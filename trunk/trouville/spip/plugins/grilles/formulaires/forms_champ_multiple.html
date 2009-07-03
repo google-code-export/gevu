@@ -1,0 +1,13 @@
+<BOUCLE_f(FORMS){id_form}>
+<BOUCLE_champs(FORMS_CHAMPS){id_form}{tout}{champ}> 
+<B_choix>
+	<BOUCLE_choix(FORMS_CHAMPS_CHOIX){id_form}{champ}{par rang}>
+	<span class='spip_form_choix_multiple'>
+	&nbsp; <input type='checkbox' name='#CHAMP[]' id='#CHOIX' value='#CHOIX'
+	[(#CHOIX|in_any{[(#ENV**{valeur}|forms_valeur{#CHAMP})], ''}|?{'checked="checked"',''})] />
+	<label for='#CHOIX'>[(#TITRE|supprimer_numero)]</label>
+	</span>
+	</BOUCLE_choix>
+</B_choix>
+</BOUCLE_champs>
+</BOUCLE_f>

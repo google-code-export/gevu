@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	creationComplete="Init()" >
+	<mx:Script>
+        <![CDATA[
+        	import mx.controls.Image;
+        	import mx.controls.LinkButton;
+        	import mx.controls.ButtonBar;
+        	import mx.collections.ArrayCollection;
+        	import mx.containers.HBox;
+        	import compo.bCrit;
+           
+           	public var rsLieu:Object;
+           
+            public function Init():void {
+				SetFilAriane();
+				SetCrit();
+            }
+
+			private function showMarker(event:MouseEvent):void {
+//				var target:ButtonBar = ButtonBar(event.target);
+				
+				var target:LinkButton = LinkButton(event.target);
+				var idRub:String = target.id.substring(3); 
+				//this.parentApplication.getXmlCarto(idRub);
+				this.parentApplication.showMarkerId(idRub);
+			}
+
+            public function SetFilAriane():void {
+				//construction du fil d'ariane
+				if(!rsLieu.ariane)return;
+		        for each (var rAriane:Object in rsLieu.ariane.hbox.label)
+		        {
+		        	if(rAriane.value != "|"){
+				        var arLnk:LinkButton = new LinkButton;
+				        //var arLnk:ButtonBar = new ButtonBar;
+				        
+				        arLnk.label = rAriane.value;
+				        arLnk.id = rAriane.id;
+						arLnk.addEventListener(MouseEvent.CLICK, showMarker);
+			        	hbAriane.addChild(arLnk);
+		        	}
+		        }
+            }
+            
+            public function SetCrit():void {
+				//construction des critères
+		        if(!rsLieu.crit) return;
+		        
+		        //à cause d'un drole de comportement sur le for each
+		        if(rsLieu.crit.length){
+					//construction de la legende quand il y a plusieurs critères
+		            for (var i:int=0; i<rsLieu.crit.length; i++) {
+	        	        var bC:bCrit = new bCrit();
+	        	        bC.rsCrit=rsLieu.crit[i];
+	   					vbCrit.addChild(bC);
+		            }	
+		        }else{
+        	        var bC1:bCrit = new bCrit();
+        	        bC1.rsCrit=rsLieu.crit;
+   					vbCrit.addChild(bC1);		        	
+		        }
+            }
+
+            
+        ]]>
+    </mx:Script>
+
+	<mx:VBox id="LieuDiag" height="100%" width="100%" >
+		<mx:HRule strokeColor="#1C999A" strokeWidth="4" themeColor="#83B5D4" width="100%" height="4"/>
+		<mx:HBox width="100%" id="hbAriane" borderStyle="none" borderColor="#6B055B" borderThickness="2" fontSize="8">
+		</mx:HBox>
+		<mx:VBox paddingLeft="30" width="90%" id="vbCrit" paddingBottom="5" paddingTop="5" >
+			
+		</mx:VBox>
+	</mx:VBox>
+	
+</mx:HBox>

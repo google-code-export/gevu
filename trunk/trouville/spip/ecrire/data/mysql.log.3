@@ -1,0 +1,92 @@
+Jun 11 11:15:20 127.0.0.1 (pid 3144) 1060 Duplicate column name 'rang'
+Dec 04 08:52:58 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=install
+Dec 04 08:52:58 127.0.0.1 (pid 3256)  - SELECT id_article FROM spip_forms_articles WHERE id_form=1
+Dec 04 08:52:58 127.0.0.1 (pid 3256) 1045 Access denied for user 'ODBC'@'localhost' (using password: NO)
+Dec 04 08:53:01 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=install&amp;etape=1
+Dec 04 08:53:01 127.0.0.1 (pid 3256)  - SELECT id_article FROM spip_forms_articles WHERE id_form=1
+Dec 04 08:53:01 127.0.0.1 (pid 3256) 1045 Access denied for user 'ODBC'@'localhost' (using password: NO)
+Dec 04 08:53:13 127.0.0.1 (pid 3256) POST /solacc/spip/ecrire/?exec=install
+Dec 04 08:53:13 127.0.0.1 (pid 3256)  - SELECT id_article FROM spip_forms_articles WHERE id_form=1
+Dec 04 08:53:13 127.0.0.1 (pid 3256) 1045 Access denied for user 'ODBC'@'localhost' (using password: NO)
+Dec 04 08:53:15 127.0.0.1 (pid 3256) POST /solacc/spip/ecrire/?exec=install
+Dec 04 08:53:15 127.0.0.1 (pid 3256)  - SELECT id_article FROM spip_forms_articles WHERE id_form=1
+Dec 04 08:53:15 127.0.0.1 (pid 3256) 1045 Access denied for user 'ODBC'@'localhost' (using password: NO)
+Dec 04 08:53:25 127.0.0.1 (pid 3256) POST /solacc/spip/ecrire/?exec=install
+Dec 04 08:53:25 127.0.0.1 (pid 3256)  - SELECT id_article FROM spip_forms_articles WHERE id_form=1
+Dec 04 08:53:25 127.0.0.1 (pid 3256) 1045 Access denied for user 'ODBC'@'localhost' (using password: NO)
+Dec 04 08:53:26 127.0.0.1 (pid 3256) POST /solacc/spip/ecrire/?exec=install
+Dec 04 08:53:26 127.0.0.1 (pid 3256)  - SELECT COUNT(*) FROM spip_meta
+Dec 04 08:53:26 127.0.0.1 (pid 3256) 1146 Table 'solacc.spip_meta' doesn't exist
+Dec 04 08:53:47 127.0.0.1 (pid 3256) POST /solacc/spip/ecrire/?exec=install
+Dec 04 08:53:47 127.0.0.1 (pid 3256)  - SELECT id_article FROM spip_forms_articles WHERE id_form=1
+Dec 04 08:53:47 127.0.0.1 (pid 3256) 1045 Access denied for user 'ODBC'@'localhost' (using password: NO)
+Dec 04 08:53:58 127.0.0.1 (pid 3256) POST /solacc/spip/ecrire/?exec=install
+Dec 04 08:53:58 127.0.0.1 (pid 3256)  - SELECT id_article FROM spip_forms_articles WHERE id_form=1
+Dec 04 08:53:58 127.0.0.1 (pid 3256) 1045 Access denied for user 'ODBC'@'localhost' (using password: NO)
+Dec 04 08:54:59 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:54:59 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms CHANGE `schema` `schema` TEXT
+Dec 04 08:54:59 127.0.0.1 (pid 3256) 1054 Unknown column 'schema' in 'spip_forms'
+Dec 04 08:55:00 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:00 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms CHANGE `schema` `structure` TEXT
+Dec 04 08:55:00 127.0.0.1 (pid 3256) 1054 Unknown column 'schema' in 'spip_forms'
+Dec 04 08:55:00 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:00 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_reponses ADD `id_article_export` BIGINT( 21 ) NOT NULL AFTER `id_auteur` 
+Dec 04 08:55:00 127.0.0.1 (pid 3256) 1146 Table 'solacc.spip_reponses' doesn't exist
+Dec 04 08:55:00 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:00 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_reponses ADD `url` VARCHAR(255) NOT NULL AFTER `id_article_export` 
+Dec 04 08:55:00 127.0.0.1 (pid 3256) 1146 Table 'solacc.spip_reponses' doesn't exist
+Dec 04 08:55:00 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:00 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_reponses RENAME `solacc`.spip_forms_donnees
+Dec 04 08:55:00 127.0.0.1 (pid 3256) 1146 Table 'solacc.spip_reponses' doesn't exist
+Dec 04 08:55:00 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:00 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_reponses_champs RENAME `solacc`.spip_forms_donnees_champs
+Dec 04 08:55:00 127.0.0.1 (pid 3256) 1146 Table 'solacc.spip_reponses_champs' doesn't exist
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms DROP structure
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1091 Can't DROP 'structure'; check that column/key exists
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms CHANGE sondage type_form VARCHAR(255) NOT NULL
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1054 Unknown column 'sondage' in 'spip_forms'
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms ADD moderation VARCHAR(10) DEFAULT 'posteriori' NOT NULL AFTER texte
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1060 Duplicate column name 'moderation'
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms ADD public ENUM('non', 'oui') DEFAULT 'non' NOT NULL AFTER moderation
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1060 Duplicate column name 'public'
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms_donnees CHANGE id_reponse id_donnee BIGINT( 21 ) NOT NULL AUTO_INCREMENT
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1054 Unknown column 'id_reponse' in 'spip_forms_donnees'
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms_donnees_champs CHANGE id_reponse id_donnee BIGINT( 21 ) NOT NULL
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1054 Unknown column 'id_reponse' in 'spip_forms_donnees_champs'
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms_donnees_champs DROP INDEX id_reponse ,ADD INDEX id_donnee (id_donnee) 
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1091 Can't DROP 'id_reponse'; check that column/key exists
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms_champs ADD specifiant ENUM('non', 'oui') DEFAULT 'non' NOT NULL AFTER extra_info
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1060 Duplicate column name 'specifiant'
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms_champs ADD public ENUM('non', 'oui') DEFAULT 'non' NOT NULL AFTER specifiant
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1060 Duplicate column name 'public'
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms_champs ADD aide text AFTER public
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1060 Duplicate column name 'aide'
+Dec 04 08:55:03 127.0.0.1 (pid 3256) GET /solacc/spip/ecrire/?exec=tables_tous
+Dec 04 08:55:03 127.0.0.1 (pid 3256)  - ALTER TABLE `solacc`.spip_forms_champs ADD html_wrap text AFTER aide
+Dec 04 08:55:03 127.0.0.1 (pid 3256) 1060 Duplicate column name 'html_wrap'
+Dec 04 09:54:14 127.0.0.1 (pid 3256) POST /solacc/spip/ecrire/?exec=donnees_edit&amp;id_form=1&amp;id_donnee=1&amp;retour=%3Fexec%3Darticles%26amp%3Bid_article%3D1
+Dec 04 09:54:14 127.0.0.1 (pid 3256)  - INSERT INTO `solacc`.spip_forms_donnees_champs (id_donnee, champ, valeur, valdec, valint) VALUES ('1','texte_1',' ',' ',' ')
+Dec 04 09:54:14 127.0.0.1 (pid 3256) 1054 Unknown column 'valdec' in 'field list'
+Dec 04 09:54:41 127.0.0.1 (pid 3256) POST /solacc/spip/ecrire/?exec=donnees_edit&amp;id_form=1&amp;id_donnee=1&amp;retour=%3Fexec%3Darticles%26amp%3Bid_article%3D1
+Dec 04 09:54:41 127.0.0.1 (pid 3256)  - INSERT INTO `solacc`.spip_forms_donnees_champs (id_donnee, champ, valeur, valdec, valint) VALUES ('1','ligne_1','1','1','1'),('1','ligne_2','1','1','1'),('1','ligne_3','1','1','1'),('1','ligne_4','17','17','17')
+Dec 04 09:54:41 127.0.0.1 (pid 3256) 1054 Unknown column 'valdec' in 'field list'
+Dec 04 09:57:58 127.0.0.1 (pid 3256) POST /solacc/spip/ecrire/?exec=donnees_edit&amp;id_form=1&amp;id_donnee=1&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D1
+Dec 04 09:57:58 127.0.0.1 (pid 3256)  - INSERT INTO `solacc`.spip_forms_donnees_champs (id_donnee, champ, valeur, valdec, valint) VALUES ('1','ligne_1','1','1','1'),('1','ligne_2','1','1','1'),('1','ligne_3','1','1','1'),('1','ligne_4','17','17','17')
+Dec 04 09:57:58 127.0.0.1 (pid 3256) 1054 Unknown column 'valdec' in 'field list'
+Dec 19 11:16:37 127.0.0.1 (pid 3240) GET /solacc/spip/ecrire/?exec=mots_tous
+Dec 19 11:16:37 127.0.0.1 (pid 3240)  - SELECT *, (TRIM(IF(INSTR(titre, '&lt;multi&gt;') = 0 ,      TRIM(titre),      CONCAT(           LEFT(titre, INSTR(titre, '&lt;multi&gt;')-1),           IF(                INSTR(TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;')))),'[fr]') = 0,                IF(                      TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;')))) REGEXP '^\[[a-z\_]{2,}\]',                      INSERT(                           TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;')))),                           1,                           INSTR(TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;')))), ']'),                           ''                      ),                      TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;'))))                 ),                TRIM(RIGHT(titre, ( LENGTH(titre) - (INSTR(titre, '[fr]')+ LENGTH('[fr]')-1) ) ))           )      ) ))) AS multi  FROM `solacc`.spip_groupes_mots WHERE id_parent = 0 ORDER BY multi
+Dec 19 11:16:37 127.0.0.1 (pid 3240) 1054 Unknown column 'id_parent' in 'where clause'
+Dec 20 14:19:35 127.0.0.1 (pid 3344) GET /solacc/spip/ecrire/?exec=mots_tous
+Dec 20 14:19:35 127.0.0.1 (pid 3344)  - SELECT *, (TRIM(IF(INSTR(titre, '&lt;multi&gt;') = 0 ,      TRIM(titre),      CONCAT(           LEFT(titre, INSTR(titre, '&lt;multi&gt;')-1),           IF(                INSTR(TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;')))),'[fr]') = 0,                IF(                      TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;')))) REGEXP '^\[[a-z\_]{2,}\]',                      INSERT(                           TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;')))),                           1,                           INSTR(TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;')))), ']'),                           ''                      ),                      TRIM(RIGHT(titre, LENGTH(titre) -(6+INSTR(titre, '&lt;multi&gt;'))))                 ),                TRIM(RIGHT(titre, ( LENGTH(titre) - (INSTR(titre, '[fr]')+ LENGTH('[fr]')-1) ) ))           )      ) ))) AS multi  FROM `solacc`.spip_groupes_mots WHERE id_parent = 0 ORDER BY multi
+Dec 20 14:19:35 127.0.0.1 (pid 3344) 1054 Unknown column 'id_parent' in 'where clause'
+[-- rotate --]

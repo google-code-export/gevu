@@ -1,0 +1,19 @@
+<!-- a:2:{s:11:"process_ins";s:4:"html";s:7:"entetes";a:0:{}} -->
+
+ 
+
+	
+	<span class='spip_form_choix_multiple'>
+	&nbsp; <input type='checkbox' name='multiple_2[]' id='multiple_2_1' value='multiple_2_1'
+	 />
+	<label for='multiple_2_1'>Travail</label>
+	</span>
+	
+	<span class='spip_form_choix_multiple'>
+	&nbsp; <input type='checkbox' name='multiple_2[]' id='multiple_2_2' value='multiple_2_2'
+	 />
+	<label for='multiple_2_2'>EPR_IOP</label>
+	</span>
+	
+
+

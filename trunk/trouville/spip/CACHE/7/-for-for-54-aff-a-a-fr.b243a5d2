@@ -1,0 +1,537 @@
+<!-- a:2:{s:11:"process_ins";s:3:"php";s:7:"entetes";a:0:{}} -->
+
+
+
+ 
+	
+	 <fieldset><legend>Contrôle</legend> 
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					
+					 <span class='label'>Type de contrôle</span>
+					
+					:
+				</span>
+				
+				
+				
+				
+				
+				
+				
+				
+				  <?php
+	$contexte_inclus = array('fond' => 'formulaires/forms_select_mot',
+	'id_groupe' => '21',
+	'champ' => 'mot_1',
+	'valeur' => 'a:1:{i:0;s:1:"0";}',
+	'lang' => 'fr');
+	include('public.php');
+?>
+				
+				
+				
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					 <label for="ligne_1">Identifiant</label>
+					
+					
+					:
+				</span>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				 
+					<input type='text' name='ligne_1' id='ligne_1' value="" 
+						class='ligne formo' 
+						size='40' />
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					 <label for="texte_1">Critères</label>
+					
+					
+					:
+				</span>
+				
+				
+				
+				
+				  <script type="text/javascript" src="img_pack/spip_barre.js"></script><table class='spip_barre' cellpadding='0' cellspacing='0' border='0'>
+<tr>
+<td style='text-align: left;' valign='middle'><a
+href="javascript:barre_raccourci('{','}',document.getElementById('texte_1'))" tabindex='1000'
+title="Mettre en {italique}"><img
+src='img_pack/icones_barre/italique.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_raccourci('{{','}}',document.getElementById('texte_1'))" tabindex='1000'
+title="Mettre en {{gras}}"><img
+src='img_pack/icones_barre/gras.png' height='16' width='16' align='middle' /></a></td>
+<td><a
+href="javascript:barre_demande('[','->',']', 'Veuillez indiquer l\'adresse de votre lien (vous pouvez indiquer une adresse Web sous la forme http://www.monsite/com ou simplement indiquer le num&eacute;ro d\'un article de ce site.', document.getElementById('texte_1'))" tabindex='1000'
+title="Transformer en [lien hypertexte->http://...]"><img
+src='img_pack/icones_barre/lien.png' height='16' width='16' align='middle' /></a></td>
+<td><a
+href="javascript:barre_raccourci('
+
+&lt;quote&gt;','&lt;/quote&gt;
+
+',document.getElementById('texte_1'))" tabindex='1000'
+title="Citer un message"><img
+src='img_pack/icones_barre/quote.png' height='16' width='16' align='middle' /></a></td>
+<td style='text-align:left;' valign='middle'><a
+href="javascript:barre_raccourci('&laquo;','&raquo;',document.getElementById('texte_1'))" tabindex='1000'
+title="Entourer de &laquo; guillemets &raquo;"><img
+src='img_pack/icones_barre/guillemets.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_raccourci('&ldquo;','&rdquo;',document.getElementById('texte_1'))" tabindex='1000'
+title="Entourer de &ldquo;guillemets de second niveau&rdquo;"><img
+src='img_pack/icones_barre/guillemets-simples.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&Agrave;',document.getElementById('texte_1'))" tabindex='1000'
+title="Ins&eacute;rer un A accent grave majuscule"><img
+src='img_pack/icones_barre/agrave-maj.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&Eacute;',document.getElementById('texte_1'))" tabindex='1000'
+title="Ins&eacute;rer un E accent aigu majuscule"><img
+src='img_pack/icones_barre/eacute-maj.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&oelig;',document.getElementById('texte_1'))" tabindex='1000'
+title="Ins&eacute;rer un E dans l'O"><img
+src='img_pack/icones_barre/oelig.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&OElig;',document.getElementById('texte_1'))" tabindex='1000'
+title="Ins&eacute;rer un E dans l'O majuscule"><img
+src='img_pack/icones_barre/oelig-maj.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&euro;',document.getElementById('texte_1'))" tabindex='1000'
+title="Ins&eacute;rer le symbole &euro;"><img
+src='img_pack/icones_barre/euro.png' height='16' width='16' align='middle' /></a></td>
+<td style='text-align:right;' valign='middle'>&nbsp;&nbsp;<a class='aide' href='http://localhost/gevu/trouville/spip/ecrire/?exec=aide_index&amp;aide=raccourcis&amp;var_lang=fr' target="spip_aide" onclick="javascript:window.open(this.href,'spip_aide', 'scrollbars=yes, resizable=yes, width=740, height=580'); return false;"><img src='img_pack/aide.gif'
+alt="AIDE" title="De l'aide sur cet &eacute;l&eacute;ment" width="12" height="12" align="middle" /></a>&nbsp;</td></tr></table>
+	<textarea name='texte_1' rows='10' class='formo ' cols='80'
+	id='texte_1'
+	onselect='storeCaret(this);'
+	onclick='storeCaret(this);'
+	onkeyup='storeCaret(this);'
+	ondblclick='storeCaret(this);'></textarea>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					
+					 <span class='label'>Type de critère</span>
+					
+					:
+				</span>
+				
+				
+				
+				
+				
+				
+				
+				  <?php
+	$contexte_inclus = array('fond' => 'formulaires/forms_champ_multiple',
+	'id_form' => '54',
+	'champ' => 'multiple_1',
+	'valeur' => 'a:1:{i:0;s:1:"0";}',
+	'lang' => 'fr');
+	include('public.php');
+?>
+				
+				
+				
+				
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					
+					 <span class='label'>Type de droit</span>
+					
+					:
+				</span>
+				
+				
+				
+				
+				
+				
+				
+				  <?php
+	$contexte_inclus = array('fond' => 'formulaires/forms_champ_multiple',
+	'id_form' => '54',
+	'champ' => 'multiple_2',
+	'valeur' => 'a:1:{i:0;s:1:"0";}',
+	'lang' => 'fr');
+	include('public.php');
+?>
+				
+				
+				
+				
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					
+					 <span class='label'>Déficience concernée</span>
+					
+					:
+				</span>
+				
+				
+				
+				
+				
+				
+				
+				  <?php
+	$contexte_inclus = array('fond' => 'formulaires/forms_champ_multiple',
+	'id_form' => '54',
+	'champ' => 'multiple_3',
+	'valeur' => 'a:1:{i:0;s:1:"0";}',
+	'lang' => 'fr');
+	include('public.php');
+?>
+				
+				
+				
+				
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					 <label for="texte_2">Affirmations</label>
+					
+					
+					:
+				</span>
+				
+				
+				
+				
+				  <table class='spip_barre' cellpadding='0' cellspacing='0' border='0'>
+<tr>
+<td style='text-align: left;' valign='middle'><a
+href="javascript:barre_raccourci('{','}',document.getElementById('texte_2'))" tabindex='1000'
+title="Mettre en {italique}"><img
+src='img_pack/icones_barre/italique.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_raccourci('{{','}}',document.getElementById('texte_2'))" tabindex='1000'
+title="Mettre en {{gras}}"><img
+src='img_pack/icones_barre/gras.png' height='16' width='16' align='middle' /></a></td>
+<td><a
+href="javascript:barre_demande('[','->',']', 'Veuillez indiquer l\'adresse de votre lien (vous pouvez indiquer une adresse Web sous la forme http://www.monsite/com ou simplement indiquer le num&eacute;ro d\'un article de ce site.', document.getElementById('texte_2'))" tabindex='1000'
+title="Transformer en [lien hypertexte->http://...]"><img
+src='img_pack/icones_barre/lien.png' height='16' width='16' align='middle' /></a></td>
+<td><a
+href="javascript:barre_raccourci('
+
+&lt;quote&gt;','&lt;/quote&gt;
+
+',document.getElementById('texte_2'))" tabindex='1000'
+title="Citer un message"><img
+src='img_pack/icones_barre/quote.png' height='16' width='16' align='middle' /></a></td>
+<td style='text-align:left;' valign='middle'><a
+href="javascript:barre_raccourci('&laquo;','&raquo;',document.getElementById('texte_2'))" tabindex='1000'
+title="Entourer de &laquo; guillemets &raquo;"><img
+src='img_pack/icones_barre/guillemets.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_raccourci('&ldquo;','&rdquo;',document.getElementById('texte_2'))" tabindex='1000'
+title="Entourer de &ldquo;guillemets de second niveau&rdquo;"><img
+src='img_pack/icones_barre/guillemets-simples.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&Agrave;',document.getElementById('texte_2'))" tabindex='1000'
+title="Ins&eacute;rer un A accent grave majuscule"><img
+src='img_pack/icones_barre/agrave-maj.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&Eacute;',document.getElementById('texte_2'))" tabindex='1000'
+title="Ins&eacute;rer un E accent aigu majuscule"><img
+src='img_pack/icones_barre/eacute-maj.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&oelig;',document.getElementById('texte_2'))" tabindex='1000'
+title="Ins&eacute;rer un E dans l'O"><img
+src='img_pack/icones_barre/oelig.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&OElig;',document.getElementById('texte_2'))" tabindex='1000'
+title="Ins&eacute;rer un E dans l'O majuscule"><img
+src='img_pack/icones_barre/oelig-maj.png' height='16' width='16' align='middle' /></a><a
+href="javascript:barre_inserer('&euro;',document.getElementById('texte_2'))" tabindex='1000'
+title="Ins&eacute;rer le symbole &euro;"><img
+src='img_pack/icones_barre/euro.png' height='16' width='16' align='middle' /></a></td>
+<td style='text-align:right;' valign='middle'>&nbsp;&nbsp;<a class='aide' href='http://localhost/gevu/trouville/spip/ecrire/?exec=aide_index&amp;aide=raccourcis&amp;var_lang=fr' target="spip_aide" onclick="javascript:window.open(this.href,'spip_aide', 'scrollbars=yes, resizable=yes, width=740, height=580'); return false;"><img src='img_pack/aide.gif'
+alt="AIDE" title="De l'aide sur cet &eacute;l&eacute;ment" width="12" height="12" align="middle" /></a>&nbsp;</td></tr></table>
+	<textarea name='texte_2' rows='10' class='formo ' cols='80'
+	id='texte_2'
+	onselect='storeCaret(this);'
+	onclick='storeCaret(this);'
+	onkeyup='storeCaret(this);'
+	ondblclick='storeCaret(this);'></textarea>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					 <label for="ligne_2">Handicateur moteur</label>
+					
+					
+					:
+				</span>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				 
+					<input type='text' name='ligne_2' id='ligne_2' value="" 
+						class='ligne formo' 
+						size='40' />
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					 <label for="ligne_3">Handicateur auditif</label>
+					
+					
+					:
+				</span>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				 
+					<input type='text' name='ligne_3' id='ligne_3' value="" 
+						class='ligne formo' 
+						size='40' />
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					 <label for="ligne_4">Handicateur visuel</label>
+					
+					
+					:
+				</span>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				 
+					<input type='text' name='ligne_4' id='ligne_4' value="" 
+						class='ligne formo' 
+						size='40' />
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+
+ 
+	
+	
+	 
+		<div class='spip_form_champ'>
+			
+			 
+				<span class='spip_form_label'>
+					 <label for="ligne_5">Handicateur cognitif</label>
+					
+					
+					:
+				</span>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				 
+					<input type='text' name='ligne_5' id='ligne_5' value="" 
+						class='ligne formo' 
+						size='40' />
+				
+				
+				<span class='nettoyeur'> </span>
+			
+		</div>
+	
+
+
+</fieldset>
+ 
+	
+	<p style='display:none;'><label for="nobotnobot">Veuillez laisser ce champ vide&nbsp;:</label>
+	<input type="text" name="nobotnobot" id="nobotnobot" value="" size="10" /></p>
+	
+	<div style='text-align:right' class='spip_bouton'><input type="submit" name='Valider' value="Valider" /></div>
+
+<script src="../plugins/grilles/javascript/jtip.js" type="text/javascript"></script>
+
+<script type="text/javascript"><!--
+$('input.formo').bind('focus',function(){$(this).removeClass('formo').addClass('formo-focus');});
+$('input.formo').bind('blur',function(){$(this).removeClass('formo-focus').addClass('formo');});
+$('input.forml').bind('focus',function(){$(this).removeClass('forml').addClass('forml-focus');});
+$('input.forml').bind('blur',function(){$(this).removeClass('forml-focus').addClass('forml');});
+
+//--></script>

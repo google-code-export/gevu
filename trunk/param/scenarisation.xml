@@ -1,0 +1,844 @@
+<questionnaire>
+	<grille id='2_acc'>
+		<question id='2_cr_acc_01'/>
+		<question id='2_qi_acc_01' reponse='1' >
+			<question id='2_cr_acc_02'/>
+			<question id='2_cr_acc_03'/>
+		</question>
+		<question id='2_qi_acc_02' reponse='1' >
+			<question id='2_cr_acc_07'/>
+			<question id='2_cr_acc_08'/>
+			<question id='2_cr_acc_09'/>
+			<question id='2_cr_acc_10'/>
+		</question>
+		<question id='2_cr_acc_04'/>
+		<question id='2_cr_acc_05'/>
+		<question id='2_cr_acc_06'/>
+		<question id='2_cr_acc_11'/>
+		<question id='2_qi_acc_03' reponse='1'>
+			<question id='2_cr_acc_12'/>
+			<question id='2_cr_acc_13'/>
+			<question id='2_cr_acc_14'/>
+		</question>
+		<question id='2_cr_acc_15'/>
+		<question id='2_cr_acc_16'/>
+		<question id='2_cr_acc_17'/>
+		<question id='2_cr_acc_18'/>
+		<question id='2_cr_acc_19'/>
+	</grille>	
+	<grille id='2_air_sta'>
+		<question id='2_air_sta_01'/>
+		<question id='2_qi_air_sta_01' reponse='1' >
+			<question id='2_air_sta_03'/>
+			<question id='2_qi_air_sta_03' reponse='2'>
+				<question id='2_air_sta_04'/>
+				<question id='2_air_sta_05'/>
+				<question id='2_air_sta_06'/>
+			</question>
+		</question>
+		<question id='2_qi_air_sta_02' reponse='1' >
+			<question id='2_air_sta_07'/>
+			<question id='2_air_sta_08'/>
+			<question id='2_air_sta_09'/>
+			<question id='2_air_sta_10'/>
+			<question id='2_air_sta_11'/>
+		</question>
+		<question id='2_qi_air_sta_02' reponse='2' >
+			<reponse id='2_air_sta_07' champ='mot_1' valeur='2' />
+			<reponse id='2_air_sta_08' champ='mot_1' valeur='2' />
+			<reponse id='2_air_sta_09' champ='mot_1' valeur='2' />
+			<reponse id='2_air_sta_10' champ='mot_1' valeur='2' />
+			<reponse id='2_air_sta_11' champ='mot_1' valeur='2' />
+			<question id='2_air_sta_12'/>
+		</question>
+		<question id='2_air_sta_02'/>
+		<question id='2_air_sta_13'/>
+		<question id='2_air_sta_14'/>
+	</grille>
+	<grille id='2_asc'>
+		<question id='2_cr_asc_01'/>
+		<question id='2_cr_asc_02'/>
+		<question id='2_cr_asc_03'/>
+		<question id='2_cr_asc_04'/>
+		<question id='2_cr_asc_05'/>
+		<question id='2_cr_asc_06'/>
+		<question id='2_cr_asc_07'/>
+		<question id='2_cr_asc_08'/>
+		<question id='2_cr_asc_09'/>
+		<question id='2_cr_asc_10'/>
+		<question id='2_cr_asc_11'/>
+		<question id='2_cr_asc_12'/>
+		<question id='2_cr_asc_13'/>
+		<question id='2_cr_asc_14'/>
+		<question id='2_cr_asc_15'/>
+	</grille>
+	<grille id='2_asc_cab'>
+		<question id='2_cr_asc_cab_01'/>
+		<question id='2_cr_asc_cab_02'/>
+		<question id='2_cr_asc_cab_03'/>
+		<question id='2_cr_asc_cab_04'/>
+		<question id='2_cr_asc_cab_05'/>
+		<question id='2_cr_asc_cab_06'/>
+		<question id='2_cr_asc_cab_07'/>
+		<question id='2_cr_asc_cab_08'/>
+		<question id='2_cr_asc_cab_09'/>
+		<question id='2_cr_asc_cab_10'/>
+		<question id='2_cr_asc_cab_11'/>
+		<question id='2_cr_asc_cab_12'/>
+		<question id='2_cr_asc_cab_13'/>
+		<question id='2_cr_asc_cab_14'/>
+		<question id='2_cr_asc_cab_15'/>
+		<question id='2_cr_asc_cab_16'/>
+		<question id='2_cr_asc_cab_17'/>
+		<question id='2_cr_asc_cab_18'/>
+		<question id='2_cr_asc_cab_19'/>
+		<question id='2_cr_asc_cab_20'/>
+		<question id='2_cr_asc_cab_21'/>
+		<question id='2_cr_asc_cab_22'/>
+		<question id='2_cr_asc_cab_23'/>
+		<question id='2_cr_asc_cab_24'/>
+		<question id='2_cr_asc_cab_25'/>
+		<question id='2_cr_asc_cab_26'/>
+		<question id='2_cr_asc_cab_27'/>
+		<question id='2_cr_asc_cab_28'/>
+	</grille>	
+	<grille id='2_assis'>
+		<question id='2_cr_assis_01'/>
+		<question id='2_cr_assis_02'/>
+		<question id='2_cr_assis_03'/>
+		<question id='2_cr_assis_04'/>
+		<question id='2_cr_assis_05'/>
+		<question id='2_cr_assis_06'/>
+		<question id='2_cr_assis_07'/>
+		<question id='2_cr_assis_08'/>
+		<question id='2_cr_assis_09'/>	
+	</grille>
+	<grille id='2_chem_ext'>
+		<question id='2_cr_chem_ext_01' reponse='1' >
+			<question id='2_cr_chem_ext_02'/>
+			<question id='2_cr_chem_ext_03'/>
+			<question id='2_cr_chem_ext_04'/>
+			<question id='2_cr_chem_ext_05'/>
+			<question id='2_cr_chem_ext_06'/>
+			<question id='2_cr_chem_ext_17'/>
+			<question id='2_cr_chem_ext_18'/>
+			<question id='2_cr_chem_ext_19'/>
+			<question id='2_cr_chem_ext_20'/>
+			<question id='2_cr_chem_ext_21'/>
+			<question id='2_cr_chem_ext_23'/>
+		</question>
+		<question id='2_qi_chem_ext_01' reponse='1' >
+			<question id='2_cr_chem_ext_07'/>
+			<question id='2_cr_chem_ext_08'/>
+			<question id='2_cr_chem_ext_09'/>
+			<question id='2_cr_chem_ext_10'/>
+			<question id='2_cr_chem_ext_11'/>
+			<question id='2_cr_chem_ext_12'/>
+			<question id='2_cr_chem_ext_13'/>
+			<question id='2_cr_chem_ext_14'/>
+			<question id='2_cr_chem_ext_15'/>
+			<question id='2_cr_chem_ext_16'/>
+		</question>
+		<question id='2_qi_chem_ext_01' reponse='2' >
+			<reponse id='2_cr_chem_ext_07' champ='mot_1' valeur='2' />
+			<reponse id='2_cr_chem_ext_08' champ='mot_1' valeur='2' />
+			<reponse id='2_cr_chem_ext_09' champ='mot_1' valeur='2' />
+			<reponse id='2_cr_chem_ext_16' champ='mot_1' valeur='2' />
+		</question>
+		<question id='2_qi_chem_ext_02' reponse='1' >
+			<question id='2_cr_chem_ext_30'/>
+			<question id='2_cr_chem_ext_31'/>
+		</question>
+		<question id='2_cr_chem_ext_22'/>
+		<question id='2_cr_chem_ext_24' reponse='1' >
+			<question id='2_cr_chem_ext_26'/>
+		</question>
+		<question id='2_cr_chem_ext_24' reponse='2' >
+			<question id='2_cr_chem_ext_25'/>
+		</question>
+		<question id='2_cr_chem_ext_27'/>
+		<question id='2_cr_chem_ext_28'/>
+		<question id='2_cr_chem_ext_29'/>
+		<question id='2_cr_chem_ext_32'/>
+		<question id='2_cr_chem_ext_33'/>
+		<question id='2_cr_chem_ext_34'/>
+		<question id='2_cr_chem_ext_35'/>
+		<question id='2_cr_chem_ext_36'/>
+		<question id='2_cr_chem_ext_37'/>
+	</grille>
+	<grille id='2_dis_com'>
+		<question id='2_cr_dis_com_01'/>
+		<question id='2_cr_dis_com_02'/>
+		<question id='2_cr_dis_com_03'/>
+		<question id='2_cr_dis_com_04'/>
+		<question id='2_cr_dis_com_05'/>
+		<question id='2_cr_dis_com_06'/>
+	</grille>
+	<grille id='2_douche'>
+		<question id='2_cr_douche_01' reponse='1' >	
+			<question id='2_qi_douche_01' reponse='1'>
+				<question id='2_cr_douche_10'/>
+			</question>	
+			<question id='2_qi_douche_01' reponse='2'>
+				<question id='2_cr_douche_09'/>
+			</question>	
+			<question id='2_cr_douche_02'/>
+			<question id='2_cr_douche_03'/>
+			<question id='2_cr_douche_04'/>
+			<question id='2_cr_douche_05'/>	
+			<question id='2_cr_douche_06'/>
+			<question id='2_cr_douche_07'/>
+			<question id='2_cr_douche_08'/>
+			<question id='2_cr_douche_11'/>
+		</question>	
+	</grille>
+	<grille id='2_lux'>
+		<question id='2_cr_lux_01'/>
+		<question id='2_cr_lux_02'/>
+		<question id='2_cr_lux_03'/>
+		<question id='2_cr_lux_04'/>
+		<question id='2_cr_lux_05'/>
+		<question id='2_cr_lux_06'/>
+		<question id='2_cr_lux_07'/>
+		<question id='2_cr_lux_08'/>
+		<question id='2_cr_lux_09'/>
+		<question id='2_cr_lux_10'/>
+		<question id='2_cr_lux_11'/>
+	</grille>
+	<grille id='2_ent'>
+		<question id='2_cr_ent_01'/>
+		<question id='2_cr_ent_02'/>
+		<question id='2_cr_ent_03'/>
+		<question id='2_cr_ent_04'/>
+	</grille>
+	<grille id='2_equip'>
+		<question id='2_qi_equip_01' reponse='1'>
+			<question id='2_cr_equip_01'/>
+			<question id='2_cr_equip_02'/>
+		</question>
+		<question id='2_qi_equip_02' reponse='1'>
+			<question id='2_cr_equip_05'/>
+			<question id='2_cr_equip_06'/>
+			<question id='2_cr_equip_07'/>
+			<question id='2_cr_equip_08'/>
+		</question>
+		<question id='2_cr_equip_03'/>
+		<question id='2_cr_equip_04'/>
+		<question id='2_cr_equip_09'/>
+		<question id='2_cr_equip_10'/>
+		<question id='2_cr_equip_11'/>
+		<question id='2_cr_equip_12'/>
+	</grille>
+	<grille id='2_esc'>
+		<question id='2_qi_esc_02' reponse='1' >
+			<question id='2_cr_esc_04'/>
+			<question id='2_cr_esc_05'/>
+		</question>
+		<question id='2_cr_esc_01'/>
+		<question id='2_cr_esc_02'/>
+		<question id='2_cr_esc_03'/>
+		<question id='2_cr_esc_06' reponse='1' >
+			<question id='2_cr_esc_07'/>
+			<question id='2_cr_esc_08'/>
+			<question id='2_cr_esc_09'/>
+			<question id='2_cr_esc_10'/>
+			<question id='2_cr_esc_11'/>
+		</question>
+		<question id='2_cr_esc_12'/>
+		<question id='2_cr_esc_13'/>
+		<question id='2_cr_esc_14'/>
+		<question id='2_cr_esc_15'/>
+		<question id='2_cr_esc_16'/>
+		<question id='2_cr_esc_17'/>
+		<question id='2_cr_esc_18'/>
+		<question id='2_cr_esc_19'/>
+		<question id='2_cr_esc_20'/>
+		<question id='2_cr_esc_21'/>
+		<question id='2_cr_esc_22'/>
+		<question id='2_cr_esc_23'/>
+		<question id='2_cr_esc_24'/>
+		<question id='2_qi_esc_01' reponse='1' >
+			<question id='2_cr_esc_25'/>
+			<question id='2_cr_esc_26'/>
+			<question id='2_cr_esc_27'/>
+			<question id='2_cr_esc_28'/>
+			<question id='2_cr_esc_29'/>
+			<question id='2_cr_esc_30'/>
+			<question id='2_cr_esc_31'/>
+			<question id='2_cr_esc_32'/>
+			<question id='2_cr_esc_33'/>
+			<question id='2_cr_esc_34'/>
+			<question id='2_cr_esc_35'/>
+			<question id='2_cr_esc_36'/>
+			<question id='2_cr_esc_37'/>
+			<question id='2_cr_esc_38'/>
+			<question id='2_cr_esc_39'/>
+			<question id='2_cr_esc_40'/>
+			<question id='2_cr_esc_41'/>
+			<question id='2_cr_esc_42'/>
+			<question id='2_cr_esc_44'/>
+		</question>
+		<question id='2_qi_esc_01' reponse='2' >
+			<reponse id='2_cr_esc_25' champ='mot_1' valeur='2' />
+			<reponse id='2_cr_esc_34' champ='mot_1' valeur='2' />
+		</question>
+		<question id='2_cr_esc_43'/>
+	</grille>
+	<grille id='2_esc_meca'>
+		<question id='2_cr_esc_meca_01'/>
+		<question id='2_cr_esc_meca_02'/>
+		<question id='2_cr_esc_meca_03' reponse='1' >
+			<question id='2_cr_esc_meca_04'/>
+			<question id='2_cr_esc_meca_05'/>
+			<question id='2_cr_esc_meca_06'/>
+		</question>
+		<question id='2_cr_esc_meca_07'/>
+		<question id='2_cr_esc_meca_08'/>
+		<question id='2_cr_esc_meca_09'/>
+		<question id='2_cr_esc_meca_10'/>
+		<question id='2_cr_esc_meca_11'/>
+		<question id='2_cr_esc_meca_12'/>
+		<question id='2_cr_esc_meca_13'/>
+		<question id='2_cr_esc_meca_14'/>
+		<question id='2_cr_esc_meca_15'/>
+		<question id='2_cr_esc_meca_16'/>
+		<question id='2_cr_esc_meca_17'/>
+		<question id='2_cr_esc_meca_18'/>
+		<question id='2_cr_esc_meca_19'/>
+		<question id='2_cr_esc_meca_20'/>
+	</grille>
+	<grille id='2_pente'>
+		<question id='2_qi_pente_01' reponse='2' >
+			<question id='2_cr_pente_01'/>
+			<question id='2_cr_pente_02'/>
+			<question id='2_cr_pente_03'/>
+			<question id='2_cr_pente_04'/>
+			<question id='2_cr_pente_05'/>
+			<question id='2_cr_pente_06'/>
+			<question id='2_cr_pente_07'/>
+			<question id='2_cr_pente_08'/>
+			<question id='2_cr_pente_09'/>
+			<question id='2_cr_pente_10'/>
+			<question id='2_cr_pente_11'/>
+			<question id='2_cr_pente_12'/>
+			<question id='2_cr_pente_13'/>
+			<question id='2_cr_pente_14'/>
+			<question id='2_cr_pente_15'/>
+			<question id='2_cr_pente_16'/>
+			<question id='2_cr_pente_17'/>
+			<question id='2_cr_pente_18'/>
+		</question>
+		<question id='2_qi_pente_02' reponse='2' >
+			<question id='2_cr_pente_19'/>
+			<question id='2_cr_pente_20'/>
+			<question id='2_cr_pente_21'/>
+			<question id='2_cr_pente_22'/>
+			<question id='2_cr_pente_23'/>
+			<question id='2_cr_pente_24'/>
+		</question>
+	</grille>
+	<grille id='2_gig'>
+		<question id='2_cr_gig_01'/>
+		<question id='2_cr_gig_02' reponse='1'>
+			<question id='2_cr_gig_03' reponse='1'>
+				<question id='2_cr_gig_10'/>
+			</question>
+		</question>
+		<question id='2_cr_gig_09'/>
+		<question id='2_qi_gig_01' reponse='1'>
+			<question id='2_cr_gig_06'/>
+			<question id='2_cr_gig_04'/>
+			<question id='2_cr_gig_05'/>
+			<question id='2_cr_gig_07'/>
+			<question id='2_cr_gig_08'/>
+		</question>
+		<question id='2_cr_gig_11'/>
+		<question id='2_cr_gig_12'/>
+		<question id='2_cr_gig_13'/>
+		<question id='2_cr_gig_14'/>
+		<question id='2_cr_gig_15'/>
+		<question id='2_cr_gig_16'/>
+		<question id='2_cr_gig_17'/>
+		<question id='2_cr_gig_18'/>
+	</grille>
+	<grille id='2_po'>
+		<question id='2_qi_po_08'/>
+		<question id='2_qi_po_01' reponse='1' >
+			<question id='2_qi_po_02' reponse='1' >
+				<question id='2_cr_po_02'/>
+				<question id='2_cr_po_03'/>
+			</question>
+			<question id='2_qi_po_02' reponse='2' >
+				<question id='2_cr_po_01'/>
+			</question>
+			<question id='2_cr_po_06'/>
+			<question id='2_cr_po_07'/>
+		</question>
+		<question id='2_qi_po_01' reponse='2' >
+			<question id='2_cr_po_04'/>
+			<question id='2_cr_po_05'/>	
+		</question>
+		<question id='2_cr_po_09'/>
+		<question id='2_cr_po_16' reponse='1' >
+			<question id='2_cr_po_17'/>
+			<question id='2_cr_po_18'/>
+			<question id='2_cr_po_19'/>
+		</question>
+		<question id='2_cr_po_16'/>
+		<question id='2_cr_po_15'/>
+		<question id='2_cr_po_08'/>
+		<question id='2_qi_po_03' reponse='1' >
+			<question id='2_cr_po_10' reponse='1'>
+				<question id='2_cr_po_13'/>
+				<question id='2_cr_po_14'/>
+			</question>
+			<question id='2_cr_po_10' reponse='2'>
+				<question id='2_cr_po_13' champ='mot_1' valeur='2' />
+				<question id='2_cr_po_14' champ='mot_1' valeur='2' />
+			</question>
+		</question>
+		<question id='2_qi_po_03' reponse='2' >
+			<question id='2_cr_po_10' reponse='1'>
+				<question id='2_cr_po_11'/>
+				<question id='2_cr_po_12'/>
+			</question>
+			<question id='2_cr_po_10' reponse='2'>
+				<question id='2_cr_po_11' champ='mot_1' valeur='2' />
+				<question id='2_cr_po_12' champ='mot_1' valeur='2' />
+			</question>
+		</question>
+		<question id='2_qi_po_04' reponse='1' >
+			<question id='2_cr_po_25'/>
+			<question id='2_cr_po_26'/>
+		</question>
+		<question id='2_qi_po_05' reponse='1' >
+			<question id='2_cr_po_20'/>
+			<question id='2_cr_po_21'/>
+		</question>
+		<question id='2_qi_po_06' reponse='1' >
+			<question id='2_cr_po_22'/>
+			<question id='2_cr_po_23'/>
+			<question id='2_cr_po_24'/>
+		</question>
+		<question id='2_qi_po_07' reponse='1' >
+			<question id='2_cr_po_28'/>
+			<question id='2_cr_po_29'/>
+			<question id='2_cr_po_30'/>
+		</question>
+		<question id='2_cr_po_31'/>
+		<question id='2_cr_po_27'/>
+	</grille>
+	<grille id='2_face_po'>
+		<question id='2_cr_face_po_01'/>
+		<question id='2_cr_face_po_02'/>
+		<question id='2_cr_face_po_03'/>
+		<question id='2_cr_face_po_04'/>
+		<question id='2_cr_face_po_05'/>
+		<question id='2_cr_face_po_06'/>
+	</grille>
+	<grille id='2_po_sec'>
+		<question id='2_cr_po_sec_01'/>
+		<question id='2_cr_po_sec_02'/>
+		<question id='2_cr_po_sec_03'/>
+		<question id='2_cr_po_sec_04'/>
+		<question id='2_cr_po_sec_05'/>
+		<question id='2_cr_po_sec_06'/>
+		<question id='2_cr_po_sec_07'/>
+	</grille>
+	<grille id='2_quai_ext'>
+		<question id='2_qi_quai_ext_01' reponse='1'>
+			<question id='2_cr_quai_ext_01'/>
+			<question id='2_cr_quai_ext_02'/>
+			<question id='2_cr_quai_ext_03'/>
+			<question id='2_cr_quai_ext_04'/>
+			<question id='2_cr_quai_ext_05'/>
+		</question>
+		<question id='2_qi_quai_ext_01' reponse='2'>
+			<question id='2_cr_quai_ext_01' champ='mot_1' valeur='2' />
+		</question>
+		<question id='2_cr_quai_ext_06'/>
+		<question id='2_cr_quai_ext_07'/>
+		<question id='2_cr_quai_ext_08'/>
+		<question id='2_cr_quai_ext_09'/>
+		<question id='2_cr_quai_ext_10'/>
+		<question id='2_cr_quai_ext_11'/>
+	</grille>
+	<grille id='2_quai_in'>
+		<question id='2_qi_quai_in_01' reponse='1'>
+			<question id='2_cr_quai_in_01'/>
+			<question id='2_cr_quai_in_02'/>
+			<question id='2_cr_quai_in_03'/>
+			<question id='2_cr_quai_in_04'/>
+			<question id='2_cr_quai_in_05'/>
+		</question>
+		<question id='2_qi_quai_in_01' reponse='2'>
+			<question id='2_cr_quai_in_01' champ='mot_1' valeur='2' />
+		</question>
+		<question id='2_cr_quai_in_06'/>
+		<question id='2_cr_quai_in_07'/>
+		<question id='2_cr_quai_in_08'/>
+		<question id='2_cr_quai_in_09'/>
+		<question id='2_cr_quai_in_10'/>
+		<question id='2_cr_quai_in_11'/>
+	</grille>
+	<grille id='2_san'>
+		<question id='2_cr_san_01'/>
+		<question id='2_cr_san_02'/>
+		<question id='2_cr_san_03'/>
+		<question id='2_cr_san_04'/>
+		<question id='2_cr_san_05' reponse='1' >
+			<question id='2_cr_san_06'/>
+			<question id='2_cr_san_07'/>
+			<question id='2_cr_san_08'/>
+			<question id='2_cr_san_09'/>
+			<question id='2_cr_san_10'/>
+		</question>
+		<question id='2_cr_san_11'/>
+		<question id='2_cr_san_12'/>
+		<question id='2_cr_san_13'/>
+	</grille>
+	<grille id='2_sign'>
+		<question id='2_cr_sign_01'/>
+		<question id='2_cr_sign_02'/>
+		<question id='2_cr_sign_03'/>
+		<question id='2_cr_sign_04'/>
+		<question id='2_cr_sign_05'/>
+		<question id='2_cr_sign_06'/>
+		<question id='2_cr_sign_07'/>
+		<question id='2_cr_sign_08' reponse='1' >
+			<question id='2_cr_sign_09'/>
+		</question>	
+		<question id='2_cr_sign_10'/>
+		<question id='2_cr_sign_11'/>
+		<question id='2_cr_sign_12'/>
+		<question id='2_cr_sign_13'/>
+		<question id='2_cr_sign_14'/>
+		<question id='2_cr_sign_15'/>
+		<question id='2_cr_sign_16'/>
+		<question id='2_cr_sign_17'/>
+		<question id='2_cr_sign_18'/>
+		<question id='2_cr_sign_19'/>
+		<question id='2_cr_sign_20'/>
+		<question id='2_cr_sign_21'/>
+		<question id='2_cr_sign_22'/>
+		<question id='2_cr_sign_23'/>
+		<question id='2_cr_sign_24'/>
+	</grille>
+	<grille id='2_sol_ext'>
+		<question id='2_cr_sol_ext_01'/>
+		<question id='2_cr_sol_ext_02'/>
+		<question id='2_cr_sol_ext_03'/>
+		<question id='2_cr_sol_ext_04'/>
+		<question id='2_cr_sol_ext_07'/>
+		<question id='2_cr_sol_ext_08'/>
+		<question id='2_cr_sol_ext_05'/>
+		<question id='2_cr_sol_ext_06'/>
+		<question id='2_qi_sol_ext_01' reponse='1' >
+			<question id='2_cr_sol_ext_09'/>
+			<question id='2_cr_sol_ext_10'/>
+			<question id='2_cr_sol_ext_11'/>
+		</question>
+	</grille>
+	<grille id='2_sol'>
+		<question id='2_cr_sol_01'/>
+		<question id='2_cr_sol_02'/>
+		<question id='2_cr_sol_03'/>
+		<question id='2_cr_sol_04'/>
+		<question id='2_cr_sol_07'/>
+		<question id='2_cr_sol_08'/>
+		<question id='2_cr_sol_05'/>
+		<question id='2_cr_sol_06'/>
+		<question id='2_cr_sol_09'/>
+		<question id='2_cr_sol_10' reponse='1' >
+			<question id='2_cr_sol_12'/>
+		</question>
+		<question id='2_cr_sol_10' reponse='2' >
+			<question id='2_cr_sol_11'/>
+		</question>
+		<question id='2_qi_sol_01' reponse='1' >
+			<question id='2_cr_sol_13'/>
+			<question id='2_cr_sol_14'/>
+			<question id='2_cr_sol_15'/>
+		</question>
+		<question id='2_cr_sol_16'/>
+		<question id='2_cr_sol_17' reponse='1' >
+			<question id='2_cr_sol_18'/>
+			<question id='2_cr_sol_19'/>
+		</question>
+		<question id='2_cr_sol_20'/>
+		<question id='2_cr_sol_21'/>
+		<question id='2_cr_sol_22'/>
+		<question id='2_qi_sol_01' reponse='1' >
+			<question id='2_cr_sol_23'/>
+			<question id='2_cr_sol_24'/>
+			<question id='2_cr_sol_25'/>
+			<question id='2_cr_sol_26'/>
+			<question id='2_cr_sol_27'/>
+			<question id='2_cr_sol_28'/>
+			<question id='2_cr_sol_29'/>
+			<question id='2_cr_sol_30'/>
+		</question>
+	</grille>
+	<grille id='2_sor'>
+		<question id='2_cr_sor_01'/>
+		<question id='2_cr_sor_02'/>
+		<question id='2_cr_sor_03'/>
+		<question id='2_cr_sor_04'/>
+	</grille>
+	<grille id='2_wc'>
+		<question id='2_cr_wc_01' reponse='2' >
+			<question id='2_cr_wc_02'/>
+		</question>
+		<question id='2_cr_wc_03'/>
+		<question id='2_cr_wc_04'/>
+		<question id='2_cr_wc_05'/>
+		<question id='2_cr_wc_06'/>
+		<question id='2_cr_wc_07'/>
+		<question id='2_cr_wc_08'/>
+		<question id='2_cr_wc_09'/>
+		<question id='2_cr_wc_10' reponse='1' >
+			<question id='2_cr_wc_11'/>
+			<question id='2_cr_wc_12'/>
+			<question id='2_cr_wc_13'/>
+		</question>
+		<question id='2_cr_wc_14'/>
+		<question id='2_cr_wc_15'/>
+		<question id='2_cr_wc_16'/>
+		<question id='2_cr_wc_17'/>
+		<question id='2_cr_wc_18'/>
+		<question id='2_cr_wc_19'/>
+		<question id='2_cr_wc_20'/>
+		<question id='2_cr_wc_21'/>
+		<question id='2_cr_wc_22'/>
+	</grille>
+	<grille id='3_voirie_pente'>
+		<question id='3_cr_voirie_pente_01'/>
+		<question id='3_qi_voirie_pente_01' reponse='2' >
+			<question id='3_cr_voirie_pente_02' reponse='2'>
+				<question id='3_cr_voirie_pente_03' reponse='1'>
+					<question id='3_cr_voirie_pente_02' champ='mot_1' valeur='124' />
+				</question>
+				<question id='3_cr_voirie_pente_04' reponse='1'>
+					<question id='3_cr_voirie_pente_02' champ='mot_1' valeur='124' />
+					<question id='3_cr_voirie_pente_03' champ='mot_1' valeur='124' />
+				</question>
+			</question>
+			<question id='3_cr_voirie_pente_05' reponse='1' >
+				<question id='3_cr_voirie_pente_10'/>
+				<question id='3_cr_voirie_pente_11'/>
+			</question>
+			<question id='3_cr_voirie_pente_06' reponse='1' >
+				<question id='3_cr_voirie_pente_12'/>
+				<question id='3_cr_voirie_pente_13'/>
+			</question>
+		</question>
+		<question id='3_cr_voirie_pente_07' reponse='1' >
+			<question id='3_cr_voirie_pente_14'/>
+			<question id='3_cr_voirie_pente_15'/>
+		</question>
+		<question id='3_cr_voirie_pente_09' />
+		<question id='3_cr_voirie_pente_08' reponse='1'> 
+			<question id='3_cr_voirie_pente_14' />
+			<question id='3_cr_voirie_pente_15' />
+			<question id='3_cr_voirie_pente_16' />
+		</question>		
+	</grille>
+	<grille id='3_voirie_bus'>
+		<question id='3_cr_voirie_bus_07'/>
+		<question id='3_cr_voirie_bus_02'/>
+		<question id='3_cr_voirie_bus_01'/>
+		<question id='3_qi_voirie_bus_01' reponse='1' >
+			<question id='3_cr_voirie_bus_03' reponse='1' >
+				<question id='3_cr_voirie_bus_04'/>
+			</question>	
+			<question id='3_cr_voirie_bus_05'/>
+		</question>	
+		<question id='3_cr_voirie_bus_06'/>
+		<question id='3_cr_voirie_bus_08' reponse='1' >
+			<question id='3_cr_voirie_bus_09'/>
+		</question>	
+		<question id='3_cr_voirie_bus_10'/>
+		<question id='3_cr_voirie_bus_11'/>
+		<question id='3_cr_voirie_bus_12'/>
+		<question id='3_cr_voirie_bus_13'/>
+	</grille>
+	<grille id='3_voirie_chem'>
+		<question id='3_cr_voirie_chem_01'/>
+		<question id='3_cr_voirie_chem_02'/>
+		<question id='3_cr_voirie_chem_03'/>
+		<question id='3_cr_voirie_chem_06'/>
+		<question id='3_cr_voirie_chem_08'/>
+		<question id='3_cr_voirie_chem_07'/>
+		<question id='3_qi_voirie_chem_01' reponse='1' >
+			<question id='3_cr_voirie_chem_04'/>
+			<question id='3_cr_voirie_chem_05'/>
+		</question>
+		<question id='3_qi_voirie_chem_02' reponse='1' >
+			<question id='3_cr_voirie_chem_09'/>
+			<question id='3_cr_voirie_chem_10'/>
+			<question id='3_cr_voirie_chem_11'/>
+		</question>
+	</grille>
+	<grille id='3_voirie_ressaut'>
+		<question id='3_cr_voirie_ressaut_01' reponse='2' >
+			<question id='3_cr_voirie_ressaut_02' reponse='1'>
+				<question id='3_cr_voirie_ressaut_01' champ='mot_1' valeur='124' />
+			</question>
+		</question>
+		<question id='3_cr_voirie_ressaut_03'/>
+		<question id='3_cr_voirie_ressaut_04'/>
+	</grille>
+	<grille id='3_voirie_equip'>
+		<question id='3_cr_voirie_equip_06' reponse='1' >
+			<question id='3_cr_voirie_equip_07'/>
+		</question>
+		<question id='3_cr_voirie_equip_09'/>
+		<question id='3_cr_voirie_equip_10'/>
+		<question id='3_cr_voirie_equip_02' reponse='1' >
+			<question id='3_cr_voirie_equip_03' reponse='1' >
+				<question id='3_cr_voirie_equip_04'/>
+				<question id='3_cr_voirie_equip_05'/>
+			</question>
+		</question>
+		<question id='3_qi_voirie_equip_01' reponse='1' >
+			<question id='3_cr_voirie_equip_11'/>
+			<question id='3_cr_voirie_equip_12'/>
+			<question id='3_cr_voirie_equip_13' reponse='1' >
+				<question id='3_cr_voirie_equip_14'/>
+			</question>
+			<question id='3_cr_voirie_equip_15'/>
+			<question id='3_cr_voirie_equip_16'/>
+			<question id='3_cr_voirie_equip_17'/>
+			<question id='3_cr_voirie_equip_18'/>
+		</question>
+		<question id='3_cr_voirie_equip_01'/>
+		<question id='3_cr_voirie_equip_08'/>
+	</grille>
+	<grille id='3_voirie_esca'>
+		<question id='3_cr_voirie_esca_22'/>
+		<question id='3_cr_voirie_esca_01'/>
+		<question id='3_cr_voirie_esca_02'/>
+		<question id='3_cr_voirie_esca_03'/>
+		<question id='3_cr_voirie_esca_04'/>
+		<question id='3_cr_voirie_esca_05'/>
+		<question id='3_cr_voirie_esca_06'/>
+		<question id='3_cr_voirie_esca_11'/>
+		<question id='3_cr_voirie_esca_24'/>
+		<question id='3_cr_voirie_esca_08'/>
+		<question id='3_cr_voirie_esca_07'/>
+		<question id='3_cr_voirie_esca_23'/>
+		<question id='3_cr_voirie_esca_09'/>
+		<question id='3_qi_voirie_esca_01' reponse='1'>
+			<question id='3_cr_voirie_esca_12' reponse='1'>
+				<question id='3_cr_voirie_esca_13'/>
+				<question id='3_cr_voirie_esca_16'/>
+				<question id='3_cr_voirie_esca_19'/>
+				<question id='3_cr_voirie_esca_31'/>
+				<question id='3_cr_voirie_esca_32'/>
+				<question id='3_cr_voirie_esca_33'/>
+			</question>
+		</question>
+		<question id='3_cr_voirie_esca_10' reponse='1'>
+			<question id='3_cr_voirie_esca_37' reponse='1'>
+				<question id='3_cr_voirie_esca_15'/>
+				<question id='3_cr_voirie_esca_18'/>
+				<question id='3_cr_voirie_esca_21'/>
+				<question id='3_cr_voirie_esca_25'/>
+				<question id='3_cr_voirie_esca_26'/>
+				<question id='3_cr_voirie_esca_27'/>
+			</question>
+			<question id='3_cr_voirie_esca_38' reponse='1'>
+				<question id='3_cr_voirie_esca_14'/>
+				<question id='3_cr_voirie_esca_17'/>
+				<question id='3_cr_voirie_esca_20'/>
+				<question id='3_cr_voirie_esca_28'/>
+				<question id='3_cr_voirie_esca_29'/>
+				<question id='3_cr_voirie_esca_30'/>
+			</question>
+			<question id='3_cr_voirie_esca_34'/>
+			<question id='3_cr_voirie_esca_35'/>
+		</question>
+		<question id='3_cr_voirie_esca_10' reponse='2'>
+			<question id='3_cr_voirie_esca_37' champ='mot_1' valeur='2' />
+			<question id='3_cr_voirie_esca_38' champ='mot_1' valeur='2' />
+			<question id='3_cr_voirie_esca_10' champ='mot_1' valeur='124' />
+			<question id='3_cr_voirie_esca_12' reponse='1'>
+				<question id='3_cr_voirie_esca_13'/>
+				<question id='3_cr_voirie_esca_16'/>
+				<question id='3_cr_voirie_esca_19'/>
+				<question id='3_cr_voirie_esca_31'/>
+				<question id='3_cr_voirie_esca_32'/>
+				<question id='3_cr_voirie_esca_33'/>
+				<question id='3_cr_voirie_esca_37' champ='mot_1' valeur='124' />
+				<question id='3_cr_voirie_esca_38' champ='mot_1' valeur='124' />
+			</question>
+		</question>
+		<question id='3_cr_voirie_esca_36'/>
+	</grille>		
+	<grille id='3_voirie_pieton'>
+		<question id='3_qi_voirie_pieton_01' reponse='1'>
+			<question id='3_cr_voirie_pieton_01'/>
+			<question id='3_cr_voirie_pieton_02' reponse='1'>
+				<question id='3_cr_voirie_pieton_03'/>
+			</question>
+			<question id='3_cr_voirie_pieton_04'/>
+			<question id='3_cr_voirie_pieton_05' reponse='2'>
+				<question id='3_cr_voirie_pieton_06' reponse='1'>
+					<question id='3_cr_voirie_pieton_05' champ='mot_1' valeur='124' />
+				</question>
+				<question id='3_cr_voirie_pieton_07' reponse='1'>
+					<question id='3_cr_voirie_pieton_05' champ='mot_1' valeur='124' />
+				</question>
+			</question>
+			<question id='3_cr_voirie_pieton_08' reponse='2'>
+				<question id='3_cr_voirie_pieton_09' reponse='1' >
+					<question id='3_cr_voirie_pieton_08' champ='mot_1' valeur='124' />
+				</question>
+			</question>
+			<question id='3_cr_voirie_pieton_10'/>
+			<question id='3_cr_voirie_pieton_11'/>
+		</question>
+		<question id='3_cr_voirie_pieton_12' reponse='1'>
+			<question id='3_cr_voirie_pieton_13'/>
+			<question id='3_cr_voirie_pieton_14'/>
+			<question id='3_cr_voirie_pieton_19'/>
+		</question>
+		<question id='3_cr_voirie_pieton_15'/>
+		<question id='3_cr_voirie_pieton_16'/>
+		<question id='3_cr_voirie_pieton_17'/>
+		<question id='3_cr_voirie_pieton_18'/>
+	</grille>
+	<grille id='3_voirie_gic'>
+		<question id='3_cr_voirie_gic_02'/>
+		<question id='3_cr_voirie_gic_03'/>
+		<question id='3_cr_voirie_gic_04' reponse='1'>
+			<question id='3_cr_voirie_gic_06'/>
+		</question>
+		<question id='3_cr_voirie_gic_05'/>
+		<question id='3_cr_voirie_gic_07' reponse='1'>
+			<question id='3_cr_voirie_gic_08'/>
+		</question>
+		<question id='3_cr_voirie_gic_09'/>
+		<question id='3_cr_voirie_gic_10'/>
+		<question id='3_cr_voirie_gic_11'/>
+		<question id='3_qi_gic_01' reponse='1'>
+			<question id='3_cr_voirie_gic_01'/>
+		</question>
+		<question id='3_cr_voirie_gic_12'/>
+		<question id='3_qi_gic_02' reponse='1'>
+			<question id='3_cr_voirie_gic_14'/>
+			<question id='3_cr_voirie_gic_15'/>
+		</question>
+		<question id='3_cr_voirie_gic_13'/>
+	</grille>
+	<grille id='3_voirie_signal'>
+		<question id='3_cr_voirie_signal_01'/>
+		<question id='3_cr_voirie_signal_02'/>
+		<question id='3_cr_voirie_signal_03'/>
+		<question id='3_cr_voirie_signal_04'/>
+		<question id='3_cr_voirie_signal_05'/>
+		<question id='3_cr_voirie_signal_06'/>
+		<question id='3_cr_voirie_signal_07'/>
+		<question id='3_cr_voirie_signal_08'/>
+	</grille>
+</questionnaire>

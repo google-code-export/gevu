@@ -1,0 +1,57 @@
+<!-- a:2:{s:11:"process_ins";s:4:"html";s:7:"entetes";a:0:{}} -->
+<div class="formulaire_spip formulaire_menu_lang">
+<a name="formulaire_menu_lang" id="formulaire_menu_lang"></a>
+
+<form method="post" action="http://localhost/gevu/trouville/spip/spip.php?action=cookie&amp;url=%2Fgevu%2Ftrouville%2Fspip%2Fspip.php%3Fpage%3Dlogin%26url%3Decrire%252F%253Fexec%253Dtables_tous">
+	
+<input name='action' value='cookie' type='hidden' />
+<input name='url' value='/gevu/trouville/spip/spip.php?page=login&amp;url=ecrire%2F%3Fexec%3Dtables_tous' type='hidden' />
+	<label for="var_lang_ecrire">Langues du site</label>
+	<select class="forml" name="var_lang_ecrire" id="var_lang_ecrire" onchange="document.location.href='http://localhost/gevu/trouville/spip/spip.php?action=cookie&amp;url=%2Fgevu%2Ftrouville%2Fspip%2Fspip.php%3Fpage%3Dlogin%26url%3Decrire%252F%253Fexec%253Dtables_tous&amp;var_lang_ecrire='+this.options[this.selectedIndex].value">
+	<option class='maj-debut' value='ar'>&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</option>
+<option class='maj-debut' value='bg'>&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;</option>
+<option class='maj-debut' value='br'>brezhoneg</option>
+<option class='maj-debut' value='bs'>bosanski</option>
+<option class='maj-debut' value='ca'>catal&#224;</option>
+<option class='maj-debut' value='cpf'>Kr&#233;ol r&#233;yon&#233;</option>
+<option class='maj-debut' value='cpf_hat'>Kr&#233;y&#242;l (P&#233;yi Dayiti)</option>
+<option class='maj-debut' value='cs'>&#269;e&#353;tina</option>
+<option class='maj-debut' value='da'>dansk</option>
+<option class='maj-debut' value='de'>Deutsch</option>
+<option class='maj-debut' value='en'>English</option>
+<option class='maj-debut' value='eo'>Esperanto</option>
+<option class='maj-debut' value='es'>Espa&#241;ol</option>
+<option class='maj-debut' value='eu'>euskara</option>
+<option class='maj-debut' value='fa'>&#1601;&#1575;&#1585;&#1587;&#1609;</option>
+<option class='maj-debut' value='fon'>fongb&#232;</option>
+<option class='maj-debut' value='fr' selected='selected'>fran&#231;ais</option>
+<option class='maj-debut' value='gl'>galego</option>
+<option class='maj-debut' value='hu'>magyar</option>
+<option class='maj-debut' value='it'>italiano</option>
+<option class='maj-debut' value='it_fem'>italiana</option>
+<option class='maj-debut' value='ja'>&#26085;&#26412;&#35486;</option>
+<option class='maj-debut' value='lb'>L&#235;tzebuergesch</option>
+<option class='maj-debut' value='nl'>Nederlands</option>
+<option class='maj-debut' value='oc_auv'>&#242;c auvernhat</option>
+<option class='maj-debut' value='oc_gsc'>&#242;c gascon</option>
+<option class='maj-debut' value='oc_lms'>&#242;c lemosin</option>
+<option class='maj-debut' value='oc_lnc'>&#242;c lengadocian</option>
+<option class='maj-debut' value='oc_ni'>&#242;c ni&#231;ard</option>
+<option class='maj-debut' value='oc_ni_la'>&#242;c ni&#231;ard (larg)</option>
+<option class='maj-debut' value='oc_prv'>&#242;c proven&#231;au</option>
+<option class='maj-debut' value='oc_va'>&#242;c vivaroaupenc</option>
+<option class='maj-debut' value='pl'>polski</option>
+<option class='maj-debut' value='pt'>Portugu&#234;s</option>
+<option class='maj-debut' value='pt_br'>Portugu&#234;s do Brasil</option>
+<option class='maj-debut' value='ro'>rom&#226;n&#259;</option>
+<option class='maj-debut' value='ru'>&#1088;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
+<option class='maj-debut' value='tr'>T&#252;rk&#231;e</option>
+<option class='maj-debut' value='vi'>Ti&#7871;ng Vi&#7879;t</option>
+<option class='maj-debut' value='zh'>&#20013;&#25991;</option>
+</select>
+	<noscript>
+		<input type="submit" value="&gt;&gt;" />
+	</noscript>
+</form>
+
+</div>

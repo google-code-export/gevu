@@ -1,0 +1,53 @@
+<!-- a:2:{s:11:"process_ins";s:4:"html";s:7:"entetes";a:0:{}} -->
+
+
+
+<div class="rubriques">
+	<h2 class="menu-titre">Rubriques</h2>
+	<ul>
+	
+		<li>
+			<a href="spip.php?rubrique5470">Chaine de déplacement</a>
+
+			
+
+		</li>
+	
+		<li>
+			<a href="spip.php?rubrique45">Etablissement</a>
+
+			
+
+		</li>
+	
+		<li>
+			<a href="spip.php?rubrique5479">France</a>
+
+			
+
+		</li>
+	
+		<li>
+			<a href="spip.php?rubrique5419">Ligne de transport</a>
+
+			
+
+		</li>
+	
+		<li>
+			<a href="spip.php?rubrique5443">Territoires</a>
+
+			
+
+		</li>
+	
+		<li>
+			<a href="spip.php?rubrique673">Voirie</a>
+
+			
+
+		</li>
+	
+
+	</ul>
+</div>

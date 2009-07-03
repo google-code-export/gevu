@@ -1,0 +1,62 @@
+<!-- a:2:{s:11:"process_ins";s:4:"html";s:7:"entetes";a:3:{s:12:"X-Spip-Cache";s:1:"0";s:13:"Cache-Control";s:35:"no-store, no-cache, must-revalidate";s:6:"Pragma";s:8:"no-cache";}} -->
+
+	<link rel="stylesheet" type="text/css" href="../plugins/grilles/img_pack/donnees_tous.css" />
+	<script type="text/javascript" src="../plugins/grilles/javascript/jquery.tablesorter.dev.js"></script>
+
+<div class='liste'>
+<div style='position: relative;'>
+	<div style='position: absolute; top: -12px; left: 3px;'><img src='../plugins/grilles/img_pack/-24.png' alt="" /></div>
+	<div style='background-color: #C0CAD4; color: black; padding: 3px; padding-left: 30px; border-bottom: 1px solid #444444;' class='verdana2'>
+	<b>Tous les formulaires</b>
+	</div>
+</div>
+<table class="arial11 donnees" id='donnees' width='auto' cellpadding='5' cellspacing='0' border='0'>
+<thead>
+	<tr>
+		<th class='neutre'></th>
+		<th class='neutre'>id</th>
+		<th>Rang</th>
+		<th>Date</th>
+		<th>De</th>
+		<th>Page</th>
+		
+		<th class="neutre">Référence</th>
+		
+		<th class="neutre">Question</th>
+		
+		<th class="neutre">Réponse</th>
+		
+		<th class="neutre">Identifiant de la donnée de contrôle</th>
+		
+		 <th class='neutre'>&nbsp;</th>
+	</tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+</div>
+
+	<script type="text/javascript"><!--
+	var search_string='Chercher';
+	var clear_string='Tout afficher';
+	var apply_string='Valider';
+	$(document).ready(function() {
+		$("table#donnees").tableSorter({
+		  
+			sortClassAsc: 'headerSortUp', 		// class name for ascending sorting action to header
+			sortClassDesc: 'headerSortDown',	// class name for descending sorting action to header
+			headerClass: 'header', 				// class name for headers (th's)
+		
+			disableHeader: [0,1,6,7,8,9,10], // disable column can be a string / number or array containing string or number. 
+			dateFormat: 'dd/mm/yyyy' // set date format for non iso dates default us, in this case override and set uk-format
+		});
+		$("div#sorting").hide();
+	});
+	$(document).sortStart(function(){
+		$("div#sorting").show();
+	}).sortStop(function(a){
+		$("div#sorting").hide();
+	});
+	// -->
+	</script>	

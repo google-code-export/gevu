@@ -1,0 +1,45 @@
+Mon Dec 08 15:04:04 CET 2008  [debug] AvalonLogSystem initialized using logfile 'velocity.log'
+Mon Dec 08 15:04:04 CET 2008   [info] ************************************************************** 
+Mon Dec 08 15:04:04 CET 2008   [info] Starting Jakarta Velocity v1.4
+Mon Dec 08 15:04:04 CET 2008   [info] RuntimeInstance initializing.
+Mon Dec 08 15:04:04 CET 2008   [info] Default Properties File: org\apache\velocity\runtime\defaults\velocity.properties
+Mon Dec 08 15:04:04 CET 2008   [info] Trying to use logger class org.apache.velocity.runtime.log.AvalonLogSystem
+Mon Dec 08 15:04:04 CET 2008   [info] Using logger class org.apache.velocity.runtime.log.AvalonLogSystem
+Mon Dec 08 15:04:04 CET 2008   [info] Default ResourceManager initializing. (class org.apache.velocity.runtime.resource.ResourceManagerImpl)
+Mon Dec 08 15:04:04 CET 2008   [info] Resource Loader Instantiated: com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:04 CET 2008   [info] FileResourceLoader : initialization complete.
+Mon Dec 08 15:04:04 CET 2008   [info] Resource Loader Instantiated: com.adobe.flexbuilder.tengine.StringResourceLoader
+Mon Dec 08 15:04:04 CET 2008   [info] ResourceCache : initialized. (class org.apache.velocity.runtime.resource.ResourceCacheImpl)
+Mon Dec 08 15:04:04 CET 2008   [info] Default ResourceManager initialization complete.
+Mon Dec 08 15:04:04 CET 2008   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Literal
+Mon Dec 08 15:04:04 CET 2008   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Macro
+Mon Dec 08 15:04:04 CET 2008   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Parse
+Mon Dec 08 15:04:04 CET 2008   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Include
+Mon Dec 08 15:04:04 CET 2008   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Foreach
+Mon Dec 08 15:04:04 CET 2008   [info] Created: 20 parsers.
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : initialization starting.
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : adding VMs from VM library template : /C:/Program Files/Adobe/Flex Builder 3 Plug-in/eclipse/plugins/com.adobe.flexbuilder.tengine_3.0.214193/templates/macros/basic.vm
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : added new VM : #basicListArgs( arguments ) : source = /C:/Program Files/Adobe/Flex Builder 3 Plug-in/eclipse/plugins/com.adobe.flexbuilder.tengine_3.0.214193/templates/macros/basic.vm
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : added new VM : #showIfNotEmpty( value string ) : source = /C:/Program Files/Adobe/Flex Builder 3 Plug-in/eclipse/plugins/com.adobe.flexbuilder.tengine_3.0.214193/templates/macros/basic.vm
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : added new VM : #dotPackage( value ) : source = /C:/Program Files/Adobe/Flex Builder 3 Plug-in/eclipse/plugins/com.adobe.flexbuilder.tengine_3.0.214193/templates/macros/basic.vm
+Mon Dec 08 15:04:04 CET 2008   [info] ResourceManager : found /C:/Program Files/Adobe/Flex Builder 3 Plug-in/eclipse/plugins/com.adobe.flexbuilder.tengine_3.0.214193/templates/macros/basic.vm with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro :  VM library template macro registration complete.
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : allowInline = true : VMs can be defined inline in templates
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : allowInlineToOverride = false : VMs defined inline may NOT replace previous VM definitions
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : allowInlineLocal = false : VMs defined inline will be  global in scope if allowed.
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : messages on  : VM system will output logging messages
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : autoload off  : VM system will not automatically reload global library macros
+Mon Dec 08 15:04:04 CET 2008   [info] Velocimacro : initialization complete.
+Mon Dec 08 15:04:04 CET 2008   [info] Velocity successfully started.
+Mon Dec 08 15:04:04 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/gen_fld/folderProps.properties with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:04 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/gen_fld/bridge.vm with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:04 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/gen_fld/export.vm with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:05 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/gen_fld/wrapper.vm with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:05 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/main_src/folderProps.properties with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:05 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/main_src/bridge.vm with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:10 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/gen_fld/folderProps.properties with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:10 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/gen_fld/bridge.vm with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:10 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/gen_fld/export.vm with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:10 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/gen_fld/wrapper.vm with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:10 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/main_src/folderProps.properties with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader
+Mon Dec 08 15:04:10 CET 2008   [info] ResourceManager : found C:/Users/samszo/Documents/eclipse/configuration/org.eclipse.osgi/bundles/524/1/.cp/templates/main_src/bridge.vm with loader com.adobe.flexbuilder.tengine.AbsoluteFileResourceLoader

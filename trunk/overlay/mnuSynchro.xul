@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<overlay id="ovmnuSynchro"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<popupset >
+		<popup id="mnuSynchro" onpopupshowing="javascript:;">
+			<menuitem label="Synchroniser tout l'arbre" oncommand="SynchroTree('arbre',document.getElementById('idRub').value);"/>
+			<menuitem label="Synchroniser cette branche" oncommand="SynchroTree('branche',document.getElementById('idRub').value);"/>
+		    <menu label="Synchroniser" hidden="true">
+		      <menupopup >
+			    <menu label="local->serveur">
+			      <menupopup >
+					<menuitem label="L'élément en cours" oncommand="SynchroTree('CompareLocalServeur',document.getElementById('idRub').value);"/>
+					<menuitem label="Mes saisies" oncommand="SynchroTree();"/>
+			      </menupopup>
+			    </menu>
+			    <menu label="serveur->local">
+			      <menupopup >
+					<menuitem label="Les contrôles" oncommand="SynchroTree(80);"/>
+					<menuitem label="L'élément en cours" oncommand="SynchroTree('CompareServeurLocal',document.getElementById('idRub').value);"/>
+			      </menupopup>
+			    </menu>
+		      </menupopup>
+		    </menu>
+
+		</popup>
+	</popupset>
+</overlay>
