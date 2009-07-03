@@ -1,0 +1,158 @@
+<!-- a:3:{s:8:"contexte";a:1:{s:9:"id_groupe";i:21;}s:11:"process_ins";s:4:"html";s:7:"entetes";a:0:{}} -->
+
+	
+	<ul class="choix_mots">
+		<li>
+			<input type="checkbox" name="mot_1[]" id="mot35" value="35" 
+			 />
+			<label for="mot35">Accueil</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot39" value="39" 
+			 />
+			<label for="mot39">Aire de stationnement</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot125" value="125" 
+			 />
+			<label for="mot125">Cabine ascenseur</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot41" value="41" 
+			 />
+			<label for="mot41">Cheminement exterieur</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot42" value="42" 
+			 />
+			<label for="mot42">Commandes</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot145" value="145" 
+			 />
+			<label for="mot145">Douche</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot43" value="43" 
+			 />
+			<label for="mot43">Eclairage</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot45" value="45" 
+			 />
+			<label for="mot45">Entrée</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot179" value="179" 
+			 />
+			<label for="mot179">Equipement</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot44" value="44" 
+			 />
+			<label for="mot44">ERP Assis</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot36" value="36" 
+			 />
+			<label for="mot36">Escalier</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot149" value="149" 
+			 />
+			<label for="mot149">Escalier mécanique</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot53" value="53" 
+			 />
+			<label for="mot53">Face des portes</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot126" value="126" 
+			 />
+			<label for="mot126">Palier ascenseur</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot46" value="46" 
+			 />
+			<label for="mot46">Pentes ressauts</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot47" value="47" 
+			 />
+			<label for="mot47">Place GIC</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot37" value="37" 
+			 />
+			<label for="mot37">Porte</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot180" value="180" 
+			 />
+			<label for="mot180">Porte de secours</label></li>
+	    
+	</ul>
+	
+	
+	<ul class="choix_mots">
+		<li>
+			<input type="checkbox" name="mot_1[]" id="mot148" value="148" 
+			 />
+			<label for="mot148">Quai extérieur</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot147" value="147" 
+			 />
+			<label for="mot147">Quai intérieur</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot48" value="48" 
+			 />
+			<label for="mot48">Sanitaire</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot49" value="49" 
+			 />
+			<label for="mot49">Signalétique</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot117" value="117" 
+			 />
+			<label for="mot117">Sol extérieur</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot50" value="50" 
+			 />
+			<label for="mot50">Sols Murs Plafonds</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot51" value="51" 
+			 />
+			<label for="mot51">Sortie</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot119" value="119" 
+			 />
+			<label for="mot119">Voirie</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot129" value="129" 
+			 />
+			<label for="mot129">Voirie bus</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot130" value="130" 
+			 />
+			<label for="mot130">Voirie cheminement</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot131" value="131" 
+			 />
+			<label for="mot131">Voirie équipement</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot132" value="132" 
+			 />
+			<label for="mot132">Voirie escalier</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot133" value="133" 
+			 />
+			<label for="mot133">Voirie passage piétons</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot215" value="215" 
+			 />
+			<label for="mot215">Voirie Pente</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot134" value="134" 
+			 />
+			<label for="mot134">Voirie place GIC</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot216" value="216" 
+			 />
+			<label for="mot216">Voirie Ressaut</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot135" value="135" 
+			 />
+			<label for="mot135">Voirie signalétique</label></li>
+	    <li>
+			<input type="checkbox" name="mot_1[]" id="mot52" value="52" 
+			 />
+			<label for="mot52">WC</label></li>
+	    
+	</ul>
+	
+
+<br class="nettoyeur" />

@@ -1,0 +1,82 @@
+#CACHE{0}
+#SET{colonnes_sans_tri,'0,1'}<BOUCLE_form(FORMS){id_form}>#SET{documents,#DOCUMENTS|=={oui}|?{' '}}</BOUCLE_form>
+	<link rel="stylesheet" type="text/css" href="#EVAL{_DIR_PLUGIN_FORMS}img_pack/donnees_tous.css" />
+	<script type="text/javascript" src="#EVAL{_DIR_PLUGIN_FORMS}javascript/jquery.tablesorter.dev.js"></script>
+<B_head>
+<div class='liste'>
+<div style='position: relative;'>
+	<div style='position: absolute; top: -12px; left: 3px;'><img src='#EVAL{_DIR_PLUGIN_FORMS}img_pack/#TYPE_FORM-24.png' alt="" /></div>
+	<div style='background-color: #ENV{couleur_claire}; color: black; padding: 3px; padding-left: 30px; border-bottom: 1px solid #444444;' class='verdana2'>
+	<b><:forms:tous_formulaires:></b>
+	</div>
+</div>
+<table class="arial11 donnees" id='donnees' width='auto' cellpadding='5' cellspacing='0' border='0'>
+<thead>
+	<tr>
+		<th class='neutre'></th>
+		<th class='neutre'>id</th>
+		<th>Rang</th>
+		<th>Date</th>
+		<th>De</th>
+		<th>Page</th>
+		<BOUCLE_head(FORMS_CHAMPS){id_form}{type !IN (separateur,textestatique)}{tout}{par rang}>
+		<th [(#SPECIFIANT|=={oui}|?{'','class="neutre"'})#SET{colonnes_sans_tri,#GET{colonnes_sans_tri}|concat{','}|concat{#COMPTEUR_BOUCLE|plus{5}}]>#TITRE</th>
+		</BOUCLE_head>
+		#SET{colonnes_sans_tri,#GET{colonnes_sans_tri}|concat{','}|concat{#TOTAL_BOUCLE|plus{6}}}
+		[(#GET{documents})<th class='neutre'>&nbsp;</th>]
+	</tr>
+</thead>
+<tbody>
+<BOUCLE_donnees(FORMS_DONNEES){id_form}{statut!=poubelle}{par rang}>
+#SET{lien_supp,#URL_ACTION_AUTEUR{forms_donnee_supprime,#ID_FORM:#ID_DONNEE,#EVAL{_DIR_RESTREINT_ABS}|concat{#SELF}|urlencode}}
+#SET{lien_edit,#URL_ECRIRE{donnees_edit,id_form=#ID_FORM}|parametre_url{id_donnee,#ID_DONNEE}|parametre_url{retour,#SELF} }
+	<tr class='tr_liste'>
+		<td>[(#ID_DONNEE|forms_puce_statut_donnee{#STATUT,#ID_FORM})]</td>
+		<td><a href='#GET{lien_edit}'>#ID_DONNEE</a></td>
+		<td>#RANG</td>
+		<td>#DATE</td>
+		<td><BOUCLE_auteur(AUTEURS){id_auteur}>#NOM</BOUCLE_auteur>#IP<//B_auteur></th>
+		<td>#URL</td>
+		<BOUCLE_body(FORMS_CHAMPS){id_form}{tout}{type !IN (separateur,textestatique)}{par rang}>
+		<td>
+
+		<BOUCLE_rep(FORMS_DONNEES_CHAMPS){id_donnee}{champ}{tout}{'<br />'}>#VALEUR</BOUCLE_rep>
+
+		</td>
+		</BOUCLE_body>
+		[(#GET{documents})<td>]
+		<BOUCLE_docs(DOCUMENTS){id_donnee}{0,1}>
+		[(#GET{documents}|?{'',' '})<td>]
+		<a href='#GET{lien_edit}'>#SET{src,#EVAL{_DIR_IMG_PACK}|concat{attachment.gif}}<img src='#GET{src}' largeur='' hauteur='' alt='<:titre_documents_joints:>' /></a>
+		[(#GET{documents}|?{'',' '})</td>]
+		</BOUCLE_docs>
+		[(#GET{documents})</td>]
+	</tr>
+</BOUCLE_donnees>
+</tbody>
+</table>
+</div>
+</B_head>
+	<script type="text/javascript"><!--
+	var search_string='<:bouton_chercher:>';
+	var clear_string='<:info_tout_afficher:>';
+	var apply_string='<:bouton_valider:>';
+	$(document).ready(function() {
+		$("table#donnees").tableSorter({
+		  
+			sortClassAsc: 'headerSortUp', 		// class name for ascending sorting action to header
+			sortClassDesc: 'headerSortDown',	// class name for descending sorting action to header
+			headerClass: 'header', 				// class name for headers (th's)
+		
+			disableHeader: [#GET{colonnes_sans_tri}], // disable column can be a string / number or array containing string or number. 
+			dateFormat: 'dd/mm/yyyy' // set date format for non iso dates default us, in this case override and set uk-format
+		});
+		$("div#sorting").hide();
+	});
+	$(document).sortStart(function(){
+		$("div#sorting").show();
+	}).sortStop(function(a){
+		$("div#sorting").hide();
+	});
+	// -->
+	</script>	

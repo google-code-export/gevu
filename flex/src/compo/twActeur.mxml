@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="400" height="300"
+	title="Liste des diagnostics" showCloseButton="true"
+	close="PopUpManager.removePopUp(this);"  
+		>
+	<mx:Script>
+        <![CDATA[
+	       	import mx.managers.PopUpManager;
+			import mx.managers.CursorManager;
+        ]]>
+    </mx:Script>
+	<mx:Label x="10" y="10" text="Label"/>
+	<mx:Label x="10" y="36" text="Label"/>
+	<mx:Label x="53" y="10" text="Label"/>
+	<mx:Label x="53" y="36" text="Label"/>
+            	
+</mx:TitleWindow>

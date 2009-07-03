@@ -1,0 +1,56 @@
+Jul 03 10:23:28 127.0.0.1 (pid 2712) Creation du cache e/ech-log-log-log-ecr-fr.4e087042 pour 1 secondes
+Jul 03 10:23:33 127.0.0.1 (pid 2712) calcul (0.08s) [dist/login] login, ecrire/?exec=naviguer&amp;id_rubrique=6264, 2009-07-03 10:23:33, 2009-07-03 10:23:33 (2351 octets)
+Jul 03 10:23:33 127.0.0.1 (pid 2712) calcul (0.01s) [formulaires/formulaire_menu_lang] var_lang_ecrire, http://localhost/gevu/trouville/spip/spip.php?action=cookie&amp;url=%2Fgevu%2Ftrouville%2Fspip%2Fspip.php%3Fpage%3Dlogin%26url%3Decrire%252F%253Fexec%253Dnaviguer%2526id_rubrique%253D6264, &lt;option class='maj-debut' value='ar'&gt;&amp;#1575;&amp;#1604;&amp;#1593;&amp;#1585;&amp;#1576;&amp;#1610;&amp;#1577;&lt;/option&gt;
+&lt;option class='maj-debut' value='bg'&gt;&amp;#1073;&amp;#1098;&amp;#1083;&amp;#1075;&amp;#1072;&amp;#1088;&amp;#1089;&amp;#1082;&amp;#1080;&lt;/option&gt;
+&lt;option class='maj-debut' value='br'&gt;brezhoneg&lt;/option&gt;
+&lt;option class='maj-debut' value='bs'&gt;bosanski&lt;/option&gt;
+&lt;option class='maj-debut' value='ca'&gt;catal&amp;#224;&lt;/option&gt;
+&lt;option class='maj-debut' value='cpf'&gt;Kr&amp;#233;ol r&amp;#233;yon&amp;#233;&lt;/option&gt;
+&lt;option class='maj-debut' value='cpf_hat'&gt;Kr&amp;#233;y&amp;#242;l (P&amp;#233;yi Dayiti)&lt;/option&gt;
+&lt;option class='maj-debut' value='cs'&gt;&amp;#269;e&amp;#353;tina&lt;/option&gt;
+&lt;option class='maj-debut' value='da'&gt;dansk&lt;/option&gt;
+&lt;option class='maj-debut' value='de'&gt;Deutsch&lt;/option&gt;
+&lt;option class='maj-debut' value='en'&gt;English&lt;/option&gt;
+&lt;option class='maj-debut' value='eo'&gt;Esperanto&lt;/option&gt;
+&lt;option class='maj-debut' value='es'&gt;Espa&amp;#241;ol&lt;/option&gt;
+&lt;option class='maj-debut' value='eu'&gt;euskara&lt;/option&gt;
+&lt;option class='maj-debut' value='fa'&gt;&amp;#1601;&amp;#1575;&amp;#1585;&amp;#1587;&amp;#1609;&lt;/option&gt;
+&lt;option class='maj-debut' value='fon'&gt;fongb&amp;#232;&lt;/option&gt;
+&lt;option class='maj-debut' value='fr' selected='selected'&gt;fran&amp;#231;ais&lt;/option&gt;
+&lt;option class='maj-debut' value='gl'&gt;galego&lt;/option&gt;
+&lt;option class='maj-debut' value='hu'&gt;magyar&lt;/option&gt;
+&lt;option class='maj-debut' value='it'&gt;italiano&lt;/option&gt;
+&lt;option class='maj-debut' value='it_fem'&gt;italiana&lt;/option&gt;
+&lt;option class='maj-debut' value='ja'&gt;&amp;#26085;&amp;#26412;&amp;#35486;&lt;/option&gt;
+&lt;option class='maj-debut' value='lb'&gt;L&amp;#235;tzebuergesch&lt;/option&gt;
+&lt;option class='maj-debut' value='nl'&gt;Nederlands&lt;/option&gt;
+&lt;option class='maj-debut' value='oc_auv'&gt;&amp;#242;c auvernhat&lt;/option&gt;
+&lt;option class='maj-debut' value='oc_gsc'&gt;&amp;#242;c gascon&lt;/option&gt;
+&lt;option class='maj-debut' value='oc_lms'&gt;&amp;#242;c lemosin&lt;/option&gt;
+&lt;option class='maj-debut' value='oc_lnc'&gt;&amp;#242;c lengadocian&lt;/option&gt;
+&lt;option class='maj-debut' value='oc_ni'&gt;&amp;#242;c ni&amp;#231;ard&lt;/option&gt;
+&lt;option class='maj-debut' value='oc_ni_la'&gt;&amp;#242;c ni&amp;#231;ard (larg)&lt;/option&gt;
+&lt;option class='maj-debut' value='oc_prv'&gt;&amp;#242;c proven&amp;#231;au&lt;/option&gt;
+&lt;option class='maj-debut' value='oc_va'&gt;&amp;#242;c vivaroaupenc&lt;/option&gt;
+&lt;option class='maj-debut' value='pl'&gt;polski&lt;/option&gt;
+&lt;option class='maj-debut' value='pt'&gt;Portugu&amp;#234;s&lt;/option&gt;
+&lt;option class='maj-debut' value='pt_br'&gt;Portugu&amp;#234;s do Brasil&lt;/option&gt;
+&lt;option class='maj-debut' value='ro'&gt;rom&amp;#226;n&amp;#259;&lt;/option&gt;
+&lt;option class='maj-debut' value='ru'&gt;&amp;#1088;&amp;#1091;&amp;#1089;&amp;#1089;&amp;#1082;&amp;#1080;&amp;#1081;&lt;/option&gt;
+&lt;option class='maj-debut' value='tr'&gt;T&amp;#252;rk&amp;#231;e&lt;/option&gt;
+&lt;option class='maj-debut' value='vi'&gt;Ti&amp;#7871;ng Vi&amp;#7879;t&lt;/option&gt;
+&lt;option class='maj-debut' value='zh'&gt;&amp;#20013;&amp;#25991;&lt;/option&gt;
+, fr, 2009-07-03 10:23:33, 2009-07-03 10:23:33 (3708 octets)
+Jul 03 10:23:33 127.0.0.1 (pid 2712) calcul (0.01s) [formulaires/formulaire_login] 1, samszo, , samszo@free.fr, , , samszo, 2766b70ef8363be6baddb11447b5fdcd, , 0minirezo, 2009-07-02 22:04:07, , $1$SdroTX7G$WuxqXYWfB3oj42glyk0VM/, 2009-07-02 22:04:07, , , 15704925624a4c9c1e831384.64663180, 374774164a4d0569749ec3.80830450, a:4:{s:3:&quot;cnx&quot;;s:5:&quot;perma&quot;;s:7:&quot;couleur&quot;;d:6;s:7:&quot;display&quot;;d:1;s:7:&quot;options&quot;;s:8:&quot;avancees&quot;;}, , spip, oui, , , http://localhost/gevu/trouville/spip/spip.php?action=cookie, , spip.php?page=login&amp;url=ecrire%2F%3Fexec%3Dnaviguer%26id_rubrique%3D6264, ecrire/?exec=naviguer&amp;id_rubrique=6264, , , samszo, spip.php?page=login&amp;url=ecrire%2F%3Fexec%3Dnaviguer%26id_rubrique%3D6264, fr, 2009-07-03 10:23:33, 2009-07-03 10:23:33 (2539 octets)
+Jul 03 10:23:46 127.0.0.1 (pid 2712) login de samszo vers ecrire/?exec=naviguer&amp;id_rubrique=6264
+Jul 03 10:23:46 127.0.0.1 (pid 2712) renouvellement de l'alea_ephemere: 8feb1f1780d89351835a1ae742b50748
+Jul 03 10:23:48 127.0.0.1 (pid 2712) traite la session ecrire/data/visites/fe29467396
+Jul 03 10:23:48 127.0.0.1 (pid 2712) analyse 1 visites
+Jul 03 10:23:48 127.0.0.1 (pid 2712) cron: visites (0.03s)
+Jul 03 10:25:35 127.0.0.1 (pid 2712) cron: rubriques (0.19s)
+Jul 03 10:25:59 127.0.0.1 (pid 2712) suivre type='t' AND id&lt;1246609559 dans 36 caches
+Jul 03 10:25:59 127.0.0.1 (pid 2712) applique '0/-inc_entete-fr.e8a7606a', '0/f-for-1-%20-for-for-fr.abeec92f', '2/-for-for-62-aff-a-a-fr.528079a7', '3/%3B-%2325991%3B-opt-fr.702ca833', '3/-for-for-35-mot-a-fr.e4357b35', '3/-for-for-66-aff-a-a-fr.a52a7922', '3/-for-for-68-aff-a-a-fr.ae44a77c', '3/-spi-spi-C-85909A-left.2dde7aab.gz', '4/-inc_pied-dist-404-fr.a6532afd', '4/lan-cal-xhtml_error%3D.b3b1a704', '5/-for-for-54-mul-a-fr.fb7eb20c', '6/-for-for-22-mot-a-fr.29e39d99', '6/385909A-exe-tem-don-fr.34139c80', '6/385909A-exe-tem-tab-fr.994d3cf8.gz', '7/-for-for-54-aff-a-a-fr.b243a5d2', '7/-for-for-54-mul-a-fr.f494e54b', '8/-for-for-38-mot-a-fr.c8baf2fd', '8/385909A-exe-tem-don-fr.fcbea676', '9/-inc_rubriques-fr.744117a9', '9/-rec-rec-lang%3D.30fde9e5', '9/f-for-1-%20-for-for-fr.8baf961b', '9/f-for-1-%20-for-for-fr.c36f0f2a', '9/lan-cal-xhtml_error%3D.6a188888', 'a/-for-for-54-mul-a-fr.8acdc4f4', 'a/f-for-1-%20-for-for-fr.98edf76b', 'a/f-for-1-for-for-for-fr.5163d732', 'b/lan-cal-xhtml_error%3D.240fd97a', 'b/lan-cal-xhtml_error%3D.73db7e7a', 'c/-for-for-21-mot-a-fr.3d40cfd6', 'c/f-for-1-%20-for-for-fr.a4d07aec', 'c/lan-cal-xhtml_error%3D.dfdbd176', 'd/385909A-exe-tem-don-fr.bc2f2645', 'e/f-for-1-%20-for-for-fr.77bdf6b2', 'f/-for-for-36-mot-a-fr.aa646570', 'f/385909A-exe-tem-don-fr.74867aff', 'f/aut-ech-sam-log-ecr-fr.fdba2891'
+Jul 03 10:25:59 127.0.0.1 (pid 2712) Taille du CACHE: 107093 octets
+Jul 03 10:25:59 127.0.0.1 (pid 2712) cron: invalideur (0.03s)
+Jul 03 10:26:16 127.0.0.1 (pid 2712) cron: ajax (0.01s)
+Jul 03 10:26:39 127.0.0.1 (pid 2712) cron: popularites (0.02s)

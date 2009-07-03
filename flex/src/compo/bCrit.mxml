@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
+	creationComplete="Init()"  backgroundColor="#FFFFFF">
+	<mx:Script>
+        <![CDATA[
+        	import mx.controls.Image;
+        	import mx.controls.LinkButton;
+        	import mx.collections.ArrayCollection;
+        	import mx.containers.HBox;
+           
+           	public var rsCrit:Object;
+           	public var urlIma:String="../../xul/chrome/content/";
+           
+            public function Init():void {
+				//construction du critère
+				SetCrit();
+            }
+
+            public function SetCrit():void {
+				//construction du texte de la legende
+				var lblLeg:String="";
+		        for each (var rTxtLegende:Object in rsCrit.legende.vbox.hbox[0].label)
+		        {
+			        lblLeg += " "+rTxtLegende.value;
+		        }
+		        lblLegende.text=lblLeg;
+
+				//construction des images de la legende
+		        for each (var rIma:Object in rsCrit.legende.vbox.hbox[1].image)
+		        {
+			        var legIma:Image = new Image;
+			        //petit bug bizare
+			        if(rIma is String){
+				        legIma.source = urlIma+rIma;		        	
+			        }else{
+				        legIma.source = urlIma+rIma.src;		        				        	
+			        }
+			        legIma.autoLoad=true;
+		        	hbLegende.addChild(legIma);				        	
+		        }
+				
+				//construction du texte du critère
+				lblCrit.text = rsCrit.textbox.value;
+				
+				/*construction des liens du critère
+		        var liensIma:Image = new Image;
+		        liensIma.source = rsCrit.liens.vbox.hbox[0].image.src;
+	        	critHB.addChild(liensIma);				        	
+		        var lienLbl:Label = new Label();
+		        lienLbl.text = rsCrit.liens.vbox.hbox[0].image.onclick;
+	        	critHB.addChild(lienLbl);				        	
+		        //ajoute le critère au conteneur
+	        	lieuHB.addChild(critHB);
+	        	*/
+            }
+            
+
+            
+        ]]>
+    </mx:Script>
+	<mx:HBox width="100%" id="hbLegende" borderStyle="none" borderColor="#083F66" borderThickness="2" horizontalGap="8" backgroundColor="#FBF8F8">
+		<mx:Label text="Label" id="lblLegende" fontFamily="Arial" fontSize="12"/>
+	</mx:HBox>
+	<mx:TextArea id="lblCrit" editable="false" fontFamily="Arial" fontSize="14" width="100%" height="100%"/>
+    <mx:HRule strokeColor="#000505" strokeWidth="4" themeColor="#83B5D4" width="100%" height="2"/>
+
+</mx:Box>

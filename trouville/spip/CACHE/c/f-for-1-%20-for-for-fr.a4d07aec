@@ -1,0 +1,45 @@
+<!-- a:3:{s:8:"contexte";a:1:{s:10:"id_article";i:0;}s:11:"process_ins";s:3:"php";s:7:"entetes";a:0:{}} -->
+
+<a name='form62'></a>
+<div class='spip_forms'>
+
+<div class='spip_descriptif'></div>
+
+
+
+
+ 
+	 
+	<form method='post' action='?exec=donnees_edit&amp;id_form=62&amp;id_donnee=7817&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D62%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10#form62'
+		enctype='multipart/form-data'>
+		
+		<div>
+		
+<input name='exec' value='donnees_edit' type='hidden' />
+<input name='id_form' value='62' type='hidden' />
+<input name='id_donnee' value='7817' type='hidden' />
+<input name='retour' value='?exec=donnees_tous&amp;id_form=62&amp;retour=%253Fexec%253Dtables_tous%2526amp%253Bdebut_forms%253D10' type='hidden' />
+		<input type='hidden' name='ajout_reponse' value='oui' />
+		<input type='hidden' name='id_form' value='62' />
+		<input type='hidden' name='id_donnee' value='7817' />
+		
+		<input type='hidden' name='retour_form' value='' />
+		
+		</div>
+			<?php
+	$contexte_inclus = array('fond' => 'formulaires/forms_structure',
+	'id_form' => '62',
+	'affiche_sondage' => '',
+	'erreur' => 'a:0:{}',
+	'valeurs' => 'a:1:{s:7:"ligne_1";s:27:"Tronçon sud Avenue Leclerc ";}',
+	'lang' => 'fr');
+	include('public.php');
+?>
+	 
+	</form>
+	
+	
+	
+
+</div>
+

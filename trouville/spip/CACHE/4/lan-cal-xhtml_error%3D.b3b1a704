@@ -1,0 +1,6 @@
+<!-- a:2:{s:11:"process_ins";s:4:"html";s:7:"entetes";a:0:{}} -->
+<div class="spip-admin-float" dir="ltr">
+	<a href="ecrire/" class="spip-admin-boutons">Espace priv&eacute;</a>
+	<a href="spip.php?page=valide_form&amp;mel_confirm=oui&amp;id_donnee=43048&amp;hash=6c2be236bd76cd06f0f75567f4e6f968&amp;var_mode=calcul" class="spip-admin-boutons">Recalculer cette page</a>
+	<a href="spip.php?page=valide_form&amp;mel_confirm=oui&amp;id_donnee=43048&amp;hash=6c2be236bd76cd06f0f75567f4e6f968&amp;var_mode=debug" class="spip-admin-boutons">debug</a>
+</div>

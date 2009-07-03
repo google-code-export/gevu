@@ -1,0 +1,27 @@
+<BOUCLE_f(FORMS){id_form}>
+<BOUCLE_champs(FORMS_CHAMPS){id_form}{tout}{champ}>
+<B_choix>
+[(#EXTRA_INFO|=={liste}|?{' ',''})
+<select name='#CHAMP' id='#CHAMP' 
+	class='[(#OBLIGATOIRE|=={oui}|?{fondl,fondo})]'>
+	<option value=''></option>]
+	<BOUCLE_choix(FORMS_CHAMPS_CHOIX){id_form}{champ}{par rang}>
+[(#EXTRA_INFO|=={liste}|?{' ',''})
+	<option value='#CHOIX' [(#CHOIX|=={[(#ENV**{valeur}|forms_valeur{#CHAMP})]}|?{'selected="selected"',''})]>
+		&nbsp;&nbsp;&nbsp;[(#TITRE|supprimer_numero)]
+	</option>
+]
+[(#EXTRA_INFO|=={liste}|?{'',' '})
+	<span class='spip_form_choix_unique'>
+	&nbsp; <input type='radio' name='#CHAMP' value='#CHOIX' id='#CHOIX'
+	[(#CHOIX|=={[(#ENV**{valeur}|forms_valeur{#CHAMP})]}|?{'checked="checked"',''})] />
+	<label for='#CHOIX'>[(#TITRE|supprimer_numero)]</label>
+	</span>
+]
+	</BOUCLE_choix>
+[(#EXTRA_INFO|=={liste}|?{' ',''})
+</select>
+]
+</B_choix>
+</BOUCLE_champs>
+</BOUCLE_f>

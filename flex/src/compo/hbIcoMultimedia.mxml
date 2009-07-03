@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	label="Documents multimédias" 
+	creationComplete="AppliVerifIco()"
+	>
+ <mx:Script>
+		<![CDATA[
+		
+       	import mx.managers.PopUpManager;
+		import compo.twPhotoListe;
+		
+      	[Embed(source="../images/jpg.png")] [Bindable] private var PhotoIcon:Class;
+      	[Embed(source="../images/mpg.png")] [Bindable] private var FilmIcon:Class;
+      	[Embed(source="../images/mp3.png")] [Bindable] private var SonIcon:Class;
+
+		public var idRub:String;
+		public var idSite:String;
+		public var urlExeAjax:String;
+		public var rsEtatDiag:Object;
+		public var photo:Boolean;
+		public var film:Boolean;
+		public var son:Boolean;
+		
+		public function Init(EtatDiag:Object, Rub:String, Site:String, Ajax:String):void {	
+			idRub=Rub;
+			idSite=Site;
+			urlExeAjax=Ajax;
+			rsEtatDiag=EtatDiag;
+		}
+			
+		public function VerifIco():Boolean{
+	    	//bug dans le cas où il n'y a qu'une icone
+	    	var nbIco:int = rsEtatDiag.EtatDiag.icones[1].icone.length;
+	    	if(nbIco != 0){
+	        	//accDocs.visible=true;
+	        	if(nbIco == 1){
+		        	var ico1:Object = rsEtatDiag.EtatDiag.icones[1].icone;
+		        	showIcone(ico1.toString());	        		        		
+	        	}else{
+			        for each (var ico:Object in rsEtatDiag.EtatDiag.icones[1].icone)
+			        {
+			        	showIcone(ico.id);	        	
+			        }
+	        	}
+	        }
+	        //vérifie qu'au moins une icone est affichée
+	        if(photo||film||son){
+	        	return true;
+	        }else{
+	        	return false;
+	        }
+      	}
+
+	public function AppliVerifIco():void{
+    	if(photo)
+    		imgPhoto.visible=true;
+    	if(film)
+    		imgFilm.visible=true;
+    	if(son)
+    		imgSon.visible=true;      			
+	}
+
+      public function showIcone(type:String):void{
+    	if(type=="images")
+    		photo=true;
+    	if(type=="videos")
+    		film=true;
+    	if(type=="sons")
+    		son=true;      	
+      }
+        
+
+     private function ShowListePhoto():void {
+        // Create a non-modal TitleWindow container.
+        var wPhotoListe:twPhotoListe = twPhotoListe(
+            PopUpManager.createPopUp(this, twPhotoListe, false));
+		var params:Object = new Object();
+		params.f = "GetImages";
+		params.id = idRub;
+		params.site = idSite;
+
+		trace ("ShowListePhoto:url="+urlExeAjax+"?f="+params.f+"&id="+params.id+"&site="+params.site);
+		wPhotoListe.useHttpService(urlExeAjax,params,"");
+
+        PopUpManager.centerPopUp(wPhotoListe);
+
+     }
+
+     private function ShowListeFilm():void {
+
+     }
+     private function ShowListeSon():void {
+
+     }
+			
+        ]]>
+  </mx:Script>
+
+   	<mx:LinkButton id="imgPhoto" visible="false" icon="{PhotoIcon}" click="ShowListePhoto();" />
+   	<mx:LinkButton id="imgFilm" visible="false" icon="{FilmIcon}" click="ShowListeFilm();" />
+   	<mx:LinkButton id="imgSon" visible="false" icon="{SonIcon}" click="ShowListeSon();" />
+	
+</mx:HBox>

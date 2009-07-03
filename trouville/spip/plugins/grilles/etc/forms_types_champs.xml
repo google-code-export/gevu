@@ -1,0 +1,12 @@
+<types>
+	<type>
+		<field>code_postal</field>
+		<label><multi>[fr]Code Postal</multi></label>
+		<match>/^[0-9]{4,5}$/</match>
+	</type>
+	<type>
+		<field>telephone</field>
+		<label><multi>[fr]T&eacute;l&eacute;phone</multi></label>
+		<match>/^(((00[.-\s])?[0-9][0-9][.-\s]?[0-9][0-9]?[.-\s]?)|([0-9][0-9][.-\s]?))([0-9][0-9][.-\s]?){4}$/</match>
+	</type>
+</types>
