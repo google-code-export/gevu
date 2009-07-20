@@ -181,7 +181,7 @@
 			$resultat = ChangeAutoIncrement($_GET['table'], $_GET['val']) ;
 			break;
 		case 'SetSessionValues':
-			$resultat = SetSessionValues($_GET['site'], $_GET['type_controle1'], $_GET['type_controle2'],$_GET['type_contexte1'], $_GET['type_contexte2'], $_GET['type_contexte3'], $_GET['type_contexte4'],$_GET['version']) ;
+			$resultat = SetSessionValues($_GET['site'], $_GET['type_controle1'], $_GET['type_controle2'],$_GET['type_contexte1'], $_GET['type_contexte2'], $_GET['type_contexte3'], $_GET['type_contexte4'], $_GET['type_contexte5'], $_GET['type_contexte6'],$_GET['version']) ;
 			break;
 		case 'SetChoixAffichage':	
 			$resultat = SetChoixAffichage($_GET['idXul'],$_GET['valeur']) ;
@@ -292,9 +292,9 @@
 		return "_SESSION[".$idXul."]=".$_SESSION[$idXul];
 	}
 	
-	function SetSessionValues($site, $type_controle1, $type_controle2,$type_contexte1, $type_contexte2, $type_contexte3, $type_contexte4, $version){
+	function SetSessionValues($site, $type_controle1, $type_controle2,$type_contexte1, $type_contexte2, $type_contexte3, $type_contexte4, $type_contexte5, $type_contexte6, $version){
 		$_SESSION['type_controle'] = array ($type_controle1, $type_controle2);
-		$_SESSION['type_contexte'] = array ($type_contexte1, $type_contexte2, $type_contexte3, $type_contexte4);
+		$_SESSION['type_contexte'] = array ($type_contexte1, $type_contexte2, $type_contexte3, $type_contexte4, $type_contexte5, $type_contexte6);
 		$_SESSION['version']= $version;
 		$_SESSION['site']= $site;
 		//print_r($_SESSION);
@@ -957,9 +957,9 @@
 			AddNewEspaceGenExt(63, $id, "ParamGenEspace");
 		if($trs=="ObjetIntBat") {
 			//ajoute une sous-rubrique cabine d'ascenseur
-			$idCA = $g->SetNewEnfant("Cabine d'ascenseur",$id);
+			//$idCA = $g->SetNewEnfant("Cabine d'ascenseur",$id);
 			//ajoute les QuestionsRéponses
-			$grille->AddQuestionReponse(613,$idCA);
+			//$grille->AddQuestionReponse(613,$idCA);
 		}
 		if($trs=="ObjetInt") {
 			AddNewObjetInt(1167, $id, "ParamObjetInt");

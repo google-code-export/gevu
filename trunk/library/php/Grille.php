@@ -1081,9 +1081,10 @@ class Grille{
 								|| $wf['trsId']==$this->site->infos["RUB_PORTE1"] )
 									{ // Porte
 								$id1 = $gra->SetNewEnfant("Face 1 ");
-								$this->AddQuestionReponse($this->site->infos["RUB_PORTE_FACE1"],$id1);
+								$this->AddQuestionReponse($this->site->infos["RUB_PORTE_FACE"],$id1);
 								$id2 = $gra->SetNewEnfant("Face 2 ");
-								$this->AddQuestionReponse($this->site->infos["RUB_PORTE_FACE2"],$id2);
+								//il n'y a qu'une rubrique pour la face des portes
+								$this->AddQuestionReponse($this->site->infos["RUB_PORTE_FACE"],$id2);
 							}
 						}else{
 							//gestion pour le signalement problème
@@ -2230,7 +2231,9 @@ class Grille{
 						if($typeContexte[0]== $r2['valeur'] 
 							|| $typeContexte[1]== $r2['valeur'] 
 							|| $typeContexte[2]== $r2['valeur'] 
-							|| $typeContexte[3]== $r2['valeur']) 
+							|| $typeContexte[3]== $r2['valeur']
+							|| $typeContexte[4]== $r2['valeur']
+							|| $typeContexte[5]== $r2['valeur']) 
 							$verif = true;
 						if($this->trace)
 							echo "Grille:VerifChoixDiagnostic:typeContexte=".print_r($typeContexte)." verif=".$verif." valeur=".$r2['valeur']."<br/>";
@@ -2494,6 +2497,10 @@ class Grille{
 						$labels .= '<label value="Logement"/>';
 					if($r['valeur']=="multiple_2_4")
 						$labels .= '<label value="Voirie"/>';
+					if($r['valeur']=="multiple_2_5")
+						$labels .= '<label value="ERP_IOP existant"/>';
+					if($r['valeur']=="multiple_2_6")
+						$labels .= '<label value="Modalité particulière"/>';
 					break;
 				case "multiple_3":
 					//construstion des icones
