@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" pageTitle="grilles" 
-		creationComplete="" backgroundGradientColors="[#ffffff, #ffffff]"
+		backgroundGradientColors="[#ffffff, #ffffff]"
 		xmlns:ns2="compo.*"
 		>
 <!--
@@ -192,11 +192,11 @@ todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
 							</mx:columns>
 					</mx:DataGrid>
 			
-					<mx:Button id="btnAddNew" click="goToUpdate()" icon="@Embed('icons/AddRecord.png')" toolTip="Add Record" x="10" bottom="10"/>
-					<mx:Button id="btnDelete" click="deleteItem()" icon="@Embed('icons/DeleteRecord.png')" toolTip="Delete Record" x="58" bottom="10"/>
+					<mx:Button id="btnAddNew" click="goToUpdate()" icon="@Embed('images/AddRecord.png')" toolTip="Add Record" x="10" bottom="10"/>
+					<mx:Button id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Delete Record" x="58" bottom="10"/>
 					<mx:Label text="Rechercher par le champ : " right="400" bottom="11"/><mx:Label id="ColSelect" text="" right="300" bottom="11"/>
 					<mx:TextInput id="filterTxt" width="238" toolTip="Rechercher par le champ sélectionné" enter="filterResults()" right="58" bottom="11"/>
-					<mx:Button click="filterResults()" id="filterButton" icon="@Embed('icons/SearchRecord.png')" toolTip="Search by champ" right="10" bottom="10"/>
+					<mx:Button click="filterResults()" id="filterButton" icon="@Embed('images/SearchRecord.png')" toolTip="Search by champ" right="10" bottom="10"/>
 	
 				</mx:Canvas>
 			

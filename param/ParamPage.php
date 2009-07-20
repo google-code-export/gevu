@@ -18,7 +18,7 @@ if(isset($_POST['login_uti'])) {
 	//pour défaut on prend toute les options
 	$_SESSION['version']="V2";
 	if(!isset($_SESSION['type_contexte'])) 
-		$_SESSION['type_contexte'] = array ('multiple_2_1', 'multiple_2_2', 'multiple_2_3', 'multiple_2_4');
+		$_SESSION['type_contexte'] = array ('multiple_2_1', 'multiple_2_2', 'multiple_2_3', 'multiple_2_4', 'multiple_2_5', 'multiple_2_6');
 	if(!isset($_SESSION['type_controle'])) 
 		$_SESSION['type_controle'] = array ('multiple_1_1','multiple_1_2');
 	if(!isset($_SESSION['IdAuteur'])) 

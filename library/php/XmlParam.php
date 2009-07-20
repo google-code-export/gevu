@@ -28,9 +28,11 @@ Class XmlParam{
 		if($this->trace)
 			echo 'XmlParam GetElements On cherche le xpath '.$Xpath.'<br/>';
 
-		if ($this->xml)
+		if ($this->xml){
 			return $this->xml->xpath($Xpath);
-		else return -1;
+		}else{
+			return -1;
+		}
 		
 		
 	}
