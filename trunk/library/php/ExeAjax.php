@@ -956,14 +956,14 @@
 		if($trs=="EspaceExt")
 			AddNewEspaceGenExt(63, $id, "ParamGenEspace");
 		if($trs=="ObjetIntBat") {
-			/*$idArt = $g->SetNewArticle($g->titre." ".date('j/m/y - H:i:s'));
-				echo ":GereWorkflow://ajoute une nouveau article ".$idArt."<br/>";
-			//ajoute une nouvelle donnee
-			$idDon = $grille->AddDonnee($id, $idRubDst, false, $idArt);*/
+			//ajoute une sous-rubrique cabine d'ascenseur
+			$idCA = $g->SetNewEnfant("Cabine d'ascenseur",$id);
+			//ajoute les QuestionsRéponses
+			$grille->AddQuestionReponse(613,$idCA);
 		}
 		if($trs=="ObjetInt") {
-			//AddNewObjetInt(1167, $id, "ParamObjetInt");
-			//$g->SetMotClef($mot,$id);
+			AddNewObjetInt(1167, $id, "ParamObjetInt");
+			$g->SetMotClef($mot,$id);
 		}
 		
 		//header('Content-type: application/vnd.mozilla.xul+xml');
@@ -1359,7 +1359,7 @@
 	function CleanForm() {
 		global $objSite;
 		
-		$synchro = new Synchro($objSite, -1);
+		$synchro = new Synchro($objSite, $objSite);
 		$synchro->CleanForm();
 	}
 

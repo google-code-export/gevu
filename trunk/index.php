@@ -2,10 +2,6 @@
 session_start();
 require_once ("param/ParamPage.php");
 
-$_SESSION['type_controle'] = array ($_POST['type_controle1'], $_POST['type_controle2']);
-$_SESSION['type_contexte'] = array ($_POST['type_contexte1'], $_POST['type_contexte2'], $_POST['type_contexte3'], $_POST['type_contexte4']);
-$_SESSION['version']= $_POST['version'];
-
 if(TRACE)
 	echo "index:login=$login, $mdp<br/>";
 ChercheAbo ($login, $mdp, $objSite);
@@ -113,8 +109,10 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 					<menupopup id="mnuContReg" >
 						<menuitem id="type_contexte1" type="checkbox" checked="<?php if($_SESSION['type_contexte'][0]=="multiple_2_1") echo "true"; ?>" label="Travail" value='multiple_2_1' oncommand="SetChoixDiagnostic();"/>
 						<menuitem id="type_contexte2" type="checkbox" checked="<?php if($_SESSION['type_contexte'][1]=="multiple_2_2") echo "true"; ?>" label="ERP/IOP" value='multiple_2_2' oncommand="SetChoixDiagnostic();"/>
-						<menuitem id="type_contexte3" type="checkbox" checked="<?php if($_SESSION['type_contexte'][3]=="multiple_2_3") echo "true"; ?>" label="Logement" value='multiple_2_3' oncommand="SetChoixDiagnostic();"/>
-						<menuitem id="type_contexte4" type="checkbox" checked="<?php if($_SESSION['type_contexte'][2]=="multiple_2_4") echo "true"; ?>" label="Voirie" value='multiple_2_4' oncommand="SetChoixDiagnostic();"/>
+						<menuitem id="type_contexte3" type="checkbox" checked="<?php if($_SESSION['type_contexte'][2]=="multiple_2_3") echo "true"; ?>" label="Logement" value='multiple_2_3' oncommand="SetChoixDiagnostic();"/>
+						<menuitem id="type_contexte4" type="checkbox" checked="<?php if($_SESSION['type_contexte'][3]=="multiple_2_4") echo "true"; ?>" label="Voirie" value='multiple_2_4' oncommand="SetChoixDiagnostic();"/>
+						<menuitem id="type_contexte5" type="checkbox" checked="<?php if($_SESSION['type_contexte'][4]=="multiple_2_5") echo "true"; ?>" label="ERP/IOP existant" value='multiple_2_5' oncommand="SetChoixDiagnostic();"/>
+						<menuitem id="type_contexte6" type="checkbox" checked="<?php if($_SESSION['type_contexte'][5]=="multiple_2_6") echo "true"; ?>" label="Modalité particulière" value='multiple_2_6' oncommand="SetChoixDiagnostic();"/>
 					</menupopup>
 				</menu>
 				<menu label="Contexte éditorial" onpopupshowing="javascript:;" class="menubar">

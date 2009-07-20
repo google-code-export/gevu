@@ -1443,6 +1443,25 @@ function DelRubriqueFrere($idRub){
 		$this->DelArticle($idArticle);
 		if (TRACE) echo "</article>";
 	}
+
+	
+	function SupprimerDonneesArticle($idArticle) {
+		
+		if (TRACE) echo "<article> SupprimerDonneesArticle = ".$idArticle;
+		$arrListeDonnees = $this->GetIdDonnees($idArticle) ;
+			
+		if($arrListeDonnees !=null) {
+			foreach ($arrListeDonnees as $donnee) {
+				if (TRACE) echo "<donnee>SupprimerArticle/// idDonnee = ".$donnee['id']."</donnee>";
+				$this->DelFormsDonneesChamps($donnee['id']);
+				$this->DelFormsDonnees($donnee['id']);
+			}
+		}
+		$this->DelFormsDonneesArticles($idArticle);
+		$this->DelFormsArticles($idArticle);
+		if (TRACE) echo "</article>";
+	}
+	
 	
 	function SupprimerArticles($arrListArticles) {
 		

@@ -1624,6 +1624,18 @@ class Grille{
 		//prise en compte des choix multiple
 		if($row["valeur"]=="supprime")
 			return;
+			
+		//prise encompte de l'importation par csv
+		$arrC = split("_",$row["champ"]);
+		if(count($arrC)>2){
+			//on traite le champ d'un csv
+			if($row["valeur"]=="oui"){
+				$row["valeur"] = $row["champ"];
+				$row["champ"] = $arrC[0]."_".$arrC[1];	
+			}else{
+				return;
+			}
+		}
 		
 		//création de la valeur
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_InsChamp']";

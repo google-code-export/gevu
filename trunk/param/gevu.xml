@@ -1942,11 +1942,11 @@ LEFT JOIN spip_forms_donnees_champs fdc4 ON fdc4.id_donnee = fd.id_donnee AND fd
 		<workflow srcObj="grille;champ;valeur" srcId="69;mot_1" srcCheckVal="166" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="586" />
 			
 		<!-- Objets niveau intérieur -->	
-		<workflow srcObj="grille;champ;valeur" srcId="63;select_2" srcCheckVal="select_2_1" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="52" />
-		<workflow srcObj="grille;champ;valeur" srcId="63;select_2" srcCheckVal="select_2_2" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="53" />
-		<workflow srcObj="grille;champ;valeur" srcId="63;select_2" srcCheckVal="select_2_3" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="51" />
-		<workflow srcObj="grille;champ;valeur" srcId="63;select_2" srcCheckVal="select_2_4" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="50" />
-		<workflow srcObj="grille;champ;valeur" srcId="63;select_2" srcCheckVal="select_2_5" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="5015" />
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="220" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="52" />
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="221" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="53" />
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="222" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="51" />
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="223" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="50" />
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="224" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="5015" />
 		
 		<!-- Objets extérieurs parcelle -->	
 		<workflow srcObj="grille;champ;valeur" srcId="64;select_2" srcCheckVal="select_2_1" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="1416" />

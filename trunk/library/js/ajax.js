@@ -5,13 +5,12 @@
 
 function AppendResult(url,doc,ajoute,cont,flex) {
   try {
+	document.documentElement.style.cursor = "wait";
   
   	if(!cont)
   		cont = "box";
 	
 	if(!flex)flex="flex='1' "; else flex="";
-
-	document.documentElement.style.cursor = "wait";
 
 	p = new XMLHttpRequest();
 	p.onload = null;
@@ -41,11 +40,12 @@ function AppendResult(url,doc,ajoute,cont,flex) {
 	return resultDoc ;
 	//dump("AppendResult OUT \n");
    } catch(ex2){alert(ex2);}
+	document.documentElement.style.cursor = "auto";
 }
 
 function InsertBeforeResult(url,doc) {
   try {
-	dump("InsertBeforeResult IN "+url+"\n");
+	document.documentElement.style.cursor = "wait";
 	p = new XMLHttpRequest();
 	p.onload = null;
 	p.open("GET", url, false);
@@ -66,9 +66,11 @@ function InsertBeforeResult(url,doc) {
 		parent.insertBefore(resultDoc.documentElement, doc.nextSibling
 		);
 	}
+	document.documentElement.style.cursor = "auto";
 	return resultDoc ;
 	dump("InsertBeforeResult OUT \n");
    } catch(ex2){alert(ex2);dump("::"+ex2);}
+	document.documentElement.style.cursor = "auto";
 }
 
 
@@ -79,6 +81,7 @@ function UploadFile(url, file){
 	 /*
 	  * http://xulfr.org/wiki/ApplisWeb/Request
 	  */
+	document.documentElement.style.cursor = "wait";
 	
 	
 	 const BOUNDARY = "111222111"; //ce qui va nous servir de délimiteur
@@ -132,12 +135,13 @@ function UploadFile(url, file){
 	
 	 /* 8 */
 	 xmlr.send(mis);	
+	document.documentElement.style.cursor = "auto";
 		
 }
 
 function GetAjaxResult(url) {
   try {
-	dump("GetAjaxResult IN "+url+"\n");
+	document.documentElement.style.cursor = "wait";
     response = "";
 	p = new XMLHttpRequest();
 	p.onload = null;
@@ -150,14 +154,16 @@ function GetAjaxResult(url) {
 	}else{
 	    response = p.responseText;
 	}
+	document.documentElement.style.cursor = "auto";
 	return response;
 	dump("GetAjaxResult OUT \n");
    } catch(ex2){alert("Ajax:GetAjaxResult:"+ex2);}
+	document.documentElement.style.cursor = "auto";
 }
 
 function GetResult(url) {
   try {
-	dump("GetResult IN "+url+"\n");
+	document.documentElement.style.cursor = "wait";
     response = "";
 	p = new XMLHttpRequest();
 	p.onload = null;
@@ -171,9 +177,12 @@ function GetResult(url) {
 	}else{
 	    response = p.responseText;
 	}
+	document.documentElement.style.cursor = "auto";
 	return response;
 	dump("GetResult OUT \n");
    } catch(ex2){alert(ex2);dump("::"+ex2);}
+	document.documentElement.style.cursor = "auto";
+
 }
 
 function AfficheResult(response,params) {
@@ -184,10 +193,12 @@ function AfficheResult(response,params) {
 }
 
 function RefreshResult(response, params) {
+	document.documentElement.style.cursor = "wait";
    	//alert(url);
 	arrP = params.split(",");
 	document.getElementById(arrP[0]).value = response;
 	AjaxRequest(arrP[1],"AfficheResult",arrP[2])
+	document.documentElement.style.cursor = "auto";
 }
 
 function AjaxRequest(url,fonction_sortie,params) {
