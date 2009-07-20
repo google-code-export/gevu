@@ -79,8 +79,7 @@ $SiteLocal = array(
 	"RUB_TERRE" => 5479,
 	"RUB_PORTE1" => 50,
 	"RUB_PORTE2" => 74,
-	"RUB_PORTE_FACE1" => 1342,
-	"RUB_PORTE_FACE2" => 1341,
+	"RUB_PORTE_FACE" => 1342,
 	
 	"DEF_ID" => 5479,
 	"DEF_LAT" => 45,
