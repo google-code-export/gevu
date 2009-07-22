@@ -27,28 +27,28 @@
 		<question id='3_cr_acc_19'/>
 	</grille>	
 	<grille id='3_air_sta'>
-		<question id='3_air_sta_01'/>
+		<question id='3_cr_air_sta_01'/>
 		<question id='3_qi_air_sta_01' reponse='1' >
 			<question id='3_qi_air_sta_03' reponse='2'>
-				<question id='3_air_sta_03'/>
-				<question id='3_air_sta_04'/>
-				<question id='3_air_sta_05'/>
+				<question id='3_cr_air_sta_03'/>
+				<question id='3_cr_air_sta_04'/>
+				<question id='3_cr_air_sta_05'/>
 			</question>
 		</question>
 		<question id='3_qi_air_sta_02' reponse='1' >
-			<question id='3_air_sta_06'/>
-			<question id='3_air_sta_07'/>
-			<question id='3_air_sta_08'/>
-			<question id='3_air_sta_09'/>
-			<question id='3_air_sta_10'/>
+			<question id='3_cr_air_sta_06'/>
+			<question id='3_cr_air_sta_07'/>
+			<question id='3_cr_air_sta_08'/>
+			<question id='3_cr_air_sta_09'/>
+			<question id='3_cr_air_sta_10'/>
 		</question>
 		<question id='3_qi_air_sta_02' reponse='2' >
-			<reponse id='3_air_sta_06' champ='mot_1' valeur='2' />
-			<question id='3_air_sta_11'/>
+			<reponse id='3_cr_air_sta_06' champ='mot_1' valeur='2' />
+			<question id='3_cr_air_sta_11'/>
 		</question>
-		<question id='3_air_sta_02'/>
-		<question id='3_air_sta_12'/>
-		<question id='3_air_sta_13'/>
+		<question id='3_cr_air_sta_02'/>
+		<question id='3_cr_air_sta_12'/>
+		<question id='3_cr_air_sta_13'/>
 	</grille>
 	<grille id='3_asc_cab'>	
 		<question id='3_qi_asc_cab_01' reponse='1' >
@@ -265,7 +265,7 @@
 			<question id='3_cr_esc_11'/>
 		</question>
 		<question id='3_cr_esc_24'/>
-		<question id='3_qi_esc_01' reponse='1' >
+		<question id='3_qi_esc_01' reponse='2' >
 			<question id='3_cr_esc_25'/>
 			<question id='3_cr_esc_26'/>
 			<question id='3_cr_esc_27'/>

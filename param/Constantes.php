@@ -88,7 +88,7 @@ $SiteLocal = array(
 	"DEF_CARTE_TYPE" => "G_HYBRID_MAP",
 	"CARTE_TYPE_DOC" => "75,76",
 	"gmKey" => "ABQIAAAATs5RWdW8iTPuaiLrkvnqjRTRqFFvaBKBgdVodt96I8idUV-28RTOELCsfx_7hD62HnKwk7Lm8Cg_lQ",
-	"lienAdminSpip" => "http://localhost/gevu/trouville/spip/ecrire",
+	"lienAdminSpip" => WebRoot."/trouville/spip/ecrire",
 	"urlExeAjax" => WebRoot."//library/php/ExeAjax.php",
 	"MenuContexte" => "menu_contextuel_Trouville.xul",
 	"urlCarto" => WebRoot."/design/BlocCarte.php",
@@ -96,9 +96,9 @@ $SiteLocal = array(
 	"urlLibPhp" => WebRoot."/library/php/",
 	"urlLibJs" => WebRoot."/library/js/",
 	"urlLibSwf" => WebRoot."/library/swf/",
-	"pathUpload" => PathRoot."/spipsync/IMG/",
+	"pathUpload" => PathRoot."/trouville/spip/IMG/",
 	"pathXulJs" => WebRoot."/library/js/",	
-	"pathSpip" => "http://localhost/gevu/trouville/spip/",
+	"pathSpip" => WebRoot."/trouville/spip/",
 	"pathImages" => WebRoot."/design/images/"
 	); 
 $SiteServeur = array(
@@ -160,7 +160,7 @@ $SiteServeur = array(
 	"gmKey" => "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRQPuSe5bSrCkW0z0AK5OduyCmU7hRSB6XyMSlG4GUuaIVi6tnDRGuEsWw",
 
 
-	"lienAdminSpip" => "http://localhost/onadabase/spip/ecrire",
+	"lienAdminSpip" => WebRoot."/spip/ecrire",
 	"urlExeAjax" => WebRoot."/library/php/ExeAjax.php",
 	"jsXulParam" => WebRoot."/param/onadabase.xml",
 	"MenuContexte" => "menu_contextuel_Trouville.xul",
@@ -170,9 +170,9 @@ $SiteServeur = array(
 	"urlLibPhp" => WebRoot."/library/php/",
 	"urlLibJs" => WebRoot."/library/js/",
 	"urlLibSwf" => WebRoot."/library/swf/",
-	"pathUpload" => "C:/wamp/www/onadabase/spip/IMG/",
+	"pathUpload" => PathRoot."/spip/IMG/",
 	"pathXulJs" => WebRoot."/library/js/",	
-	"pathSpip" => "http://localhost/onadabase/spip/",
+	"pathSpip" => WebRoot."/spip/",
 	"pathImages" => WebRoot."/design/images/"
 	); 
 	
