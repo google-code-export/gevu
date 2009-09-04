@@ -1,0 +1,20 @@
+<!-- a:2:{s:11:"process_ins";s:4:"html";s:7:"entetes";a:2:{s:13:"Cache-Control";s:35:"no-store, no-cache, must-revalidate";s:6:"Pragma";s:8:"no-cache";}} -->
+
+
+	<script type="text/javascript" src="ecrire/img_pack/md5.js"> </script>
+	<form id="login"
+		action="spip.php?page=login&amp;url=ecrire%2F%3Fexec%3Dnaviguer%26id_rubrique%3D6264"
+		method="post">
+	<fieldset>
+	<legend>Identifiants personnels</legend>
+		
+		<p><label for="var_login">Login (identifiant de connexion au site)&nbsp;:</label> <br />
+		<input type="text" class="forml" id="var_login" name="var_login" value="" size="40" /></p>
+		
+	<input type="hidden" name="url" value="ecrire/?exec=naviguer&amp;id_rubrique=6264" />
+	<div class="spip_bouton"><input type="submit" value="Valider" /></div>
+	</fieldset>
+	</form>
+<script type="text/javascript"><!--
+document.getElementById('var_login').focus();
+--></script>

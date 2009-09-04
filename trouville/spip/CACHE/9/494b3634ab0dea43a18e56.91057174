@@ -1,0 +1,67 @@
+<!-- a:2:{s:11:"process_ins";s:3:"php";s:7:"entetes";a:3:{s:12:"X-Spip-Cache";s:5:"86400";s:13:"Cache-Control";s:35:"no-store, no-cache, must-revalidate";s:6:"Pragma";s:8:"no-cache";}} -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="fr">
+<head>
+	<title>Erreur 404 - GEVU - Trouville</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta name="robots" content="none" />
+	<meta name="generator" content="SPIP" />
+	<link rel="shortcut icon" href="dist/favicon.ico" />
+
+	<!-- Ceci est la feuille de style par defaut pour le code genere par SPIP -->
+	<link rel="stylesheet" href="dist/spip_style.css" type="text/css" media="all" />
+	<!-- Feuille de styles CSS pour l'affichage du site sur ecran -->
+	<link rel="stylesheet" href="dist/habillage.css" type="text/css" media="projection, screen, tv" />
+	<!-- Feuille de styles CSS pour l'impression -->
+	<link rel="stylesheet" href="dist/impression.css" type="text/css" media="print" />
+</head>
+<body class="page_404">
+	<div id="page">
+
+	
+	<?php
+	$contexte_inclus = array('fond' => 'inc-entete',
+	'lang' => 'fr');
+	include('ecrire/public.php');
+?>
+
+	
+	<div id="hierarchie"><a href="http://www.mundilogiweb.com/onadabase/spip/">Accueil du site</a> &gt; Erreur 404</div>
+
+	<div id="conteneur">
+
+		<div id="contenu">
+
+			<div class="cartouche">
+			<h1 class="titre">Erreur 404</h1>
+			</div>
+			
+
+		</div><!-- fin contenu -->
+
+		
+		<div id="navigation">
+
+			
+			<?php
+	$contexte_inclus = array('fond' => 'inc-rubriques',
+	'lang' => 'fr');
+	include('ecrire/public.php');
+?>
+
+		</div><!-- fin navigation -->
+
+	</div><!-- fin conteneur -->
+
+	
+	<?php
+	$contexte_inclus = array('fond' => 'inc-pied',
+	'skel' => 'dist/404.html',
+	'lang' => 'fr');
+	include('ecrire/public.php');
+?>
+
+	</div><!-- fin page -->
+<div style="background-image: url('http://localhost/gevu/trouville/spip/spip.php?action=cron');"></div>
+</body>
+</html>

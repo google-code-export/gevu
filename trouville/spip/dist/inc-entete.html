@@ -1,0 +1,24 @@
+<div id="entete">
+
+[(#REM) Afficher le logo ou le titre du site ]
+
+<a rel="start" href="#URL_SITE_SPIP/">
+[(#LOGO_SITE_SPIP||?{
+
+	[(#LOGO_SITE_SPIP
+		||image_reduire{770,200}
+		|inserer_attribut{alt,[(#NOM_SITE_SPIP|textebrut)]}
+		|inserer_attribut{title,[(#NOM_SITE_SPIP|textebrut)]}
+		)]
+
+	,
+
+	<span id="nom_site_spip">#NOM_SITE_SPIP</span>
+})]
+</a>
+
+
+#FORMULAIRE_RECHERCHE
+
+<br class="nettoyeur" />
+</div>

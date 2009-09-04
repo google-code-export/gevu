@@ -1,0 +1,96 @@
+<BOUCLE_form(FORMS){id_form=#ENV{id_form}}>
+#SET{need_fieldset,1} #SET{date-picker,0}
+<BOUCLE_champs(FORMS_CHAMPS){id_form}{tout}{par rang}>
+[(#ENV{affiche_sondage}) #RESULTATS_SONDAGE]
+[(#ENV{affiche_sondage}|?{'',' '})
+	[[(#GET{need_fieldset}|?{'','</fieldset>'})]<fieldset><legend>(#TYPE|=={separateur}|?{#TITRE,''})</legend> #SET{need_fieldset,0}]
+	[(#GET{need_fieldset}|?{' '})<fieldset><legend>#_form:TITRE</legend> #SET{need_fieldset,0}]
+	[(#TYPE|=={separateur}|?{'',' '})
+		<div class='spip_form_champ'>
+			[(#TYPE|=={textestatique}|?{#TITRE,''})]
+			[(#TYPE|=={textestatique}|?{'',' '})
+				#SET{afficher,1}
+				<span class='spip_form_label'>
+					[(#TYPE|match{^(select|multiple|mot)}|?{'',' '})<label for="#CHAMP">#TITRE</label>]
+					[(#TYPE|match{^(select|multiple|mot)}|?{' ',''})<span class='label'>#TITRE</span>]
+					[<span class='spip_form_label_obligatoire[(#ENV**{erreur}|forms_valeur{#CHAMP}|?{' ',''})obligatoire_oublie]'>
+						(#OBLIGATOIRE|=={oui}|?{<:forms:info_obligatoire_02:>,''})</span>]
+					[(#TITRE|strlen|?{':'})]
+				</span>
+				[<span class="formInfo"><a href="#URL_PAGE{forms_tip,id_form=#ID_FORM&champ=#CHAMP&width=200}" class="jTip" name="" id='aide_#ID_FORM_#CHAMP'>(#AIDE|?{'?'})</a></span>]
+				[(#TYPE|=={date}|?{' ',''}) #SET{afficher,0} #SET{date-picker,1}
+					<input type='text' name='#CHAMP' id='#CHAMP' value="[(#ENV**{valeurs}|forms_valeur{#CHAMP,''}|entites_html)]" 
+						class='[(#OBLIGATOIRE|=={oui}|?{forml,formo})][(#ENV**{erreur}|forms_valeur{#CHAMP}|?{' ',''}) champ_obli_oubli] date-picker'
+						size='40' />
+				]
+				[(#TYPE|=={email}|?{' ',''}) #SET{afficher,0}
+					<span class='spip_form_label_details'><:forms:champ_email_details:></span>
+					<input type='text' name='#CHAMP' id='#CHAMP' value="[(#ENV**{valeurs}|forms_valeur{#CHAMP,''}|entites_html)]" 
+						class='[(#OBLIGATOIRE|=={oui}|?{forml,formo})][(#ENV**{erreur}|forms_valeur{#CHAMP}|?{' ',''}) champ_obli_oubli]' 
+						size='40' />
+				]
+				[(#TYPE|=={url}|?{' ',''}) #SET{afficher,0}
+					<span class='spip_form_label_details'><:forms:champ_url_details:></span>
+					<input type='text' name='#CHAMP' id='#CHAMP' value="[(#ENV**{valeurs}|forms_valeur{#CHAMP,''}|entites_html)]" 
+						class='[(#OBLIGATOIRE|=={oui}|?{forml,formo})][(#ENV**{erreur}|forms_valeur{#CHAMP}|?{' ',''}) champ_obli_oubli]' 
+						size='40' />
+				]
+				[(#TYPE|=={texte}|?{' ',''}) #SET{afficher,0}
+					[(#ENV**{valeurs}|forms_valeur{#CHAMP,''}|forms_textarea{10,80,#CHAMP,#CHAMP,[(#OBLIGATOIRE|=={oui}|?{forml,formo}|concat{#ENV**{erreur}|forms_valeur{#CHAMP}|?{champ_obli_oubli}})] })]
+				]
+				[(#TYPE|=={fichier}|?{' ',''}) #SET{afficher,0}
+					<input type='file' name='#CHAMP' id='#CHAMP'
+						class='[(#OBLIGATOIRE|=={oui}|?{forml,formo})][(#ENV**{erreur}|forms_valeur{#CHAMP}|?{' ',''}) champ_obli_oubli]' 
+						size='40' />
+					[(#ENV**{valeurs}|forms_valeur{#CHAMP,''})]
+				]
+				[(#TYPE|=={select}|?{' ',''}) #SET{afficher,0}
+					<INCLURE{fond=formulaires/forms_champ_select}{id_form}{champ}{valeur=#ENV**{valeurs}}>
+				]
+				[(#TYPE|=={multiple}|?{' ',''}) #SET{afficher,0}
+					<INCLURE{fond=formulaires/forms_champ_multiple}{id_form}{champ}{valeur=#ENV**{valeurs}}>
+				]
+				[(#TYPE|=={mot}|?{' ',''}) #SET{afficher,0}
+					<INCLURE{fond=formulaires/forms_select_mot}{id_groupe=#EXTRA_INFO}{champ}{valeur=#ENV**{valeurs}}>
+				]
+				[(#TYPE|=={articles_mot}|?{' ',''}) #SET{afficher,0}
+					<INCLURE{fond=formulaires/forms_select_article_mot}{id_mot=#EXTRA_INFO}{champ}{valeur=#ENV**{valeurs}}>
+				]
+				[(#REM) tous les autres types sont affiches ici]
+				[(#GET{afficher}|?{' ',''})
+					<input type='text' name='#CHAMP' id='#CHAMP' value="[(#ENV**{valeurs}|forms_valeur{#CHAMP,''}|entites_html)]" 
+						class='[(#TYPE) ][(#OBLIGATOIRE|=={oui}|?{forml,formo})][(#ENV**{erreur}|forms_valeur{#CHAMP}|?{' ',''}) champ_obli_oubli]' 
+						size='40' />
+				]
+				[<span class='erreur'>(#ENV**{erreur}|forms_valeur{#CHAMP})</span>]
+				<span class='nettoyeur'> </span>
+			]
+		</div>
+	]
+]
+</BOUCLE_champs>
+</fieldset>
+[(#ENV{affiche_sondage}|?{'',' '})
+	[(#REM) Piege a robots spammeurs ]
+	<p style='display:none;'><label for="nobotnobot"><:antispam_champ_vide:></label>
+	<input type="text" name="nobotnobot" id="nobotnobot" value="#ENV{nobotnobot}" size="10" /></p>
+	
+	<div style='text-align:#LANG_RIGHT' class='spip_bouton'><input type="submit" name='Valider' value="<:bouton_valider:>" /></div>
+]
+<script src="#CHEMIN{javascript/jtip.js}" type="text/javascript"></script>
+[(#GET{date-picker}|?{' '})
+<script src="#CHEMIN{javascript/jquery-dom.js}" type="text/javascript"></script>
+<script src="#CHEMIN{javascript/datePicker.js}" type="text/javascript"></script>
+]
+<script type="text/javascript"><!--
+$('input.formo').bind('focus',function(){$(this).removeClass('formo').addClass('formo-focus');});
+$('input.formo').bind('blur',function(){$(this).removeClass('formo-focus').addClass('formo');});
+$('input.forml').bind('focus',function(){$(this).removeClass('forml').addClass('forml-focus');});
+$('input.forml').bind('blur',function(){$(this).removeClass('forml-focus').addClass('forml');});
+[(#GET{date-picker}|?{' '})
+	$.datePicker.setDateFormat('ddmmyyyy','/');
+	[(#INCLURE{fond=formulaires/date_picker_init}|charset2unicode{html}|unicode2charset)]
+	$('input.date-picker').datePicker({startDate:'01/01/1900'});
+]
+//--></script>
+</BOUCLE_form>

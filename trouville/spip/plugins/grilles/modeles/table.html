@@ -1,0 +1,53 @@
+#SET{colonnes_sans_tri,'0'}
+<link rel="stylesheet" type="text/css" href="#CHEMIN{img_pack/donnees_tous.css}" />
+<script type="text/javascript" src="#EVAL{_DIR_PLUGIN_FORMS}javascript/jquery.tablesorter.dev.js"></script>
+<p><div id="sorting"><div>Tri en cours, un instant...</div></div>
+<div id="filter"></div></p>
+<div style="clear:both">&nbsp;</div>
+<B_head>
+<table class="spip donnees" id='donnees-#ENV{id_table}'>
+<BOUCLE_caption(FORMS){id_form=#ENV{id_table}}><caption>#TITRE</caption></BOUCLE_caption>
+<thead><tr class='row_first'>
+	<th class='neutre'>id</th>
+	<BOUCLE_head(FORMS_CHAMPS){id_form=#ENV{id_table}}{type !IN (separateur,textestatique)}{par rang}{specifiant=oui}>
+	<th [(#SPECIFIANT|=={oui}|?{'','class="neutre"'})#SET{colonnes_sans_tri,#GET{colonnes_sans_tri}|concat{','}|concat{#COMPTEUR_BOUCLE|plus{1}}]>#TITRE</th>
+	</BOUCLE_head>
+</tr></thead>
+<tbody>
+<BOUCLE_donnees(FORMS_DONNEES){id_form=#ENV{id_table}}{id_mot?}{par rang}>
+#SET{lien_supp,#URL_ACTION_AUTEUR{forms_donnee_supprime,#ID_FORM:#ID_DONNEE,#EVAL{_DIR_RESTREINT_ABS}|concat{#SELF}|urlencode}}
+	<tr class='[(#COMPTEUR_BOUCLE|alterner{row_even,row_odd})]'>
+		<td><a href='[(#SELF|parametre_url{id_donnee,#ID_DONNEE}|ancre_url{donnee-#ID_DONNEE})]'>#ID_DONNEE</a></td>
+		<BOUCLE_body(FORMS_CHAMPS){id_form}{type !IN (separateur,textestatique)}{par rang}{specifiant=oui}>
+		<td>
+		#LESVALEURS{'<br />'}
+		</td>
+		</BOUCLE_body>
+</BOUCLE_donnees>
+</tbody>
+</table>
+</B_head>
+#MODELE{donnee,id_donnee=#EVAL{$_GET['id_donnee']} }
+<script type="text/javascript"><!--
+var search_string='<:bouton_chercher:>';
+var clear_string='<:info_tout_afficher:>';
+var apply_string='<:bouton_valider:>';
+$(document).ready(function() {
+	$("table#donnees-#ENV{id_table}").tableSorter({
+		sortClassAsc: 'headerSortUp', 		// class name for ascending sorting action to header
+		sortClassDesc: 'headerSortDown',	// class name for descending sorting action to header
+		headerClass: 'header', 				// class name for headers (th's)
+		disableHeader: [#GET{colonnes_sans_tri}], // disable column can be a string / number or array containing string or number. 
+		dateFormat: 'dd/mm/yyyy', // set date format for non iso dates default us, in this case override and set uk-format
+		stripingRowClass: ['row_even','row_odd'],	// Class names for striping supplyed as a array.
+		stripRowsOnStartUp: false		// Strip rows on tableSorter init.	
+	});
+	$("div#sorting").hide();
+});
+$(document).sortStart(function(){
+	$("div#sorting").show();
+}).sortStop(function(a){
+	$("div#sorting").hide();
+});
+// -->
+</script>

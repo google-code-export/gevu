@@ -1,0 +1,62 @@
+<!-- a:2:{s:11:"process_ins";s:3:"php";s:7:"entetes";a:3:{s:12:"X-Spip-Cache";s:5:"86400";s:13:"Cache-Control";s:13:"max-age=86400";s:12:"Content-Type";s:29:"text/html; charset=iso-8859-1";}} -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="fr">
+<head>
+	<title>acc&egrave;s &agrave; l'espace priv&eacute; - GEVU - Trouville</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta name="robots" content="none" />
+	<meta name="generator" content="SPIP" />
+	<link rel="shortcut icon" href="dist/favicon.ico" />
+	<link rel="stylesheet" href="dist/spip_style.css" type="text/css" />
+	<style type="text/css">
+	<!--
+		body.page_login { background: #fff; text-align: center; font: 1em Verdana, Tahoma, Arial, Helvetica, sans-serif; }
+		.formulaire_spip { text-align: left; font-size: 12px; }
+		.formulaire_menu_lang { float: right; }
+		.formulaire_menu_lang label { display: none; }
+		.formulaire_login { clear: both; }
+		.spip_logos { float: right; padding-left: 10px; }
+		.forml { width: 12em; font-family: inherit; font-size: inherit; }
+		.spip_bouton input { float: right; }
+		.reponse_formulaire { font-weight: bold; color: red; }
+		a { color: #e86519; text-decoration: none; }
+	-->
+	</style>
+</head>
+<body class="page_login">
+
+<div style="text-align: center; width: 400px; margin: 0 auto; padding: 3em 0;">
+
+		<h3 class="spip">GEVU - Trouville<br />
+			<small>acc&egrave;s &agrave; l'espace priv&eacute;</small>
+		</h3>
+
+		<?php 
+include_spip('inc/lang');
+lang_select("fr");
+include_once("ecrire/balise/menu_lang_ecrire.php");
+inclure_balise_dynamique(balise_MENU_LANG_ECRIRE_dyn(''),1, 36);
+lang_dselect();
+?>
+
+		<div class="formulaire_spip formulaire_login">
+			<?php 
+include_spip('inc/lang');
+lang_select("fr");
+include_once("ecrire/balise/login_prive.php");
+inclure_balise_dynamique(balise_LOGIN_PRIVE_dyn('', 'ecrire/?exec=naviguer&id_rubrique=6264'),1, 39);
+lang_dselect();
+?>
+
+			<p style="text-align: center;">
+			
+			&#91;<a href="http://localhost/gevu/trouville/spip/spip.php?action=pass" target="spip_pass" onclick="javascript:window.open(this.href, 'spip_pass', 'scrollbars=yes, resizable=yes, width=480, height=330'); return false;">mot&nbsp;de&nbsp;passe&nbsp;oubli&eacute;&nbsp;?</a>&#93;
+			&#91;<a href="http://www.mundilogiweb.com/onadabase/spip/">retour&nbsp;au&nbsp;site&nbsp;public</a>&#93;
+			</p>
+
+		</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!-- a:2:{s:11:"process_ins";s:4:"html";s:7:"entetes";a:3:{s:12:"X-Spip-Cache";s:1:"0";s:13:"Cache-Control";s:35:"no-store, no-cache, must-revalidate";s:6:"Pragma";s:8:"no-cache";}} -->
+
+	<link rel="stylesheet" type="text/css" href="../plugins/grilles/img_pack/donnees_tous.css" />
+	<script type="text/javascript" src="../plugins/grilles/javascript/jquery.tablesorter.dev.js"></script>
+
+<div class='liste'>
+<div style='position: relative;'>
+	<div style='position: absolute; top: -12px; left: 3px;'><img src='../plugins/grilles/img_pack/-24.png' alt="" /></div>
+	<div style='background-color: #C0CAD4; color: black; padding: 3px; padding-left: 30px; border-bottom: 1px solid #444444;' class='verdana2'>
+	<b>Tous les formulaires</b>
+	</div>
+</div>
+<table class="arial11 donnees" id='donnees' width='auto' cellpadding='5' cellspacing='0' border='0'>
+<thead>
+	<tr>
+		<th class='neutre'></th>
+		<th class='neutre'>id</th>
+		<th>Rang</th>
+		<th>Date</th>
+		<th>De</th>
+		<th>Page</th>
+		
+		<th class="neutre">Nom du territoire</th>
+		
+		<th class="neutre">Type de territoire</th>
+		
+		 <th class='neutre'>&nbsp;</th>
+	</tr>
+</thead>
+<tbody>
+
+<tr class='tr_liste'>
+		<td><script type='text/javascript'><!--
+$(document).ready(function(){
+					$('div.puce_forms_donnee').mouseover( function() {
+						if (this.puce_loaded) return;
+						this.puce_loaded = true;
+						id = $(this).id();
+						id = id.substr(6,id.length-1);
+						$('#statut'+id).load('http://localhost/gevu/trouville/spip/ecrire/?exec=puce_statut_forms_donnee&id='+id,function(){ 
+								$('#statutdecalforms_donnee'+id).show(); 
+								/*$('#statut'+id).mouseover(function(){ $(this).children('.puce_forms_donnee_popup').show(); });*/
+							});
+						});
+					
+				})//--></script>
+<div class='puce_forms_donnee' id='statut43039'><img src='img_pack/puce-.gif'
+alt="puce-" id='imgstatutforms_donnee43039' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=43039&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>43039</a></td>
+		<td></td>
+		<td>2009-07-02 20:39:50</td>
+		<td>samszo</th>
+		<td></td>
+		
+		<td>
+
+		
+
+		</td>
+		
+		<td>
+
+		
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+<tr class='tr_liste'>
+		<td>
+<div class='puce_forms_donnee' id='statut12395'><img src='img_pack/puce-.gif'
+alt="puce-" id='imgstatutforms_donnee12395' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=12395&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>12395</a></td>
+		<td></td>
+		<td>2008-04-07 12:50:49</td>
+		<td>86.198.170.124</th>
+		<td></td>
+		
+		<td>
+
+		
+
+		</td>
+		
+		<td>
+
+		
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+<tr class='tr_liste'>
+		<td>
+<div class='puce_forms_donnee' id='statut30984'><img src='img_pack/puce-.gif'
+alt="puce-" id='imgstatutforms_donnee30984' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=30984&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>30984</a></td>
+		<td></td>
+		<td>2008-12-01 09:05:35</td>
+		<td>samszo</th>
+		<td></td>
+		
+		<td>
+
+		
+
+		</td>
+		
+		<td>
+
+		
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+<tr class='tr_liste'>
+		<td>
+<div class='puce_forms_donnee' id='statut31003'><img src='img_pack/puce-verte.gif'
+alt="Article publi&eacute;" id='imgstatutforms_donnee31003' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=31003&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>31003</a></td>
+		<td></td>
+		<td>2009-06-09 20:16:40</td>
+		<td>samszo</th>
+		<td>ecrire/</td>
+		
+		<td>
+
+		France
+
+		</td>
+		
+		<td>
+
+		54
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+<tr class='tr_liste'>
+		<td>
+<div class='puce_forms_donnee' id='statut11020'><img src='img_pack/puce-verte.gif'
+alt="Article publi&eacute;" id='imgstatutforms_donnee11020' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=11020&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>11020</a></td>
+		<td>1</td>
+		<td>2008-04-01 18:16:10</td>
+		<td>90.58.107.102</th>
+		<td>ecrire/</td>
+		
+		<td>
+
+		Territoire test
+
+		</td>
+		
+		<td>
+
+		59
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+<tr class='tr_liste'>
+		<td>
+<div class='puce_forms_donnee' id='statut39308'><img src='img_pack/puce-verte.gif'
+alt="Article publi&eacute;" id='imgstatutforms_donnee39308' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=39308&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>39308</a></td>
+		<td>1</td>
+		<td>2009-06-09 16:32:33</td>
+		<td>127.0.0.1</th>
+		<td>ecrire/</td>
+		
+		<td>
+
+		Basse Normandie
+
+		</td>
+		
+		<td>
+
+		56
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+<tr class='tr_liste'>
+		<td>
+<div class='puce_forms_donnee' id='statut39310'><img src='img_pack/puce-orange.gif'
+alt="Article propos&eacute;" id='imgstatutforms_donnee39310' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=39310&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>39310</a></td>
+		<td>1</td>
+		<td>2009-05-26 10:19:54</td>
+		<td></th>
+		<td></td>
+		
+		<td>
+
+		Trouville-sur-Mer
+
+		</td>
+		
+		<td>
+
+		59
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+<tr class='tr_liste'>
+		<td>
+<div class='puce_forms_donnee' id='statut34105'><img src='img_pack/puce-orange.gif'
+alt="Article propos&eacute;" id='imgstatutforms_donnee34105' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=34105&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>34105</a></td>
+		<td>1</td>
+		<td>2009-01-22 12:36:03</td>
+		<td></th>
+		<td></td>
+		
+		<td>
+
+		
+
+		</td>
+		
+		<td>
+
+		
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+<tr class='tr_liste'>
+		<td>
+<div class='puce_forms_donnee' id='statut43041'><img src='img_pack/puce-orange.gif'
+alt="Article propos&eacute;" id='imgstatutforms_donnee43041' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=43041&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>43041</a></td>
+		<td>1</td>
+		<td>2009-07-02 20:40:57</td>
+		<td></th>
+		<td></td>
+		
+		<td>
+
+		Calvados
+
+		</td>
+		
+		<td>
+
+		57
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+<tr class='tr_liste'>
+		<td>
+<div class='puce_forms_donnee' id='statut11021'><img src='img_pack/puce-verte.gif'
+alt="Article publi&eacute;" id='imgstatutforms_donnee11021' style='margin: 1px;' /></div></td>
+		<td><a href='http://localhost/gevu/trouville/spip/ecrire/?exec=donnees_edit&amp;id_form=66&amp;id_donnee=11021&amp;retour=%3Fexec%3Ddonnees_tous%26amp%3Bid_form%3D66%26amp%3Bretour%3D%25253Fexec%25253Dtables_tous%252526amp%25253Bdebut_forms%25253D10'>11021</a></td>
+		<td>2</td>
+		<td>2008-04-01 18:16:11</td>
+		<td>90.58.107.102</th>
+		<td>ecrire/</td>
+		
+		<td>
+
+		Territoire test
+
+		</td>
+		
+		<td>
+
+		59
+
+		</td>
+		
+		 <td>
+		
+		 </td>
+	</tr>
+
+</tbody>
+</table>
+</div>
+
+	<script type="text/javascript"><!--
+	var search_string='Chercher';
+	var clear_string='Tout afficher';
+	var apply_string='Valider';
+	$(document).ready(function() {
+		$("table#donnees").tableSorter({
+		  
+			sortClassAsc: 'headerSortUp', 		// class name for ascending sorting action to header
+			sortClassDesc: 'headerSortDown',	// class name for descending sorting action to header
+			headerClass: 'header', 				// class name for headers (th's)
+		
+			disableHeader: [0,1,6,7,8], // disable column can be a string / number or array containing string or number. 
+			dateFormat: 'dd/mm/yyyy' // set date format for non iso dates default us, in this case override and set uk-format
+		});
+		$("div#sorting").hide();
+	});
+	$(document).sortStart(function(){
+		$("div#sorting").show();
+	}).sortStop(function(a){
+		$("div#sorting").hide();
+	});
+	// -->
+	</script>	

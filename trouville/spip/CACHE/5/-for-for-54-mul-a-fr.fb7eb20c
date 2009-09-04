@@ -1,0 +1,19 @@
+<!-- a:2:{s:11:"process_ins";s:4:"html";s:7:"entetes";a:0:{}} -->
+
+ 
+
+	
+	<span class='spip_form_choix_multiple'>
+	&nbsp; <input type='checkbox' name='multiple_1[]' id='multiple_1_1' value='multiple_1_1'
+	 />
+	<label for='multiple_1_1'>Réglementaire</label>
+	</span>
+	
+	<span class='spip_form_choix_multiple'>
+	&nbsp; <input type='checkbox' name='multiple_1[]' id='multiple_1_2' value='multiple_1_2'
+	 />
+	<label for='multiple_1_2'>Souhaitable</label>
+	</span>
+	
+
+
