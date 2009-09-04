@@ -1,0 +1,29 @@
+#CACHE{0}
+<div id='table_donnee_deplace-#ID_FORM'>
+<div class='verdana2' style='text-align:#LANG_RIGHT'>
+<BOUCLE_la(FORMS_DONNEES){id_form}{id_donnee}>
+<label for='nouv_rang'><:forms:rang:></label>
+<input name='rang_nouv' id='nouv_rang' size='4' class='fondl' value='#RANG' />
+#SET{rang_deb,#RANG|moins{10}|max{1}}
+</BOUCLE_la>
+<input type='submit' value='<:bouton_valider:>' class='fondo' />
+</div>
+<B_donnees>
+<ul class="sortable verdana2" id="sort_table">
+<BOUCLE_donnees(FORMS_DONNEES){id_form}{statut!=poubelle}{par rang}{rang>=#GET{rang_deb}}{rang<#GET{rang_deb}|plus{#ENV{total,20}}}>
+	<li class="sortableitem [(#ID_DONNEE|=={#ENV{id_donnee}}|?{selected})]" id="#ID_DONNEE-#RANG">#RANG - 
+		#SET{texte,''}
+		<BOUCLE_body(FORMS_CHAMPS){id_form}{tout}{par rang}{specifiant='oui'}{0,2}>
+		#SET{texte,#GET{texte}|concat{#LESVALEURS{' '},' '}}
+		</BOUCLE_body>
+			<BOUCLE_alt(FORMS_CHAMPS){id_form}{tout}{par rang}{type !IN (separateur,textestatique)}{0,2}>
+			#SET{texte,#GET{texte}|concat{#LESVALEURS{' '},' '}}
+			</BOUCLE_alt>
+		<//B_body>
+		[(#GET{texte}|couper{50})]
+	</li>
+</BOUCLE_donnees>
+</ul>
+<input name='ordre' type='hidden' value='' />
+</B_donnees>
+</div>

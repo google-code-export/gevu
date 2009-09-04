@@ -1,0 +1,22 @@
+<!-- a:3:{s:8:"contexte";a:1:{s:9:"id_groupe";i:35;}s:11:"process_ins";s:4:"html";s:7:"entetes";a:0:{}} -->
+
+	
+	<ul class="choix_mots">
+		<li>
+			<input type="checkbox" name="mot_1[]" id="mot152" value="152" 
+			 />
+			<label for="mot152">V1</label></li>
+	    
+	</ul>
+	
+	
+	<ul class="choix_mots">
+		<li>
+			<input type="checkbox" name="mot_1[]" id="mot153" value="153" 
+			 />
+			<label for="mot153">V2</label></li>
+	    
+	</ul>
+	
+
+<br class="nettoyeur" />
