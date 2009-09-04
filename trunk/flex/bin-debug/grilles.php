@@ -6,8 +6,8 @@ $ajax = true;
 require_once(dirname(__FILE__) . "/functions.inc.php");
 require_once(dirname(__FILE__) . "/XmlSerializer.class.php"); 
 
-require_once ("C:/wamp/www/gevu/param/ParamPage.php");
-//require_once ($_SERVER["DOCUMENT_ROOT"]."/trouville/param/ParamPage.php");
+//require_once ("C:/wamp/www/gevu/param/ParamPage.php");
+require_once ($_SERVER["DOCUMENT_ROOT"]."/param/ParamPage.php");
 
 $objSite = new Site($SITES, DEFSITE, $scope, false);
 //echo ($objSite->infos["SQL_HOST"].", ".$objSite->infos["SQL_LOGIN"].", ".$objSite->infos["SQL_DB"]);

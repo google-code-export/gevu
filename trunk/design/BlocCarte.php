@@ -1,5 +1,6 @@
 <?php
 //vérifie si la page est include ou ajax
+session_start();
 if(!$g){
 	$ajax = true;
 	require_once("../param/ParamPage.php");
@@ -7,7 +8,7 @@ if(!$g){
 
 //récupération de donnée géo 
 $arrGeo = $g->GetGeo(-1,$idDon);
-//print_r($arrGeo);
+print_r($arrGeo);
 
 ?>
 <html >
