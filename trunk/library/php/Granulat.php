@@ -1007,11 +1007,15 @@ class Granulat
 		$db->connect();
 		$requete =  $db->query($sql);
 		$db->close();
+
+		$GmapType = "G_SATELLITE_MAP";
+		
 		$result['lat'] = $this->site->infos["DEF_LAT"];
 		$result['lng'] = $this->site->infos["DEF_LNG"];
 		$result['zoom'] = $this->site->infos["DEF_ZOOM"];
 		$result['zoommax'] = $this->site->infos["DEF_ZOOM"]+4;
 		$result['idType'] = $this->site->infos["MOT_CLEF_DEF_TYPE_CARTE"];
+		$result['type'] = $GmapType;
 		$r =  $db->fetch_assoc($requete);
 		//gestion de la localisation parente si localisation  null
 		if(!$r['lat']){
@@ -1024,7 +1028,6 @@ class Granulat
 				$result['zoom'] = $r['zoom'];
 			if($r['zoommax'])
 				$result['zoommax'] = $r['zoommax'];
-			$GmapType = "G_SATELLITE_MAP";
 			if($r['type']==3)
 				$GmapType = "G_NORMAL_MAP";
 			if($r['type']==5)

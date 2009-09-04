@@ -1584,6 +1584,58 @@ function DelRubriqueFrere($idRub){
 			
 	}
 	
+
+	function CleanDocuments() {
+		
+		$time_start = microtime(true);		
+		$this->trace = true;
+		if($this->trace)
+			echo "<Synchro f='CleanDocument' db='".$this->siteSrc->infos["SQL_DB"]."' />\n";
+		
+		if($this->trace)
+			echo "<Synchro f='CleanDocument' job='supprime les document sans articles' >\n";
+		$sql = "SELECT da.id_document, d.id_document idDoc
+			FROM `spip_documents` d
+				LEFT JOIN spip_documents_articles da ON da.id_document = d.id_document
+			WHERE da.id_document IS NULL ";
+		$DB = new mysql($this->siteSrc->infos["SQL_HOST"], $this->siteSrc->infos["SQL_LOGIN"], $this->siteSrc->infos["SQL_PWD"], $this->siteSrc->infos["SQL_DB"]);
+		$rs = $DB->query($sql);
+		$DB->close();
+		while($r = $DB->fetch_assoc($rs)) {
+			$this->DelDocument($r["idDoc"]);
+			if($this->trace)
+				echo $r["idDoc"]."<br/>";
+		}
+		if($this->trace)
+			echo "</Synchro>\n";
+		
+		if($this->trace)
+			echo "<Synchro f='CleanDocument' job='supprime les documents sans rubrique' >\n";
+		$sql = "SELECT dr.id_document, d.id_document idDoc
+			FROM `spip_documents` d
+				LEFT JOIN spip_documents_rubriques dr ON dr.id_document = d.id_document
+			WHERE dr.id_document IS NULL";
+		$DB = new mysql($this->siteSrc->infos["SQL_HOST"], $this->siteSrc->infos["SQL_LOGIN"], $this->siteSrc->infos["SQL_PWD"], $this->siteSrc->infos["SQL_DB"]);
+		$rs = $DB->query($sql);
+		$DB->close();
+		//supprime les lignes
+		while($r = $DB->fetch_assoc($rs)) {
+			$this->DelDocument($r["idDoc"]);
+			if($this->trace)
+				echo $r["idDoc"]."<br/>";
+		}
+		if($this->trace)
+			echo "</Synchro>\n";
+		
+		
+		$time_end = microtime(true);
+		$time = $time_end - $time_start;
+		//if($this->trace)
+			echo "<Synchro f='CleanForm' fin='$time' />\n";
+			
+	}
+	
+	
 	function CleanForm() {
 		
 		$time_start = microtime(true);		
@@ -1640,7 +1692,7 @@ function DelRubriqueFrere($idRub){
 		
 		$time_end = microtime(true);
 		$time = $time_end - $time_start;
-		if($this->trace)
+		//if($this->trace)
 			echo "<Synchro f='CleanForm' fin='$time' />\n";
 			
 	}
@@ -1792,6 +1844,17 @@ function DelRubriqueFrere($idRub){
 		$sql = "DELETE 
 				FROM spip_documents_articles 
 				WHERE id_article = ".$idArticle;
+		//echo $sql."<br/>";
+		$DB = new mysql($this->siteSrc->infos["SQL_HOST"], $this->siteSrc->infos["SQL_LOGIN"], $this->siteSrc->infos["SQL_PWD"], $this->siteSrc->infos["SQL_DB"]);
+		$req = $DB->query($sql);
+		$DB->close();
+	}
+
+	function DelDocument($idDoc) {
+		
+		$sql = "DELETE 
+				FROM spip_documents 
+				WHERE id_document = ".$idDoc;
 		//echo $sql."<br/>";
 		$DB = new mysql($this->siteSrc->infos["SQL_HOST"], $this->siteSrc->infos["SQL_LOGIN"], $this->siteSrc->infos["SQL_PWD"], $this->siteSrc->infos["SQL_DB"]);
 		$req = $DB->query($sql);

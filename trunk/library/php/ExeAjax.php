@@ -138,6 +138,13 @@
 		case 'CleanRubrique':
 			$resultat = CleanRubrique($_GET['deb'], $_GET['fin']);
 			break;
+		case 'CleanForm':
+			$resultat = CleanForm() ;
+			break;
+		case 'CleanDoc':
+			$synchro = new Synchro($objSite, $objSite);
+			$synchro->CleanDocuments();
+			break;		
 		case 'AddDocToArt':
 			//$resultat = AddDocToArt($_GET['path'], $_GET['idArt'], $_GET['doc']);
 			$resultat = AddDocToArt($_GET['idDoc']);
