@@ -61,6 +61,7 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 				<menu label="Gestion des bases" class="menubar" >
 					<menupopup >
 						<menuitem accesskey="d" label="Déconnexion" oncommand="window.location.replace('exit.php');"/>
+						<!--  
 					    <menu label="Synchronisation">
 					      <menupopup id='mnuBarSynchro' >
 						    <menu label="<?php echo $SITES[SYNCSITE]["NOM"]; ?>-><?php echo $SITES[$site]["NOM"]; ?>">
@@ -78,6 +79,7 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 						    </menu>
 					      </menupopup>
 					    </menu>
+					    -->
 					    <menu label="Bases disponibles">
 					      <menupopup id='mnuSite' >
 							<?php 
