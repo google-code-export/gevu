@@ -72,10 +72,12 @@ class Granulat
 	}
   
 	
-	function GetIdsScope(){
+	function GetIdsScope($inCache=false,$allNiv=false){
 		
 		//purge la liste des enfants
-		$this->DelEnfantId();
+		if(!$inCache){
+			$this->DelEnfantId();
+		}
 		
 		//vérifie si on traite une ligne de transport
 		$ligne = $this->VerifExistGrille($this->site->infos["GRILLE_LIGNE_TRANS"]);
@@ -90,7 +92,7 @@ class Granulat
 		if($ligne!=-1)
 			$ids = $this->GetEnfantIdsInLiens($this->id,",",$idMotLiens);
 		else
-			$ids = $this->GetEnfantIds($this->id,",").$this->id;
+			$ids = $this->GetEnfantIds($this->id,",",-1,$inCache,$allNiv).$this->id;
 
 		//vérifie si $ids est renseigné
 		if(!$ids)
@@ -972,7 +974,7 @@ class Granulat
 	}
 	
 	
-  	function GetGeo($id=-1,$idDon=-1) {
+  	function GetGeo($id=-1,$idDon=-1,$niv=-1) {
 		if($id==-1)
 			$g = $this;
 		else
@@ -1016,11 +1018,16 @@ class Granulat
 		$result['zoommax'] = $this->site->infos["DEF_ZOOM"]+4;
 		$result['idType'] = $this->site->infos["MOT_CLEF_DEF_TYPE_CARTE"];
 		$result['type'] = $GmapType;
+		$result['adresse'] = "";
+		$result['kml'] = "";
+		$result['docArtkml'] = "";
 		$r =  $db->fetch_assoc($requete);
 		//gestion de la localisation parente si localisation  null
 		if(!$r['lat']){
-			if($g->IdParent!=0)
-				$result = $this->GetGeo($g->IdParent);
+			//niveau pour éviter de boucler trop longtemps
+			if($g->IdParent!=0 && $niv<3){
+				$result = $this->GetGeo($g->IdParent,-1,$niv+1);
+			}
 		}else {
 			$result['lat'] = $r['lat'];
 			$result['lng'] = $r['lng'];
@@ -1336,17 +1343,22 @@ class Granulat
 
 	}
 
-	public function GetEnfantIds($id = "", $sep="", $maxNiv=-1)
+	public function GetEnfantIds($id = "", $sep="", $maxNiv=-1, $inCache=false, $allNiv=false)
 	{
 		if($id =="")
 			$id = $this->id;
 		if($sep=="")
 			$sep=DELIM;
 			
-		//récupère les sous thème
-		$sql = "SELECT id_rubrique, titre
-			FROM spip_rubriques r
-			WHERE r.id_parent = ".$id;
+		if(!$inCache){
+			//récupère les sous thème
+			$sql = "SELECT id_rubrique, titre
+				FROM spip_rubriques r
+				WHERE r.id_parent = ".$id;
+		}else{
+			$sql = "SELECT id_rubrique FROM spip_rubriques_enfants 
+				WHERE id_parent = ".$id;
+		}
 		//echo $this->site->infos["SQL_LOGIN"]."<br/>";
 	
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
@@ -1355,11 +1367,18 @@ class Granulat
 
 		$valeur="";
 		while($r = $DB->fetch_assoc($req)) {
-			if($maxNiv==-1)
-				$valeur .= $this->GetEnfantIds($r['id_rubrique'],$sep);
+			if($maxNiv==-1 && !$inCache){
+				$valeur .= $this->GetEnfantIds($r['id_rubrique'],$sep,$maxNiv,$inCache,$allNiv);
+			}
+			if($allNiv){
+				$g = new Granulat($r['id_rubrique'],$this->site);
+				$valeur .= $g->GetIdsScope($inCache,$allNiv);
+			}
 			$valeur .= $r['id_rubrique'].$sep;
-			//ajoute dans la table de cache
-			$this->SetEnfantId($r['id_rubrique']);
+			if(!$inCache){
+				//ajoute dans la table de cache
+				$this->SetEnfantId($r['id_rubrique']);
+			}
 		}
 		
 		return $valeur;

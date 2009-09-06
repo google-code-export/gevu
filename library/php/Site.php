@@ -7,6 +7,7 @@ class Site{
   public $XmlParam;
   public $sites;
   public $trace;
+  public $infos;
   
   function __tostring() {
     return "Cette classe permet de définir et manipuler un site.<br/>";
@@ -476,7 +477,40 @@ class Site{
 
 	}
 
-	
+ function stripAccents($string)
+  {
+    return strtr($string,'àáâãäçèéêëìíîïñòóôõöùúûüıÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜİ',
+		 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
+  }
+  function strtokey($str)
+  {
+    for ($iii = 0; $iii < strlen($str); $iii++)
+      if (ord($str[$iii]) == 146 || ord($str[$iii]) == 156)
+	$str[$iii] = '-';
+    $key = str_replace("_", "-", $str);
+    $key = str_replace("'", "-", $key);
+    $key = str_replace("`", "-", $key);
+    $key = str_replace(".", "-", $key);
+    $key = str_replace(" ", "-", $key);
+    $key = str_replace(",", "-", $key);
+    $key = str_replace("{}", "_", $key);
+    $key = str_replace("(", "_", $key);
+    $key = str_replace(")", "_", $key);
+    $key = str_replace("--", "-", $key);
+    $key = str_replace("- -", "-", $key);
+    $key = str_replace("<i>", "", $key);
+    $key = str_replace("</i>", "", $key);
+    $key = str_replace(":", "", $key);
+    $key = str_replace("«", "", $key);
+    $key = str_replace("»", "", $key);
+    $key = str_replace("/", "", $key);
+    $key = str_replace("“", "", $key);
+    $key = str_replace("”", "", $key);
+        
+    $key = strtolower($key);
+    return $this->stripAccents($key);
+  }
+		
 	
   }
 
