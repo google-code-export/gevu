@@ -13,6 +13,13 @@
 			// en prod c'est $objSite
 			$resultat = Synchroniser($objSiteSync);
 			break;*/
+		case 'GetIdsScope':
+			//attention pend beaucoup de temps
+			$resultat = $g->GetIdsScope(false,true);
+			break;
+		case 'GetEnfantIds':
+			$resultat = $g->GetEnfantIds(6264);
+			break;
 		case 'AddGeoRSS':
 			$resultat = $g->SetRSS($url);
 			break;
@@ -135,6 +142,10 @@
 		case 'CleanArticle':
 			$resultat = CleanArticle($_GET['deb'], $_GET['fin']);
 			break;
+		case 'DelRubrique':
+			$synchro = new Synchro($objSite, $objSite);
+			$synchro->DelRubrique($_GET['idRub']);
+			break;
 		case 'CleanRubrique':
 			$resultat = CleanRubrique($_GET['deb'], $_GET['fin']);
 			break;
@@ -207,15 +218,14 @@
 		case 'SetElementChaine':
 			$resultat = SetElementChaine($objSite,$_GET['idRubSrc'],$_GET['idRubDst'],$objSite->infos["MOT_CLEF_CHAINE_DEPLA"]);
 			break;
-		case 'DelRubriqueFrere':
-			$synchro = new Synchro($objSite, -1);
-			$synchro->DelRubriqueFrere($_GET['idRub']);
-			break;
 		case 'AddNewDonnee':
 			$resultat = AddNewDonnee($_GET['idRub'],$_GET['idGrille'],$objSite);
 			break;
 		case 'GetXulForm':
 			$resultat = GetXulForm($_GET['idGrille'],$_GET['idDon']);
+			break;
+		case 'GetAllEtatDiag':
+			$resultat = GetAllEtatDiag();
 			break;
 		default:
 			//$resultat = AddDocToArt();
@@ -223,6 +233,21 @@
 
 	echo  utf8_encode($resultat);	
 
+	
+	function GetAllEtatDiag(){		
+		//gestion des requÃªtes multisite
+		if($objSite->infos["SITE_ENFANT"]!=-1 && $query!="idFiche"){
+			foreach($objSite->infos["SITE_ENFANT"] as $siteenfant=>$type)
+			{
+					//echo $site." NextSiteEnfant:".$siteenfant."<br/>"; 
+					$site = $objSite->sites[$siteenfant];
+					//echo $objSite->sites."<br/>"; 
+					$objSiteNew = new Site($objSite->sites, $siteenfant, $objSite->scope, false);
+					echo get_marker($objSiteNew, $id, $southWestLat, $northEastLat, $southWestLng, $northEastLng, $zoom, $query, $themes, $i);
+			}
+		}		
+	}
+	
 	function GetXmlImaListe($g){
 		//récupère les images jpeg png, gif
 		$imas = $g->GetDocs($g->id,"1,2,3");

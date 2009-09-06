@@ -27,22 +27,20 @@
 
     //prod
     /*
-	[Bindable] private var urlExeAjax:String="http://www.onadabase.eu/library/php/ExeAjax.php";
-	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRQPuSe5bSrCkW0z0AK5OduyCmU7hRSB6XyMSlG4GUuaIVi6tnDRGuEsWw";
-    private var urlAllEtatDiag:String="http://www.onadabase.eu/bdd/carto/allEtatDiag_centre-valdemarne-picardie_1942_prod.xml";
-    [Bindable] private var urlExeCarto:String="http://www.onadabase.eu/library/php/ExecDonneeCarto.php";
-    //private var urlTerreRoot:String="http://www.onadabase.eu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=1942&site=picardie";
-    private var urlTerreRoot:String="http://www.onadabase.eu/bdd/carto/ArboTerritoire_centre-picardie-valdemarne_1942.xml";
+	[Bindable] private var urlExeAjax:String="http://www.gevu.eu/library/php/ExeAjax.php";
+	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRSox1CW3WZ7BFlPopnC1QYedci_nRTlqNkDlGLLooN1jsOpU7UlsFDrfg";
+    private var urlAllEtatDiag:String="http://www.gevu.eu/bdd/carto/allEtatDiag_trouville_6264.xml";
+    [Bindable] private var urlExeCarto:String="http://www.gevu.eu/library/php/ExecDonneeCarto.php";
+    private var urlTerreRoot:String="http://www.gevu.eu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=6263&site=trouville";
 	*/
-
+	
 	//local
-   [Bindable] private var urlExeAjax:String="http://localhost/onadabase/library/php/ExeAjax.php";
+   [Bindable] private var urlExeAjax:String="http://localhost/gevu/library/php/ExeAjax.php";
 	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRSAqqCYJRNRYB52nvFZykN9ZY0cdhRvfhvUr_7t7Rz5_XNkPGDb_GYlQA";
-    private var urlAllEtatDiag:String="http://localhost/onadabase/bdd/carto/allEtatDiag_centre-valdemarne-picardie_1942.xml";
-    [Bindable] private var urlExeCarto:String="http://localhost/onadabase/library/php/ExecDonneeCarto.php";
-    private var urlTerreRoot:String="http://localhost/onadabase/bdd/carto/ArboTerritoire_centre-picardie-valdemarne_1942.xml";
-
-
+    private var urlAllEtatDiag:String="http://localhost/gevu/bdd/carto/allEtatDiag_trouville_6264.xml";
+    [Bindable] private var urlExeCarto:String="http://localhost/gevu/library/php/ExecDonneeCarto.php";
+    private var urlTerreRoot:String="http://localhost/gevu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=6263&site=trouville";
+	
     private var map:Map;
     private var markers:XMLList;
 	[Bindable]	private var rsEtatDiag:Object;
@@ -355,11 +353,11 @@
 	            var adresse:String = markerXml.@adresse;
 	            var latlng:LatLng = new LatLng(markerXml.@lat, markerXml.@lng);
 	            var type:String = "grille_"+markerXml.grilles.grille[0].@id
-		        if(!rubMarkers[idRub]){
+		        //if(!rubMarkers[idRub]){
 			        var marker:Marker = createMarker(latlng, titre, adresse, type, markerXml);
 				    rubMarkers[idRub] = marker;
 			        map.addOverlay(marker);
-			    }
+			    //}
 			    //montre les stats
 			    if(sStat)	
 				    showStat(markerXml);

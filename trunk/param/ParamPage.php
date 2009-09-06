@@ -32,10 +32,6 @@ if(isset($_POST['login_uti'])) {
 		$cols = $_GET['cols'];
 	else
 		$cols = -1;
-	if(isset($_GET['id']))
-		$id = $_GET['id'];
-	else
-		$id = -1;
 	if(isset($_GET['ppp']))
 		$ppp = $_GET['ppp'];
 	else
@@ -71,7 +67,7 @@ if(!isset($_SESSION['version']))
 	$_SESSION['version']="V1";
 	
 if(!isset($_SESSION['ForceCalcul']))
-	$_SESSION['ForceCalcul']=false;
+	$_SESSION['ForceCalcul']=true;
 	
 	
 if(TRACE)

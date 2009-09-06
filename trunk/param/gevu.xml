@@ -176,7 +176,7 @@
 				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Ligne');"/>
 			</menuDst>
 		</menuSrc>
-		<menuSrc code="Etab">
+		<menuSrc code="Etab" idForm="55" >
 			<menuDst codeTree="parcelle" codeSaisi="Parcelle" lib="Parcelle(s)" idForm="58" >
 				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Parcelle');"/>
 						<menuSrc code="Parcelle"></menuSrc>

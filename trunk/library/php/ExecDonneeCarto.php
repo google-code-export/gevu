@@ -57,6 +57,9 @@ echo $resultat;
 
 function get_arbo_territoire($idRub,$objSite,$niv=0) {
 	
+	$idGrille=$objSite->infos["GRILLE_TERRE"];
+	$grille = new Grille($objSite);
+	
 	$path = PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml";
     $xml = $objSite->GetFile($path);
 	if(!$xml){
@@ -68,7 +71,7 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 					AND r.id_parent =".$idRub."
 				INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
 				INNER JOIN spip_forms_donnees fd ON fd.id_donnee = da.id_donnee
-					AND fd.id_form =".$objSite->infos["GRILLE_TERRE"]."
+					AND fd.id_form =".$idGrille."
 				INNER JOIN spip_forms_donnees_champs dc ON dc.id_donnee = da.id_donnee
 					AND champ = 'mot_1'
 				INNER JOIN spip_mots m ON m.id_mot = dc.valeur
@@ -83,16 +86,34 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 		else
 			$xml="";
 		while($r = mysql_fetch_assoc($req)) {
-			$xml .= "<terre idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"".$r["rTitre"]."\"  idMot='".$r["id_mot"]."'  titreMot=\"".$r["mTitre"]."\" >";
+			$xml .= "<terre idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"".$r["rTitre"]."\" idGrille='".$idGrille."'   idMot='".$r["id_mot"]."'  titreMot=\"".$r["mTitre"]."\" >";
 	 		$xml .= get_arbo_territoire($r["id_rubrique"],$objSite,$niv+1);
+			//récupèration des éléments des sites enfants
+	 		if($objSite->infos["SITE_ENFANT"]!=-1){
+				//récupération des établissements
+	 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($r["id_rubrique"],$objSite->infos["GRILLE_ETAB"]);
+	 			if(count($arrG)>0){
+	 				$xml .= "<terre idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Etablissements\" idGrille='".$idGrille."' >";
+		 			//trie le résultat
+		 			ksort($arrG); 					
+		 			foreach($arrG as  $key=>$val){
+		 				$xml.=$val["xml"];
+					}	
+					$xml .= "</terre>";				
+	 			}
+			}
+	 		
 			$xml .= "</terre>";
 		}
+				
 		if($niv==0)	
 			$xml .= "</terres>";
 		$objSite->SaveFile(PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml",utf8_encode($xml));
 	}
 	return $xml;
 }
+
+
 
 
 function get_stat_kml($g,$objSite) {
@@ -434,9 +455,9 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 		//pour gérer le plantage de connexion mysql
 		//if(file_exists($path))	continue;
 			
-		//echo "recupÃ¨re le granulat = ".$id."<br/>";
 		$g = new Granulat($row['id_rubrique'], $objSite,false);
-
+		echo "recupère le granulat = ".$row['id_rubrique']."<br/>";
+		
 		//construction des markers
 		$xmlRub = $g->GetXmlCartoDonnee($row);
 						
@@ -456,7 +477,7 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 		}
 		
 		//ajoute le bassin de gare
-		$xmlRub .= CalculBassinGare($g, $saveStat);
+		//$xmlRub .= CalculBassinGare($g, $saveStat);
 		
 		//ajoute les geoRss
 		$xmlRub .= $g->GetXmlRSS();
@@ -492,22 +513,6 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 		//finalisation du xml
 		$xml .= "</CartoDonnees>";		
 	}
-	
-	
-	
-	//gestion des requÃªtes multisite
-	/*
-	if($objSite->infos["SITE_ENFANT"]!=-1 && $query!="idFiche"){
-		foreach($objSite->infos["SITE_ENFANT"] as $siteenfant=>$type)
-		{
-				//echo $site." NextSiteEnfant:".$siteenfant."<br/>"; 
-				$site = $objSite->sites[$siteenfant];
-				//echo $objSite->sites."<br/>"; 
-				$objSiteNew = new Site($objSite->sites, $siteenfant, $objSite->scope, false);
-				echo get_marker($objSiteNew, $id, $southWestLat, $northEastLat, $southWestLng, $northEastLng, $zoom, $query, $themes, $i);
-		}
-	}
-	*/
 			
 	//echo $markers;
 	if($SaveFile){
@@ -521,13 +526,14 @@ function CalculCartoDonneevide($g){
 
 	//création des données sur les enfants qui n'ont pas de grille géo
 	$grille = new Grille($g->site);
-	$ids = $g->GetIdsScope();
+	$ids = $g->GetIdsScope(true);
     $xmlEnf="";
 	$rs = $grille->FiltreRubSansGrille($g->id,$g->site->infos["GRILLE_REP_CON"]);
 	$i=6;
 	while ($rEnf =  mysql_fetch_assoc($rs)) {
     	$gEnf = new Granulat($rEnf["id_rubrique"],$g->site,false);
     	$row = $gEnf->GetGeo();
+    	echo "CalculCartoDonneevide:".$gEnf->titre." ".$gEnf->id."<br/>";
     	//construction de la ligne en incrémentant un peu la position
     	if($lat==$row["lat"]){
     		$lat = $row["lat"].$i;

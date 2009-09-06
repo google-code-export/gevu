@@ -284,14 +284,65 @@ class Grille{
 		$db->close();
     }
     
-    public function FiltreRubAvecGrille($id,$idsGrille)
+    public function FiltreRubAvecGrilleMultiSite($idRub,$idGrille)
 	{
-		$sql = "SELECT DISTINCT r.id_rubrique
+		$arrG = array();
+		//récupère les grilles pour le site
+		if($this->site->infos["SITE_ENFANT"]==-1){ 					
+			$arrG = $this->FiltreRubAvecGrille($idRub,$idGrille,true);
+		}else{
+			//récupère les grille des sites dans le cas d'un site parent 					
+	 		foreach($this->site->infos["SITE_ENFANT"] as $id=>$type)
+			{
+				$oSiteEnf = new Site($this->site->sites,$id,false);
+				$grille = new Grille($oSiteEnf);
+				
+				//récupération des rubrique avec la grille
+				$rs = $grille->FiltreRubAvecGrille($idRub,$idGrille);
+				$xml = "";
+				while($row = mysql_fetch_assoc($rs)) {
+					$key = $oSiteEnf->strtokey($row["titre"]."_".$oSiteEnf->id."_".$row["id_rubrique"]);
+					$xml = "<terre idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$row["titre"]."\" idGrille='".$idGrille."' >";
+					//vérifie s'il faut charger des grilles enfants
+					$Xpath = "/XmlParams/XmlParam/menuSrc[@idForm='".$idGrille."']";
+					if($this->trace)
+						echo "Grille:FiltreRubAvecGrilleMultiSite:Xpath".$Xpath."<br/>";
+					$Q = $this->site->XmlParam->GetElements($Xpath);
+					//calcul les grilles enfants 					
+			 		foreach($Q[0]->menuDst as $grilleEnf)
+					{
+						$arrSG = $grille->FiltreRubAvecGrilleMultiSite($row["id_rubrique"],$grilleEnf["idForm"]);
+						ksort($arrSG);
+						$i=0;
+						$xmlSG=""; 					
+						foreach($arrSG as  $k=>$val){
+							if($i==0)$xmlSG = "<terre idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$val["rub"]["gTitre"]."\" idGrille='".$grilleEnf["idForm"]."' >";
+							//ajoute les grilles enfants
+							$xmlSG .= $val["xml"];
+							$i++;
+						}
+						if($xmlSG!=""){
+							$xml .= $xmlSG."</terre>";
+						}
+					}
+					$xml .= "</terre>";
+					$arrG[$key]= array("xml"=>$xml,"rub"=>$row);
+				}
+			}				
+		}
+		return $arrG;
+		
+	}
+    
+	public function FiltreRubAvecGrille($id,$idsGrille,$GetArr=false)
+	{
+		$sql = "SELECT DISTINCT r.id_rubrique, r.titre, f.id_form, f.titre gTitre
 			FROM spip_rubriques r
 			INNER JOIN spip_rubriques_enfants re ON re.id_rubrique = r.id_rubrique AND re.id_parent =".$id."
 			INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
 			INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article 
 			INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form IN (".$idsGrille.")
+			INNER JOIN spip_forms f ON f.id_form = fd.id_form 
 			";
 		$db = new mysql ($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$db->connect();
@@ -299,6 +350,16 @@ class Grille{
 		if($this->trace)
 			echo "Grille:FiltreRubAvecGrille".$this->site->infos["SQL_LOGIN"]." ".$sql."<br/>";
 		$db->close();
+		
+		if($GetArr){
+			$arrG = array();
+			while($row = mysql_fetch_assoc($result)) {
+				$key = $this->site->strtokey($row["titre"]."_".$this->site->id."_".$row["id_rubrique"]);
+				$xml = "<terre idSite='".$this->site->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$row["titre"]."\" idGrille='".$row["id_form"]."' />";
+				$arrG[$key]= array("xml"=>$xml,"rub"=>$row);								
+			}
+			$result = $arrG;
+		}
 			
 		return $result;
 		
