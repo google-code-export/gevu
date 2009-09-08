@@ -456,7 +456,7 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 		//if(file_exists($path))	continue;
 			
 		$g = new Granulat($row['id_rubrique'], $objSite,false);
-		echo "recupère le granulat = ".$row['id_rubrique']."<br/>";
+		//echo "recupère le granulat = ".$row['id_rubrique']."<br/>";
 		
 		//construction des markers
 		$xmlRub = $g->GetXmlCartoDonnee($row);
@@ -533,7 +533,7 @@ function CalculCartoDonneevide($g){
 	while ($rEnf =  mysql_fetch_assoc($rs)) {
     	$gEnf = new Granulat($rEnf["id_rubrique"],$g->site,false);
     	$row = $gEnf->GetGeo();
-    	echo "CalculCartoDonneevide:".$gEnf->titre." ".$gEnf->id."<br/>";
+    	//echo "CalculCartoDonneevide:".$gEnf->titre." ".$gEnf->id."<br/>";
     	//construction de la ligne en incrémentant un peu la position
     	if($lat==$row["lat"]){
     		$lat = $row["lat"].$i;
