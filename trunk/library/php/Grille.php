@@ -2200,8 +2200,24 @@ class Grille{
 		return $nb;
 	}
 	
-	function VerifChoixDiagnostic ($idDon, $typeCritere, $typeContexte,$critere=""){
+	function VerifChoixDiagnostic ($idDon, $typeCritere, $typeContexte, $critere=""){
 		
+		//quand il n'y a aucun critère on ne renvoie rien
+		if(!$typeContexte || !$typeCritere)
+			return false;
+		if(!$typeCritere[0]
+			&& !$typeCritere[1]
+			) return false;
+		if(!$typeContexte[0] 
+			&& !$typeContexte[1]
+			&& !$typeContexte[2]
+			&& !$typeContexte[3]
+			&& !$typeContexte[4]
+			&& !$typeContexte[5]
+			)
+			return false;	
+		
+				
 		//si crit est défini on gère une scénarisation
 		if($critere==""){
 			// On récupere le critere corespondant à la donnée (grille 59 Diagnostic)
@@ -2216,20 +2232,7 @@ class Grille{
 				}
 			}
 		}
-		
-		/*si aucun contexte ou critère n'est saisi on renvoie toute les questions
-		if(!$typeContexte || !$typeCritere)
-			return true;
-		if(!$typeContexte[0] 
-			&& !$typeContexte[1]
-			&& !$typeContexte[2]
-			&& !$typeContexte[3]
-			&& !$typeCritere[0]
-			&& !$typeCritere[1]
-			)
-			return true;	
-		*/
-				
+						
 		if($this->trace)
 			echo "Grille:VerifChoixDiagnostic:On récupere la donnée corespondant au critere (grille ".$this->site->infos["GRILLE_CONTROL_".$_SESSION['version']]." Controle)<br/>";
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetDonneeCritere']";
@@ -2266,9 +2269,11 @@ class Grille{
 				$verif = true;
 				
 				//vérifie les critères réglémentaires souhaitables
-				if(($typeCritere[0]== $r1['valeur'] || $typeCritere[1]== $r1['valeur']) ) 
+				$ok = false;
+				if(($typeCritere[0]== $r1['valeur'] || $typeCritere[1]== $r1['valeur']) ){ 
 					$ok = $r1['valeur'];
-				else 
+					$verif = true;
+				}else 
 					$verif = false;
 				
 				

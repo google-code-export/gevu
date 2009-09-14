@@ -9,7 +9,7 @@
         	import mx.containers.HBox;
            
            	public var rsCrit:Object;
-           	public var urlIma:String="../../xul/chrome/content/";
+           	public var urlIma:String="";
            
             public function Init():void {
 				//construction du critère

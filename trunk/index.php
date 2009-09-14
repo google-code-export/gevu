@@ -125,10 +125,10 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 				</menu>
 				<menu label="Affichage" onpopupshowing="javascript:;" class="menubar">
 					<menupopup id="mnuAffichage" >
-						<menuitem id="ShowLegendeControle" value="true" type="checkbox" checked="<?php if($_SESSION['ShowLegendeControle']) echo "true"; ?>"  label="Montrer la légende des contrôles" oncommand="SetChoixAffichage(this.id);"/>
-						<menuitem id="ShowCarte" value="true" type="checkbox" checked="<?php if($_SESSION['ShowCarte']) echo "true"; ?>" label="Afficher la carte"  oncommand="SetChoixAffichage(this.id);" />
-						<menuitem id="ShowDocs" value="true" type="checkbox" checked="<?php if($_SESSION['ShowDocs']) echo "true"; ?>" label="Afficher le(s) document(s)"  oncommand="SetChoixAffichage(this.id);" />
-						<menuitem id="ForceCalcul" value="true" type="checkbox" checked="<?php if($_SESSION['ForceCalcul']) echo "true"; ?>" label="Forcer les calculs"  oncommand="SetChoixAffichage(this.id);" />
+						<menuitem id="ShowLegendeControle" value="true" type="checkbox" checked="<?php if($_SESSION['ShowLegendeControle']) echo "true"; else echo "false"; ?>"  label="Montrer la légende des contrôles" oncommand="SetChoixAffichage(this.id);"/>
+						<menuitem id="ShowCarte" value="true" type="checkbox" checked="<?php if($_SESSION['ShowCarte']) echo "true"; else echo "false"; ?>" label="Afficher la carte"  oncommand="SetChoixAffichage(this.id);" />
+						<menuitem id="ShowDocs" value="true" type="checkbox" checked="<?php if($_SESSION['ShowDocs']) echo "true"; else echo "false"; ?>" label="Afficher le(s) document(s)"  oncommand="SetChoixAffichage(this.id);" />
+						<menuitem id="ForceCalcul" value="true" type="checkbox" checked="<?php if($_SESSION['ForceCalcul']) echo "true"; else echo "false"; ?>" label="Forcer les calculs"  oncommand="SetChoixAffichage(this.id);" />
 					</menupopup>
 				</menu>
 				
