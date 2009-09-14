@@ -15,15 +15,20 @@ if(isset($_POST['login_uti'])) {
 		echo "ParamPage:session:$login, $mdp, $idAuteur<br/>";
 }
 
-	//pour défaut on prend toute les options
+	//pour défaut on prend aucune option
 	$_SESSION['version']="V2";
 	if(!isset($_SESSION['type_contexte'])) 
-		$_SESSION['type_contexte'] = array ('multiple_2_1', 'multiple_2_2', 'multiple_2_3', 'multiple_2_4', 'multiple_2_5', 'multiple_2_6');
+		$_SESSION['type_contexte'] = false;//array ('multiple_2_1', 'multiple_2_2', 'multiple_2_3', 'multiple_2_4', 'multiple_2_5', 'multiple_2_6');
+	if(TRACE)
+		print_r($_SESSION['type_contexte']);	
 	if(!isset($_SESSION['type_controle'])) 
-		$_SESSION['type_controle'] = array ('multiple_1_1','multiple_1_2');
+		$_SESSION['type_controle'] = false;//array ('multiple_1_1','multiple_1_2');
+	if(TRACE)
+		print_r($_SESSION['type_controle']);	
+	
 	if(!isset($_SESSION['IdAuteur'])) 
 		$_SESSION['IdAuteur']=1;
-	
+
 	if(isset($_GET['f']))
 		$fonction = $_GET['f'];
 	else
@@ -54,20 +59,20 @@ if(!$site)
 $_SESSION['site']=$site;
 
 if(!isset($_SESSION['ShowLegendeControle']))
-	$_SESSION['ShowLegendeControle']=true;
+	$_SESSION['ShowLegendeControle']=false;
 if(!isset($_SESSION['ShowCarte']))
 	$_SESSION['ShowCarte']=false;
 if(!isset($_SESSION['ShowDocs']))
-	$_SESSION['ShowDocs']=true;
+	$_SESSION['ShowDocs']=false;
 if(!isset($_SESSION['ContEditAll']))
-	$_SESSION['ContEditAll']=true;
+	$_SESSION['ContEditAll']=false;
 if(!isset($_SESSION['ContEditPublie']))
 	$_SESSION['ContEditPublie']=false;
 if(!isset($_SESSION['version']))
 	$_SESSION['version']="V1";
 	
 if(!isset($_SESSION['ForceCalcul']))
-	$_SESSION['ForceCalcul']=true;
+	$_SESSION['ForceCalcul']=false;
 	
 	
 if(TRACE)

@@ -13,8 +13,8 @@
 
   define ("TRACE", false);
 
-  define ("DEFSITE", "trouville");
-  define ("SYNCSITE", "trouville");
+  define ("DEFSITE", "trouvilleERP1");
+  define ("SYNCSITE", "trouvilleERP1");
  
   
   $DB_OPTIONS = array (

@@ -61,8 +61,8 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 	$grille = new Grille($objSite);
 	
 	$path = PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml";
-    $xml = $objSite->GetFile($path);
-	if(!$xml){
+//	$xml = $objSite->GetFile($path);
+//	if(!$xml){
 		//récupération des territoires du granulat
 		$sql = "SELECT dc.valeur, dc.champ, da.id_donnee, r.titre rTitre, r.id_rubrique
 				, m.titre mTitre, m.id_mot
@@ -76,7 +76,7 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 					AND champ = 'mot_1'
 				INNER JOIN spip_mots m ON m.id_mot = dc.valeur
 			ORDER BY mTitre, rTitre";
-		//echo $sql;
+		//echo $sql."<br/>";
 		$DB = new mysql($objSite->infos["SQL_HOST"], $objSite->infos["SQL_LOGIN"], $objSite->infos["SQL_PWD"], $objSite->infos["SQL_DB"]);
 		$DB->connect();
 		$req = $DB->query($sql);
@@ -109,7 +109,7 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 		if($niv==0)	
 			$xml .= "</terres>";
 		$objSite->SaveFile(PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml",utf8_encode($xml));
-	}
+//	}
 	return $xml;
 }
 

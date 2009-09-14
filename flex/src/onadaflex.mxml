@@ -12,6 +12,7 @@ todo :
    >
 
 	<mx:Script source="onadaflex.as"/>
+	<mx:Script source="http.as"/>
 	
 	<mx:WipeLeft id="myWL"/>
 
