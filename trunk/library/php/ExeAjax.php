@@ -131,7 +131,7 @@
 			break;
 		case 'UpdateReferenceId':
 			$sync = new Synchro($objSite,$objSiteSync);
-			//pour les mettre en négatif
+			//pour les mettre en nï¿½gatif
 			//$resultat = $sync->UpdateReferenceId();
 			//pour les mettre en positif
 			$resultat = $sync->UpdateReferenceId("<");
@@ -249,7 +249,7 @@
 	}
 	
 	function GetXmlImaListe($g){
-		//récupère les images jpeg png, gif
+		//rï¿½cupï¿½re les images jpeg png, gif
 		$imas = $g->GetDocs($g->id,"1,2,3");
 		$xml = "<images>";
 		foreach($imas as $ima){
@@ -303,10 +303,10 @@
 		$s = new Synchro($objSite,false);
 		$gra = new Granulat($idRubDst,$objSite,false);
 		if($grille->VerifLiensInRub($idRubDst,$idRubSrc)){
-			//si l'élément existe on le supprime
+			//si l'ï¿½lï¿½ment existe on le supprime
 			$s->DelSyndicsRubriques($idRubDst," AND descriptif='".$idRubSrc."'");
 		}else{
-			//sinon on le crée
+			//sinon on le crï¿½e
 			$m = new MotClef($idMot,$objSite);
 			$idSyndic = $gra->SetNewSyndic(
 				" Element de ".$m->titre." ".date('j/m/y - H:i:s')
@@ -352,7 +352,7 @@
 	
 	
 	/*
-		ajoute un document à un article 
+		ajoute un document ï¿½ un article 
 	*/
 	function AddDocToArt($idDoc){
 		
@@ -386,23 +386,23 @@
 		if ($_FILES['nom_du_fichier']['error']) {
 		          switch ($_FILES['nom_du_fichier']['error']){
 		                   case 1: // UPLOAD_ERR_INI_SIZE
-		                   echo"Le fichier dépasse la limite autorisée par le serveur (fichier php.ini) !";
+		                   echo"Le fichier dï¿½passe la limite autorisï¿½e par le serveur (fichier php.ini) !";
 		                   break;
 		                   case 2: // UPLOAD_ERR_FORM_SIZE
-		                   echo "Le fichier dépasse la limite autorisée dans le formulaire HTML !";
+		                   echo "Le fichier dï¿½passe la limite autorisï¿½e dans le formulaire HTML !";
 		                   break;
 		                   case 3: // UPLOAD_ERR_PARTIAL
-		                   echo "L'envoi du fichier a été interrompu pendant le transfert !";
+		                   echo "L'envoi du fichier a ï¿½tï¿½ interrompu pendant le transfert !";
 		                   break;
 		                   case 4: // UPLOAD_ERR_NO_FILE
-		                   echo "Le fichier que vous avez envoyé a une taille nulle !";
+		                   echo "Le fichier que vous avez envoyï¿½ a une taille nulle !";
 		                   break;
 		          }
 		}
 		
 		
 		//substr($_FILES['filename']['name'],-4,4)
-		//déplace le fichier dans le répertoire spip
+		//dï¿½place le fichier dans le rï¿½pertoire spip
 		$moveOK = move_uploaded_file($_FILES['filename']['tmp_name'], $objSite->infos["pathUpload"].$extention.'/'.$FicDst);
 		
 		if(TRACE) {
@@ -552,7 +552,7 @@
 	
 	/*
 	 * Synchronise le local avec le serveur,
-	 * récupère les nouvelles données du serveur,
+	 * rï¿½cupï¿½re les nouvelles donnï¿½es du serveur,
 	 * actualise les id rubriques et articles
 	 * et import les nouvelles rubriques et articles du serveur
 	 */
@@ -615,7 +615,7 @@
 	function GetFilAriane($jsParam, $id){
 		global $objSite;
 		
-		//récupère le granulat
+		//rï¿½cupï¿½re le granulat
 		$xul = new Xul($objSite, $id);
 		$FilAriane = $xul->GetFilAriane($jsParam);
 		$xul = "<hbox class='wb' >";
@@ -628,7 +628,7 @@
 	function AddXmlDonnee($url,$objSite)
 	{
 		//if(TRACE)
-			echo "ExeAjax:AddXmlDonnee:début importation $url ".date(DATE_W3C)."<br/>";
+			echo "ExeAjax:AddXmlDonnee:dï¿½but importation $url ".date(DATE_W3C)."<br/>";
 		$g = new Grille($objSite);
 		$g->AddXmlDonnee($url);
 		//if(TRACE)
@@ -636,8 +636,8 @@
 	}
 
 	/*
-	 * Récupère le fichier uploadé, 
-	 * réalise l'import sur le serveur 
+	 * Rï¿½cupï¿½re le fichier uploadï¿½, 
+	 * rï¿½alise l'import sur le serveur 
 	 * et synchronise les nouvelles rubriques et articles du serveur
 	 * 
 	 */
@@ -790,7 +790,7 @@
 		
 		$xulScena = "";
 		if($idGrille==$objSite->infos["GRILLE_REP_CON"] && $_SESSION['version']=="V2" && $qiParent)
-			//gestion de la scénarisation
+			//gestion de la scï¿½narisation
 			$xul = $g->GereScenarisation($row, $idDon, $qiParent);		
 		else
 			//gestion du workflow
@@ -800,11 +800,11 @@
 			echo "ExeAjax:SetVal:ppp=".$ppp."<br/>";
 		if ($ppp==1){
 			$pppxul = new Xul($objSite);
-			return $pppxul->GetPopUp($xul,"Signalement problème ".$g->GetValeur($idDon,"ligne_1"), $login);
+			return $pppxul->GetPopUp($xul,"Signalement problï¿½me ".$g->GetValeur($idDon,"ligne_1"), $login);
 		} 
 		if ($ppp==2){
 			$pppxul = new Xul($objSite);
-			//récupère la liste des observation pour la question
+			//rï¿½cupï¿½re la liste des observation pour la question
 			$idRub = $g->GetRubDon($idDon);
 			$Obstree = $g->GetTreeObs($idRub,true);			
 			return $pppxul->GetPopUp($xul,"Observations ".$g->GetValeur($idDon,"ligne_1"), $login,$idDon,$idRub,$Obstree);
@@ -823,21 +823,21 @@
 		$row = array("grille"=>$idGrille,"champ"=>$champ,"valeur"=>utf8_decode($val));
 		$g->DelChamp($row, $idDon);
 		
-		return utf8_decode("donnée supprimée = ".$val);
+		return utf8_decode("donnï¿½e supprimï¿½e = ".$val);
 	}
 	
 	function GetTree($type,$Cols,$id,$objSite){
 		
 		
-		//récupération des colonnes
+		//rï¿½cupï¿½ration des colonnes
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='GetTreeChildren_".$type."']/col";
 		$Cols = $objSite->XmlParam->GetElements($Xpath);		
 
 		
-		//une seule sélection possible seltype='single' onselect=\"GetTreeSelect('tree".$type."','TreeTrace',2)" seltype='multiple' single
+		//une seule sï¿½lection possible seltype='single' onselect=\"GetTreeSelect('tree".$type."','TreeTrace',2)" seltype='multiple' single
 		//	class='editableTree' 			width='100px' height='100px' 
 
-		//récupération des js
+		//rï¿½cupï¿½ration des js
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='GetTreeChildren_".$type."']/js";
 		$js = $objSite->GetJs($Xpath, array($type,$id));
 		$objXul = new Xul($objSite);
@@ -856,7 +856,7 @@
 		$i=0;
 		foreach($Cols as $Col)
 		{
-			//la première colonne est le bouton pour déplier
+			//la premiï¿½re colonne est le bouton pour dï¿½plier
 			if($i!=0){
 				if($Col["hidden"])
 					$visible = $Col["hidden"];
@@ -971,14 +971,14 @@
 		//alert("AddNewGrille  IN Src "+$idRubSrc+" Dst "+$idRubDst+" trs "+$trs+" n");	
 		
 		//prise encompte du scope pour la grille Ligne de transport uniquement
-		//pour éviter le calcul de idsInScope si on n'en a pas besoin
+		//pour ï¿½viter le calcul de idsInScope si on n'en a pas besoin
 		if($trs=="Ligne" || $trs=="Chaine")	
 			$grille = new Grille($objSite,-1,false,$trs, $idRubDst,true);
 		else
 			$grille = new Grille($objSite,-1,false,$trs);
 				
 		$grille->AddGrilles($idRubSrc, $id);
-		//ajoute les QuestionsRéponses
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse($idRubSrc,$id);
 		
 		$xul = $grille->GetXulTab($trs, $id);
@@ -990,12 +990,12 @@
 		if($trs=="ObjetIntBat") {
 			//ajoute une sous-rubrique cabine d'ascenseur
 			//$idCA = $g->SetNewEnfant("Cabine d'ascenseur",$id);
-			//ajoute les QuestionsRéponses
+			//ajoute les QuestionsRï¿½ponses
 			//$grille->AddQuestionReponse(613,$idCA);
 		}
 		if($trs=="ObjetInt") {
-			AddNewObjetInt(1167, $id, "ParamObjetInt");
-			$g->SetMotClef($mot,$id);
+			//AddNewObjetInt(1167, $id, "ParamObjetInt");
+			//$g->SetMotClef($mot,$id);
 		}
 		
 		//header('Content-type: application/vnd.mozilla.xul+xml');
@@ -1023,37 +1023,37 @@
 		//ajoute une sous-rubrique espace gen
 		$g = new Granulat($idRubDst,$objSite);
 		$grille = new Grille($objSite);
-		//$idGen = $g->SetNewEnfant("Paramètres généraux espace");
+		//$idGen = $g->SetNewEnfant("Paramï¿½tres gï¿½nï¿½raux espace");
 		//$gGen = new Granulat($idGen,$objSite);
 		
-		//ajoute une sous-rubrique espace gen->éclairage
+		//ajoute une sous-rubrique espace gen->ï¿½clairage
 		$id = $g->SetNewEnfant("Eclairage");
-		//ajoute les QuestionsRéponses
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(71,$id);
 
 		//ajoute une sous-rubrique espace gen->Equipements et dispositifs de commande
 		$id = $g->SetNewEnfant("Commandes");
-		//ajoute les QuestionsRéponses
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(1416,$id);
 		
 		//ajoute une sous-rubrique espace gen->Pentes et ressauts
 		$id = $g->SetNewEnfant("Pentes et ressauts");
-		//ajoute les QuestionsRéponses
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(2170,$id);
 				
-		//ajoute une sous-rubrique espace gen->Signalétique
-		$id = $g->SetNewEnfant("Signalétique");
-		//ajoute les QuestionsRéponses
+		//ajoute une sous-rubrique espace gen->Signalï¿½tique
+		$id = $g->SetNewEnfant("Signalï¿½tique");
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(72,$id);
 				
 		//ajoute une sous-rubrique espace gen->Sols, murs et plafonds
 		$id = $g->SetNewEnfant("Sols, murs et plafonds");
-		//ajoute les QuestionsRéponses
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(68,$id);
 				
 		//ajoute une sous-rubrique espace gen->Equipement et mobilier
 		$id = $g->SetNewEnfant("Equipement et mobilier");
-		//ajoute les QuestionsRéponses
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(5014,$id);
 				
 		//header('Content-type: application/vnd.mozilla.xul+xml');
@@ -1069,17 +1069,17 @@
 		//ajoute une sous-rubrique espace gen
 		$g = new Granulat($idRubDst,$objSite);
 		$grille = new Grille($objSite);
-		//$idGen = $g->SetNewEnfant("Paramètres généraux espace");
+		//$idGen = $g->SetNewEnfant("Paramï¿½tres gï¿½nï¿½raux espace");
 		//$gGen = new Granulat($idGen,$objSite);
 		
-		//ajoute une sous-rubrique espace gen->Cheminement extérieur
+		//ajoute une sous-rubrique espace gen->Cheminement extï¿½rieur
 		$id = $g->SetNewEnfant("Cheminement");
-		//ajoute les QuestionsRéponses
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(64,$id);
 						
-		//ajoute une sous-rubrique espace gen->Sol extérieur
-		$id = $g->SetNewEnfant("Sol extérieur");
-		//ajoute les QuestionsRéponses
+		//ajoute une sous-rubrique espace gen->Sol extï¿½rieur
+		$id = $g->SetNewEnfant("Sol extï¿½rieur");
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(65,$id);
 		
 		//header('Content-type: application/vnd.mozilla.xul+xml');
@@ -1095,22 +1095,22 @@
 		//ajoute une sous-rubrique espace gen
 		$g = new Granulat($idRubDst,$objSite);
 		$grille = new Grille($objSite);
-		//$idGen = $g->SetNewEnfant("Paramètres généraux espace");
+		//$idGen = $g->SetNewEnfant("Paramï¿½tres gï¿½nï¿½raux espace");
 		//$gGen = new Granulat($idGen,$objSite);
 		
-		//ajoute une sous-rubrique espace gen->Cheminement extérieur
-		$id = $g->SetNewEnfant("Cheminement extérieur");
-		//ajoute les QuestionsRéponses
+		//ajoute une sous-rubrique espace gen->Cheminement extï¿½rieur
+		$id = $g->SetNewEnfant("Cheminement extï¿½rieur");
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(64,$id);
 		
 		//ajoute une sous-rubrique espace gen->Equipements et dispositifs de commande
 		$id = $g->SetNewEnfant("Equipements et dispositifs de commande");
-		//ajoute les QuestionsRéponses
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(5014,$id);
 				
-		//ajoute une sous-rubrique espace gen->Sol extérieur
-		$id = $g->SetNewEnfant("Sol extérieur");
-		//ajoute les QuestionsRéponses
+		//ajoute une sous-rubrique espace gen->Sol extï¿½rieur
+		$id = $g->SetNewEnfant("Sol extï¿½rieur");
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(65,$id);
 						
 		//header('Content-type: application/vnd.mozilla.xul+xml');
@@ -1126,12 +1126,12 @@
 		//ajoute une sous-rubrique espace gen
 		$g = new Granulat($idRubDst,$objSite);
 		$grille = new Grille($objSite);
-		//$idGen = $g->SetNewEnfant("Paramètres généraux espace");
+		//$idGen = $g->SetNewEnfant("Paramï¿½tres gï¿½nï¿½raux espace");
 		//$gGen = new Granulat($idGen,$objSite);
 		
-		//ajoute une sous-rubrique espace gen->Cheminement extérieur
+		//ajoute une sous-rubrique espace gen->Cheminement extï¿½rieur
 		$id = $g->SetNewEnfant("Cabine d'ascenseur");
-		//ajoute les QuestionsRéponses
+		//ajoute les QuestionsRï¿½ponses
 		$grille->AddQuestionReponse(613,$id);
 						
 		//header('Content-type: application/vnd.mozilla.xul+xml');
@@ -1148,10 +1148,10 @@
 			echo 'ExeAjax:NewRubrique:idRubSrc '.$idRubSrc;
 			echo 'ExeAjax:NewRubrique:idRubDst '.$idRubDst;
 		}
-		// pour récupérer le parent
+		// pour rï¿½cupï¿½rer le parent
 		$g = new Granulat($idRubDst,$objSite);
 		
-		// pour créer un nouvel enfant
+		// pour crï¿½er un nouvel enfant
 		$idGen = $g->SetNewEnfant("Territoire Sans Nom ".date('j/m/y - H:i:s'));
 		
 		$grille = new Grille($objSite);
@@ -1167,7 +1167,7 @@
 		
 		//if ($mot != -1) $g->SetMotClef($mot,$idGen);
 		
-		// pour renvoyer la mise à jour du tree
+		// pour renvoyer la mise ï¿½ jour du tree
 		$tree = GetTree('terre',-1,-1,$objSite);
 		
 		return $xul;
@@ -1176,7 +1176,7 @@
 	function AddPlacemark($idRubDst, $kml, $bbox){
 		global $objSite;
 		$g = new Grille($objSite);
-		//création de la grille géolocalisation
+		//crï¿½ation de la grille gï¿½olocalisation
 		$idDon = $g->AddDonnee($idRubDst, $objSite->infos["GRILLE_GEO"], false);
 		
 		//ajoute la valeur du kml
@@ -1209,7 +1209,7 @@
 		//header('Content-type: application/vnd.mozilla.xul+xml');
 		//$xul = "<box>".$xul."</box>";
 
-		return "donnée créé = ".$idDon;
+		return "donnï¿½e crï¿½ï¿½ = ".$idDon;
 		
 	}
 
@@ -1403,7 +1403,7 @@
 	}
 	
 	/*
-	 * Nettoye les données des articles inutilisées
+	 * Nettoye les donnï¿½es des articles inutilisï¿½es
 	 * 
 	 */
 	function CleanArticle($deb, $fin) {
@@ -1415,7 +1415,7 @@
 	
 	
 	/*
-	 * Nettoye les données des rubriques inutilisées
+	 * Nettoye les donnï¿½es des rubriques inutilisï¿½es
 	 * 
 	 */
 	function CleanRubrique($deb, $fin) {

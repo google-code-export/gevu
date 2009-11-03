@@ -13,8 +13,8 @@
 
   define ("TRACE", false);
 
-  define ("DEFSITE", "trouvilleERP1");
-  define ("SYNCSITE", "trouvilleERP1");
+  define ("DEFSITE", "trouville");
+  define ("SYNCSITE", "trouville");
  
   
   $DB_OPTIONS = array (
@@ -33,19 +33,17 @@
   
   date_default_timezone_set('Europe/Paris');
 
-$SiteTrouville = array(
-    "SITE_ENFANT" => array(
-		"trouvilleERP1" => "diagnostic"
-		,"trouvilleERP2" => "diagnostic"
-		,"trouvilleVoirie" => "diagnostic"
-		),
-    "SITE_PARENT" => -1,
+$SiteTrouvilleVoirie = array(
 	"AUTEUR_SYNCHRO" => 8, 
 	"SQL_LOGIN" => "root", 
 	"SQL_PWD" => "", 
 	"SQL_HOST" => "localhost",
-	"SQL_DB" => "gevutrouville",
-	"NOM" => "gevu trouville global",//je sais pas
+	"SQL_DB" => "mundimuzgevu4",
+	"NOM" => "gevu trouville Voirie",//je sais pas
+    "SITE_PARENT" => array(
+		"trouville" => "Ville"
+		),
+	"SITE_ENFANT" => -1,
 	"GRILLE_GEO" => 1,
 	"GRILLE_REG_LEG" => 52,
 	"GRILLE_REP_CON" => 59,
@@ -104,19 +102,18 @@ $SiteTrouville = array(
 	"pathXulJs" => WebRoot."/library/js/",	
 	"pathSpip" => WebRoot."/trouville/spip/",
 	"pathImages" => WebRoot."/design/images/"
-); 
-  
+	); 
   
 $SiteTrouvilleERP2 = array(
-    "SITE_PARENT" => array(
-		"trouville" => "ville"
-		),
 	"AUTEUR_SYNCHRO" => 8, 
 	"SQL_LOGIN" => "root", 
 	"SQL_PWD" => "", 
 	"SQL_HOST" => "localhost",
-	"SQL_DB" => "gevutrouville2",
+	"SQL_DB" => "mundimuzgevu2",
 	"NOM" => "gevu trouville ERP 2",//je sais pas
+    "SITE_PARENT" => array(
+		"trouville" => "Ville"
+		),
 	"SITE_ENFANT" => -1,
 	"GRILLE_GEO" => 1,
 	"GRILLE_REG_LEG" => 52,
@@ -179,15 +176,15 @@ $SiteTrouvilleERP2 = array(
 	); 
 
 $SiteTrouvilleERP1 = array(
-    "SITE_PARENT" => array(
-		"trouville" => "ville"
-		),
 	"AUTEUR_SYNCHRO" => 8, 
 	"SQL_LOGIN" => "root", 
 	"SQL_PWD" => "", 
 	"SQL_HOST" => "localhost",
-	"SQL_DB" => "gevutrouville1",
+	"SQL_DB" => "mundimuzgevu3",
 	"NOM" => "gevu trouville ERP 1",//je sais pas
+    "SITE_PARENT" => array(
+		"trouville" => "Ville"
+		),
 	"SITE_ENFANT" => -1,
 	"GRILLE_GEO" => 1,
 	"GRILLE_REG_LEG" => 52,
@@ -249,17 +246,21 @@ $SiteTrouvilleERP1 = array(
 	"pathImages" => WebRoot."/design/images/"
 	); 
 	
-$SiteTrouvilleVoirie = array(
+	
+$SiteTrouville = array(
 	"AUTEUR_SYNCHRO" => 8, 
 	"SQL_LOGIN" => "root", 
 	"SQL_PWD" => "", 
 	"SQL_HOST" => "localhost",
-	"SQL_DB" => "gevutrouvilleVoirie",
-	"NOM" => "gevu trouville Voirie",//je sais pas
-    "SITE_PARENT" => array(
-		"trouville" => "ville"
+	"SQL_DB" => "mundimuzgevu1",
+	"NOM" => "gevu trouville global",//je sais pas
+	"SITE_PARENT" => -1,//je sais pas
+    "SITE_ENFANT" => array(
+		"trouvilleERP1" => "diagnostic"
+		,"trouvilleERP2" => "diagnostic"
+		,"trouvilleVoirie" => "diagnostic"
 		),
-	"SITE_ENFANT" => -1,
+	
 	"GRILLE_GEO" => 1,
 	"GRILLE_REG_LEG" => 52,
 	"GRILLE_REP_CON" => 59,
@@ -297,8 +298,7 @@ $SiteTrouvilleVoirie = array(
 	"RUB_TERRE" => 5479,
 	"RUB_PORTE1" => 50,
 	"RUB_PORTE2" => 74,
-	"RUB_PORTE_FACE1" => 1342,
-	"RUB_PORTE_FACE2" => 1341,
+	"RUB_PORTE_FACE" => 1342,
 	
 	"DEF_ID" => 5479,
 	"DEF_LAT" => 45,
@@ -306,23 +306,24 @@ $SiteTrouvilleVoirie = array(
 	"DEF_ZOOM" => 4,
 	"DEF_CARTE_TYPE" => "G_HYBRID_MAP",
 	"CARTE_TYPE_DOC" => "75,76",
-	"gmKey" => "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRSox1CW3WZ7BFlPopnC1QYedci_nRTlqNkDlGLLooN1jsOpU7UlsFDrfg",
+	"gmKey" => "ABQIAAAATs5RWdW8iTPuaiLrkvnqjRTRqFFvaBKBgdVodt96I8idUV-28RTOELCsfx_7hD62HnKwk7Lm8Cg_lQ",
 	"lienAdminSpip" => WebRoot."/trouville/spip/ecrire",
-	"urlExeAjax" => WebRoot."/library/php/ExeAjax.php",
+	"urlExeAjax" => WebRoot."//library/php/ExeAjax.php",
 	"MenuContexte" => "menu_contextuel_Trouville.xul",
 	"urlCarto" => WebRoot."/design/BlocCarte.php",
 	"urlVideo" => WebRoot."/design/BlocVideo.php",
 	"urlLibPhp" => WebRoot."/library/php/",
 	"urlLibJs" => WebRoot."/library/js/",
 	"urlLibSwf" => WebRoot."/library/swf/",
-	"pathUpload" => PathRoot."/spip/IMG/",
+	"pathUpload" => PathRoot."/trouville/spip/IMG/",
 	"pathXulJs" => WebRoot."/library/js/",	
 	"pathSpip" => WebRoot."/trouville/spip/",
 	"pathImages" => WebRoot."/design/images/"
-	); 	
+	); 
+	
 $SITES = array(
 	"trouville" => $SiteTrouville
-	,"trouvilleERP1" => $SiteTrouvilleERP1
+	,"trouvilleERP1" => $SiteTrouvilleERP1 
 	,"trouvilleERP2" => $SiteTrouvilleERP2
 	,"trouvilleVoirie" => $SiteTrouvilleVoirie
 	);

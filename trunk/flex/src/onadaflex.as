@@ -9,6 +9,7 @@
       import com.google.maps.controls.MapTypeControl;
       import com.google.maps.controls.PositionControl;
       import com.google.maps.controls.ZoomControl;
+      import com.google.maps.interfaces.IMapType;
       import com.google.maps.overlays.Marker;
       import com.google.maps.overlays.MarkerOptions;
       import com.google.maps.styles.FillStyle;
@@ -19,6 +20,7 @@
       import flash.net.URLRequest;
       
       import mx.collections.*;
+      import mx.controls.Alert;
       import mx.controls.treeClasses.*;
       import mx.managers.CursorManager;
       import mx.managers.PopUpManager;
@@ -65,6 +67,8 @@
 
 
       [Bindable] private var rubMarkers:Array = new Array; 
+
+	[Bindable] public var isDraggable:Boolean=false; 
 		
       private var handi:Object = 
         { "A": {
@@ -160,6 +164,10 @@
       public function TraiteReponseEtatDiag():void {
       	
 			if(rsEtatDiag && rsEtatDiag.toString()!=""){
+				
+				//mise à jour du taux de calcul
+				TauxCalc.text = "Taux de calcul : "+rsEtatDiag.EtatDiag.TauxCalc;
+				
 				//mise à jour des icones handicateur
 		        for each (var obs:Object in rsEtatDiag.EtatDiag.Obstacles)
 		        {
@@ -239,7 +247,7 @@
         map.enableContinuousZoom();
         map.setCenter(new LatLng(47.12995076, 1.00001335), 7);
         getXmlTerre();
-        getXml();
+        //getXml();
      }
      
      public function getXmlTerre():void {
@@ -288,7 +296,10 @@
         if(accEtatLieu.selectedIndex!=0)
 	        accEtatLieu.selectedIndex=0;
 		var item:Object=event.currentTarget.selectedItem;
-        showMarkerId(item.@idRub,item.@idSite);	        	
+        //showMarkerId(item.@idRub,item.@idSite);
+		var param:String = "f=get_markers&MapQuery=admin&id=" + item.@idRub + "&site=" + item.@idSite;
+		doRequestDirect(param,GetGeoHandler);
+	        	
      }
 
 
@@ -315,26 +326,98 @@
         //vérifie s'il faut créer les markers ou les rendre visible/invisible
         if(treeEtatLieux.categories[type].markers.length>0){
 			toggleCategory(type);
-	    }else{	    
-	        //boucle sur les géoloc 
-	        for each (var markerXml:XML in markers){
-	        	//vérifie si le marker possède la grille
-	        	var resultG:XMLList;
-            	resultG = markerXml.grilles.grille.(@id == idGrille);
-            	if(resultG.length()>0){
-            		//contruction du markers
-		            var titre:String = markerXml.@titre;
-		            var adresse:String = markerXml.@adresse;
-		            var latlng:LatLng = new LatLng(markerXml.@lat, markerXml.@lng);
-			        var marker:Marker = createMarker(latlng, titre, adresse, type, markerXml);
-				    treeEtatLieux.categories[type].markers.push(marker);
-			        map.addOverlay(marker);            		
-            	}  
-	        }
+	    }else{
+	    	//récupère les géolocalisation pour la grille
+			var param:String = "f=get_arbo_grille&idGrille=" + idGrille;
+			doRequestDirect(param,GetGrilleHandler);	    		        
 	    }
    		CursorManager.removeBusyCursor();
 
       }
+
+    public function GetGeoHandler(event:Event):void{
+    	
+		try{
+			var markerXml:XML = new XML(event.target.data);
+	    	showMarkerRub(markerXml[0].CartoDonnee[0]);
+		}catch (err:Error){
+		 	// code to react to the error
+            Alert.show(err.message);
+			CursorManager.removeBusyCursor();
+		}
+    }
+
+    public function GetGrilleHandler(event:Event):void{
+    	
+		try{
+			var terreXml:XML = new XML(event.target.data);
+
+	        //boucle sur les géoloc 
+	        for each (var markerXml:XML in terreXml.terre.CartoDonnee){
+        		//contruction du markers
+	            var titre:String = markerXml.@titre;
+	            var adresse:String = markerXml.@adresse;
+	            var latlng:LatLng = new LatLng(markerXml.@lat, markerXml.@lng);
+               	var type:String =  "grille_"+markerXml.@idGrille;
+
+		        var marker:Marker = createMarker(latlng, titre, adresse, type, markerXml);
+			    treeEtatLieux.categories[type].markers.push(marker);
+		        map.addOverlay(marker);            		
+	        }
+
+		}catch (err:Error){
+		 	// code to react to the error
+            Alert.show(err.message);
+			CursorManager.removeBusyCursor();
+		}
+    }
+
+
+	public function showMarkerRub(markerXml:XML): void {
+
+		CursorManager.setBusyCursor();
+
+
+			var marker:Marker = createMarkerX(markerXml);
+			rubMarkers[markerXml.@idRub] = marker;
+			map.addOverlay(marker);
+
+		    //montre les stats
+		    //if(sStat)	
+				showStat(markerXml);
+
+
+		    //recentre la carte
+		    var mType:IMapType= GetMapType(markerXml.@cartotype);
+		    var zoom:Number= markerXml.@zoommin;            		
+	        map.setCenter(marker.getLatLng(),zoom , mType);
+        
+		CursorManager.removeBusyCursor();
+                
+      }
+      
+      public function GetMapType(cType:String):IMapType{
+      	
+      	var mType:IMapType= MapType.PHYSICAL_MAP_TYPE;
+      	if(cType=="Mixte")mType= MapType.HYBRID_MAP_TYPE;
+      	if(cType=="Plan")mType= MapType.NORMAL_MAP_TYPE;
+      	if(cType=="Satellite")mType= MapType.SATELLITE_MAP_TYPE;
+      	if(cType=="Relief")mType= MapType.PHYSICAL_MAP_TYPE;
+      	
+      	return mType;
+      }
+
+	public function doRequestDirect(param:String, callback:Function):void{
+		
+		    var urlRequest:URLRequest = new URLRequest(urlExeCarto);
+		    urlRequest.data = param;
+			trace ("http.as:doRequestDirect:query=" +urlExeCarto+"?"+urlRequest.data);
+		    urlRequest.method = URLRequestMethod.GET;
+		    var urlLoader:URLLoader = new URLLoader(urlRequest);
+		    urlLoader.addEventListener("complete", callback);
+		
+	}
+
 
       public function showMarkerId(idR:String,idS:String="-1",sStat:Boolean=true): void {
 
@@ -399,6 +482,83 @@
         }
       	
       }
+
+	public function createMarkerX(markerXml:XML): Marker {
+
+		//contruction du markers
+		var titre:String = markerXml.@titre;
+		var adresse:String = markerXml.@adresse;
+		var latlng:LatLng = new LatLng(markerXml.@lat, markerXml.@lng);
+
+    	var type:String; 
+       	var html:String;
+       	html = "<b>" + titre + "</b> <br/>" + adresse;
+
+		//vérifie si on traite un type de marker particulier
+    	var resultType:XMLList = markerXml.motsclefs.motclef;
+    	if(resultType.length()>0){
+	        for each (var mc:XML in resultType){
+	            type = "motclef_"+mc.@id;
+		       	/*
+		       	if(roleUti != "visite"){
+		       		var prenom:String=markerXml.grilles.grille.(@id == "25").donnee.valeur.(@champ == "ligne_3").@valeur;
+		       		var nom:String=markerXml.grilles.grille.(@id == "25").donnee.valeur.(@champ == "ligne_2").@valeur;
+					var tel:String=markerXml.grilles.grille.(@id == "25").donnee.valeur.(@champ == "ligne_4").@valeur;
+			       	html += "<br/>Contact : " + prenom + " " + nom;
+			       	html += "<br/>Tel : " + tel;
+		       	}
+				*/
+				isDraggable=false;    	
+	        }
+        }
+    	resultType = markerXml.grilles.grille;
+    	if(resultType.length()>0){
+	        for each (var gr:XML in resultType){
+	            //on exclu les grilles géoloc
+	            if(gr.@id!="1"){
+		            type = "grille_"+gr.@id;		        		            	
+	            }
+				isDraggable=false;    	
+	        }
+        }
+
+		//inspiration de http://www.tricedesigns.com/portfolio/googletemps/srcview/
+		var markerOptions:MarkerOptions = new MarkerOptions({
+                    strokeStyle: new StrokeStyle({color: 0x000000}),
+                    fillStyle: new FillStyle({color:treeEtatLieux.categories[type].color, alpha: 0.3}),
+                    radius: 12,
+                    hasShadow: true
+                  })
+		markerOptions = new MarkerOptions({draggable: isDraggable, icon: new treeEtatLieux.categories[type].icon, iconOffset: new Point(-16, -32)});
+
+       	var marker:Marker = new Marker(latlng, markerOptions);
+        marker.addEventListener(MapMouseEvent.CLICK, function(e:MapMouseEvent):void {
+			marker.openInfoWindow(new InfoWindowOptions({contentHTML:html}));
+			showStat(markerXml);
+        });
+		if(isDraggable){
+	        var options:InfoWindowOptions = new InfoWindowOptions({
+	            customContent: new InfoWindowTabbedComponent(marker,adresse,"-1",markerXml.@idRub,markerXml.@titre),
+	            customOffset: new Point(0, 10),
+	            width: 300,
+	            height: 120,
+	            drawDefaultFrame: true
+	        });
+	
+	        marker.addEventListener(MapMouseEvent.CLICK, function (event:MapMouseEvent):void {
+	          var markerContent:String = marker.getLatLng().toString();
+	           marker.openInfoWindow(options);
+	        });
+	        marker.addEventListener(MapMouseEvent.DRAG_END, function(event:MapMouseEvent):void {
+	          var markerContent:String = marker.getLatLng().toString();
+	          marker.openInfoWindow(options);
+	         });
+		}
+         
+        return marker;
+	} 
+
+
 
       public function createMarker(latlng:LatLng, name:String, address:String, type:String, markerXml:XML): Marker {
 

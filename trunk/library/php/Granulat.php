@@ -1,5 +1,4 @@
 <?php
-
 class Granulat
 {
   public $id;
@@ -21,7 +20,7 @@ class Granulat
   
 
   	function __tostring() {
-    return "Cette classe permet de définir et manipuler un granulat : .<br/>";
+    return "Cette classe permet de dï¿½finir et manipuler un granulat : .<br/>";
     }
 
   	function __construct($id, $site, $complet=true) {
@@ -48,7 +47,7 @@ class Granulat
 		if($this->trace)
 	    	echo "Granulat:GetKml: id=$gra->id <br/>";
 
-		//récupère les kml
+		//rï¿½cupï¿½re les kml
 		$kmls = $this->GetDocs($gra->id, $this->site->infos["CARTE_TYPE_DOC"]);
 
 		$ficsKml ="";
@@ -58,7 +57,7 @@ class Granulat
 			}
 		}else{
 			//on ne remonte que jusqu'au grand parent
-			//on supprime cette étape pour flex
+			//on supprime cette ï¿½tape pour flex
 			//
 			if($gra->IdParent && $niv<6){
 				$grap = new Granulat($gra->IdParent,$gra->site,false);
@@ -79,22 +78,22 @@ class Granulat
 			$this->DelEnfantId();
 		}
 		
-		//vérifie si on traite une ligne de transport
+		//vï¿½rifie si on traite une ligne de transport
 		$ligne = $this->VerifExistGrille($this->site->infos["GRILLE_LIGNE_TRANS"]);
 		$idMotLiens = $this->site->infos["MOT_CLEF_LIGNE_TRANS"];
-		//vérifie si on traite une chaine de déplacement
+		//vï¿½rifie si on traite une chaine de dï¿½placement
 		if($ligne==-1){
 			$ligne = $this->VerifExistGrille($this->site->infos["GRILLE_CHAINE_DEPLA"]);
 			$idMotLiens = $this->site->infos["MOT_CLEF_CHAINE_DEPLA"];
 		}
 		
-		//récupère les enfants
+		//rï¿½cupï¿½re les enfants
 		if($ligne!=-1)
 			$ids = $this->GetEnfantIdsInLiens($this->id,",",$idMotLiens);
 		else
 			$ids = $this->GetEnfantIds($this->id,",",-1,$inCache,$allNiv).$this->id;
 
-		//vérifie si $ids est renseigné
+		//vï¿½rifie si $ids est renseignï¿½
 		if(!$ids)
 			$ids=-1;
 		
@@ -214,14 +213,14 @@ class Granulat
 		if($this->trace)
 	    	echo $deb."Granulat:GetEtatDiag: id= $this->id<br/>";
 
-	    //récupère toutes les rubrique enfants
+	    //rï¿½cupï¿½re toutes les rubrique enfants
 	    $ids = $this->GetIdsScope();
 	    	
-		//calculer l'état du diagnostique
+		//calculer l'ï¿½tat du diagnostique
 		$grille = new Grille($this->site);
 		$numDiag=0;
 		if(!$calcul){
-			//récupère les rubriques ayant un diagnostique
+			//rï¿½cupï¿½re les rubriques ayant un diagnostique
 			$rs = $grille->FiltreRubAvecGrille($this->id,$this->site->infos["GRILLE_REP_CON"]);
 			$numDiag = mysql_num_rows($rs);
 			$fin = microtime(true)-$deb;
@@ -230,13 +229,13 @@ class Granulat
 			if($_SESSION['ForceCalcul']){
 				//calcul les diagnostiques
 				while ($r =  mysql_fetch_assoc($rs)) {
-					//création du granulta
+					//crï¿½ation du granulta
 					$g = new Granulat($r["id_rubrique"],$this->site,false);
 					$g->GetEtatDiag($PourFlex,$SaveFile,true);
 				}
 			}
 		}
-		//calcul ou récupère les diagnostiques
+		//calcul ou rï¿½cupï¿½re les diagnostiques
 		$EtatOui = $grille->GetEtatDiagOui($ids,$this->id,$calcul);
 		$Etat1 = $grille->GetEtatDiagHandi($ids,1,$this->id,$calcul);
 		$Etat2 = $grille->GetEtatDiagHandi($ids,2,$this->id,$calcul);
@@ -248,10 +247,10 @@ class Granulat
 		if($this->trace)
     		echo "Granulat:GetEtatDiag:avant retour $fin<br/>";
 				
-		//calculer le l'indicateur d'accessibilité
+		//calculer le l'indicateur d'accessibilitï¿½
 		$fin = microtime(true)-$deb;
 		if($this->trace)
-    		echo "Granulat:GetEtatDiag:calculer le l'indicateur d'accessibilité $fin<br/>";
+    		echo "Granulat:GetEtatDiag:calculer le l'indicateur d'accessibilitï¿½ $fin<br/>";
 		$moteurObst = $this->GetHandiObstacle($Etat1,$Etat2,$Etat3,"moteur");
 		$moteur = $this->GetHandiAccess($moteurObst,$EtatAppli["r"]["moteur"],$Etat3["r"]["moteur"]);
 		
@@ -264,7 +263,7 @@ class Granulat
 		$cogObst = $this->GetHandiObstacle($Etat1,$Etat2,$Etat3,"cog");
 		$cog = $this->GetHandiAccess($cogObst,$EtatAppli["r"]["cog"],$Etat3["r"]["cog"]);
 
-		//calculer les icones supplémentaires
+		//calculer les icones supplï¿½mentaires
 		$FormIds = $this->GetFormIds(-1,$this->id);
 		//ajoute le parent
 		$ids .= ",".$this->IdParent;
@@ -280,13 +279,13 @@ class Granulat
 		while($r = mysql_fetch_assoc($Arts)) {
 			$IcosDoc .= $xul->GetFriseDocsIco($r["id_article"],-1,false,true);
 		}
-		//vérifie s'il y a une géolocalisation
+		//vï¿½rifie s'il y a une gï¿½olocalisation
 		$geo = $this->GetValeurForm($this->site->infos["GRILLE_GEO"],"lat");
 		if($geo)
 			$IcosDoc .= "<icone id='kml' />";		
 		$IcosDoc .="</icones>";
 				
-		//récupère le niveau d'achévement de l'état
+		//rï¿½cupï¿½re le niveau d'achï¿½vement de l'ï¿½tat
 		$numDiag = $grille->GetNumEtatDiagFait($this->id)." sur ".$numDiag;	
 		//initialisation du xml
 		$xml = "<EtatDiag idSite='".$this->site->id."' idRub='".$this->id."' titre=\"".$this->titre."\" TauxCalc='".$numDiag."' >";
@@ -369,7 +368,7 @@ class Granulat
 			return "A";	
 		if($handi>0.2 && $handi<=0.4 && $Handi3==0)	
 			return "B";
-		//attention on réinitialise l'interval pour afficher les cas précédent ayant un Handi 3
+		//attention on rï¿½initialise l'interval pour afficher les cas prï¿½cï¿½dent ayant un Handi 3
 		// 0.4 devient 0	
 		if($handi>=0 && $handi<=0.6)	
 			return "C";	
@@ -410,7 +409,7 @@ class Granulat
   
  
 /*
- * Parcourt récursivement les enfants afin de créer l'arborescence des rubriques et articles dans spip (correspondant à l'import)  
+ * Parcourt rï¿½cursivement les enfants afin de crï¿½er l'arborescence des rubriques et articles dans spip (correspondant ï¿½ l'import)  
  */ 
   	function SetRubElements($xml, $idParent, $rubriques, $articles, $dom, $update) {
   		
@@ -454,7 +453,7 @@ class Granulat
 	
 	  				$idDon = $g->AddIdDonnee($idGrille, $idArt, $donnee->date, $donnee->maj);
 					if($this->trace)
-						echo "Granulat/AddXmlFile/- création de la donnee ".$idDon."<br/>";	
+						echo "Granulat/AddXmlFile/- crï¿½ation de la donnee ".$idDon."<br/>";	
 	  				
 					foreach($donnee->valeur as $valeur) {
 						if($valeur!='non'){
@@ -468,14 +467,14 @@ class Granulat
 								$champ=substr($champ,0,-2);
 							}
 							if($this->trace) {
-								echo "Granulat/AddXmlFile/-- récupération du type de champ ".$champ."<br/>";
-								echo "Granulat/AddXmlFile/-- récupération de la valeur du champ ".$valeur."<br/>";
+								echo "Granulat/AddXmlFile/-- rï¿½cupï¿½ration du type de champ ".$champ."<br/>";
+								echo "Granulat/AddXmlFile/-- rï¿½cupï¿½ration de la valeur du champ ".$valeur."<br/>";
 							}
 							$row = array('champ'=>$champ, 'valeur'=>$valeur);
 							
 							$grille = new Grille($g->site);
 							if($this->trace)
-								echo "Granulat/AddXmlFile/--- création du champ <br/>";
+								echo "Granulat/AddXmlFile/--- crï¿½ation du champ <br/>";
 							$grille->SetChamp($row, $idDon, false);
 							
 						}
@@ -519,7 +518,7 @@ class Granulat
   	}
   	
   	/*
-  	 * Vérifie l'existence d'une rubrique dans la table spip_rubriques, retourne -1 si la rubrique n'est pas trouvée
+  	 * Vï¿½rifie l'existence d'une rubrique dans la table spip_rubriques, retourne -1 si la rubrique n'est pas trouvï¿½e
   	 * 
   	 */
 	public function VerifExistRubrique($idRub, $idParent) {
@@ -540,7 +539,7 @@ class Granulat
 	}
 	
 	/*
-  	 * Vérifie l'existence d'un article dans la table spip_articles, retourne -1 si l'article n'est pas trouvé
+  	 * Vï¿½rifie l'existence d'un article dans la table spip_articles, retourne -1 si l'article n'est pas trouvï¿½
 	 * 	 * 
 	 */
 	public function VerifExistArticle($idArt, $idRub) {
@@ -587,7 +586,7 @@ class Granulat
 	
 		
 	/*
-	 * Met à jour les identifiants des rubriques dans les tables spip_rubriques, spip_mots_rubriques et spip_articles 
+	 * Met ï¿½ jour les identifiants des rubriques dans les tables spip_rubriques, spip_mots_rubriques et spip_articles 
 	 * 
 	 */
 	public function UpdateIdRub($idRubOld, $idRubNew, $idParent) {
@@ -625,7 +624,7 @@ class Granulat
 	}
 	
 	/*
-	 * Met à jour les identifiants des articles dans les tables spip_articles, spip_forms_articles, spip_forms_donnees_articles et spip_auteurs_articles
+	 * Met ï¿½ jour les identifiants des articles dans les tables spip_articles, spip_forms_articles, spip_forms_donnees_articles et spip_auteurs_articles
 	 * 
 	 */
 	public function UpdateIdArt($idArtOld, $idArtNew, $idRubNew) {
@@ -697,12 +696,12 @@ class Granulat
 	
   	function SetAuteur($newId,$objet){
 
-	  	//pas de création d'auteur pour les rubriques
+	  	//pas de crï¿½ation d'auteur pour les rubriques
 	  	if($objet=="rubrique")
 	  		return;
 	  		
 	  	if($this->site->scope["login"]!=-1){
-				//association de l'article à l'auteur
+				//association de l'article ï¿½ l'auteur
 				$sql = "INSERT INTO spip_auteurs_".$objet."s (id_".$objet.",id_auteur)
 					SELECT ".$newId.", id_auteur FROM spip_auteurs where login='".$this->site->scope["login"]."'";					
 				$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
@@ -721,7 +720,7 @@ class Granulat
   	
   	function GetAuteurArticle($idArt) {
 	  
-		//association de l'article à l'auteur
+		//association de l'article ï¿½ l'auteur
 		$sql = "SELECT id_auteur, id_article FROM spip_auteurs_articles a WHERE a.id_article=".$idArt;					
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$req = $DB->query($sql);
@@ -782,7 +781,7 @@ class Granulat
 		$grille->SetChamp(array("champ"=>"url_1","valeur"=>$url),$idDon);
 		$grille->SetChamp(array("champ"=>"texte_1","valeur"=>$this->site->GetSQLValueString($rss, "html")),$idDon);
 
-		return "GeoRR ajoutée = ".$url;
+		return "GeoRR ajoutï¿½e = ".$url;
   
  	}
 
@@ -870,7 +869,7 @@ class Granulat
   
 	function GetXmlGrilles(){
 		$xml = "";
-		//récupère les grilles du granulat 
+		//rï¿½cupï¿½re les grilles du granulat 
 		$rsG = $this->GetFormIds(-1,$this->id);
 		if(mysql_num_rows($rsG)>0){
 			$xml .= "<grilles>";
@@ -885,7 +884,7 @@ class Granulat
 	function GetXmlGrilleMots(){
 		$xml = "";
 
-		//récupère les mots-clef du granulat
+		//rï¿½cupï¿½re les mots-clef du granulat
 		$rsMC = $this->GetTypeMotClef("rubrique");
 		if(count($rsMC)>0){
 			$xml .= "<motsclefs>";
@@ -899,14 +898,19 @@ class Granulat
 		
 	}
 		
-	function GetXmlCartoDonnee($row){
+	function GetXmlCartoDonnee($row,$fin=false){
 		$xml="";
 		
 		$xml .= "<CartoDonnee lat='".$row['lat']."'";
 		
 		$xml .= " lng='".$row['lng']."'";
-				
-		$xml .= " idRub='".$row['id_rubrique']."'";
+		
+		if($row['id_rubrique'])
+			$id = $row['id_rubrique'];
+		else
+			$id = $row['id'];
+		
+		$xml .= " idRub='".$id."'";
 				
 		$xml .= " idSite='".$this->site->id."'";
 		
@@ -962,12 +966,15 @@ class Granulat
 			$kml = $this->GetKml();
 		$xml .= " kml='".$kml."'";
 				
-		//création de l'identidiant xul
+		//crï¿½ation de l'identidiant xul
 		$idDoc = 'val'.DELIM.$this->site->infos["GRILLE_GEO"].DELIM.$row["idDon"].DELIM."fichier".DELIM.$row["idArt"];
 		$xml .= " idDoc='".$idDoc."'";
 		
 		//finalisation des attributs de CartoDonnee
-		$xml .= " >";
+		if($fin)
+			$xml .= " />";
+		else
+			$xml .= " >";
 		
 		return $xml;
 						
@@ -1024,7 +1031,7 @@ class Granulat
 		$r =  $db->fetch_assoc($requete);
 		//gestion de la localisation parente si localisation  null
 		if(!$r['lat']){
-			//niveau pour éviter de boucler trop longtemps
+			//niveau pour ï¿½viter de boucler trop longtemps
 			if($g->IdParent!=0 && $niv<3){
 				$result = $this->GetGeo($g->IdParent,-1,$niv+1);
 			}
@@ -1049,7 +1056,7 @@ class Granulat
 	}
   
 	function GetArticle($extraSql=""){
-		//récupère pour la rubrique l'article ayant les condition de extra
+		//rï¿½cupï¿½re pour la rubrique l'article ayant les condition de extra
 		$sql = "SELECT a.id_article
 			FROM spip_rubriques r
 				INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique  
@@ -1058,11 +1065,11 @@ class Granulat
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$req = $DB->query($sql);
 		$DB->close();
-		//vérifie l'existance de l'article pour les forms
+		//vï¿½rifie l'existance de l'article pour les forms
 		if ($r = $DB->fetch_assoc($req)){
 			$artId = $r['id_article']; 
 		} else {
-			//Création de l'article pour la rubrique
+			//Crï¿½ation de l'article pour la rubrique
 			$NomGrille = $this->site->GetSQLValueString($this->titre, "text");
 			$sql = "INSERT INTO `spip_articles` (`titre`, id_rubrique, statut, date)
 				VALUES (".$NomGrille.",".$this->id.",'prepa', now())";
@@ -1078,7 +1085,7 @@ class Granulat
 	}
 	
 	/*
-	 * Retourne un tableau contenant l'id de l'article, le titre, les dates de création et de mise à jour pour une rubrique
+	 * Retourne un tableau contenant l'id de l'article, le titre, les dates de crï¿½ation et de mise ï¿½ jour pour une rubrique
 	 */
 	function GetArticleInfo($extraSql="",$idRub=true){
 		
@@ -1091,7 +1098,7 @@ class Granulat
 		if($_SESSION['ContEditPublie'])
 			$wherePubli = " AND a.statut='publie' ";	
 		
-		//récupère pour la rubrique l'article ayant les condition de extra
+		//rï¿½cupï¿½re pour la rubrique l'article ayant les condition de extra
 		$sql = "SELECT a.id_article ,a.titre, a.date, a.maj, a.statut, aa.id_auteur
 			FROM spip_articles a 
 				LEFT JOIN spip_auteurs_articles aa ON aa.id_article = a.id_article 	
@@ -1132,11 +1139,11 @@ class Granulat
 	}
 	
 	/*
-	 * Retourne l'ensemble des id de données d'une grille donnée pour un article 
+	 * Retourne l'ensemble des id de donnï¿½es d'une grille donnï¿½e pour un article 
 	 */
 	function GetIdDonnees($idGrille, $idArticle) {
 		
-		//vérifie si on renvoit toute les données quelques soit la form
+		//vï¿½rifie si on renvoit toute les donnï¿½es quelques soit la form
 		if($idGrille==-1)
 			$sql = "SELECT fd.id_donnee, fd.date, fd.maj, fd.id_form idGrille
 				FROM spip_forms_donnees_articles da 
@@ -1156,7 +1163,7 @@ class Granulat
 	}
 	
 	/*
-	 * Retourne le tableau contenant l'id, le champ, la valeur et la date de mise à jour d'une donnée
+	 * Retourne le tableau contenant l'id, le champ, la valeur et la date de mise ï¿½ jour d'une donnï¿½e
 	 */
 	function GetInfosDonnee($idDonnee) {
 		
@@ -1183,7 +1190,7 @@ class Granulat
 		$donId = false;
 		
 		if(!$doublon){
-			//vérifie l'existence de la donnee
+			//vï¿½rifie l'existence de la donnee
 	  		$sql = "SELECT fd.id_donnee
 				FROM spip_forms_donnees_articles da 
 					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = da.id_donnee AND fd.id_form = ".$formId."
@@ -1197,7 +1204,7 @@ class Granulat
 		}
 		
 		if(!$donId){
-			//attache le form à l'article
+			//attache le form ï¿½ l'article
 			/*
 			$sql = "INSERT INTO `spip_forms_articles` (id_form, id_article)
 				VALUES (".$formId.",".$artId.")";
@@ -1205,20 +1212,20 @@ class Granulat
 			$req = $DB->query($sql);
 			$DB->close();
 			*/
-			//création de la donnée du formulaire
+			//crï¿½ation de la donnï¿½e du formulaire
 			$sql = "INSERT INTO `spip_forms_donnees` (`id_form`, `date`,`confirmation`, `statut`, `rang`)
 				VALUES (".$formId.", now(), 'valide', 'prop', 1)";
 			$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 			$req = $DB->query($sql);
 			$donId = mysql_insert_id();
 			$DB->close();
-			//attache la donnée à l'article
+			//attache la donnï¿½e ï¿½ l'article
 			$sql = "INSERT INTO `spip_forms_donnees_articles` (`id_donnee`, `id_article`)
 				VALUES (".$donId.", ".$artId.")";
 			$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 			$req = $DB->query($sql);
 			$DB->close();
-			//echo "-- création de la donnée ".$donId." \n<br/>"; 
+			//echo "-- crï¿½ation de la donnï¿½e ".$donId." \n<br/>"; 
 		}
 
 		return $donId;
@@ -1230,34 +1237,34 @@ class Granulat
 		if($artId==-1)
 			$artId = $this->GetArticle();
 
-		//attache le form à l'article
+		//attache le form ï¿½ l'article
 		/*$sql = "INSERT INTO `spip_forms_articles` (id_form, id_article)
 				VALUES (".$formId.",".$artId.")";
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$req = $DB->query($sql);
 		$DB->close();*/
 			
-		//création de la donnée du formulaire
+		//crï¿½ation de la donnï¿½e du formulaire
 		$sql = "INSERT INTO `spip_forms_donnees` (`id_form`, `date`, `maj`, `confirmation`, `statut`, `rang`)
 				VALUES (".$formId.", '".$date."', '".$maj."', 'valide', 'prop', 1)";
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$req = $DB->query($sql);
 		$donId = mysql_insert_id();
 		$DB->close();
-		//attache la donnée à l'article
+		//attache la donnï¿½e ï¿½ l'article
 		$sql = "INSERT INTO `spip_forms_donnees_articles` (`id_donnee`, `id_article`)
 				VALUES (".$donId.", ".$artId.")";
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$req = $DB->query($sql);
 		$DB->close();
-		//echo "-- création de la donnée ".$donId." \n<br/>"; 
+		//echo "-- crï¿½ation de la donnï¿½e ".$donId." \n<br/>"; 
 		
 		return $donId;
 	}
 	
 	function GetLiens($rReq=false){
 	
-		//récupère les liens du granulat
+		//rï¿½cupï¿½re les liens du granulat
 		$sql = "SELECT nom_site, url_site
 			FROM `spip_syndic`
 			WHERE statut = 'publie' AND id_rubrique =".$this->id;
@@ -1324,7 +1331,7 @@ class Granulat
 		if($sep =="")
 			$sep = DELIM;
 			
-		//récupère les sous thème
+		//rï¿½cupï¿½re les sous thï¿½me
 		$sql = "SELECT id_rubrique, titre, r.id_parent
 			FROM spip_rubriques r
 			WHERE r.id_rubrique = ".$id;
@@ -1351,7 +1358,7 @@ class Granulat
 			$sep=DELIM;
 			
 		if(!$inCache){
-			//récupère les sous thème
+			//rï¿½cupï¿½re les sous thï¿½me
 			$sql = "SELECT id_rubrique, titre
 				FROM spip_rubriques r
 				WHERE r.id_parent = ".$id;
@@ -1387,7 +1394,7 @@ class Granulat
 
 	function SetEnfantId($id)
 	{
-		/*vérifie si la ligne existe
+		/*vï¿½rifie si la ligne existe
 		$sql = "SELECT id_rubrique FROM spip_rubriques_enfants 
 			WHERE id_parent = ".$this->id." AND id_rubrique=".$id;
 		//echo $this->site->infos["SQL_LOGIN"]."<br/>";
@@ -1440,7 +1447,7 @@ class Granulat
 		else
 			$JoinMot = " INNER JOIN spip_mots_syndic ms ON ms.id_syndic = s.id_syndic AND ms.id_mot =".$idMot;
 		
-		//récupère les sous thème
+		//rï¿½cupï¿½re les sous thï¿½me
 		$sql = "SELECT s.id_syndic, s.descriptif
 			FROM spip_syndic s
 			".$JoinMot." 
@@ -1476,7 +1483,7 @@ class Granulat
 		$arrlisteGrilles = $this->GetFormIds(-1,$idRub);
 		if(mysql_num_rows($arrlisteGrilles)>0){
 			while($rowGrille = mysql_fetch_assoc($arrlisteGrilles)) {
-				//récupération du js
+				//rï¿½cupï¿½ration du js
 				$Xpath = "/XmlParams/XmlParam[@nom='FilAriane']/fil[@idForm='".$rowGrille['id_form']."']";
 				$nodes = $this->site->XmlParam->GetElements($Xpath);		
 				foreach($nodes as $node)
@@ -1495,7 +1502,7 @@ class Granulat
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$DB->connect();
 		if($this->trace)
-			echo "//charge les propiétés du granulat $this->id -<br/>";
+			echo "//charge les propiï¿½tï¿½s du granulat $this->id -<br/>";
 		$sql = "SELECT r.titre rtitre, r.id_rubrique, r.descriptif, r.texte, r.id_parent rpid
 				, rp.titre rptitre
 				, a.texte atexte, a.chapo , a.descriptif adesc, a.ps, a.extra, a.date
@@ -1542,7 +1549,7 @@ class Granulat
 	
 	function SetGeoStat($idInd,$year,$val){
 		
-		//vérifie si la GeoRef existe
+		//vï¿½rifie si la GeoRef existe
 		$sql = "DELETE FROM ona_indicator_values 
 			WHERE area = ".$this->id." AND variable=".$idInd." AND year=".$year ;
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
@@ -1569,7 +1576,7 @@ class Granulat
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$DB->connect();
 	
-		//récupère la valeur de la donnée
+		//rï¿½cupï¿½re la valeur de la donnï¿½e
 		if($champ==-1){
 			$sql = "SELECT dc.valeur
 				FROM spip_articles a
@@ -1613,7 +1620,7 @@ class Granulat
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$DB->connect();
 	
-		//récupère les sous thème
+		//rï¿½cupï¿½re les sous thï¿½me
 		$sql = "SELECT dc.valeur, dc.champ, da.id_donnee, fc.titre
 			FROM spip_articles a
 				INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
@@ -1664,7 +1671,7 @@ class Granulat
 		$this->arrDoc = array(); 
 		while($data = $DB->fetch_assoc($req)) {
 			$this->arrDoc[$i] = new Document($this->site, $data);
-			//vérifie s'il y a des fichiers multimédia
+			//vï¿½rifie s'il y a des fichiers multimï¿½dia
 			$i ++;
 		}
 		return $this->arrDoc;
@@ -1776,7 +1783,7 @@ class Granulat
 	}
 
 	public function GetMotClef() {
-		//récupère lid du granulat
+		//rï¿½cupï¿½re lid du granulat
 		$sql = "SELECT id_mot, id_rubrique
 			FROM `spip_mots_rubriques`
 			WHERE id_rubrique =".$this->id;
@@ -1789,7 +1796,7 @@ class Granulat
 		while($r = $DB->fetch_assoc($req)) {
 			$valeur .= $r['id_mot'].DELIM;
 		}
-		//enlève le dernier délmiteur
+		//enlï¿½ve le dernier dï¿½lmiteur
 		$valeur = substr($valeur,0,-1);
 		return $valeur;
 	}
@@ -1797,7 +1804,7 @@ class Granulat
 	public function GetTypeMotClef($type,$id=-1) {
 		if($id==-1)
 			$id=$this->id;
-		//récupère lid du granulat
+		//rï¿½cupï¿½re lid du granulat
 		$sql = "SELECT id_mot
 			FROM spip_mots_".$type."s
 			WHERE id_".$type." =".$id;
@@ -1818,7 +1825,7 @@ class Granulat
 	public function GetTypeAuteur($type,$id=-1) {
 		if($id==-1)
 			$id=$this->id;
-		//récupère lid du granulat
+		//rï¿½cupï¿½re lid du granulat
 		$sql = "SELECT a.id_auteur, a.nom, a.login
 			FROM spip_auteurs a 
 				INNER JOIN spip_auteurs_".$type."s at ON at.id_auteur = a.id_auteur
@@ -1836,7 +1843,7 @@ class Granulat
 		if($id =="")
 			$id = $this->id;
 			
-		//récupère les sous thème
+		//rï¿½cupï¿½re les sous thï¿½me
 		$sql = "SELECT id_rubrique, titre, r.id_parent
 			FROM spip_rubriques r
 			WHERE r.id_rubrique = ".$id;
@@ -1877,7 +1884,7 @@ class Granulat
 			while($donnee = mysql_fetch_assoc($arrListeDonnees)){
 	  			$idDon = $gra->AddIdDonnee($donnee['idGrille'], $idArt, $donnee['date'], $donnee['maj']);
 				if($this->trace)
-					echo "Granulat/copy/- création de la donnee ".$idDon."<br/>";	
+					echo "Granulat/copy/- crï¿½ation de la donnee ".$idDon."<br/>";	
 	  			
 				$arrListeDonneeInfos = $gra->GetInfosDonnee($donnee['id_donnee']);
 				while($Donnee = mysql_fetch_assoc($arrListeDonneeInfos)){
@@ -1892,13 +1899,13 @@ class Granulat
 							$champ=substr($champ,0,-2);
 						}
 						if($this->trace) {
-							echo "Granulat/copy/-- récupération du type de champ ".$champ."<br/>";
-							echo "Granulat/copy/-- récupération de la valeur du champ ".$valeur."<br/>";
+							echo "Granulat/copy/-- rï¿½cupï¿½ration du type de champ ".$champ."<br/>";
+							echo "Granulat/copy/-- rï¿½cupï¿½ration de la valeur du champ ".$valeur."<br/>";
 						}
 						$row = array('champ'=>$champ, 'valeur'=>$valeur);
 						
 						if($this->trace)
-							echo "Granulat/copy/--- création du champ <br/>";
+							echo "Granulat/copy/--- crï¿½ation du champ <br/>";
 						$grille->SetChamp($row, $idDon, false);
 					}
 				}
@@ -1937,13 +1944,13 @@ class Granulat
 		
 		while($article = mysql_fetch_assoc($arrListeInfoArticle)) {
 			$idArt = $graNew->SetNewArticleComplet($article['titre'], $article['date'], $article['maj']);
-	  		//récupère les données du granulat source
+	  		//rï¿½cupï¿½re les donnï¿½es du granulat source
 			$arrListeDonnees = $gSrc->GetIdDonnees(-1, $article['id_article']);
 			while($donnee = mysql_fetch_assoc($arrListeDonnees)){
 	  			$idDon = $graNew->AddIdDonnee($donnee['idGrille'], $idArt, $donnee['date'], $donnee['maj']);
 				if($this->trace)
-					echo "Granulat/copy/- création de la donnee ".$idDon."<br/>";	
-	  			//récupère les valeurs de la donnee source
+					echo "Granulat/copy/- crï¿½ation de la donnee ".$idDon."<br/>";	
+	  			//rï¿½cupï¿½re les valeurs de la donnee source
 				$arrListeDonneeInfos = $gSrc->GetInfosDonnee($donnee['id_donnee']);
 				while($Donnee = mysql_fetch_assoc($arrListeDonneeInfos)){
 					if($Donnee['valeur']!='non'){
@@ -1957,13 +1964,13 @@ class Granulat
 							$champ=substr($champ,0,-2);
 						}
 						if($this->trace) {
-							echo "Granulat/copy/-- récupération du type de champ ".$champ."<br/>";
-							echo "Granulat/copy/-- récupération de la valeur du champ ".$valeur."<br/>";
+							echo "Granulat/copy/-- rï¿½cupï¿½ration du type de champ ".$champ."<br/>";
+							echo "Granulat/copy/-- rï¿½cupï¿½ration de la valeur du champ ".$valeur."<br/>";
 						}
 						$row = array('champ'=>$champ, 'valeur'=>$valeur);
 						
 						if($this->trace)
-							echo "Granulat/copy/--- création du champ <br/>";
+							echo "Granulat/copy/--- crï¿½ation du champ <br/>";
 						$grille->SetChamp($row, $idDon, false);
 					}
 				}
