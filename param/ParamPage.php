@@ -15,14 +15,16 @@ if(isset($_POST['login_uti'])) {
 		echo "ParamPage:session:$login, $mdp, $idAuteur<br/>";
 }
 
-	//pour défaut on prend aucune option
+	//pour dï¿½faut on prend aucune option
 	$_SESSION['version']="V2";
 	if(!isset($_SESSION['type_contexte'])) 
-		$_SESSION['type_contexte'] = false;//array ('multiple_2_1', 'multiple_2_2', 'multiple_2_3', 'multiple_2_4', 'multiple_2_5', 'multiple_2_6');
-	if(TRACE)
+		//$_SESSION['type_contexte'] = false;//array ('multiple_2_1', 'multiple_2_2', 'multiple_2_3', 'multiple_2_4', 'multiple_2_5', 'multiple_2_6');
+		$_SESSION['type_contexte'] = array ('multiple_2_5');
+		if(TRACE)
 		print_r($_SESSION['type_contexte']);	
 	if(!isset($_SESSION['type_controle'])) 
-		$_SESSION['type_controle'] = false;//array ('multiple_1_1','multiple_1_2');
+		//$_SESSION['type_controle'] = false;//array ('multiple_1_1','multiple_1_2');
+		$_SESSION['type_controle'] = array ('multiple_1_1');
 	if(TRACE)
 		print_r($_SESSION['type_controle']);	
 	
@@ -44,16 +46,16 @@ if(isset($_POST['login_uti'])) {
 
 
 
-// vérification du site en cours
+// vï¿½rification du site en cours
 //echo("_SESSION['site']=".$_SESSION['site']);
+if(isset($_SESSION['site']))
+	$site=$_SESSION['site'];
 if(isset($_GET['site'])){
 	$site = $_GET['site'];
 }
 if(isset($_POST['site'])){
 	$site = $_POST['site'];
 }
-if(isset($_SESSION['site']))
-	$site=$_SESSION['site'];
 if(!$site)
 	$site = DEFSITE;
 $_SESSION['site']=$site;
@@ -138,7 +140,7 @@ function ChercheAbo ($login, $mdp, $objSite)
 	{
 		// connexion serveur
 		$link = mysql_connect($objSite->infos["SQL_HOST"], $objSite->infos["SQL_LOGIN"], $objSite->infos["SQL_PWD"]) or die("Impossible de se connecter : " . mysql_error());	
-		// Sélection de la base de données
+		// Sï¿½lection de la base de donnï¿½es
 		//mysql_select_db("solacc", $link);	
 		mysql_select_db($objSite->infos["SQL_DB"], $link);	
 		

@@ -50,10 +50,48 @@ switch ($fonction) {
 	case 'get_stat_kml_handi':
 		$resultat = get_stat_kml_handi($g,$objSite);
 		break;
+	case 'get_arbo_grille':
+		$resultat = get_arbo_grille($g->id,$objSite,$_GET['idGrille']);
+		break;
 		
 }
 
 echo $resultat;
+
+
+function get_arbo_grille($idRub,$objSite,$idGrille) {
+	
+	$grille = new Grille($objSite);
+	
+	$path = PathRoot."/bdd/carto/ArboGrille_".$objSite->id."_".$idRub."_".$idGrille.".xml";
+
+	$xml = $objSite->GetFile($path);
+	if(!$xml){
+	
+			$xml = "<grilles idSite='".$objSite->id."' idRub='".$idRub."' idGrille='".$idGrille."' >";
+
+			//rï¿½cupï¿½ration des ï¿½lï¿½ments des sites enfants
+	 		if($objSite->infos["SITE_ENFANT"]!=-1){
+				//rï¿½cupï¿½ration des Ã©lÃ©ments avec la grille
+	 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($idRub,$idGrille,true);
+	 			if(count($arrG)>0){
+	 				//trie le rï¿½sultat
+		 			ksort($arrG); 					
+		 			foreach($arrG as  $key=>$val){
+		 				$xml.=$val["xml"];
+					}	
+	 			}
+			}
+	 		
+			$xml .= "</grilles>";
+
+		$objSite->SaveFile($path,utf8_encode($xml));
+	}		
+	return $xml;
+	
+			
+}
+
 
 function get_arbo_territoire($idRub,$objSite,$niv=0) {
 	
@@ -63,7 +101,7 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 	$path = PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml";
 //	$xml = $objSite->GetFile($path);
 //	if(!$xml){
-		//récupération des territoires du granulat
+		//rï¿½cupï¿½ration des territoires du granulat
 		$sql = "SELECT dc.valeur, dc.champ, da.id_donnee, r.titre rTitre, r.id_rubrique
 				, m.titre mTitre, m.id_mot
 			FROM spip_articles a
@@ -88,13 +126,13 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 		while($r = mysql_fetch_assoc($req)) {
 			$xml .= "<terre idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"".$r["rTitre"]."\" idGrille='".$idGrille."'   idMot='".$r["id_mot"]."'  titreMot=\"".$r["mTitre"]."\" >";
 	 		$xml .= get_arbo_territoire($r["id_rubrique"],$objSite,$niv+1);
-			//récupèration des éléments des sites enfants
+			//rï¿½cupï¿½ration des ï¿½lï¿½ments des sites enfants
 	 		if($objSite->infos["SITE_ENFANT"]!=-1){
-				//récupération des établissements
+				//rï¿½cupï¿½ration des ï¿½tablissements
 	 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($r["id_rubrique"],$objSite->infos["GRILLE_ETAB"]);
 	 			if(count($arrG)>0){
 	 				$xml .= "<terre idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Etablissements\" idGrille='".$idGrille."' >";
-		 			//trie le résultat
+		 			//trie le rï¿½sultat
 		 			ksort($arrG); 					
 		 			foreach($arrG as  $key=>$val){
 		 				$xml.=$val["xml"];
@@ -197,11 +235,11 @@ function get_stat_kml_handi($g,$objSite) {
 	//$objSite = new Site($SITES,$site,"");
 	//$g = new Granulat($id, $objSite);
 	$pck = "";
-	//récupère les coordonnées géographiques
+	//rï¿½cupï¿½re les coordonnï¿½es gï¿½ographiques
 	$arrGeo = $g->GetGeo();
-	//récupère le diagnostic
+	//rï¿½cupï¿½re le diagnostic
 	$EtatDiag = simplexml_load_string($g->GetEtatDiag(true));
-	//création des placemarks par handicap
+	//crï¿½ation des placemarks par handicap
 	foreach($EtatDiag->Obstacles as $obst){
 		$stat = array($obst->niv0,$obst->niv1,$obst->niv2,$obst->niv3);
 		$coorStat = GetCoorStatCarre($arrGeo,$stat);
@@ -384,7 +422,7 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 	$NewQuery = "idFiche";
 	//
 	
-	//construction de la requête
+	//construction de la requï¿½te
 	$statut = "";//" AND a.statut = 'publie' ";
 	$statut = " ";
 	$sql = "SELECT DISTINCT r.id_rubrique, r.titre, r.descriptif, r.texte
@@ -452,29 +490,29 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 	{
 
 		$path = PathRoot."/bdd/carto/".$query."_".$objSite->id."_".$row['id_rubrique'].".xml";
-		//pour gérer le plantage de connexion mysql
+		//pour gï¿½rer le plantage de connexion mysql
 		//if(file_exists($path))	continue;
 			
 		$g = new Granulat($row['id_rubrique'], $objSite,false);
-		//echo "recupère le granulat = ".$row['id_rubrique']."<br/>";
+		//echo "recupï¿½re le granulat = ".$row['id_rubrique']."<br/>";
 		
 		//construction des markers
 		$xmlRub = $g->GetXmlCartoDonnee($row);
 						
-		//vérifie s'il faut récupérer le diagnostic
+		//vï¿½rifie s'il faut rï¿½cupï¿½rer le diagnostic
 		$saveStat = true;//false;
-		if($query=="allEtatDiag"){
+		//if($query=="allEtatDiag"){
 			
 			$saveStat = true;
 			
 			//$xml .= $g->GetEtatDiag(true,true);
 
-			//récupère les grilles du granulat 
+			//rï¿½cupï¿½re les grilles du granulat 
 			$xmlRub.= $g->GetXmlGrilles();
-			//récupère les mots-clef du granulat
+			//rï¿½cupï¿½re les mots-clef du granulat
 			$xmlRub.= $g->GetXmlGrilleMots();
 						
-		}
+		//}
 		
 		//ajoute le bassin de gare
 		//$xmlRub .= CalculBassinGare($g, $saveStat);
@@ -489,7 +527,7 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 		$xmlRub = "<CartoDonnees>".$xmlRub."</CartoDonnees>";
 
 	/***************************************************************fin*******************************/
-		//pour éviter le bug des connexion mysql
+		//pour ï¿½viter le bug des connexion mysql
 		//sleep(1);
 		if($SaveFile){
 			$objSite->SaveFile($path,$xmlRub);
@@ -499,13 +537,13 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 
 	}
 
-	//gestion de la géolocalisation par le parent quand la requête est vide
+	//gestion de la gï¿½olocalisation par le parent quand la requï¿½te est vide
 	if($i==0){
 		$g = new Granulat($id, $objSite);
 		if($g->IdParent!=0)
 			$xml = get_marker($objSite, $g->IdParent, $southWestLat, $northEastLat, $southWestLng, $northEastLng, $zoom, $query, $themes, $i);		
 	}else{
-		//calcul toute les données vides
+		//calcul toute les donnï¿½es vides
 		if($query=="allEtatDiag"){
 			$g = new Granulat($id,$objSite);
 			$xml .= CalculCartoDonneevide($g);		
@@ -524,7 +562,7 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 
 function CalculCartoDonneevide($g){
 
-	//création des données sur les enfants qui n'ont pas de grille géo
+	//crï¿½ation des donnï¿½es sur les enfants qui n'ont pas de grille gï¿½o
 	$grille = new Grille($g->site);
 	$ids = $g->GetIdsScope(true);
     $xmlEnf="";
@@ -534,7 +572,7 @@ function CalculCartoDonneevide($g){
     	$gEnf = new Granulat($rEnf["id_rubrique"],$g->site,false);
     	$row = $gEnf->GetGeo();
     	//echo "CalculCartoDonneevide:".$gEnf->titre." ".$gEnf->id."<br/>";
-    	//construction de la ligne en incrémentant un peu la position
+    	//construction de la ligne en incrï¿½mentant un peu la position
     	if($lat==$row["lat"]){
     		$lat = $row["lat"].$i;
     		$i++;
@@ -556,9 +594,9 @@ function CalculCartoDonneevide($g){
 			, "docArtkml"=> $row["docArtkml"]
 			);
 		$xmlEnf .= $gEnf->GetXmlCartoDonnee($r);
-		//récupère les grilles du granulat 
+		//rï¿½cupï¿½re les grilles du granulat 
 		$xmlEnf.= $gEnf->GetXmlGrilles();
-		//récupère les mots-clef du granulat
+		//rï¿½cupï¿½re les mots-clef du granulat
 		$xmlEnf.= $gEnf->GetXmlGrilleMots();
 		//finalisation du xml
 		$xmlEnf .= "</CartoDonnee>";
@@ -572,10 +610,10 @@ function CalculBassinGare($g,$saveStat=false){
 	if($g->trace)
     	echo "Granulat:CalculBassinGare:g->id = $g->id g->titre= $g->titre<br/>";
 	
-	//création du bassin de gare si nécessaire
+	//crï¿½ation du bassin de gare si nï¿½cessaire
 	$kml = "";
 	
-	//vérifie le type d'ERP
+	//vï¿½rifie le type d'ERP
 	$typeERP = $g->GetValeurForm($g->site->infos["GRILLE_ETAB"], "", "", "", "", -1, "mot_2");
 	if($g->trace)
     	echo "Granulat:CalculBassinGare:typeERP = $typeERP<br/>";
@@ -586,20 +624,20 @@ function CalculBassinGare($g,$saveStat=false){
 		foreach($arrIds as $idEnf){
 			if($idEnf){
 				$gEnf = new Granulat($idEnf,$g->site,false);
-				//récupère le kml du granulat mais pas celui de ses parents => $niv>6
+				//rï¿½cupï¿½re le kml du granulat mais pas celui de ses parents => $niv>6
 				$docKmls = $gEnf->GetDocs($gEnf->id, $gEnf->site->infos["CARTE_TYPE_DOC"]);;
 				foreach($docKmls as $docKml){
 					$kml .= "<kml url='".$docKml->fichier."' />";
 					if($saveStat){
-						//récupère les infos de geo
+						//rï¿½cupï¿½re les infos de geo
 						$row = $gEnf->GetGeo();
-						//récupère le kml
+						//rï¿½cupï¿½re le kml
 						if($docKml->type==$gEnf->site->infos["KMZ_TYPE_DOC"]){
 		        			$xml = GetXmlFromKmz($docKml->path);						
 						}else{
 							$xml = simplexml_load_file($docKml->path);					
 						}
-						//récupèration des coordonnées de la communes
+						//rï¿½cupï¿½ration des coordonnï¿½es de la communes
 						/*
 						$xml->registerXPathNamespace("xmlns","http://earth.google.com/kml/2.1");
 						$Xpath = "//xmlns:coordinates";
@@ -613,11 +651,11 @@ function CalculBassinGare($g,$saveStat=false){
 							}
 							//enregistrement dans la geo
 							$gEnf->SetGeoRef($row["lat"],$row["lng"],$coors." ");
-							//récupère le nombre d'habitant
+							//rï¿½cupï¿½re le nombre d'habitant
 							$nbHab = $gEnf->GetValeurForm($gEnf->site->infos["GRILLE_TERRE"], "", "", "", "", -1, "ligne_2");
 							//enregistrement dans la stat
 							$gEnf->SetGeoStat(1,2006,$nbHab+1000);
-							//récupère le nombre d'handicapé
+							//rï¿½cupï¿½re le nombre d'handicapï¿½
 							$nbHan = $gEnf->GetValeurForm($gEnf->site->infos["GRILLE_TERRE"], "", "", "", "", -1, "ligne_3");
 							//enregistrement dans la stat
 							$gEnf->SetGeoStat(2,1999,$nbHan+1000);
@@ -641,7 +679,7 @@ function GetXmlFromKmz($path){
 	    $kml = $zip->getFromIndex(0);
 	    $zip->close();
 	} else {
-	    echo 'échec';
+	    echo 'ï¿½chec';
 	}
 	return  simplexml_load_string($kml);
 }
