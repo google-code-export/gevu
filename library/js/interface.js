@@ -177,7 +177,7 @@ function ShowEtatDiag(idRub) {
 		}
 
   	} catch(ex2){alert("interface:ShowEtatDiag:"+ex2+"="+idDoc+voir);}
-	document.documentElement.style.cursor = "auto";
+	//document.documentElement.style.cursor = "auto";
 
 }
 
@@ -1038,7 +1038,7 @@ function RefreshEcran(id,titre,typeSrc,typeDst)
 	AppliDroit(role);
    
    } catch(ex2){alert(":RefreshEcran:"+ex2+"");dump("::"+ex2);}
-	document.documentElement.style.cursor = "auto";
+	//document.documentElement.style.cursor = "auto";
 	
 }
 
@@ -1240,7 +1240,7 @@ function ChargeMenuFromAjax(id,idDst,type)
 	dump("ChargeMenuFromAjax OUT\n");
    
    } catch(ex2){dump(":ChargeMenuFromAjax:"+ex2);}
-	document.documentElement.style.cursor = "auto";
+	//document.documentElement.style.cursor = "auto";
 	
 }
 
@@ -1386,7 +1386,7 @@ function GetFichierKml(doc)
 			document.getElementById(doc).value = "Aucun fichier n'est sélectionné !";
 			
   } catch(ex2){ alert("interface:GetFichierKml:"+ex2); } 
-	document.documentElement.style.cursor = "auto";
+	//document.documentElement.style.cursor = "auto";
 }
 
 function AddGeoRSS(id){

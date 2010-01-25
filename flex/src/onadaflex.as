@@ -28,21 +28,22 @@
 
 
     //prod
-    /*
+    //
 	[Bindable] private var urlExeAjax:String="http://www.gevu.eu/library/php/ExeAjax.php";
 	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRSox1CW3WZ7BFlPopnC1QYedci_nRTlqNkDlGLLooN1jsOpU7UlsFDrfg";
     private var urlAllEtatDiag:String="http://www.gevu.eu/bdd/carto/allEtatDiag_trouville_6264.xml";
     [Bindable] private var urlExeCarto:String="http://www.gevu.eu/library/php/ExecDonneeCarto.php";
     private var urlTerreRoot:String="http://www.gevu.eu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=6263&site=trouville";
-	*/
+	//
 	
 	//local
+	/*
    [Bindable] private var urlExeAjax:String="http://localhost/gevu/library/php/ExeAjax.php";
 	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRSAqqCYJRNRYB52nvFZykN9ZY0cdhRvfhvUr_7t7Rz5_XNkPGDb_GYlQA";
     private var urlAllEtatDiag:String="http://localhost/gevu/bdd/carto/allEtatDiag_trouville_6264.xml";
     [Bindable] private var urlExeCarto:String="http://localhost/gevu/library/php/ExecDonneeCarto.php";
     private var urlTerreRoot:String="http://localhost/gevu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=6263&site=trouville";
-	
+	*/
     private var map:Map;
     private var markers:XMLList;
 	[Bindable]	private var rsEtatDiag:Object;
@@ -515,7 +516,7 @@
     	if(resultType.length()>0){
 	        for each (var gr:XML in resultType){
 	            //on exclu les grilles géoloc
-	            if(gr.@id!="1"){
+	            if(gr.@id!="1" && gr.@id!="81"){
 		            type = "grille_"+gr.@id;		        		            	
 	            }
 				isDraggable=false;    	
@@ -537,6 +538,7 @@
 			showStat(markerXml);
         });
 		if(isDraggable){
+			/*
 	        var options:InfoWindowOptions = new InfoWindowOptions({
 	            customContent: new InfoWindowTabbedComponent(marker,adresse,"-1",markerXml.@idRub,markerXml.@titre),
 	            customOffset: new Point(0, 10),
@@ -553,6 +555,7 @@
 	          var markerContent:String = marker.getLatLng().toString();
 	          marker.openInfoWindow(options);
 	         });
+	         */
 		}
          
         return marker;

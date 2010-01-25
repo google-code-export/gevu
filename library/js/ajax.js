@@ -34,13 +34,13 @@ function AppendResult(url,doc,ajoute,cont,flex) {
 		}
 		//ajoute le résultat
 		doc.appendChild(resultDoc.documentElement);
+		document.documentElement.style.cursor = "auto";
 	}
-	document.documentElement.style.cursor = "auto";
 	
 	return resultDoc ;
 	//dump("AppendResult OUT \n");
-   } catch(ex2){alert(ex2);}
-	document.documentElement.style.cursor = "auto";
+   } catch(ex2){alert(ex2);document.documentElement.style.cursor = "auto";}
+	
 }
 
 function InsertBeforeResult(url,doc) {
@@ -65,12 +65,12 @@ function InsertBeforeResult(url,doc) {
 		parent = doc.parentNode
 		parent.insertBefore(resultDoc.documentElement, doc.nextSibling
 		);
+		document.documentElement.style.cursor = "auto";
 	}
-	document.documentElement.style.cursor = "auto";
 	return resultDoc ;
 	dump("InsertBeforeResult OUT \n");
-   } catch(ex2){alert(ex2);dump("::"+ex2);}
-	document.documentElement.style.cursor = "auto";
+   } catch(ex2){alert(ex2);document.documentElement.style.cursor = "auto";}
+	
 }
 
 
@@ -153,12 +153,12 @@ function GetAjaxResult(url) {
 	      alert("Réception erreur " + p.status);
 	}else{
 	    response = p.responseText;
+		document.documentElement.style.cursor = "auto";
 	}
-	document.documentElement.style.cursor = "auto";
 	return response;
 	dump("GetAjaxResult OUT \n");
-   } catch(ex2){alert("Ajax:GetAjaxResult:"+ex2);}
-	document.documentElement.style.cursor = "auto";
+   } catch(ex2){alert("Ajax:GetAjaxResult:"+ex2);document.documentElement.style.cursor = "auto";}
+	
 }
 
 function GetResult(url) {
@@ -176,12 +176,11 @@ function GetResult(url) {
 	      alert("Réception erreur " + p.status);
 	}else{
 	    response = p.responseText;
+		document.documentElement.style.cursor = "auto";
 	}
-	document.documentElement.style.cursor = "auto";
 	return response;
 	dump("GetResult OUT \n");
-   } catch(ex2){alert(ex2);dump("::"+ex2);}
-	document.documentElement.style.cursor = "auto";
+   } catch(ex2){alert(ex2);dump("::"+ex2);	document.documentElement.style.cursor = "auto";}
 
 }
 
@@ -198,7 +197,7 @@ function RefreshResult(response, params) {
 	arrP = params.split(",");
 	document.getElementById(arrP[0]).value = response;
 	AjaxRequest(arrP[1],"AfficheResult",arrP[2])
-	document.documentElement.style.cursor = "auto";
+	//document.documentElement.style.cursor = "auto";
 }
 
 function AjaxRequest(url,fonction_sortie,params) {
