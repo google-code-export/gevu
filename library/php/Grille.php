@@ -308,7 +308,9 @@ class Grille{
 					$xml = "";
 					while($row = mysql_fetch_assoc($rs)) {
 						$key = $oSiteEnf->strtokey($row["titre"]."_".$oSiteEnf->id."_".$row["id_rubrique"]);
+						
 						$xml = "<terre idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$row["titre"]."\" idGrille='".$idGrille."' >";
+						
 						$geo = $g->GetGeo($row["id_rubrique"]);
 						$xml .= "<CartoDonnee lat='".$geo['lat']."'";		
 						$xml .= " lng='".$geo['lng']."'";
@@ -321,7 +323,7 @@ class Grille{
 						$xml .= " cartotype='".$geo['type']."'";
 						$xml .= " idGrille='".$idGrille."'";
 						$xml .= " />";
-						
+
 						//v?rifie s'il faut charger des grilles enfants
 						$Xpath = "/XmlParams/XmlParam/menuSrc[@idForm='".$idGrille."']";
 						if($this->trace)

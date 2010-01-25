@@ -21,9 +21,9 @@
 //				var target:ButtonBar = ButtonBar(event.target);
 				
 				var target:LinkButton = LinkButton(event.target);
-				var idRub:String = target.id.substring(3); 
+				var arrId:Array = target.id.split("_"); 
 				//this.parentApplication.getXmlCarto(idRub);
-				this.parentApplication.showMarkerId(idRub);
+				this.parentApplication.showMarkerId(arrId[1]);
 			}
 
             public function SetFilAriane():void {

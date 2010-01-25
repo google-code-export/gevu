@@ -28,22 +28,23 @@
 
 
     //prod
-    //
+    /*
 	[Bindable] private var urlExeAjax:String="http://www.gevu.eu/library/php/ExeAjax.php";
 	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRSox1CW3WZ7BFlPopnC1QYedci_nRTlqNkDlGLLooN1jsOpU7UlsFDrfg";
     private var urlAllEtatDiag:String="http://www.gevu.eu/bdd/carto/allEtatDiag_trouville_6264.xml";
     [Bindable] private var urlExeCarto:String="http://www.gevu.eu/library/php/ExecDonneeCarto.php";
-    private var urlTerreRoot:String="http://www.gevu.eu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=6263&site=trouville";
-	//
+    //private var urlTerreRoot:String="http://www.gevu.eu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=6263&site=trouville";
+    private var urlTerreRoot:String="http://www.gevu.eu/bdd/carto/ArboTerritoire_trouville_6263.xml";
+	*/
 	
 	//local
-	/*
+	//
    [Bindable] private var urlExeAjax:String="http://localhost/gevu/library/php/ExeAjax.php";
 	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRSAqqCYJRNRYB52nvFZykN9ZY0cdhRvfhvUr_7t7Rz5_XNkPGDb_GYlQA";
     private var urlAllEtatDiag:String="http://localhost/gevu/bdd/carto/allEtatDiag_trouville_6264.xml";
     [Bindable] private var urlExeCarto:String="http://localhost/gevu/library/php/ExecDonneeCarto.php";
     private var urlTerreRoot:String="http://localhost/gevu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=6263&site=trouville";
-	*/
+	//
     private var map:Map;
     private var markers:XMLList;
 	[Bindable]	private var rsEtatDiag:Object;
@@ -427,7 +428,9 @@
 
         //vérifie s'il faut créer les markers ou les rendre visible/invisible
         //boucle sur les géoloc 
+        var bM:Boolean=false;
         for each (var markerXml:XML in markers){
+        	bM=true;
         	//vérifie si le marker a bien l'identifiant
         	var resultG:XMLList;
         	resultG = markerXml.(@idSite == idS && @idRub == idR);
@@ -450,6 +453,14 @@
 		        break;	        	
         	}  
         }
+        
+        //requete la geoloc de la rubrique
+        if(!bM){
+	        var param:String = "f=get_markers&MapQuery=admin&id=" + idR + "&site=" + idS;
+			doRequestDirect(param,GetGeoHandler);
+        	
+        }
+        
       }
       
       public function chargeKML(markerXml:XML):void {
@@ -589,6 +600,7 @@
         pEtatLieu.title = markerXml.@titre;
         idRub.text = markerXml.@idRub;
         idSite.text = markerXml.@idSite;
+
 	    //charge le kml
     	chargeKML(markerXml);
         //paramètre la requête pour récupérer le bon fichier xml
