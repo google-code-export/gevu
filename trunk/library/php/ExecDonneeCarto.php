@@ -139,7 +139,18 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 					}	
 					$xml .= "</terre>";				
 	 			}
-			}
+				//récupération des ï'établissements
+	 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($r["id_rubrique"],$objSite->infos["GRILLE_VOIRIE"]);
+	 			if(count($arrG)>0){
+	 				$xml .= "<terre idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Voiries\" idGrille='".$objSite->infos["GRILLE_VOIRIE"]."' >";
+		 			//trie le rï¿½sultat
+		 			ksort($arrG); 					
+		 			foreach($arrG as  $key=>$val){
+		 				$xml.=$val["xml"];
+					}	
+					$xml .= "</terre>";				
+	 			}
+	 		}
 	 		
 			$xml .= "</terre>";
 		}

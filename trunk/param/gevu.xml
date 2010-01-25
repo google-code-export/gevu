@@ -222,7 +222,7 @@
 			</menuDst>
 		</menuSrc>
 		
-		<menuSrc code="Voirie">
+		<menuSrc code="Voirie" idForm="62" >
 			<menuDst codeTree="voie" codeSaisi="Voie" lib="Voie" idForm="78" >
 				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Voie');"/>
 			</menuDst>
