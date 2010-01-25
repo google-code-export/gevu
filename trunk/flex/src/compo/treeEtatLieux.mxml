@@ -185,6 +185,18 @@
 	          "titre": "Axe de transport",
               "color": 0x080202,
 	          "icon": iconAxe,
+              "markers": []},
+          "grille_73": {
+        	"id": "73",
+	          "titre": "Voie",
+              "color": 0x080202,
+	          "icon": iconVoirie,
+              "markers": []},
+          "grille_78": {
+        	"id": "78",
+	          "titre": "Voie",
+              "color": 0x080202,
+	          "icon": iconVoirie,
               "markers": []}
 		};
     

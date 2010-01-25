@@ -161,7 +161,7 @@ $SiteTrouvilleERP2 = array(
 	"DEF_CARTE_TYPE" => "G_HYBRID_MAP",
 	"CARTE_TYPE_DOC" => "75,76",
 	"gmKey" => "ABQIAAAATs5RWdW8iTPuaiLrkvnqjRTRqFFvaBKBgdVodt96I8idUV-28RTOELCsfx_7hD62HnKwk7Lm8Cg_lQ",
-	"lienAdminSpip" => WebRoot."/trouville/spip/ecrire",
+	"lienAdminSpip" => WebRoot."/trouville/spip2/ecrire",
 	"urlExeAjax" => WebRoot."//library/php/ExeAjax.php",
 	"MenuContexte" => "menu_contextuel_Trouville.xul",
 	"urlCarto" => WebRoot."/design/BlocCarte.php",
@@ -169,9 +169,9 @@ $SiteTrouvilleERP2 = array(
 	"urlLibPhp" => WebRoot."/library/php/",
 	"urlLibJs" => WebRoot."/library/js/",
 	"urlLibSwf" => WebRoot."/library/swf/",
-	"pathUpload" => PathRoot."/trouville/spip/IMG/",
+	"pathUpload" => PathRoot."/trouville/spip2/IMG/",
 	"pathXulJs" => WebRoot."/library/js/",	
-	"pathSpip" => WebRoot."/trouville/spip/",
+	"pathSpip" => WebRoot."/trouville/spip2/",
 	"pathImages" => WebRoot."/design/images/"
 	); 
 
@@ -232,7 +232,7 @@ $SiteTrouvilleERP1 = array(
 	"DEF_CARTE_TYPE" => "G_HYBRID_MAP",
 	"CARTE_TYPE_DOC" => "75,76",
 	"gmKey" => "ABQIAAAATs5RWdW8iTPuaiLrkvnqjRTRqFFvaBKBgdVodt96I8idUV-28RTOELCsfx_7hD62HnKwk7Lm8Cg_lQ",
-	"lienAdminSpip" => WebRoot."/trouville/spip/ecrire",
+	"lienAdminSpip" => WebRoot."/trouville/spip1/ecrire",
 	"urlExeAjax" => WebRoot."//library/php/ExeAjax.php",
 	"MenuContexte" => "menu_contextuel_Trouville.xul",
 	"urlCarto" => WebRoot."/design/BlocCarte.php",
@@ -240,9 +240,9 @@ $SiteTrouvilleERP1 = array(
 	"urlLibPhp" => WebRoot."/library/php/",
 	"urlLibJs" => WebRoot."/library/js/",
 	"urlLibSwf" => WebRoot."/library/swf/",
-	"pathUpload" => PathRoot."/trouville/spip/IMG/",
+	"pathUpload" => PathRoot."/trouville/spip1/IMG/",
 	"pathXulJs" => WebRoot."/library/js/",	
-	"pathSpip" => WebRoot."/trouville/spip/",
+	"pathSpip" => WebRoot."/trouville/spip1/",
 	"pathImages" => WebRoot."/design/images/"
 	); 
 	

@@ -998,16 +998,23 @@ class Granulat
 		
 		$sql = "SELECT r.id_rubrique, r.titre, r.descriptif, r.id_parent, da.id_donnee
 				,dc1.valeur lat, dc2.valeur lng, dc3.valeur zoom, dc4.valeur type, dc5.valeur zoommax
-			FROM spip_rubriques r
+				, dc7.valeur adresse
+				, dc8.valeur kml
+				, dArt.fichier docArtkml
+				FROM spip_rubriques r
 				INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
 				INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
 				INNER JOIN spip_forms_donnees fd ON fd.id_donnee = da.id_donnee AND fd.id_form = ".$this->site->infos["GRILLE_GEO"]."
-				LEFT JOIN spip_forms_donnees_champs dc1 ON dc1.id_donnee = da.id_donnee AND dc1.champ = 'ligne_1'
-				LEFT JOIN spip_forms_donnees_champs dc2 ON dc2.id_donnee = da.id_donnee AND dc2.champ = 'ligne_2'
-				LEFT JOIN spip_forms_donnees_champs dc3 ON dc3.id_donnee = da.id_donnee AND dc3.champ = 'ligne_3'
-				LEFT JOIN spip_forms_donnees_champs dc5 ON dc5.id_donnee = da.id_donnee AND dc5.champ = 'ligne_4'
-				LEFT JOIN spip_forms_donnees_champs dc4 ON dc4.id_donnee = da.id_donnee AND dc4.champ = 'mot_1'
-			".$where."
+				INNER JOIN spip_forms_donnees_champs dc1 ON dc1.id_donnee = da.id_donnee AND dc1.champ = 'ligne_1'
+				INNER JOIN spip_forms_donnees_champs dc2 ON dc2.id_donnee = da.id_donnee AND dc2.champ = 'ligne_2'
+				INNER JOIN spip_forms_donnees_champs dc3 ON dc3.id_donnee = da.id_donnee AND dc3.champ = 'ligne_3'
+				INNER JOIN spip_forms_donnees_champs dc5 ON dc5.id_donnee = da.id_donnee AND dc5.champ = 'ligne_4'
+				INNER JOIN spip_forms_donnees_champs dc4 ON dc4.id_donnee = da.id_donnee AND dc4.champ = 'mot_1'
+			INNER JOIN spip_forms_donnees_champs dc7 ON dc7.id_donnee = da.id_donnee AND dc7.champ = 'ligne_7'
+			LEFT JOIN spip_forms_donnees_champs dc8 ON dc8.id_donnee = da.id_donnee AND dc8.champ = 'texte_1'
+			LEFT JOIN spip_documents_articles doca ON doca.id_article = a.id_article
+			LEFT JOIN spip_documents dArt ON dArt.id_document = doca.id_document AND dArt.id_type IN (".$this->site->infos["CARTE_TYPE_DOC"].")
+				".$where."
 			GROUP BY r.id_rubrique
 			LIMIT 0 , ".MaxMarker;
 		//echo $sql."<br/>";
@@ -1025,7 +1032,7 @@ class Granulat
 		$result['zoommax'] = $this->site->infos["DEF_ZOOM"]+4;
 		$result['idType'] = $this->site->infos["MOT_CLEF_DEF_TYPE_CARTE"];
 		$result['type'] = $GmapType;
-		$result['adresse'] = "";
+		$result['adresse'] = "";		
 		$result['kml'] = "";
 		$result['docArtkml'] = "";
 		$r =  $db->fetch_assoc($requete);
@@ -1050,6 +1057,17 @@ class Granulat
 				$GmapType = "G_SATELLITE_MAP";				
 			$result['type'] = $GmapType;
 			$result['idType'] = $r['type'];
+			$result['adresse'] = $r['adresse'];		
+			//lien vers le kml
+			$kml="";
+			if($r['docArtkml'])
+				$kml = $this->site->infos["pathSpip"].$r['docArtkml'];
+			if($kml=="")	
+				$kml = $r['kml'];
+			if($kml=="")
+				$kml = $this->GetKml();
+			$result['kml']=$kml;
+			
 		}
 		
 		return $result;

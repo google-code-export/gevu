@@ -186,7 +186,7 @@
 				<menuSrc code="Bat"></menuSrc>
 			</menuDst>
 		</menuSrc>
-		<menuSrc code="Parcelle">
+		<menuSrc code="Parcelle" idForm="58">
 			<menuDst codeTree="espaceext" codeSaisi="EspaceExt" lib="Espace(s) exterieur" idForm="61" >
 				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','EspaceExt');"/>
 			</menuDst>
@@ -195,7 +195,7 @@
 			</menuDst>
 		</menuSrc>
 
-		<menuSrc code="Bat">
+		<menuSrc code="Bat" idForm="53">
 			<menuDst codeTree="niveau" codeSaisi="Niveau" lib="Niveau" idForm="35" >
 				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Niveau');"/>
 			</menuDst>
@@ -203,7 +203,7 @@
 				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','ObjetIntBat');"/>
 			</menuDst>
 		</menuSrc>
-		<menuSrc code="Niveau">
+		<menuSrc code="Niveau" idForm="35">
 			<menuDst codeTree="espaceint" codeSaisi="EspaceInt" lib="Espaces intérieurs" idForm="57" >
 				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','EspaceInt');"/>
 			</menuDst>
