@@ -54,7 +54,7 @@ private var orderColumn:Number;
 private var fields:Object = { 'id_donnee':Number, 'ligne_1':String, 'ligne_2':String, 'ligne_3':String, 'ligne_4':String, 'ligne_5':String
 	, 'mot_1_titre':String, 'mot_1':Number
 	, 'multiple_1_1':Boolean, 'multiple_1_2':Boolean
-	, 'multiple_2_1':Boolean, 'multiple_2_2':Boolean, 'multiple_2_3':Boolean, 'multiple_2_4':Boolean
+	, 'multiple_2_1':Boolean, 'multiple_2_2':Boolean, 'multiple_2_3':Boolean, 'multiple_2_4':Boolean, 'multiple_2_5':Boolean, 'multiple_2_6':Boolean
 	, 'multiple_3_1':Boolean, 'multiple_3_2':Boolean, 'multiple_3_3':Boolean, 'multiple_3_4':Boolean
 	, 'texte_1':String, 'texte_2':String};
 
@@ -242,6 +242,7 @@ private function insertItem():void {
 		,"ligne_2":ligne_2Col.value,"ligne_3":ligne_3Col.value,"ligne_4":ligne_4Col.value,"ligne_5":ligne_5Col.value
 		,"multiple_1_1":multiple_1_1Col.selected,"multiple_1_2":multiple_1_2Col.selected
 		,"multiple_2_1":multiple_2_1Col.selected,"multiple_2_2":multiple_2_2Col.selected,"multiple_2_3":multiple_2_3Col.selected,"multiple_2_4":multiple_2_4Col.selected
+		,"multiple_2_5":multiple_2_5Col.selected,"multiple_2_6":multiple_2_6Col.selected
 		,"multiple_3_1":multiple_3_1Col.selected,"multiple_3_2":multiple_3_2Col.selected,"multiple_3_3":multiple_3_3Col.selected,"multiple_3_4":multiple_3_4Col.selected
 		,"texte_1":texte_1Col.text,"texte_2":texte_2Col.text,"id_form":idGrille
 	};

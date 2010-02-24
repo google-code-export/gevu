@@ -472,6 +472,7 @@
                 ,{label:"Objet intérieur", cat:categories["grille_57"], children: [
                     {label:"Escalier", cat:categories["mot_37"], data:"child data"}
                     ,{label:"Escalier mécanique", cat:categories["mot_149"], data:"child data"}
+                    ,{label:"Face de Porte", cat:categories["mot_53"], data:"child data"}
                     ,{label:"Palier d'ascenseur", cat:categories["mot_126"], data:"child data"}
                     ,{label:"Porte", cat:categories["mot_37"], data:"child data"}
                     ,{label:"Porte de secours", cat:categories["mot_180"], data:"child data"}
@@ -490,6 +491,7 @@
 	                {label:"Commandes", cat:categories["mot_42"], data:"child data"}
                     ,{label:"Escalier", cat:categories["mot_37"], data:"child data"}
                     ,{label:"Escalier mécanique", cat:categories["mot_149"], data:"child data"}
+                    ,{label:"Face de Porte", cat:categories["mot_53"], data:"child data"}
                     ,{label:"Palier d'ascenseur", cat:categories["mot_126"], data:"child data"}
                     ,{label:"Porte", cat:categories["mot_37"], data:"child data"}
                 ]}

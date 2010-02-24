@@ -29,6 +29,8 @@ $objSite = new Site($SITES, DEFSITE, $scope, false);
 		, 'multiple_2_2'=>"fdc8_2.valeur"
 		, 'multiple_2_3'=>"fdc8_3.valeur"
 		, 'multiple_2_4'=>"fdc8_4.valeur"
+		, 'multiple_2_5'=>"fdc8_5.valeur"
+		, 'multiple_2_6'=>"fdc8_6.valeur"
 		, 'multiple_3_1'=>"fdc9_1.valeur"
 		, 'multiple_3_2'=>"fdc9_2.valeur"
 		, 'multiple_3_3'=>"fdc9_3.valeur"
@@ -61,6 +63,8 @@ function GetQuery() {
 					LEFT JOIN spip_forms_donnees_champs fdc8_2 ON fdc8_2.id_donnee = fd.id_donnee AND fdc8_2.champ = "multiple_2" AND fdc8_2.valeur = "multiple_2_2"
 					LEFT JOIN spip_forms_donnees_champs fdc8_3 ON fdc8_3.id_donnee = fd.id_donnee AND fdc8_3.champ = "multiple_2" AND fdc8_3.valeur = "multiple_2_3"
 					LEFT JOIN spip_forms_donnees_champs fdc8_4 ON fdc8_4.id_donnee = fd.id_donnee AND fdc8_4.champ = "multiple_2" AND fdc8_4.valeur = "multiple_2_4"
+					LEFT JOIN spip_forms_donnees_champs fdc8_5 ON fdc8_5.id_donnee = fd.id_donnee AND fdc8_5.champ = "multiple_2" AND fdc8_5.valeur = "multiple_2_5"
+					LEFT JOIN spip_forms_donnees_champs fdc8_6 ON fdc8_6.id_donnee = fd.id_donnee AND fdc8_6.champ = "multiple_2" AND fdc8_6.valeur = "multiple_2_6"
 					LEFT JOIN spip_forms_donnees_champs fdc9_1 ON fdc9_1.id_donnee = fd.id_donnee AND fdc9_1.champ = "multiple_3" AND fdc9_1.valeur = "multiple_3_1"
 					LEFT JOIN spip_forms_donnees_champs fdc9_2 ON fdc9_2.id_donnee = fd.id_donnee AND fdc9_2.champ = "multiple_3" AND fdc9_2.valeur = "multiple_3_2"
 					LEFT JOIN spip_forms_donnees_champs fdc9_3 ON fdc9_3.id_donnee = fd.id_donnee AND fdc9_3.champ = "multiple_3" AND fdc9_3.valeur = "multiple_3_3"
@@ -135,6 +139,7 @@ function findAll() {
 			, m.id_mot mot_1_id, m.titre mot_1
 			, IF(ISNULL(fdc7_1.valeur),'false','true') multiple_1_1, IF(ISNULL(fdc7_2.valeur),'false','true') multiple_1_2
 			, IF(ISNULL(fdc8_1.valeur),'false','true') multiple_2_1, IF(ISNULL(fdc8_2.valeur),'false','true') multiple_2_2, IF(ISNULL(fdc8_3.valeur),'false','true') multiple_2_3, IF(ISNULL(fdc8_4.valeur),'false','true') multiple_2_4
+			, IF(ISNULL(fdc8_5.valeur),'false','true') multiple_2_5, IF(ISNULL(fdc8_6.valeur),'false','true') multiple_2_6
 			, IF(ISNULL(fdc9_1.valeur),'false','true') multiple_3_1, IF(ISNULL(fdc9_2.valeur),'false','true') multiple_3_2, IF(ISNULL(fdc9_3.valeur),'false','true') multiple_3_3, IF(ISNULL(fdc9_4.valeur),'false','true') multiple_3_4
 			, fdc10.valeur texte_1, fdc11.valeur texte_2
 		".$arrSql["from"]." ".$arrSql["where"]." ".$arrSql["groupby"]." ".$arrSql["order"];
@@ -326,6 +331,18 @@ function insertNew() {
 	}else{
 		$g->DelChamp($row, $idDon);
 	}
+	$row = array("grille"=>$idGrille,"champ"=>"multiple_2","valeur"=>"multiple_2_5");
+	if($_REQUEST["multiple_2_5"]=="true"){
+		$g->SetChamp($row, $idDon);
+	}else{
+		$g->DelChamp($row, $idDon);
+	}
+	$row = array("grille"=>$idGrille,"champ"=>"multiple_2","valeur"=>"multiple_2_6");
+	if($_REQUEST["multiple_2_6"]=="true"){
+		$g->SetChamp($row, $idDon);
+	}else{
+		$g->DelChamp($row, $idDon);
+	}
 	
 	$row = array("grille"=>$idGrille,"champ"=>"multiple_3","valeur"=>"multiple_3_1");
 	if($_REQUEST["multiple_3_1"]=="true"){
@@ -374,6 +391,8 @@ function insertNew() {
 				,"multiple_2_2" => $_REQUEST["multiple_2_2"]
 				,"multiple_2_3" => $_REQUEST["multiple_2_3"]
 				,"multiple_2_4" => $_REQUEST["multiple_2_4"]
+				,"multiple_2_5" => $_REQUEST["multiple_2_5"]
+				,"multiple_2_6" => $_REQUEST["multiple_2_6"]
 				,"multiple_3_1" => $_REQUEST["multiple_3_1"]
 				,"multiple_3_2" => $_REQUEST["multiple_3_2"]
 				,"multiple_3_3" => $_REQUEST["multiple_3_3"]
