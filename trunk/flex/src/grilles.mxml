@@ -163,6 +163,10 @@ todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
 									itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
 								<mx:DataGridColumn headerText="Voirie" dataField="multiple_2_4Col" 
 									itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+								<mx:DataGridColumn headerText="ERP_IOP Ex" dataField="multiple_2_5Col" 
+									itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+								<mx:DataGridColumn headerText="Mod. Part." dataField="multiple_2_6Col" 
+									itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
 
 								<mx:DataGridColumn headerText="Déf. motrice" dataField="multiple_3_1Col" 
 									itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
@@ -252,6 +256,12 @@ todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
 					                    </mx:FormItem>
 					                    <mx:FormItem label="Voirie:" id="multiple_2_4form">
 								        	<mx:CheckBox selected="false" id="multiple_2_4Col" />
+					                    </mx:FormItem>
+					                    <mx:FormItem label="Voirie:" id="multiple_2_5form">
+								        	<mx:CheckBox selected="false" id="multiple_2_5Col" />
+					                    </mx:FormItem>
+					                    <mx:FormItem label="Voirie:" id="multiple_2_6form">
+								        	<mx:CheckBox selected="false" id="multiple_2_6Col" />
 					                    </mx:FormItem>
 			                    
 			                    	</mx:HBox>
