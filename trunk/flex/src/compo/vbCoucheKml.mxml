@@ -5,6 +5,8 @@
  <mx:Script>
     <![CDATA[
   import flash.events.Event;
+  import flash.events.IOErrorEvent;
+  import flash.events.ProgressEvent;
   
   import com.google.maps.controls.ZoomControl;
   import com.google.maps.overlays.Polyline;
@@ -185,6 +187,21 @@
 	        new LatLngBounds(new LatLng(groundOverlay.latLonBox.south,groundOverlay.latLonBox.west), new LatLng(groundOverlay.latLonBox.north,groundOverlay.latLonBox.east)));
 	        mapP.addOverlay(obj.mapObject);
 	    });
+	    testLoader.contentLoaderInfo.addEventListener(
+	      IOErrorEvent.IO_ERROR,
+	      function(e:Event):void {
+	        var j:int=0;
+	    });
+	    testLoader.contentLoaderInfo.addEventListener(
+	      ProgressEvent.PROGRESS,
+	      function(e:Event):void {
+	        
+	        var i:int=0;
+	        
+	    });
+	    
+	    	 
+	    
 	    testLoader.load(urlRequest); 
   	}
   }

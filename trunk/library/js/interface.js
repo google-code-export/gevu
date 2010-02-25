@@ -3,10 +3,11 @@ var fichierCourant;
 var numFic = 0;
 var DELIM = "*";
 
+		
 
 function AppliDroit(role) {
 	try {
-		
+
 		if(role=='AUCUN')
 			return;
 		
@@ -1214,6 +1215,7 @@ function ChargeMenuFromAjax(id,idDst,type)
 {
   try {
 	document.documentElement.style.cursor = "wait";
+	
 	dump("ChargeMenuFromAjax IN "+type+"\n");
 	
 	var doc = document.getElementById("menu_"+type+"_voir");

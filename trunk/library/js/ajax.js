@@ -6,6 +6,7 @@
 function AppendResult(url,doc,ajoute,cont,flex) {
   try {
 	document.documentElement.style.cursor = "wait";
+  //	document.getElementById('wSaisiDiag').setAttribute("wait-cursor", true);
   
   	if(!cont)
   		cont = "box";
