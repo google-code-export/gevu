@@ -1138,6 +1138,8 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 					, fdc1.valeur idPbPlan
 					, fdc2.valeur photo
 					, fdc3.valeur obs
+					, fdc5.valeur RepProb
+
 					, fdcc.valeur idCrit
 					, fdcc1.valeur TextCont
 					, m.titre RepCont
@@ -1161,7 +1163,9 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 					 LEFT JOIN spip_forms_donnees_champs fdc2 ON fdc2.id_donnee = fd.id_donnee
 					 AND fdc2.champ = 'mot_1'
 					 LEFT JOIN spip_mots m1 ON m1.id_mot = fdc2.valeur
-					 
+					LEFT JOIN spip_forms_donnees_champs fdc5 ON fdc5.id_donnee = fd.id_donnee
+					 	AND fdc5.champ = 'ligne_5'
+					 						 
 					INNER JOIN spip_rubriques rp ON rp.id_rubrique = r.id_parent
 					
 					
@@ -1188,68 +1192,67 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 				<dst>Art</dst>
 			</Query>
 
+
+
 			<Query fonction="Grille_GetListeObservations">
 				<select>
 				SELECT a.id_article idArt, a.titre titreArt, a.date aDate
 					, r.id_rubrique idRub, r.titre titreRub
 					, rp.id_rubrique idRubPar, rp.titre titreRubPar
 					, fd.id_donnee idDon
-					, fdc.valeur idCont
-					, fdc1.valeur obs
-					, fdc2.valeur idPbPlan
-					, fdc4.valeur idPbPlan
-					, fdcc1.valeur TextCont
-					, m.titre RepCont
-					, d.fichier ReponsePhoto
-					, fdc21.valeur regle
-					, fdc21.id_donnee idDonneCont
+					, fdc1.valeur ComVal1
+					, fdc2.valeur ComVal2
+					, fdc3.valeur ComVal3
+					, fdc4.valeur ComVal4
+					, fdc5.valeur ComVal5
+					, d.fichier ComFic
+
+					, fdcc1.id_donnee idCont
+					, fdcc1.valeur ContVal1
+					, fdcc2.valeur ContVal2
+					, fdcc3.valeur ContVal3
+					, m.titre ContRep
 				</select>
 				<from> 
+				 
 					FROM spip_rubriques r
 					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
 					
 					 INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
 					 INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee
-					 AND fd.id_form =67
-					 LEFT JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee
-					 AND fdc.champ = 'ligne_5'
-					 LEFT JOIN spip_forms_donnees_champs fdc4 ON fdc.id_donnee = fd.id_donnee
-					 AND fdc.champ = 'ligne_4'
-					 LEFT JOIN spip_forms_donnees_champs fdc1 ON fdc1.id_donnee = fd.id_donnee
-					 AND fdc1.champ = 'ligne_3'
-					 LEFT JOIN spip_forms_donnees_champs fdc2 ON fdc2.id_donnee = fd.id_donnee
-					 AND fdc2.champ = 'ligne_2'
+						 AND fd.id_form =67
+					 INNER  JOIN spip_forms_donnees_champs fdc5 ON fdc5.id_donnee = fd.id_donnee
+						 AND fdc5.champ = 'ligne_5'
+					 INNER  JOIN spip_forms_donnees_champs fdc4 ON fdc4.id_donnee = fd.id_donnee
+						 AND fdc4.champ = 'ligne_4'
+					 INNER  JOIN spip_forms_donnees_champs fdc3 ON fdc3.id_donnee = fd.id_donnee
+						 AND fdc3.champ = 'ligne_3'
+					 INNER  JOIN spip_forms_donnees_champs fdc2 ON fdc2.id_donnee = fd.id_donnee
+						 AND fdc2.champ = 'ligne_2'
+					 INNER  JOIN spip_forms_donnees_champs fdc1 ON fdc1.id_donnee = fd.id_donnee
+					 	AND fdc1.champ = 'ligne_1'
+
 					 LEFT JOIN spip_documents_articles da ON da.id_article = a.id_article
 					 LEFT JOIN spip_documents d ON d.id_document = da.id_document
 					 
 					INNER JOIN spip_rubriques rp ON rp.id_rubrique = r.id_parent
-					
-					
-					INNER JOIN spip_articles a1 ON a1.id_rubrique = r.id_rubrique
-					INNER JOIN spip_forms_donnees_articles fda1 ON fda1.id_article = a1.id_article
-					INNER JOIN spip_forms_donnees fdp ON fdp.id_donnee = fda1.id_donnee
-					AND fdp.id_form =-idFormRep-
-					INNER JOIN spip_forms_donnees_champs fdcc ON fdcc.id_donnee = fdp.id_donnee
-					AND fdcc.champ = 'ligne_1'
-					 AND fdcc.valeur = fdc.valeur
-					INNER JOIN spip_forms_donnees_champs fdcc1 ON fdcc1.id_donnee = fdcc.id_donnee
-					AND fdcc1.champ = 'ligne_2'
-					INNER JOIN spip_forms_donnees_champs fdcc2 ON fdcc2.id_donnee = fdcc.id_donnee
-					AND fdcc2.champ = 'mot_1'
-					INNER JOIN spip_mots m ON m.id_mot = fdcc2.valeur
 
-					INNER JOIN spip_articles a2 ON a2.id_rubrique = r.id_rubrique
-					INNER JOIN spip_forms_donnees_articles fda2 ON fda2.id_article = a2.id_article
-					LEFT JOIN spip_forms_donnees fdp2 ON fdp2.id_donnee = fda2.id_donnee
-					AND fdp2.id_form IN (54,70)
-					LEFT JOIN spip_forms_donnees_champs fdc21 ON fdc21.id_donnee = fdp2.id_donnee
-					AND fdc21.champ = 'multiple_1' AND fdc21.valeur = 'multiple_1_1' 
-
-					
+					INNER JOIN spip_forms_donnees_champs fdcc1 ON fdcc1.id_donnee = fdc4.valeur
+						AND fdcc1.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcc2 ON fdcc2.id_donnee = fdc4.valeur
+						AND fdcc2.champ = 'ligne_2'
+					INNER JOIN spip_forms_donnees_champs fdcc3 ON fdcc3.id_donnee = fdc4.valeur
+						AND fdcc3.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcc3.valeur					
 				</from>
-				<where> WHERE r.id_rubrique IN(-ids-) GROUP BY idRubPar, idRub, IdArt ORDER BY idRubPar, idRub, IdArt, idCont</where>
+				<where>
+					WHERE r.id_rubrique IN(-ids-) 
+					GROUP BY idRubPar, idRub, IdArt 
+					ORDER BY idRubPar, idRub, IdArt
+				</where>				
 				<dst>Art</dst>
 			</Query>
+
 
 			<Query fonction="Grille_GetEtatDiagSum">
 				<select>
@@ -1585,7 +1588,7 @@ INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee
 				<select>SELECT fd.id_donnee idDon </select>
 				<from> FROM spip_articles a 
 INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
-INNER JOIN spip_forms_donnees fd ON fda.id_donnee = fd.id_donnee 
+INNER JOIN spip_forms_donnees fd ON fda.id_donnee = fd.id_donnee AND fd.id_form = -grille- 
 INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee 
 	AND fdc.champ = "-champ-" AND fdc.valeur = "-valeur-"
 				 </from>

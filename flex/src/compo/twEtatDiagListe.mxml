@@ -62,13 +62,21 @@
                 if(event.result!=""){
 	                var rsListe:Object = event.result;
                 }
-                //boucle sur les critères
-		        for each (var rLieu:Object in rsListe.vbox.lieu)
-		        {
-					var hbLC:hbLieuDiag = new hbLieuDiag();
-					hbLC.rsLieu=rLieu;
-					mainCtrl.addChild(hbLC);	
-				}
+		        //à cause d'un drole de comportement sur le for each
+		        if(rsListe.vbox.lieu.length){
+	                //boucle sur les critères
+			        for each (var rLieu:Object in rsListe.vbox.lieu)
+			        {
+						var hbLC:hbLieuDiag = new hbLieuDiag();
+						hbLC.rsLieu=rLieu;
+						mainCtrl.addChild(hbLC);	
+					}
+		        }else{
+	                var rLieuU:Object = rsListe.vbox.lieu;
+					var hbLCU:hbLieuDiag = new hbLieuDiag();
+					hbLCU.rsLieu=rLieuU;
+					mainCtrl.addChild(hbLCU);			        	
+		        }
 				CursorManager.removeBusyCursor();
             
             }
