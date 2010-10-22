@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 change="changeCbMot()"
+	creationComplete="init()" >
+	<mx:Script>
+        <![CDATA[
+	import mx.managers.CursorManager;
+	import mx.managers.PopUpManager;
+
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
+
+	import mx.controls.Alert;
+
+	/**
+	 * paramétrage de l'objet
+	 */
+	[Bindable] public var endPoint:String;
+	[Bindable] public var objName:String;
+
+	private function init():void
+	{
+	    //chargement des données
+	    ROS.getAll();
+	}
+
+	public function getIndex(label:String):int
+	{
+		var i:int
+	    for each(var row:Object in this.dataProvider){
+	    	if(row["titre"]==label){
+	    		return i;
+	    	}
+	    	i++;
+	    }
+   		return -1;
+	}
+
+	private function fillHandler(e:Object):void
+	{
+		if(!e)return;
+		
+    	this.dataProvider = e.result as Array;
+    	this.labelField = "lib";
+
+	}
+	
+	private function changeCbMot():void{
+		
+		//vérifie s'il faut ajouter un mot clef;
+		if(this.selectedItem.titre=="-ajout-"){
+			//construction de la fenêtre d'édition
+			var dg:dgGrille = new dgGrille;
+			dg.idGrille="InsertMot";
+			dg.idMot=this.selectedItem.id_mot;
+			dg.showUpdateFirst=true;
+			dg.showAddDelete=true;
+			dg.showFiche=false;
+			dg.Edit=true;
+			dg.objAppelant=this;			
+			this.parent.parent.addChild(dg);
+
+		}
+		
+	}
+	
+	public function AjoutMot():void{
+		
+		//construction de la fenêtre d'édition
+		var twAMC:twAjoutMotClef= twAjoutMotClef(
+            PopUpManager.createPopUp(this, twAjoutMotClef, true));
+		twAMC.dg.idGrille="InsertMot";
+		twAMC.dg.idMot=this.selectedItem.id_mot;
+		twAMC.dg.showUpdateFirst=true;
+		twAMC.dg.showAddDelete=true;
+		twAMC.dg.showFiche=false;
+		twAMC.dg.Edit=true;
+		twAMC.dg.objAppelant=this;
+		twAMC.titre = "Créer un transporteur"					
+        PopUpManager.centerPopUp(twAMC);
+
+	}
+
+	public function faultHandlerService(fault:FaultEvent):void
+	{
+	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+	}
+
+        ]]>
+    </mx:Script>
+	<mx:RemoteObject id="ROS"
+	    	source="{objName}" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
+	</mx:RemoteObject>
+    
+</mx:ComboBox>

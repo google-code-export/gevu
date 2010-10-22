@@ -74,9 +74,9 @@ if(!isset($_SESSION['version']))
 	$_SESSION['version']="V1";
 	
 if(!isset($_SESSION['ForceCalcul']))
-	$_SESSION['ForceCalcul']=false;
+	$_SESSION['ForceCalcul']=true;
 	
-	
+
 if(TRACE)
 	echo "ParamPage:session".print_r($_SESSION)."<br/>";
 

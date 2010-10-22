@@ -3,6 +3,7 @@
 	<name>gevu</name>
 	<comment></comment>
 	<projects>
+		<project>ZendFramework</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -10,8 +10,8 @@
 </compiler>
 <applications>
 <application path="grilles.mxml"/>
-<application path="gevu.mxml"/>
 <application path="onadaflex.mxml"/>
+<application path="gevu.mxml"/>
 </applications>
 <modules/>
 <buildCSSFiles/>

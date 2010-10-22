@@ -58,8 +58,27 @@ private var fields:Object = { 'id_donnee':Number, 'ligne_1':String, 'ligne_2':St
 	, 'multiple_3_1':Boolean, 'multiple_3_2':Boolean, 'multiple_3_3':Boolean, 'multiple_3_4':Boolean
 	, 'texte_1':String, 'texte_2':String};
 
-   
-            
+private var fieldsSolus:Object = { 'id_solution':Number, 'lib':String, 'id_type_solution':String};
+  
+ 
+public const ENDPOINT_SERVICE:String = "http://localhost/gevu/services/index.php";
+ 
+ 
+public function init():void
+{
+//myservice.hello("Wade");
+//myservice.getAllSolution();
+} 
+ 
+public function faultHandlerService(fault:FaultEvent):void
+{
+Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+}
+ 
+public function resultHandlerService(result:ResultEvent):void
+{
+Alert.show(result.result.toString(), "ResultHandlerService");
+}         
             
 // Handle the itemEditBegin event.
 private function modifyEditedData(event:DataGridEvent):void
@@ -106,6 +125,7 @@ private function modifyEditedData(event:DataGridEvent):void
 public function initApp(data:Object):void 
 {
 	idMot = data.id;
+	myservice.hello("tutu");
 
     /**
      * initialize the gateway
@@ -304,7 +324,8 @@ private function fill():void
         "orderDirection": (desc) ? "DESC" : "ASC", 
         "filter": filterTxt.text,
         "idGrille": idGrille,
-        "idMot": idMot
+        "idMot": idMot,
+        "tab": this.tabNavig.selectedChild.id
     }
 	/**
 	 * execute the server "select" command
@@ -358,8 +379,8 @@ private function deleteItem():void {
     
     if (dataGrid.selectedItem)
     {
-        Alert.show("Etes-vous certain de vouloir supprimer ce contrôle ?",
-        "Confirmation Suppression", 3, this, deleteClickHandler);
+        Alert.show("Etes-vous certain de vouloir supprimer cet élément ?",
+        "Confirmation de Suppression", 3, this, deleteClickHandler);
     }
     
 }
@@ -504,7 +525,10 @@ public function doRequest(method_name:String, parameters:Object, callback:Functi
  */
 public function goToUpdate():void
 {
-	applicationScreens.selectedChild = update;
+	if(this.tabNavig.selectedChild.id=="tabCrit")
+		applicationScreens.selectedChild = update;
+	if(this.tabNavig.selectedChild.id=="tabSolus")
+		AppScreensSolus.selectedChild = updateSolus;
 }
 
 /**
@@ -512,5 +536,8 @@ public function goToUpdate():void
  */
 public function goToView():void
 {
-    applicationScreens.selectedChild = view;
+	if(this.tabNavig.selectedChild.id=="tabCrit")
+	    applicationScreens.selectedChild = view;
+	if(this.tabNavig.selectedChild.id=="tabSolus")
+		AppScreensSolus.selectedChild = viewSolus;
 }
