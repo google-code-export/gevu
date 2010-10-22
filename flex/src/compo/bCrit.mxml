@@ -26,18 +26,23 @@
 		        lblLegende.text=lblLeg;
 
 				//construction des images de la legende
-		        for each (var rIma:Object in rsCrit.legende.vbox.hbox[1].image)
-		        {
-			        var legIma:Image = new Image;
-			        //petit bug bizare
-			        if(rIma is String){
-				        legIma.source = urlIma+rIma;		        	
-			        }else{
-				        legIma.source = urlIma+rIma.src;		        				        	
-			        }
-			        legIma.autoLoad=true;
-		        	hbLegende.addChild(legIma);				        	
-		        }
+				try{
+			        for each (var rIma:Object in rsCrit.legende.vbox.hbox[1].image)
+			        {
+				        var legIma:Image = new Image;
+				        //petit bug bizare
+				        if(rIma is String){
+					        legIma.source = urlIma+rIma;		        	
+				        }else{
+					        legIma.source = urlIma+rIma.src;		        				        	
+				        }
+				        legIma.autoLoad=true;
+			        	hbLegende.addChild(legIma);				        	
+			        }		
+				}catch (err:Error){
+				 	// code to react to the error
+				}
+				
 				
 				//construction du texte du critère
 				lblCrit.text = rsCrit.textbox.value;

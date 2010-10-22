@@ -1,0 +1,958 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack width="100%" height="100%" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:ns2="compo.*"
+	creationComplete="Init()"
+	minHeight="200"
+	>
+
+	<mx:Script source="../http.as"/>
+
+	<mx:Script>
+        <![CDATA[
+import mx.containers.TitleWindow;
+import mx.events.FlexEvent;
+import mx.controls.ComboBox;
+import mx.containers.Form;
+import mx.containers.FormItem;
+
+import mx.collections.ArrayCollection;
+import mx.collections.IViewCursor;
+import mx.collections.Sort;
+import mx.collections.SortField;
+
+import mx.controls.Alert;
+import mx.controls.DataGrid;
+import mx.controls.dataGridClasses.DataGridColumn;
+import mx.controls.listClasses.IDropInListItemRenderer;
+import mx.controls.CheckBox;
+
+import mx.events.CloseEvent;
+import mx.events.DataGridEvent;
+
+import mx.managers.CursorManager;
+
+import mx.rpc.AsyncToken;
+import mx.rpc.events.FaultEvent;
+import mx.rpc.events.ResultEvent;
+import mx.rpc.http.HTTPService;
+
+import com.adobe.serialization.json.JSON
+
+import mx.managers.PopUpManager;
+
+import compo.*;
+
+/**
+ * paramétrage de l'objet
+ */
+[Bindable] public var endPoint:String;
+[Bindable] public var objName:String;
+
+/**
+ * identifiants de la grille en cours de consultation
+ */
+[Bindable] public var idUti:String;
+[Bindable] public var idRub:String;
+[Bindable] public var idArt:String;
+[Bindable] public var idGrille:String;
+[Bindable] public var idDon:String;
+[Bindable] public var idGroupe:String;
+[Bindable] public var idMot:String;
+[Bindable] public var pxml:String="";
+/**
+ * variables d'affichage
+ */
+[Bindable] public var Edit:Boolean=false;
+[Bindable] public var SaveEdit:Boolean=false;
+[Bindable] public var showAddDelete:Boolean=true;
+[Bindable] public var showFiche:Boolean=true;
+[Bindable] public var showUpdateFirst:Boolean=false;
+[Bindable] public var showAddfilter:Boolean=false;
+[Bindable] public var objAppelant:Object;
+[Bindable] public var roleUti:String="";
+[Bindable] public var twAMC:twAjoutMotClef;
+
+
+/**
+ * the array collection holds the rows that we use in the grid
+ */
+[Bindable]public var dataArr:ArrayCollection = new ArrayCollection();
+public var cursor:IViewCursor;
+
+/**
+ * column that we order by. This is updated each time the users clicks on the 
+ * grid column header. 
+ * see headerRelease="setOrder(event);" in the DataGrid instantiation in the 
+ * mxml file
+ */
+[Bindable]public var orderField:String = '';
+private var orderColumn:Number;
+
+            
+//variable pour la mise à jour des diifférente view
+private var selectValues:*;
+private var frm:Form=new Form();
+
+private function changeEvt(event:Event):void {
+	var item:Object=event.currentTarget.selectedItem;
+	if(item){
+		if(showFiche){;
+
+		}			
+	}
+
+}
+
+            
+// Handle the itemEditBegin event.
+private function modifyEditedData(e:DataGridEvent):void
+{
+	
+    //récupère les valeurs
+    selectValues = e.itemRenderer.data;//dataArr[e.rowIndex];
+	
+}
+
+
+/**
+ * Executes by a another componement like tree or button. 
+ */
+public function initGrille(data:Object):void 
+{
+	idGrille = data.idGrille;
+	idMot = data.idMot;
+    
+    fill();
+}
+
+
+/**
+ * Executes when the mxml is completed loaded. 
+ * - Construction des colonnes.
+ * - Initialize the Rest Gateway.
+ */
+public function Init():void 
+{
+	if(idGrille=="ActiUti"){
+		ufCsv.visible=false;
+		btnUpdate.visible=false;
+		btnAddNew.visible=false;
+		btnDelete.visible=false;
+	}
+
+	if(showAddDelete){
+		AddDelete.percentWidth=100;
+		AddDelete.height=30;
+	}
+
+    /**
+     * set the event handler which prevents editing of the primary key
+     */
+    dataGrid.addEventListener(DataGridEvent.ITEM_EDIT_BEGINNING, editCellHandler);
+
+    /**
+     * set the event handler which triggers the update actions - everytime an 
+     * edit operation is finished
+     */
+    dataGrid.addEventListener(DataGridEvent.ITEM_EDIT_END, editCellEnd);
+    
+    //création des colonnes
+    //ROS.getCols();
+    
+    //chargement des données
+    ROS.getAll();
+        
+}
+
+
+
+/**
+ * Disallow editing of the primary key column.
+ * @param e DataGridEvent contains details about the row and column of the grid 
+ * where the user clicked
+ */
+private function editCellHandler(e:DataGridEvent):void
+{
+    /**
+     * if the user clicked on the primary key column, stop editing
+     */
+    if(e.dataField == "id_donneeCol")
+    {
+        e.preventDefault();
+        return;
+    }
+}
+
+/**
+ * Click handler for "Filter" button.
+ * When setting another filter, refresh the collection, and load the new data
+ */
+private function filterResults():void
+{
+    fill();
+}
+
+/**
+ * Event handler triggered when the user finishes editing an entry
+ * triggers an "update" server command
+ */
+private function editCellEnd(e:DataGridEvent):void
+{
+	if(!SaveEdit)return;
+
+    var dsRowIndex:int = e.rowIndex;
+    var dsFieldName:String = e.dataField;
+    var dsColumnIndex:Number = e.columnIndex;
+
+    var vo:* = dataArr[dsRowIndex];
+    
+    var col:DataGridColumn = dataGrid.columns[dsColumnIndex];
+    var newvalue:String = dataGrid.itemEditorInstance[col.editorDataField];
+
+    //récupération de l'identifiant
+    var id:String = vo.id_donneeCol;
+
+    trace("a:" + dsRowIndex + ", " + dsFieldName + ", " + dsColumnIndex);
+    
+
+    var parameters:* =
+    {"id_donnee": id, "champ": dsFieldName.substr(0,dsFieldName.length-3), "valeur": newvalue}
+
+	/**
+	 * execute the server "update" command
+	 */
+    doRequest("Update", parameters, saveItemHandler);    
+	
+}
+
+private function saveItemHandler(e:Object):void
+{
+   	if(!e)return;
+
+    if (e.isError)
+    {
+        Alert.show("Error: " + e.data.error);
+    }
+    else
+    {
+    }     
+}
+
+private function insertTransportHandler(e:Object):void
+{
+	if(!e)return;
+    if (e.isError)
+    {
+        Alert.show("Error: " + e.data.error);
+    }
+    else
+    {
+    	this.fill();
+    	var mEvt:MouseEvent=new MouseEvent("click");
+    	this.goToView(mEvt);
+    }     
+}
+
+
+/**
+ * dragHeader handler for the datagrid. This handler is executed when the user 
+ * clicks on a header column in the datagrid
+ * updates the global orderColumn variable, refreshes the TableCollection
+ * @param event DataGridEvent details about the column
+ */
+private function setOrder(event:DataGridEvent):void 
+{
+    orderColumn = event.columnIndex;
+    var col:DataGridColumn = dataGrid.columns[orderColumn];
+    col.sortDescending = !col.sortDescending;
+	ColSelect.text = col.headerText;    
+    event.preventDefault();
+    fill();
+}
+
+/**
+ * Click handler for the "Save" button in the "Add" state
+ * collects the information in the form and adds a new object to the collection
+ */
+private function insertItem(e:MouseEvent):void {
+
+	//création de l'objet de param
+	//var pJS:Object = new Object();
+	//création du tableau de param
+	var pArr:Array = new Array;
+	var val:String="";
+    var frmC:Array = frm.getChildren();
+	//boucle sur chaque composant du modèle
+    for each(var ctl:Object in frmC){
+    	//récupère l'identifiant de la valeur
+    	var ctlId:String=ctl.id;
+		//récupère le contrôle d'édition
+		var ctlVal:Object=ctl.getChildAt(0);
+		//vérifie le type pour récupérer les modifs
+    	if(ctlVal.className=="cbGroupeMot"){
+    		val=ctlVal.selectedItem["id_mot"];
+    	}
+    	if(ctlVal.className=="TextInput"){
+    		val=ctlVal.text;
+    	}
+    	//vérifie si le champ est obligatoire
+    	if(!VerifChampOblig(val, ctlVal))return;
+    	//incrémente le tableau
+		pArr.push({col:ctlId, valeur:val});
+   	}
+   	
+	pxml = JSON.encode(pArr);
+
+    var parameters:* ={"pxml":pxml};
+
+	/**
+	 * execute the server "insert" command
+	 */
+    doRequest("Insert", parameters, insertItemHandler);
+	//remet à jour le time out
+	if(parentApplication)parentApplication.toExit.startTimer();
+
+}
+
+
+private function VerifChampOblig(val:String, ctlVal:Object):Boolean{
+	
+	if(val!="")return true;
+
+	if(idGrille!="InsertMot")return true;
+
+	var verif:Boolean=true;
+	
+	if(ctlVal.id=="ligne_4_formInsertMotCol"){
+		Alert.show("Le champ 'Nom' est obligatoire.");
+		return false;
+	}
+	if(ctlVal.id=="ligne_2_formInsertMotCol"){
+		Alert.show("Le champ 'Ville' est obligatoire.");
+		return false;
+	}
+	if(ctlVal.id=="code_postal_1_formInsertMotCol"){
+		Alert.show("Le champ 'Code postal' est obligatoire.");
+		return false;
+	}
+	
+	return verif;
+}
+
+
+/**
+ * Result handler for the insert call.
+ * Alert the error if it exists
+ * if the call went through ok, return to the list, and refresh the data
+ */
+private function insertItemHandler(e:Object):void
+{
+	if(!e)return;
+
+    if (e.isError)
+    {
+        Alert.show("Error: " + e.data.error);
+    }else{
+    	pxml="";
+    	var mEvt:MouseEvent=new MouseEvent("click");
+        goToView(mEvt);
+        fill();
+    }     
+}
+
+/** 
+ * general utility function for refreshing the data 
+ * gets the filtering and ordering, then dispatches a new server call
+ *
+ */
+public function fill():void 
+{
+    /**
+     * find the order parameters
+     */
+    var desc:Boolean = false;
+    
+    if(!isNaN(orderColumn))
+    {
+	    var col:DataGridColumn = dataGrid.columns[orderColumn];
+        desc = col.sortDescending;
+		//remove the 'Col' particle
+	    orderField = col.dataField.substr(0,col.dataField.length-3);
+    }
+
+
+    dataGrid.enabled = false;
+    CursorManager.setBusyCursor();
+
+    var parameters:* =
+    {
+        "orderField": orderField,
+        "orderDirection": (desc) ? "DESC" : "ASC", 
+        "filter": filterTxt.text,
+        "idUti": idUti,
+        "idGrille": idGrille,
+        "idGroupe": idGroupe,
+        "idMot": idMot
+    }
+    //vérifie si une recherhce est en cours
+    if(pxml!="")parameters["pxml"] = pxml;
+    
+	/**
+	 * execute the server "select" command
+	 */
+    doRequest("FindAll", parameters, fillHandler);
+}
+
+private function exportCsv():void{
+	
+    var parameters:String =
+        "csv=true&"+
+        "orderField="+orderField+"&"+
+        "orderDirection=ASC"+"&"+ 
+        "filter="+filterTxt.text+"&"+
+        "idUti="+idUti+"&"+
+        "idGrille="+idGrille+"&"+
+        "idGroupe="+idGroupe+"&"+
+        "idMot="+idMot+"&"+
+        "f=FindAll"
+    //vérifie si une recherhce est en cours
+    if(pxml!="")parameters += "&"+ pxml;
+
+	var u:URLRequest = new URLRequest(ENDPOINT_URL);
+    u.data = parameters;
+    u.method=URLRequestMethod.POST;
+	trace ("dgGrille:exportCsv:query=" +ENDPOINT_URL+"?"+u.data);
+	navigateToURL(u,"_blank");	
+	
+}
+
+/** 
+ * result handler for the fill call. 
+ * if it is an error, show it to the user, else refill the arraycollection with the new data
+ *
+ */
+private function fillHandler(e:Object):void
+{
+    CursorManager.removeBusyCursor();
+
+	if(!e)return;
+	
+    dataGrid.dataProvider = e.result as Array;
+	
+	/*
+    var sortField:SortField = new SortField(null, true);
+    var sort:Sort = new Sort();
+    sort.fields = [sortField];
+
+    dataArr.sort = sort;
+    dataArr.refresh();
+
+	cursor = dataArr.createCursor();
+	*/
+	
+    //montre la formulaire d'uptate du seul enregstrement
+    if(showUpdateFirst){
+		updateItem();
+    }
+
+	
+    dataGrid.enabled = true;
+
+}
+
+
+/** 
+ * result handler for the getColonne call. 
+ *
+ */
+private function getColsHandler(e:Object):void
+{
+	
+	//a faire : vérification saisie
+	//http://livedocs.adobe.com/flex/3/html/help.html?content=validators_7.html
+	
+   	if(!e)return;
+
+    //vide les conteneur
+    dataArr.removeAll();
+    update.removeAllChildren();
+
+	//création du formulaire
+    frm.id = "grillesForm"
+    frm.percentHeight=100;
+    frm.percentWidth=100;
+	//frm.addEventListener(FlexEvent.CREATION_COMPLETE,updateReady);
+	//var ir:*=new ClassFactory(cbGM12b);
+
+    var tbTmp:Array = new Array(); 
+    for each(var colRef:Object in e.result.cols) 
+    {
+        //ajoute une colonne
+        var col:DataGridColumn = new DataGridColumn(colRef.titre);
+        col.dataField = colRef.champ; 
+
+        //ajoute une form pour la création
+        var fi:FormItem=new FormItem();
+        fi.id = colRef.champ+"_form"+idGrille;
+        fi.label = colRef.titre;
+
+        //prise encompte des paramètres de création
+        if(!colRef.visible){
+            col.visible=false;
+            fi.visible=false;             	
+        }
+        if(colRef.CheckBox){
+            col.itemRenderer=new ClassFactory(CheckBox);
+            col.rendererIsEditor=true;
+            col.editorDataField="selected";             	
+        } 
+        if(colRef.width){
+            col.width=colRef.width;
+        }
+        if(colRef.editable){
+            col.editable=colRef.editable;
+        }
+        /*
+        http://livedocs.adobe.com/flex/3/html/help.html?content=cellrenderer_4.html
+        http://www.flex-tutorial.fr/2009/03/08/flex-item-renderer-utiliser-la-propriete-itemeditor-pour-la-mise-a-jour/
+       */
+        if(colRef.objName){
+        	
+        	//ajoute une combo box pour l'ajout
+			var cbpt:cbGroupeMot = new cbGroupeMot();
+	        cbpt.id = colRef.champ+"_form"+idGrille;
+			cbpt.endPoint = this.endPoint;
+			cbpt.objName = colRef.objName;
+			fi.addChild(cbpt);
+
+			//impossible charger la combo on the fly
+			/*
+			if(row['extra_info']==12){
+	            col.itemRenderer=ir;
+	            col.rendererIsEditor=true;
+	            //col.editorDataField="selectedItem";             	
+	            col.editorDataField="result";             						
+			}
+			*/
+        }else{
+			var inpt:TextInput = new TextInput();
+	        inpt.id = colRef.champ+"_form"+idGrille;
+			fi.addChild(inpt); 
+        } 
+        
+	    //ajoute la colone à la ligne
+		tbTmp.push(col); 
+		//ajoute la forme pour la modification
+		frm.addChild(fi);
+    }    
+
+    //ajoute une colone au grid
+    dataGrid.columns = tbTmp; 
+
+   	//ajoute les boutons
+   	var hb:HBox=new HBox;
+   	var btnSubmit:Button= new Button;
+   	btnSubmit.toolTip = "Enregistrer les modifications de la donnée";
+   	btnSubmit.label = "Enregistrer";
+   	btnSubmit.addEventListener(MouseEvent.CLICK,insertItem);
+   	hb.addChild(btnSubmit);
+   	var btnCancel:Button= new Button;
+   	btnCancel.toolTip = "Annuler la modification";
+   	btnCancel.label = "Annuler";
+   	btnCancel.addEventListener(MouseEvent.CLICK,goToView);
+   	hb.addChild(btnCancel);
+	frm.addChild(hb);
+
+    //ajoute le formulaire
+    update.addChildAt(frm,0);
+
+    dataGrid.enabled = true;
+
+}
+
+
+private function GeoLocaliser():void{
+	var adresse:String=this["adresse"+"_form"+idGrille+"Col"].text
+		+","+this["codepostal"+"_form"+idGrille+"Col"].text
+		+","+this["ville"+"_form"+idGrille+"Col"].text
+		+","+this["pays"+"_form"+idGrille+"Col"].text;
+	if(adresse==""){
+		Alert.show("Veillez précisez le code postal et/ou la ville.");
+	}
+	this.parentApplication.doGeocode(adresse,-1,idRub);
+}
+
+
+/**
+ * Click handler for the "delete" button in the list
+ * confirms the action and launches the deleteClickHandler function
+ */
+private function deleteItem():void {
+    
+    if (dataGrid.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression de cette ligne ?",
+        "Confirmation Suppression", 3, this, deleteClickHandler);
+    }
+    
+}
+
+/**
+ * Event handler function for the Confirm dialog raises when the 
+ * Delete button is pressed.
+ * If the pressed button was Yes, then the product is deleted.
+ * @param object event
+ * @return nothing
+ */ 
+private function deleteClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+        var vo:* = dataGrid.selectedItem;
+
+        var parameters:* =
+        {
+            "idDon": vo.id_donneeCol
+            ,"idMot": vo.id_motCol
+            ,"idGrille": idGrille
+        }
+
+		/**
+		 * execute the server "delete" command
+		 */
+        doRequest("Delete", parameters, deleteHandler);
+
+        setTimeout( function():void
+        {
+            dataGrid.destroyItemEditor();
+        },
+        1);
+    }
+}
+
+public function deleteHandler(e:*):void
+{
+    CursorManager.removeBusyCursor();
+ 	if(!e)return;
+   if (e.isError)
+    {
+        Alert.show("Error: " + e.data.error);
+    }
+    else
+    {
+        if(e.data.row["champ"]=="ATTRIB"){
+	        Alert.show(e.data.row["valeur"]);     	
+        }else{        
+	        var id:Number = parseInt(e.data.row["valeur"], 10);
+	        for (var index:Number = 0; index < dataArr.length; index++)
+	        {
+	            if (dataArr[index][e.data.row["champ"]] == id)
+	            {
+	                dataArr.removeItemAt(index);
+	                break;
+	            }
+	        }
+        }
+    }     
+}
+
+
+/**
+ * Click handler when the user click the "Create" button
+ * Load the "Update" canvas.
+ */
+public function goToUpdate():void
+{
+	this.selectedChild = update;
+}
+
+public function goToInsert():void
+{
+	this.selectedChild = insert;
+	decocherInsert();
+}
+
+
+private function decocherInsert():void{
+
+	if(cb_mot_18){
+		
+		
+	    cb_mot_18.selected=false;
+	    cb_mot_20.selected=false;
+		cb_mot_169.selected=false
+		
+	    for each (var ligP:Object in dgPays.dataArr){
+		    ligP.checkCol=false;
+	    }
+	    dgPays.dataArr.refresh();
+	    for each (var ligD:Object in dgDept.dataArr){
+		    ligD.checkCol=false;
+	    }
+	    dgDept.dataArr.refresh();
+	}		
+}
+
+
+private function insertTransport():void{
+	
+
+		var pJS:Object = new Object();
+		
+		var p:String = "";
+	    if(cb_mot_18.selected)p+="18";
+	    if(cb_mot_20.selected){
+	    	if(p!="") p+=","
+		    p+="20";
+	    }
+	    if(cb_mot_169.selected){
+	    	if(p!="") p+=","
+		    p+="169";
+	    }
+		pJS.temp = p;
+		//vérification saisie
+		if(p==""){
+			Alert.show("Vous devez choisir une température");
+			return;
+		}     	
+
+		
+		
+		p="";
+        for each (var ligP:Object in dgPays.dataArr){
+		    if(ligP.checkCol){
+		    	if(p!="") p+=","
+		    	p+=ligP.id_motCol
+		    }
+        }
+		pJS.pays = p;
+
+		p="";
+        for each (var ligD:Object in dgDept.dataArr){
+		    if(ligD.checkCol){
+		    	if(p!="") p+=","
+		    	p+=ligD.id_motCol
+		    }
+        }
+		pJS.dept = p;
+		//vérification saisie
+		if(pJS.pays=="" && pJS.dept==""){
+			Alert.show("Vous devez choisir un pays ou un département");
+			return;
+		}     	
+
+		//p = InsTrans.selectedItem["id_mot"];
+		pJS.trans =p;
+		//vérification saisie
+		if(pJS.trans==-1 || pJS.trans==-2){
+			Alert.show("Vous devez choisir un transporteur");
+			return;
+		}     	
+
+				
+		pxml = JSON.encode(pJS);
+
+        var parameters:* =
+        {
+            "pxml": pxml
+            ,"idGrille": idGrille
+            ,"idUti": idUti
+        }
+
+        doRequest("insertTrans", parameters, insertTransportHandler);
+
+ 	
+}
+
+public function updateItem():void
+{
+    
+    if(!showUpdateFirst){
+	    //vérifie s'il faut mettre à jour les données
+	    if(selectValues==undefined){
+			Alert.show("Veillez sélectionner une ligne.");
+			return;
+	    }else{
+		    //purge le formulaire
+		    update.removeAllChildren();
+		    //récupère le modèle créé à la création des colonnes
+		    var frmC:Array = frm.getChildren();
+			//boucle sur chaque composant du modèle
+		    for each(var ctl:Object in frmC){
+		    	if(ctl.id){
+			    	//construit l'identifiant de la valeur
+			    	var ctlId:String=ctl.id;
+			    	ctlId = ctlId.replace("_form"+idGrille,"Col");
+			    	//vérifie si la valeur n'est pas null
+			    	if(selectValues[ctlId]){
+			    		//récupère le contrôle d'édition
+			    		var ctlVal:Object=ctl.getChildAt(0);
+			    		//vérifie le type pour appliquer les modifs
+				    	if(ctlVal.className=="cbGroupeMot"){
+				    		var ind:int=ctlVal.getIndex(selectValues[ctlId]);
+				    		ctlVal.selectedIndex = ind;
+				    	}
+				    	if(ctlVal.className=="TextInput"){
+				    		ctlVal.text = selectValues[ctlId];
+				    	}    		
+			    	}
+			    }
+		   	}
+	    }
+    }
+   	//ajoute le nouveau formulaire
+    update.addChild(frm);
+	this.selectedChild = update;
+}
+
+
+
+/**
+ * Load the "View" canvas.
+ */
+public function goToView(e:MouseEvent):void
+{
+	if(showUpdateFirst){
+		if(this.objAppelant)this.objAppelant.fill();	
+		if(twAMC)twAMC.Ferme();
+		/*
+			//réactualise la combo mise à jour
+		    var frmC:Array = this.parent.parent.parent["frm"].getChildren();
+			//boucle sur chaque composant du modèle
+		    for each(var ctl:Object in frmC){
+	    		//récupère le contrôle d'édition
+	    		var ctlVal:Object=ctl.getChildAt(0);
+	    		//vérifie le type pour appliquer les modifs
+		    	if(ctlVal.className=="cbGroupeMot" && ctlVal["idGroupe"] == this.idGroupe){
+		    		ctlVal.fill();
+		    	}
+		   	}
+			this.parent.removeChild(this);
+		*/
+	}else{
+	    this.selectedChild = view;
+	}
+}
+
+private function AjoutPays():void{
+	
+	//construction de la fenêtre d'édition
+	var twAMC:twAjoutMotClef= twAjoutMotClef(
+        PopUpManager.createPopUp(this, twAjoutMotClef, true));
+	twAMC.dg.idGrille="InsertMot";
+	twAMC.dg.idGroupe="14";
+	twAMC.dg.showUpdateFirst=true;
+	twAMC.dg.showAddDelete=true;
+	twAMC.dg.showFiche=false;
+	twAMC.dg.Edit=true;
+	twAMC.dg.objAppelant=dgPays;
+	twAMC.titre = "Créer un pays"		
+    PopUpManager.centerPopUp(twAMC);
+	
+}
+
+
+public function faultHandlerService(fault:FaultEvent):void
+{
+Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+}
+ 
+public function resultHandlerService(result:ResultEvent):void
+{
+Alert.show(result.result.toString(), "ResultHandlerService");
+}      
+
+        ]]>
+    </mx:Script>
+    
+	<mx:RemoteObject id="ROS"
+	    	source="{objName}" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="getCols"  result="getColsHandler(event)"/>  	
+	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
+	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="csv"  result="resultHandlerService(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:Canvas id="view" width="100%" height="100%">
+		<mx:VBox width="100%" height="100%" >		
+			<mx:HBox id="AddDelete" visible="{showAddDelete}" width="0" height="0" >		
+				<mx:LinkButton id="btnCsv" click="exportCsv()" icon="@Embed('images/csv.jpg')" toolTip="Exporter les données en csv" />
+				<ns2:cUploadFile idUti="{idUti}" idGrille="{idGrille}" id="ufCsv" iconBtn="@Embed('images/csvImp.jpg')" ttBtn="Importer des données" ctlBind="{this}" wf="impCsv" typeFic="csv" />
+				<mx:LinkButton id="btnUpdate" click="updateItem()" icon="@Embed('images/UpdateRecord.png')" toolTip="Modifier une donnée" />
+				<mx:LinkButton id="btnAddNew" click="goToInsert()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une donnée" />
+				<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une donnée" />
+				<mx:HBox id="AddFilter" visible="{showAddfilter}" width="0" height="0" >					
+					<mx:Label text="Rechercher par le champ : " /><mx:Label id="ColSelect" text="" />
+					<mx:Button click="filterResults()" id="filterButton" icon="@Embed('images/SearchRecord.png')" toolTip="Search by champ" />
+					<mx:TextInput id="filterTxt" toolTip="Rechercher par le champ sélectionné" enter="filterResults()" />
+				</mx:HBox>		
+			</mx:HBox>
+			<mx:VBox id="fiche" width="100%" >
+				<mx:HRule/>				
+			</mx:VBox>
+			<mx:VBox width="100%" height="100%">
+				<mx:DataGrid 
+					id="dataGrid"
+					editable="{Edit}"
+					resizableColumns="true" 
+					headerRelease="setOrder(event);"
+					itemEditBegin="modifyEditedData(event);" 
+					textAlign="left"
+					width="100%" height="100%"
+					click="changeEvt(event);"
+					>			
+					<mx:columns>
+						<mx:DataGridColumn visible="false" headerText="id_solution" dataField="id_solution" />
+						<mx:DataGridColumn headerText="Référence" dataField="ref" editable="true" />
+    					<mx:DataGridColumn headerText="Type de solusion"   rendererIsEditor="true"  dataField="id_type_solution" editorDataField="result" itemRenderer="compo.cbTypeSolution"/>
+						<mx:DataGridColumn headerText="libellé" dataField="lib" >									
+							<mx:itemEditor>
+								<mx:Component>
+			                    	<mx:TextArea text="{data.lib}" />
+								</mx:Component>
+							</mx:itemEditor>
+						</mx:DataGridColumn>
+					</mx:columns>
+				</mx:DataGrid>		
+			</mx:VBox>
+		</mx:VBox>
+
+	</mx:Canvas>
+	<mx:Canvas id="update" width="100%" height="100%" >
+	</mx:Canvas>
+	<mx:Canvas id="insert" width="100%" height="100%" >
+
+		<mx:VBox width="100%" height="100%"  >
+			<mx:HBox width="100%" borderColor="black" borderStyle="solid" borderThickness="1" >					
+				<mx:Label text="Température"/>
+				<mx:CheckBox id="cb_mot_18" label="Ambiant" selected="false"/>
+				<mx:CheckBox id="cb_mot_20" label="Froid positif" selected="false"/>
+				<mx:CheckBox id="cb_mot_169" label="Froid négatif" selected="false"/>
+			</mx:HBox>
+			<mx:HBox width="100%" height="100%" >					
+				<mx:VBox width="100%" height="100%" borderColor="black" borderStyle="solid" borderThickness="1" >
+					<mx:Label text="Département"/>					
+					<ns2:dgGrille id="dgDept" showFiche="false" orderField="titre" width="100%" Edit="true" idGrille="dept" />					
+				</mx:VBox>
+				<mx:VBox width="100%" height="100%" borderColor="black" borderStyle="solid" borderThickness="1" >
+					<mx:HBox>
+						<mx:Label text="Pays"/>					
+						<mx:LinkButton click="AjoutPays()" icon="@Embed('images/AddRecord.png')" toolTip="Créer un nouveau pays" />					
+					</mx:HBox>
+					<ns2:dgGrille id="dgPays" showFiche="false" orderField="titre" width="100%" Edit="true" idGrille="pays" />					
+				</mx:VBox>
+			</mx:HBox>
+			<mx:HBox>
+				<mx:Button label="Enregistrer" id="btnAjout" toolTip="Enregistrer le nouveau plan de transport." click="insertTransport()" />
+				<mx:Button label="Annuler" id="btnAnnuler" click="goToView(event)" />			
+			</mx:HBox>
+		</mx:VBox>
+
+
+	</mx:Canvas>
+</mx:ViewStack>

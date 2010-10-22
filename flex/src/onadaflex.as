@@ -249,8 +249,6 @@
         map.enableScrollWheelZoom();
         map.enableContinuousZoom();
         map.setCenter(new LatLng(47.12995076, 1.00001335), 7);
-        getXmlTerre();
-        //getXml();
      }
      
      public function getXmlTerre():void {
