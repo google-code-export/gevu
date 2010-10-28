@@ -64,7 +64,7 @@ import compo.*;
  * variables d'affichage
  */
 [Bindable] public var Edit:Boolean=false;
-[Bindable] public var SaveEdit:Boolean=false;
+[Bindable] public var SaveEdit:Boolean=true;
 [Bindable] public var showAddDelete:Boolean=true;
 [Bindable] public var showFiche:Boolean=true;
 [Bindable] public var showUpdateFirst:Boolean=false;
@@ -91,27 +91,15 @@ private var orderColumn:Number;
 
             
 //variable pour la mise à jour des diifférente view
-private var selectValues:*;
+private var idSolution:int;
 private var frm:Form=new Form();
 
-private function changeEvt(event:Event):void {
+private function selectSolution(event:Event):void {
 	var item:Object=event.currentTarget.selectedItem;
 	if(item){
-		if(showFiche){;
-
-		}			
+		idSolution = item.id_solution;
 	}
 
-}
-
-            
-// Handle the itemEditBegin event.
-private function modifyEditedData(e:DataGridEvent):void
-{
-	
-    //récupère les valeurs
-    selectValues = e.itemRenderer.data;//dataArr[e.rowIndex];
-	
 }
 
 
@@ -136,7 +124,6 @@ public function Init():void
 {
 	if(idGrille=="ActiUti"){
 		ufCsv.visible=false;
-		btnUpdate.visible=false;
 		btnAddNew.visible=false;
 		btnDelete.visible=false;
 	}
@@ -205,7 +192,7 @@ private function editCellEnd(e:DataGridEvent):void
     var dsFieldName:String = e.dataField;
     var dsColumnIndex:Number = e.columnIndex;
 
-    var vo:* = dataArr[dsRowIndex];
+    var vo:* = dataGrid.dataProvider[dsRowIndex];
     
     var col:DataGridColumn = dataGrid.columns[dsColumnIndex];
     var newvalue:String = dataGrid.itemEditorInstance[col.editorDataField];
@@ -213,17 +200,12 @@ private function editCellEnd(e:DataGridEvent):void
     //récupération de l'identifiant
     var id:String = vo.id_donneeCol;
 
-    trace("a:" + dsRowIndex + ", " + dsFieldName + ", " + dsColumnIndex);
+    trace("a:" + dsRowIndex + ", " + dsFieldName + "=" + newvalue);
     
 
-    var parameters:* =
-    {"id_donnee": id, "champ": dsFieldName.substr(0,dsFieldName.length-3), "valeur": newvalue}
+    var parameters:* = {dsFieldName:newvalue};
 
-	/**
-	 * execute the server "update" command
-	 */
-    doRequest("Update", parameters, saveItemHandler);    
-	
+	ROS.edit(idSolution,parameters);	
 }
 
 private function saveItemHandler(e:Object):void
@@ -450,13 +432,7 @@ private function fillHandler(e:Object):void
 
 	cursor = dataArr.createCursor();
 	*/
-	
-    //montre la formulaire d'uptate du seul enregstrement
-    if(showUpdateFirst){
-		updateItem();
-    }
-
-	
+		
     dataGrid.enabled = true;
 
 }
@@ -670,142 +646,7 @@ public function goToUpdate():void
 public function goToInsert():void
 {
 	this.selectedChild = insert;
-	decocherInsert();
 }
-
-
-private function decocherInsert():void{
-
-	if(cb_mot_18){
-		
-		
-	    cb_mot_18.selected=false;
-	    cb_mot_20.selected=false;
-		cb_mot_169.selected=false
-		
-	    for each (var ligP:Object in dgPays.dataArr){
-		    ligP.checkCol=false;
-	    }
-	    dgPays.dataArr.refresh();
-	    for each (var ligD:Object in dgDept.dataArr){
-		    ligD.checkCol=false;
-	    }
-	    dgDept.dataArr.refresh();
-	}		
-}
-
-
-private function insertTransport():void{
-	
-
-		var pJS:Object = new Object();
-		
-		var p:String = "";
-	    if(cb_mot_18.selected)p+="18";
-	    if(cb_mot_20.selected){
-	    	if(p!="") p+=","
-		    p+="20";
-	    }
-	    if(cb_mot_169.selected){
-	    	if(p!="") p+=","
-		    p+="169";
-	    }
-		pJS.temp = p;
-		//vérification saisie
-		if(p==""){
-			Alert.show("Vous devez choisir une température");
-			return;
-		}     	
-
-		
-		
-		p="";
-        for each (var ligP:Object in dgPays.dataArr){
-		    if(ligP.checkCol){
-		    	if(p!="") p+=","
-		    	p+=ligP.id_motCol
-		    }
-        }
-		pJS.pays = p;
-
-		p="";
-        for each (var ligD:Object in dgDept.dataArr){
-		    if(ligD.checkCol){
-		    	if(p!="") p+=","
-		    	p+=ligD.id_motCol
-		    }
-        }
-		pJS.dept = p;
-		//vérification saisie
-		if(pJS.pays=="" && pJS.dept==""){
-			Alert.show("Vous devez choisir un pays ou un département");
-			return;
-		}     	
-
-		//p = InsTrans.selectedItem["id_mot"];
-		pJS.trans =p;
-		//vérification saisie
-		if(pJS.trans==-1 || pJS.trans==-2){
-			Alert.show("Vous devez choisir un transporteur");
-			return;
-		}     	
-
-				
-		pxml = JSON.encode(pJS);
-
-        var parameters:* =
-        {
-            "pxml": pxml
-            ,"idGrille": idGrille
-            ,"idUti": idUti
-        }
-
-        doRequest("insertTrans", parameters, insertTransportHandler);
-
- 	
-}
-
-public function updateItem():void
-{
-    
-    if(!showUpdateFirst){
-	    //vérifie s'il faut mettre à jour les données
-	    if(selectValues==undefined){
-			Alert.show("Veillez sélectionner une ligne.");
-			return;
-	    }else{
-		    //purge le formulaire
-		    update.removeAllChildren();
-		    //récupère le modèle créé à la création des colonnes
-		    var frmC:Array = frm.getChildren();
-			//boucle sur chaque composant du modèle
-		    for each(var ctl:Object in frmC){
-		    	if(ctl.id){
-			    	//construit l'identifiant de la valeur
-			    	var ctlId:String=ctl.id;
-			    	ctlId = ctlId.replace("_form"+idGrille,"Col");
-			    	//vérifie si la valeur n'est pas null
-			    	if(selectValues[ctlId]){
-			    		//récupère le contrôle d'édition
-			    		var ctlVal:Object=ctl.getChildAt(0);
-			    		//vérifie le type pour appliquer les modifs
-				    	if(ctlVal.className=="cbGroupeMot"){
-				    		var ind:int=ctlVal.getIndex(selectValues[ctlId]);
-				    		ctlVal.selectedIndex = ind;
-				    	}
-				    	if(ctlVal.className=="TextInput"){
-				    		ctlVal.text = selectValues[ctlId];
-				    	}    		
-			    	}
-			    }
-		   	}
-	    }
-    }
-   	//ajoute le nouveau formulaire
-    update.addChild(frm);
-	this.selectedChild = update;
-}
-
 
 
 /**
@@ -834,24 +675,6 @@ public function goToView(e:MouseEvent):void
 	    this.selectedChild = view;
 	}
 }
-
-private function AjoutPays():void{
-	
-	//construction de la fenêtre d'édition
-	var twAMC:twAjoutMotClef= twAjoutMotClef(
-        PopUpManager.createPopUp(this, twAjoutMotClef, true));
-	twAMC.dg.idGrille="InsertMot";
-	twAMC.dg.idGroupe="14";
-	twAMC.dg.showUpdateFirst=true;
-	twAMC.dg.showAddDelete=true;
-	twAMC.dg.showFiche=false;
-	twAMC.dg.Edit=true;
-	twAMC.dg.objAppelant=dgPays;
-	twAMC.titre = "Créer un pays"		
-    PopUpManager.centerPopUp(twAMC);
-	
-}
-
 
 public function faultHandlerService(fault:FaultEvent):void
 {
@@ -883,7 +706,6 @@ Alert.show(result.result.toString(), "ResultHandlerService");
 			<mx:HBox id="AddDelete" visible="{showAddDelete}" width="0" height="0" >		
 				<mx:LinkButton id="btnCsv" click="exportCsv()" icon="@Embed('images/csv.jpg')" toolTip="Exporter les données en csv" />
 				<ns2:cUploadFile idUti="{idUti}" idGrille="{idGrille}" id="ufCsv" iconBtn="@Embed('images/csvImp.jpg')" ttBtn="Importer des données" ctlBind="{this}" wf="impCsv" typeFic="csv" />
-				<mx:LinkButton id="btnUpdate" click="updateItem()" icon="@Embed('images/UpdateRecord.png')" toolTip="Modifier une donnée" />
 				<mx:LinkButton id="btnAddNew" click="goToInsert()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une donnée" />
 				<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une donnée" />
 				<mx:HBox id="AddFilter" visible="{showAddfilter}" width="0" height="0" >					
@@ -895,22 +717,22 @@ Alert.show(result.result.toString(), "ResultHandlerService");
 			<mx:VBox id="fiche" width="100%" >
 				<mx:HRule/>				
 			</mx:VBox>
-			<mx:VBox width="100%" height="100%">
+			<mx:HBox width="100%" height="100%">
 				<mx:DataGrid 
 					id="dataGrid"
+					dataProvider="{dataArr}"
 					editable="{Edit}"
 					resizableColumns="true" 
 					headerRelease="setOrder(event);"
-					itemEditBegin="modifyEditedData(event);" 
+					click="selectSolution(event);"
 					textAlign="left"
 					width="100%" height="100%"
-					click="changeEvt(event);"
 					>			
 					<mx:columns>
 						<mx:DataGridColumn visible="false" headerText="id_solution" dataField="id_solution" />
 						<mx:DataGridColumn headerText="Référence" dataField="ref" editable="true" />
-    					<mx:DataGridColumn headerText="Type de solusion"   rendererIsEditor="true"  dataField="id_type_solution" editorDataField="result" itemRenderer="compo.cbTypeSolution"/>
-						<mx:DataGridColumn headerText="libellé" dataField="lib" >									
+    					<mx:DataGridColumn headerText="Type de solution"   rendererIsEditor="true"  dataField="id_type_solution" editorDataField="result" itemRenderer="compo.cbTypeSolution"/>
+						<mx:DataGridColumn width="200" headerText="libellé" dataField="lib" >									
 							<mx:itemEditor>
 								<mx:Component>
 			                    	<mx:TextArea text="{data.lib}" />
@@ -918,40 +740,24 @@ Alert.show(result.result.toString(), "ResultHandlerService");
 							</mx:itemEditor>
 						</mx:DataGridColumn>
 					</mx:columns>
-				</mx:DataGrid>		
-			</mx:VBox>
+				</mx:DataGrid>
+				<mx:VBox width="100%" height="100%" >
+					<mx:Panel label="Illustration réglementaire" width="100%" height="50%" layout="absolute">
+					</mx:Panel>
+					<mx:DataGrid width="100%"  height="50%">
+						<mx:columns>
+							<mx:DataGridColumn headerText="Metiers" dataField="col1" />
+							<mx:DataGridColumn headerText="Id Metier" dataField="col2" visible="false"/>
+						</mx:columns>
+					</mx:DataGrid>					
+				</mx:VBox>		
+			</mx:HBox>
 		</mx:VBox>
 
 	</mx:Canvas>
 	<mx:Canvas id="update" width="100%" height="100%" >
 	</mx:Canvas>
 	<mx:Canvas id="insert" width="100%" height="100%" >
-
-		<mx:VBox width="100%" height="100%"  >
-			<mx:HBox width="100%" borderColor="black" borderStyle="solid" borderThickness="1" >					
-				<mx:Label text="Température"/>
-				<mx:CheckBox id="cb_mot_18" label="Ambiant" selected="false"/>
-				<mx:CheckBox id="cb_mot_20" label="Froid positif" selected="false"/>
-				<mx:CheckBox id="cb_mot_169" label="Froid négatif" selected="false"/>
-			</mx:HBox>
-			<mx:HBox width="100%" height="100%" >					
-				<mx:VBox width="100%" height="100%" borderColor="black" borderStyle="solid" borderThickness="1" >
-					<mx:Label text="Département"/>					
-					<ns2:dgGrille id="dgDept" showFiche="false" orderField="titre" width="100%" Edit="true" idGrille="dept" />					
-				</mx:VBox>
-				<mx:VBox width="100%" height="100%" borderColor="black" borderStyle="solid" borderThickness="1" >
-					<mx:HBox>
-						<mx:Label text="Pays"/>					
-						<mx:LinkButton click="AjoutPays()" icon="@Embed('images/AddRecord.png')" toolTip="Créer un nouveau pays" />					
-					</mx:HBox>
-					<ns2:dgGrille id="dgPays" showFiche="false" orderField="titre" width="100%" Edit="true" idGrille="pays" />					
-				</mx:VBox>
-			</mx:HBox>
-			<mx:HBox>
-				<mx:Button label="Enregistrer" id="btnAjout" toolTip="Enregistrer le nouveau plan de transport." click="insertTransport()" />
-				<mx:Button label="Annuler" id="btnAnnuler" click="goToView(event)" />			
-			</mx:HBox>
-		</mx:VBox>
 
 
 	</mx:Canvas>
