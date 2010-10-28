@@ -17,6 +17,7 @@
 	 */
 	[Bindable] public var endPoint:String;
 	[Bindable] public var objName:String;
+	[Bindable] public var keyName:String;
 
 	private function init():void
 	{

@@ -92,7 +92,6 @@ private var orderColumn:Number;
             
 //variable pour la mise à jour des diifférente view
 private var idSolution:int;
-private var frm:Form=new Form();
 
 private function selectSolution(event:Event):void {
 	var item:Object=event.currentTarget.selectedItem;
@@ -136,7 +135,7 @@ public function Init():void
     /**
      * set the event handler which prevents editing of the primary key
      */
-    dataGrid.addEventListener(DataGridEvent.ITEM_EDIT_BEGINNING, editCellHandler);
+    //dataGrid.addEventListener(DataGridEvent.ITEM_EDIT_BEGINNING, editCellHandler);
 
     /**
      * set the event handler which triggers the update actions - everytime an 
@@ -191,21 +190,16 @@ private function editCellEnd(e:DataGridEvent):void
     var dsRowIndex:int = e.rowIndex;
     var dsFieldName:String = e.dataField;
     var dsColumnIndex:Number = e.columnIndex;
-
-    var vo:* = dataGrid.dataProvider[dsRowIndex];
-    
     var col:DataGridColumn = dataGrid.columns[dsColumnIndex];
     var newvalue:String = dataGrid.itemEditorInstance[col.editorDataField];
 
-    //récupération de l'identifiant
-    var id:String = vo.id_donneeCol;
+	//création du tableau de valeur
+	var vn:Array = new Array();
+	vn[dsFieldName] = newvalue;
 
-    trace("a:" + dsRowIndex + ", " + dsFieldName + "=" + newvalue);
-    
+    trace("a:" + dsRowIndex + ", " + dsFieldName + "=" + newvalue);    
 
-    var parameters:* = {dsFieldName:newvalue};
-
-	ROS.edit(idSolution,parameters);	
+	ROS.edit(idSolution,vn);	
 }
 
 private function saveItemHandler(e:Object):void
@@ -221,20 +215,6 @@ private function saveItemHandler(e:Object):void
     }     
 }
 
-private function insertTransportHandler(e:Object):void
-{
-	if(!e)return;
-    if (e.isError)
-    {
-        Alert.show("Error: " + e.data.error);
-    }
-    else
-    {
-    	this.fill();
-    	var mEvt:MouseEvent=new MouseEvent("click");
-    	this.goToView(mEvt);
-    }     
-}
 
 
 /**
@@ -257,14 +237,14 @@ private function setOrder(event:DataGridEvent):void
  * Click handler for the "Save" button in the "Add" state
  * collects the information in the form and adds a new object to the collection
  */
-private function insertItem(e:MouseEvent):void {
+private function insertItem():void {
 
 	//création de l'objet de param
 	//var pJS:Object = new Object();
 	//création du tableau de param
 	var pArr:Array = new Array;
 	var val:String="";
-    var frmC:Array = frm.getChildren();
+    var frmC:Array = insertSolus.getChildren();
 	//boucle sur chaque composant du modèle
     for each(var ctl:Object in frmC){
     	//récupère l'identifiant de la valeur
@@ -273,7 +253,7 @@ private function insertItem(e:MouseEvent):void {
 		var ctlVal:Object=ctl.getChildAt(0);
 		//vérifie le type pour récupérer les modifs
     	if(ctlVal.className=="cbGroupeMot"){
-    		val=ctlVal.selectedItem["id_mot"];
+    		val=ctlVal.selectedItem[ctl.id];
     	}
     	if(ctlVal.className=="TextInput"){
     		val=ctlVal.text;
@@ -281,20 +261,11 @@ private function insertItem(e:MouseEvent):void {
     	//vérifie si le champ est obligatoire
     	if(!VerifChampOblig(val, ctlVal))return;
     	//incrémente le tableau
-		pArr.push({col:ctlId, valeur:val});
+		pArr[ctlId]=val;
    	}
    	
-	pxml = JSON.encode(pArr);
-
-    var parameters:* ={"pxml":pxml};
-
-	/**
-	 * execute the server "insert" command
-	 */
-    doRequest("Insert", parameters, insertItemHandler);
-	//remet à jour le time out
-	if(parentApplication)parentApplication.toExit.startTimer();
-
+	ROS.ajouter(pArr);
+	
 }
 
 
@@ -330,17 +301,8 @@ private function VerifChampOblig(val:String, ctlVal:Object):Boolean{
  */
 private function insertItemHandler(e:Object):void
 {
-	if(!e)return;
-
-    if (e.isError)
-    {
-        Alert.show("Error: " + e.data.error);
-    }else{
-    	pxml="";
-    	var mEvt:MouseEvent=new MouseEvent("click");
-        goToView(mEvt);
-        fill();
-    }     
+    goToView();
+    ROS.getAll();
 }
 
 /** 
@@ -416,8 +378,6 @@ private function exportCsv():void{
  */
 private function fillHandler(e:Object):void
 {
-    CursorManager.removeBusyCursor();
-
 	if(!e)return;
 	
     dataGrid.dataProvider = e.result as Array;
@@ -435,128 +395,6 @@ private function fillHandler(e:Object):void
 		
     dataGrid.enabled = true;
 
-}
-
-
-/** 
- * result handler for the getColonne call. 
- *
- */
-private function getColsHandler(e:Object):void
-{
-	
-	//a faire : vérification saisie
-	//http://livedocs.adobe.com/flex/3/html/help.html?content=validators_7.html
-	
-   	if(!e)return;
-
-    //vide les conteneur
-    dataArr.removeAll();
-    update.removeAllChildren();
-
-	//création du formulaire
-    frm.id = "grillesForm"
-    frm.percentHeight=100;
-    frm.percentWidth=100;
-	//frm.addEventListener(FlexEvent.CREATION_COMPLETE,updateReady);
-	//var ir:*=new ClassFactory(cbGM12b);
-
-    var tbTmp:Array = new Array(); 
-    for each(var colRef:Object in e.result.cols) 
-    {
-        //ajoute une colonne
-        var col:DataGridColumn = new DataGridColumn(colRef.titre);
-        col.dataField = colRef.champ; 
-
-        //ajoute une form pour la création
-        var fi:FormItem=new FormItem();
-        fi.id = colRef.champ+"_form"+idGrille;
-        fi.label = colRef.titre;
-
-        //prise encompte des paramètres de création
-        if(!colRef.visible){
-            col.visible=false;
-            fi.visible=false;             	
-        }
-        if(colRef.CheckBox){
-            col.itemRenderer=new ClassFactory(CheckBox);
-            col.rendererIsEditor=true;
-            col.editorDataField="selected";             	
-        } 
-        if(colRef.width){
-            col.width=colRef.width;
-        }
-        if(colRef.editable){
-            col.editable=colRef.editable;
-        }
-        /*
-        http://livedocs.adobe.com/flex/3/html/help.html?content=cellrenderer_4.html
-        http://www.flex-tutorial.fr/2009/03/08/flex-item-renderer-utiliser-la-propriete-itemeditor-pour-la-mise-a-jour/
-       */
-        if(colRef.objName){
-        	
-        	//ajoute une combo box pour l'ajout
-			var cbpt:cbGroupeMot = new cbGroupeMot();
-	        cbpt.id = colRef.champ+"_form"+idGrille;
-			cbpt.endPoint = this.endPoint;
-			cbpt.objName = colRef.objName;
-			fi.addChild(cbpt);
-
-			//impossible charger la combo on the fly
-			/*
-			if(row['extra_info']==12){
-	            col.itemRenderer=ir;
-	            col.rendererIsEditor=true;
-	            //col.editorDataField="selectedItem";             	
-	            col.editorDataField="result";             						
-			}
-			*/
-        }else{
-			var inpt:TextInput = new TextInput();
-	        inpt.id = colRef.champ+"_form"+idGrille;
-			fi.addChild(inpt); 
-        } 
-        
-	    //ajoute la colone à la ligne
-		tbTmp.push(col); 
-		//ajoute la forme pour la modification
-		frm.addChild(fi);
-    }    
-
-    //ajoute une colone au grid
-    dataGrid.columns = tbTmp; 
-
-   	//ajoute les boutons
-   	var hb:HBox=new HBox;
-   	var btnSubmit:Button= new Button;
-   	btnSubmit.toolTip = "Enregistrer les modifications de la donnée";
-   	btnSubmit.label = "Enregistrer";
-   	btnSubmit.addEventListener(MouseEvent.CLICK,insertItem);
-   	hb.addChild(btnSubmit);
-   	var btnCancel:Button= new Button;
-   	btnCancel.toolTip = "Annuler la modification";
-   	btnCancel.label = "Annuler";
-   	btnCancel.addEventListener(MouseEvent.CLICK,goToView);
-   	hb.addChild(btnCancel);
-	frm.addChild(hb);
-
-    //ajoute le formulaire
-    update.addChildAt(frm,0);
-
-    dataGrid.enabled = true;
-
-}
-
-
-private function GeoLocaliser():void{
-	var adresse:String=this["adresse"+"_form"+idGrille+"Col"].text
-		+","+this["codepostal"+"_form"+idGrille+"Col"].text
-		+","+this["ville"+"_form"+idGrille+"Col"].text
-		+","+this["pays"+"_form"+idGrille+"Col"].text;
-	if(adresse==""){
-		Alert.show("Veillez précisez le code postal et/ou la ville.");
-	}
-	this.parentApplication.doGeocode(adresse,-1,idRub);
 }
 
 
@@ -585,25 +423,7 @@ private function deleteClickHandler(event:CloseEvent):void
 {
     if (event.detail == Alert.YES) 
     {
-        var vo:* = dataGrid.selectedItem;
-
-        var parameters:* =
-        {
-            "idDon": vo.id_donneeCol
-            ,"idMot": vo.id_motCol
-            ,"idGrille": idGrille
-        }
-
-		/**
-		 * execute the server "delete" command
-		 */
-        doRequest("Delete", parameters, deleteHandler);
-
-        setTimeout( function():void
-        {
-            dataGrid.destroyItemEditor();
-        },
-        1);
+		ROS.remove(idSolution);
     }
 }
 
@@ -633,16 +453,6 @@ public function deleteHandler(e:*):void
     }     
 }
 
-
-/**
- * Click handler when the user click the "Create" button
- * Load the "Update" canvas.
- */
-public function goToUpdate():void
-{
-	this.selectedChild = update;
-}
-
 public function goToInsert():void
 {
 	this.selectedChild = insert;
@@ -652,28 +462,9 @@ public function goToInsert():void
 /**
  * Load the "View" canvas.
  */
-public function goToView(e:MouseEvent):void
+public function goToView():void
 {
-	if(showUpdateFirst){
-		if(this.objAppelant)this.objAppelant.fill();	
-		if(twAMC)twAMC.Ferme();
-		/*
-			//réactualise la combo mise à jour
-		    var frmC:Array = this.parent.parent.parent["frm"].getChildren();
-			//boucle sur chaque composant du modèle
-		    for each(var ctl:Object in frmC){
-	    		//récupère le contrôle d'édition
-	    		var ctlVal:Object=ctl.getChildAt(0);
-	    		//vérifie le type pour appliquer les modifs
-		    	if(ctlVal.className=="cbGroupeMot" && ctlVal["idGroupe"] == this.idGroupe){
-		    		ctlVal.fill();
-		    	}
-		   	}
-			this.parent.removeChild(this);
-		*/
-	}else{
-	    this.selectedChild = view;
-	}
+    this.selectedChild = view;
 }
 
 public function faultHandlerService(fault:FaultEvent):void
@@ -683,7 +474,7 @@ Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
  
 public function resultHandlerService(result:ResultEvent):void
 {
-Alert.show(result.result.toString(), "ResultHandlerService");
+ROS.getAll();
 }      
 
         ]]>
@@ -694,10 +485,10 @@ Alert.show(result.result.toString(), "ResultHandlerService");
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
-	 	<mx:method name="getCols"  result="getColsHandler(event)"/>  	
 	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
 	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
 	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="ajouter"  result="insertItemHandler(event)"/>  	
 	 	<mx:method name="csv"  result="resultHandlerService(event)"/>  	
 	</mx:RemoteObject>
 
@@ -755,9 +546,20 @@ Alert.show(result.result.toString(), "ResultHandlerService");
 		</mx:VBox>
 
 	</mx:Canvas>
-	<mx:Canvas id="update" width="100%" height="100%" >
-	</mx:Canvas>
 	<mx:Canvas id="insert" width="100%" height="100%" >
+		<mx:Form width="100%" height="100%" id="insertSolus">			                    		
+            <mx:FormItem label="Référence:" id="ref" >
+            	<mx:TextInput id="refSolus" />
+            </mx:FormItem>
+            <mx:FormItem label="Libellé:" id="lib" >
+            	<mx:TextArea id="libSolus"  width="400" height="100" />
+            </mx:FormItem>
+            <mx:FormItem label="Type de solution:" id="id_type_solution" >
+            	<ns2:cbGroupeMot objName="Model_DbTable_Gevu_typesxsolutions" endPoint="{ROS.endpoint}" />
+            </mx:FormItem>
+		</mx:Form>
+		<mx:Button label="Enregistrer" click="insertItem()" right="81" bottom="10"/>
+		<mx:Button label="Annuler" click="goToView()" right="10" bottom="10"/>
 
 
 	</mx:Canvas>

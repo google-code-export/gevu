@@ -31,5 +31,12 @@ class GEVU_Solution{
 		
     }        
 
+	public function edit($id, $data){
+
+    	$dbSolus = new Model_DbTable_Gevu_solutions();
+    	$rs = $dbSolus->edit($id,$data);
+    			
+    }        
+    
 }
 ?>
