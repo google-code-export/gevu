@@ -45,4 +45,5 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	
 $response = $server->handle();
 
-echo $response;            
+echo $response;
+?>
