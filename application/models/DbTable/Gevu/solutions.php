@@ -28,6 +28,44 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_solution';
     
+
+    /**
+     * Vérifie si une entrée Gevu_solutions existe.
+     *
+     * @param array $data
+     *
+     * @return integer
+     */
+    public function existe($data)
+    {
+		$select = $this->select();
+		$select->from($this, array('id_solution'));
+		foreach($data as $k=>$v){
+			$select->where($k.' = ?', $v);
+		}
+	    $rows = $this->fetchAll($select);        
+	    if($rows->count()>0)$id=$rows[0]->id_solution; else $id=false;
+        return $id;
+    } 
+        
+    /**
+     * Ajoute une entrée Gevu_solutions.
+     *
+     * @param array $data
+     * @param boolean $existe
+     * 
+     * @return integer
+     */
+    public function ajouter($data, $existe=true)
+    {
+    	if($existe)$id = $this->existe($data);
+    	if(!$id){
+    		$data['maj'] = new Zend_Db_Expr('CURDATE()');
+    	 	$id = $this->insert($data);
+    	}
+    	return $id;
+    } 
+       
     /**
      * Recherche une entrée Gevu_solutions avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
@@ -39,7 +77,7 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
      */
     public function edit($id, $data)
     {        
-        $this->update('gevu_solutions', $data, 'gevu_solutions.id_solution = ' . $id);
+        $this->update($data, 'gevu_solutions.id_solution = ' . $id);
     }
     
     /**
@@ -52,7 +90,7 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
-        $this->delete('gevu_solutions', 'gevu_solutions.id_solution = ' . $id);
+        $this->delete('gevu_solutions.id_solution = ' . $id);
     }
     
     /**
