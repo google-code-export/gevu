@@ -51,15 +51,17 @@ class Model_DbTable_Gevu_criteresxtypesxcriteres extends Zend_Db_Table_Abstract
     /**
      * Ajoute une entrée Gevu_criteresxtypesxcriteres.
      *
-     * @param array $data
+     * @param int $idCritere
+     * @param int $idType
      * @param boolean $existe
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($idCritere, $idType, $existe=true)
     {
     	$id=false;
-    	if($existe)$id = $this->existe($data);
+    	$data = array("id_critere"=>$idCritere,"id_type_critere"=>$idType);
+       	if($existe)$id = $this->existe($data);
     	if(!$id){
     	 	$id = $this->insert($data);
     	}
@@ -149,13 +151,16 @@ class Model_DbTable_Gevu_criteresxtypesxcriteres extends Zend_Db_Table_Abstract
      *
      * @param int $id_critere
      */
-    public function findById_critere($id_critere)
+    public function findByIdCritere($id_critere)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_criteresxtypesxcriteres") )                           
-                    ->where( "g.id_critere = " . $id_critere );
-
-        return $this->fetchRow($query)->toArray(); 
+			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from( array("g" => "gevu_criteresxtypesxcriteres"),
+            	array('id_critere', 'id_type_critere') )                           
+            ->joinInner(array('l' => 'gevu_typesxcriteres'),
+            	'g.id_type_critere = l.id_type_critere','lib')
+            ->where( "g.id_critere = " . $id_critere);
+        return $this->fetchAll($query)->toArray(); 
     }
     
     

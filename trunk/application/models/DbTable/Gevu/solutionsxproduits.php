@@ -56,9 +56,10 @@ class Model_DbTable_Gevu_solutionsxproduits extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($idSolution, $idProduit, $existe=true)
     {
     	$id=false;
+    	$data = array("id_solution"=>$idSolution,"id_produit"=>$idProduit);
     	if($existe)$id = $this->existe($data);
     	if(!$id){
     	 	$id = $this->insert($data);
@@ -135,13 +136,16 @@ class Model_DbTable_Gevu_solutionsxproduits extends Zend_Db_Table_Abstract
      *
      * @param int $id_solution
      */
-    public function findById_solution($id_solution)
+    public function findByIdSolution($id_solution)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_solutionsxproduits") )                           
-                    ->where( "g.id_solution = ?", $id_solution );
-
-        return $this->fetchRow($query)->toArray(); 
+        			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+                    ->from( array("g" => "gevu_solutionsxproduits"),
+                          array('id_solution', 'id_produit') )                           
+                   ->joinInner(array('l' => 'gevu_produits'),
+                          'g.id_produit = l.id_produit',array('ref'))
+                   ->where( "g.id_solution = " . $id_solution );
+        return $this->fetchAll($query)->toArray(); 
     }
     /*
      * Recherche une entrée Gevu_solutionsxproduits avec la valeur spécifiée
@@ -149,13 +153,16 @@ class Model_DbTable_Gevu_solutionsxproduits extends Zend_Db_Table_Abstract
      *
      * @param int $id_produit
      */
-    public function findById_produit($id_produit)
+    public function findByIdProduit($id_produit)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_solutionsxproduits") )                           
-                    ->where( "g.id_produit = ?", $id_produit );
-
-        return $this->fetchRow($query)->toArray(); 
+        			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+                    ->from( array("g" => "gevu_solutionsxproduits"),
+                          array('id_solution', 'id_produit') )                           
+                   ->joinInner(array('l' => 'gevu_solutions'),
+                          'g.id_solution = l.id_solution',array('ref','lib'))
+                   ->where( "g.id_produit = " . $id_produit );
+        return $this->fetchAll($query)->toArray(); 
     }
     
     

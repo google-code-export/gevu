@@ -150,12 +150,12 @@ class Model_DbTable_Gevu_solutionsxmetiers extends Zend_Db_Table_Abstract
     public function findByIdSolution($id_solution)
     {
         $query = $this->select()
-        			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
-                    ->from( array("g" => "gevu_solutionsxmetiers"),
-                          array('id_solution', 'id_metier') )                           
-                   ->joinInner(array('l' => 'gevu_metiers'),
-                          'g.id_metier = l.id_metier','lib')
-                   ->where( "g.id_solution = " . $id_solution );
+			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from( array("g" => "gevu_solutionsxmetiers"),
+            	array('id_solution', 'id_metier') )                           
+            ->joinInner(array('l' => 'gevu_metiers'),
+            	'g.id_metier = l.id_metier','lib')
+            ->where( "g.id_solution = " . $id_solution );
         return $this->fetchAll($query)->toArray(); 
     }
     /*
