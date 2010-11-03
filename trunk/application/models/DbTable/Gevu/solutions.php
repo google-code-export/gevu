@@ -28,7 +28,14 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_solution';
     
-
+    /*
+     * dépendance avec les autres tables.
+     */
+    protected $_dependentTables = array(
+		'Model_DbTable_Gevu_metiersxsolutions'
+		,'Model_DbTable_Gevu_typesxsolutions'
+	);
+    
     /**
      * Vérifie si une entrée Gevu_solutions existe.
      *
@@ -104,7 +111,10 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_solutions") );
+        			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+        			->from( array("g" => "gevu_solutions"))
+                   	->joinInner(array('l' => 'gevu_typesxsolutions'),
+                          'g.id_type_solution = l.id_type_solution',array('LibTypeSolution'=>'lib'));
                     
         if($order != null)
         {

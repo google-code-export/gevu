@@ -101,3 +101,83 @@ INSERT INTO `gevu_typesxsolutions` (`id_type_solution`, `lib`) VALUES
 (1, 'Humaine'),
 (2, 'Opérationnelle'),
 (3, 'Technique');
+
+CREATE TABLE IF NOT EXISTS `gevu_criteres` (
+  `id_critere` int(11) NOT NULL AUTO_INCREMENT,
+  `id_type_controle` int(11) NOT NULL,
+  `ref` varchar(100) NOT NULL,
+  `handicateur_moteur` int(11) NOT NULL,
+  `handicateur_auditif` int(11) NOT NULL,
+  `handicateur_visuel` int(11) NOT NULL,
+  `handicateur_cognitif` int(11) NOT NULL,
+  `criteres` varchar(500) DEFAULT NULL,
+  `affirmation` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id_critere`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC ;
+
+CREATE TABLE IF NOT EXISTS `gevu_typesxcriteres` (
+  `id_type_critere` int(11) NOT NULL AUTO_INCREMENT,
+  `lib` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id_type_critere`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `gevu_typesxdroits` (
+  `id_type_droit` int(11) NOT NULL AUTO_INCREMENT,
+  `lib` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id_type_droit`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `gevu_typesxdeficiences` (
+  `id_type_deficience` int(11) NOT NULL AUTO_INCREMENT,
+  `lib` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id_type_deficience`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `gevu_typesxcriteresxsolutions` (
+  `id_type_critere` int(11) NOT NULL AUTO_INCREMENT,
+  `id_solution` int(11) NOT NULL,
+  PRIMARY KEY (`id_solution`,`id_type_critere`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `gevu_typesxdroitsxsolutions` (
+  `id_type_droit` int(11) NOT NULL AUTO_INCREMENT,
+  `id_solution` int(11) NOT NULL,
+  PRIMARY KEY (`id_solution`,`id_type_droit`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `gevu_typesxdeficiencexsolutions` (
+  `id_type_deficience` int(11) NOT NULL AUTO_INCREMENT,
+  `id_solution` int(11) NOT NULL,
+  PRIMARY KEY (`id_solution`,`id_type_deficience`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `gevu_produits` (
+  `id_produit` int(11) NOT NULL AUTO_INCREMENT,
+  `id_entreprise` int(11) NOT NULL,
+  `description` varchar(500) COLLATE utf8_bin NOT NULL,
+  `technique` varchar(500) COLLATE utf8_bin NOT NULL,
+  `preconisation` varchar(500) COLLATE utf8_bin NOT NULL,
+  `marque` varchar(100) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id_produit`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `gevu_produitsxexperimentations` (
+  `id_produit` int(11) NOT NULL,
+  `id_experimentation` int(11) NOT NULL,
+  PRIMARY KEY (`id_produit`,`id_experimentation`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE IF NOT EXISTS `gevu_entreprises` (
+  `id_entreprise` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(100) COLLATE utf8_bin NOT NULL,
+  `num` varchar(100) COLLATE utf8_bin NOT NULL,
+  `voie` varchar(100) COLLATE utf8_bin NOT NULL,
+  `code_postal` varchar(20) COLLATE utf8_bin NOT NULL,
+  `ville` varchar(255) COLLATE utf8_bin NOT NULL,
+  `pays` varchar(255) COLLATE utf8_bin NOT NULL,
+  `telephone` varchar(20) COLLATE utf8_bin NOT NULL,
+  `fax` varchar(20) COLLATE utf8_bin NOT NULL,
+  `mail` varchar(255) COLLATE utf8_bin NOT NULL,
+  `observations` varchar(500) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id_entreprise`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC;

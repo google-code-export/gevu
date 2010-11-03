@@ -17,6 +17,7 @@ import mx.rpc.AsyncToken;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 import mx.rpc.http.HTTPService;
+import mx.managers.PopUpManager;
 
 //include the constant definition of the server endpoint URL
 include "grillesconfig.as";
@@ -26,6 +27,7 @@ include "grillesconfig.as";
  */
 private var idGrille:String = "70";
 private var idMot:String = "";
+private var idExi:String = "";
 
 /**
  * gateway : this is the communication layer with the server side php code
@@ -37,6 +39,8 @@ private var gateway:HTTPService = new HTTPService();
  */
 [Bindable]
 public var dataArr:ArrayCollection = new ArrayCollection();
+[Bindable]
+public var exi:Object;
 
 /**
  * column that we order by. This is updated each time the users clicks on the 
@@ -61,13 +65,14 @@ private var fields:Object = { 'id_donnee':Number, 'ligne_1':String, 'ligne_2':St
 private var fieldsSolus:Object = { 'id_solution':Number, 'lib':String, 'id_type_solution':String};
   
  
-public const ENDPOINT_SERVICE:String = "http://localhost/gevu/services/index.php";
- 
- 
 public function init():void
 {
-//myservice.hello("Wade");
-//myservice.getAllSolution();
+	//construction de la fenêtre d'édition
+	var twLog:twLogin= twLogin(
+        PopUpManager.createPopUp(this, twLogin, true));
+	twLog.endPoint=ENDPOINT_SERVICE;
+    PopUpManager.centerPopUp(twLog);
+        	
 } 
  
 public function faultHandlerService(fault:FaultEvent):void
@@ -527,8 +532,6 @@ public function goToUpdate():void
 {
 	if(this.tabNavig.selectedChild.id=="tabCrit")
 		applicationScreens.selectedChild = update;
-	if(this.tabNavig.selectedChild.id=="tabSolus")
-		AppScreensSolus.selectedChild = updateSolus;
 }
 
 /**
@@ -538,6 +541,4 @@ public function goToView():void
 {
 	if(this.tabNavig.selectedChild.id=="tabCrit")
 	    applicationScreens.selectedChild = view;
-	if(this.tabNavig.selectedChild.id=="tabSolus")
-		AppScreensSolus.selectedChild = viewSolus;
 }

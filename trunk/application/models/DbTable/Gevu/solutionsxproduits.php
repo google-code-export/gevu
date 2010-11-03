@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier contient la classe Gevu_typesxsolutions.
+ * Ce fichier contient la classe Gevu_solutionsxproduits.
  *
  * @copyright  2008 Gabriel Malkas
  * @copyright  2010 Samuel Szoniecky
@@ -9,27 +9,28 @@
 
 
 /**
- * Classe ORM qui représente la table 'gevu_typesxsolutions'.
+ * Classe ORM qui représente la table 'gevu_solutionsxproduits'.
  *
  * @copyright  2008 Gabriel Malkas
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_typesxsolutions extends Zend_Db_Table_Abstract
+class Model_DbTable_Gevu_solutionsxproduits extends Zend_Db_Table_Abstract
 {
     
     /*
      * Nom de la table.
      */
-    protected $_name = 'gevu_typesxsolutions';
+    protected $_name = 'gevu_solutionsxproduits';
     
     /*
      * Clef primaire de la table.
      */
-    protected $_primary = 'id_type_solution';
+    protected $_primary = 'id_solution';
 
+    
     /**
-     * Vérifie si une entrée Gevu_typesxsolutions existe.
+     * Vérifie si une entrée Gevu_solutionsxproduits existe.
      *
      * @param array $data
      *
@@ -38,21 +39,21 @@ class Model_DbTable_Gevu_typesxsolutions extends Zend_Db_Table_Abstract
     public function existe($data)
     {
 		$select = $this->select();
-		$select->from($this, array("id_type_solution"));
+		$select->from($this, array('id_solution'));
 		foreach($data as $k=>$v){
 			$select->where($k.' = ?', $v);
 		}
 	    $rows = $this->fetchAll($select);        
-	    if($rows->count()>0)$id=$rows[0]["id_type_solution"]; else $id=false;
+	    if($rows->count()>0)$id=$rows[0]->id_solution; else $id=false;
         return $id;
     } 
         
     /**
-     * Ajoute une entrée Gevu_typesxsolutions.
+     * Ajoute une entrée Gevu_solutionsxproduits.
      *
      * @param array $data
      * @param boolean $existe
-     * 
+     *  
      * @return integer
      */
     public function ajouter($data, $existe=true)
@@ -63,10 +64,10 @@ class Model_DbTable_Gevu_typesxsolutions extends Zend_Db_Table_Abstract
     	 	$id = $this->insert($data);
     	}
     	return $id;
-    }     
-    
+    } 
+           
     /**
-     * Recherche une entrée Gevu_typesxsolutions avec la clef primaire spécifiée
+     * Recherche une entrée Gevu_solutionsxproduits avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
      *
      * @param integer $id
@@ -76,11 +77,11 @@ class Model_DbTable_Gevu_typesxsolutions extends Zend_Db_Table_Abstract
      */
     public function edit($id, $data)
     {        
-        $this->update($data, 'gevu_typesxsolutions.id_type_solution = ' . $id);
+        $this->update($data, 'gevu_solutionsxproduits.id_solution = ' . $id);
     }
     
     /**
-     * Recherche une entrée Gevu_typesxsolutions avec la clef primaire spécifiée
+     * Recherche une entrée Gevu_solutionsxproduits avec la clef primaire spécifiée
      * et supprime cette entrée.
      *
      * @param integer $id
@@ -89,17 +90,17 @@ class Model_DbTable_Gevu_typesxsolutions extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
-        $this->delete('gevu_typesxsolutions.id_type_solution = ' . $id);
+        $this->delete('gevu_solutionsxproduits.id_solution = ' . $id);
     }
     
     /**
-     * Récupère toutes les entrées Gevu_typesxsolutions avec certains critères
+     * Récupère toutes les entrées Gevu_solutionsxproduits avec certains critères
      * de tri, intervalles
      */
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_typesxsolutions") );
+                    ->from( array("gevu_solutionsxproduits" => "gevu_solutionsxproduits") );
                     
         if($order != null)
         {
@@ -115,45 +116,46 @@ class Model_DbTable_Gevu_typesxsolutions extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Récupère les spécifications des colonnes Gevu_typesxsolutions 
+     * Récupère les spécifications des colonnes Gevu_solutionsxproduits 
      */
     public function getCols(){
 
     	$arr = array("cols"=>array(
-	array("titre"=>"id_type_solution","champ"=>"id_type_solution","visible"=>true),
-	array("titre"=>"lib","champ"=>"lib","visible"=>true),
+    	   	array("titre"=>"id_solution","champ"=>"id_solution","visible"=>true),
+    	array("titre"=>"id_produit","champ"=>"id_produit","visible"=>true),
+        	
     		));    	
     	return $arr;
 		
     }     
     
     /*
-     * Recherche une entrée Gevu_typesxsolutions avec la valeur spécifiée
+     * Recherche une entrée Gevu_solutionsxproduits avec la valeur spécifiée
      * et retourne cette entrée.
      *
-     * @param int $id_type_solution
+     * @param int $id_solution
      */
-    public function findById_type_solution($id_type_solution)
+    public function findById_solution($id_solution)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_typesxsolutions") )                           
-                    ->where( "g.id_type_solution = " . $id_type_solution );
+                    ->from( array("g" => "gevu_solutionsxproduits") )                           
+                    ->where( "g.id_solution = ?", $id_solution );
 
-        return $this->fetchRow($query); 
+        return $this->fetchRow($query)->toArray(); 
     }
     /*
-     * Recherche une entrée Gevu_typesxsolutions avec la valeur spécifiée
+     * Recherche une entrée Gevu_solutionsxproduits avec la valeur spécifiée
      * et retourne cette entrée.
      *
-     * @param varchar $lib
+     * @param int $id_produit
      */
-    public function findByLib($lib)
+    public function findById_produit($id_produit)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_typesxsolutions") )                           
-                    ->where( "g.lib = " . $lib );
+                    ->from( array("g" => "gevu_solutionsxproduits") )                           
+                    ->where( "g.id_produit = ?", $id_produit );
 
-        return $this->fetchRow($query); 
+        return $this->fetchRow($query)->toArray(); 
     }
     
     

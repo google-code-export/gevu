@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml" 
-	 change="changeCbMot()"
-	creationComplete="init()" >
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" >
 	<mx:Script>
         <![CDATA[
 	import mx.managers.CursorManager;
@@ -18,8 +16,14 @@
 	[Bindable] public var endPoint:String;
 	[Bindable] public var objName:String;
 	[Bindable] public var keyName:String;
+	[Bindable] public var labelName:String="lib";
+	[Bindable] public var titre:String="un mot clef";
+	[Bindable] public var bAjout:Boolean=true;
+	
+	[Bindable] private var dpValue:Array;
+	public var result:String="";
 
-	private function init():void
+	public function init():void
 	{
 	    //chargement des données
 	    ROS.getAll();
@@ -28,8 +32,8 @@
 	public function getIndex(label:String):int
 	{
 		var i:int
-	    for each(var row:Object in this.dataProvider){
-	    	if(row["titre"]==label){
+	    for each(var row:Object in cb.dataProvider){
+	    	if(row[labelName]==label){
 	    		return i;
 	    	}
 	    	i++;
@@ -40,29 +44,10 @@
 	private function fillHandler(e:Object):void
 	{
 		if(!e)return;
-		
-    	this.dataProvider = e.result as Array;
-    	this.labelField = "lib";
+		dpValue = e.result as Array;
+    	cb.dataProvider = dpValue;
+    	cb.labelField = labelName;
 
-	}
-	
-	private function changeCbMot():void{
-		
-		//vérifie s'il faut ajouter un mot clef;
-		if(this.selectedItem.titre=="-ajout-"){
-			//construction de la fenêtre d'édition
-			var dg:dgGrille = new dgGrille;
-			dg.idGrille="InsertMot";
-			dg.idMot=this.selectedItem.id_mot;
-			dg.showUpdateFirst=true;
-			dg.showAddDelete=true;
-			dg.showFiche=false;
-			dg.Edit=true;
-			dg.objAppelant=this;			
-			this.parent.parent.addChild(dg);
-
-		}
-		
 	}
 	
 	public function AjoutMot():void{
@@ -70,22 +55,23 @@
 		//construction de la fenêtre d'édition
 		var twAMC:twAjoutMotClef= twAjoutMotClef(
             PopUpManager.createPopUp(this, twAjoutMotClef, true));
-		twAMC.dg.idGrille="InsertMot";
-		twAMC.dg.idMot=this.selectedItem.id_mot;
-		twAMC.dg.showUpdateFirst=true;
-		twAMC.dg.showAddDelete=true;
-		twAMC.dg.showFiche=false;
-		twAMC.dg.Edit=true;
-		twAMC.dg.objAppelant=this;
-		twAMC.titre = "Créer un transporteur"					
+		twAMC.endPoint=this.endPoint;
+		twAMC.objName=this.objName;
+		twAMC.titre = "Ajouter "+titre;
+		twAMC.objSource = this;					
         PopUpManager.centerPopUp(twAMC);
-
+        
 	}
 
 	public function faultHandlerService(fault:FaultEvent):void
 	{
-	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+		Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
 	}
+
+    public function onChange():void 
+    {
+        result = cb.selectedItem[keyName];
+    }
 
         ]]>
     </mx:Script>
@@ -96,5 +82,8 @@
 	    	fault="faultHandlerService(event)">
 	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
 	</mx:RemoteObject>
+ 
+<mx:ComboBox id="cb" />
+<mx:LinkButton visible="{bAjout}" id="btnAddNew" click="AjoutMot()" icon="@Embed('images/AddRecord.png')" toolTip="{'Ajouter '+titre}" />
     
-</mx:ComboBox>
+</mx:HBox>

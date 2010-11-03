@@ -2,7 +2,6 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
 	top="10" bottom="10" left="10" right="10"
 	creationComplete="initApp()">
-	<mx:Script source="../http.as"/>
 	<mx:Script>
         <![CDATA[
         
@@ -15,9 +14,11 @@
             dustin@flash-dev.com
             www.flash-dev.com
 			
-			CUSTOM BY lucky semiosisis
+			CUSTOM BY samuel szoniecky
             
             */
+			//include the constant definition of the server endpoint URL
+			include "../grillesconfig.as";
                     
             import mx.states.*;
             import mx.controls.*;
@@ -30,15 +31,14 @@
             import compo.twResultImport;            
 
 			[Bindable]public var wf:String;
-			[Bindable]public var idUti:String;
-			[Bindable]public var idGrille:String;
+			[Bindable]public var idExi:String;
+			[Bindable]public var objName:String;
 			[Bindable]public var lblBtn:String;
            	[Bindable]public var iconBtn:Class;
            	[Bindable]public var ttBtn:String;            	 
 			[Bindable]public var ctlBind:Object;
 			[Bindable]public var typeFic:String;
-
-            private const _strUploadScript:String = ENDPOINT_URL;
+			[Bindable]public var UploadScript:String=ENDPOINT_IMPORT;
             
             private var _arrUploadFiles:Array;
             private var _numCurrentUpload:Number = 0;
@@ -172,14 +172,14 @@
                     
                     // Variables to send along with upload
                     var sendVars:URLVariables = new URLVariables();
-                    sendVars.f = "upload";
+                    //sendVars.f = "upload";
                     sendVars.wf = wf;
-                    sendVars.idUti = idUti;
-                    sendVars.idGrille = idGrille;
+                    sendVars.idExi = idExi;
+                    sendVars.objName = objName;
                     
                     var request:URLRequest = new URLRequest();
                     request.data = sendVars;
-                    request.url = _strUploadScript;
+                    request.url = UploadScript;
                     request.method = URLRequestMethod.POST;
                     _refUploadFile = new FileReference();
                     _refUploadFile = _arrUploadFiles[_numCurrentUpload].data;

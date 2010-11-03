@@ -118,274 +118,232 @@ todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
  	<mx:method name="getAllSolution"  result="resultHandlerService(event)"/>  	
 </mx:RemoteObject>
 
- 	<mx:HDividedBox width="100%" height="100%">
- 		
-	    <mx:VBox id="boxTree" width="20%" height="100%">	    	
-	 		<mx:Panel title="Choisissez les éléments à afficher" width="100%" height="100%" borderColor="#080202">
-		   		<ns2:treeControles id="treeControles" width="100%" height="100%" >
-		   		</ns2:treeControles>	
-			</mx:Panel>
-	    </mx:VBox>		    	
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox>
+			<mx:LinkButton id="btnAjoutUti" click="init();" icon="@Embed('images/ajoutUti.jpg')" toolTip="Ajouter un utilisateur" />					
+			<mx:LinkButton label="Mon profil" click="init();" />
+			<mx:LinkButton label="Mes données" click="init();" />
+			<mx:LinkButton label="Connexion/Déconnexion" click="init();" />		
+		</mx:HBox>
 
-		<mx:VBox id="boxGrid" width="80%" height="100%" >
+	 	<mx:HDividedBox width="100%" height="100%">
+	 		
+		    <mx:VBox id="boxTree" width="20%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >	    	
+		 		<mx:Panel title="Choisissez les éléments à afficher" width="100%" height="100%" borderColor="#080202">
+			   		<ns2:treeControles id="treeControles" width="100%" height="100%" >
+			   		</ns2:treeControles>	
+				</mx:Panel>
+		    </mx:VBox>		    	
+	
+			<mx:VBox id="boxGrid" width="80%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"   >
+				
+				<mx:TabNavigator x="0" y="10" width="100%" height="100%" id="tabNavig" >
+					<mx:Canvas id="tabCrit" label="Critères" width="100%" height="100%" activate="true">
+	
+						<mx:ViewStack id="applicationScreens" width="100%" height="100%">
+							<mx:Canvas id="view" width="100%" height="100%">
+								<ns2:cUploadFile right="10" left="10" top="0" idExi="{this.exi.idExi}" objName="csv_criteres" id="ufCsv" iconBtn="@Embed('images/csvImp.jpg')" ttBtn="Importer des critères" ctlBind="{this}" wf="impCsv" typeFic="csv" />
+								<mx:DataGrid id="dataGrid"
+														dataProvider="{dataArr}"
+														editable="true"
+														rowHeight="80"
+														resizableColumns="true" 
+														headerRelease="setOrder(event);"
+														itemEditBegin="modifyEditedData(event);" 
+														right="10" left="10" top="20" bottom="71" textAlign="center">
+										<mx:columns>
+											<mx:DataGridColumn visible="false" headerText="id_donnee" dataField="id_donneeCol" />
+											<mx:DataGridColumn headerText="Référence" dataField="ligne_1Col" editable="false" />
+											<mx:DataGridColumn headerText="Contrôle id" dataField="mot_1_idCol" editable="false" visible="false" />
+			            					<mx:DataGridColumn headerText="Contrôle" dataField="mot_1Col" editorDataField="selectedItem" itemEditor="{cbTypeControle}"/>
+								            
+								            <mx:DataGridColumn headerText="H moteur" dataField="ligne_2Col" editorDataField="value">
+									                <mx:itemEditor>
+									                    <mx:Component>
+									                        <mx:NumericStepper stepSize="1" maximum="4"/>
+									                    </mx:Component>
+									                </mx:itemEditor>
+								            </mx:DataGridColumn>								
+											<mx:DataGridColumn headerText="H auditif" dataField="ligne_3Col"  editorDataField="value">
+									                <mx:itemEditor>
+									                    <mx:Component>
+									                        <mx:NumericStepper stepSize="1" maximum="4"/>
+									                    </mx:Component>
+									                </mx:itemEditor>
+								            </mx:DataGridColumn>								
+											<mx:DataGridColumn headerText="H visuel" dataField="ligne_4Col"  editorDataField="value">
+									                <mx:itemEditor>
+									                    <mx:Component>
+									                        <mx:NumericStepper stepSize="1" maximum="4"/>
+									                    </mx:Component>
+									                </mx:itemEditor>
+								            </mx:DataGridColumn>								
+											<mx:DataGridColumn headerText="H cognitif" dataField="ligne_5Col"  editorDataField="value">
+									                <mx:itemEditor>
+									                    <mx:Component>
+									                        <mx:NumericStepper stepSize="1" maximum="4"/>
+									                    </mx:Component>
+									                </mx:itemEditor>
+								            </mx:DataGridColumn>								
 			
-			<mx:TabNavigator x="0" y="10" width="100%" height="100%" id="tabNavig" >
-				<mx:Canvas id="tabCrit" label="Critères" width="100%" height="100%" activate="true">
-
-					<mx:ViewStack id="applicationScreens" width="100%" height="100%">
-		
-						<mx:Canvas id="view" width="100%" height="100%">
-							<mx:DataGrid id="dataGrid"
-													dataProvider="{dataArr}"
-													editable="true"
-													rowHeight="80"
-													resizableColumns="true" 
-													headerRelease="setOrder(event);"
-													itemEditBegin="modifyEditedData(event);" 
-													right="10" left="10" top="10" bottom="71" textAlign="center">
-									<mx:columns>
-										<mx:DataGridColumn visible="false" headerText="id_donnee" dataField="id_donneeCol" />
-										<mx:DataGridColumn headerText="Référence" dataField="ligne_1Col" editable="false" />
-										<mx:DataGridColumn headerText="Contrôle id" dataField="mot_1_idCol" editable="false" visible="false" />
-		            					<mx:DataGridColumn headerText="Contrôle" dataField="mot_1Col" editorDataField="selectedItem" itemEditor="{cbTypeControle}"/>
-							            
-							            <mx:DataGridColumn headerText="H moteur" dataField="ligne_2Col" editorDataField="value">
-								                <mx:itemEditor>
-								                    <mx:Component>
-								                        <mx:NumericStepper stepSize="1" maximum="4"/>
-								                    </mx:Component>
-								                </mx:itemEditor>
-							            </mx:DataGridColumn>								
-										<mx:DataGridColumn headerText="H auditif" dataField="ligne_3Col"  editorDataField="value">
-								                <mx:itemEditor>
-								                    <mx:Component>
-								                        <mx:NumericStepper stepSize="1" maximum="4"/>
-								                    </mx:Component>
-								                </mx:itemEditor>
-							            </mx:DataGridColumn>								
-										<mx:DataGridColumn headerText="H visuel" dataField="ligne_4Col"  editorDataField="value">
-								                <mx:itemEditor>
-								                    <mx:Component>
-								                        <mx:NumericStepper stepSize="1" maximum="4"/>
-								                    </mx:Component>
-								                </mx:itemEditor>
-							            </mx:DataGridColumn>								
-										<mx:DataGridColumn headerText="H cognitif" dataField="ligne_5Col"  editorDataField="value">
-								                <mx:itemEditor>
-								                    <mx:Component>
-								                        <mx:NumericStepper stepSize="1" maximum="4"/>
-								                    </mx:Component>
-								                </mx:itemEditor>
-							            </mx:DataGridColumn>								
-		
-										<mx:DataGridColumn dataField="multiple_1_1Col" headerText="Réglementaire"
-										    itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>																																	
-										<mx:DataGridColumn headerText="Souhaitable" dataField="multiple_1_2Col"
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-		
-										<mx:DataGridColumn headerText="Travail" dataField="multiple_2_1Col"
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-										<mx:DataGridColumn headerText="ERP_IOP" dataField="multiple_2_2Col" 
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-										<mx:DataGridColumn headerText="Logement" dataField="multiple_2_3Col" 
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-										<mx:DataGridColumn headerText="Voirie" dataField="multiple_2_4Col" 
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-										<mx:DataGridColumn headerText="ERP_IOP Ex" dataField="multiple_2_5Col" 
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-										<mx:DataGridColumn headerText="Mod. Part." dataField="multiple_2_6Col" 
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-		
-										<mx:DataGridColumn headerText="Déf. motrice" dataField="multiple_3_1Col" 
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-										<mx:DataGridColumn headerText="Déf. auditive" dataField="multiple_3_2Col" 
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-										<mx:DataGridColumn headerText="Déf. visuelle" dataField="multiple_3_3Col" 
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
-										<mx:DataGridColumn headerText="Déf. cognitive" dataField="multiple_3_4Col" 
-											itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											<mx:DataGridColumn dataField="multiple_1_1Col" headerText="Réglementaire"
+											    itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>																																	
+											<mx:DataGridColumn headerText="Souhaitable" dataField="multiple_1_2Col"
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+			
+											<mx:DataGridColumn headerText="Travail" dataField="multiple_2_1Col"
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											<mx:DataGridColumn headerText="ERP_IOP" dataField="multiple_2_2Col" 
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											<mx:DataGridColumn headerText="Logement" dataField="multiple_2_3Col" 
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											<mx:DataGridColumn headerText="Voirie" dataField="multiple_2_4Col" 
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											<mx:DataGridColumn headerText="ERP_IOP Ex" dataField="multiple_2_5Col" 
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											<mx:DataGridColumn headerText="Mod. Part." dataField="multiple_2_6Col" 
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+			
+											<mx:DataGridColumn headerText="Déf. motrice" dataField="multiple_3_1Col" 
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											<mx:DataGridColumn headerText="Déf. auditive" dataField="multiple_3_2Col" 
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											<mx:DataGridColumn headerText="Déf. visuelle" dataField="multiple_3_3Col" 
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											<mx:DataGridColumn headerText="Déf. cognitive" dataField="multiple_3_4Col" 
+												itemRenderer="mx.controls.CheckBox" rendererIsEditor="true" editorDataField="selected"/>
+											
+											<mx:DataGridColumn headerText="Critères" dataField="texte_1Col" >									
+												<mx:itemEditor>
+													<mx:Component>
+								                    	<mx:TextArea text="{data.texte_1Col}" />
+													</mx:Component>
+												</mx:itemEditor>
+											</mx:DataGridColumn>
+			
+											<mx:DataGridColumn headerText="Affirmation" dataField="texte_2Col" >
+												<mx:itemEditor>
+													<mx:Component>
+								                    	<mx:TextArea text="{data.texte_2Col}" />
+													</mx:Component>
+												</mx:itemEditor>									
+											</mx:DataGridColumn>
+			
+										</mx:columns>
+								</mx:DataGrid>
+								<mx:Button id="btnAddNew" click="goToUpdate()" icon="@Embed('images/AddRecord.png')" toolTip="Add Record" x="10" bottom="10"/>
+								<mx:Button id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Delete Record" x="58" bottom="10"/>
+								<mx:Label text="Rechercher par le champ : " right="400" bottom="11"/>
+								<mx:Label id="ColSelect" text="" right="300" bottom="11"/>
+								<mx:TextInput id="filterTxt" width="238" toolTip="Rechercher par le champ sélectionné" enter="filterResults()" right="58" bottom="11"/>
+								<mx:Button click="filterResults()" id="filterButton" icon="@Embed('images/SearchRecord.png')" toolTip="Search by champ" right="10" bottom="10"/>
+							</mx:Canvas>
+						
+							<mx:Canvas id="update" width="100%" height="100%">
+								<mx:Form width="100%" height="100%" id="grillesForm">
+			
+				                    		
+						                    <mx:FormItem label="Référence:" id="ligne_1_form">
+						                        <mx:TextInput id="ligne_1Col" text=""/>
+						                    </mx:FormItem>
+						                    <mx:FormItem label="Type de contrôle:" id="mot_1form">
+											   <mx:ComboBox id="mot_1Col" dataProvider="{arrTypeControle}" /> 
+						                    </mx:FormItem>
+						                    <mx:FormItem label="Handicateurs">
+						                    	<mx:HBox width="100%">
+						                    		<mx:FormItem label="H moteur:" id="ligne_2_form">
+						                    		    <mx:NumericStepper stepSize="1" maximum="4" id="ligne_2Col" />
+						                    		</mx:FormItem>
+								                    <mx:FormItem label="H auditif:" id="ligne_3_form">
+								                        <mx:NumericStepper stepSize="1" maximum="4" id="ligne_3Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="H visuel:" id="ligne_4_form">
+								                        <mx:NumericStepper stepSize="1" maximum="4" id="ligne_4Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="H cognitif:" id="ligne_5_form">
+								                        <mx:NumericStepper stepSize="1" maximum="4" id="ligne_5Col" />
+								                    </mx:FormItem>
+						                    	</mx:HBox>
+						                    </mx:FormItem>
+			
+						                    <mx:FormItem label="Type de critère">
+						                    	<mx:HBox width="100%">
+								                    <mx:FormItem label="Réglementaire:" id="multiple_1_1form">
+											        	<mx:CheckBox selected="false" id="multiple_1_1Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="Souhaitable:" id="multiple_1_2form">
+											        	<mx:CheckBox selected="false" id="multiple_1_2Col" />
+								                    </mx:FormItem>
+						                    	</mx:HBox>
+						                    </mx:FormItem>
+						                    
+						                    <mx:FormItem label="Contexte réglementaire">
+						                    	<mx:HBox width="100%">
+						                    
+								                    <mx:FormItem label="Travail:" id="multiple_2_1form">
+											        	<mx:CheckBox selected="false" id="multiple_2_1Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="ERP_IOP:" id="multiple_2_2form">
+											        	<mx:CheckBox selected="false" id="multiple_2_2Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="Logement:" id="multiple_2_3form">
+											        	<mx:CheckBox selected="false" id="multiple_2_3Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="Voirie:" id="multiple_2_4form">
+											        	<mx:CheckBox selected="false" id="multiple_2_4Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="Voirie:" id="multiple_2_5form">
+											        	<mx:CheckBox selected="false" id="multiple_2_5Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="Voirie:" id="multiple_2_6form">
+											        	<mx:CheckBox selected="false" id="multiple_2_6Col" />
+								                    </mx:FormItem>
+						                    
+						                    	</mx:HBox>
+						                    </mx:FormItem>
+			
+						                    <mx:FormItem label="Type de déficience">
+						                    	<mx:HBox width="100%">
+								                    <mx:FormItem label="Déf. motrice:" id="multiple_3_1form">
+											        	<mx:CheckBox selected="false" id="multiple_3_1Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="Déf. auditive:" id="multiple_3_2form">
+											        	<mx:CheckBox selected="false" id="multiple_3_2Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="Déf. visuelle:" id="multiple_3_3form">
+											        	<mx:CheckBox selected="false" id="multiple_3_3Col" />
+								                    </mx:FormItem>
+								                    <mx:FormItem label="Déf. cognitive:" id="multiple_3_4form">
+											        	<mx:CheckBox selected="false" id="multiple_3_4Col" />
+								                    </mx:FormItem>
+						                    	</mx:HBox>
+						                    </mx:FormItem>
 										
-										<mx:DataGridColumn headerText="Critères" dataField="texte_1Col" >									
-											<mx:itemEditor>
-												<mx:Component>
-							                    	<mx:TextArea text="{data.texte_1Col}" />
-												</mx:Component>
-											</mx:itemEditor>
-										</mx:DataGridColumn>
-		
-										<mx:DataGridColumn headerText="Affirmation" dataField="texte_2Col" >
-											<mx:itemEditor>
-												<mx:Component>
-							                    	<mx:TextArea text="{data.texte_2Col}" />
-												</mx:Component>
-											</mx:itemEditor>									
-										</mx:DataGridColumn>
-		
-									</mx:columns>
-							</mx:DataGrid>
-							<mx:Button id="btnAddNew" click="goToUpdate()" icon="@Embed('images/AddRecord.png')" toolTip="Add Record" x="10" bottom="10"/>
-							<mx:Button id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Delete Record" x="58" bottom="10"/>
-							<mx:Label text="Rechercher par le champ : " right="400" bottom="11"/>
-							<mx:Label id="ColSelect" text="" right="300" bottom="11"/>
-							<mx:TextInput id="filterTxt" width="238" toolTip="Rechercher par le champ sélectionné" enter="filterResults()" right="58" bottom="11"/>
-							<mx:Button click="filterResults()" id="filterButton" icon="@Embed('images/SearchRecord.png')" toolTip="Search by champ" right="10" bottom="10"/>
-						</mx:Canvas>
+						                    <mx:FormItem label="Critères:" id="texte_1form" >
+						                    	<mx:TextArea id="texte_1Col"  width="400" height="100" />
+						                    </mx:FormItem>
+						                    <mx:FormItem label="Affirmation:" id="texte_2form">
+						                    	<mx:TextArea id="texte_2Col"  width="400" height="100" />
+						                    </mx:FormItem>
+			
+								</mx:Form>
+								<mx:Button label="Save" id="btnSubmit" click="insertItem()" right="81" bottom="10"/>
+								<mx:Button label="Cancel" id="btnCancel" click="goToView()" right="10" bottom="10"/>
+							</mx:Canvas>
+						</mx:ViewStack>
+			
+					</mx:Canvas>
 					
-						<mx:Canvas id="update" width="100%" height="100%">
-							<mx:Form width="100%" height="100%" id="grillesForm">
-		
-			                    		
-					                    <mx:FormItem label="Référence:" id="ligne_1_form">
-					                        <mx:TextInput id="ligne_1Col" text=""/>
-					                    </mx:FormItem>
-					                    <mx:FormItem label="Type de contrôle:" id="mot_1form">
-										   <mx:ComboBox id="mot_1Col" dataProvider="{arrTypeControle}" /> 
-					                    </mx:FormItem>
-					                    <mx:FormItem label="Handicateurs">
-					                    	<mx:HBox width="100%">
-					                    		<mx:FormItem label="H moteur:" id="ligne_2_form">
-					                    		    <mx:NumericStepper stepSize="1" maximum="4" id="ligne_2Col" />
-					                    		</mx:FormItem>
-							                    <mx:FormItem label="H auditif:" id="ligne_3_form">
-							                        <mx:NumericStepper stepSize="1" maximum="4" id="ligne_3Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="H visuel:" id="ligne_4_form">
-							                        <mx:NumericStepper stepSize="1" maximum="4" id="ligne_4Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="H cognitif:" id="ligne_5_form">
-							                        <mx:NumericStepper stepSize="1" maximum="4" id="ligne_5Col" />
-							                    </mx:FormItem>
-					                    	</mx:HBox>
-					                    </mx:FormItem>
-		
-					                    <mx:FormItem label="Type de critère">
-					                    	<mx:HBox width="100%">
-							                    <mx:FormItem label="Réglementaire:" id="multiple_1_1form">
-										        	<mx:CheckBox selected="false" id="multiple_1_1Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="Souhaitable:" id="multiple_1_2form">
-										        	<mx:CheckBox selected="false" id="multiple_1_2Col" />
-							                    </mx:FormItem>
-					                    	</mx:HBox>
-					                    </mx:FormItem>
-					                    
-					                    <mx:FormItem label="Contexte réglementaire">
-					                    	<mx:HBox width="100%">
-					                    
-							                    <mx:FormItem label="Travail:" id="multiple_2_1form">
-										        	<mx:CheckBox selected="false" id="multiple_2_1Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="ERP_IOP:" id="multiple_2_2form">
-										        	<mx:CheckBox selected="false" id="multiple_2_2Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="Logement:" id="multiple_2_3form">
-										        	<mx:CheckBox selected="false" id="multiple_2_3Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="Voirie:" id="multiple_2_4form">
-										        	<mx:CheckBox selected="false" id="multiple_2_4Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="Voirie:" id="multiple_2_5form">
-										        	<mx:CheckBox selected="false" id="multiple_2_5Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="Voirie:" id="multiple_2_6form">
-										        	<mx:CheckBox selected="false" id="multiple_2_6Col" />
-							                    </mx:FormItem>
-					                    
-					                    	</mx:HBox>
-					                    </mx:FormItem>
-		
-					                    <mx:FormItem label="Type de déficience">
-					                    	<mx:HBox width="100%">
-							                    <mx:FormItem label="Déf. motrice:" id="multiple_3_1form">
-										        	<mx:CheckBox selected="false" id="multiple_3_1Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="Déf. auditive:" id="multiple_3_2form">
-										        	<mx:CheckBox selected="false" id="multiple_3_2Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="Déf. visuelle:" id="multiple_3_3form">
-										        	<mx:CheckBox selected="false" id="multiple_3_3Col" />
-							                    </mx:FormItem>
-							                    <mx:FormItem label="Déf. cognitive:" id="multiple_3_4form">
-										        	<mx:CheckBox selected="false" id="multiple_3_4Col" />
-							                    </mx:FormItem>
-					                    	</mx:HBox>
-					                    </mx:FormItem>
-									
-					                    <mx:FormItem label="Critères:" id="texte_1form" >
-					                    	<mx:TextArea id="texte_1Col"  width="400" height="100" />
-					                    </mx:FormItem>
-					                    <mx:FormItem label="Affirmation:" id="texte_2form">
-					                    	<mx:TextArea id="texte_2Col"  width="400" height="100" />
-					                    </mx:FormItem>
-		
-							</mx:Form>
-							<mx:Button label="Save" id="btnSubmit" click="insertItem()" right="81" bottom="10"/>
-							<mx:Button label="Cancel" id="btnCancel" click="goToView()" right="10" bottom="10"/>
-						</mx:Canvas>
-					</mx:ViewStack>
-		
-				</mx:Canvas>
-				
-				<mx:Canvas id="tabSolus" label="Solutions" width="100%" height="100%">
-
-
-					<mx:ViewStack id="AppScreensSolus" width="100%" height="100%">
-		
-						<mx:Canvas id="viewSolus" width="100%" height="100%">
-							<mx:DataGrid id="dataGridSolus"
-													dataProvider="{dataArr}"
-													editable="true"
-													rowHeight="80"
-													resizableColumns="true" 
-													headerRelease="setOrder(event);"
-													itemEditBegin="modifyEditedData(event);" 
-													right="10" left="10" top="10" bottom="71" textAlign="center">
-									<mx:columns>
-										<mx:DataGridColumn visible="false" headerText="id_solution" dataField="id_solutionCol" />
-										<mx:DataGridColumn headerText="Référence" dataField="referenceCol" editable="false" />
-										<mx:DataGridColumn headerText="Type id" dataField="id_type_solutionCol" editable="false" visible="false" />
-		            					<mx:DataGridColumn headerText="Type" dataField="type_solutionCol" editorDataField="selectedItem" itemEditor="{cbTypeSolution}"/>
-										<mx:DataGridColumn headerText="libellé" dataField="lib_Col" >									
-											<mx:itemEditor>
-												<mx:Component>
-							                    	<mx:TextArea text="{data.lib_Col}" />
-												</mx:Component>
-											</mx:itemEditor>
-										</mx:DataGridColumn>
-									</mx:columns>
-							</mx:DataGrid>
-							<mx:Button id="btnAddNewSolus" click="goToUpdate()" icon="@Embed('images/AddRecord.png')" toolTip="Add Record" x="10" bottom="10"/>
-							<mx:Button id="btnDeleteSolus" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Delete Record" x="58" bottom="10"/>
-							<mx:Label text="Rechercher par le champ : " right="400" bottom="11"/>
-							<mx:Label id="ColSelectSolus" text="" right="300" bottom="11"/>
-							<mx:TextInput id="filterTxtSolus" width="238" toolTip="Rechercher par le champ sélectionné" enter="filterResults()" right="58" bottom="11"/>
-							<mx:Button click="filterResults()" id="filterButtonSolus" icon="@Embed('images/SearchRecord.png')" toolTip="Search by champ" right="10" bottom="10"/>
-						</mx:Canvas>
-					
-						<mx:Canvas id="updateSolus" width="100%" height="100%">
-							<mx:Form width="100%" height="100%" id="grillesSolus">			                    		
-					                    <mx:FormItem label="Libellé:" id="lib_Solus">
-					                    	<mx:TextArea id="lib_SolusCol"  width="400" height="100" />
-					                    </mx:FormItem>
-					                    <mx:FormItem label="Type de solution:" id="type_Solus">
-										   <mx:ComboBox id="type_SolusCol" dataProvider="{arrTypeSolution}" /> 
-					                    </mx:FormItem>
-		
-							</mx:Form>
-							<mx:Button label="Save" id="btnSubmitSolus" click="insertItem()" right="81" bottom="10"/>
-							<mx:Button label="Cancel" id="btnCancelSolus" click="goToView()" right="10" bottom="10"/>
-						</mx:Canvas>
-					</mx:ViewStack>	
-
-				</mx:Canvas>
-				
-				<mx:Canvas id="tabProduit" label="Produits" width="100%" height="100%">
-					<ns2:dgGrilleSolus id="dgProduit" endPoint="{ENDPOINT_SERVICE}" objName="Model_DbTable_Gevu_solutions" orderField="lib" width="90%" height="90%" Edit="true" idGrille="produit" />										
-				</mx:Canvas>
-			</mx:TabNavigator>
-		
-		</mx:VBox>
-
- 	</mx:HDividedBox> 
+					<mx:Canvas id="tabSolus" label="Solutions" width="100%" height="100%">
+						<ns2:dgGrilleSolus id="dgProduit" endPoint="{ENDPOINT_SERVICE}" objName="Model_DbTable_Gevu_solutions" orderField="lib" width="100%" height="100%" Edit="true" idGrille="produit" />										
+					</mx:Canvas>				
+					<mx:Canvas id="tabProduit" label="Produits" width="100%" height="100%">
+					</mx:Canvas>
+				</mx:TabNavigator>
+			
+			</mx:VBox>
+	
+	 	</mx:HDividedBox> 
+	</mx:VBox>
 
 </mx:Application>
