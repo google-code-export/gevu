@@ -111,10 +111,10 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-        			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
-        			->from( array("g" => "gevu_solutions"))
-                   	->joinInner(array('l' => 'gevu_typesxsolutions'),
-                          'g.id_type_solution = l.id_type_solution',array('LibTypeSolution'=>'lib'));
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+        	->from( array("g" => "gevu_solutions"))
+			->joinInner(array('l' => 'gevu_typesxsolutions'),
+            	'g.id_type_solution = l.id_type_solution',array('LibTypeSolution'=>'lib'));
                     
         if($order != null)
         {

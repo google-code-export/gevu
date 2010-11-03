@@ -41,7 +41,7 @@ class Model_DbTable_Gevu_entreprises extends Zend_Db_Table_Abstract
 		$select = $this->select();
 		$select->from($this, array('id_entreprise'));
 		foreach($data as $k=>$v){
-			$select->where($k.' = ?', $val)
+			$select->where($k.' = ?', $v);
 		}
 	    $rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_entreprise; else $id=false;
@@ -58,6 +58,7 @@ class Model_DbTable_Gevu_entreprises extends Zend_Db_Table_Abstract
      */
     public function ajouter($data, $existe=true)
     {
+    	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
     	 	$id = $this->insert($data);

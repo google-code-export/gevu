@@ -140,9 +140,6 @@ class Model_DbTable_Gevu_solutionsxcriteres extends Zend_Db_Table_Abstract
     public function findByIdSolution($id_solution)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_solutionsxcriteres") )                           
-                    ->where( "g.id_solution = ?", $id_solution );
-        $query = $this->select()
         			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
                     ->from( array("g" => "gevu_solutionsxcriteres"),
                           array('id_solution', 'id_critere') )                           

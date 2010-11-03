@@ -41,7 +41,7 @@ class Model_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
 		$select = $this->select();
 		$select->from($this, array('id_produit'));
 		foreach($data as $k=>$v){
-			$select->where($k.' = ?', $val)
+			$select->where($k.' = ?', $v);
 		}
 	    $rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_produit; else $id=false;
@@ -58,6 +58,7 @@ class Model_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
      */
     public function ajouter($data, $existe=true)
     {
+    	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
     	 	$id = $this->insert($data);
@@ -99,7 +100,10 @@ class Model_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-                    ->from( array("gevu_produits" => "gevu_produits") );
+        			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+                    ->from( array("g" => "gevu_produits"))
+                   	->joinInner(array('l' => 'gevu_entreprises'),
+                          'g.id_entreprise = l.id_entreprise',array('LibEntreprise'=>'nom'));
                     
         if($order != null)
         {
