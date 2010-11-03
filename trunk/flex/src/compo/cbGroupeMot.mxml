@@ -19,6 +19,7 @@
 	[Bindable] public var labelName:String="lib";
 	[Bindable] public var titre:String="un mot clef";
 	[Bindable] public var bAjout:Boolean=true;
+	[Bindable] public var objSource:String="";
 	
 	[Bindable] private var dpValue:Array;
 	public var result:String="";
@@ -53,14 +54,25 @@
 	public function AjoutMot():void{
 		
 		//construction de la fenêtre d'édition
-		var twAMC:twAjoutMotClef= twAjoutMotClef(
-            PopUpManager.createPopUp(this, twAjoutMotClef, true));
-		twAMC.endPoint=this.endPoint;
-		twAMC.objName=this.objName;
-		twAMC.titre = "Ajouter "+titre;
-		twAMC.objSource = this;					
-        PopUpManager.centerPopUp(twAMC);
-        
+		if(objSource==""){
+			var twAMC:twAjoutMotClef= twAjoutMotClef(
+	            PopUpManager.createPopUp(this, twAjoutMotClef, true));
+			twAMC.endPoint=this.endPoint;
+			twAMC.objName=this.objName;
+			twAMC.titre = "Ajouter "+titre;
+			twAMC.objSource = this;					
+	        PopUpManager.centerPopUp(twAMC);
+		}else{
+			var twAR:twAjoutRef= twAjoutRef(
+	            PopUpManager.createPopUp(this, twAjoutRef, true));
+			twAR.objRef=objSource;
+			twAR.titre = "Ajouter "+titre;
+			twAR.objSource = this;
+			twAR.endPoint = this.endPoint;
+			twAR.bInsert = true;					
+	        PopUpManager.centerPopUp(twAR);
+			
+		}        
 	}
 
 	public function faultHandlerService(fault:FaultEvent):void
