@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns2="compo.*"
+	creationComplete="Init()"
+	width="100%" height="100%">
+	<mx:Script>
+        <![CDATA[
+import mx.containers.TitleWindow;
+import mx.events.FlexEvent;
+import mx.controls.ComboBox;
+import mx.containers.Form;
+import mx.containers.FormItem;
+
+import mx.collections.ArrayCollection;
+import mx.collections.IViewCursor;
+import mx.collections.Sort;
+import mx.collections.SortField;
+
+import mx.controls.Alert;
+import mx.controls.DataGrid;
+import mx.controls.dataGridClasses.DataGridColumn;
+import mx.controls.listClasses.IDropInListItemRenderer;
+import mx.controls.CheckBox;
+
+import mx.events.CloseEvent;
+import mx.events.DataGridEvent;
+
+import mx.managers.CursorManager;
+
+import mx.rpc.AsyncToken;
+import mx.rpc.events.FaultEvent;
+import mx.rpc.events.ResultEvent;
+import mx.rpc.http.HTTPService;
+
+import mx.managers.PopUpManager;
+
+import compo.*;
+
+/**
+ * paramétrage de l'objet
+ */
+[Bindable] public var endPoint:String;
+[Bindable] public var idExi:String;
+[Bindable] public var bInit:Boolean=true;
+[Bindable] public var bInsert:Boolean=true;
+[Bindable] public var twAR:twAjoutRef;
+
+private var idEntreprise:int;	
+
+
+private function selectItem(event:Event):void {
+	var item:Object=event.currentTarget.selectedItem;
+	if(item){
+		idEntreprise = item.id_entreprise;
+		UpdNom.text=item.nom;
+		UpdNum.text=item.num;
+		UpdVoie.text=item.voie;
+		UpdCodePostal.text=item.code_postal;
+		UpdVille.text=item.ville;
+		UpdPays.text=item.pays;
+		UpdTel.text=item.telephone;
+		UpdFax.text=item.fax;
+		UpdMail.text=item.mail;
+		UpdUrl.text=item.url;
+		UpdObs.text=item.observations;
+
+	}
+}
+
+public function Init():void 
+{
+    //chargement des données
+    if(bInit)RO.getAll();
+    if(bInsert)selectedChild=insert;
+        
+}
+
+private function updateItem():void
+{
+	//création du tableau de valeur
+	var vn:Array = new Array();
+	
+	vn["nom"] = UpdNom.text;
+	vn["num"] = UpdNum.text;
+	vn["voie"] = UpdVoie.text;
+	vn["code_postal"] = UpdCodePostal.text;
+	vn["ville"] = UpdVille.text;
+	vn["pays"] = UpdPays.text;
+	vn["telephone"] = UpdTel.text;
+	vn["fax"] = UpdFax.text;
+	vn["mail"] = UpdMail.text;
+	vn["url"] = UpdUrl.text;
+	vn["observations"] = UpdObs.text;
+	
+	RO.edit(idEntreprise,vn);	
+}
+
+private function insertAnnuler():void {
+	if(this.bInsert){
+		twAR.ferme();
+	}else{
+		this.selectedChild = view;
+	}
+}
+
+private function insertItem():void {
+
+	//création du tableau de param
+	var pArr:Array = new Array;
+	var val:String="";
+    var frmC:Array = insertForm.getChildren();
+	//boucle sur chaque composant du modèle
+    for each(var ctl:Object in frmC){
+    	//récupère l'identifiant de la valeur
+    	var ctlId:String=ctl.id;
+		//récupère le contrôle d'édition
+		var ctlVal:Object=ctl.getChildAt(0);
+		//vérifie le type pour récupérer les modifs
+    	if(ctlVal.className=="cbGroupeMot"){
+    		val=ctlVal.cb.selectedItem[ctl.id];
+    	}
+    	if(ctlVal.className=="TextInput" || ctlVal.className=="TextArea"){
+    		val=ctlVal.text;
+    	}
+    	//vérifie si le champ est obligatoire
+    	if(!VerifChampOblig(val, ctlVal))return;
+    	//incrémente le tableau
+		pArr[ctlId]=val;
+   	}
+   	
+	RO.ajouter(pArr);
+	
+}
+
+private function VerifChampOblig(val:String, ctlVal:Object):Boolean{
+	
+	if(val!="")return true;
+
+	var verif:Boolean=true;
+	
+	if(ctlVal.id=="ref"){
+		Alert.show("La référence est obligatoire.");
+		return false;
+	}
+	if(ctlVal.id=="lib"){
+		Alert.show("Le libellé est obligatoire.");
+		return false;
+	}
+	if(ctlVal.id=="id_type_solution"){
+		Alert.show("Le type de solution est obligatoire.");
+		return false;
+	}
+	
+	return verif;
+}
+
+private function insertItemHandler(e:Object):void
+{
+    this.selectedChild = view;
+    RO.getAll();
+}
+
+private function fillGridHandler(e:Object, dg:DataGrid):void
+{
+	if(!e)return;
+    dg.dataProvider = e.result as Array;
+}
+
+private function deleteItem():void {
+    
+    if (dataGrid.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression de cet élément ?",
+        "Confirmation Suppression", 3, this, deleteClickHandler);
+    }
+   
+}
+
+private function deleteClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		RO.remove(idEntreprise);
+    }
+}
+
+public function faultHandlerService(fault:FaultEvent):void
+{
+	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+}
+ 
+public function resultHandlerService(result:ResultEvent):void
+{
+	RO.getAll();
+}
+
+private function ContactHandler(e:Object):void
+{
+	vsContact.selectedChild = viewContact;
+    ROC.findByIdentreprise(idEntreprise);
+}
+
+private function deleteContact():void {
+    
+    if (this.dgContact.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression du contact pour cette entreprise ?",
+        "Confirmation Suppression", 3, this, deleteContactClickHandler);
+    }
+    
+}
+private function deleteContactClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		ROC.remove(dgContact.selectedItem['id_contact'],idEntreprise);
+    }
+}
+
+
+        ]]>
+    </mx:Script>
+    
+	<mx:RemoteObject id="RO"
+	    	source="Model_DbTable_Gevu_entreprises" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="getAll"  result="fillGridHandler(event,dataGrid)"/>  	
+	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="ajouter"  result="insertItemHandler(event)"/>  	
+	 	<mx:method name="csv"  result="resultHandlerService(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROC"
+	    	source="Model_DbTable_Gevu_contactsxentreprises" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdEntreprise"  result="fillGridHandler(event,dgContact)"/>  	
+	 	<mx:method name="remove"  result="ContactHandler(event)"/>  	
+	 	<mx:method name="ajouter"  result="ContactHandler(event)"/>  	
+	</mx:RemoteObject>
+
+
+	<mx:Canvas id="view" width="100%" height="100%">
+		<mx:HBox width="100%" height="100%">
+			<mx:VBox width="100%" height="100%" >		
+				<mx:HBox id="AddDelete" >		
+					<mx:LinkButton id="btnAddNew" click="this.selectedChild = insert;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un produit" />
+					<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un produit" />
+				</mx:HBox>
+				<mx:VBox id="fiche" width="100%" >
+					<mx:HRule/>				
+				</mx:VBox>
+				<mx:DataGrid 
+					id="dataGrid"
+					editable="false"
+					resizableColumns="true" 
+					click="selectItem(event);"
+					textAlign="left"
+					width="100%" height="100%"
+					>			
+					<mx:columns>
+						<mx:DataGridColumn visible="false" headerText="id_entreprise" dataField="id_entreprise" />
+						<mx:DataGridColumn headerText="Nom" dataField="nom" />   					
+						<mx:DataGridColumn headerText="N" dataField="num" />   					
+						<mx:DataGridColumn headerText="¨Voie" dataField="voie" />   					
+	   					<mx:DataGridColumn headerText="Code postal"  dataField="code_postal" />
+						<mx:DataGridColumn headerText="Ville" dataField="ville" />									
+						<mx:DataGridColumn headerText="Pays" dataField="pays" />									
+	   					<mx:DataGridColumn headerText="Téléphone"  dataField="telephone" />
+	   					<mx:DataGridColumn headerText="Fax"  dataField="fax" />
+	   					<mx:DataGridColumn headerText="Mail"  dataField="mail" />
+	   					<mx:DataGridColumn headerText="Site web"  dataField="url" />
+	   					<mx:DataGridColumn headerText="Observation"  dataField="observations" />
+ 					</mx:columns>
+				</mx:DataGrid>
+				<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+					<mx:Label text="Nom:" />
+	            	<mx:TextInput id="UpdNom" />							
+					<mx:HBox >
+						<mx:VBox>
+							<mx:Label text="N°:" />
+			            	<mx:TextInput id="UpdNum" />							
+						</mx:VBox>
+						<mx:VBox>
+							<mx:Label text="Voie:" />
+			            	<mx:TextInput id="UpdVoie" />							
+						</mx:VBox>
+					</mx:HBox>			
+					<mx:HBox >
+						<mx:VBox>
+							<mx:Label text="Code Postal:" />
+			            	<mx:TextInput id="UpdCodePostal" />							
+						</mx:VBox>
+						<mx:VBox>
+							<mx:Label text="Ville:" />
+			            	<mx:TextInput id="UpdVille" />							
+						</mx:VBox>
+						<mx:VBox>
+							<mx:Label text="Pays:" />
+			            	<mx:TextInput id="UpdPays" />							
+						</mx:VBox>
+					</mx:HBox>			
+					<mx:HBox >
+						<mx:VBox>
+							<mx:Label text="Téléphone:" />
+			            	<mx:TextInput id="UpdTel" />							
+						</mx:VBox>
+						<mx:VBox>
+							<mx:Label text="Fax:" />
+			            	<mx:TextInput id="UpdFax" />							
+						</mx:VBox>
+						<mx:VBox>
+							<mx:Label text="Mail:" />
+			            	<mx:TextInput id="UpdMail" />							
+						</mx:VBox>
+					</mx:HBox>			
+					<mx:Label text="Site:" />
+	            	<mx:TextInput id="UpdUrl" />							
+					<mx:Label text="Observations:" />
+	            	<mx:TextArea id="UpdObs" width="100%" height="100" />
+					<mx:Button label="Enregistrer" click="updateItem()" />
+				</mx:VBox>
+			</mx:VBox>
+
+			<mx:VBox id="detail" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+				<mx:HBox width="100%" height="100%" >
+					<mx:Panel title="Contacts associés" width="100%" height="100%" layout="absolute">
+						<mx:ViewStack id="vsContact" width="100%" height="100%">
+							<mx:VBox id="viewContact" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:HBox>
+									<mx:LinkButton click="vsContact.selectedChild = insertContact;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un contact à l'entreprise" />
+									<mx:LinkButton click="deleteContact()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un contact de l'entreprise" />							
+								</mx:HBox>							
+								<mx:DataGrid width="100%" height="100%" id="dgContact">
+									<mx:columns>
+										<mx:DataGridColumn headerText="Nom" dataField="nom" />
+										<mx:DataGridColumn headerText="Prénom" dataField="prenom" />
+										<mx:DataGridColumn headerText="Id Contact" dataField="id_contact" visible="false"/>
+									</mx:columns>
+								</mx:DataGrid>					
+							</mx:VBox>
+							<mx:VBox id="insertContact" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:Label text="Choisissez un contact :"/> 
+				            	<ns2:cbGroupeMot titre="un contact" labelName="nom" bAjout="false" keyName="id_contact" id="cbContact" objName="Model_DbTable_Gevu_contacts" endPoint="{RO.endpoint}" />
+								<mx:HBox>
+									<mx:Button label="Enregistrer" click="ROC.ajouter(cbContact.cb.selectedItem['id_contact'],idEntreprise);" />
+									<mx:Button label="Annuler" click="vsContact.selectedChild = viewContact;" />				
+								</mx:HBox>							
+							</mx:VBox>
+						</mx:ViewStack>											
+					</mx:Panel>
+				</mx:HBox>						
+			</mx:VBox>		
+					
+		</mx:HBox>
+
+	</mx:Canvas>
+	<mx:Canvas id="insert" width="100%" height="100%" >
+		<mx:VBox>			
+			<mx:Form width="100%" height="100%" id="insertForm">			                    		
+	            <mx:FormItem label="Nom:" id="nom" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Num:" id="num" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Voie:" id="voie" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Code Postal:" id="code_postal" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Ville:" id="ville" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Pays:" id="pays" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Telephone:" id="telephone" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Fax:" id="fax" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Mail:" id="mail" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Site:" id="url" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Observations:" id="observations" >
+	            	<mx:TextArea width="400" height="100" />
+	            </mx:FormItem>
+			</mx:Form>			
+			<mx:HBox>
+				<mx:Button label="Enregistrer" click="insertItem()" />
+				<mx:Button label="Annuler" click="insertAnnuler()" />				
+			</mx:HBox>
+		</mx:VBox>
+	</mx:Canvas>
+
+	 
+</mx:ViewStack>

@@ -52,12 +52,17 @@ private function selectItem(event:Event):void {
 	var item:Object=event.currentTarget.selectedItem;
 	if(item){
 		idProduit = item.id_produit;
-		UpdLib.text=item.lib;
-		UpdRef.text = item.ref;
-		var i:int=UpdType.getIndex(item.LibTypeSolution);
-		UpdType.cb.selectedIndex=i;
-		//ROSM.findByIdSolution(idSolution);
-		//ROSC.findByIdSolution(idSolution);
+		UpdRef.text=item.ref;
+		UpdDesc.text=item.description;
+		UpdMarque.text=item.marque;
+		var i:int=UpdEntreprise.getIndex(item.LibEntreprise);
+		UpdEntreprise.cb.selectedIndex=i;
+		UpdPreco.text=item.preconisation;
+		UpdTech.text=item.technique;
+		UpdUrl.text=item.url;
+		
+		ROSP.findByIdProduit(idProduit);
+
 	}
 }
 
@@ -71,10 +76,14 @@ private function updateItem():void
 {
 	//création du tableau de valeur
 	var vn:Array = new Array();
-	vn["lib"] = this.UpdLib.text;
 	vn["ref"] = this.UpdRef.text;
-	vn["id_type_solution"] = this.UpdType.cb.selectedItem['id_type_solution'];
-	RO.edit(idSolution,vn);	
+	vn["description"] = this.UpdDesc.text;
+	vn["marque"] = this.UpdMarque.text;
+	vn["id_entreprise"] = this.UpdEntreprise.cb.selectedItem['id_entreprise'];
+	vn["preconisation"] = this.UpdPreco.text;
+	vn["technique"] = this.UpdTech.text;
+	vn["url"] = this.UpdUrl.text;
+	RO.edit(idProduit,vn);	
 }
 
 private function insertItem():void {
@@ -110,8 +119,6 @@ private function VerifChampOblig(val:String, ctlVal:Object):Boolean{
 	
 	if(val!="")return true;
 
-	if(idGrille!="InsertMot")return true;
-
 	var verif:Boolean=true;
 	
 	if(ctlVal.id=="ref"){
@@ -132,9 +139,10 @@ private function VerifChampOblig(val:String, ctlVal:Object):Boolean{
 
 private function insertItemHandler(e:Object):void
 {
-    goToView();
-    ROS.getAll();
+    this.selectedChild = view;
+    RO.getAll();
 }
+
 
 private function fillGridHandler(e:Object, dg:DataGrid):void
 {
@@ -169,15 +177,39 @@ public function resultHandlerService(result:ResultEvent):void
 {
 	RO.getAll();
 }
+
+private function SolusHandler(e:Object):void
+{
+	vsSolus.selectedChild = viewSolus;
+    ROSP.findByIdProduit(idProduit);
+}
+
+private function deleteSolus():void {
+    
+    if (this.dgSolus.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression de la solution pour ce produit ?",
+        "Confirmation Suppression", 3, this, deleteSolusClickHandler);
+    }
+    
+}
+private function deleteSolusClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		ROSP.remove(dgSolus.selectedItem['id_solution'],idProduit);
+    }
+}
+
         ]]>
     </mx:Script>
     
-	<mx:RemoteObject id="ROS"
+	<mx:RemoteObject id="RO"
 	    	source="Model_DbTable_Gevu_produits" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
-	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
+	 	<mx:method name="getAll"  result="fillGridHandler(event,dataGrid)"/>  	
 	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
 	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
 	 	<mx:method name="ajouter"  result="insertItemHandler(event)"/>  	
@@ -185,15 +217,14 @@ public function resultHandlerService(result:ResultEvent):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROSP"
-	    	source="Model_DbTable_Gevu_solutions" destination="zend" 
+	    	source="Model_DbTable_Gevu_solutionsxproduits" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
-	 	<mx:method name="findByIdSolution"  result="fillMetierHandler(event,dgMetiers)"/>  	
-	 	<mx:method name="remove"  result="MetierSolusHandler(event)"/>  	
-	 	<mx:method name="ajouter"  result="MetierSolusHandler(event)"/>  	
+	 	<mx:method name="findByIdProduit"  result="fillGridHandler(event,dgSolus)"/>  	
+	 	<mx:method name="remove"  result="SolusHandler(event)"/>  	
+	 	<mx:method name="ajouter"  result="SolusHandler(event)"/>  	
 	</mx:RemoteObject>
-
 
 	<mx:Canvas id="view" width="100%" height="100%">
 		<mx:HBox width="100%" height="100%">
@@ -209,33 +240,40 @@ public function resultHandlerService(result:ResultEvent):void
 					id="dataGrid"
 					editable="false"
 					resizableColumns="true" 
-					headerRelease="setOrder(event);"
 					click="selectItem(event);"
 					textAlign="left"
 					width="100%" height="100%"
 					>			
 					<mx:columns>
 						<mx:DataGridColumn visible="false" headerText="id_produit" dataField="id_produit" />
+						<mx:DataGridColumn headerText="Référence" dataField="ref" />   					
 						<mx:DataGridColumn headerText="Description" dataField="description" />   					
 	   					<mx:DataGridColumn headerText="Technique"  dataField="technique" />
 						<mx:DataGridColumn headerText="Préconisation" dataField="preconisation" />									
 						<mx:DataGridColumn headerText="Marque" dataField="marque" />									
 	   					<mx:DataGridColumn headerText="Entreprise"  dataField="LibEntreprise" />
+	   					<mx:DataGridColumn headerText="Site"  dataField="url" />
  					</mx:columns>
 				</mx:DataGrid>
 				<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
-					<mx:Label text="Description:" />
-	            	<mx:TextInput id="UpdDesc" />							
 					<mx:HBox >
+						<mx:VBox>
+							<mx:Label text="Référence:" />
+			            	<mx:TextInput id="UpdRef" />							
+						</mx:VBox>
 						<mx:VBox>
 							<mx:Label text="Marque:" />
 			            	<mx:TextInput id="UpdMarque" />							
 						</mx:VBox>
 						<mx:VBox>
 							<mx:Label text="Entreprise:"/>
-			            	<ns2:cbGroupeMot id="UpdEntreprise" labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Model_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" />						
+			            	<ns2:cbGroupeMot id="UpdEntreprise" labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Model_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises" />						
 						</mx:VBox>
 					</mx:HBox>			
+					<mx:Label text="Site web :" />
+	            	<mx:TextInput id="UpdUrl" width="100%" />							
+					<mx:Label text="Description:" />
+	            	<mx:TextInput id="UpdDesc" width="100%" />							
 					<mx:Label text="Technique du produit:" />
 	            	<mx:TextArea id="UpdTech" width="100%" height="100" />
 					<mx:Label text="Préconisation du produit:" />
@@ -252,7 +290,7 @@ public function resultHandlerService(result:ResultEvent):void
 									<mx:LinkButton id="btnAddNewSolus" click="vsSolus.selectedChild = insertSolus;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une solution au produit" />
 									<mx:LinkButton id="btnDeleteSolus" click="deleteSolus()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une solution du produit" />							
 								</mx:HBox>							
-								<mx:DataGrid width="100%" height="50%" id="dgSolus">
+								<mx:DataGrid width="100%" height="100%" id="dgSolus">
 									<mx:columns>
 										<mx:DataGridColumn headerText="Référence" dataField="ref" />
 										<mx:DataGridColumn headerText="Solution" dataField="lib" />
@@ -262,9 +300,11 @@ public function resultHandlerService(result:ResultEvent):void
 							</mx:VBox>
 							<mx:VBox id="insertSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 								<mx:Label text="Choisissez une solution :"/> 
-				            	<ns2:cbGroupeMot titre="une solution" labelName="ref" bAjout="false" keyName="id_solution" id="cbSolus" objName="Model_DbTable_Gevu_solutions" endPoint="{RO.endpoint}" />
+				            	<ns2:cbGroupeMot titre="une solution" labelName="ref" bAjout="false" 
+				            		keyName="id_solution" id="cbSolus" objName="Model_DbTable_Gevu_solutions" 
+				            		endPoint="{RO.endpoint}" />
 								<mx:HBox>
-									<mx:Button label="Enregistrer" click="ROSP.ajouter(cbSolution.cb.selectedItem['id_solution'],idProduit);" />
+									<mx:Button label="Enregistrer" click="ROSP.ajouter(cbSolus.cb.selectedItem['id_solution'],idProduit);" />
 									<mx:Button label="Annuler" click="vsSolus.selectedChild = viewSolus;" />				
 								</mx:HBox>							
 							</mx:VBox>
@@ -278,14 +318,20 @@ public function resultHandlerService(result:ResultEvent):void
 	<mx:Canvas id="insert" width="100%" height="100%" >
 		<mx:VBox>			
 			<mx:Form width="100%" height="100%" id="insertForm">			                    		
-	            <mx:FormItem label="Description:" id="description" >
-	            	<mx:TextInput id="prodDesc" />
+	            <mx:FormItem label="Référence:" id="ref" >
+	            	<mx:TextInput id="ProdRef" />
 	            </mx:FormItem>
 	            <mx:FormItem label="Marque:" id="marque" >
-	            	<mx:TextInput id="ProdMarque" />
+	            	<mx:TextInput id="ProdMarque" width="100%" />
 	            </mx:FormItem>
 	            <mx:FormItem label="Entreprise:" id="id_entreprise" >
-	            	<ns2:cbGroupeMot labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Model_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" />						
+	            	<ns2:cbGroupeMot labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Model_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises"  />						
+	            </mx:FormItem>
+	            <mx:FormItem label="Site web:" id="url" width="100%" >
+	            	<mx:TextInput width="100%" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Description:" id="description" width="100%" >
+	            	<mx:TextInput width="100%" />
 	            </mx:FormItem>
 	            <mx:FormItem label="Technique du produit:" id="technique" >
 	            	<mx:TextArea id="ProdTech"  width="400" height="100" />

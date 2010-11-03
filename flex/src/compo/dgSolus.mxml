@@ -37,8 +37,6 @@ import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 import mx.rpc.http.HTTPService;
 
-import com.adobe.serialization.json.JSON
-
 import mx.managers.PopUpManager;
 
 import compo.*;
@@ -47,31 +45,7 @@ import compo.*;
  * paramétrage de l'objet
  */
 [Bindable] public var endPoint:String;
-[Bindable] public var objName:String;
-
-/**
- * identifiants de la grille en cours de consultation
- */
 [Bindable] public var idExi:String;
-[Bindable] public var idRub:String;
-[Bindable] public var idArt:String;
-[Bindable] public var idGrille:String;
-[Bindable] public var idDon:String;
-[Bindable] public var idGroupe:String;
-[Bindable] public var idMot:String;
-[Bindable] public var pxml:String="";
-/**
- * variables d'affichage
- */
-[Bindable] public var Edit:Boolean=false;
-[Bindable] public var SaveEdit:Boolean=true;
-[Bindable] public var showAddDelete:Boolean=true;
-[Bindable] public var showFiche:Boolean=true;
-[Bindable] public var showUpdateFirst:Boolean=false;
-[Bindable] public var showAddfilter:Boolean=false;
-[Bindable] public var objAppelant:Object;
-[Bindable] public var roleUti:String="";
-[Bindable] public var twAMC:twAjoutMotClef;
 
 
 /**
@@ -103,20 +77,9 @@ private function selectSolution(event:Event):void {
 		UpdType.cb.selectedIndex=i;
 		ROSM.findByIdSolution(idSolution);
 		ROSC.findByIdSolution(idSolution);
+		ROSP.findByIdSolution(idSolution);
 	}
 
-}
-
-
-/**
- * Executes by a another componement like tree or button. 
- */
-public function initGrille(data:Object):void 
-{
-	idGrille = data.idGrille;
-	idMot = data.idMot;
-    
-    //fill();
 }
 
 
@@ -127,86 +90,11 @@ public function initGrille(data:Object):void
  */
 public function Init():void 
 {
-	if(idGrille=="ActiUti"){
-		ufCsv.visible=false;
-		btnAddNew.visible=false;
-		btnDelete.visible=false;
-	}
-
-	if(showAddDelete){
-		AddDelete.percentWidth=100;
-		AddDelete.height=30;
-	}
-
-    /**
-     * set the event handler which prevents editing of the primary key
-     */
-    //dataGrid.addEventListener(DataGridEvent.ITEM_EDIT_BEGINNING, editCellHandler);
-
-    /**
-     * set the event handler which triggers the update actions - everytime an 
-     * edit operation is finished
-     */
-    dataGrid.addEventListener(DataGridEvent.ITEM_EDIT_END, editCellEnd);
-    
-    //création des colonnes
-    //ROS.getCols();
-    
     //chargement des données
     ROS.getAll();
         
 }
 
-
-
-/**
- * Disallow editing of the primary key column.
- * @param e DataGridEvent contains details about the row and column of the grid 
- * where the user clicked
- */
-private function editCellHandler(e:DataGridEvent):void
-{
-    /**
-     * if the user clicked on the primary key column, stop editing
-     */
-    if(e.dataField == "id_donneeCol")
-    {
-        e.preventDefault();
-        return;
-    }
-}
-
-/**
- * Click handler for "Filter" button.
- * When setting another filter, refresh the collection, and load the new data
- */
-private function filterResults():void
-{
-    ///fill();
-}
-
-/**
- * Event handler triggered when the user finishes editing an entry
- * triggers an "update" server command
- */
-private function editCellEnd(e:DataGridEvent):void
-{
-	if(!SaveEdit)return;
-
-    var dsRowIndex:int = e.rowIndex;
-    var dsFieldName:String = e.dataField;
-    var dsColumnIndex:Number = e.columnIndex;
-    var col:DataGridColumn = dataGrid.columns[dsColumnIndex];
-    var newvalue:String = dataGrid.itemEditorInstance[col.editorDataField];
-
-	//création du tableau de valeur
-	var vn:Array = new Array();
-	vn[dsFieldName] = newvalue;
-
-    trace("a:" + dsRowIndex + ", " + dsFieldName + "=" + newvalue);    
-
-	ROS.edit(idSolution,vn);	
-}
 
 private function updateItem():void
 {
@@ -218,45 +106,9 @@ private function updateItem():void
 	ROS.edit(idSolution,vn);	
 }
 
-private function saveItemHandler(e:Object):void
-{
-   	if(!e)return;
 
-    if (e.isError)
-    {
-        Alert.show("Error: " + e.data.error);
-    }
-    else
-    {
-    }     
-}
-
-
-
-/**
- * dragHeader handler for the datagrid. This handler is executed when the user 
- * clicks on a header column in the datagrid
- * updates the global orderColumn variable, refreshes the TableCollection
- * @param event DataGridEvent details about the column
- */
-private function setOrder(event:DataGridEvent):void 
-{
-    orderColumn = event.columnIndex;
-    var col:DataGridColumn = dataGrid.columns[orderColumn];
-    col.sortDescending = !col.sortDescending;
-	ColSelect.text = col.headerText;    
-    event.preventDefault();
-    //fill();
-}
-
-/**
- * Click handler for the "Save" button in the "Add" state
- * collects the information in the form and adds a new object to the collection
- */
 private function insertItem():void {
 
-	//création de l'objet de param
-	//var pJS:Object = new Object();
 	//création du tableau de param
 	var pArr:Array = new Array;
 	var val:String="";
@@ -288,7 +140,6 @@ private function VerifChampOblig(val:String, ctlVal:Object):Boolean{
 	
 	if(val!="")return true;
 
-	if(idGrille!="InsertMot")return true;
 
 	var verif:Boolean=true;
 	
@@ -332,64 +183,11 @@ private function CritereSolusHandler(e:Object):void
     ROSC.findByIdSolution(idSolution);
 }
 
-
-private function exportCsv():void{
-	
-    var parameters:String =
-        "csv=true&"+
-        "orderField="+orderField+"&"+
-        "orderDirection=ASC"+"&"+ 
-        "filter="+filterTxt.text+"&"+
-        "idExi="+idExi+"&"+
-        "idGrille="+idGrille+"&"+
-        "idGroupe="+idGroupe+"&"+
-        "idMot="+idMot+"&"+
-        "f=FindAll"
-    //vérifie si une recherhce est en cours
-    if(pxml!="")parameters += "&"+ pxml;
-
-	var u:URLRequest = new URLRequest(ENDPOINT_URL);
-    u.data = parameters;
-    u.method=URLRequestMethod.POST;
-	trace ("dgGrille:exportCsv:query=" +ENDPOINT_URL+"?"+u.data);
-	navigateToURL(u,"_blank");	
-	
-}
-
-/** 
- * result handler for the fill call. 
- * if it is an error, show it to the user, else refill the arraycollection with the new data
- *
- */
-private function fillHandler(e:Object):void
+private function ProHandler(e:Object):void
 {
-	if(!e)return;
-	
-    dataGrid.dataProvider = e.result as Array;
-	
-	/*
-    var sortField:SortField = new SortField(null, true);
-    var sort:Sort = new Sort();
-    sort.fields = [sortField];
-
-    dataArr.sort = sort;
-    dataArr.refresh();
-
-	cursor = dataArr.createCursor();
-	*/
-		
-    dataGrid.enabled = true;
-
+	vsProd.selectedChild = viewProd;
+    ROSP.findByIdSolution(idSolution);
 }
-
-
-private function fillMetierHandler(e:Object, dg:DataGrid):void
-{
-	if(!e)return;
-    dg.dataProvider = e.result as Array;
-}
-
-
 
 /**
  * Click handler for the "delete" button in the list
@@ -454,6 +252,23 @@ private function deleteCritereSolusClickHandler(event:CloseEvent):void
     }
 }
 
+private function deleteProd():void {
+    
+    if (this.dgProd.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression du produit pour cette solution ?",
+        "Confirmation Suppression", 3, this, deleteProdClickHandler);
+    }
+    
+}
+private function deleteProdClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		ROSP.remove(idSolution, dgProd.selectedItem['id_produit']);
+    }
+}
+
 
 public function goToInsert():void
 {
@@ -469,6 +284,12 @@ public function goToView():void
     this.selectedChild = view;
 }
 
+private function fillGridHandler(e:Object, dg:DataGrid):void
+{
+	if(!e)return;
+    dg.dataProvider = e.result as Array;
+}
+
 public function faultHandlerService(fault:FaultEvent):void
 {
 	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
@@ -479,29 +300,15 @@ public function resultHandlerService(result:ResultEvent):void
 	ROS.getAll();
 }      
 
-public function AjoutMot(objName:String):void{
-	
-	//construction de la fenêtre d'édition
-	var twAMC:twAjoutMotClef= twAjoutMotClef(
-        PopUpManager.createPopUp(this, twAjoutMotClef, true));
-	twAMC.endPoint=this.endPoint;
-	twAMC.objName=objName;
-	twAMC.titre = "Création d'un mot clef";
-	twAMC.objSource = this;					
-    PopUpManager.centerPopUp(twAMC);
-    
-}
-
-
         ]]>
     </mx:Script>
     
 	<mx:RemoteObject id="ROS"
-	    	source="{objName}" destination="zend" 
+	    	source="Model_DbTable_Gevu_solutions" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
-	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
+	 	<mx:method name="getAll"  result="fillGridHandler(event,dataGrid)"/>  	
 	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
 	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
 	 	<mx:method name="ajouter"  result="insertItemHandler(event)"/>  	
@@ -513,7 +320,7 @@ public function AjoutMot(objName:String):void{
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
-	 	<mx:method name="findByIdSolution"  result="fillMetierHandler(event,dgMetiers)"/>  	
+	 	<mx:method name="findByIdSolution"  result="fillGridHandler(event,dgMetiers)"/>  	
 	 	<mx:method name="remove"  result="MetierSolusHandler(event)"/>  	
 	 	<mx:method name="ajouter"  result="MetierSolusHandler(event)"/>  	
 	</mx:RemoteObject>
@@ -523,24 +330,27 @@ public function AjoutMot(objName:String):void{
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
-	 	<mx:method name="findByIdSolution"  result="fillMetierHandler(event,dgCritere)"/>  	
+	 	<mx:method name="findByIdSolution"  result="fillGridHandler(event,dgCritere)"/>  	
 	 	<mx:method name="remove"  result="CritereSolusHandler(event)"/>  	
 	 	<mx:method name="ajouter"  result="CritereSolusHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROSP"
+	    	source="Model_DbTable_Gevu_solutionsxproduits" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdSolution"  result="fillGridHandler(event,dgProd)"/>  	
+	 	<mx:method name="remove"  result="ProHandler(event)"/>  	
+	 	<mx:method name="ajouter"  result="ProHandler(event)"/>  	
 	</mx:RemoteObject>
 
 	<mx:Canvas id="view" width="100%" height="100%">
 		<mx:HBox width="100%" height="100%">
 			<mx:VBox width="100%" height="100%" >		
-				<mx:HBox id="AddDelete" visible="{showAddDelete}" width="0" height="0" >		
-					<mx:LinkButton id="btnCsv" click="exportCsv()" icon="@Embed('images/csv.jpg')" toolTip="Exporter les solutions en csv" />
-					<ns2:cUploadFile idExi="{idExi}" objName="Model_DbTable_Gevu_solutions" id="ufCsv" iconBtn="@Embed('images/csvImp.jpg')" ttBtn="Importer des solutions" ctlBind="{this}" wf="impCsv" typeFic="csv" />
+				<mx:HBox id="AddDelete" width="0" height="0" >		
 					<mx:LinkButton id="btnAddNew" click="goToInsert()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une solution" />
 					<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une solution" />
-					<mx:HBox id="AddFilter" visible="{showAddfilter}" width="0" height="0" >					
-						<mx:Label text="Rechercher par le champ : " /><mx:Label id="ColSelect" text="" />
-						<mx:Button click="filterResults()" id="filterButton" icon="@Embed('images/SearchRecord.png')" toolTip="Search by champ" />
-						<mx:TextInput id="filterTxt" toolTip="Rechercher par le champ sélectionné" enter="filterResults()" />
-					</mx:HBox>		
 				</mx:HBox>
 				<mx:VBox id="fiche" width="100%" >
 					<mx:HRule/>				
@@ -549,7 +359,6 @@ public function AjoutMot(objName:String):void{
 					id="dataGrid"
 					editable="false"
 					resizableColumns="true" 
-					headerRelease="setOrder(event);"
 					click="selectSolution(event);"
 					textAlign="left"
 					width="100%" height="100%"
@@ -634,18 +443,34 @@ public function AjoutMot(objName:String):void{
 									<mx:Button label="Enregistrer" click="ROSC.ajouter(idSolution, cbCritere.cb.selectedItem['id_critere']);" />
 									<mx:Button label="Annuler" click="vsCritereSolus.selectedChild = viewCritereSolus;" />				
 								</mx:HBox>							
-							</mx:VBox>
-								
+							</mx:VBox>								
 						</mx:ViewStack>
 					</mx:Panel>
 				</mx:HBox>						
 				<mx:Panel title="Produits préconisés" width="100%" height="50%" layout="absolute">
-					<mx:VBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-						<mx:HBox>
-							<mx:LinkButton id="btnAddNewProd" click="goToInsert()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une illustration" />
-							<mx:LinkButton id="btnDeleteProd" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une illustration" />							
-						</mx:HBox>							
-					</mx:VBox>
+					<mx:ViewStack id="vsProd" width="100%" height="100%">
+						<mx:VBox id="viewProd" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+							<mx:HBox>
+								<mx:LinkButton click="vsProd.selectedChild = insertProd;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un produit à la solution" />
+								<mx:LinkButton click="deleteProd()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un produit de la solution " />							
+							</mx:HBox>							
+							<mx:DataGrid width="100%" height="50%" id="dgProd">
+								<mx:columns>
+									<mx:DataGridColumn headerText="Référence" dataField="ref" />
+									<mx:DataGridColumn headerText="Id Produit" dataField="id_produit" visible="false"/>
+									<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
+								</mx:columns>
+							</mx:DataGrid>					
+						</mx:VBox>
+						<mx:VBox id="insertProd" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+					    	<mx:Label text="Choisissez un produit :" />
+			            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un produit" keyName="id_produit" id="cbProduit" objName="Model_DbTable_Gevu_produits" endPoint="{ROS.endpoint}" />
+							<mx:HBox>
+								<mx:Button label="Enregistrer" click="ROSP.ajouter(idSolution, cbProduit.cb.selectedItem['id_produit']);" />
+								<mx:Button label="Annuler" click="vsProd.selectedChild = viewProd;" />				
+							</mx:HBox>							
+						</mx:VBox>								
+					</mx:ViewStack>
 				</mx:Panel>
 			</mx:VBox>		
 		</mx:HBox>

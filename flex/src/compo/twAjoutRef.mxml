@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
+	title="{titre}"
+	showCloseButton="true"
+	close="ferme()"  
+	xmlns:ns2="compo.*"
+	creationComplete="Init()"
+	> 
+	<mx:Script>
+        <![CDATA[
+	       	import mx.managers.PopUpManager;
+			import mx.managers.CursorManager;
+			import compo.*;
+
+			[Bindable] public var titre:String="";
+			[Bindable] public var endPoint:String="";
+			[Bindable] public var objRef:String="";
+			[Bindable] public var objSource:Object;
+			[Bindable] public var bInsert:Boolean=true;
+			
+			private function Init():void{
+				if(objRef=="dgEntreprises"){
+					var obj:dgEntreprises = new dgEntreprises;
+					obj.endPoint = this.endPoint;
+					obj.id = "objRef";
+					obj.bInit = false;
+					obj.bInsert = this.bInsert;
+					obj.twAR = this;
+					main.addChild(obj);					
+				}
+			}
+			public function ferme():void{
+			   	if(objSource.className=="cbGroupeMot"){
+		    		objSource.init();
+		    	}
+				PopUpManager.removePopUp(this);
+			}
+        ]]>
+    </mx:Script>
+    <mx:VBox id="main" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  />
+</mx:TitleWindow>
