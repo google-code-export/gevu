@@ -120,12 +120,7 @@ class GEVU_Import{
 								if(!$val){
 									$err .= "La valeur '".$ref."' de la colonne '".$trtmts[$j]['colSource']."' n'est pas une référence.\n";
 								}
-								if(count($arrQuery)==3){
-									$Querys[$arrQuery[0]][]=array($arrQuery[2]=>$val);
-								}											
-								if(count($arrQuery)==4){
-									$Querys[$arrQuery[2]][]=array($arrQuery[3]=>$val);
-								}																		
+								$Querys[$arrQuery[0]][]=array($arrQuery[2]=>$val);
 							}
 						}
 					}else{
@@ -154,36 +149,35 @@ class GEVU_Import{
 							if($kQ!='Model_DbTable_Gevu_criteres'){							
 								$objDb = new $kQ();
 								foreach($Querys[$kQ] as $v){
-									$objDb->ajouter(array("id_critere"=>$id,key($v)=>$v[key($v)]));						
+									$objDb->ajouter($id,$v[key($v)]);
 								}
 							}
 						}					
-						break;
-				    case 'csv_solutions':
-			    		//création des valeurs
-			    		$json = '{';
-			    		foreach($Querys['Model_DbTable_Gevu_solutions'] as $kQ=>$v){
-			    			$json .= '"'.key($v).'":"'.str_replace('"','\"',$v[key($v)]).'",';
-			    		}
-			    		$json=substr($json,0,-1).'}';
-			    		$vals = json_decode($json,true); 
-				    	$objDb = new Model_DbTable_Gevu_solutions();
-						$id = $objDb->ajouter($vals);
-	
-						//puis les tables asocciées
-						foreach($Querys as $kQ=>$vQ){
-							if($kQ!='Model_DbTable_Gevu_solutions'){							
-								$objDb = new $kQ();
-								foreach($Querys[$kQ] as $v){
-									if($kQ=='Model_DbTable_Gevu_solutionsxcriteres'){							
+					break;
+				    
+					case 'csv_solutions':
+						//vérifie si une solution est définie
+						if(array_key_exists('Model_DbTable_Gevu_solutions', $Querys)){
+				    		//création des valeurs
+				    		$json = '{';
+				    		foreach($Querys['Model_DbTable_Gevu_solutions'] as $kQ=>$v){
+				    			$json .= '"'.key($v).'":"'.str_replace('"','\"',$v[key($v)]).'",';
+				    		}
+				    		$json=substr($json,0,-1).'}';
+				    		$vals = json_decode($json,true); 
+					    	$objDb = new Model_DbTable_Gevu_solutions();
+							$id = $objDb->ajouter($vals);
+							//puis les tables asocciées
+							foreach($Querys as $kQ=>$vQ){
+								if($kQ!='Model_DbTable_Gevu_solutions'){							
+									$objDb = new $kQ();
+									foreach($Querys[$kQ] as $v){
 										$objDb->ajouter($id,$v[key($v)]);
-									}else{						
-										$objDb->ajouter(array("id_solution"=>$id,key($v)=>$v[key($v)]));
 									}
 								}
 							}
 						}					
-						break;
+					break;
 				}
 				if($err!="")return "Le fichier n'est pas bien formaté.\n".$err;
 			}
