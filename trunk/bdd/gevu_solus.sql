@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.1.1
+-- version 3.2.0.1
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost
--- Généré le : Mer 03 Novembre 2010 à 19:16
--- Version du serveur: 5.1.30
--- Version de PHP: 5.2.8
+-- Généré le : Jeu 04 Novembre 2010 à 07:59
+-- Version du serveur: 5.1.36
+-- Version de PHP: 5.2.5
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -3430,16 +3430,7 @@ CREATE TABLE IF NOT EXISTS `gevu_docs` (
 --
 
 INSERT INTO `gevu_docs` (`id_doc`, `url`, `titre`, `branche`, `tronc`, `content_type`, `path_source`) VALUES
-(1, 'url', 'name', 0, 'objName', 'text/csv', 'path_source'),
-(2, 'url', 'name', 0, 'objName', 'text/csv', 'path_source'),
-(3, 'url', 'name', 0, 'objName', 'text/csv', 'path_source'),
-(4, 'url', 'name', 0, 'objName', 'text/csv', 'path_source'),
-(5, 'url', 'name', 0, 'objName', 'text/csv', 'path_source'),
-(6, 'url', 'name', 0, 'objName', 'text/csv', 'path_source'),
-(7, 'url', 'name', 0, 'objName', 'text/csv', 'path_source'),
-(8, 'url', 'name', 0, 'objName', 'text/csv', 'path_source'),
-(9, 'url', 'name', 0, 'objName', 'text/csv', 'path_source'),
-(10, 'http://localhost/gevu/data/upload\\Criteres.csv', 'Criteres.csv', 0, 'csv_criteres', 'text/csv', 'c:\\wamp\\www\\gevu/data/upload\\Criteres.csv');
+(10, 'http://localhost/gevu/data/upload/solutions.csv', 'solutions.csv', 0, 'csv_solutions', 'text/csv', 'c:\\wamp\\www\\gevu\\data\\upload\\solutions.csv');
 
 -- --------------------------------------------------------
 
@@ -3559,19 +3550,12 @@ CREATE TABLE IF NOT EXISTS `gevu_metiers` (
   `id_metier` int(11) NOT NULL AUTO_INCREMENT,
   `lib` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id_metier`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 --
 -- Contenu de la table `gevu_metiers`
 --
 
-INSERT INTO `gevu_metiers` (`id_metier`, `lib`) VALUES
-(1, 'chirurgien'),
-(2, 'paresseux'),
-(3, 'marchand'),
-(4, 'crac boum'),
-(5, 'cade'),
-(6, 'radio');
 
 -- --------------------------------------------------------
 
@@ -3583,37 +3567,43 @@ DROP TABLE IF EXISTS `gevu_paramximport`;
 CREATE TABLE IF NOT EXISTS `gevu_paramximport` (
   `id_paramximport` int(11) NOT NULL AUTO_INCREMENT,
   `colSource` varchar(255) COLLATE utf8_bin NOT NULL,
+  `colChamp` varchar(32) COLLATE utf8_bin NOT NULL,
   `objDest` varchar(255) COLLATE utf8_bin NOT NULL,
   `ordre` int(11) NOT NULL,
   `type_import` varchar(32) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id_paramximport`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=41 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=46 ;
 
 --
 -- Contenu de la table `gevu_paramximport`
 --
 
-INSERT INTO `gevu_paramximport` (`id_paramximport`, `colSource`, `objDest`, `ordre`, `type_import`) VALUES
-(21, 'Type de contrôle', 'Model_DbTable_Gevu_criteres.Model_DbTable_Gevu_typesxcontroles.id_type_controle', 0, 'csv_criteres'),
-(22, 'Identifiant', 'Model_DbTable_Gevu_criteres.ref', 1, 'csv_criteres'),
-(23, 'Critères', 'Model_DbTable_Gevu_criteres.criteres', 2, 'csv_criteres'),
-(24, 'Réglementaire', 'Model_DbTable_Gevu_criteresxtypesxcriteres.Model_DbTable_Gevu_typesxcriteres.id_type_critere', 3, 'csv_criteres'),
-(25, 'Souhaitable', 'Model_DbTable_Gevu_criteresxtypesxcriteres.Model_DbTable_Gevu_typesxcriteres.id_type_critere', 4, 'csv_criteres'),
-(26, 'Travail', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 5, 'csv_criteres'),
-(27, 'ERP_IOP', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 6, 'csv_criteres'),
-(28, 'Logement', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 7, 'csv_criteres'),
-(29, 'Voirie', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 8, 'csv_criteres'),
-(30, 'ERP_IOP existant', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 9, 'csv_criteres'),
-(31, 'Modalité particulière', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 10, 'csv_criteres'),
-(32, 'motrice', 'Model_DbTable_Gevu_criteresxtypesxdeficience.Model_DbTable_Gevu_typesxdeficiences.id_type_deficience', 11, 'csv_criteres'),
-(33, 'auditive', 'Model_DbTable_Gevu_criteresxtypesxdeficience.Model_DbTable_Gevu_typesxdeficiences.id_type_deficience', 12, 'csv_criteres'),
-(34, 'visuelle', 'Model_DbTable_Gevu_criteresxtypesxdeficience.Model_DbTable_Gevu_typesxdeficiences.id_type_deficience', 13, 'csv_criteres'),
-(35, 'cognitive', 'Model_DbTable_Gevu_criteresxtypesxdeficience.Model_DbTable_Gevu_typesxdeficiences.id_type_deficience', 14, 'csv_criteres'),
-(36, 'Affirmations', 'Model_DbTable_Gevu_criteres.affirmation', 15, 'csv_criteres'),
-(37, 'Handicateur moteur', 'Model_DbTable_Gevu_criteres.handicateur_moteur', 16, 'csv_criteres'),
-(38, 'Handicateur auditif', 'Model_DbTable_Gevu_criteres.handicateur_auditif', 17, 'csv_criteres'),
-(39, 'Handicateur visuel', 'Model_DbTable_Gevu_criteres.handicateur_visuel', 18, 'csv_criteres'),
-(40, 'Handicateur cognitif', 'Model_DbTable_Gevu_criteres.handicateur_cognitif', 19, 'csv_criteres');
+INSERT INTO `gevu_paramximport` (`id_paramximport`, `colSource`, `colChamp`, `objDest`, `ordre`, `type_import`) VALUES
+(21, 'Type de contrôle', '', 'Model_DbTable_Gevu_criteres.Model_DbTable_Gevu_typesxcontroles.id_type_controle', 0, 'csv_criteres'),
+(22, 'Identifiant', '', 'Model_DbTable_Gevu_criteres.ref', 1, 'csv_criteres'),
+(23, 'Critères', '', 'Model_DbTable_Gevu_criteres.criteres', 2, 'csv_criteres'),
+(24, 'Réglementaire', 'lib', 'Model_DbTable_Gevu_criteresxtypesxcriteres.Model_DbTable_Gevu_typesxcriteres.id_type_critere', 3, 'csv_criteres'),
+(25, 'Souhaitable', 'lib', 'Model_DbTable_Gevu_criteresxtypesxcriteres.Model_DbTable_Gevu_typesxcriteres.id_type_critere', 4, 'csv_criteres'),
+(26, 'Travail', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 5, 'csv_criteres'),
+(27, 'ERP_IOP', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 6, 'csv_criteres'),
+(28, 'Logement', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 7, 'csv_criteres'),
+(29, 'Voirie', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 8, 'csv_criteres'),
+(30, 'ERP_IOP existant', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 9, 'csv_criteres'),
+(31, 'Modalité particulière', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdroits.Model_DbTable_Gevu_typesxdroits.id_type_droit', 10, 'csv_criteres'),
+(32, 'motrice', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdeficience.Model_DbTable_Gevu_typesxdeficiences.id_type_deficience', 11, 'csv_criteres'),
+(33, 'auditive', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdeficience.Model_DbTable_Gevu_typesxdeficiences.id_type_deficience', 12, 'csv_criteres'),
+(34, 'visuelle', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdeficience.Model_DbTable_Gevu_typesxdeficiences.id_type_deficience', 13, 'csv_criteres'),
+(35, 'cognitive', 'lib', 'Model_DbTable_Gevu_criteresxtypesxdeficience.Model_DbTable_Gevu_typesxdeficiences.id_type_deficience', 14, 'csv_criteres'),
+(36, 'Affirmations', '', 'Model_DbTable_Gevu_criteres.affirmation', 15, 'csv_criteres'),
+(37, 'Handicateur moteur', '', 'Model_DbTable_Gevu_criteres.handicateur_moteur', 16, 'csv_criteres'),
+(38, 'Handicateur auditif', '', 'Model_DbTable_Gevu_criteres.handicateur_auditif', 17, 'csv_criteres'),
+(39, 'Handicateur visuel', '', 'Model_DbTable_Gevu_criteres.handicateur_visuel', 18, 'csv_criteres'),
+(40, 'Handicateur cognitif', '', 'Model_DbTable_Gevu_criteres.handicateur_cognitif', 19, 'csv_criteres'),
+(41, 'Id_Critère', 'ref', 'Model_DbTable_Gevu_solutions.Model_DbTable_Gevu_solutions.Model_DbTable_Gevu_solutionsxcriteres.id_critere', 1, 'csv_solutions'),
+(42, 'Id_Solution', '', 'Model_DbTable_Gevu_solutions.ref', 2, 'csv_solutions'),
+(43, 'Descriptif de la solution', '', 'Model_DbTable_Gevu_solutions.lib', 3, 'csv_solutions'),
+(44, 'Type de solution', 'lib', 'Model_DbTable_Gevu_solutions.Model_DbTable_Gevu_typesxsolutions.id_type_solution', 4, 'csv_solutions'),
+(45, 'Corps de métier mobilisé', '', 'Model_DbTable_Gevu_solutions.Model_DbTable_Gevu_metiers.id_metier', 5, 'csv_solutions');
 
 -- --------------------------------------------------------
 
@@ -3639,8 +3629,7 @@ CREATE TABLE IF NOT EXISTS `gevu_produits` (
 --
 
 INSERT INTO `gevu_produits` (`id_produit`, `id_entreprise`, `ref`, `description`, `technique`, `preconisation`, `marque`, `url`) VALUES
-(1, 1, 'df', 'QFqf', 'QFqsf', 'QSFqsf', 'FDqf', 'QFq'),
-(2, 4, 'qwf', 'qsdf', 'qsdf', 'qsdf', 'qsdf', 'qsdf');
+(1, 1, 'df', 'QFqf', 'QFqsf', 'QSFqsf', 'FDqf', 'QFq');
 
 -- --------------------------------------------------------
 
@@ -3675,24 +3664,49 @@ CREATE TABLE IF NOT EXISTS `gevu_solutions` (
   `maj` datetime NOT NULL,
   PRIMARY KEY (`id_solution`),
   KEY `id_type_solution` (`id_type_solution`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=17 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=37 ;
 
 --
 -- Contenu de la table `gevu_solutions`
 --
 
 INSERT INTO `gevu_solutions` (`id_solution`, `ref`, `lib`, `id_type_solution`, `maj`) VALUES
-(1, 'jhkjhèè-è-', 'yo na ff', 0, '0000-00-00 00:00:00'),
-(3, 'jhkjhèè-è-', 'fqsdfsdfdfSD', 0, '2010-10-28 00:00:00'),
-(4, 'jhkjhèè-è-', 'fqsdfsdfdfSD', 0, '2010-10-28 00:00:00'),
-(7, 'jhkjhèè-è-', 'vqsdf', 0, '2010-10-28 00:00:00'),
-(6, 'DFSdf', 'DFSdf', 2, '2010-10-28 00:00:00'),
-(11, 'jhkjhèè-è-', 'dQ', 0, '2010-10-28 00:00:00'),
-(10, 'vSSSS   qsSSS  df', 'vSSSS   qsSSS  df', 6, '2010-10-28 00:00:00'),
-(13, 'ddd', 'ddd', 0, '2010-10-29 00:00:00'),
-(14, 'sss', 'sss\rsdfsdf\rsfdsdfgg sdfsdf', 5, '2010-10-29 00:00:00'),
-(15, 'sqfdqsdf23', 'sqfdqsdf', 5, '2010-10-29 00:00:00'),
-(16, 'qsdQS qsd ', 'lkj, v&i''"j&é"_''  ²àéç"(''à) \rçàe&çàé_''"\rlk \r6989+7*21', 6, '2010-10-29 00:00:00');
+(1, '3_cr_acc_01', '', 0, '2010-11-03 00:00:00'),
+(2, '1_so_acc_01', 'Fourniture d''un point d''accueil avec une partie haute utilisable en position debout et une partie basse d''une hauteur de 80 cm maxi, avec un vide en partie inférieure de 30 cm de profondeur, de 60 cm de largeur et de 70 cm de hauteur permettant l''accueil d''un UFR.', 1, '2010-11-03 00:00:00'),
+(3, '3_cr_acc_02', '', 0, '2010-11-03 00:00:00'),
+(4, '1_so_acc_02', 'Ouvrir le point d''accueil accessible en priorité', 2, '2010-11-03 00:00:00'),
+(5, '3_cr_acc_03', '', 0, '2010-11-03 00:00:00'),
+(6, '1_so_acc_03', 'Fourniture d''une signalétique indiquant l''accueil dès l''entrée', 1, '2010-11-03 00:00:00'),
+(7, '3_cr_acc_04', '', 0, '2010-11-03 00:00:00'),
+(8, '3_cr_acc_05', '', 0, '2010-11-03 00:00:00'),
+(9, '3_cr_acc_06', '', 0, '2010-11-03 00:00:00'),
+(10, '1_so_acc_04', 'Déplacer les éventuels obstacles présent sur le plan de travail du point d''accueil afin de permettre une communication visuelle entre les usagers et le personnel', 2, '2010-11-03 00:00:00'),
+(11, '1_so_acc_05', 'Modification de l''accueil existant afin de permettre une communication aisée avec le personnel d''accueil', 1, '2010-11-03 00:00:00'),
+(12, '3_cr_acc_07', '', 0, '2010-11-03 00:00:00'),
+(13, '3_cr_acc_08', '', 0, '2010-11-03 00:00:00'),
+(14, '3_cr_acc_09', '', 0, '2010-11-03 00:00:00'),
+(15, '3_cr_acc_10', '', 0, '2010-11-03 00:00:00'),
+(16, '3_cr_acc_11', '', 0, '2010-11-03 00:00:00'),
+(17, '1_so_acc_06', 'Mise en place d''un écran LCD.', 1, '2010-11-03 00:00:00'),
+(18, '1_so_acc_07', 'Fourniture et pose d''un système de transmission d''un signal acoustique par induction magnétique', 1, '2010-11-03 00:00:00'),
+(19, '3_cr_acc_12', '', 0, '2010-11-03 00:00:00'),
+(20, '3_cr_acc_13', '', 0, '2010-11-03 00:00:00'),
+(21, '1_so_acc_08', 'Fourniture d''une signalétique indiquant que le point d''accueil est sonorisé', 1, '2010-11-03 00:00:00'),
+(22, '3_cr_acc_14', '', 0, '2010-11-03 00:00:00'),
+(23, '1_so_acc_09', 'Veiller à ce que les boucles magnétiques n''interfèrent pas ', 2, '2010-11-03 00:00:00'),
+(24, '3_cr_acc_15', '', 0, '2010-11-03 00:00:00'),
+(25, '1_so_acc_10', 'Mise à disposition d''un ou plusieurs siège(s) à disposition à proximité de l''accueil (attention à leur disposition sur le cheminement)', 2, '2010-11-03 00:00:00'),
+(26, '3_cr_acc_16', '', 0, '2010-11-03 00:00:00'),
+(27, '1_so_acc_11', 'Mise en place d''une main courante avec garde corps au sol', 1, '2010-11-03 00:00:00'),
+(28, '1_so_acc_12', 'Mise en place un guide visuellement et tactillement contrasté au sol, menant au point d''accueil', 1, '2010-11-03 00:00:00'),
+(29, '1_so_acc_13', 'Dans le cas où son utilisation n''est pas indispensable, suppression du guide fil', 2, '2010-11-03 00:00:00'),
+(30, '3_cr_acc_17', '', 0, '2010-11-03 00:00:00'),
+(31, '1_so_acc_14', 'Formation du personnel à l''accueil des personnes déficientes', 2, '2010-11-03 00:00:00'),
+(32, '3_cr_acc_18', '', 0, '2010-11-03 00:00:00'),
+(33, '1_so_acc_15', 'Déplacer le mobilier afin que le personnel d''accueil ne soit pas à contre jour', 2, '2010-11-03 00:00:00'),
+(34, '1_so_acc_16', 'Si le contre jour est lié à la présence d''une vitre ou d''une surface laissant pénétrer la lumière, il est possible de traiter cette surface ou de poser un store vénitien.', 1, '2010-11-03 00:00:00'),
+(35, '1_so_acc_17', 'Si le contre jour est lié à une mauvaise orientation de l''éclairage artificiel, il est possible de modifier l''orientation de l''éclairage.', 2, '2010-11-03 00:00:00'),
+(36, '3_cr_acc_19', '', 0, '2010-11-03 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -3712,10 +3726,31 @@ CREATE TABLE IF NOT EXISTS `gevu_solutionsxcriteres` (
 --
 
 INSERT INTO `gevu_solutionsxcriteres` (`id_solution`, `id_critere`) VALUES
-(1, 1),
-(6, 670),
-(10, 565),
-(10, 622);
+(2, 1),
+(2, 7),
+(2, 8),
+(2, 9),
+(2, 12),
+(2, 13),
+(2, 14),
+(2, 15),
+(4, 3),
+(6, 5),
+(10, 9),
+(11, 9),
+(17, 16),
+(18, 16),
+(18, 19),
+(21, 20),
+(23, 22),
+(25, 24),
+(27, 26),
+(28, 26),
+(29, 26),
+(31, 30),
+(33, 32),
+(34, 32),
+(35, 32);
 
 -- --------------------------------------------------------
 
@@ -3734,10 +3769,6 @@ CREATE TABLE IF NOT EXISTS `gevu_solutionsxmetiers` (
 -- Contenu de la table `gevu_solutionsxmetiers`
 --
 
-INSERT INTO `gevu_solutionsxmetiers` (`id_solution`, `id_metier`) VALUES
-(6, 1),
-(6, 3),
-(10, 1);
 
 -- --------------------------------------------------------
 
@@ -3756,9 +3787,6 @@ CREATE TABLE IF NOT EXISTS `gevu_solutionsxproduits` (
 -- Contenu de la table `gevu_solutionsxproduits`
 --
 
-INSERT INTO `gevu_solutionsxproduits` (`id_solution`, `id_produit`) VALUES
-(15, 1),
-(16, 1);
 
 -- --------------------------------------------------------
 
@@ -3905,16 +3933,12 @@ CREATE TABLE IF NOT EXISTS `gevu_typesxsolutions` (
   `id_type_solution` int(11) NOT NULL AUTO_INCREMENT,
   `lib` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id_type_solution`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `gevu_typesxsolutions`
 --
 
 INSERT INTO `gevu_typesxsolutions` (`id_type_solution`, `lib`) VALUES
-(1, 'Humaine'),
-(2, 'Opérationnelle'),
-(3, 'Technique'),
-(6, 'QSDQSD'),
-(5, 'Mise à jour'),
-(7, 'cwxcxw xcwxc');
+(1, 'Technique'),
+(2, 'Humaine');
