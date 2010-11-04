@@ -102,22 +102,31 @@ class GEVU_Import{
 					$arrQuery = explode(".", $trtmts[$j]['objDest']);
 					//si le tableau contient 3 éléments la valeur est un identifiant à trouver
 					//Model_DbTable_Gevu_criteres.Model_DbTable_Gevu_typesxcontroles.id_type_controle
-					if(count($arrQuery)==3){
+					if(count($arrQuery)>2){
 						//vérification si la valeur est renseignée
 						if($arr[$j]!=""){
 							$className = $arrQuery[1];
 							$objDb = new $className();
-							if($creerModele){
-								//création du modèle
-								$val = $objDb->ajouter(array("lib"=>$arr[$j]));
-							}else{
-								//respect du modèle existant
-								$val = $objDb->existe(array("lib"=>$arr[$j]));
+							//récupère les différentes valeurs
+							$arrVal = explode(";", $arr[$j]);
+							foreach($arrVal as $ref){
+								if(!$creerModele){
+									//création du modèle
+									$val = $objDb->ajouter(array($trtmts[$j]["colChamp"]=>$ref));								
+								}else{
+									//respect du modèle existant
+									$val = $objDb->existe(array($trtmts[$j]["colChamp"]=>$ref));
+								}
+								if(!$val){
+									$err .= "La valeur '".$ref."' de la colonne '".$trtmts[$j]['colSource']."' n'est pas une référence.\n";
+								}
+								if(count($arrQuery)==3){
+									$Querys[$arrQuery[0]][]=array($arrQuery[2]=>$val);
+								}											
+								if(count($arrQuery)==4){
+									$Querys[$arrQuery[2]][]=array($arrQuery[3]=>$val);
+								}																		
 							}
-							if(!$val){
-								$err .= "La valeur '".$arr[$j]."' de la colonne '".$trtmts[$j]['colSource']."' n'est pas une référence.\n";
-							}
-							$Querys[$arrQuery[0]][]=array($arrQuery[2]=>$val);											
 						}
 					}else{
 						$Querys[$arrQuery[0]][]=array($arrQuery[1]=>$arr[$j]);					
@@ -137,18 +146,6 @@ class GEVU_Import{
 			    		$json=substr($json,0,-1).'}';
 			    		$vals = json_decode($json,true); 
 				    	//on crée le critère
-				    	/*
-				    	$vals = array(
-				    		"id_type_controle"=>$Querys['Model_DbTable_Gevu_criteres'][0]["id_type_controle"]
-				    		,"ref"=>$Querys['Model_DbTable_Gevu_criteres'][1]["ref"]
-				    		,"criteres"=>$Querys['Model_DbTable_Gevu_criteres'][2]["criteres"]
-				    		,"affirmation"=>$Querys['Model_DbTable_Gevu_criteres'][3]["affirmation"]
-				    		,"handicateur_moteur"=>$Querys['Model_DbTable_Gevu_criteres'][4]["handicateur_moteur"]
-				    		,"handicateur_auditif"=>$Querys['Model_DbTable_Gevu_criteres'][5]["handicateur_auditif"]
-				    		,"handicateur_visuel"=>$Querys['Model_DbTable_Gevu_criteres'][6]["handicateur_visuel"]
-				    		,"handicateur_cognitif"=>$Querys['Model_DbTable_Gevu_criteres'][7]["handicateur_cognitif"]
-				    		);
-						*/
 				    	$objDb = new Model_DbTable_Gevu_criteres();
 						$id = $objDb->ajouter($vals,false);
 	
@@ -162,17 +159,36 @@ class GEVU_Import{
 							}
 						}					
 						break;
-				    case 1:
-				        echo "i égal 1";
-				        break;
-				    case 2:
-				        echo "i égal 2";
-				        break;
+				    case 'csv_solutions':
+			    		//création des valeurs
+			    		$json = '{';
+			    		foreach($Querys['Model_DbTable_Gevu_solutions'] as $kQ=>$v){
+			    			$json .= '"'.key($v).'":"'.str_replace('"','\"',$v[key($v)]).'",';
+			    		}
+			    		$json=substr($json,0,-1).'}';
+			    		$vals = json_decode($json,true); 
+				    	$objDb = new Model_DbTable_Gevu_solutions();
+						$id = $objDb->ajouter($vals);
+	
+						//puis les tables asocciées
+						foreach($Querys as $kQ=>$vQ){
+							if($kQ!='Model_DbTable_Gevu_solutions'){							
+								$objDb = new $kQ();
+								foreach($Querys[$kQ] as $v){
+									if($kQ=='Model_DbTable_Gevu_solutionsxcriteres'){							
+										$objDb->ajouter($id,$v[key($v)]);
+									}else{						
+										$objDb->ajouter(array("id_solution"=>$id,key($v)=>$v[key($v)]));
+									}
+								}
+							}
+						}					
+						break;
 				}
 				if($err!="")return "Le fichier n'est pas bien formaté.\n".$err;
 			}
     	}
-    	
+    	    
     }
     
 }
