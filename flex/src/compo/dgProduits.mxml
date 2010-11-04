@@ -275,9 +275,9 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 					<mx:Label text="Description:" />
 	            	<mx:TextInput id="UpdDesc" width="100%" />							
 					<mx:Label text="Technique du produit:" />
-	            	<mx:TextArea id="UpdTech" width="100%" height="100" />
+	            	<mx:TextArea id="UpdTech" width="100%" height="50" />
 					<mx:Label text="Préconisation du produit:" />
-	            	<mx:TextArea id="UpdPreco" width="100%" height="100" />
+	            	<mx:TextArea id="UpdPreco" width="100%" height="50" />
 					<mx:Button label="Enregistrer" click="updateItem()" />
 				</mx:VBox>
 			</mx:VBox>

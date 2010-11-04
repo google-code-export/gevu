@@ -580,7 +580,7 @@
                trace(" Data: " + theData.titre);
                //vérifie le type d'action a effectuer
                if(this.parentApplication.id=="grilles"){
-	               this.parentApplication.initApp(theData);           	               	
+	               //this.parentApplication.initApp(theData);           	               	
                }
                if(this.parentApplication.id=="onadaflex"){
 	               this.parentApplication.createMarkerGrille(theData.id);           	
