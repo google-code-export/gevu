@@ -579,7 +579,7 @@ class Grille{
 
 	}
     
-    function GetTreeProb($idRub){
+    function GetTreeProb($idRub, $rs=false){
     	
     	$g = new Granulat($idRub,$this->site);
     	//r?cup?re les rubriques enfants
@@ -600,6 +600,7 @@ class Grille{
 		if($this->trace)
 			echo "Grille:GetTreeProb:".$this->site->infos["SQL_LOGIN"]." ".$sql."<br/>";
 		$db->close();
+		if($rs)return $result;
 		
 		$xul ='<grid flex="1">';
 		//on cache la colonne de r?f?rence	

@@ -881,6 +881,48 @@ class Granulat
 		return $xml;			
 	}
   
+  
+	function GetXmlGrillesValues($idGrille=-1,$valeurs=false){
+		$xml = "";
+		//récupère les grilles du granulat 
+		$rsG = $this->GetFormIds(-1,$this->id,$idGrille);
+		if(mysql_num_rows($rsG)>0){
+			$xml .= "<grilles>";
+			while($rG = mysql_fetch_assoc($rsG)) {
+				//$titre = $this->site->XmlParam->XML_entities($rG['titre']);
+				$xml .= "<grille id='".$rG['id_form']."' idArt='".$rG['id_article']."' >";
+				$rsD = $this->GetIdDonnees($rG['id_form'], $rG['id_article']);
+				if(mysql_num_rows($rsD)>0){
+					while($rD = mysql_fetch_assoc($rsD)) {
+						$xml .= "<donnee id='".$rD['id_donnee']."' idGrille='".$rG['id_form']."' >";
+						if($valeurs){
+							//foreach($valeurs as $val){
+							//	if($val["id_form"]==$rG['id_form']){
+									$rsV = $this->GetInfosDonnee($rD['id_donnee']);									
+									while($rV = mysql_fetch_assoc($rsV)) {										
+										$xml .= "<valeur id='".$rD['id_donnee']."' champ='".$rV["champ"]."' ";
+										$xml .= " valeur=\"".utf8_encode($this->site->XmlParam->XML_entities($rV["valeur"]))."\" >";
+										//vérifie qu'on ne traite pas un mot
+										if(substr($rV["champ"],0,4)=="mot_" && $rV["valeur"]!=""){
+											$mc = new MotClef($rV["valeur"],$this->site);
+											$xml .= "<motclef id='".$mc->id."' idGroupe='".$mc->id_groupe."' titre=\"".utf8_encode($this->site->XmlParam->XML_entities($mc->titre))."\" descriptif=\"".utf8_encode($this->site->XmlParam->XML_entities($mc->descriptif))."\"  />";	
+										}
+										$xml .= "</valeur>";
+									}															
+							//	}
+							//}
+						}
+						$xml .= "</donnee>";
+					}
+				}
+				$xml .= "</grille>";
+			}
+			$xml .= "</grilles>";
+		}
+		return $xml;			
+	}
+	
+	
 	function GetXmlGrilleMots(){
 		$xml = "";
 
@@ -1113,14 +1155,15 @@ class Granulat
 			$whereRub = " WHERE 1 ";
 		
 		$wherePubli = " ";	
-		if($_SESSION['ContEditPublie'])
+		if(isset($_SESSION['ContEditPublie']))
 			$wherePubli = " AND a.statut='publie' ";	
 		
 		//rï¿½cupï¿½re pour la rubrique l'article ayant les condition de extra
-		$sql = "SELECT a.id_article ,a.titre, a.date, a.maj, a.statut, aa.id_auteur
+		$sql = "SELECT a.id_article ,a.titre, a.date, a.maj, a.statut, aa.id_auteur, au.nom
 			FROM spip_articles a 
 				LEFT JOIN spip_auteurs_articles aa ON aa.id_article = a.id_article 	
-			 ".$whereRub." ".$wherePubli." ".$extraSql."
+				LEFT JOIN spip_auteurs au ON au.id_auteur = aa.id_auteur 	
+			".$whereRub." ".$wherePubli." ".$extraSql."
 				";
 		//echo $sql."<br/>";
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);

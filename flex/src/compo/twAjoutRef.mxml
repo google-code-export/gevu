@@ -20,13 +20,22 @@
 			
 			private function Init():void{
 				if(objRef=="dgEntreprises"){
-					var obj:dgEntreprises = new dgEntreprises;
-					obj.endPoint = this.endPoint;
-					obj.id = "objRef";
-					obj.bInit = false;
-					obj.bInsert = this.bInsert;
-					obj.twAR = this;
-					main.addChild(obj);					
+					var objE:dgEntreprises = new dgEntreprises;
+					objE.endPoint = this.endPoint;
+					objE.id = "objRef";
+					objE.bInit = false;
+					objE.bInsert = this.bInsert;
+					objE.twAR = this;
+					main.addChild(objE);					
+				}
+				if(objRef=="dgContacts"){
+					var objC:dgContacts = new dgContacts;
+					objC.endPoint = this.endPoint;
+					objC.id = "objRef";
+					objC.bInit = false;
+					objC.bInsert = this.bInsert;
+					objC.twAR = this;
+					main.addChild(objC);					
 				}
 			}
 			public function ferme():void{

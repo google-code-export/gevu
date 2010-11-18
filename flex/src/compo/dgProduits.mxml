@@ -46,6 +46,7 @@ import compo.*;
  */
 [Bindable] public var idExi:String;
 private var idProduit:int;	
+private var idCout:int;	
 
 
 private function selectItem(event:Event):void {
@@ -62,6 +63,7 @@ private function selectItem(event:Event):void {
 		UpdUrl.text=item.url;
 		
 		ROSP.findByIdProduit(idProduit);
+		ROC.findByIdProduit(idProduit);
 
 	}
 }
@@ -112,6 +114,19 @@ private function insertItem():void {
    	}
    	
 	RO.ajouter(pArr);
+	
+}
+
+private function updateCout():void
+{
+
+	var vn:Array = new Array();
+	vn["unite"] = this.UpdCunite.text;
+	vn["metre_lineaire"] = this.UpdCmetre_lineaire.text;
+	vn["metre_carre"] = this.UpdCmetre_carre.text;
+	vn["achat"] = UpdCachat.text;
+	vn["pose"] = this.UpdCpose.text;
+	ROC.edit(idCout,vn);	
 	
 }
 
@@ -184,6 +199,21 @@ private function SolusHandler(e:Object):void
     ROSP.findByIdProduit(idProduit);
 }
 
+private function CoutHandler(e:Object):void
+{
+	var item:Object=e.result[0];	
+	if(item){
+		idCout = item.id_cout;
+		this.UpdCunite.text = item.unite;
+		this.UpdCmetre_lineaire.text = item.metre_lineaire;
+		this.UpdCmetre_carre.text = item.metre_carre;
+		this.UpdCachat.text = item.achat;
+		this.UpdCpose.text = item.pose;
+
+	}
+}
+
+
 private function deleteSolus():void {
     
     if (this.dgSolus.selectedItem)
@@ -224,6 +254,15 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 	 	<mx:method name="findByIdProduit"  result="fillGridHandler(event,dgSolus)"/>  	
 	 	<mx:method name="remove"  result="SolusHandler(event)"/>  	
 	 	<mx:method name="ajouter"  result="SolusHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROC"
+	    	source="Model_DbTable_Gevu_couts" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdProduit"  result="CoutHandler(event)"/>  	
+	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
 	</mx:RemoteObject>
 
 	<mx:Canvas id="view" width="100%" height="100%">
@@ -282,7 +321,6 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 				</mx:VBox>
 			</mx:VBox>
 			<mx:VBox id="detail" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
-				<mx:HBox width="100%" height="100%" >
 					<mx:Panel title="Solutions associées" width="100%" height="100%" layout="absolute">
 						<mx:ViewStack id="vsSolus" width="100%" height="100%">
 							<mx:VBox id="viewSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
@@ -310,7 +348,33 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 							</mx:VBox>
 						</mx:ViewStack>											
 					</mx:Panel>
-				</mx:HBox>						
+					<mx:Panel title="Coût associé" layout="absolute">
+						<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+							<mx:Label text="Unitaire:" />
+			            	<mx:TextInput id="UpdCunite" />							
+							<mx:HBox >
+								<mx:VBox>
+									<mx:Label text="Mètre linéaire:" />
+					            	<mx:TextInput id="UpdCmetre_lineaire" />							
+								</mx:VBox>
+								<mx:VBox>
+									<mx:Label text="Mètre carré:" />
+					            	<mx:TextInput id="UpdCmetre_carre" />							
+								</mx:VBox>
+							</mx:HBox>			
+							<mx:HBox >
+								<mx:VBox>
+									<mx:Label text="A l'achat:" />
+					            	<mx:TextInput id="UpdCachat" />							
+								</mx:VBox>
+								<mx:VBox>
+									<mx:Label text="A la pose:" />
+					            	<mx:TextInput id="UpdCpose" />							
+								</mx:VBox>
+							</mx:HBox>			
+							<mx:Button label="Enregistrer" click="updateCout()" />
+						</mx:VBox>					
+					</mx:Panel>
 			</mx:VBox>		
 		</mx:HBox>
 

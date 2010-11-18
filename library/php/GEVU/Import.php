@@ -110,7 +110,7 @@ class GEVU_Import{
 							//récupère les différentes valeurs
 							$arrVal = explode(";", $arr[$j]);
 							foreach($arrVal as $ref){
-								if(!$creerModele){
+								if($creerModele){
 									//création du modèle
 									$val = $objDb->ajouter(array($trtmts[$j]["colChamp"]=>$ref));								
 								}else{
@@ -178,7 +178,32 @@ class GEVU_Import{
 							}
 						}					
 					break;
-				}
+
+					case 'csv_solutions_cout':
+						//vérifie si une solution est définie
+						if(array_key_exists('Model_DbTable_Gevu_couts', $Querys)){
+				    		//création des valeurs
+				    		$json = '{';
+				    		foreach($Querys['Model_DbTable_Gevu_couts'] as $kQ=>$v){
+				    			$json .= '"'.key($v).'":"'.str_replace('"','\"',$v[key($v)]).'",';
+				    		}
+				    		$json=substr($json,0,-1).'}';
+				    		$vals = json_decode($json,true); 
+					    	$objDb = new Model_DbTable_Gevu_couts();
+							$id = $objDb->ajouter($vals);
+							//puis les tables asocciées
+							foreach($Querys as $kQ=>$vQ){
+								if($kQ!='Model_DbTable_Gevu_couts'){							
+									$objDb = new $kQ();
+									foreach($Querys[$kQ] as $v){
+										$objDb->ajouter(array("id_cout"=>$id,key($v)=>$v[key($v)]));
+									}
+								}
+							}
+						}					
+					break;
+					
+			    }
 				if($err!="")return "Le fichier n'est pas bien formaté.\n".$err;
 			}
     	}

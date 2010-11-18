@@ -74,7 +74,7 @@ if(!isset($_SESSION['version']))
 	$_SESSION['version']="V1";
 	
 if(!isset($_SESSION['ForceCalcul']))
-	$_SESSION['ForceCalcul']=true;
+	$_SESSION['ForceCalcul']=false;
 	
 
 if(TRACE)

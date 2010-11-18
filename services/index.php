@@ -1,7 +1,23 @@
 <?php
 require_once( "../param/ParamAppli.php" );
 
+try {
+
+
 /*
+
+$s = new Model_DbTable_Gevu_criteres();
+$data = array("criteres"=>"La banque d'accueil permet la communication visuelle entre les usagers et le personnel","ref"=>"3_cr_acc_06","handicateur_moteur"=>"1","handicateur_auditif"=>"2","handicateur_visuel"=>"1","handicateur_cognitif"=>"3","id_type_controle"=>"1","affirmation"=>"La banque d'accueil ne permet pas la communication visuelle entre les usagers et le personnel");
+$s->edit(6, $data);
+
+$s = new Model_DbTable_Gevu_contacts();
+$data = array("nom"=>"kj","prenom"=>"kj","fixe"=>"kj","mobile"=>"kj","mail"=>"kj","url"=>"kj","observations"=>"kj");
+$s->ajouter($data);
+	
+$s = new Model_DbTable_Gevu_docs();
+$rs = $s->getAll();
+print_r($rs);
+	
 $s = new Model_DbTable_Gevu_solutionsxproduits();
 $rs = $s->findByIdProduit(6);
 
@@ -33,13 +49,12 @@ $server = new Zend_Amf_Server();
 //$server->setClass( "ZendAmfServiceBrowser" );
 //ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
 
-
 $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_solutionsxmetiers')
 	->setClass('Model_DbTable_Gevu_solutionsxcriteres')
 	->setClass('Model_DbTable_Gevu_solutionsxproduits')
-	->setClass('Model_DbTable_Gevu_metiers')
 	->setClass('Model_DbTable_Gevu_docs')
+	->setClass('Model_DbTable_Gevu_metiers')
 	->setClass('Model_DbTable_Gevu_produits')
 	->setClass('Model_DbTable_Gevu_entreprises')
 	->setClass('Model_DbTable_Gevu_criteres')
@@ -51,13 +66,20 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_typesxdroits')
 	->setClass('Model_DbTable_Gevu_typesxdeficiences')
 	->setClass('Model_DbTable_Gevu_typesxcriteres')	
+	->setClass('Model_DbTable_Gevu_contacts')
+	->setClass('Model_DbTable_Gevu_couts')
 	//pour l'authentification
 	->setClass("AUTH_LoginManager")
 	->setClass("AUTH_LoginVO");
+;
 	
 $server->setClassMap('LoginVO','AUTH_LoginVO');	
 
 $response = $server->handle();
-		
+
+}catch (Zend_Exception $e) {
+	echo "Récupère exception: " . get_class($e) . "\n";
+    echo "Message: " . $e->getMessage() . "\n";
+}
+   		
 echo $response;
-?>
