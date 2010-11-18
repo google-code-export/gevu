@@ -63,6 +63,14 @@ class Model_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
     	if(!$id){
     	 	$id = $this->insert($data);
     	}
+    	//on crée un cout pour le produit
+		$s = new Model_DbTable_Gevu_couts();
+		$data = array("unite"=>0);
+		$idC = $s->ajouter($data);
+		$s = new Model_DbTable_Gevu_produitsxcouts();
+		$data = array("id_produit"=>$id,"id_cout"=>$idC);
+		$s->ajouter($data,false);
+		
     	return $id;
     } 
            

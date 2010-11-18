@@ -40,6 +40,15 @@ todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
 					<mx:Canvas id="tabProduit" label="Produits" width="100%" height="100%">
 						<ns2:dgProduits id="dgProduit" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
 					</mx:Canvas>
+
+					<mx:Canvas id="tabEntreprise" label="Entreprises" width="100%" height="100%">
+						<ns2:dgEntreprises id="dgEntreprise" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
+					</mx:Canvas>
+
+					<mx:Canvas id="tabContact" label="Contacts" width="100%" height="100%">
+						<ns2:dgContacts id="dgContact" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
+					</mx:Canvas>
+
 				</mx:TabNavigator>
 			
 			</mx:VBox>

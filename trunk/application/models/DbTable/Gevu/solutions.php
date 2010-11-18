@@ -70,6 +70,14 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
     		$data['maj'] = new Zend_Db_Expr('CURDATE()');
     	 	$id = $this->insert($data);
     	}
+    	//on crée un cout pour la solution
+		$s = new Model_DbTable_Gevu_couts();
+		$data = array("unite"=>0);
+		$idC = $s->ajouter($data);
+		$s = new Model_DbTable_Gevu_solutionsxcouts();
+		$data = array("id_solution"=>$id,"id_cout"=>$idC);
+		$s->ajouter($data,false);
+    	
     	return $id;
     } 
        

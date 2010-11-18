@@ -82,7 +82,7 @@ private function updateItem():void
 	vn["handicateur_visuel"] = this.UpdHandiVisu.value;
 	vn["handicateur_cognitif"] = this.UpdHandiCog.value;
 	vn["id_type_controle"] = this.UpdTypControle.cb.selectedItem['id_type_controle'];
-	vn["critere"] = this.UpdCritere.text;
+	vn["criteres"] = this.UpdCritere.text;
 	vn["affirmation"] = this.UpdAffirmation.text;
 
 	RO.edit(idCritere,vn);	
@@ -466,7 +466,7 @@ private function deleteTypeCriClickHandler(event:CloseEvent):void
 	            <mx:FormItem label="Handicateur cognitif:" id="handicateur_cognitif" >
 					<mx:NumericStepper stepSize="1" maximum="4"/>						
 	            </mx:FormItem>
-	            <mx:FormItem label="Critère:" id="critere" >
+	            <mx:FormItem label="Critère:" id="criteres" >
 	            	<mx:TextArea width="100%" height="60" />
 	            </mx:FormItem>
 	            <mx:FormItem label="Affirmation:" id="affirmation" >
