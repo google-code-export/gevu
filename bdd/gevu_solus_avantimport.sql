@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost
--- Généré le : Jeu 18 Novembre 2010 à 14:18
+-- Généré le : Ven 19 Novembre 2010 à 17:35
 -- Version du serveur: 5.1.30
 -- Version de PHP: 5.2.8
 
@@ -4034,12 +4034,60 @@ CREATE TABLE IF NOT EXISTS `gevu_diagnosticsxvoirie` (
   PRIMARY KEY (`id_diag_voirie`),
   KEY `id_lieu` (`id_lieu`),
   KEY `id_instant` (`id_instant`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=48 ;
 
 --
 -- Contenu de la table `gevu_diagnosticsxvoirie`
 --
 
+INSERT INTO `gevu_diagnosticsxvoirie` (`id_diag_voirie`, `id_lieu`, `id_instant`, `nom`, `ref`, `id_donnee`, `maj`) VALUES
+(1, 68, 3, 'test gilles', '', 49381, '2009-12-11 09:52:26'),
+(2, 69, 3, '', '', 49681, '2010-01-13 12:01:45'),
+(3, 107, 3, 'Voirie test', '', 49912, '2010-01-20 10:33:26'),
+(4, 721, 3, 'cheminement carriers-faidherbe', '', 57161, '2010-03-18 16:07:44'),
+(5, 722, 3, 'cheminement aire de jeu', '', 57162, '2010-03-18 16:09:44'),
+(6, 723, 3, 'cheminement boulier-foch-jeanne d''arc', '', 57165, '2010-03-18 16:11:17'),
+(7, 724, 3, 'Cheminement Carriers-Aldi', '', 57166, '2010-03-18 16:12:24'),
+(8, 725, 3, 'Cheminement Carriers-Hugo-Eglise-Chanzy', '', 57167, '2010-03-18 16:13:22'),
+(9, 726, 3, 'cheminement parcours sportif et stade', '', 57168, '2010-03-18 16:14:25'),
+(10, 727, 3, 'cheminement place du S', '', 57169, '2010-03-18 16:15:00'),
+(11, 728, 3, 'cheminement salle brassens 1', '', 57170, '2010-03-18 16:16:17'),
+(12, 729, 3, 'Cheminement stade-chasse mar', '', 57171, '2010-03-18 16:17:15'),
+(13, 730, 3, 'cheminement vaillant couturier-chasse mar', '', 57172, '2010-03-18 16:18:29'),
+(14, 731, 3, 'cheminement zola-Ramponneau-Barbusse', '', 57173, '2010-03-18 16:19:24'),
+(15, 732, 3, 'Passage Delobel', '', 57174, '2010-03-18 16:20:30'),
+(16, 733, 3, 'Passerelle', '', 57175, '2010-03-18 16:20:59'),
+(17, 736, 3, 'Cheminement salle brassens 2', '', 57180, '2010-03-18 20:03:10'),
+(18, 742, 3, 'test voirie', '', 60233, '2010-05-10 12:53:35'),
+(19, 848, 4, 'Diagnostic voirie: Cit', 'Cit', 44210, '2009-07-08 11:22:37'),
+(20, 1409, 4, 'Diagnostic voirie: zone Ren', 'Diagnostic voirie: zone Ren', 44251, '2009-07-08 16:42:18'),
+(21, 1410, 4, 'Diagnostic voirie: Zone Quai, Plage, Roche Noir		', 'Diagnostic voirie: Zone Quai, Pl', 44254, '2009-07-08 16:44:33'),
+(22, 1766, 4, 'Diagnostic voirie: Zone Roseraie/CES Charles Mozin', 'Diagnostic voirie: Zone Roseraie', 44258, '2009-07-08 16:49:19'),
+(23, 1767, 4, 'Diagnostic voirie: Zone Kennedy		', 'Diagnostic voirie: Zone Kennedy', 44261, '2009-07-08 16:51:23'),
+(24, 1881, 4, 'Diagnostic voirie: Zone Villa Falaise', 'Diagnostic voirie: Zone Villa Fa', 44264, '2009-07-08 16:53:21'),
+(25, 2249, 4, 'Diagnostic voirie: Zone Villa Bord de mer  ', 'Diagnostic voirie: Zone Villa Bo', 44267, '2009-07-08 16:55:57'),
+(26, 2426, 4, 'test gilles', '', 49381, '2009-12-11 09:52:26'),
+(27, 2427, 4, '', '', 49681, '2010-01-13 12:01:45'),
+(28, 2465, 4, 'Voirie test', '', 49912, '2010-01-20 10:33:26'),
+(29, 2570, 4, 'Diagnostic voirie: Zone Hennequeville', '', 63688, '2010-02-23 11:06:58'),
+(30, 68, 11, 'test gilles', '', 49381, '2009-12-11 09:52:26'),
+(31, 69, 11, '', '', 49681, '2010-01-13 12:01:45'),
+(32, 107, 11, 'Voirie test', '', 49912, '2010-01-20 10:33:26'),
+(33, 721, 11, 'cheminement carriers-faidherbe', '', 57161, '2010-03-18 16:07:44'),
+(34, 722, 11, 'cheminement aire de jeu', '', 57162, '2010-03-18 16:09:44'),
+(35, 723, 11, 'cheminement boulier-foch-jeanne d''arc', '', 57165, '2010-03-18 16:11:17'),
+(36, 724, 11, 'Cheminement Carriers-Aldi', '', 57166, '2010-03-18 16:12:24'),
+(37, 725, 11, 'Cheminement Carriers-Hugo-Eglise-Chanzy', '', 57167, '2010-03-18 16:13:22'),
+(38, 726, 11, 'cheminement parcours sportif et stade', '', 57168, '2010-03-18 16:14:25'),
+(39, 727, 11, 'cheminement place du S', '', 57169, '2010-03-18 16:15:00'),
+(40, 728, 11, 'cheminement salle brassens 1', '', 57170, '2010-03-18 16:16:17'),
+(41, 729, 11, 'Cheminement stade-chasse mar', '', 57171, '2010-03-18 16:17:15'),
+(42, 730, 11, 'cheminement vaillant couturier-chasse mar', '', 57172, '2010-03-18 16:18:29'),
+(43, 731, 11, 'cheminement zola-Ramponneau-Barbusse', '', 57173, '2010-03-18 16:19:24'),
+(44, 732, 11, 'Passage Delobel', '', 57174, '2010-03-18 16:20:30'),
+(45, 733, 11, 'Passerelle', '', 57175, '2010-03-18 16:20:59'),
+(46, 736, 11, 'Cheminement salle brassens 2', '', 57180, '2010-03-18 20:03:10'),
+(47, 742, 11, 'test voirie', '', 60233, '2010-05-10 12:53:35');
 
 -- --------------------------------------------------------
 
@@ -4383,12 +4431,14 @@ CREATE TABLE IF NOT EXISTS `gevu_lieux` (
   KEY `id_parent` (`id_parent`),
   KEY `id_rubrique` (`id_rubrique`),
   KEY `id_instant` (`id_instant`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=2 ;
 
 --
 -- Contenu de la table `gevu_lieux`
 --
 
+INSERT INTO `gevu_lieux` (`id_lieu`, `id_rubrique`, `lib`, `id_parent`, `id_instant`, `lft`, `rgt`, `niv`, `maj`) VALUES
+(1, 0, 'univers', 0, 0, 1, 2, 0, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
