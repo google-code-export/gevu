@@ -11,22 +11,14 @@ todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
 
 	<mx:VBox width="100%" height="100%">
 		<mx:HBox>
+			<mx:Label text="V 0.38" />
 			<mx:LinkButton id="btnAjoutUti" click="init();" icon="@Embed('images/ajoutUti.jpg')" toolTip="Ajouter un utilisateur" />					
 			<mx:LinkButton label="Mon profil" click="init();" />
 			<mx:LinkButton label="Mes données" click="init();" />
 			<mx:LinkButton label="Connexion/Déconnexion" click="init();" />		
 		</mx:HBox>
 
-	 	<mx:HDividedBox width="100%" height="100%">
-	 		
-		    <mx:VBox id="boxTree" width="20%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >	    	
-		 		<mx:Panel title="Choisissez les éléments à afficher" width="100%" height="100%" borderColor="#080202">
-			   		<ns2:treeControles id="treeControles" width="100%" height="100%" >
-			   		</ns2:treeControles>	
-				</mx:Panel>
-		    </mx:VBox>		    	
-	
-			<mx:VBox id="boxGrid" width="80%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"   >
+			<mx:VBox id="boxGrid" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"   >
 				
 				<mx:TabNavigator x="0" y="10" width="100%" height="100%" id="tabNavig" >
 					<mx:Canvas id="tabCrit" label="Critères" width="100%" height="100%" activate="true">
@@ -53,7 +45,6 @@ todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
 			
 			</mx:VBox>
 	
-	 	</mx:HDividedBox> 
 	</mx:VBox>
 
 </mx:Application>
