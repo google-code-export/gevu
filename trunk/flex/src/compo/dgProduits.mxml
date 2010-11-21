@@ -350,6 +350,7 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 					</mx:Panel>
 					<mx:Panel title="Coût associé" layout="absolute">
 						<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+							<mx:Label text="tous les prix sont exprimés en €  Hors Taxes"  fontWeight="bold" fontSize="18"/>
 							<mx:Label text="Unitaire:" />
 			            	<mx:TextInput id="UpdCunite" />							
 							<mx:HBox >
