@@ -61,6 +61,7 @@ private function selectItem(event:Event):void {
 		UpdPreco.text=item.preconisation;
 		UpdTech.text=item.technique;
 		UpdUrl.text=item.url;
+		UpdModele.text=item.modele;
 		
 		ROSP.findByIdProduit(idProduit);
 		ROC.findByIdProduit(idProduit);
@@ -85,6 +86,7 @@ private function updateItem():void
 	vn["preconisation"] = this.UpdPreco.text;
 	vn["technique"] = this.UpdTech.text;
 	vn["url"] = this.UpdUrl.text;
+	vn["modele"] = this.UpdModele.text;
 	RO.edit(idProduit,vn);	
 }
 
@@ -290,33 +292,48 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 	   					<mx:DataGridColumn headerText="Technique"  dataField="technique" />
 						<mx:DataGridColumn headerText="Préconisation" dataField="preconisation" />									
 						<mx:DataGridColumn headerText="Marque" dataField="marque" />									
+						<mx:DataGridColumn headerText="Modèle" dataField="modele" />									
 	   					<mx:DataGridColumn headerText="Entreprise"  dataField="LibEntreprise" />
 	   					<mx:DataGridColumn headerText="Site"  dataField="url" />
  					</mx:columns>
 				</mx:DataGrid>
 				<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
-					<mx:HBox >
-						<mx:VBox>
+					<mx:HBox width="100%" >
+						<mx:VBox width="100%">
 							<mx:Label text="Référence:" />
 			            	<mx:TextInput id="UpdRef" />							
 						</mx:VBox>
-						<mx:VBox>
+						<mx:VBox width="100%">
 							<mx:Label text="Marque:" />
 			            	<mx:TextInput id="UpdMarque" />							
 						</mx:VBox>
+						<mx:VBox width="100%">
+							<mx:Label text="modèle:"/>
+			            	<mx:TextInput id="UpdModele" />						
+						</mx:VBox>
+					</mx:HBox>			
+					<mx:HBox width="100%" >
 						<mx:VBox>
 							<mx:Label text="Entreprise:"/>
 			            	<ns2:cbGroupeMot id="UpdEntreprise" labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Model_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises" />						
 						</mx:VBox>
+						<mx:VBox width="100%" >
+							<mx:Label text="Site web :" />
+			            	<mx:TextInput id="UpdUrl" width="100%" />							
+						</mx:VBox>
 					</mx:HBox>			
-					<mx:Label text="Site web :" />
-	            	<mx:TextInput id="UpdUrl" width="100%" />							
 					<mx:Label text="Description:" />
 	            	<mx:TextInput id="UpdDesc" width="100%" />							
-					<mx:Label text="Technique du produit:" />
-	            	<mx:TextArea id="UpdTech" width="100%" height="50" />
-					<mx:Label text="Préconisation du produit:" />
-	            	<mx:TextArea id="UpdPreco" width="100%" height="50" />
+					<mx:HBox width="100%" >
+						<mx:VBox width="100%" >
+							<mx:Label text="Technique du produit:" />
+			            	<mx:TextArea id="UpdTech" width="100%" height="50" />
+						</mx:VBox>
+						<mx:VBox width="100%" >
+							<mx:Label text="Préconisation du produit:" />
+			            	<mx:TextArea id="UpdPreco" width="100%" height="50" />
+						</mx:VBox>
+					</mx:HBox>			
 					<mx:Button label="Enregistrer" click="updateItem()" />
 				</mx:VBox>
 			</mx:VBox>
@@ -348,34 +365,38 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 							</mx:VBox>
 						</mx:ViewStack>											
 					</mx:Panel>
-					<mx:Panel title="Coût associé" layout="absolute">
-						<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
-							<mx:Label text="tous les prix sont exprimés en €  Hors Taxes"  fontWeight="bold" fontSize="18"/>
-							<mx:Label text="Unitaire:" />
-			            	<mx:TextInput id="UpdCunite" />							
-							<mx:HBox >
-								<mx:VBox>
-									<mx:Label text="Mètre linéaire:" />
-					            	<mx:TextInput id="UpdCmetre_lineaire" />							
-								</mx:VBox>
-								<mx:VBox>
-									<mx:Label text="Mètre carré:" />
-					            	<mx:TextInput id="UpdCmetre_carre" />							
-								</mx:VBox>
-							</mx:HBox>			
-							<mx:HBox >
-								<mx:VBox>
-									<mx:Label text="A l'achat:" />
-					            	<mx:TextInput id="UpdCachat" />							
-								</mx:VBox>
-								<mx:VBox>
-									<mx:Label text="A la pose:" />
-					            	<mx:TextInput id="UpdCpose" />							
-								</mx:VBox>
-							</mx:HBox>			
-							<mx:Button label="Enregistrer" click="updateCout()" />
-						</mx:VBox>					
-					</mx:Panel>
+					<mx:HBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">						
+						<mx:Panel title="Coût associé" layout="absolute" width="100%" height="100%">
+							<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+								<mx:Label text="Les coûts sont en € HT"  fontWeight="bold" fontSize="18"/>
+								<mx:Label text="Unitaire:" />
+				            	<mx:TextInput id="UpdCunite" />							
+								<mx:HBox >
+									<mx:VBox>
+										<mx:Label text="Mètre linéaire:" />
+						            	<mx:TextInput id="UpdCmetre_lineaire" />							
+									</mx:VBox>
+									<mx:VBox>
+										<mx:Label text="Mètre carré:" />
+						            	<mx:TextInput id="UpdCmetre_carre" />							
+									</mx:VBox>
+								</mx:HBox>			
+								<mx:HBox >
+									<mx:VBox>
+										<mx:Label text="A l'achat:" />
+						            	<mx:TextInput id="UpdCachat" />							
+									</mx:VBox>
+									<mx:VBox>
+										<mx:Label text="A la pose:" />
+						            	<mx:TextInput id="UpdCpose" />							
+									</mx:VBox>
+								</mx:HBox>			
+								<mx:Button label="Enregistrer" click="updateCout()" />
+							</mx:VBox>					
+						</mx:Panel>
+						<mx:Panel title="Photos" layout="absolute" >
+						</mx:Panel>
+					</mx:HBox>
 			</mx:VBox>		
 		</mx:HBox>
 
@@ -388,6 +409,9 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 	            </mx:FormItem>
 	            <mx:FormItem label="Marque:" id="marque" >
 	            	<mx:TextInput id="ProdMarque" width="100%" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Modèle:" id="modele" >
+	            	<mx:TextInput width="100%" />
 	            </mx:FormItem>
 	            <mx:FormItem label="Entreprise:" id="id_entreprise" >
 	            	<ns2:cbGroupeMot labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Model_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises"  />						

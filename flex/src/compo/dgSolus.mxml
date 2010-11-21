@@ -373,7 +373,7 @@ private function updateCout():void
 	</mx:RemoteObject>
 	
 	<mx:Canvas id="view" width="100%" height="100%">
-		<mx:HBox width="100%" height="100%">
+		<mx:VBox width="100%" height="100%">
 			<mx:VBox width="100%" height="100%" >		
 				<mx:HBox id="AddDelete" width="0" height="0" >		
 					<mx:LinkButton id="btnAddNew" click="goToInsert()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une solution" />
@@ -397,6 +397,9 @@ private function updateCout():void
 						<mx:DataGridColumn width="200" headerText="libellé" dataField="lib" />									
 					</mx:columns>
 				</mx:DataGrid>
+			</mx:VBox>
+			<mx:HBox width="100%" height="100%" >		
+
 				<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
 					<mx:HBox >
 						<mx:VBox>
@@ -411,11 +414,22 @@ private function updateCout():void
 					<mx:Label text="libellé de la solution:" />
 	            	<mx:TextArea id="UpdLib" width="100%" height="100" />
 					<mx:Button label="Enregistrer" click="updateItem()" />
-					<mx:Panel title="Coût associé" layout="absolute" width="100%" height="100%" >
 						<mx:VBox fontSize="16" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
-							<mx:Label text="tous les prix sont exprimés en €  Hors Taxes"  fontWeight="bold" fontSize="18"/>
-							<mx:Label text="Unitaire:" />
-			            	<mx:TextInput id="UpdCunite" />							
+							<mx:Label text="Les coûts sont en € HT"  fontWeight="bold" fontSize="18"/>
+							<mx:HBox >
+								<mx:VBox>
+									<mx:Label text="Unitaire:" />
+					            	<mx:TextInput id="UpdCunite" />							
+								</mx:VBox>
+								<mx:VBox>
+									<mx:Label text="A l'achat:" />
+					            	<mx:TextInput id="UpdCachat" />							
+								</mx:VBox>
+								<mx:VBox>
+									<mx:Label text="A la pose:" />
+					            	<mx:TextInput id="UpdCpose" />							
+								</mx:VBox>
+							</mx:HBox>			
 							<mx:HBox >
 								<mx:VBox>
 									<mx:Label text="Mètre linéaire:" />
@@ -426,109 +440,94 @@ private function updateCout():void
 					            	<mx:TextInput id="UpdCmetre_carre" />							
 								</mx:VBox>
 							</mx:HBox>			
-							<mx:HBox >
-								<mx:VBox>
-									<mx:Label text="A l'achat:" />
-					            	<mx:TextInput id="UpdCachat" />							
-								</mx:VBox>
-								<mx:VBox>
-									<mx:Label text="A la pose:" />
-					            	<mx:TextInput id="UpdCpose" />							
-								</mx:VBox>
-							</mx:HBox>			
 							<mx:Button label="Enregistrer" click="updateCout()" />
 						</mx:VBox>					
-					</mx:Panel>
 				</mx:VBox>				
-			</mx:VBox>
-			<mx:VBox id="detailSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
-				<mx:Panel title="Illustration réglementaire" width="100%" height="50%" layout="absolute">
-					<mx:VBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-						<mx:HBox>
-							<mx:LinkButton id="btnAddNewIllu" click="goToInsert()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une illustration" />
-							<mx:LinkButton id="btnDeleteIllu" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une illustration" />							
-						</mx:HBox>							
-					</mx:VBox>
-				</mx:Panel>
-				<mx:HBox width="100%" height="50%" >
-					<mx:Panel title="Métiers" width="50%" height="100%" layout="absolute">
-						<mx:ViewStack id="vsMetierSolus" width="100%" height="100%">
-							<mx:VBox id="viewMetierSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+				<mx:VBox id="detailSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+						<mx:VBox paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+							<mx:Label text="Illustrations réglementaires" fontWeight="bold" fontSize="18" />
+							<mx:HBox>
+								<mx:LinkButton id="btnAddNewIllu" click="" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une illustration" />
+								<mx:LinkButton id="btnDeleteIllu" click="" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une illustration" />							
+							</mx:HBox>							
+						</mx:VBox>
+					<mx:HBox width="100%" height="100%" >
+							<mx:ViewStack id="vsMetierSolus" width="100%" height="100%">
+								<mx:VBox id="viewMetierSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+									<mx:Label text="Métiers" fontWeight="bold" fontSize="18" />
+									<mx:HBox>
+										<mx:LinkButton id="btnAddNewMetierSolus" click="vsMetierSolus.selectedChild = insertMetierSolus;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un métier à la solution" />
+										<mx:LinkButton id="btnDeleteMetierSolus" click="deleteMetierSolus()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un métier de la solution " />							
+									</mx:HBox>							
+									<mx:DataGrid width="100%" height="50%" id="dgMetiers">
+										<mx:columns>
+											<mx:DataGridColumn headerText="Metiers" dataField="lib" />
+											<mx:DataGridColumn headerText="Id Metier" dataField="id_metier" visible="false"/>
+											<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
+										</mx:columns>
+									</mx:DataGrid>					
+								</mx:VBox>
+								<mx:VBox id="insertMetierSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+									<mx:Label text="Choisissez un métier :" fontWeight="bold" fontSize="18" /> 
+					            	<ns2:cbGroupeMot titre="un métier" keyName="id_metier" id="cbMetier" objName="Model_DbTable_Gevu_metiers" endPoint="{ROS.endpoint}" />
+									<mx:HBox>
+										<mx:Button label="Enregistrer" click="ROSM.ajouter(idSolution, cbMetier.cb.selectedItem['id_metier']);" />
+										<mx:Button label="Annuler" click="vsMetierSolus.selectedChild = viewMetierSolus;" />				
+									</mx:HBox>							
+								</mx:VBox>
+							</mx:ViewStack>											
+							<mx:ViewStack id="vsCritereSolus" width="100%" height="100%">
+								<mx:VBox id="viewCritereSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+									<mx:Label text="Critères" fontWeight="bold" fontSize="18" />
+									<mx:HBox>
+										<mx:LinkButton id="btnAddNewCritereSolus" click="vsCritereSolus.selectedChild = insertCritereSolus;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un critère à la solution" />
+										<mx:LinkButton id="btnDeleteCritereSolus" click="deleteCritereSolus()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un critère de la solution " />							
+									</mx:HBox>							
+									<mx:DataGrid width="100%" height="50%" id="dgCritere">
+										<mx:columns>
+											<mx:DataGridColumn headerText="Référence" dataField="ref" />
+											<mx:DataGridColumn headerText="Id critère" dataField="id_critere" visible="false"/>
+											<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
+										</mx:columns>
+									</mx:DataGrid>					
+								</mx:VBox>
+								<mx:VBox id="insertCritereSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+							    	<mx:Label text="Choisissez un critère :" fontWeight="bold" fontSize="18" />
+					            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un critère" keyName="id_critere" id="cbCritere" objName="Model_DbTable_Gevu_criteres" endPoint="{ROS.endpoint}" />
+									<mx:HBox>
+										<mx:Button label="Enregistrer" click="ROSC.ajouter(idSolution, cbCritere.cb.selectedItem['id_critere']);" />
+										<mx:Button label="Annuler" click="vsCritereSolus.selectedChild = viewCritereSolus;" />				
+									</mx:HBox>							
+								</mx:VBox>								
+							</mx:ViewStack>
+					</mx:HBox>						
+						<mx:ViewStack id="vsProd" width="100%" height="100%">
+							<mx:VBox id="viewProd" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:Label text="Produits préconisés" fontWeight="bold" fontSize="18" />
 								<mx:HBox>
-									<mx:LinkButton id="btnAddNewMetierSolus" click="vsMetierSolus.selectedChild = insertMetierSolus;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un métier à la solution" />
-									<mx:LinkButton id="btnDeleteMetierSolus" click="deleteMetierSolus()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un métier de la solution " />							
+									<mx:LinkButton click="vsProd.selectedChild = insertProd;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un produit à la solution" />
+									<mx:LinkButton click="deleteProd()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un produit de la solution " />							
 								</mx:HBox>							
-								<mx:DataGrid width="100%" height="50%" id="dgMetiers">
-									<mx:columns>
-										<mx:DataGridColumn headerText="Metiers" dataField="lib" />
-										<mx:DataGridColumn headerText="Id Metier" dataField="id_metier" visible="false"/>
-										<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
-									</mx:columns>
-								</mx:DataGrid>					
-							</mx:VBox>
-							<mx:VBox id="insertMetierSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-								<mx:Label text="Choisissez un métier :"/> 
-				            	<ns2:cbGroupeMot titre="un métier" keyName="id_metier" id="cbMetier" objName="Model_DbTable_Gevu_metiers" endPoint="{ROS.endpoint}" />
-								<mx:HBox>
-									<mx:Button label="Enregistrer" click="ROSM.ajouter(idSolution, cbMetier.cb.selectedItem['id_metier']);" />
-									<mx:Button label="Annuler" click="vsMetierSolus.selectedChild = viewMetierSolus;" />				
-								</mx:HBox>							
-							</mx:VBox>
-						</mx:ViewStack>											
-					</mx:Panel>
-					<mx:Panel title="Critères" width="50%" height="100%" layout="absolute">							
-						<mx:ViewStack id="vsCritereSolus" width="100%" height="100%">
-							<mx:VBox id="viewCritereSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-								<mx:HBox>
-									<mx:LinkButton id="btnAddNewCritereSolus" click="vsCritereSolus.selectedChild = insertCritereSolus;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un critère à la solution" />
-									<mx:LinkButton id="btnDeleteCritereSolus" click="deleteCritereSolus()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un critère de la solution " />							
-								</mx:HBox>							
-								<mx:DataGrid width="100%" height="50%" id="dgCritere">
+								<mx:DataGrid width="100%" height="50%" id="dgProd">
 									<mx:columns>
 										<mx:DataGridColumn headerText="Référence" dataField="ref" />
-										<mx:DataGridColumn headerText="Id critère" dataField="id_critere" visible="false"/>
+										<mx:DataGridColumn headerText="Id Produit" dataField="id_produit" visible="false"/>
 										<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
 									</mx:columns>
 								</mx:DataGrid>					
 							</mx:VBox>
-							<mx:VBox id="insertCritereSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-						    	<mx:Label text="Choisissez un critère :" />
-				            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un critère" keyName="id_critere" id="cbCritere" objName="Model_DbTable_Gevu_criteres" endPoint="{ROS.endpoint}" />
+							<mx:VBox id="insertProd" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+						    	<mx:Label text="Choisissez un produit :" fontWeight="bold" fontSize="18" />
+				            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un produit" keyName="id_produit" id="cbProduit" objName="Model_DbTable_Gevu_produits" endPoint="{ROS.endpoint}" />
 								<mx:HBox>
-									<mx:Button label="Enregistrer" click="ROSC.ajouter(idSolution, cbCritere.cb.selectedItem['id_critere']);" />
-									<mx:Button label="Annuler" click="vsCritereSolus.selectedChild = viewCritereSolus;" />				
+									<mx:Button label="Enregistrer" click="ROSP.ajouter(idSolution, cbProduit.cb.selectedItem['id_produit']);" />
+									<mx:Button label="Annuler" click="vsProd.selectedChild = viewProd;" />				
 								</mx:HBox>							
 							</mx:VBox>								
 						</mx:ViewStack>
-					</mx:Panel>
-				</mx:HBox>						
-				<mx:Panel title="Produits préconisés" width="100%" height="50%" layout="absolute">
-					<mx:ViewStack id="vsProd" width="100%" height="100%">
-						<mx:VBox id="viewProd" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-							<mx:HBox>
-								<mx:LinkButton click="vsProd.selectedChild = insertProd;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un produit à la solution" />
-								<mx:LinkButton click="deleteProd()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un produit de la solution " />							
-							</mx:HBox>							
-							<mx:DataGrid width="100%" height="50%" id="dgProd">
-								<mx:columns>
-									<mx:DataGridColumn headerText="Référence" dataField="ref" />
-									<mx:DataGridColumn headerText="Id Produit" dataField="id_produit" visible="false"/>
-									<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
-								</mx:columns>
-							</mx:DataGrid>					
-						</mx:VBox>
-						<mx:VBox id="insertProd" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-					    	<mx:Label text="Choisissez un produit :" />
-			            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un produit" keyName="id_produit" id="cbProduit" objName="Model_DbTable_Gevu_produits" endPoint="{ROS.endpoint}" />
-							<mx:HBox>
-								<mx:Button label="Enregistrer" click="ROSP.ajouter(idSolution, cbProduit.cb.selectedItem['id_produit']);" />
-								<mx:Button label="Annuler" click="vsProd.selectedChild = viewProd;" />				
-							</mx:HBox>							
-						</mx:VBox>								
-					</mx:ViewStack>
-				</mx:Panel>
-			</mx:VBox>		
-		</mx:HBox>
+				</mx:VBox>		
+			</mx:HBox>
+		</mx:VBox>
 
 	</mx:Canvas>
 	<mx:Canvas id="insert" width="100%" height="100%" >
