@@ -3,10 +3,10 @@ CREATE PROCEDURE gevu_solus.`SPIPtoGEVU`( IN dbn VARCHAR(100),  IN dbo VARCHAR(1
 BEGIN
 	
   -- DIAGNOSTICS 
-	-- on ne conserve que les réponses 'non' et 'sous réserve'
-	-- pour les questions qui ne sont pas interméfiaire
+	-- on ne conserve que les r?ponses 'non' et 'sous r?serve'
+	-- pour les questions qui ne sont pas interm?fiaire
   
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_diagnostics "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_diagnostics "
   ," (id_critere, id_reponse, id_instant, id_lieu, id_donnee, maj)"
   ," SELECT c.id_critere, fdc1.valeur, ",instant,", l.id_lieu, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -18,15 +18,18 @@ BEGIN
   ," LEFT JOIN ",dbn,".gevu_criteres c ON c.ref = fdc2.valeur "
   ," WHERE fd.id_form =59 "
   ," GROUP BY fd.id_donnee");
+
   PREPARE stmt FROM @sql;
+  
   EXECUTE stmt;
-  DROP PREPARE stmt;
+  
+  -- DROP PREPARE stmt;
   
   
   -- PROBLEMES
 	-- on ne conserve que le champ photo
-	-- les champs 'fichier' et 'doc' devront être ajouter à la table gevu_doc
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_problemes "
+	-- les champs 'fichier' et 'doc' devront ?tre ajouter ? la table gevu_doc
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_problemes "
   ," (id_lieu, id_critere, num_marker, mesure, observations, fichier, doc, id_instant, id_donnee, maj) "
   ," SELECT l.id_lieu, c.id_critere, fdc1.valeur, fdc11.valeur, fdc3.valeur, fdc4.valeur, fdc6.valeur, ",instant,", fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -49,7 +52,7 @@ BEGIN
   DROP PREPARE stmt;
 
 	-- GEOGRAPHIE
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_geos "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_geos "
   ," (id_lieu, id_instant, lat, lng, zoom_min, zoom_max, adresse, id_type_carte, kml, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc1.valeur, fdc2.valeur, fdc3.valeur, fdc4.valeur, fdc5.valeur, fdc6.valeur, fdc7.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -70,7 +73,7 @@ BEGIN
   DROP PREPARE stmt;
   
 	-- GEORSS
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_georss "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_georss "
   ," (id_lieu, id_instant, url, id_donnee, maj) "
   ," SELECT l.id_lieu ,",instant,", fdc1.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -85,7 +88,7 @@ BEGIN
   DROP PREPARE stmt;
 
 	-- NIVEAU
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_niveaux "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_niveaux "
   ," (id_lieu, id_instant, nom, ref, id_reponse_1, id_reponse_2, id_reponse_3, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc1.valeur, fdc2.valeur, fdc3.valeur, fdc4.valeur, fdc5.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -104,10 +107,10 @@ BEGIN
   DROP PREPARE stmt;
   
 	-- BATIMENT
-	-- les contacts devront être retraités
-	-- (53, 'ligne_10', 12, 'Coordonnées du gardien'
-	-- les horaires devront être retraité
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_batiments "
+	-- les contacts devront ?tre retrait?s
+	-- (53, 'ligne_10', 12, 'Coordonn?es du gardien'
+	-- les horaires devront ?tre retrait?
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_batiments "
   ," (id_lieu, id_instant, nom, ref, adresse, commune, pays, code_postal "
   ," , contact_proprietaire, contact_delegataire, contact_gardien "
   ," , horaires_gardien, horaires_batiment "
@@ -161,7 +164,7 @@ BEGIN
   DROP PREPARE stmt;
   
 	-- ETABLISSEMENT
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_etablissements "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_etablissements "
   ,"(id_lieu, id_instant, nom, ref, adresse, commune, pays, code_postal "
   ," , contact_proprietaire, contact_delegataire "
   ,", reponse_1, reponse_2, reponse_3, reponse_4, reponse_5, id_donnee, maj) "
@@ -191,7 +194,7 @@ BEGIN
   DROP PREPARE stmt;
   
 	-- ESPACES
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_espaces "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_espaces "
   ," (id_lieu, id_instant, ref, id_type_espace "
   ," , reponse_1, reponse_2, id_type_specifique_int, id_type_specifique_ext, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc2.valeur, fdc17.valeur, fdc18.valeur, fdc19.valeur, fdc20.valeur, fdc21.valeur, fd.id_donnee, fd.date "
@@ -212,7 +215,7 @@ BEGIN
   DROP PREPARE stmt;
   
 	-- ESPACES INTERIEURS
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_espacesxinterieurs "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_espacesxinterieurs "
   ," (id_lieu, id_instant, nom, ref, fonction, id_type_specifique_int, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc1.valeur, fdc2.valeur, fdc3.valeur, fdc4.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -230,7 +233,7 @@ BEGIN
   DROP PREPARE stmt;
 
   -- PARCELLES
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_parcelles "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_parcelles "
   ," (id_lieu, id_instant, nom, ref, adresse, commune, pays, code_postal, contact_proprietaire, reponse_1, reponse_2, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc1.valeur, fdc2.valeur, fdc3.valeur, fdc4.valeur, fdc5.valeur, '', fdc6.valeur, fdc7.valeur, fdc17.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -253,7 +256,7 @@ BEGIN
   DROP PREPARE stmt;
   
 	-- ESPACES EXTERIEURS
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_espacesxexterieurs "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_espacesxexterieurs "
   ," (id_lieu, id_instant, nom, ref, fonction, id_type_espace, id_type_specifique_ext, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc1.valeur, fdc2.valeur, fdc3.valeur, fdc4.valeur, fdc4.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -272,7 +275,7 @@ BEGIN
   DROP PREPARE stmt;
 
   -- DIAGNOSTICS VOIRIE
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_diagnosticsxvoirie "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_diagnosticsxvoirie "
   ," (id_lieu, id_instant, nom, ref, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc1.valeur, fdc3.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -288,7 +291,7 @@ BEGIN
   DROP PREPARE stmt;
   
 	-- OBJETS INTERIEURS
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_objetsxinterieurs "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_objetsxinterieurs "
   ," (id_lieu, id_instant, nom, ref, fonctions, reponse_1, reponse_2, id_type_objet, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc1.valeur, fdc2.valeur, fdc3.valeur, fdc17.valeur, fdc18.valeur, fdc19.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -308,7 +311,7 @@ BEGIN
   DROP PREPARE stmt;
 
   -- OBJETS EXTERIEURS
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_objetsxexterieurs "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_objetsxexterieurs "
   ," (id_lieu, id_instant, nom, ref, fonctions, id_type_objet, id_type_objet_ext, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc1.valeur, fdc2.valeur, fdc3.valeur, fdc17.valeur, fdc18.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -327,7 +330,7 @@ BEGIN
   DROP PREPARE stmt;
 	
   -- ELEMENTS VOIRIE
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_objetsxvoiries "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_objetsxvoiries "
   ," (id_lieu, id_instant, nom, ref, id_type_objet_voirie, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", fdc1.valeur, fdc2.valeur, fdc18.valeur, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
@@ -344,7 +347,7 @@ BEGIN
   DROP PREPARE stmt;
   
 	-- DOCUMENTS
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_docs "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_docs "
   ," (tronc, id_instant, path_source, titre, content_type, maj) "
   ," SELECT id_document, ",instant,", fichier, d.titre, mime_type, d.date "
   ," FROM "  ,dbo,".spip_documents d "
@@ -354,7 +357,7 @@ BEGIN
   DROP PREPARE stmt;
   
   -- DOCUMENTS LIEUX
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_docsxlieux "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_docsxlieux "
   ," (id_doc, id_lieu, id_instant) "
   ," SELECT gd.id_doc, l.id_lieu, ",instant
   ," FROM ",dbn,".gevu_docs gd "
@@ -365,7 +368,7 @@ BEGIN
   EXECUTE stmt;
   DROP PREPARE stmt;
   
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_docsxlieux "
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_docsxlieux "
   ," (id_doc, id_lieu, id_instant) "
   ," SELECT gd.id_doc, l.id_lieu, ",instant 
   ," FROM ",dbn,".gevu_docs gd "
@@ -379,8 +382,8 @@ BEGIN
   
 	-- OBSERVATIONS
 	-- on ne conserve que le champ photo
-	-- les champs 'fichier' et 'doc' devront être ajouter à la table gevu_doc
-	SET @sql = Concat("INSERT INTO ",dbn,".gevu_observations "
+	-- les champs 'fichier' et 'doc' devront ?tre ajouter ? la table gevu_doc
+	SET @sql = CONCAT("INSERT INTO ",dbn,".gevu_observations "
   ," (id_lieu, id_instant, id_reponse, num_marker, lib, id_critere, id_donnee, maj) "
   ," SELECT l.id_lieu, ",instant,", m.id_mot, fdc2.valeur, fdc3.valeur, c.id_critere, fd.id_donnee, fd.date "
   ," FROM "  ,dbo,".spip_forms_donnees fd "
