@@ -9,7 +9,7 @@ BEGIN
         SET lft = lft + 2
       WHERE lft > parentleft AND id_instant = instant;
       UPDATE gevu_lieux
-        SET lft = parentleft + 1, rgt = parentleft + 2
+        SET lft = parentleft + 1, rgt = parentleft + 2, id_instant= instant
       WHERE id_lieu = node;
     END;
 END;
