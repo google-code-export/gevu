@@ -11,8 +11,8 @@
 <applications>
 <application path="gevu.mxml"/>
 <application path="grilles.mxml"/>
+<application path="rapports.mxml"/>
 </applications>
 <modules/>
 <buildCSSFiles/>
 </actionScriptProperties>
-
