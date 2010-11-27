@@ -6,44 +6,45 @@ mysql_select_db('gevu_solus');
 
 $pdo = new PDO("mysql:host=localhost;port='3306';dbname=gevu_solus", 'root', '');
 
+updLieuxHierarchie(1, 10, 0, 1, 0);
+
 $dbN = "gevu_solus";    
 
-//DeleteLieu(1242);
+//DeleteLieu(500);
 
 $dbO = "gevu_alceane";
 //migreBase($dbN, $dbO);
-ajusteBase(1);
+//ajusteBase(1);
 
-/*
 $dbO = "gevu_pc1";    
 //migreBase($dbN, $dbO);
-//ajusteBase(1);
 
 
 $dbO = "gevu_pc2";    
-migreBase($dbN, $dbO);
-ajusteBase(1);
+//migreBase($dbN, $dbO);
 
 $dbO = "gevu_trouville";    
 $idInstant = 4;    
-migreBase($dbN, $dbO, $idInstant);
+//migreBase($dbN, $dbO);
+//ajusteBase(1);
 
 $dbO = "gevutrouville";    
 $idInstant = 5;    
-migreBase($dbN, $dbO, $idInstant);
+//migreBase($dbN, $dbO, $idInstant);
 
 $dbO = "gevutrouville1";    
 $idInstant = 6;    
-migreBase($dbN, $dbO, $idInstant);
+//migreBase($dbN, $dbO, $idInstant);
 
 $dbO = "gevutrouville2";    
 $idInstant = 7;    
-migreBase($dbN, $dbO, $idInstant);
+//migreBase($dbN, $dbO, $idInstant);
 
 $dbO = "gevutrouvillevoirie";    
 $idInstant = 8;    
-migreBase($dbN, $dbO, $idInstant);
+//migreBase($dbN, $dbO, $idInstant);
 
+/*
 $dbO = "mundimuzgevu1";    
 $idInstant = 9;    
 migreBase($dbN, $dbO, $idInstant);

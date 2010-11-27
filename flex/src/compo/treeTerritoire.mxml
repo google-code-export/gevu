@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox horizontalCenter="0" verticalCenter="0" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:controls="it.sephiroth.controls.*"
+	width="100%" height="100%" 
+	creationComplete="init()" >
+	<mx:Script>
+        <![CDATA[
+           
+          private function init():void {
+
+
+          }
+          
+          private function changeEvt(event:Event):void {
+         	if(!event.currentTarget.selectedItem)return;
+            var theData:Object=event.currentTarget.selectedItem.cat;
+            if (theData) {
+               trace(" Data: " + theData.titre);
+               //vérifie le type d'action a effectuer
+               if(this.parentApplication.id=="grilles"){
+	               this.parentApplication.initApp(theData.id);           	               	
+               }
+               if(this.parentApplication.id=="onadaflex"){
+	               this.parentApplication.createMarkerGrille(theData.id);           	
+               }
+            }
+         }
+
+        ]]>
+	</mx:Script>
+<mx:XML xmlns="" id="treeSource">
+		<node label="home" checked="2">
+			<node label="alessandro" checked="2">
+				<node label="Music" checked="2">
+					<node label="Downloads" checked="1">
+						<node label="boot.ini" checked="1" />
+					</node>
+					<node label="Documents" checked="0">
+						<node label="Music" checked="0">
+							<node label="NightWish" checked="0">
+								<node label="NightQuest.mp3" checked="0"/>
+								<node label="Stargazers.mp3" checked="0"/>
+								<node label="Lagoon.mp3" checked="0"/>
+							</node>
+							<node label="Lunatica" checked="0">
+								<node label="Fables and Dreams" checked="0">
+									<node label="The Spell.mp3" checked="0"/>
+									<node label="Fables and Dreams.mp3" checked="0"/>
+									<node label="Hymn.mp3" checked="0"/>
+								</node>
+								<node label="The Edge of Infinity" checked="0">
+									<node label="Edge of infinity.mp3" checked="0"/>
+								</node>
+								<node label="Who you are.mp3" checked="0"/>
+							</node>
+						</node>
+					</node>
+					<node label="Desktop.ini"  checked="0"/>
+					<node label="Gedit.desktop"  checked="0"/>
+				</node>
+			</node>
+		</node>
+	</mx:XML>
+	<mx:Script>
+		<![CDATA[
+			import mx.events.TreeEvent;
+			import it.sephiroth.renderers.TreecheckboxItemRenderer;
+
+			/**
+			 * Called on checkbox click
+			 * check and update for both parents and child nodes
+			 * according to the checkbox status
+			 */
+			private function onItemCheck( event: TreeEvent ): void
+			{
+				updateParents( event.item as XML, ( event.itemRenderer as TreecheckboxItemRenderer ).checkBox.checkState );
+				updateChilds( event.item as XML, ( event.itemRenderer as TreecheckboxItemRenderer ).checkBox.checkState );
+			}
+			
+			/**
+			 * @see it.sephiroth.controls.CheckBoxExtended#checkState
+			 * 
+			 */
+            private function updateChilds( item:XML, value: uint ):void
+            {
+		        var middle: Boolean = ( value & 2 << 1 ) == ( 2 << 1 );
+		        var selected: Boolean = ( value & 1 << 1 ) == ( 1 << 1 );
+	        
+                if( item.children( ).length( ) > 0 && !middle )
+                {
+                    for each(var x: XML in item.node )
+                    {
+                        x.@checked = value == ( 1 << 1 | 2 << 1 ) ? "2" : value == ( 1 << 1 ) ? "1" : "0";
+                        updateChilds( x, value );
+                    }
+                }
+            }
+            
+            private function updateParents( item: XML, value: uint ): void
+            {
+            	var checkValue: String = ( value == ( 1 << 1 | 2 << 1 ) ? "2" : value == ( 1 << 1 ) ? "1" : "0" );
+                var parentNode: XML = item.parent( );
+                if( parentNode )
+                {
+                    for each(var x: XML in parentNode.node )
+                    {
+                        if( x.@checked != checkValue )
+                        {
+                            checkValue = "2"
+                        }
+                    }
+                    parentNode.@checked = checkValue;
+                    updateParents( parentNode, value );
+                }
+            }
+			
+		]]>
+	</mx:Script>
+	
+		<controls:TreeCheckBox id="mytree"
+			showRoot="false"
+			width="100%"
+			height="100%"
+			dataProvider="{treeSource}"
+			openItems="{treeSource..node}"
+			labelField="@label"
+			checkField="@checked"
+			itemCheck="onItemCheck( event )"
+		/>
+	</mx:VBox>	
