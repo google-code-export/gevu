@@ -4,7 +4,7 @@ require_once('../library/php/odtphp/odf.php');
 $cc = new GEVU_CalculCouts();
 
 //en attendant la nouvelle version
-//on utilise les requête de la version XUL
+//on utilise les requêtes de la version XUL
 require_once( "../param/Constantes.php" );
 $site = new Site($SITES,"trouvilleERP1");
 $grille = new Grille($site);

@@ -1110,6 +1110,26 @@ function migreBase($dbN, $dbO){
         if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO OBSERVATIONS: ".mysql_affected_rows()."<br/>";       
 
+
+        //AUTEURS
+        //l'importation n'est à faire que une fois
+        $sql = "INSERT INTO $dbN.gevu_exis
+        (nom, url, mail, mdp, mdp_sel, role)
+        SELECT a.nom
+			, a.url_site 	
+			, a.email
+			, pass
+			, alea_actuel
+            , statut
+        FROM $dbO.spip_auteurs a
+        ";
+        //$result = mysql_query($sql);
+        //if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        $sql = "UPDATE gevu_exis SET role = 'manager'";
+        //$result = mysql_query($sql);
+        //if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        //echo "$dbO AUTEURS: ".mysql_affected_rows()."<br/>";       
+        
         echo "FIN IMPORT --------------------<br/>--------------<br/>"; 
         
 }

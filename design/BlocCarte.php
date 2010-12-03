@@ -8,7 +8,7 @@ if(!$g){
 
 //récupération de donnée géo 
 $arrGeo = $g->GetGeo(-1,$idDon);
-print_r($arrGeo);
+//print_r($arrGeo);
 
 ?>
 <html >

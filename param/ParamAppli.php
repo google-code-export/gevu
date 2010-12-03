@@ -12,8 +12,8 @@ set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\ZendFramework-1.
 set_include_path(get_include_path().PATH_SEPARATOR.ROOT_PATH."\library\php");
 
 // *ZAMFBROWSER IMPLEMENTATION*
-set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\exemples\php\ZamfBrowser_v.1.0\browser");
-require_once( "ZendAmfServiceBrowser.php" );
+//set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\exemples\php\ZamfBrowser_v.1.0\browser");
+//require_once( "ZendAmfServiceBrowser.php" );
 
 
 // Define path to application directory

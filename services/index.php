@@ -3,7 +3,6 @@ require_once( "../param/ParamAppli.php" );
 
 try {
 
-
 /*
 
 $s = new Model_DbTable_Gevu_criteres();
@@ -30,13 +29,14 @@ $s = new Model_DbTable_Gevu_produits();
 $rs = $s->getAll();
 $data = array("url"=>"kjh","titre"=>"csv","content_type"=>"text/csv");
 $s->ajouter($data,false);
+*/
 
 $lm = new AUTH_LoginManager();
 $u = new AUTH_LoginVO();
 $u->username="samszo";
-$u->password="samszo";
+$u->password="Samszo0";
 $au = $lm->verifyUser($u);
-*/
+
 
 $server = new Zend_Amf_Server();
 //voir s'il ne faut pas passer par des objects en dehors du framework pour �viter 
@@ -70,8 +70,8 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_couts')
 	//pour l'authentification
 	->setClass("AUTH_LoginManager")
-	->setClass("AUTH_LoginVO");
-;
+	->setClass("AUTH_LoginVO")
+	;
 	
 $server->setClassMap('LoginVO','AUTH_LoginVO');	
 

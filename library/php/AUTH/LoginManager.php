@@ -48,7 +48,8 @@ class AUTH_LoginManager {
 		$authAdapter->setTableName('gevu_exis')
             ->setIdentityColumn('nom')
             ->setCredentialColumn('mdp')
-			->setCredentialTreatment('MD5(CONCAT(?, mdp_sel))');
+			->setCredentialTreatment('MD5(?)');
+            //->setCredentialTreatment('MD5(CONCAT(?, mdp_sel))');
 			
 		$usr=htmlspecialchars($user->username);
 		$pwd=htmlspecialchars($user->password);
