@@ -12,6 +12,7 @@
 <application path="gevu.mxml"/>
 <application path="grilles.mxml"/>
 <application path="rapports.mxml"/>
+<application path="onadaflex.mxml"/>
 </applications>
 <modules/>
 <buildCSSFiles/>

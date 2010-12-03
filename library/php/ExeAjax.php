@@ -224,9 +224,6 @@
 		case 'GetXulForm':
 			$resultat = GetXulForm($_GET['idGrille'],$_GET['idDon']);
 			break;
-		case 'GetAllEtatDiag':
-			$resultat = GetAllEtatDiag();
-			break;
 		case 'GetBDs':
 			$resultat = GetBDs($objSite);
 			break;
@@ -250,21 +247,7 @@
 		header ("Content-Type:text/xml");
 		return $menu;
 	}
-	
-	function GetAllEtatDiag(){		
-		//gestion des requêtes multisite
-		if($objSite->infos["SITE_ENFANT"]!=-1 && $query!="idFiche"){
-			foreach($objSite->infos["SITE_ENFANT"] as $siteenfant=>$type)
-			{
-					//echo $site." NextSiteEnfant:".$siteenfant."<br/>"; 
-					$site = $objSite->sites[$siteenfant];
-					//echo $objSite->sites."<br/>"; 
-					$objSiteNew = new Site($objSite->sites, $siteenfant, $objSite->scope, false);
-					echo get_marker($objSiteNew, $id, $southWestLat, $northEastLat, $southWestLng, $northEastLng, $zoom, $query, $themes, $i);
-			}
-		}		
-	}
-	
+
 	function GetXmlImaListe($g){
 		//r�cup�re les images jpeg png, gif
 		$imas = $g->GetDocs($g->id,"1,2,3");
