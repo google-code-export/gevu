@@ -255,11 +255,7 @@ $SiteTrouville = array(
 	"SQL_DB" => "gevu_villeneuve",
 	"NOM" => "gevu trouville global",//je sais pas
 	"SITE_PARENT" => -1,//je sais pas
-    "SITE_ENFANT" => array(
-		"trouvilleERP1" => "diagnostic"
-		,"trouvilleERP2" => "diagnostic"
-		,"trouvilleVoirie" => "diagnostic"
-		),
+    "SITE_ENFANT" => -1,
 	
 	"GRILLE_GEO" => 1,
 	"GRILLE_REG_LEG" => 52,

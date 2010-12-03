@@ -289,7 +289,10 @@ class Grille{
 		$arrG = array();
 		//r?cup?re les grilles pour le site
 		if($this->site->infos["SITE_ENFANT"]==-1){ 					
-			$arrG = $this->FiltreRubAvecGrille($idRub,$idGrille,true,$GetAll);
+			//$arrG = $this->FiltreRubAvecGrille($idRub,$idGrille,true,$GetAll);
+			$rs = $this->FiltreRubAvecGrille($idRub,$idGrille,false,$GetAll);
+			$arr = $this->GetRubGeoGrille($idGrille,$idRub,$this->site,$rs,"",$arrG,$GetAll);
+			$arrG = $arr[0];
 		}else{
 			//r?cup?re les grille des sites dans le cas d'un site parent 					
 	 		foreach($this->site->infos["SITE_ENFANT"] as $id=>$type)
@@ -304,6 +307,8 @@ class Grille{
 				
 					//r?cup?ration des rubrique avec la grille
 					$rs = $grille->FiltreRubAvecGrille($idRub,$idGrille,false,$GetAll);
+					$arr = $grille->GetRubGeoGrille($idGrille,$idRub,$oSiteEnf,$rs,$xmlG,$arrG,$GetAll);
+					/*
 					$g = new Granulat($idRub,$oSiteEnf,false);
 					$xml = "";
 					while($row = mysql_fetch_assoc($rs)) {
@@ -351,7 +356,10 @@ class Grille{
 						$xml .= "</terre>";
 						$arrG[$key]= array("xml"=>$xml,"rub"=>$row);
 						$xmlG .= $xml;
-					}					
+					}
+					*/
+					$arrG = $arr[0];
+					$xmlG = $arr[1];					
 					$oSiteEnf->SaveFile($path,utf8_encode($xmlG));
 				}else{
 					//construction du tableau
@@ -363,7 +371,63 @@ class Grille{
 		return $arrG;
 		
 	}
-    
+	
+	public function GetRubGeoGrille($idGrille, $idRub,$oSiteEnf,$rs,$xmlG,$arrG,$GetAll)
+	{
+		$g = new Granulat($idRub,$oSiteEnf,false);
+		$xml = "";
+		while($row = mysql_fetch_assoc($rs)) {
+			$key = $oSiteEnf->strtokey($row["titre"]."_".$oSiteEnf->id."_".$row["id_rubrique"]);
+			
+			$xml = "<terre checked='1' idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$row["titre"]."\" idGrille='".$idGrille."' >";
+			
+			$geo = $g->GetGeo($row["id_rubrique"]);
+			$xml .= "<CartoDonnee lat='".$geo['lat']."'";		
+			$xml .= " lng='".$geo['lng']."'";
+			$xml .= " idRub='".$row['id_rubrique']."'";				
+			$xml .= " titre=\"".utf8_encode($this->site->XmlParam->XML_entities($row["titre"]))."\"";
+			$xml .= " idSite='".$oSiteEnf->id."'";
+			$xml .= " zoommin='".$geo['zoom']."'";
+			$xml .= " kml='".$geo['kml']."'";
+			$xml .= " adresse=\"".utf8_encode($this->site->XmlParam->XML_entities($geo['adresse']))."\"";
+			$xml .= " cartotype='".$geo['type']."'";
+			$xml .= " idGrille='".$idGrille."'";
+			$xml .= " />";
+
+			//v?rifie s'il faut charger des grilles enfants
+			$Xpath = "/XmlParams/XmlParam/menuSrc[@idForm='".$idGrille."']";
+			if($this->trace)
+				echo "Grille:FiltreRubAvecGrilleMultiSite:Xpath".$Xpath."<br/>";
+			$Q = $this->site->XmlParam->GetElements($Xpath);
+			//calcul les grilles enfants
+			if(count($Q)>0){ 					
+		 		foreach($Q[0]->menuDst as $grilleEnf)
+				{
+					if($grilleEnf["idForm"]){
+						$arrSG = $this->FiltreRubAvecGrilleMultiSite($row["id_rubrique"],$grilleEnf["idForm"],$GetAll);	
+					}
+					ksort($arrSG);
+					$i=0;
+					$xmlSG=""; 					
+					foreach($arrSG as  $k=>$val){
+						if($i==0)$xmlSG = "<terre checked='1' idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$val["rub"]["gTitre"]."\" idGrille='".$grilleEnf["idForm"]."' >";
+						//ajoute les grilles enfants
+						$xmlSG .= $val["xml"];
+						$i++;
+					}
+					if($xmlSG!=""){
+						$xml .= $xmlSG."</terre>";
+					}
+				}
+			}
+			$xml .= "</terre>";
+			$arrG[$key]= array("xml"=>$xml,"rub"=>$row);
+			$xmlG .= $xml;
+		}
+		return array($arrG,$xmlG);		
+	}
+	
+	
 	public function FiltreRubAvecGrille($id,$idsGrille,$GetArr=false,$GetAll=false)
 	{
 	

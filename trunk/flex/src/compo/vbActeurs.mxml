@@ -11,7 +11,7 @@
         	import mx.controls.Label;
         	import mx.controls.LinkButton;
 		    import mx.managers.PopUpManager;
-        	import compo.twActeur;
+        	//import compo.twActeur;
            
            	[Bindable] public var rsActeurs:Object;
            

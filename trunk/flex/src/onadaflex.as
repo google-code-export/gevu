@@ -41,9 +41,11 @@
 	//
    [Bindable] private var urlExeAjax:String="http://localhost/gevu/library/php/ExeAjax.php";
 	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRSAqqCYJRNRYB52nvFZykN9ZY0cdhRvfhvUr_7t7Rz5_XNkPGDb_GYlQA";
-    private var urlAllEtatDiag:String="http://localhost/gevu/bdd/carto/allEtatDiag_trouville_6264.xml";
+    //private var urlAllEtatDiag:String="http://localhost/gevu/bdd/carto/allEtatDiag_trouville_6264.xml";
+    private var urlAllEtatDiag:String="http://localhost/gevu/library/php/ExecDonneeCarto.php?f=GetAllEtatDiag";
     [Bindable] private var urlExeCarto:String="http://localhost/gevu/library/php/ExecDonneeCarto.php";
-    private var urlTerreRoot:String="http://localhost/gevu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=6263&site=trouville";
+    //private var urlTerreRoot:String="http://localhost/gevu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=6263&site=trouville";
+    private var urlTerreRoot:String="http://localhost/gevu/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=5479";
 	//
 	
     private var map:Map;

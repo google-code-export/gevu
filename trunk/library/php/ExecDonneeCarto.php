@@ -53,12 +53,32 @@ switch ($fonction) {
 	case 'get_arbo_grille':
 		$resultat = get_arbo_grille($g->id,$objSite,$_GET['idGrille']);
 		break;
+	case 'GetAllEtatDiag':
+		$resultat = GetAllEtatDiag();
+		break;
 		
 }
 
 echo $resultat;
 
-
+	
+	function GetAllEtatDiag(){		
+		//gestion des requêtes multisite
+		global $objSite, $id, $southWestLat, $northEastLat, $southWestLng, $northEastLng, $zoom, $query, $themes, $i;
+		if($objSite->infos["SITE_ENFANT"]!=-1 && $query!="idFiche"){
+			foreach($objSite->infos["SITE_ENFANT"] as $siteenfant=>$type)
+			{
+					//echo $site." NextSiteEnfant:".$siteenfant."<br/>"; 
+					$site = $objSite->sites[$siteenfant];
+					//echo $objSite->sites."<br/>"; 
+					$objSiteNew = new Site($objSite->sites, $siteenfant, $objSite->scope, false);
+					echo get_marker($objSiteNew, $id, $southWestLat, $northEastLat, $southWestLng, $northEastLng, $zoom, $query, $themes, $i);
+			}
+		}else{
+			echo get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, $northEastLng, $zoom, $query, $themes, $i);
+		}
+	}
+	
 function get_arbo_grille($idRub,$objSite,$idGrille) {
 	
 	$grille = new Grille($objSite);
@@ -70,18 +90,14 @@ function get_arbo_grille($idRub,$objSite,$idGrille) {
 	
 			$xml = "<grilles idSite='".$objSite->id."' idRub='".$idRub."' idGrille='".$idGrille."' >";
 
-			//r�cup�ration des �l�ments des sites enfants
-	 		if($objSite->infos["SITE_ENFANT"]!=-1){
-				//r�cup�ration des éléments avec la grille
-	 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($idRub,$idGrille,true);
-	 			if(count($arrG)>0){
-	 				//trie le r�sultat
-		 			ksort($arrG); 					
-		 			foreach($arrG as  $key=>$val){
-		 				$xml.=$val["xml"];
-					}	
-	 			}
-			}
+ 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($idRub,$idGrille,true);
+ 			if(count($arrG)>0){
+ 				//trie le r�sultat
+	 			ksort($arrG); 					
+	 			foreach($arrG as  $key=>$val){
+	 				$xml.=$val["xml"];
+				}	
+ 			}
 	 		
 			$xml .= "</grilles>";
 
