@@ -1156,7 +1156,8 @@ class Granulat
 		
 		$wherePubli = " ";	
 		if(isset($_SESSION['ContEditPublie']))
-			$wherePubli = " AND a.statut='publie' ";	
+			if($_SESSION['ContEditPublie'])
+				$wherePubli = " AND a.statut='publie' ";	
 		
 		//r�cup�re pour la rubrique l'article ayant les condition de extra
 		$sql = "SELECT a.id_article ,a.titre, a.date, a.maj, a.statut, aa.id_auteur, au.nom

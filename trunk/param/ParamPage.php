@@ -67,7 +67,7 @@ if(!isset($_SESSION['ShowCarte']))
 if(!isset($_SESSION['ShowDocs']))
 	$_SESSION['ShowDocs']=false;
 if(!isset($_SESSION['ContEditAll']))
-	$_SESSION['ContEditAll']=false;
+	$_SESSION['ContEditAll']=true;
 if(!isset($_SESSION['ContEditPublie']))
 	$_SESSION['ContEditPublie']=false;
 if(!isset($_SESSION['version']))

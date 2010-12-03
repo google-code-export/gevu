@@ -309,7 +309,7 @@ class Grille{
 					while($row = mysql_fetch_assoc($rs)) {
 						$key = $oSiteEnf->strtokey($row["titre"]."_".$oSiteEnf->id."_".$row["id_rubrique"]);
 						
-						$xml = "<terre idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$row["titre"]."\" idGrille='".$idGrille."' >";
+						$xml = "<terre checked='1' idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$row["titre"]."\" idGrille='".$idGrille."' >";
 						
 						$geo = $g->GetGeo($row["id_rubrique"]);
 						$xml .= "<CartoDonnee lat='".$geo['lat']."'";		
@@ -338,7 +338,7 @@ class Grille{
 								$i=0;
 								$xmlSG=""; 					
 								foreach($arrSG as  $k=>$val){
-									if($i==0)$xmlSG = "<terre idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$val["rub"]["gTitre"]."\" idGrille='".$grilleEnf["idForm"]."' >";
+									if($i==0)$xmlSG = "<terre checked='1' idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$val["rub"]["gTitre"]."\" idGrille='".$grilleEnf["idForm"]."' >";
 									//ajoute les grilles enfants
 									$xmlSG .= $val["xml"];
 									$i++;
@@ -353,6 +353,10 @@ class Grille{
 						$xmlG .= $xml;
 					}					
 					$oSiteEnf->SaveFile($path,utf8_encode($xmlG));
+				}else{
+					//construction du tableau
+					$key = $oSiteEnf->id."_".$idRub."_".$idGrille;
+					$arrG[$key]= array("xml"=>$xml);
 				}
 			}				
 		}
@@ -1040,6 +1044,7 @@ class Grille{
 		$where = str_replace("-ids-", $idsRub, $Q[0]->where);
 		$from = str_replace("-champ-", $champ, $Q[0]->from);
 		$from = str_replace("-valeur-", $valeur, $from);
+		$from = str_replace("-grille-", $grille, $from);
 		$from = str_replace("-idArt-", $idArt, $from);
 		$from = str_replace("-ref-", $ref, $from);
 		$sql = $Q[0]->select.$from.$where;

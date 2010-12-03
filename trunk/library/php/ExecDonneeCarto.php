@@ -124,14 +124,14 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 		else
 			$xml="";
 		while($r = mysql_fetch_assoc($req)) {
-			$xml .= "<terre idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"".$r["rTitre"]."\" idGrille='".$idGrille."'   idMot='".$r["id_mot"]."'  titreMot=\"".$r["mTitre"]."\" >";
+			$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"".$r["rTitre"]."\" idGrille='".$idGrille."'   idMot='".$r["id_mot"]."'  titreMot=\"".$r["mTitre"]."\" >";
 	 		$xml .= get_arbo_territoire($r["id_rubrique"],$objSite,$niv+1);
 			//rï¿½cupï¿½ration des ï¿½lï¿½ments des sites enfants
 	 		if($objSite->infos["SITE_ENFANT"]!=-1){
 				//rï¿½cupï¿½ration des ï¿½tablissements
 	 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($r["id_rubrique"],$objSite->infos["GRILLE_ETAB"]);
 	 			if(count($arrG)>0){
-	 				$xml .= "<terre idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Etablissements\" idGrille='".$idGrille."' >";
+	 				$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Etablissements\" idGrille='".$idGrille."' >";
 		 			//trie le rï¿½sultat
 		 			ksort($arrG); 					
 		 			foreach($arrG as  $key=>$val){
@@ -142,7 +142,7 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 				//récupération des ï'établissements
 	 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($r["id_rubrique"],$objSite->infos["GRILLE_VOIRIE"]);
 	 			if(count($arrG)>0){
-	 				$xml .= "<terre idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Voiries\" idGrille='".$objSite->infos["GRILLE_VOIRIE"]."' >";
+	 				$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Voiries\" idGrille='".$objSite->infos["GRILLE_VOIRIE"]."' >";
 		 			//trie le rï¿½sultat
 		 			ksort($arrG); 					
 		 			foreach($arrG as  $key=>$val){

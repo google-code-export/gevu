@@ -227,12 +227,29 @@
 		case 'GetAllEtatDiag':
 			$resultat = GetAllEtatDiag();
 			break;
+		case 'GetBDs':
+			$resultat = GetBDs($objSite);
+			break;
 		default:
 			//$resultat = AddDocToArt();
 	}
 
 	echo  utf8_encode($resultat);	
 
+	function GetBDs($objSite){
+
+		$menu = "<menuitems>";
+		foreach($objSite->sites as $k => $s){
+			if($site == $k)
+				$check = "true";
+			else
+				$check = "false";
+			$menu .= "<menuitem label=\"".$s["NOM"]."\" value='".$k."' />";
+		}
+		$menu .= "</menuitems>";
+		header ("Content-Type:text/xml");
+		return $menu;
+	}
 	
 	function GetAllEtatDiag(){		
 		//gestion des requêtes multisite

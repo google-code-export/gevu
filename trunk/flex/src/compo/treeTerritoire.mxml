@@ -3,11 +3,14 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:controls="it.sephiroth.controls.*"
 	width="100%" height="100%" 
-	creationComplete="init()" >
+	creationComplete="initTree()" >
 	<mx:Script>
         <![CDATA[
+		  import mx.rpc.events.ResultEvent;
            
-          private function init():void {
+         [Bindable]	private var treeSource:XML;
+
+         private function initTree():void {
 
 
           }
@@ -27,43 +30,10 @@
             }
          }
 
-        ]]>
-	</mx:Script>
-<mx:XML xmlns="" id="treeSource">
-		<node label="home" checked="2">
-			<node label="alessandro" checked="2">
-				<node label="Music" checked="2">
-					<node label="Downloads" checked="1">
-						<node label="boot.ini" checked="1" />
-					</node>
-					<node label="Documents" checked="0">
-						<node label="Music" checked="0">
-							<node label="NightWish" checked="0">
-								<node label="NightQuest.mp3" checked="0"/>
-								<node label="Stargazers.mp3" checked="0"/>
-								<node label="Lagoon.mp3" checked="0"/>
-							</node>
-							<node label="Lunatica" checked="0">
-								<node label="Fables and Dreams" checked="0">
-									<node label="The Spell.mp3" checked="0"/>
-									<node label="Fables and Dreams.mp3" checked="0"/>
-									<node label="Hymn.mp3" checked="0"/>
-								</node>
-								<node label="The Edge of Infinity" checked="0">
-									<node label="Edge of infinity.mp3" checked="0"/>
-								</node>
-								<node label="Who you are.mp3" checked="0"/>
-							</node>
-						</node>
-					</node>
-					<node label="Desktop.ini"  checked="0"/>
-					<node label="Gedit.desktop"  checked="0"/>
-				</node>
-			</node>
-		</node>
-	</mx:XML>
-	<mx:Script>
-		<![CDATA[
+		public function readXmlTerre(event:ResultEvent):void{
+	        treeSource = new XML(event.result);
+		}
+
 			import mx.events.TreeEvent;
 			import it.sephiroth.renderers.TreecheckboxItemRenderer;
 
@@ -89,7 +59,7 @@
 	        
                 if( item.children( ).length( ) > 0 && !middle )
                 {
-                    for each(var x: XML in item.node )
+                    for each(var x: XML in item.terre )
                     {
                         x.@checked = value == ( 1 << 1 | 2 << 1 ) ? "2" : value == ( 1 << 1 ) ? "1" : "0";
                         updateChilds( x, value );
@@ -103,7 +73,7 @@
                 var parentNode: XML = item.parent( );
                 if( parentNode )
                 {
-                    for each(var x: XML in parentNode.node )
+                    for each(var x: XML in parentNode.terre )
                     {
                         if( x.@checked != checkValue )
                         {
@@ -115,16 +85,18 @@
                 }
             }
 			
-		]]>
+
+        ]]>
 	</mx:Script>
+	<mx:HTTPService id="srvTerre" resultFormat="xml" result="readXmlTerre(event);" showBusyCursor="true" /> 
 	
 		<controls:TreeCheckBox id="mytree"
 			showRoot="false"
 			width="100%"
 			height="100%"
 			dataProvider="{treeSource}"
-			openItems="{treeSource..node}"
-			labelField="@label"
+			openItems="{treeSource.terre}"
+			labelField="@titreRub"
 			checkField="@checked"
 			itemCheck="onItemCheck( event )"
 		/>
