@@ -227,12 +227,30 @@
 		case 'GetBDs':
 			$resultat = GetBDs($objSite);
 			break;
+		case 'GetSolusProbEtab':
+			$resultat = GetSolusProbEtab($objSite, $_GET['idEtab']);
+			break;
 		default:
 			//$resultat = AddDocToArt();
 	}
 
 	echo  utf8_encode($resultat);	
 
+	function GetSolusProbEtab($objSite, $idEtab){
+		
+		$path = PathRoot."/bdd/EtatDiag/GetSolusProbEtab".$objSite->id."_".$idEtab.".xml";
+	    $contents = $objSite->GetFile($path);
+   		if(!$contents){
+			//pour utiliser Zend
+			require_once( "../../param/ParamAppli.php" );
+			$rap = new GEVU_Rapport();
+			$contents = $rap->GetSolusProbEtab($objSite, $idEtab);
+			$objSite->SaveFile($path,$contents);
+   		}
+   		echo $contents; 
+
+	}
+	
 	function GetBDs($objSite){
 
 		$menu = "<menuitems>";

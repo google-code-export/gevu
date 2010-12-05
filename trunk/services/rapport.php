@@ -1,7 +1,6 @@
 <?php
 require_once( "../param/ParamAppli.php" );
 require_once('../library/php/odtphp/odf.php');
-$cc = new GEVU_CalculCouts();
 
 //en attendant la nouvelle version
 //on utilise les requêtes de la version XUL
@@ -122,6 +121,7 @@ foreach($rBats as $r){
 $odf->mergeSegment($e_bats);
 */
 
+$cc = new Model_DbTable_Gevu_couts();
 
 $bats = $odf->setSegment('bats');
 foreach($rBats as $r){
@@ -134,7 +134,7 @@ foreach($rBats as $r){
 		$refs .= ",'".$r['idCrit']."'";
 	}
 	//récupère les couts liées aux critères
-    $couts = $cc->getCoutsByCriteres($refs);
+    $couts = $cc->findByIdsCriteres($refs);
     
     $bats->setVars('bat_cout_reg', '???');
     $bats->setVars('bat_cout_sou', '???');
