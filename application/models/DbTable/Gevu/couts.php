@@ -269,5 +269,50 @@ class Model_DbTable_Gevu_couts extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
+	/*
+     * Recherche une entrée Gevu_cout avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param int $refsCrits
+     */
+    public function findSolusByIdsCriteres($refsCrits)
+    {
+        $query = $this->select()
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from( array("g" => "gevu_couts"))
+            ->joinInner(array('s' => 'gevu_solutionsxcouts'),
+            	'g.id_cout = s.id_cout','id_solution')
+            ->joinInner(array('sc' => 'gevu_solutionsxcriteres'),
+            	's.id_solution = sc.id_solution','id_critere')
+            ->joinInner(array('c' => 'gevu_criteres'),
+            	'sc.id_critere = c.id_critere','ref')
+            ->joinInner(array('so' => 'gevu_solutions'),
+            	'so.id_solution = s.id_solution',array('soRef'=>'ref','soLib'=>'lib'))
+            ->where( "c.ref IN ($refsCrits)");
+    
+        return $this->fetchAll($query)->toArray(); 
+    }
+
+	/*
+     * Recherche une entrée Gevu_cout avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param int $idSolus
+     */
+    public function findProduitsByIdSolution($idSolus)
+    {
+        $query = $this->select()
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from( array("g" => "gevu_couts"))
+            ->joinInner(array('pc' => 'gevu_produitsxcouts'),
+            	'g.id_cout = pc.id_cout','id_produit')
+            ->joinInner(array('sp' => 'gevu_solutionsxproduits'),
+            	'sp.id_produit = pc.id_produit AND sp.id_solution = '.$idSolus,'id_solution')
+            ->joinInner(array('p' => 'gevu_produits'),
+            	'p.id_produit = pc.id_produit')
+            ;
+    
+        return $this->fetchAll($query)->toArray(); 
+    }
     
 }

@@ -4,21 +4,72 @@
 	>
 
 <mx:Script source="rapportsScript.as" />
+<mx:Style source="rapport.css"/>
 
 <mx:HTTPService id="srvBD" url="{urlBD}" result="readXmlBD(event);" showBusyCursor="true" /> 
+<mx:HTTPService id="srvEtab" result="readXmlEtab(event);" showBusyCursor="true" /> 
+<mx:HTTPService id="srvSolus" result="readXmlSolus(event);" showBusyCursor="true" /> 
     
-<mx:Panel title="GEVU Global EValuation Urbaine " width="100%" height="100%">
- 	<mx:ComboBox id="cbBD"  
-		dataProvider="{rsBD}"
-		labelField="label"
-		data="value"
-		prompt="Choisissez une base de donnée..."
-		rowCount="3"
-		close="choixBD(event)"
-	/>
+<mx:Panel title="GEVU Global EValuation Urbaine : RAPPORTS " width="100%" height="100%">
+ 	<mx:HBox paddingLeft="6" verticalAlign="middle">
+	 	<mx:ComboBox id="cbBD"  
+			dataProvider="{rsBD}"
+			labelField="label"
+			data="value"
+			prompt="Choisissez une base de donnée..."
+			rowCount="6"
+			close="choixBD(event)"
+		/>
+		<mx:Button label="Voir les solutions aux problèmes" click="showSolusProbEtab();" />
+		<mx:Label id="nomEtab" text="" fontSize="24"/>		 		
+ 	</mx:HBox>
+	<!--
  	<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">
  		<compo:treeTerritoire id="tTerre" />
  	</mx:Panel>
+ 	-->
+	<mx:HBox width="100%" height="100%" > 			
+	 	<mx:Panel  title="Choisissez un établissement" width="25%" height="100%" borderColor="#080808">
+			<mx:DataGrid 
+				id="dgEtab"
+				dataProvider="{rsEtab}"
+				editable="false"
+				resizableColumns="false" 
+				textAlign="left"
+				width="100%" height="100%"
+				click="selectEtab(event);"
+				>			
+				<mx:columns>
+					<mx:DataGridColumn visible="false" headerText="idGrille" dataField="idGrille" />
+					<mx:DataGridColumn visible="false" headerText="idRub" dataField="idRub" />
+					<mx:DataGridColumn visible="false" headerText="idSite" dataField="idSite" />
+					<mx:DataGridColumn headerText="Nom" dataField="titreRub" />   					
+	 			</mx:columns>
+			</mx:DataGrid>
+	 	</mx:Panel>
+	 	<mx:Canvas width="100%" height="100%" borderColor="#080808" >
+	 		<mx:VBox id="pSolusProb" width="100%" height="100%" >
+	 			
+	 		</mx:VBox>
+	 	</mx:Canvas>
+	 	<mx:VBox >	 		
+ 			<mx:Button label="calculer les coûts" click="calculerCout();" />
+ 			<mx:HBox>
+				<mx:Label text=" - Coûts réglémentaires : " fontSize="12"/>
+				<mx:Label id="coutReg" text="" fontSize="12"/> 				
+ 			</mx:HBox>
+ 			<mx:HBox>
+				<mx:Label text=" - Coûts souhaitables : " fontSize="12"/>
+				<mx:Label id="coutSou" text="" fontSize="12"/>
+ 			</mx:HBox>
+ 			<mx:HBox>
+				<mx:Label text=" - Coûts totaux : " fontSize="12"/>
+				<mx:Label id="coutTot" text="" fontSize="12"/>
+ 			</mx:HBox>
+	 	</mx:VBox>
+
+	</mx:HBox> 			
+ 	
 </mx:Panel>
 	
 </mx:Application>
