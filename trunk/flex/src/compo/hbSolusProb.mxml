@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	 creationComplete="init()"
+	>
+	<mx:Script>
+		<![CDATA[
+			public var prob:Object;
+			public function init():void{
+				if(prob){
+		        	lieu.text=prob.lieu;
+		        	texte.text=prob.texte;
+		        	titre.text=prob.titre;
+					if(prob.reglementaire)
+						regle.selected=true;
+					else
+						souha.selected=true;
+
+		        	if(prob.couts){
+				    	//bug dans le cas où il n'y a qu'un élément
+				    	var nb:int = prob.couts.coutSolus.length;
+			        	if(nb == 0){
+				        	var cout1:Object = prob.couts.coutSolus;
+				        	var c1:hbSolusCout=new hbSolusCout();
+				        	c1.cout=cout1;
+				        	couts.addChild(c1);
+			        	}else{		
+					        for each (var cout:Object in prob.couts.coutSolus)
+					        {
+					        	var c:hbSolusCout=new hbSolusCout();
+					        	c.cout=cout;
+					        	couts.addChild(c);
+					        }        	
+		        		}
+		        	}
+				}				
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HRule width="100%" strokeColor="#EBB807" strokeWidth="3"/>
+	<mx:HBox width="100%" height="100%" fontSize="12" >
+		<mx:Label text="" id="titre"/>
+		<mx:Label text="" id="lieu"/>
+	</mx:HBox>
+	<mx:HBox width="100%" height="100%" >
+		<mx:CheckBox label="réglementaire" id="regle" enabled="false" selected="false"/>
+		<mx:CheckBox label="souhaitable" id="souha" enabled="false" selected="false"/>
+	</mx:HBox>
+	<mx:Text id="texte" width="600" fontSize="12" />
+	<mx:VBox id="couts" width="100%" height="100%" >
+	</mx:VBox>
+	<mx:HRule width="100%" strokeColor="#EBB807" strokeWidth="3"/>	
+</mx:VBox>

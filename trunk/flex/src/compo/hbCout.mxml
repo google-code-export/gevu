@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	 creationComplete="init()"
+	 backgroundColor="{bgColor}" backgroundAlpha="0.3"
+	>
+
+	<mx:Script>
+		<![CDATA[
+			public var cout:Object;
+			[Bindable]	public var prob:Object;
+			public var bgColor=0x3366F;
+			public function init():void{
+				if(cout){
+					unite.text=cout.unite; 
+					if(int(cout.unite)==0)v_unite.width=0;
+					metre_lineaire.text=cout.metre_lineaire;
+					if(int(cout.metre_lineaire)==0)v_metre_lineaire.width=0;
+					metre_carre.text=cout.metre_carre;
+					if(int(cout.metre_carre)==0)v_metre_carre.width=0;
+					achat.text=cout.achat;
+					if(int(cout.achat)==0)v_achat.width=0;
+					pose.text=cout.pose;
+					if(int(cout.pose)==0)v_pose.width=0;
+					
+					if(this.name.substr(0,5)=="prob_"){
+						ref.text=prob.lieu; 
+						lib.text=prob.texte;				
+					}
+					if(this.name.substr(0,5)=="prod_"){
+						ref.text=cout.ref; 
+						lib.text=cout.marque+" - "+cout.modele;
+					}
+				}				
+			}
+			private function garde(event:Event):void{
+				
+				if(n_achat.value != 0  || n_unite.value != 0  || n_metre_lineaire.value != 0 || n_metre_carre.value != 0 || n_pose.value != 0 ){
+					this.setStyle("backgroundColor","green");
+					//création de la solution à ajouter
+					//ajoute une solution à la sélection
+					//this.parentApplication.contains()					
+				}else{
+					this.setStyle("backgroundColor",bgColor);
+				}	
+			}
+
+		]]>
+	</mx:Script>
+	<mx:Label text="" id="ref"/>			
+	<mx:Text id="lib" fontSize="12" width="400" />
+	<mx:HBox>        
+		<mx:VBox styleName="ligneCout" id="v_unite" >
+			<mx:Label text="unité" />
+			<mx:HBox>
+				<mx:Label text="" id="unite"/><mx:Label text="x"/>
+				<mx:NumericStepper change="garde(event);" id="n_unite" minimum="0" maximum="1000" width="48"/>							
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VRule height="40" strokeColor="{bgColor}" />
+		<mx:VBox styleName="ligneCout" id="v_metre_lineaire" >
+			<mx:Label text="m. liné." />
+			<mx:HBox>
+				<mx:Label text="" id="metre_lineaire"/><mx:Label text="x"/>
+				<mx:NumericStepper change="garde(event);" id="n_metre_lineaire" minimum="0" maximum="1000" width="48"/>							
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VRule height="40" strokeColor="{bgColor}" />
+		<mx:VBox styleName="ligneCout"  id="v_metre_carre">
+			<mx:Label text="mètre carré" />
+			<mx:HBox>
+				<mx:Label text="" id="metre_carre"/><mx:Label text="x"/>
+				<mx:NumericStepper change="garde(event);" id="n_metre_carre" minimum="0" maximum="1000" width="48"/>							
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VRule height="40" strokeColor="{bgColor}" />
+		<mx:VBox styleName="ligneCout"  id="v_achat" >
+			<mx:Label text="achat" />
+			<mx:HBox>
+				<mx:Label text="" id="achat"/><mx:Label text="x"/>
+				<mx:NumericStepper change="garde(event);" id="n_achat" minimum="0" maximum="1000" width="48"/>							
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VRule height="40" strokeColor="{bgColor}" />
+		<mx:VBox styleName="ligneCout" id="v_pose" >
+			<mx:Label text="pose" />
+			<mx:HBox>
+				<mx:Label text="" id="pose"/><mx:Label text="x"/>
+				<mx:NumericStepper change="garde(event);" id="n_pose" minimum="0" maximum="1000" width="48"/>							
+			</mx:HBox>
+		</mx:VBox>
+	</mx:HBox>
+	<mx:VBox id="sousCout" >
+		
+	</mx:VBox>
+</mx:VBox>
