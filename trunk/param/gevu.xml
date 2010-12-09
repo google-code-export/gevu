@@ -1145,6 +1145,7 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 					, m.titre RepCont
 					, m1.titre ReponsePhoto
 					, fdc21.valeur regle
+					, fdc23.valeur affir
 					, fdp2.id_donnee idDonneCont
 				</select>
 				<from> 
@@ -1186,7 +1187,10 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 					INNER JOIN spip_forms_donnees_champs fdc22 ON fdc22.id_donnee = fdp2.id_donnee
 					AND fdc22.champ = 'ligne_1' AND fdc22.valeur = fdc.valeur 
 					LEFT JOIN spip_forms_donnees_champs fdc21 ON fdc21.id_donnee = fdp2.id_donnee
-					AND fdc21.champ = 'multiple_1' AND fdc21.valeur = 'multiple_1_1' 
+					AND fdc21.champ = 'multiple_1' AND fdc21.valeur = 'multiple_1_1'
+					LEFT JOIN spip_forms_donnees_champs fdc23 ON fdc23.id_donnee = fdp2.id_donnee
+					AND fdc23.champ = 'texte_2'
+					 
 				</from>
 				<where> WHERE r.id_rubrique IN(-ids-) GROUP BY idRubPar, idRub, IdArt ORDER BY idRubPar, idRub, IdArt, idCont</where>
 				<dst>Art</dst>
