@@ -738,7 +738,7 @@ class Grille{
 		$xul .='</rows>';	
 		$xul .='</grid>';	
 		
-		$this->site->SaveFile($path,utf8_encode($xul));
+		$this->site->SaveFile($path,$xul);
 		
 	   	return $xul;
     	

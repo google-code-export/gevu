@@ -287,7 +287,7 @@ class Model_DbTable_Gevu_couts extends Zend_Db_Table_Abstract
             ->joinInner(array('c' => 'gevu_criteres'),
             	'sc.id_critere = c.id_critere','ref')
             ->joinInner(array('so' => 'gevu_solutions'),
-            	'so.id_solution = s.id_solution',array('soRef'=>'ref','soLib'=>'lib'))
+            	'so.id_solution = s.id_solution',array('ref'=>'ref','lib'=>'lib'))
             ->where( "c.ref IN ($refsCrits)");
     
         return $this->fetchAll($query)->toArray(); 

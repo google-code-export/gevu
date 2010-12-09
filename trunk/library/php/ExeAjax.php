@@ -238,7 +238,7 @@
 
 	function GetSolusProbEtab($objSite, $idEtab){
 		
-		$path = PathRoot."/bdd/EtatDiag/GetSolusProbEtab".$objSite->id."_".$idEtab.".xml";
+		$path = PathRoot."/bdd/EtatDiag/GetSolusProbEtab_".$objSite->id."_".$idEtab.".xml";
 	    $contents = $objSite->GetFile($path);
    		if(!$contents){
 			//pour utiliser Zend

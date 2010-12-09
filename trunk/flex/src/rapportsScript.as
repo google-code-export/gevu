@@ -108,38 +108,34 @@ public function showSolusProbEtab():void {
 }
 
 public function calculerCout():void {
-	var probs:Array = pSolusProb.getChildren();
+	var sols:Array = selectCout.getChildren();
 	var cReg:int=0;
 	var cSou:int=0;
 	var c:int=0;
-	for each(var prob:hbSolusProb in probs){
-		var coutsS:Array = prob.couts.getChildren();
-		for each(var cSolus:hbSolusCout in coutsS){
+	for each(var sol:hbSelectSolus in sols){
+		var couts:Array = sol.selectProb.getChildren();
+		for each(var ct:hbCout in couts){
 			c=0;
-			if(cSolus.cbuni.selected) c = int(cSolus.unite.text);
-			if(cSolus.cbml.selected) c = int(cSolus.metre_lineaire.text);
-			if(cSolus.cbm2.selected) c = int(cSolus.metre_carre.text);
-			if(cSolus.cbachat.selected) c = int(cSolus.achat.text);
-			if(cSolus.cbpose.selected) c = int(cSolus.pose.text);
-			if(int(cSolus.num.text)>1){
-				c = c * int(cSolus.num.text);
-			}
-			if(prob.regle.selected)cReg+=c;
-			if(prob.souha.selected)cSou+=c;
+			if(ct.n_unite.value !=0) c = int(ct.unite.text)*ct.n_unite.value;
+			if(ct.n_metre_lineaire.value !=0) c = int(ct.metre_lineaire.text)*ct.n_metre_lineaire.value;
+			if(ct.n_metre_carre.value !=0) c = int(ct.metre_carre.text)*ct.n_metre_carre.value;
+			if(ct.n_achat.value !=0) c = int(ct.achat.text)*ct.n_achat.value;
+			if(ct.n_pose.value !=0) c = int(ct.pose.text)*ct.n_pose.value;
+			if(ct.prob.reglementaire)cReg+=c; else cSou+=c;
 			c=0;
+			/*
 			var coutsP:Array = cSolus.couts.getChildren();
 			for each(var cProd:hbProdCout in coutsP){
-				if(cProd.cbuni.selected) c = int(cProd.unite.text);
-				if(cProd.cbml.selected) c = int(cProd.metre_lineaire.text);
-				if(cProd.cbm2.selected) c = int(cProd.metre_carre.text);
-				if(cProd.cbachat.selected) c = int(cProd.achat.text);
-				if(cProd.cbpose.selected) c = int(cProd.pose.text);
-				if(int(cProd.num.text)>1){
-					c = c * int(cProd.num.text);
-				}
+				ct=hbCout(cProd.detailCout.getChildAt(0));
+				if(ct.n_unite.value !=0) c = int(ct.unite.text)*ct.n_unite.value;
+				if(ct.n_metre_lineaire.value !=0) c = int(ct.metre_lineaire.text)*ct.n_metre_lineaire.value;
+				if(ct.n_metre_carre.value !=0) c = int(ct.metre_carre.text)*ct.n_metre_carre.value;
+				if(ct.n_achat.value !=0) c = int(ct.achat.text)*ct.n_achat.value;
+				if(ct.n_pose.value !=0) c = int(ct.pose.text)*ct.n_pose.value;
 			}				
 			if(prob.regle.selected)cReg+=c;
 			if(prob.souha.selected)cSou+=c;
+			*/
 		}
 	}
 	coutReg.text = cReg + " € H.T.";
