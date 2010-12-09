@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	 creationComplete="init()"
+	 backgroundColor="{bgColor}" backgroundAlpha="0.3"
+	>
+
+	<mx:Script>
+		<![CDATA[
+			public var cout:Object;
+			[Bindable]	public var probs:Array=[];
+			public var bgColor=0x3366F;
+			public function init():void{
+				if(cout){
+					ref.text=cout.ref; 
+					lib.text=cout.lib;
+					for each(var p:Object in probs){						 
+						addProb(p);
+						for each(var pd:Object in p.prods){						 
+							addProd(pd, p)
+						}
+					}
+				}				
+			}
+			public function addProb(p:Object):hbCout{
+				var ct:hbCout= new hbCout();
+				ct.name = "prob_"+p.idDon;
+				ct.cout = cout;
+				ct.prob = p;
+				ct.bgColor = 0x3366F;
+				selectProb.addChild(ct);
+				return ct;				
+			}
+			public function addProd(c:Object, p:Object):void{
+				var ct:hbCout = hbCout(selectProb.getChildByName("prob_"+p.idDon));
+				//vérifie si le problème a été ajouté
+				if(!ct){
+					//on ajoute le problème
+					probs.push(p);
+					ct = addProb(p);														
+				}
+				var ctP:hbCout= new hbCout();
+				ctP.name = "prod_"+c.ref;
+				ctP.cout = c;
+				ctP.prob = p;
+				ctP.bgColor = 0x3366F;
+				ct.sousCout.addChild(ctP);				
+			}
+			public function delProb(p:Object):void{
+				for each(var prob:Object in probs){
+					if(prob.idDon==p.idDon){
+						probs.pop();
+						var ct:hbCout = hbCout(selectProb.getChildByName("prob_"+p.idDon));					
+						selectProb.removeChild(ct);
+					}
+				}
+			}
+			public function delProd(p:Object, c:Object):void{
+				for each(var prob:Object in probs){
+					for each(var prod:Object in prob.prods){
+						if(prod.id_cout==c.id_cout){
+							prob.prods.pop();
+							var ct:hbCout = hbCout(selectProb.getChildByName("prob_"+prob.idDon));					
+							var souCt:hbCout = hbCout(ct.getChildByName("prod_"+p.idDon));					
+							ct.removeChild(souCt);
+						}
+					}
+				}
+			}
+
+		]]>
+	</mx:Script>
+	<mx:Label text="" id="ref"/>			
+	<mx:Text id="lib" fontSize="12" width="400" />
+	<mx:VBox id="selectProb" width="100%" >			
+	</mx:VBox>	
+</mx:VBox>
