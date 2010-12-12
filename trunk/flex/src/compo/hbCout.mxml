@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
 	 creationComplete="init()"
-	 backgroundColor="{bgColor}" backgroundAlpha="0.3"
+	 backgroundColor="{bgColor}" backgroundAlpha="0.1"
 	>
 
 	<mx:Script>

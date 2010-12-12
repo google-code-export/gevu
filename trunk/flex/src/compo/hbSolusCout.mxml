@@ -48,7 +48,6 @@
 						sol = new hbSelectSolus();
 						sol.name = "so_"+cbRef.label;						
 						sol.cout = cout;
-						sol.bgColor = 0x3366F;
 						sol.probs.push(p.prob);
 						this.parentApplication.selectCout.addChild(sol);
 					}

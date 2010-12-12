@@ -33,13 +33,13 @@
 					//vérifie si la solution a déjà été sélectionnée
 					if(solSel){
 						//on ajoute le produit
-						solSel.addProd(cout,p.prob);							
+						solSel.addProd(cout,p.prob, false);							
 					}else{
 						//on crée la solution sélectionné
+						sol.cbRef.selected=true;
 						solSel = new hbSelectSolus();
 						solSel.name = "so_"+sol.cbRef.label;						
 						solSel.cout = sol.cout;
-						solSel.bgColor = 0x3366F;
 						var pds:Array=[];
 						pds.push(cout);
 						p.prob.prods = pds;

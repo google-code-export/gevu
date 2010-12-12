@@ -126,6 +126,12 @@ if(isset($_GET['idDon']))
 	$idDon = $_GET['idDon'];
 else
 	$idDon = -1;
+
+$pxml=-1;
+if(isset($_REQUEST['pxml']))
+	$pxml = $_REQUEST['pxml'];
+if($pxml == "")
+	$pxml = -1;	
 	
 $objSite = new Site($SITES, $site, false);
 

@@ -1425,6 +1425,33 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 				</where>
 			</Query>
 
+			<Query fonction="Grille_GetEtatDiagListeTot">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+						, fdcRef.valeur valRef
+						, fdcAff.valeur affirm
+						, oed.idDonRep
+						, oed.idDonCont
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+					INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+					INNER JOIN ona_etatdiag_donnees oed ON oed.id_etatdiag = oe.id_etatdiag
+
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = oed.idDonRep 
+					INNER JOIN spip_mots m ON m.id_mot = fdcRef.valeur AND m.titre='Non'
+					
+					
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont
+					INNER JOIN spip_forms_donnees_champs fdcM ON fdcM.id_donnee = oed.idDonCont
+					LEFT JOIN spip_forms_donnees_champs fdcAff ON fdcAff.id_donnee = oed.idDonCont 
+					   AND fdcAff.champ = 'texte_2'	   
+
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique
+				</where>
+			</Query>
+
 			<Query fonction="Grille_GetEtatDiagHandiListe__">
 				<select>
 					SELECT DISTINCT r.id_rubrique

@@ -278,12 +278,14 @@ class Xul{
 		$FilAriane.="<label id='fIN_".$id."' ".$js." value=\"".$g->titre."\"/>";
 		
 		//pour les liens vers l'admin spip
-		if($_SESSION['role']=== "administrateur"){
-			$js = "onclick='OuvreLienAdmin(".$g->id.");'";
-			$FilAriane.="<label id='fOUT_".$id."' ".$js." value=\"$\"/>";
-			
+		if(isset($_SESSION['role'])){
+			if($_SESSION['role']=== "administrateur"){
+				$js = "onclick='OuvreLienAdmin(".$g->id.");'";
+				$FilAriane.="<label id='fOUT_".$id."' ".$js." value=\"$\"/>";
+				
+			}
 		}
-		
+				
 		//pour le dernier élément du fil
 		if($niv==0){
 			//on crée un menu

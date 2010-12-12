@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
 	 creationComplete="init()"
-	 backgroundColor="{bgColor}" backgroundAlpha="0.3"
+	 backgroundColor="white" backgroundAlpha="0.3"
 	>
 
 	<mx:Script>
 		<![CDATA[
 			public var cout:Object;
 			[Bindable]	public var probs:Array=[];
-			public var bgColor=0x3366F;
 			public function init():void{
 				if(cout){
 					ref.text=cout.ref; 
@@ -16,7 +15,7 @@
 					for each(var p:Object in probs){						 
 						addProb(p);
 						for each(var pd:Object in p.prods){						 
-							addProd(pd, p)
+							addProd(pd, p, true)
 						}
 					}
 				}				
@@ -26,51 +25,70 @@
 				ct.name = "prob_"+p.idDon;
 				ct.cout = cout;
 				ct.prob = p;
-				ct.bgColor = 0x3366F;
+				ct.bgColor = 0xff0000;
 				selectProb.addChild(ct);
 				return ct;				
 			}
-			public function addProd(c:Object, p:Object):void{
+			
+			public function addProd(c:Object, p:Object, init:Boolean):void{
 				var ct:hbCout = hbCout(selectProb.getChildByName("prob_"+p.idDon));
-				//vérifie si le problème a été ajouté
-				if(!ct){
-					//on ajoute le problème
-					probs.push(p);
-					ct = addProb(p);														
+				if(!init){
+					//vérifie si le problème a été ajouté
+					if(!ct){
+						//on ajoute le problème
+						var pds:Array=[];
+						pds.push(cout);
+						p.prods = pds;
+						probs.push(p);
+						ct = addProb(p);														
+					}else{
+						//on ajoute les datas du produit
+						for each(var prob:Object in probs){
+							if(prob.idDon==p.idDon){
+								prob.prods.push(c);						
+							}
+						}
+					}
 				}
 				var ctP:hbCout= new hbCout();
-				ctP.name = "prod_"+c.ref;
+				ctP.name = "prod_"+c.id_cout;
 				ctP.cout = c;
 				ctP.prob = p;
-				ctP.bgColor = 0x3366F;
+				ctP.bgColor = 0xff0000;
 				ct.sousCout.addChild(ctP);				
 			}
 			public function delProb(p:Object):void{
+				var i:int=0;
 				for each(var prob:Object in probs){
 					if(prob.idDon==p.idDon){
-						probs.pop();
+						probs.splice(i,1);
 						var ct:hbCout = hbCout(selectProb.getChildByName("prob_"+p.idDon));					
 						selectProb.removeChild(ct);
 					}
+					i++;
 				}
 			}
 			public function delProd(p:Object, c:Object):void{
 				for each(var prob:Object in probs){
+					var i:int=0;
 					for each(var prod:Object in prob.prods){
 						if(prod.id_cout==c.id_cout){
-							prob.prods.pop();
+							prob.prods.splice(i,1);
 							var ct:hbCout = hbCout(selectProb.getChildByName("prob_"+prob.idDon));					
-							var souCt:hbCout = hbCout(ct.getChildByName("prod_"+p.idDon));					
-							ct.removeChild(souCt);
+							var souCt:hbCout = hbCout(ct.sousCout.getChildByName("prod_"+c.id_cout));					
+							ct.sousCout.removeChild(souCt);
 						}
+						i++;
 					}
 				}
 			}
 
 		]]>
 	</mx:Script>
+	<mx:HRule width="50%"  strokeColor="red"/>	
 	<mx:Label text="" id="ref"/>			
 	<mx:Text id="lib" fontSize="12" width="400" />
 	<mx:VBox id="selectProb" width="100%" >			
 	</mx:VBox>	
+	<mx:HRule width="50%"  strokeColor="red"/>	
 </mx:VBox>

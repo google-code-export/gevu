@@ -99,7 +99,29 @@ class Granulat
 		
 		return $ids;
 	}
-	
+
+	function GetFilAriane($id=-1, $niv=0, $sep=" | "){
+
+		if($id==-1)
+			$id=$this->id;
+		//echo "$id, $niv<br/>";
+			
+		//création du granulat
+		$g = new Granulat($id, $this->site);
+		
+		$FilAriane="";
+		
+		if($g->IdParent!=0){
+			$FilAriane.=$this->GetFilAriane($g->IdParent, ($niv+1));
+		}else{
+			return "";
+		}
+				
+		$FilAriane.=$sep.$g->titre;
+					
+		return $FilAriane;
+		
+	}	
   	function GetEtatDiagListe($idDoc,$PourFlex=false,$SaveFile=true){
 		
 		if($this->trace)
@@ -1772,11 +1794,13 @@ class Granulat
 		return $arrDoc;
 	}
 	
-	public function GetEnfants($complet=true)
+	public function GetEnfants($complet=true, $id=-1)
 	{
+		if($id==-1)$id=$this->id;
+		
 		$sql = "SELECT id_rubrique, titre
 			FROM spip_rubriques
-			WHERE id_parent = ".$this->id
+			WHERE id_parent = ".$id
 			." ORDER BY titre";
 		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$DB->connect();
