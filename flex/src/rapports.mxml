@@ -21,15 +21,9 @@
 			close="choixBD(event)"
 		/>
 		<mx:Label id="nomEtab" text="" fontSize="24"/>
+		<mx:Button label="Voir les solutions aux problèmes" click="showSolusProbEtab();" />
 		<mx:Button label="calculer les coûts" click="calculerCout();" />
-		<mx:Label text=" - réglémentaires : " fontSize="12"/>
-		<mx:Label id="coutReg" text="" fontSize="12"/> 				
-		<mx:Label text=" - souhaitables : " fontSize="12"/>
-		<mx:Label id="coutSou" text="" fontSize="12"/>
-		<mx:Label text=" - totaux : " fontSize="12"/>
-		<mx:Label id="coutTot" text="" fontSize="12"/>
-		<mx:Button label="Editer le rapport"  />
-			 		
+		<mx:Button label="Editer le rapport" click="calculerRapport();"  />
  	</mx:HBox>
 	<!--
  	<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">
@@ -38,7 +32,6 @@
  	-->
 	<mx:HBox width="100%" height="100%" > 			
 	 	<mx:Panel  title="Choisissez un établissement" width="25%" height="100%" borderColor="#080808">
-			<mx:Button label="Voir les solutions aux problèmes" click="showSolusProbEtab();" />
 			<mx:DataGrid 
 				id="dgEtab"
 				dataProvider="{rsEtab}"
@@ -69,6 +62,15 @@
 	 	<mx:VBox width="60%" height="100%" >
 				<mx:HRule width="64%" strokeColor="black" />
 		 		<mx:Label fontSize="12"  text="Précisez les coûts pour chaque problème." />
+				<mx:HBox>
+					<mx:Label text=" - Régl. : " fontSize="12"/>
+					<mx:Label id="coutReg" text="" fontSize="12"/> 				
+					<mx:Label text=" - Souhai. : " fontSize="12"/>
+					<mx:Label id="coutSou" text="" fontSize="12"/>
+					<mx:Label text=" - Total : " fontSize="12"/>
+					<mx:Label id="coutTot" text="" fontSize="12"/>			 		
+				</mx:HBox>
+		 		
 				<mx:HRule width="64%" strokeColor="black" />
 			 	<mx:Canvas height="100%" width="100%" borderColor="#080808" >
 	 				<mx:VBox id="selectCout"  width="100%" height="100%" >

@@ -5,9 +5,7 @@ import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 import mx.rpc.http.HTTPService;
 
-public const ENDPOINT_URL:String = "http://localhost/gevu/library/php/ExeAjax.php";
-
-//public const ENDPOINT_URL:String = "http://www.gevu.eu/library/php/ExeAjax.php";
+include "grillesconfig.as";
 
 private var gateway:HTTPService = new HTTPService();
 
