@@ -50,11 +50,8 @@ if(isset($_POST['login_uti'])) {
 //echo("_SESSION['site']=".$_SESSION['site']);
 if(isset($_SESSION['site']))
 	$site=$_SESSION['site'];
-if(isset($_GET['site'])){
-	$site = $_GET['site'];
-}
-if(isset($_POST['site'])){
-	$site = $_POST['site'];
+if(isset($_REQUEST['site'])){
+	$site = $_REQUEST['site'];
 }
 if(!$site)
 	$site = DEFSITE;
@@ -117,8 +114,8 @@ if(isset($_GET['So']))
 else
 	$So = "Traduction";
 
-if(isset($_GET['id']))
-	$id = $_GET['id'];
+if(isset($_REQUEST['id']))
+	$id = $_REQUEST['id'];
 else
 	$id = $SITES[$site]["DEF_ID"];
 

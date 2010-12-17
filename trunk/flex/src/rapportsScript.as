@@ -2,10 +2,13 @@ import com.adobe.serialization.json.JSON;
 
 import compo.*;
 
+import flash.events.Event;
+
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.events.DropdownEvent;
 import mx.rpc.events.ResultEvent;
+import mx.rpc.http.HTTPService;
 
 //include the constant definition of the server endpoint URL
 include "grillesconfig.as";
@@ -96,6 +99,21 @@ public function showSolusProbEtab():void {
 		srvSolus.send(params);		
 	}
 }
+public function ForceCalcul():void{
+	srvFC.cancel();
+	srvFC.url = ENDPOINT_EXEAJAX;
+	var params:Object = new Object();
+	params.f = "SetChoixAffichage";
+	params.idXul = ForceCalcul;
+	if(cbForceCalcul.selected){
+		params.valeur = "true";		
+	}else{
+		params.valeur = "false";				
+	}
+	trace ("ForceCalcul:srvFC.url="+ENDPOINT_EXEAJAX+"?f="+params.f+"&idXul="+params.idXul+"&valeur="+params.valeur);
+	srvFC.send(params);			
+		
+}
 
 public function calculerCout():void {
 	var sols:Array = selectCout.getChildren();
@@ -106,18 +124,18 @@ public function calculerCout():void {
 		var couts:Array = sol.selectProb.getChildren();
 		for each(var ct:hbCout in couts){
 			c=0;
-			if(ct.n_unite.value !=0) c = int(ct.unite.text)*ct.n_unite.value;
-			if(ct.n_metre_lineaire.value !=0) c = int(ct.metre_lineaire.text)*ct.n_metre_lineaire.value;
-			if(ct.n_metre_carre.value !=0) c = int(ct.metre_carre.text)*ct.n_metre_carre.value;
-			if(ct.n_achat.value !=0) c = int(ct.achat.text)*ct.n_achat.value;
-			if(ct.n_pose.value !=0) c = int(ct.pose.text)*ct.n_pose.value;
+			if(ct.n_unite.value !=0) c += int(ct.unite.text)*ct.n_unite.value;
+			if(ct.n_metre_lineaire.value !=0) c += int(ct.metre_lineaire.text)*ct.n_metre_lineaire.value;
+			if(ct.n_metre_carre.value !=0) c += int(ct.metre_carre.text)*ct.n_metre_carre.value;
+			if(ct.n_achat.value !=0) c += int(ct.achat.text)*ct.n_achat.value;
+			if(ct.n_pose.value !=0) c += int(ct.pose.text)*ct.n_pose.value;
 			var coutsP:Array = ct.sousCout.getChildren();
 			for each(var ctP:hbCout in coutsP){
-				if(ctP.n_unite.value !=0) c = int(ctP.unite.text)*ctP.n_unite.value;
-				if(ctP.n_metre_lineaire.value !=0) c = int(ctP.metre_lineaire.text)*ctP.n_metre_lineaire.value;
-				if(ctP.n_metre_carre.value !=0) c = int(ctP.metre_carre.text)*ctP.n_metre_carre.value;
-				if(ctP.n_achat.value !=0) c = int(ctP.achat.text)*ctP.n_achat.value;
-				if(ctP.n_pose.value !=0) c = int(ctP.pose.text)*ctP.n_pose.value;
+				if(ctP.n_unite.value !=0) c += int(ctP.unite.text)*ctP.n_unite.value;
+				if(ctP.n_metre_lineaire.value !=0) c += int(ctP.metre_lineaire.text)*ctP.n_metre_lineaire.value;
+				if(ctP.n_metre_carre.value !=0) c += int(ctP.metre_carre.text)*ctP.n_metre_carre.value;
+				if(ctP.n_achat.value !=0) c += int(ctP.achat.text)*ctP.n_achat.value;
+				if(ctP.n_pose.value !=0) c += int(ctP.pose.text)*ctP.n_pose.value;
 			}				
 			if(ct.prob.reglementaire)cReg+=c; else cSou+=c;
 		}
@@ -154,15 +172,20 @@ public function calculerRapport():void{
 
     var parameters:* ={"pxml":pxml,"site":selectedBD.value, "id":selectedEtab.idRub};
 
-	/**
-	 * execute the server "insert" command
-	 */
-    //doRequest("Insert", parameters, insertItemHandler);
+	var request:URLRequest = new URLRequest(ENDPOINT_RAPPORT);
+	var variables:URLVariables = new URLVariables();
+	variables.pxml=pxml;
+	variables.site=selectedBD.value;
+	variables.id=selectedEtab.idRub;
+	request.data = variables;
+	request.method = URLRequestMethod.POST;
+	navigateToURL(request,"_blank");
+	
 }
 
 public function GetArrCout(ct:hbCout):Array{
 	var pCout:Array; var pSousCout:Array; var pProb:Array;
-	var idRub:int;	var idDon:int;	var idSol:int;	var idCrit:int;	var idCout:int;
+	var idRub:int;	var idDon:int;	var idSol:int;	var idProd:int;	var idCrit:int;	var idCout:int;
 	var regle:Boolean;
 	var lib:String;
 	
@@ -174,19 +197,28 @@ public function GetArrCout(ct:hbCout):Array{
 	regle = ct.prob.reglementaire != null;
 	idSol = ct.cout.id_solution;		
 	idCrit = ct.cout.id_critere;		
-	idCout = ct.cout.id_cout;		
-	if(ct.n_unite.value !=0) pCout.push({"type":"unite","val":ct.unite.text, "q":ct.n_unite.value});
-	if(ct.n_metre_lineaire.value !=0) pCout.push({"type":"metre_lineaire","val":ct.metre_lineaire.text, "q":ct.n_metre_lineaire.value});
-	if(ct.n_metre_carre.value !=0) pCout.push({"type":"metre_carre","val":ct.metre_carre.text, "q":ct.n_metre_carre.value});
-	if(ct.n_achat.value !=0) pCout.push({"type":"achat","val":ct.achat.text, "q":ct.n_achat.value});
-	if(ct.n_pose.value !=0) pCout.push({"type":"pose","val":ct.pose.text, "q":ct.n_pose.value});
+	idCout = ct.cout.id_cout;
+	if(ct.cout.id_produit)
+		idProd = ct.cout.id_produit;
+	else			
+		idProd = -1;
+	//if(ct.n_unite.value !=0) 
+	pCout.push({"type":"unite","val":ct.unite.text, "q":ct.n_unite.value});
+	//if(ct.n_metre_lineaire.value !=0) 
+	pCout.push({"type":"metre_lineaire","val":ct.metre_lineaire.text, "q":ct.n_metre_lineaire.value});
+	//if(ct.n_metre_carre.value !=0) 
+	pCout.push({"type":"metre_carre","val":ct.metre_carre.text, "q":ct.n_metre_carre.value});
+	//if(ct.n_achat.value !=0) 
+	pCout.push({"type":"achat","val":ct.achat.text, "q":ct.n_achat.value});
+	//if(ct.n_pose.value !=0) 
+	pCout.push({"type":"pose","val":ct.pose.text, "q":ct.n_pose.value});
 
 	var coutsP:Array = ct.sousCout.getChildren();
 	for each(var ctP:hbCout in coutsP){
 		pSousCout.push(GetArrCout(ctP));
 	}
 
-	pProb.push({"idRub":idRub,"idDon":idDon,"idSol":idSol,"idCrit":idCrit,"idCout":idCout,"regle":regle,"Couts":pCout,"SousCouts":pSousCout});
+	pProb.push({"idRub":idRub,"idDon":idDon,"idSol":idSol,"idProd":idProd,"idCrit":idCrit,"idCout":idCout,"regle":regle,"Couts":pCout,"SousCouts":pSousCout});
 
 	return pProb;
 }

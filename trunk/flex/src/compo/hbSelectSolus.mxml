@@ -86,8 +86,8 @@
 		]]>
 	</mx:Script>
 	<mx:HRule width="50%"  strokeColor="red"/>	
-	<mx:Label text="" id="ref"/>			
-	<mx:Text id="lib" fontSize="12" width="400" />
+	<mx:Label text="" fontSize="16" id="ref"/>			
+	<mx:Text id="lib" fontSize="16" width="400" />
 	<mx:VBox id="selectProb" width="100%" >			
 	</mx:VBox>	
 	<mx:HRule width="50%"  strokeColor="red"/>	

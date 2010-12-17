@@ -9,17 +9,21 @@
 <mx:HTTPService id="srvBD" url="{urlBD}" result="readXmlBD(event);" showBusyCursor="true" /> 
 <mx:HTTPService id="srvEtab" result="readXmlEtab(event);" showBusyCursor="true" /> 
 <mx:HTTPService id="srvSolus" result="readXmlSolus(event);" showBusyCursor="true" /> 
+<mx:HTTPService id="srvFC" showBusyCursor="true" /> 
     
 <mx:Panel title="GEVU Global EValuation Urbaine : RAPPORTS " width="100%" height="100%">
  	<mx:HBox paddingLeft="6" verticalAlign="middle">
-	 	<mx:ComboBox id="cbBD"  
-			dataProvider="{rsBD}"
-			labelField="label"
-			data="value"
-			prompt="Choisissez une base de donnée..."
-			rowCount="6"
-			close="choixBD(event)"
-		/>
+ 		<mx:VBox>
+			<mx:CheckBox label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" /> 			
+		 	<mx:ComboBox id="cbBD"  
+				dataProvider="{rsBD}"
+				labelField="label"
+				data="value"
+				prompt="Choisissez une base de donnée..."
+				rowCount="6"
+				close="choixBD(event)"
+			/>
+ 		</mx:VBox>
 		<mx:Label id="nomEtab" text="" fontSize="24"/>
 		<mx:Button label="Voir les solutions aux problèmes" click="showSolusProbEtab();" />
 		<mx:Button label="calculer les coûts" click="calculerCout();" />

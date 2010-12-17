@@ -56,21 +56,26 @@ public var cursor:IViewCursor;
 
             
 //variable pour la mise à jour des diifférente view
-private var idSolution:int;
+public var idSolution:int;
 private var idCout:int;	
+private var idTof:int;	
 
 private function selectSolution(event:Event):void {
 	var item:Object=event.currentTarget.selectedItem;
 	if(item){
+		detailSolus.visible=true;
 		idSolution = item.id_solution;
 		UpdLib.text=item.lib;
 		UpdRef.text = item.ref;
 		var i:int=UpdType.getIndex(item.LibTypeSolution);
 		UpdType.cb.selectedIndex=i;
+		/*
 		ROSM.findByIdSolution(idSolution);
 		ROSC.findByIdSolution(idSolution);
 		ROSP.findByIdSolution(idSolution);
 		ROC.findByIdSolution(idSolution);
+		*/
+		ROTOF.findByIdSolution(idSolution);
 	}
 
 }
@@ -318,6 +323,41 @@ private function updateCout():void
 	
 }
 
+private function TofHandler(e:Object):void
+{
+	if(!e)return;
+    tlTof.dataProvider = e.result as Array;
+}
+
+
+private function showPhoto(event:Event):void{
+	
+	idTof = event.currentTarget.selectedItem.id_doc;
+
+}
+
+private function removePhoto():void {
+    
+    if (idTof)
+    {
+        Alert.show("Confirmez-vous la suppression de la photo ?",
+        "Confirmation Suppression", 3, this, deleteTofClickHandler);
+    }
+    
+}
+private function deleteTofClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+			ROTOF.remove(idTof);
+    }
+}
+
+private function TofRemoveHandler(e:Object):void
+{
+    ROTOF.findByIdSolution(idSolution);
+}
+
         ]]>
     </mx:Script>
     
@@ -371,6 +411,15 @@ private function updateCout():void
 	 	<mx:method name="findByIdSolution"  result="CoutHandler(event)"/>  	
 	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
 	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROTOF"
+	    	source="Model_DbTable_Gevu_docsxsolutions" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdSolution"  result="TofHandler(event)"/>  	
+	 	<mx:method name="remove"  result="TofRemoveHandler(event)"/>  	
+	</mx:RemoteObject>
 	
 	<mx:Canvas id="view" width="100%" height="100%">
 		<mx:VBox width="100%" height="100%">
@@ -398,7 +447,7 @@ private function updateCout():void
 					</mx:columns>
 				</mx:DataGrid>
 			</mx:VBox>
-			<mx:HBox width="100%" height="100%" >		
+			<mx:HBox width="100%" height="100%" visible="false" id="detailSolus" >		
 
 				<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
 					<mx:HBox >
@@ -443,13 +492,30 @@ private function updateCout():void
 							<mx:Button label="Enregistrer" click="updateCout()" />
 						</mx:VBox>					
 				</mx:VBox>				
-				<mx:VBox id="detailSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
-						<mx:VBox paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+				<mx:VBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+						<mx:VBox width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 							<mx:Label text="Illustrations réglementaires" fontWeight="bold" fontSize="18" />
 							<mx:HBox>
-								<mx:LinkButton id="btnAddNewIllu" click="" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une illustration" />
-								<mx:LinkButton id="btnDeleteIllu" click="" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une illustration" />							
-							</mx:HBox>							
+								<ns2:cUploadFile id="ufIma" iconBtn="@Embed('images/AddRecord.png')" idExi="{idExi}" objName="img_solus"  ttBtn="Ajouter une illustration" ctlBind="{this}" wf="auton" typeFic="images" />				
+								<mx:LinkButton id="btnDeleteIllu" click="removePhoto()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une illustration" />							
+							</mx:HBox>
+							<mx:TileList id="tlTof"
+								width="100%" height="140"
+								paddingTop="20" left="5"
+								itemClick="showPhoto(event)">
+								<mx:itemRenderer>
+									<mx:Component>
+						                <mx:VBox width="100" height="100"
+						                    paddingRight="5" paddingLeft="5"
+						                    horizontalAlign="center">
+						                    <mx:Image 
+						                        height="75" width="75"
+						                        source="{data.url}"/>
+						                </mx:VBox>
+						            </mx:Component>
+								</mx:itemRenderer>
+								
+							</mx:TileList>							
 						</mx:VBox>
 					<mx:HBox width="100%" height="100%" >
 							<mx:ViewStack id="vsMetierSolus" width="100%" height="100%">
