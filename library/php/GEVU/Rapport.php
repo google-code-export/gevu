@@ -18,14 +18,15 @@ class GEVU_Rapport{
 			$x=0;
 		    foreach($rs as $r) {
 		    	//on ne prend en compte que les réponses non
-		    	if($r['RepCont']=='Non'){
+		    	if($r['RepCont']=='Non' || $r['RepCont']=="Sous réserve"){
 			    	$xml .="<prob>"
 			    		."<idRub>".$objSite->XmlParam->XML_entities($r['idRub'])."</idRub>"
 			    		."<idDon>".$objSite->XmlParam->XML_entities($r['idDon'])."</idDon>"
 			    		."<titre>".$objSite->XmlParam->XML_entities($r['titreArt'])."</titre>"
 			    		."<lieu>".$objSite->XmlParam->XML_entities($r['titreRubPar']." _ ".$r['titreRub'])."</lieu>"
 			    		."<texte>".$objSite->XmlParam->XML_entities($r['affir'])."</texte>"
-			    		."<reglementaire>".$r['regle']."</reglementaire>";
+			    		."<reglementaire>".$r['regle']."</reglementaire>"
+			    		."<reponse>".$r['RepCont']."</reponse>";
 			    	$xml .="<couts>";    	
 					//récupère les couts des solutions liées aux critères
 			    	$couts = $cc->findSolusByIdsCriteres("'".$r['idCrit']."'");

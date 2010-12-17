@@ -1,15 +1,17 @@
 <?php
-require_once( "../param/ParamAppli.php" );
-require_once('../library/php/odtphp/odf.php');
-
 //en attendant la nouvelle version
 //on utilise les requêtes de la version XUL
 require_once( "../param/ParamPage.php" );
+
+require_once( "../param/ParamAppli.php" );
+require_once('../library/php/odtphp/odf.php');
+
 
 $grille = new Grille($objSite);
 $xul = new Xul($objSite);
 
 $idExi = 1;
+
 $c = new Model_DbTable_Gevu_contacts();
 $arrContact = $c->findById_exi($idExi);
 
@@ -25,11 +27,15 @@ if($pxml!=-1){
 
 $XpInfos = '/tabbox/tabpanels/tabpanel/tabbox/tabpanels/tabpanel/vbox/hbox[2]/grid/columns/column[2]'; 
 
+
+
 //chargement du modèle de rapport
-$odf = new odf(ROOT_PATH.'\data\rapports\models\RAPPORTDIAGVFtot.odt');
+$pathModel = PathRoot.'/data/rapports/models/RAPPORTDIAGVF.odt';
+//echo $pathModel; 
+$odf = new odf($pathModel);
 
 //création d'un rapport pour un établissement
-$odf->setVars('commune', utf8_encode($g->TitreParent));
+$odf->setVars('commune', $g->TitreParent);
 
 $odf->setVars('etablissement', utf8_encode($g->titre));
 
@@ -44,7 +50,7 @@ if(count($arrDocs)>0){
 }
 $odf->setVars('redacteur', $arrContact['prenom'].' '.$arrContact['nom']);
 $today = strftime( "%A %d %B %Y" , time());
-$odf->setVars('date_redaction', utf8_encode($today));
+//$odf->setVars('date_redaction', $today);
 
 $odf->setVars('diagnostiqueur', utf8_encode($art['nom']));
 //information pas présente actuellement dans la base
@@ -66,6 +72,17 @@ $odf->setImage('img_niv_app_moteur', '../images/'.$xmlEtaLieux->Applicables['mot
 $odf->setImage('img_niv_app_audio', '../images/'.$xmlEtaLieux->Applicables['audio'].'.png');
 $odf->setImage('img_niv_app_visu', '../images/'.$xmlEtaLieux->Applicables['visu'].'.png');
 $odf->setImage('img_niv_app_cog', '../images/'.$xmlEtaLieux->Applicables['cog'].'.png');
+
+
+$odf->setImage('img_niv_reg_moteur1', '../images/'.$xmlEtaLieux->Applicables['moteur'].'.png');
+$odf->setImage('img_niv_reg_audio1', '../images/'.$xmlEtaLieux->Applicables['audio'].'.png');
+$odf->setImage('img_niv_reg_visu1', '../images/'.$xmlEtaLieux->Applicables['visu'].'.png');
+$odf->setImage('img_niv_reg_cog1', '../images/'.$xmlEtaLieux->Applicables['cog'].'.png');
+
+$odf->setImage('img_niv_app_moteur1', '../images/'.$xmlEtaLieux->Applicables['moteur'].'.png');
+$odf->setImage('img_niv_app_audio1', '../images/'.$xmlEtaLieux->Applicables['audio'].'.png');
+$odf->setImage('img_niv_app_visu1', '../images/'.$xmlEtaLieux->Applicables['visu'].'.png');
+$odf->setImage('img_niv_app_cog1', '../images/'.$xmlEtaLieux->Applicables['cog'].'.png');
 
 
 $rs = $grille->GetTreeObs($id,false, true);
@@ -92,6 +109,7 @@ $cat = $xmlEtab->xpath($XpInfos."/menulist[3]/menupopup/menuitem[@selected='true
 $odf->setVars('etab_cat_erp', utf8_encode($cat[0]['label']));
 $odf->setVars('etab_proprio', utf8_encode($dons[0]->textbox[5]['value']));
 $odf->setVars('etab_adresse', $dons[0]->textbox[2]['value'].', '.$dons[0]->textbox[3]['value'].', '.$dons[0]->textbox[4]['value']);
+
 
 //récupère la liste des batiments
 $url = WebRoot.'/library/php/ExeAjax.php?f=GetTree&site='.$objSite->id.'&ParamNom=GetOntoTree&type=bat&id='.$g->id;
@@ -130,19 +148,21 @@ $bats = $odf->setSegment('bats');
 $plans = $odf->setSegment('plan_bats');
 foreach($rBats as $r){
 	$idBat = $r->treecell[0]['label']."";
-    $gBat = new Granulat($idBat,$objSite,true);
+    $gBat = new Granulat($idBat,$objSite);
 	
 	$plans->setVars('plan_bat_nom', 'Plan : ' . utf8_encode($gBat->titre));
-	if(count($gBat->arrDoc)>0){
-    	$plans->setImage('plan_bat_img', $gBat->arrDoc[0]->path);	
+	
+	$arrDocs = $gBat->GetDocs($gBat->id,"1,2");
+	if(count($arrDocs)>0){
+    	$plans->setImage('plan_bat_img', $arrDocs[0]->path);	
 	}else{
-    	$plans->setImage('plan_bat_img', '../images/Personnel.png');	
+    	$plans->setImage('plan_bat_img', '../images/check_no.png');	
 	}
 	
 	//calcul le cout pour le batiments
 	$arrCout = getCout($g, $idBat, $arrP);
 		
-    $bats->setVars('bat_nom', $r->treecell[1]['label']);
+	$bats->setVars('bat_nom', $r->treecell[1]['label']);
 	$bats->setVars('bat_cout_reg', $arrCout["reg"]);
     $bats->setVars('bat_cout_sou', $arrCout["sou"]);
     $bats->setVars('bat_cout_tot', $arrCout["reg"]+$arrCout["sou"]);
@@ -159,25 +179,27 @@ foreach($rBats as $r){
         $cReg+=$arrCout["reg"]; $cSou+=$arrCout["sou"];
         
 		$plans->plan_nivs->plan_niv_nom('Plan niveau :' . utf8_encode($niv->titre));
-    	if(count($niv->arrDoc)>0){
-        	$plans->plan_nivs->setImage('plan_niv_img', $niv->arrDoc[0]->path);
+		$arrDocs = $niv->GetDocs($niv->id,"1,2");
+		if(count($arrDocs)>0){
+        	$plans->plan_nivs->setImage('plan_niv_img', $arrDocs[0]->path);
     	}else{
-        	$plans->plan_nivs->setImage('plan_niv_img', '../images/Personnel.png');
+        	$plans->plan_nivs->setImage('plan_niv_img', '../images/check_no.png');
 		}
         
     }
     $bats->setVars('niv_cout_reg_tot', $cReg);
     $bats->setVars('niv_cout_sou_tot', $cSou);
     $bats->setVars('niv_cout_tot_tot', $cReg+$cSou);
+
     $bats->merge();
     $plans->merge();
+
 }
 $odf->mergeSegment($plans);
 $odf->mergeSegment($bats);
 
 
 $odf->setImage('img_cadastre', '../images/kml.png');
-
 
 $probs = $odf->setSegment('probs');
 //récupère les problèmes
@@ -201,26 +223,35 @@ foreach($xmlProb->rows->row as $r){
     //$strXml = $gProb->GetEtatDiag(true, true);
     //$strXml = $grille->GetEtatDiagListeTot($gProb->id);
     //$Probs = simplexml_load_string($strXml);
-    
+	
 	if(count($r->vbox[4]->hbox)==2){
 		$tof = $r->vbox[4]->hbox[1]->label[2]['value'];
     	$idDonRef = substr($r->vbox[4]->hbox[0]->label[1]['onclick'],14,-2);
-    	$const = substr($r->vbox[4]->hbox[0]->label[0]['value'],16);
+    	$const = $r->vbox[4]->hbox[0]->label[0]['value'];
+    	$const = substr($const,strpos($const, ":")+1);
+    	$code = mb_detect_encoding($const, "auto");
+    	if($code != "UTF-8" && $code != "ASCII"){
+    		$const  = "";
+    	}
 	    //récupère la légende du problème
 		$xmlLeg = utf8_encode($grille->GetXulLegendeControle($idDonRef,$objSite->infos["GRILLE_CONTROL_".$_SESSION['version']]));
 	    $LegProb = simplexml_load_string($xmlLeg);
 	}else{
 		$tof = $r->vbox[4]->hbox->label[2]['value'];	
 	}
-    
-    //$arrDoc = $gProb->GetDocs($gProb->id,"1,2");
+	
+	//$arrDoc = $gProb->GetDocs($gProb->id,"1,2");
     //problème de la place de l'image en dehors du tableau = image du diag et pas du problème
-    if($tof!='Photo : Non'){
-    	$probs->rowprob->setImage('prob_img', $arrDoc[0]->path); 
-    }else{
-    	$probs->rowprob->setImage('prob_img', '../images/Personnel.png'); 
+	if($tof!='Photo : Non'){
+    	$arrDocs = $gProb->GetDocs($idRubLieu,"1,2");
+		if(count($arrDocs)>0){    
+	    	$probs->rowprob->setImage('prob_img', $arrDoc[0]->path); 
+	    }else{
+	    	$probs->rowprob->setImage('prob_img', '../images/check_no.png'); 
+	    }
+	}else{
+    	$probs->rowprob->setImage('prob_img', '../images/check_no.png'); 
     }
-    
 	$probs->rowprob->prob_reg($LegProb->hbox[0]->label[2]['value']);
     $probs->rowprob->prob_const($const);
     $probs->rowprob->prob_mesure('prob_mesure :'.$j);
@@ -230,14 +261,14 @@ foreach($xmlProb->rows->row as $r){
 		$probs->rowprob->probimg->merge();
     }
     //$probs->rowprob->setImage('prob_niv_gen', '../images/audio2.jpg');
-    $arrSolus = getCout($g, $idRubLieu, $arrP, true);
+    $arrSolus = getCout($g, $idRubLieu, $arrP, $refsProb[2], true);
     foreach($arrSolus as $solus){
 	    $probs->rowprob->probsolus->prob_solus($solus[0]);
 	    $probs->rowprob->probsolus->prob_prod($solus[1]);
 	    $probs->rowprob->probsolus->prob_cout($solus[2]);    
 		$probs->rowprob->probsolus->merge();
     }
-    
+ 
     
     $j++;
 	$probs->rowprob->merge();
@@ -246,10 +277,15 @@ $probs->merge();
 $odf->mergeSegment($probs);
 
 
+
 $odf->exportAsAttachedFile();
-  
-function getCout($g, $id, $arrP, $lib=false){
-	$ids = $g->GetEnfantIds($id).$id;
+
+function getCout($g, $id, $arrP, $idDon=-1, $lib=false){
+	if($idDon==-1){
+		$ids = $g->GetEnfantIds($id).$id."*";
+	}else{
+		$ids = -1;
+	}
 	if($lib){
 		$arrLib = array();
 		$dbSolus = new Model_DbTable_Gevu_solutions();
@@ -259,25 +295,26 @@ function getCout($g, $id, $arrP, $lib=false){
 	foreach($arrP as $solus){
 		foreach($solus->couts as $couts){
 			foreach($couts as $cout){
-				if(strrpos($ids, $cout->idRub.',')){
+				if(strrpos($ids, $cout->idRub.'*') || $cout->idDon==$idDon){
 					$c=0;
 					foreach($cout->Couts as $ct){
 						$c += $ct->val*$ct->q;
 					}
 					if($cout->regle)$cReg += $c; else $cSou += $c;
 					if($lib){
-						$s = $dbSolus->findById_solution($solus->id);
+						$s = $dbSolus->findById_solution($solus->idSolus);
 						$arrLib[]=array($s['lib'],"",$c);
 					}
 					foreach($cout->SousCouts as $souscouts){
 						foreach($souscouts as $scout){
-							foreach($scout->Couts as $sct){
+						$c=0;
+						foreach($scout->Couts as $sct){
 								$c += $sct->val*$sct->q;
 							}
 							if($scout->regle)$cReg += $c; else $cSou += $c;
 							if($lib){
-								$s = $dbProds->findById_solution($solus->id);
-								$arrLib[]=array($s['lib'],"",$c);
+								$s = $dbProds->findById_produit($scout->idProd);
+								$arrLib[]=array("",$s['ref']." : ".$s['description'],$c);
 							}
 							
 						}
@@ -295,7 +332,6 @@ function getCout($g, $id, $arrP, $lib=false){
 	return array("reg"=>$cReg, "sou"=>$cSou);
 	
 }
-
 
 
 ?>

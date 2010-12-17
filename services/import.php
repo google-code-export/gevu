@@ -2,7 +2,7 @@
 require_once( "../param/ParamAppli.php" );
 
 $imp = new GEVU_Import();
-//$imp->addDoc($_REQUEST);
+$imp->addDoc($_REQUEST);
 
 /*
 $dataDoc = array(
@@ -12,6 +12,6 @@ $dataDoc = array(
     );			        
 $imp->saveDoc($_REQUEST, $dataDoc);
 */    
-$imp->traiteDoc(10);
+//$imp->traiteDoc(10);
 
 ?>

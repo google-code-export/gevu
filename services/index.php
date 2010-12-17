@@ -29,13 +29,13 @@ $s = new Model_DbTable_Gevu_produits();
 $rs = $s->getAll();
 $data = array("url"=>"kjh","titre"=>"csv","content_type"=>"text/csv");
 $s->ajouter($data,false);
-*/
 
 $lm = new AUTH_LoginManager();
 $u = new AUTH_LoginVO();
 $u->username="samszo";
 $u->password="Samszo0";
 $au = $lm->verifyUser($u);
+*/
 
 
 $server = new Zend_Amf_Server();
@@ -46,8 +46,8 @@ $server = new Zend_Amf_Server();
 //$server->addDirectory(dirname(__FILE__) .'/../library/php/');
 
 // *ZAMFBROWSER IMPLEMENTATION*
-//$server->setClass( "ZendAmfServiceBrowser" );
-//ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
+$server->setClass( "ZendAmfServiceBrowser" );
+ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
 
 $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_solutionsxmetiers')
@@ -68,6 +68,8 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_typesxcriteres')	
 	->setClass('Model_DbTable_Gevu_contacts')
 	->setClass('Model_DbTable_Gevu_couts')
+	->setClass('Model_DbTable_Gevu_docsxsolutions')
+	
 	//pour l'authentification
 	->setClass("AUTH_LoginManager")
 	->setClass("AUTH_LoginVO")

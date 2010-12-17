@@ -29,6 +29,8 @@
             
             import compo.twWinProgress;
             import compo.twResultImport;            
+			
+			import com.adobe.serialization.json.JSON;
 
 			[Bindable]public var wf:String;
 			[Bindable]public var idExi:String;
@@ -176,6 +178,10 @@
                     sendVars.wf = wf;
                     sendVars.idExi = idExi;
                     sendVars.objName = objName;
+                    //récupération de l'identifiant d'objet
+                    if(objName=='img_solus'){
+                    	sendVars.objId = ctlBind.idSolution;
+                    }
                     
                     var request:URLRequest = new URLRequest();
                     request.data = sendVars;
@@ -195,23 +201,25 @@
             // Called on upload data complete
 			private function onUploadDataComplete(event:DataEvent):void{
 				try{
-					var result:XML = new XML(event.data);
+					//var result:XML = new XML(event.data);
+					var result:Object = JSON.decode(event.data);
 					//gestion de la réponse au upload
-					if(result.success=="true"){
+					if(result.error==0){
 						if(wf=="auton"){
 		                    Alert.show("La photo est mise à jour.", "Succés du téléchargement");
-							ctlBind.load("");
-							ctlBind.load(result.data);
+							ctlBind.ROTOF.findByIdSolution(ctlBind.idSolution);
 						}
 						if(wf=="impCsv"){
 		                    Alert.show("Les données sont importées.", "Succés de l'importation");
 							ctlBind.fill();
+							/*
 	                    	twResult = twResultImport(PopUpManager.createPopUp(this, twResultImport, true));
 	                    	twResult.result = result;
-		                    PopUpManager.centerPopUp(twResult);						
+		                    PopUpManager.centerPopUp(twResult);
+		                    */						
 						}															
 					}else{
-	                    Alert.show(result, "Echec du téléchargement");					
+	                    //Alert.show(result, "Echec du téléchargement");					
 					}
 				}catch (err:Error){
                     Alert.show(err.message, "Echec du téléchargement");					

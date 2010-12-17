@@ -33,6 +33,7 @@ class GEVU_Import{
 						continue;
 					}
 			        $url = str_replace(ROOT_PATH,WEB_ROOT,$adapter->getFileName());
+			        $url = str_replace("\\","/",$url);
 			        $path = $adapter->getFileName();
 			        $dataDoc = array(
 			    		"url"=>$url,"titre"=>$info["name"],"content_type"=>"text/csv"
@@ -40,8 +41,10 @@ class GEVU_Import{
 			    		,"tronc"=>$data['objName']
 			    		);			        
 					$this->saveDoc($data, $dataDoc);
-					$this->traiteDoc($idDoc, $path);
-					print_r($info);					
+					if($data['objName']!='img_solus'){
+						$this->traiteDoc($idDoc, $path);
+					}
+					//print_r($info);					
 				}
 		      }
 		      
@@ -52,7 +55,7 @@ class GEVU_Import{
           	echo "Message: " . $e->getMessage() . "\n";
           	// puis tout le code nécessaire pour récupérer l'erreur
 		}
-        
+     	echo json_encode(array("error"=>$info["error"]));   
     }
     
     public function saveDoc($data, $dataDoc){
@@ -66,6 +69,11 @@ class GEVU_Import{
 		
 		$exidoc = new Model_DbTable_Gevu_instantsxdocs();
 		$exidoc->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns),false);
+		
+		if($data['objName']=='img_solus'){
+			$doc_obj = new Model_DbTable_Gevu_docsxsolutions();
+			$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_solution"=>$data['objId']),false);		
+		}
 
     	
     }
