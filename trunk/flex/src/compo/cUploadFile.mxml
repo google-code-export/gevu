@@ -182,6 +182,9 @@
                     if(objName=='img_solus'){
                     	sendVars.objId = ctlBind.idSolution;
                     }
+                    if(objName=='img_produit'){
+                    	sendVars.objId = ctlBind.idProduit;
+                    }
                     
                     var request:URLRequest = new URLRequest();
                     request.data = sendVars;
@@ -207,7 +210,12 @@
 					if(result.error==0){
 						if(wf=="auton"){
 		                    Alert.show("La photo est mise à jour.", "Succés du téléchargement");
-							ctlBind.ROTOF.findByIdSolution(ctlBind.idSolution);
+                            if(objName=='img_produit'){
+ 			                   	ctlBind.ROTOF.findByIdProduit(ctlBind.idProduit);
+            		        }
+		                    if(objName=='img_solus'){
+								ctlBind.ROTOF.findByIdSolution(ctlBind.idSolution);
+		                    }
 						}
 						if(wf=="impCsv"){
 		                    Alert.show("Les données sont importées.", "Succés de l'importation");

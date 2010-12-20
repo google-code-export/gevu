@@ -90,7 +90,10 @@ class Model_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
+        $infos = $this->findByIdDoc($id);     
         $this->delete('gevu_docs.id_doc = ' . $id);
+        unlink($infos['path_source']);
+        
     }
     
     /**
@@ -139,7 +142,7 @@ class Model_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
      *
      * @param int $id_doc
      */
-    public function findById_doc($id_doc)
+    public function findByIdDoc($id_doc)
     {
         $query = $this->select()
                     ->from( array("g" => "gevu_docs") )                           

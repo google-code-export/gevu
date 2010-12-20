@@ -44,7 +44,8 @@
 					Alert.show("Ce login n'est pas dans la base.\nVous êtes connecté comme invité.", 'Vérification authentification', mx.controls.Alert.OK);
 				}else{
 					this.parentApplication.exi = result.result;
-				}	
+				}
+				this.parentApplication.boxGen.visible = true;	
 				PopUpManager.removePopUp(this);
 			}      
 			

@@ -45,8 +45,9 @@ import compo.*;
  * identifiants de la grille en cours de consultation
  */
 [Bindable] public var idExi:String;
-private var idProduit:int;	
+public var idProduit:int;	
 private var idCout:int;	
+private var idTof:int;	
 
 
 private function selectItem(event:Event):void {
@@ -65,6 +66,7 @@ private function selectItem(event:Event):void {
 		
 		ROSP.findByIdProduit(idProduit);
 		ROC.findByIdProduit(idProduit);
+		ROTOF.findByIdProduit(idProduit);
 
 	}
 }
@@ -233,6 +235,41 @@ private function deleteSolusClickHandler(event:CloseEvent):void
     }
 }
 
+private function TofHandler(e:Object):void
+{
+	if(!e)return;
+    tlTof.dataProvider = e.result as Array;
+}
+
+
+private function showPhoto(event:Event):void{
+	
+	idTof = event.currentTarget.selectedItem.id_doc;
+
+}
+
+private function removePhoto():void {
+    
+    if (idTof)
+    {
+        Alert.show("Confirmez-vous la suppression de la photo ?",
+        "Confirmation Suppression", 3, this, deleteTofClickHandler);
+    }
+    
+}
+private function deleteTofClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+			ROTOF.remove(idTof);
+    }
+}
+
+private function TofRemoveHandler(e:Object):void
+{
+    ROTOF.findByIdProduit(idProduit);
+}
+
         ]]>
     </mx:Script>
     
@@ -266,6 +303,16 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 	 	<mx:method name="findByIdProduit"  result="CoutHandler(event)"/>  	
 	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
 	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROTOF"
+	    	source="Model_DbTable_Gevu_docsxproduits" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdProduit"  result="TofHandler(event)"/>  	
+	 	<mx:method name="remove"  result="TofRemoveHandler(event)"/>  	
+	</mx:RemoteObject>
+
 
 	<mx:Canvas id="view" width="100%" height="100%">
 		<mx:HBox width="100%" height="100%">
@@ -347,7 +394,7 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 								</mx:HBox>							
 								<mx:DataGrid width="100%" height="100%" id="dgSolus">
 									<mx:columns>
-										<mx:DataGridColumn headerText="Référence" dataField="ref" />
+										<mx:DataGridColumn headerText="Référence" width="100" dataField="ref" />
 										<mx:DataGridColumn headerText="Solution" dataField="lib" />
 										<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
 									</mx:columns>
@@ -365,8 +412,8 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 							</mx:VBox>
 						</mx:ViewStack>											
 					</mx:Panel>
-					<mx:HBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">						
-						<mx:Panel title="Coût associé" layout="absolute" width="100%" height="100%">
+					<mx:HBox width="100%" height="320" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">						
+						<mx:Panel title="Coût associé" layout="absolute" width="360" height="100%">
 							<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
 								<mx:Label text="Les coûts sont en € HT"  fontWeight="bold" fontSize="18"/>
 								<mx:Label text="Unitaire:" />
@@ -394,7 +441,30 @@ private function deleteSolusClickHandler(event:CloseEvent):void
 								<mx:Button label="Enregistrer" click="updateCout()" />
 							</mx:VBox>					
 						</mx:Panel>
-						<mx:Panel title="Photos" layout="absolute" >
+						<mx:Panel width="100%" height="100%" title="Photos" layout="absolute" >
+							<mx:VBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:HBox>
+									<ns2:cUploadFile id="ufIma" iconBtn="@Embed('images/AddRecord.png')" idExi="{idExi}" objName="img_produit"  ttBtn="Ajouter une photo" ctlBind="{this}" wf="auton" typeFic="images" />				
+									<mx:LinkButton click="removePhoto()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une photo" />							
+								</mx:HBox>
+								<mx:TileList id="tlTof"
+									width="100%" height="100%"
+									itemClick="showPhoto(event)">
+									<mx:itemRenderer>
+										<mx:Component>
+							                <mx:VBox width="74" height="74"
+							                    paddingRight="5" paddingLeft="5"
+							                    horizontalAlign="center">
+							                    <mx:Image 
+							                        height="64" width="64"
+							                        source="{data.url}"/>
+							                </mx:VBox>
+							            </mx:Component>
+									</mx:itemRenderer>
+									
+								</mx:TileList>							
+							</mx:VBox>
+
 						</mx:Panel>
 					</mx:HBox>
 			</mx:VBox>		
