@@ -19,7 +19,7 @@ class GEVU_Import{
 			$adapter = new Zend_File_Transfer_Adapter_Http();
 		        //echo ROOT_PATH.'/data/upload';
 		    $adapter->setDestination(ROOT_PATH.'/data/upload');
-		               		
+		    
 			if (!$adapter->receive()) {
 				$messages = $adapter->getMessages();
 				echo implode("\n", $messages);
@@ -32,16 +32,24 @@ class GEVU_Import{
 						print "Désolé mais $file ne correspond à ce que nous attendons";
 						continue;
 					}
-			        $url = str_replace(ROOT_PATH,WEB_ROOT,$adapter->getFileName());
-			        $url = str_replace("\\","/",$url);
-			        $path = $adapter->getFileName();
+					//renomme le fichier pour éviter les doublons
+					$tabDecomp = explode('.', $info["name"]);
+					$extention = ".".strtolower($tabDecomp[sizeof($tabDecomp)-1]);
+					$new_name = uniqid().$extention;
+			        $path = ROOT_PATH.'/data/upload/'.$new_name;					
+			        $url = WEB_ROOT.'/data/upload/'.$new_name;
+
 			        $dataDoc = array(
-			    		"url"=>$url,"titre"=>$info["name"],"content_type"=>"text/csv"
+			    		"url"=>$url,"titre"=>$info["name"],"content_type"=>$adapter->getMimeType()
 			    		,"path_source"=>$path
 			    		,"tronc"=>$data['objName']
-			    		);			        
+			    		);
+					
+			    	rename(ROOT_PATH.'/data/upload/'.$info["name"],$path);
+			    		
+			    		
 					$this->saveDoc($data, $dataDoc);
-					if($data['objName']!='img_solus'){
+					if($data['objName']!='img_solus' && $data['objName']!='img_produit'){
 						$this->traiteDoc($idDoc, $path);
 					}
 					//print_r($info);					
@@ -74,8 +82,11 @@ class GEVU_Import{
 			$doc_obj = new Model_DbTable_Gevu_docsxsolutions();
 			$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_solution"=>$data['objId']),false);		
 		}
-
-    	
+		if($data['objName']=='img_produit'){
+			$doc_obj = new Model_DbTable_Gevu_docsxproduits();
+			$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_produit"=>$data['objId']),false);		
+		}
+		    	
     }
 
     public function traiteDoc($idDoc, $creerModele=false){
