@@ -89,9 +89,13 @@ class Model_DbTable_Gevu_solutionsxproduits extends Zend_Db_Table_Abstract
      *
      * @return void
      */
-    public function remove($id)
+    public function remove($idSolution, $idProduit=null)
     {
-        $this->delete('gevu_solutionsxproduits.id_solution = ' . $id);
+    	if($idProduit == null){
+       		$this->delete('gevu_solutionsxproduits.id_solution = ' . $idSolution);
+    	}else{
+   			$this->delete('gevu_solutionsxproduits.id_solution = ' . $idSolution.' AND gevu_solutionsxproduits.id_produit = ' . $idProduit);
+       	}
     }
     
     /**

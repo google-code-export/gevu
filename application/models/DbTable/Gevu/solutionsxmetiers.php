@@ -101,9 +101,13 @@ class Model_DbTable_Gevu_solutionsxmetiers extends Zend_Db_Table_Abstract
      * 
      * @return void
      */
-    public function remove($idSolution, $idMetier)
+    public function remove($idSolution, $idMetier=null)
     {
-        $this->delete('gevu_solutionsxmetiers.id_solution = ' . $idSolution.' AND gevu_solutionsxmetiers.id_metier = ' . $idMetier);
+    	if($idMetier == null){
+	        $this->delete('gevu_solutionsxmetiers.id_solution = '.$idSolution);
+    	}else{
+   			$this->delete('gevu_solutionsxmetiers.id_solution = ' . $idSolution.' AND gevu_solutionsxmetiers.id_metier = ' . $idMetier);
+       	}
     }
     
     /**
