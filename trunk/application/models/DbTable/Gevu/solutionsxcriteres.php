@@ -90,9 +90,13 @@ class Model_DbTable_Gevu_solutionsxcriteres extends Zend_Db_Table_Abstract
      *
      * @return void
      */
-    public function remove($idSolution, $idCritere)
+    public function remove($idSolution, $idCritere=null)
     {
-        $this->delete('gevu_solutionsxcriteres.id_solution = '.$idSolution.' AND gevu_solutionsxcriteres.id_critere = '.$idCritere);
+    	if($idCritere == null){
+	        $this->delete('gevu_solutionsxcriteres.id_solution = '.$idSolution);
+    	}else{
+	        $this->delete('gevu_solutionsxcriteres.id_solution = '.$idSolution.' AND gevu_solutionsxcriteres.id_critere = '.$idCritere);
+    	}
     }
     
     /**

@@ -3,6 +3,10 @@ require_once( "../param/ParamAppli.php" );
 
 try {
 
+$s = new Model_DbTable_Gevu_solutions();
+$rs = $s->remove(526);
+
+
 /*
 
 $s = new Model_DbTable_Gevu_criteres();

@@ -105,7 +105,15 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
-        $this->delete('gevu_solutions.id_solution = ' . $id);
+    	$dbE = new Model_DbTable_Gevu_solutionsxcouts();
+    	$dbE->remove($id);
+    	$dbE = new Model_DbTable_Gevu_solutionsxcriteres();
+    	$dbE->remove($id);
+    	$dbE = new Model_DbTable_Gevu_solutionsxmetiers();
+    	$dbE->remove($id);
+    	$dbE = new Model_DbTable_Gevu_solutionsxproduits();
+    	$dbE->remove($id);
+    	$this->delete('gevu_solutions.id_solution = ' . $id);
     }
     
     /**
