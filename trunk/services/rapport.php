@@ -84,15 +84,6 @@ $odf->setImage('img_niv_app_audio1', '../images/'.$xmlEtaLieux->Applicables['aud
 $odf->setImage('img_niv_app_visu1', '../images/'.$xmlEtaLieux->Applicables['visu'].'.png');
 $odf->setImage('img_niv_app_cog1', '../images/'.$xmlEtaLieux->Applicables['cog'].'.png');
 
-
-$rs = $grille->GetTreeObs($id,false, true);
-$obs = $odf->setSegment('obs');
-while($r = mysql_fetch_assoc($rs)){
-   	$obs->setVars('obs_diag', utf8_encode($r['titreRubPar']." | ".$r['titreRub']." : ".$r['ComVal3']));	
-	$obs->merge();
-}
-$odf->mergeSegment($obs);
-
 //récupère les informations de l'établissement
 $url = WebRoot.'/library/php/ExeAjax.php?f=GetTabForm&site='.$objSite->id.'&ParamNom=GetTabForm&id='.$g->id.'&type=Etab';
 $strXml = $objSite->GetCurl($url);
@@ -209,14 +200,26 @@ $xmlProb = simplexml_load_string($strXml);
 $j=1;
 foreach($xmlProb->rows->row as $r){
 	$refsProb = explode("*", $r->vbox[0]->label["id"]);
+	//si le hbox n'est pas vide on passe à un nouveau lieu
 	if($r->vbox[2]->hbox){
+		//on enregistre le problème précédent
+		if($j>1)$probs->merge();
+		
+		//on crée le nouveau problème
 		$idRubLieu = substr($r->vbox[2]->hbox->label["id"],9);
 		$gProb = new Granulat($idRubLieu, $objSite);
+		
 		//$strAriane = utf8_encode($gProb->GetFilAriane());
 		$strAriane = utf8_encode($gProb->TitreParent." | ".$gProb->titre);
-		if($j>1)$probs->merge();
 	    $probs->setVars('prob_num', $j);     
 	    $probs->setVars('prob_ariane', $strAriane);
+    	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
+		if(count($arrDocs)>0){    
+	    	$probs->rowprob->setImage('prob_img', $arrDoc[0]->path); 
+	    }else{
+	    	$probs->rowprob->setImage('prob_img', '../images/check_no.png'); 
+	    }
+	    
 	}
 	
     //$_SESSION['ForceCalcul'] = true;
@@ -240,21 +243,22 @@ foreach($xmlProb->rows->row as $r){
 		$tof = $r->vbox[4]->hbox->label[2]['value'];	
 	}
 	
-	//$arrDoc = $gProb->GetDocs($gProb->id,"1,2");
-    //problème de la place de l'image en dehors du tableau = image du diag et pas du problème
-	if($tof!='Photo : Non'){
-    	$arrDocs = $gProb->GetDocs($idRubLieu,"1,2");
-		if(count($arrDocs)>0){    
-	    	$probs->rowprob->setImage('prob_img', $arrDoc[0]->path); 
-	    }else{
-	    	$probs->rowprob->setImage('prob_img', '../images/check_no.png'); 
-	    }
-	}else{
-    	$probs->rowprob->setImage('prob_img', '../images/check_no.png'); 
-    }
 	$probs->rowprob->prob_reg($LegProb->hbox[0]->label[2]['value']);
     $probs->rowprob->prob_const($const);
     $probs->rowprob->prob_mesure('prob_mesure :'.$j);
+    
+	$rs = $grille->GetTreeObs($id,false, true);
+	while($r = mysql_fetch_assoc($rs)){
+    	$probs->rowprob->probs_obs->prob_obs(utf8_encode($r['ComVal3']));
+		$probs->rowprob->probs_obs->merge();
+	}
+
+    foreach($LegProb->hbox[1]->image as $img){
+    	$src = str_replace(WebRoot,PathRoot,$img['src']);
+    	$probs->rowprob->regimg->setImage('prob_reg', $src);;
+		$probs->rowprob->regimg->merge();
+    }
+
     foreach($LegProb->hbox[1]->image as $img){
     	$src = str_replace(WebRoot,PathRoot,$img['src']);
     	$probs->rowprob->probimg->setImage('prob_defici', $src);;
