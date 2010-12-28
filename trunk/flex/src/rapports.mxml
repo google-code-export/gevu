@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" xmlns:compo="compo.*"
-	 creationComplete="init()"
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
+	xmlns:compo="compo.*"
+	creationComplete="init()"
 	>
 
 <mx:Script source="rapportsScript.as" />
@@ -27,7 +28,14 @@
 		<mx:Label id="nomEtab" text="" fontSize="24"/>
 		<mx:Button label="Voir les solutions aux problèmes" click="showSolusProbEtab();" />
 		<mx:Button label="calculer les coûts" click="calculerCout();" />
-		<mx:Button label="Editer le rapport" click="calculerRapport();"  />
+ 		<mx:VBox>
+			<mx:Button label="Editer le rapport" click="calculerRapport();"  />
+			<mx:HBox>
+	           	<compo:cbGroupeMot labelName="titre" bRemove="true" bAjout="false" titre="un modèle" keyName="id_doc" id="cbModel" objName="Model_DbTable_Gevu_docs" objMethode="findByTronc"  objParam="model_rapport" endPoint="{ENDPOINT_SERVICE}" />
+				<compo:cUploadFile id="ufModel" iconBtn="@Embed('images/AddRecord.png')" idExi="{idExi}" objName="model_rapport" ttBtn="Ajouter un modèle" ctlBind="{this}" wf="models" typeFic="models" />								
+			</mx:HBox>
+ 		</mx:VBox>
+
  	</mx:HBox>
 	<!--
  	<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">

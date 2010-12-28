@@ -47,7 +47,95 @@ class Grille{
 		
     }
 
+	public function GetCritereObs($idRub, $cri)
+	{
+		
+		$sql = "SELECT a.id_article idArt, a.titre titreArt, a.date aDate
+					, fd.id_donnee idDon
+					, fdc1.valeur ComVal1
+					, fdc2.valeur ComVal2
+					, fdc3.valeur ComVal3
+					, fdc4.valeur ComVal4
+					, fdc5.valeur ComVal5
+					, d.fichier ComFic
+				FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique					
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee
+						 AND fd.id_form =67
+					INNER  JOIN spip_forms_donnees_champs fdc5 ON fdc5.id_donnee = fd.id_donnee
+						 AND fdc5.champ = 'ligne_5' AND fdc5.valeur = '".$cri."' 
+					INNER  JOIN spip_forms_donnees_champs fdc4 ON fdc4.id_donnee = fd.id_donnee
+						 AND fdc4.champ = 'ligne_4'
+					INNER  JOIN spip_forms_donnees_champs fdc3 ON fdc3.id_donnee = fd.id_donnee
+						 AND fdc3.champ = 'ligne_3'
+					INNER  JOIN spip_forms_donnees_champs fdc2 ON fdc2.id_donnee = fd.id_donnee
+						 AND fdc2.champ = 'ligne_2'
+					INNER  JOIN spip_forms_donnees_champs fdc1 ON fdc1.id_donnee = fd.id_donnee
+					 	AND fdc1.champ = 'ligne_1'
 
+					LEFT JOIN spip_documents_articles da ON da.id_article = a.id_article
+					LEFT JOIN spip_documents d ON d.id_document = da.id_document					 
+				WHERE r.id_rubrique = ".$idRub;
+		$db = new mysql ($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
+		$db->connect();
+		$result = $db->query($sql);
+		$db->close();
+		
+		return $result;
+	}
+
+    
+    
+	function GetTree($type,$id){
+		
+		
+		//recuperation des colonnes
+		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='GetTreeChildren_".$type."']/col";
+		$Cols = $this->site->XmlParam->GetElements($Xpath);		
+
+		//recuperation des js
+		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='GetTreeChildren_".$type."']/js";
+		$js = $this->site->GetJs($Xpath, array($type,$id));
+		
+		$tree = "<tree flex=\"1\" 
+			id=\"tree".$type."\"
+			seltype='multiple'
+			class='ariane'
+			".$js."
+			>";
+		$tree .= '<treecols>';
+		$tree .= '<treecol  id="id" primary="true" cycler="true" flex="1" persist="width ordinal hidden"/>';
+
+		$i=0;
+		foreach($Cols as $Col)
+		{
+			//la premiere colonne est le bouton pour deplier
+			if($i!=0){
+				if($Col["hidden"])
+					$visible = $Col["hidden"];
+				else
+					$visible = "false";
+				if($Col["type"]=="checkbox"){
+					$tree .= '<treecol id="treecol_'.$Col["tag"].'" label="'.$Col["tag"].'" type="checkbox" editable="true" persist="width ordinal hidden" />';
+				}else{
+					$tree .= '<treecol id="treecol_'.$Col["tag"].'" hidden="'.$visible.'" label="'.$Col["tag"].'" flex="6"  persist="width ordinal hidden" />';
+					//$tree .= '<splitter class="tree-splitter"/>';
+				}
+			}
+			$i++;
+		}
+		$tree .= '</treecols>';
+		$tree .= $this->site->GetTreeChildren($type, $Cols, $id);
+		$tree .= '</tree>';
+		/*
+		header('Content-type: application/vnd.mozilla.xul+xml');
+		$tree = $objSite->GetTreeChildren($type, $Cols, $id);
+		*/
+		return $tree;
+		
+	}
+    
 	public function GetEtatDiagListeTot($idRub, $rs=false)
 	{
 		
@@ -720,6 +808,7 @@ class Grille{
 		$oidRubPar=-1;
 		$oidRub=-1;
 		$oidArt=-1;
+		$oidCont=-1;
 		while ($r =  $db->fetch_assoc($result)) {
 			if($this->trace)
 				echo "Grille:GetTreeProb:".$r["idRub"]." ".$r["idArt"]." ".$r["idDon"]."<br/>";

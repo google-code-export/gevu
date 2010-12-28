@@ -50,8 +50,8 @@ $server = new Zend_Amf_Server();
 //$server->addDirectory(dirname(__FILE__) .'/../library/php/');
 
 // *ZAMFBROWSER IMPLEMENTATION*
-//$server->setClass( "ZendAmfServiceBrowser" );
-//ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
+$server->setClass( "ZendAmfServiceBrowser" );
+ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
 
 $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_solutionsxmetiers')

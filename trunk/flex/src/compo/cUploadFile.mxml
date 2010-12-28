@@ -73,6 +73,9 @@
 				if(typeFic=="csv"){
 					filter = new FileFilter("Fichier CSV (*.txt, *.rtf, *.csv)", "*.txt; *.rtf; *.csv");					
 				}
+				if(typeFic=="models"){
+					filter = new FileFilter("Fichier ODT (*.odt)", "*.odt");					
+				}
 				var Types:Array = new Array(filter);
 				
                 _refAddFiles = new FileReferenceList();
@@ -225,6 +228,10 @@
 	                    	twResult.result = result;
 		                    PopUpManager.centerPopUp(twResult);
 		                    */						
+						}
+						if(wf=="models"){
+		                    Alert.show("Le modèle est ajouté.", "Succés du téléchargement");
+		                   	ctlBind.cbModel.init();
 						}															
 					}else{
 	                    //Alert.show(result, "Echec du téléchargement");					

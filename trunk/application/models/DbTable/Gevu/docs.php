@@ -99,6 +99,11 @@ class Model_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
     /**
      * Récupère toutes les entrées Gevu_docs avec certains critères
      * de tri, intervalles
+     * @param string $order
+     * @param integer $limit
+     * @param integer $from
+     *  
+     * @return array
      */
     public function getAll($order=null, $limit=0, $from=0)
     {
@@ -202,9 +207,9 @@ class Model_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
                     ->from( array("g" => "gevu_docs") )                           
-                    ->where( "g.tronc = " . $tronc );
+                    ->where( "g.tronc = ?",$tronc );
 
-        return $this->fetchRow($query)->toArray(); 
+        return $this->fetchAll($query)->toArray(); 
     }
     /*
      * Recherche une entrée Gevu_docs avec la valeur spécifiée
