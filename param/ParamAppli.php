@@ -6,14 +6,15 @@ ini_set("display_errors", "on");
 
 define ("WEB_ROOT","http://localhost/gevu");
 define ("ROOT_PATH","c:\wamp\www\gevu");
+define ("SEP_PATH","/");
 
 set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\ZendFramework-1.10.8\library");
 set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\ZendFramework-1.10.8\extras\library");
 set_include_path(get_include_path().PATH_SEPARATOR.ROOT_PATH."\library\php");
 
 // *ZAMFBROWSER IMPLEMENTATION*
-//set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\exemples\php\ZamfBrowser_v.1.0\browser");
-//require_once( "ZendAmfServiceBrowser.php" );
+set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\exemples\php\ZamfBrowser_v.1.0\browser");
+require_once( "ZendAmfServiceBrowser.php" );
 
 
 // Define path to application directory

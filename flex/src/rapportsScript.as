@@ -17,7 +17,8 @@ include "grillesconfig.as";
 public var dataArr:ArrayCollection = new ArrayCollection();
 [Bindable]
 public var exi:Object;
-private var idExi:String = "";
+[Bindable]
+public var idExi:String = "1";
 
 [Bindable]	private var urlBD:String = ENDPOINT_EXEAJAX+"?f=GetBDs";
 [Bindable]	private var rsBD:Object;

@@ -106,7 +106,7 @@ class Granulat
 			$id=$this->id;
 		//echo "$id, $niv<br/>";
 			
-		//création du granulat
+		//crï¿½ation du granulat
 		$g = new Granulat($id, $this->site);
 		
 		$FilAriane="";
@@ -238,7 +238,7 @@ class Granulat
 	    //rï¿½cupï¿½re toutes les rubrique enfants
 	    $ids = $this->GetIdsScope();
 	    	
-		//calculer l'ï¿½tat du diagnostique
+		//calculer l'Ã©tat du diagnostique
 		$grille = new Grille($this->site);
 		$numDiag=0;
 		if(!$calcul){
@@ -906,7 +906,7 @@ class Granulat
   
 	function GetXmlGrillesValues($idGrille=-1,$valeurs=false){
 		$xml = "";
-		//récupère les grilles du granulat 
+		//rï¿½cupï¿½re les grilles du granulat 
 		$rsG = $this->GetFormIds(-1,$this->id,$idGrille);
 		if(mysql_num_rows($rsG)>0){
 			$xml .= "<grilles>";
@@ -924,7 +924,7 @@ class Granulat
 									while($rV = mysql_fetch_assoc($rsV)) {										
 										$xml .= "<valeur id='".$rD['id_donnee']."' champ='".$rV["champ"]."' ";
 										$xml .= " valeur=\"".utf8_encode($this->site->XmlParam->XML_entities($rV["valeur"]))."\" >";
-										//vérifie qu'on ne traite pas un mot
+										//vï¿½rifie qu'on ne traite pas un mot
 										if(substr($rV["champ"],0,4)=="mot_" && $rV["valeur"]!=""){
 											$mc = new MotClef($rV["valeur"],$this->site);
 											$xml .= "<motclef id='".$mc->id."' idGroupe='".$mc->id_groupe."' titre=\"".utf8_encode($this->site->XmlParam->XML_entities($mc->titre))."\" descriptif=\"".utf8_encode($this->site->XmlParam->XML_entities($mc->descriptif))."\"  />";	

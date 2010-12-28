@@ -15,14 +15,20 @@ class GEVU_Import{
 	public function addDoc($data){
 
 		try {
-		    
+			if($data['objName']=="model_rapport"){
+				$rep = SEP_PATH.'data'.SEP_PATH.'rapports'.SEP_PATH.'models';    
+			}else{
+				$rep = SEP_PATH.'data'.SEP_PATH.'upload';    
+			}
+		
 			$adapter = new Zend_File_Transfer_Adapter_Http();
 		        //echo ROOT_PATH.'/data/upload';
-		    $adapter->setDestination(ROOT_PATH.'/data/upload');
+		    $adapter->setDestination(ROOT_PATH.$rep);
+		    //echo ROOT_PATH.$rep;
 		    
 			if (!$adapter->receive()) {
 				$messages = $adapter->getMessages();
-				echo implode("\n", $messages);
+				echo implode("Mauvaise réception\n", $messages);
 		      }else{
 				// Retourne toutes les informations connues sur le fichier
 				$files = $adapter->getFileInfo();
@@ -36,8 +42,8 @@ class GEVU_Import{
 					$tabDecomp = explode('.', $info["name"]);
 					$extention = ".".strtolower($tabDecomp[sizeof($tabDecomp)-1]);
 					$new_name = uniqid().$extention;
-			        $path = ROOT_PATH.'/data/upload/'.$new_name;					
-			        $url = WEB_ROOT.'/data/upload/'.$new_name;
+			        $path = ROOT_PATH.$rep.SEP_PATH.$new_name;					
+			        $url = WEB_ROOT.$rep.SEP_PATH.$new_name;
 
 			        $dataDoc = array(
 			    		"url"=>$url,"titre"=>$info["name"],"content_type"=>$adapter->getMimeType()
@@ -45,11 +51,11 @@ class GEVU_Import{
 			    		,"tronc"=>$data['objName']
 			    		);
 					
-			    	rename(ROOT_PATH.'/data/upload/'.$info["name"],$path);
+			    	rename(ROOT_PATH.$rep.'/'.$info["name"],$path);
 			    		
 			    		
 					$this->saveDoc($data, $dataDoc);
-					if($data['objName']!='img_solus' && $data['objName']!='img_produit'){
+					if($data['objName']=='imp_csv'){
 						$this->traiteDoc($idDoc, $path);
 					}
 					//print_r($info);					
@@ -63,8 +69,9 @@ class GEVU_Import{
           	echo "Message: " . $e->getMessage() . "\n";
           	// puis tout le code nécessaire pour récupérer l'erreur
 		}
-     	echo json_encode(array("error"=>$info["error"]));   
-    }
+     	//echo json_encode(array("error"=>$info["error"]));   
+     	echo json_encode($info);   
+	}
     
     public function saveDoc($data, $dataDoc){
 

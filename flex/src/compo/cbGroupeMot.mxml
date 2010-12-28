@@ -2,6 +2,7 @@
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" >
 	<mx:Script>
         <![CDATA[
+        	import mx.events.CloseEvent;
 	import mx.managers.CursorManager;
 	import mx.managers.PopUpManager;
 
@@ -15,10 +16,13 @@
 	 */
 	[Bindable] public var endPoint:String;
 	[Bindable] public var objName:String;
+	[Bindable]public var objMethode:String="getAll";
+	[Bindable]public var objParam:String;
 	[Bindable] public var keyName:String;
 	[Bindable] public var labelName:String="lib";
 	[Bindable] public var titre:String="un mot clef";
 	[Bindable] public var bAjout:Boolean=true;
+	[Bindable] public var bRemove:Boolean=false;
 	[Bindable] public var objSource:String="";
 	
 	[Bindable] private var dpValue:Array;
@@ -26,8 +30,14 @@
 
 	public function init():void
 	{
-	    //chargement des données
-	    ROS.getAll();
+		if(objMethode!="getAll"){
+			if(objMethode=="findByTronc"){
+			    ROS.findByTronc(objParam);
+			}			
+		}else{
+		    //chargement des données
+		    ROS.getAll();
+		}
 	}
 
 	public function getIndex(label:String):int
@@ -85,6 +95,24 @@
         result = cb.selectedItem[keyName];
     }
 
+	private function removeItem():void {
+	    
+	    if (cb.selectedItem)
+	    {
+	        Alert.show("Confirmez-vous la suppression "+titre+" ?",
+	        "Confirmation Suppression", 3, this, removeItemHandler);
+	    }
+	   
+	}
+	
+	private function removeItemHandler(event:CloseEvent):void
+	{
+	    if (event.detail == Alert.YES) 
+	    {
+			ROS.remove(cb.selectedItem[keyName]);
+	    }
+	}
+
         ]]>
     </mx:Script>
 	<mx:RemoteObject id="ROS"
@@ -93,9 +121,12 @@
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
 	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
+	 	<mx:method name="findByTronc"  result="fillHandler(event)" />
+	 	<mx:method name="remove"  result="init()" />
 	</mx:RemoteObject>
  
 <mx:ComboBox id="cb" />
 <mx:LinkButton visible="{bAjout}" id="btnAddNew" click="AjoutMot()" icon="@Embed('images/AddRecord.png')" toolTip="{'Ajouter '+titre}" />
+<mx:LinkButton visible="{bRemove}" click="removeItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="{'Supprimer '+titre}" />
     
 </mx:HBox>

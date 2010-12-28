@@ -235,7 +235,7 @@
 	}
 
 	echo  utf8_encode($resultat);	
-
+	
 	function GetSolusProbEtab($objSite, $idEtab){
 		
 		$path = PathRoot."/bdd/EtatDiag/GetSolusProbEtab_".$objSite->id."_".$idEtab.".xml";

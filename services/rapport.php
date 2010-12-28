@@ -6,7 +6,6 @@ require_once( "../param/ParamPage.php" );
 require_once( "../param/ParamAppli.php" );
 require_once('../library/php/odtphp/odf.php');
 
-
 $grille = new Grille($objSite);
 $xul = new Xul($objSite);
 
@@ -35,10 +34,9 @@ $pathModel = PathRoot.'/data/rapports/models/RAPPORTDIAGVF.odt';
 $odf = new odf($pathModel);
 
 //création d'un rapport pour un établissement
-$odf->setVars('commune', $g->TitreParent);
+$odf->setVars('commune', utf8_encode($g->TitreParent));
 
 $odf->setVars('etablissement', utf8_encode($g->titre));
-
 
 //récupération des images
 $arrDocs = $g->GetDocs($g->id,"1,2");
@@ -57,10 +55,8 @@ $odf->setVars('diagnostiqueur', utf8_encode($art['nom']));
 $odf->setVars('structure_diagnostiqueur', '???');
 $odf->setVars('date_passage', utf8_encode($art['maj']));
 
-
 //récupération de l'état des lieux
-$url = WebRoot.'/library/php/ExeAjax.php?f=GetEtatDiag&site='.$objSite->id.'&id='.$g->id;
-$strXml = $objSite->GetCurl($url);
+$strXml = utf8_encode($g->GetEtatDiag());
 $xmlEtaLieux = simplexml_load_string($strXml);
 
 $odf->setImage('img_niv_reg_moteur', '../images/'.$xmlEtaLieux->Applicables['moteur'].'.png');
@@ -85,10 +81,9 @@ $odf->setImage('img_niv_app_visu1', '../images/'.$xmlEtaLieux->Applicables['visu
 $odf->setImage('img_niv_app_cog1', '../images/'.$xmlEtaLieux->Applicables['cog'].'.png');
 
 //récupère les informations de l'établissement
-$url = WebRoot.'/library/php/ExeAjax.php?f=GetTabForm&site='.$objSite->id.'&ParamNom=GetTabForm&id='.$g->id.'&type=Etab';
-$strXml = $objSite->GetCurl($url);
-//$strXml = $gra->GetXmlGrillesValues(-1, true);
+$strXml =  utf8_encode($grille->GetXulTab('Etab', $g->id, 'Etab'));
 $xmlEtab = simplexml_load_string($strXml);
+
 $dons = $xmlEtab->xpath($XpInfos);
 $erp = $xmlEtab->xpath($XpInfos."/menulist[1]/menupopup/menuitem[@selected='true']/@label");
 $structure = "???";
@@ -103,8 +98,9 @@ $odf->setVars('etab_adresse', $dons[0]->textbox[2]['value'].', '.$dons[0]->textb
 
 
 //récupère la liste des batiments
-$url = WebRoot.'/library/php/ExeAjax.php?f=GetTree&site='.$objSite->id.'&ParamNom=GetOntoTree&type=bat&id='.$g->id;
-$strXml = $objSite->GetCurl($url);
+//$url = WebRoot.'/library/php/ExeAjax.php?f=GetTree&site='.$objSite->id.'&ParamNom=GetOntoTree&type=bat&id='.$g->id;
+//$objSite->GetCurl($url);
+$strXml = utf8_encode($grille->GetTree('bat',$g->id));
 $xmlBats = simplexml_load_string($strXml);
 
 $e_bats = $odf->setSegment('etab_bats');
@@ -112,8 +108,8 @@ $rBats = $xmlBats->xpath("/tree/treechildren/treeitem/treerow");
 foreach($rBats as $r){
 	$e_bats->setVars('bat_nom', $r->treecell[1]['label']);
 	//récupère les infos du batiment
-	$url = WebRoot.'/library/php/ExeAjax.php?f=GetTabForm&ParamNom=GetTabForm&site='.$objSite->id.'&id='.$r->treecell[0]['label'].'&type=Bat';
-	$strXml = $objSite->GetCurl($url);
+	//$url = WebRoot.'/library/php/ExeAjax.php?f=GetTabForm&ParamNom=GetTabForm&site='.$objSite->id.'&id='.$r->treecell[0]['label'].'&type=Bat';
+	$strXml = utf8_encode($grille->GetXulTab('Bat', $r->treecell[0]['label'], 'Bat'));
 	$xmlBat = simplexml_load_string($strXml);
 	$dons = $xmlBat->xpath($XpInfos);
 	
@@ -194,10 +190,11 @@ $odf->setImage('img_cadastre', '../images/kml.png');
 
 $probs = $odf->setSegment('probs');
 //récupère les problèmes
-$url = WebRoot.'/library/php/ExeAjax.php?f=GetTreeProb&site='.$objSite->id.'&id='.$r->treecell[0]['label'].'&type=Bat';
-$strXml = $objSite->GetCurl($url);
+//$url = WebRoot.'/library/php/ExeAjax.php?f=GetTreeProb&site='.$objSite->id.'&id='.$r->treecell[0]['label'].'&type=Bat';
+$strXml = utf8_encode($grille->GetTreeProb($r->treecell[0]['label']));
 $xmlProb = simplexml_load_string($strXml);
 $j=1;
+
 foreach($xmlProb->rows->row as $r){
 	$refsProb = explode("*", $r->vbox[0]->label["id"]);
 	//si le hbox n'est pas vide on passe à un nouveau lieu
@@ -215,9 +212,9 @@ foreach($xmlProb->rows->row as $r){
 	    $probs->setVars('prob_ariane', $strAriane);
     	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
 		if(count($arrDocs)>0){    
-	    	$probs->rowprob->setImage('prob_img', $arrDoc[0]->path); 
+	    	$probs->setImage('prob_img', $arrDoc[0]->path); 
 	    }else{
-	    	$probs->rowprob->setImage('prob_img', '../images/check_no.png'); 
+	    	$probs->setImage('prob_img', '../images/check_no.png'); 
 	    }
 	    
 	}
@@ -242,20 +239,24 @@ foreach($xmlProb->rows->row as $r){
 	}else{
 		$tof = $r->vbox[4]->hbox->label[2]['value'];	
 	}
-	
-	$probs->rowprob->prob_reg($LegProb->hbox[0]->label[2]['value']);
+	$regle = $LegProb->hbox[0]->label[2]['value'];
+	$cri = $LegProb->hbox[0]->label[1]['value'];
     $probs->rowprob->prob_const($const);
     $probs->rowprob->prob_mesure('prob_mesure :'.$j);
     
-	$rs = $grille->GetTreeObs($id,false, true);
+    //ajoute les observations
+    $rs = $grille->GetCritereObs($idRubLieu,$cri);
 	while($r = mysql_fetch_assoc($rs)){
-    	$probs->rowprob->probs_obs->prob_obs(utf8_encode($r['ComVal3']));
-		$probs->rowprob->probs_obs->merge();
+		if($r['ComVal3']!=""){
+	    	$probs->rowprob->probobs->obs_diag(utf8_encode($r['ComVal3']));
+			$probs->rowprob->probobs->merge();
+		}
 	}
 
-    foreach($LegProb->hbox[1]->image as $img){
-    	$src = str_replace(WebRoot,PathRoot,$img['src']);
-    	$probs->rowprob->regimg->setImage('prob_reg', $src);;
+	//ajoute les images réglementaires
+	for ($i = 3; $i < count($LegProb->hbox[0]->label); $i++) { 
+    	$src = getImgReg($regle, $LegProb->hbox[0]->label[$i]['value']);
+    	$probs->rowprob->regimg->setImage('prob_reg', $src);
 		$probs->rowprob->regimg->merge();
     }
 
@@ -279,8 +280,8 @@ foreach($xmlProb->rows->row as $r){
 }
 $probs->merge();
 $odf->mergeSegment($probs);
-
-
+/*
+*/
 
 $odf->exportAsAttachedFile();
 
@@ -337,5 +338,31 @@ function getCout($g, $id, $arrP, $idDon=-1, $lib=false){
 	
 }
 
+function getImgReg($regle, $type){
+	if($regle=="Réglementaire"){
+		$regle="R";
+	}else{
+		$regle="S";
+	}
+	$path = '../images/check_no.png';
+	if($type=="EPR_IOP"){
+		$path = '../images/'.$regle.'ERP.png';
+	}
+	if($type=="ERP_IOP existant"){
+		$path = '../images/'.$regle.'ERPexistant.png';
+	}
+	if($type=="Voirie"){
+		$path = '../images/'.$regle.'VOIRIE.png';
+	}
+	if($type=="Logement"){
+		$path = '../images/'.$regle.'LOGEMENT.png';
+	}
+	if($type=="Travail"){
+		$path = '../images/'.$regle.'CT.png';
+	}
+	
+	return $path;
+	
+}
 
 ?>
