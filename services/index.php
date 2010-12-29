@@ -74,6 +74,7 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_couts')
 	->setClass('Model_DbTable_Gevu_docsxsolutions')
 	->setClass('Model_DbTable_Gevu_docsxproduits')
+	->setClass('Model_DbTable_Gevu_rapports')
 	
 	//pour l'authentification
 	->setClass("AUTH_LoginManager")

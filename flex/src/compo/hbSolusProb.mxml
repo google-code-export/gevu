@@ -5,6 +5,7 @@
 	<mx:Script>
 		<![CDATA[
 			public var prob:Object;
+
 			public function init():void{
 				if(prob){
 		        	lieu.text=prob.lieu;
@@ -22,12 +23,14 @@
 			        	if(nb == 0){
 				        	var cout1:Object = prob.couts.coutSolus;
 				        	var c1:hbSolusCout=new hbSolusCout();
+				        	c1.name="crit:"+cout1.id_critere+"_cout:"+cout1.id_cout;
 				        	c1.cout=cout1;
 				        	couts.addChild(c1);
 			        	}else{		
 					        for each (var cout:Object in prob.couts.coutSolus)
 					        {
 					        	var c:hbSolusCout=new hbSolusCout();
+					        	c.name="crit:"+cout.id_critere+"_cout:"+cout.id_cout;
 					        	c.cout=cout;
 					        	couts.addChild(c);
 					        }        	

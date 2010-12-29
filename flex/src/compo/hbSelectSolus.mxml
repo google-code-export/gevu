@@ -7,7 +7,7 @@
 	<mx:Script>
 		<![CDATA[
 			public var cout:Object;
-			[Bindable]	public var probs:Array=[];
+		 	public var probs:Array=[];
 			public function init():void{
 				if(cout){
 					ref.text=cout.ref; 
