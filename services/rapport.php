@@ -26,12 +26,16 @@ if($pxml!=-1){
 
 $XpInfos = '/tabbox/tabpanels/tabpanel/tabbox/tabpanels/tabpanel/vbox/hbox[2]/grid/columns/column[2]'; 
 
+//récupère le modele
+$m = new Model_DbTable_Gevu_docs();
+$rm = $m->findByIdDoc($_REQUEST['model']);
 
 
 //chargement du modèle de rapport
-$pathModel = PathRoot.'/data/rapports/models/RAPPORTDIAGVF.odt';
+//$pathModel = PathRoot.'/data/rapports/models/RAPPORTDIAGVF.odt';
+
 //echo $pathModel; 
-$odf = new odf($pathModel);
+$odf = new odf($rm['path_source']);
 
 //création d'un rapport pour un établissement
 $odf->setVars('commune', utf8_encode($g->TitreParent));
@@ -48,7 +52,7 @@ if(count($arrDocs)>0){
 }
 $odf->setVars('redacteur', $arrContact['prenom'].' '.$arrContact['nom']);
 $today = strftime( "%A %d %B %Y" , time());
-//$odf->setVars('date_redaction', $today);
+$odf->setVars('date_redaction', $today);
 
 $odf->setVars('diagnostiqueur', utf8_encode($art['nom']));
 //information pas présente actuellement dans la base
@@ -212,7 +216,7 @@ foreach($xmlProb->rows->row as $r){
 	    $probs->setVars('prob_ariane', $strAriane);
     	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
 		if(count($arrDocs)>0){    
-	    	$probs->setImage('prob_img', $arrDoc[0]->path); 
+	    	$probs->setImage('prob_img', $arrDocs[0]->path); 
 	    }else{
 	    	$probs->setImage('prob_img', '../images/check_no.png'); 
 	    }
@@ -281,6 +285,7 @@ foreach($xmlProb->rows->row as $r){
 $probs->merge();
 $odf->mergeSegment($probs);
 /*
+
 */
 
 $odf->exportAsAttachedFile();

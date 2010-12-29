@@ -174,8 +174,6 @@ public function calculerRapport(send:Boolean):*{
 		pArr.push({"idSolus":idSolus, "couts":pProb});
 	}	
 	var pxml:String = JSON.encode(pArr);
-
-    var parameters:* ={"pxml":pxml,"site":selectedBD.value, "id":selectedEtab.idRub};
     
     if(!send) return pxml;
 
@@ -184,6 +182,7 @@ public function calculerRapport(send:Boolean):*{
 	variables.pxml=pxml;
 	variables.site=selectedBD.value;
 	variables.id=selectedEtab.idRub;
+	variables.model=cbModel.cb.selectedItem["id_doc"];
 	request.data = variables;
 	request.method = URLRequestMethod.POST;
 	navigateToURL(request,"_blank");

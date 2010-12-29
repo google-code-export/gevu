@@ -1,16 +1,5 @@
 <?php
 class GEVU_Import{
-    /**
-    * @param  string $name
-    * @param  string $greeting
-    * @return string
-    */
-    public function critere($data)
-    {
-    	//Identifiant	Critères	Réglementaire	Souhaitable	Type de droit	Travail	ERP_IOP	Logement	Voirie	ERP_IOP existant	Modalité particulière	motrice	auditive	visuelle	cognitive	Affirmations	Handicateur moteur	Handicateur auditif	Handicateur visuel	Handicateur cognitif																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
-    
-    	return $greeting . ', ' . $name;
-    }
 
 	public function addDoc($data){
 

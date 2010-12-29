@@ -3,11 +3,10 @@ require_once( "../param/ParamAppli.php" );
 
 try {
 
+/*
 $s = new Model_DbTable_Gevu_solutions();
 $rs = $s->remove(526);
 
-
-/*
 
 $s = new Model_DbTable_Gevu_criteres();
 $data = array("criteres"=>"La banque d'accueil permet la communication visuelle entre les usagers et le personnel","ref"=>"3_cr_acc_06","handicateur_moteur"=>"1","handicateur_auditif"=>"2","handicateur_visuel"=>"1","handicateur_cognitif"=>"3","id_type_controle"=>"1","affirmation"=>"La banque d'accueil ne permet pas la communication visuelle entre les usagers et le personnel");
@@ -50,8 +49,8 @@ $server = new Zend_Amf_Server();
 //$server->addDirectory(dirname(__FILE__) .'/../library/php/');
 
 // *ZAMFBROWSER IMPLEMENTATION*
-$server->setClass( "ZendAmfServiceBrowser" );
-ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
+//$server->setClass( "ZendAmfServiceBrowser" );
+//ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
 
 $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_solutionsxmetiers')
