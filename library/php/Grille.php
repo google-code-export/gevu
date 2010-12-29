@@ -749,17 +749,18 @@ class Grille{
 
 	}
     
-    function GetTreeProb($idRub, $rs=false, $arr=false){
+    function GetTreeProb($idRub, $rs=false, $arr=false, $force=false){
     	
 		$path = PathRoot."/bdd/EtatDiag/GetTreeProb_".$this->site->id."_".$idRub."_".$rs."_".$arr.".xml";
-		$str = $this->site->GetFile($path);
-		if($str){
-			if($arr){
-				return json_decode($str, true);
-			}
-			return $str;			
-		}			
-    
+		if(!$force){
+			$str = $this->site->GetFile($path);
+			if($str){
+				if($arr){
+					return json_decode($str, true);
+				}
+				return $str;			
+			}			
+		}    
     	$g = new Granulat($idRub,$this->site);
     	//r?cup?re les rubriques enfants
     	$ids = $g->GetIdsScope();
@@ -859,7 +860,7 @@ class Grille{
 			$xul.="<vbox>";
 				if($r["idCont"]!=$oidCont){
 					$xul.="<hbox>";
-						$xul.="<label value=\"Problï¿½me nï¿½ ".$r["idPbPlan"]." : ".$this->site->XmlParam->XML_entities($r["TextCont"])."\"/>";
+						$xul.="<label value=\"Problème n° ".$r["idPbPlan"]." : ".$this->site->XmlParam->XML_entities($r["TextCont"])."\"/>";
 						$xul.="<label class='text-linkAdmin' onclick=\"OuvreControle(".$r["idDonneCont"].");\" value='(".$r["idCont"].")'/>";
 		    		$xul.="</hbox>";
 				}
@@ -869,7 +870,7 @@ class Grille{
 					$xul.="<label value='Photo : ".$r["ReponsePhoto"]."'/>";
 					$xul.="<label id='adminDon_".$r["idDon"]."' class='text-linkAdmin' onclick=\"OuvreDonnee(".$this->site->infos["GRILLE_SIG_PROB"].",".$r["idDon"].");\" value=\"Admin\"/>";
 					$xul.="<image onclick=\"SetVal('".$idDoc."');\" src='".$this->site->infos["pathImages"]."check_yes.png' />";
-		    		$xul.="<image onclick=\"DelArticle('".$r["idDon"]."', '".$idRub."');\" src='".$this->site->infos["pathImages"]."check_no.png' />";
+		    		$xul.="<image onclick=\"DelArticleProb('".$r["idArt"]."', '".$idRub."');\" src='".$this->site->infos["pathImages"]."check_no.png' />";
 		    	$xul.="</hbox>";
 			$xul.="</vbox>";
 					

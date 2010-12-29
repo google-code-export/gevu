@@ -109,7 +109,7 @@ public function ForceCalcul():void{
 	srvFC.url = ENDPOINT_EXEAJAX;
 	var params:Object = new Object();
 	params.f = "SetChoixAffichage";
-	params.idXul = ForceCalcul;
+	params.idXul = 'ForceCalcul';
 	if(cbForceCalcul.selected){
 		params.valeur = "true";		
 	}else{
