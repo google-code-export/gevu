@@ -1181,7 +1181,7 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 					AND fdcc1.champ = 'ligne_2'
 					INNER JOIN spip_forms_donnees_champs fdcc2 ON fdcc2.id_donnee = fdcc.id_donnee
 					AND fdcc2.champ = 'mot_1'
-					INNER JOIN spip_mots m ON m.id_mot = fdcc2.valeur
+					INNER JOIN spip_mots m ON m.id_mot = fdcc2.valeur AND m.titre='Non'
 					
 					INNER JOIN spip_forms_donnees fdp2 ON fdp2.id_form IN (54,70)
 					INNER JOIN spip_forms_donnees_champs fdc22 ON fdc22.id_donnee = fdp2.id_donnee

@@ -230,11 +230,25 @@
 		case 'GetSolusProbEtab':
 			$resultat = GetSolusProbEtab($objSite, $_GET['idEtab']);
 			break;
+		case 'DelArticleProb':
+			DelArticle($_GET['idArt']);
+			$grille = new Grille($objSite);
+			$resultat = $grille->GetTreeProb($_GET['idRub'],false,false,true);
+			break;
 		default:
 			//$resultat = AddDocToArt();
 	}
 
-	echo  utf8_encode($resultat);	
+	echo  utf8_encode($resultat);
+
+	function DelArticle($idArt){
+		global $objSite;
+		
+		$s = new Synchro($objSite,false);
+	
+		$s->SupprimerArticle($idArt);
+	
+	}
 	
 	function GetSolusProbEtab($objSite, $idEtab){
 		
