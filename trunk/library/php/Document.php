@@ -25,8 +25,10 @@ class Document{
 		    $this->path = str_replace(WebRoot, PathRoot, $this->fichier);
 		    $this->largeur = $data['largeur'];
 		    $this->hauteur = $data['hauteur'];
-			if($data['dtitre'])
+		    /*
+			if($data['rtitre'])
 				$this->titre = $data['rtitre'];
+			*/
 		    if($data['dtitre'])
 				$this->titre = $data['dtitre'];
 	  	}	

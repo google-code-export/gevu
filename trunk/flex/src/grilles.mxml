@@ -11,7 +11,7 @@ todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
 
 	<mx:VBox width="100%" height="100%" id="boxGen" visible="false" >
 		<mx:HBox>
-			<mx:Label text="V 0.56" />
+			<mx:Label text="V 0.60" />
 			<mx:LinkButton id="btnAjoutUti" click="init();" icon="@Embed('images/ajoutUti.jpg')" toolTip="Ajouter un utilisateur" />					
 			<mx:LinkButton label="Mon profil" click="init();" />
 			<mx:LinkButton label="Mes données" click="init();" />
