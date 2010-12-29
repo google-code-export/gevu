@@ -7,8 +7,8 @@ import flash.events.Event;
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.events.DropdownEvent;
+import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
-import mx.rpc.http.HTTPService;
 
 //include the constant definition of the server endpoint URL
 include "grillesconfig.as";
@@ -20,11 +20,11 @@ public var exi:Object;
 [Bindable]
 public var idExi:String = "1";
 
-[Bindable]	private var urlBD:String = ENDPOINT_EXEAJAX+"?f=GetBDs";
-[Bindable]	private var rsBD:Object;
-[Bindable]public var selectedBD:Object;
-[Bindable]	private var rsEtab:Object;
-[Bindable]public var selectedEtab:Object;
+[Bindable] private var urlBD:String = ENDPOINT_EXEAJAX+"?f=GetBDs";
+[Bindable] private var rsBD:Object;
+[Bindable] public var selectedBD:Object;
+[Bindable] private var rsEtab:Object;
+[Bindable] public var selectedEtab:Object;
 
 public function init():void
 {
@@ -58,6 +58,7 @@ public function readXmlSolus(event:ResultEvent):void{
         for each (var prob:Object in arr.prob)
         {
         	var p:hbSolusProb=new hbSolusProb();
+        	p.name = prob.idRub+"_"+prob.idDon
         	p.prob = prob;
 			pSolusProb.addChild(p);			
         }
@@ -82,9 +83,12 @@ public function choixBD(event:DropdownEvent):void{
 public function selectEtab(event:Event):void {
 	selectedEtab = event.currentTarget.selectedItem;
 	if(selectedEtab){
+		boxEtab.visible=true;
 		nomEtab.text = selectedEtab.titreRub;
 		pSolusProb.removeAllChildren(); 		
-		selectCout.removeAllChildren(); 		
+		selectCout.removeAllChildren();
+		showSolusProbEtab();
+		cbSelection.init(); 		
 	}
 }
 
@@ -147,12 +151,12 @@ public function calculerCout():void {
 
 }
 
-public function calculerRapport():void{
+public function calculerRapport(send:Boolean):*{
 	
 	var SelSols:Array = selectCout.getChildren();
 	
 	if(SelSols.length == 0){
-		Alert.show("Merci de sélectionner au moins une solution avant d'éditer un rapport.");
+		Alert.show("Merci de sélectionner au moins une solution ou un produit.");
 		return;
 	}
 	
@@ -172,6 +176,8 @@ public function calculerRapport():void{
 	var pxml:String = JSON.encode(pArr);
 
     var parameters:* ={"pxml":pxml,"site":selectedBD.value, "id":selectedEtab.idRub};
+    
+    if(!send) return pxml;
 
 	var request:URLRequest = new URLRequest(ENDPOINT_RAPPORT);
 	var variables:URLVariables = new URLVariables();
@@ -223,3 +229,103 @@ public function GetArrCout(ct:hbCout):Array{
 
 	return pProb;
 }
+
+
+public function decocheCout():void {
+	var Probs:Array = pSolusProb.getChildren();
+	for each(var Prob:hbSolusProb in Probs){
+		var Sols:Array = Prob.couts.getChildren();
+		for each(var Sol:hbSolusCout in Sols){
+			var Prods:Array = Sol.couts.getChildren();
+			for each(var Prod:hbProdCout in Prods){
+				if(Prod.cbRef.selected){
+					Prod.cbRef.selected=false;
+					Prod.garde();					
+				}
+			}
+			if(Sol.cbRef.selected){
+				Sol.cbRef.selected=false;
+				Sol.garde();
+			}						
+		}
+	}
+}
+
+private function SauveSelection():void{
+	
+	if(selectedEtab){
+		var pxml:String = calculerRapport(false);
+		if(pxml){
+			var pArr:Array = new Array;
+			var idRapport:String = cbSelection.cb.selectedItem["id_rapport"];
+			pArr["site"]=selectedBD.value;
+			pArr["id_exi"]=idExi;
+			pArr["selection"]=pxml;
+			pArr["id_lieu"]=selectedEtab.idRub;		
+			ROS.edit(idRapport,pArr);
+		}
+	}
+}
+
+public function ShowSelection(pxml:String):void{
+	
+	if(pxml){
+		var pArr:Object = JSON.decode(pxml);
+		if(pArr){
+			//décoche toute les solutions
+			decocheCout();
+        	var name:String="";
+        	var c:hbSolusCout;
+        	var p:hbSolusProb;
+        	var sc:hbProdCout;
+	        for each (var solus:Object in pArr)
+	        {
+		        for each (var couts:Object in solus.couts)
+		        {
+			        for each (var cout:Object in couts)
+			        {
+			        	//récupère le problème
+			        	name = cout.idRub+"_"+cout.idDon;
+			        	p=hbSolusProb(this.pSolusProb.getChildByName(name));
+			        	if(p){
+				        	name = "crit:"+cout.idCrit+"_cout:"+cout.idCout;
+				        	//récupère la solution
+				        	c=hbSolusCout(p.couts.getChildByName(name));
+				        	if(c){				        		
+						        for each (var SousCouts:Object in cout.SousCouts)
+						        {
+							        for each (var souscout:Object in SousCouts)
+							        {
+							        	//récupère le produit
+							        	name = "cout:"+souscout.idCout+"_prod:"+souscout.idProd;
+							        	sc=hbProdCout(c.couts.getChildByName(name));
+							        	if(sc){
+							        		sc.cbRef.selected = true;
+							        		sc.cout.save = souscout.Couts;
+							        		sc.garde();
+							        	}			        		
+							        }			        	
+						        }
+				        		c.cbRef.selected = true;
+				        		c.cout.save = cout.Couts;
+				        		c.garde();				        			
+				        	}			        		
+			        	}
+			        				        	
+			        }		        	
+		        }
+	        }
+		}
+	}
+
+}
+
+	public function faultHandlerService(fault:FaultEvent):void
+	{
+		Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+	}
+	private function fillHandler(e:Object):void
+	{
+		if(!e)return;
+		this.cbSelection.init();
+	}

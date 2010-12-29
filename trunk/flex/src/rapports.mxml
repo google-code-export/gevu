@@ -11,7 +11,14 @@
 <mx:HTTPService id="srvEtab" result="readXmlEtab(event);" showBusyCursor="true" /> 
 <mx:HTTPService id="srvSolus" result="readXmlSolus(event);" showBusyCursor="true" /> 
 <mx:HTTPService id="srvFC" showBusyCursor="true" /> 
-    
+<mx:RemoteObject id="ROS"
+    	source="Model_DbTable_Gevu_rapports" destination="zend" 
+    	endpoint="{ENDPOINT_SERVICE}"
+    	showBusyCursor="true"
+    	fault="faultHandlerService(event)">
+ 	<mx:method name="edit"  result="fillHandler(event)"/>  	
+</mx:RemoteObject>
+	    
 <mx:Panel title="GEVU Global EValuation Urbaine : RAPPORTS " width="100%" height="100%">
  	<mx:HBox paddingLeft="6" verticalAlign="middle">
  		<mx:VBox>
@@ -25,17 +32,26 @@
 				close="choixBD(event)"
 			/>
  		</mx:VBox>
-		<mx:Label id="nomEtab" text="" fontSize="24"/>
-		<mx:Button label="Voir les solutions aux problèmes" click="showSolusProbEtab();" />
-		<mx:Button label="calculer les coûts" click="calculerCout();" />
- 		<mx:VBox>
-			<mx:Button label="Editer le rapport" click="calculerRapport();"  />
-			<mx:HBox>
-	           	<compo:cbGroupeMot labelName="titre" bRemove="true" bAjout="false" titre="un modèle" keyName="id_doc" id="cbModel" objName="Model_DbTable_Gevu_docs" objMethode="findByTronc"  objParam="model_rapport" endPoint="{ENDPOINT_SERVICE}" />
-				<compo:cUploadFile id="ufModel" iconBtn="@Embed('images/AddRecord.png')" idExi="{idExi}" objName="model_rapport" ttBtn="Ajouter un modèle" ctlBind="{this}" wf="models" typeFic="models" />								
-			</mx:HBox>
- 		</mx:VBox>
-
+ 		<mx:HBox id="boxEtab" visible="false"> 			
+			<mx:Label id="nomEtab" text="" fontSize="24"/>
+			<!-- 
+			<mx:Button label="Voir les solutions aux problèmes" click="showSolusProbEtab();" />
+			-->
+	 		<mx:VBox>
+				<mx:Label text="Sélection des solutions et produits" />
+	           	<mx:HBox>
+	           		<compo:cbGroupeMot bRemove="true" bAjout="true" titre="une sélection" keyName="id_rapport" id="cbSelection" objName="Model_DbTable_Gevu_rapports" objMethode="findByIdLieu"  objParam="{selectedEtab.idRub}" endPoint="{ENDPOINT_SERVICE}" />
+					<mx:LinkButton click="SauveSelection()" icon="@Embed('images/UpdateRecord.png')" toolTip="Enregistrer la sélection des solutions et produits" />
+				</mx:HBox>
+	 		</mx:VBox>
+	 		<mx:VBox>
+				<mx:Label text="Modèles de rapport" />
+				<mx:HBox>
+		           	<compo:cbGroupeMot labelName="titre" bRemove="true" bAjout="false" titre="un modèle" keyName="id_doc" id="cbModel" objName="Model_DbTable_Gevu_docs" objMethode="findByTronc"  objParam="model_rapport" endPoint="{ENDPOINT_SERVICE}" />
+					<compo:cUploadFile x="-100" id="ufModel" iconBtn="@Embed('images/AddRecord.png')" idExi="{idExi}" objName="model_rapport" ttBtn="Ajouter un modèle" ctlBind="{this}" wf="models" typeFic="models" />								
+				</mx:HBox>
+	 		</mx:VBox>
+ 		</mx:HBox>
  	</mx:HBox>
 	<!--
  	<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">
@@ -73,7 +89,13 @@
 	 	</mx:VBox>
 	 	<mx:VBox width="60%" height="100%" >
 				<mx:HRule width="64%" strokeColor="black" />
-		 		<mx:Label fontSize="12"  text="Précisez les coûts pour chaque problème." />
+		 		<!--
+		 			<mx:Label fontSize="12"  text="Précisez les coûts pour chaque problème." />
+		 		-->
+				<mx:HBox>
+			 		<mx:Button label="calculer les coûts" click="calculerCout();" />
+					<mx:Button label="Editer le rapport" click="calculerRapport(true);"  />
+				</mx:HBox>
 				<mx:HBox>
 					<mx:Label text=" - Régl. : " fontSize="12"/>
 					<mx:Label id="coutReg" text="" fontSize="12"/> 				

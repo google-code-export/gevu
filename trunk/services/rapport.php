@@ -312,8 +312,8 @@ function getCout($g, $id, $arrP, $idDon=-1, $lib=false){
 					}
 					foreach($cout->SousCouts as $souscouts){
 						foreach($souscouts as $scout){
-						$c=0;
-						foreach($scout->Couts as $sct){
+							$c=0;
+							foreach($scout->Couts as $sct){
 								$c += $sct->val*$sct->q;
 							}
 							if($scout->regle)$cReg += $c; else $cSou += $c;

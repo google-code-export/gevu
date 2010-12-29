@@ -21,6 +21,7 @@
 			[Bindable] public var endPoint:String;
 			[Bindable] public var objName:String;
 			[Bindable] public var objSource:Object;
+			[Bindable] public var objParam:Array = new Array();
 			
 			private function Init():void{
 				//dg.twAMC=this;
@@ -37,9 +38,11 @@
 
 			public function ajouter():void
 			{
-				var vn:Array = new Array();
-				vn["lib"] = inText.text;
-				ROS.ajouter(vn);	
+				if(parentApplication.idExi){
+					objParam["id_exi"] = parentApplication.idExi;					
+				}
+				objParam["lib"] = inText.text;
+				ROS.ajouter(objParam);	
 			}      
 
 			public function ajouterHandler(result:ResultEvent):void
@@ -61,7 +64,7 @@
 	</mx:RemoteObject>
 	<mx:VBox left="10" top="10" bottom="10" right="10">
 		<mx:HBox>
-		    <mx:Label text="Sisissez le nouveau mot clef" /><mx:TextInput id="inText" />		
+		    <mx:Label text="{titre}" /><mx:TextInput id="inText" />		
 		</mx:HBox>
 		<mx:HBox>
 			<mx:Button label="Enregistrer" click="ajouter()" right="81" bottom="10"/>
