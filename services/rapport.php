@@ -6,6 +6,8 @@ require_once( "../param/ParamPage.php" );
 require_once( "../param/ParamAppli.php" );
 require_once('../library/php/odtphp/odf.php');
 
+try {
+
 $grille = new Grille($objSite);
 $xul = new Xul($objSite);
 
@@ -289,6 +291,11 @@ $odf->mergeSegment($probs);
 */
 
 $odf->exportAsAttachedFile();
+
+}catch (Zend_Exception $e) {
+	echo "Récupère exception: " . get_class($e) . "\n";
+    echo "Message: " . $e->getMessage() . "\n";
+}
 
 function getCout($g, $id, $arrP, $idDon=-1, $lib=false){
 	if($idDon==-1){
