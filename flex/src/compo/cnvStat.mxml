@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	<mx:Accordion x="0" y="0" width="100%" height="100%">
+		<mx:Canvas label="POPULATION" width="100%" height="100%">
+			<mx:Accordion x="0" y="0" width="100%" height="100%">
+				<mx:Canvas label="Categories socio-professionnelles" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="Ages des locataires" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="Composition des familles" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="Nombre de personnes par logement" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="Provenance des locataires" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="Ancienneté des locataires" width="100%" height="100%">
+				</mx:Canvas>
+			</mx:Accordion>
+		</mx:Canvas>
+		<mx:Canvas label="PATRIMOINE" width="100%" height="100%">
+			<mx:Accordion x="0" y="0" width="100%" height="100%">
+				<mx:Canvas label="TRANCHE" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="ZUS" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="TYPES DE BATIMENTS" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="TYPES DE LOGEMENTS" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="DATE DE CONSTRUCTION" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="DATE DE REHABILITATION" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="VACANCES" width="100%" height="100%">
+				</mx:Canvas>
+			</mx:Accordion>
+		</mx:Canvas>
+		<mx:Canvas label="PERFORMANCE ENERGIE" width="100%" height="100%">
+			<mx:Accordion x="0" y="0" width="100%" height="100%">
+				<mx:Canvas label="CHAUFFAGE" width="100%" height="100%">
+				</mx:Canvas>
+				<mx:Canvas label="DIAGNIOSTIC DE PERFORMANCE" width="100%" height="100%">
+				</mx:Canvas>
+			</mx:Accordion>
+		</mx:Canvas>
+	</mx:Accordion>
+	
+</mx:Canvas>

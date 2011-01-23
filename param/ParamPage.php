@@ -8,9 +8,11 @@ if(isset($_POST['login_uti'])) {
 	if(TRACE)
 		echo "ParamPage:post:$login, $mdp<br/>";
 } else {
-	$login=$_SESSION['loginSess'];
-	$mdp=$_SESSION['mdpSess'];
-	$idAuteur=$_SESSION['IdAuteur'];
+	if(isset($_SESSION)) {
+		$login=$_SESSION['loginSess'];
+		$mdp=$_SESSION['mdpSess'];
+		$idAuteur=$_SESSION['IdAuteur'];
+	}
 	if(TRACE)
 		echo "ParamPage:session:$login, $mdp, $idAuteur<br/>";
 }
@@ -137,6 +139,8 @@ $objSiteSync = new Site($SITES, SYNCSITE, false);
 
 if($id!=-1)
 	$g = new Granulat($id,$objSite);
+	
+//print_r($_SESSION);
 	
 	
 function ChercheAbo ($login, $mdp, $objSite)

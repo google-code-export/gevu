@@ -13,74 +13,50 @@
       import mx.controls.treeClasses.*;
 
          [Bindable]
-         [Embed(source="../images/batimentP.png")] 
-         public var iconBatiment:Class; 
+         [Embed(source="../images/patrimoine.png")] 
+         public var iconPatrimoine:Class; 
          [Bindable]
-         [Embed(source="../images/eclairageP.jpg")] 
-         public var iconEclairage:Class; 
+         [Embed(source="../images/gens.png")] 
+         public var iconGens:Class; 
          [Bindable]
-         [Embed(source="../images/escaliermecaP.jpg")] 
-         public var iconEscaliermeca:Class; 
+         [Embed(source="../images/energie.png")] 
+         public var iconEnergie:Class; 
          [Bindable]
-         [Embed(source="../images/escalierP.jpg")] 
-         public var iconEscalier:Class; 
+         [Embed(source="../images/radar.png")] 
+         public var iconRadar:Class; 
          [Bindable]
-         [Embed(source="../images/etablissementP.png")] 
-         public var iconEtablissement:Class; 
+         [Embed(source="../images/couche.png")] 
+         public var iconCouche:Class; 
          [Bindable]
-         [Embed(source="../images/niveauP.png")] 
-         public var iconNiveau:Class; 
+         [Embed(source="../images/barre.png")] 
+         public var iconBarre:Class; 
          [Bindable]
-         [Embed(source="../images/objetP.png")] 
-         public var iconObjet:Class; 
-         [Bindable]
-         [Embed(source="../images/parkingP.jpg")] 
-         public var iconParking:Class; 
-         [Bindable]
-         [Embed(source="../images/porteP.jpg")] 
-         public var iconPorte:Class; 
-         [Bindable]
-         [Embed(source="../images/espace_exterieurP.png")] 
-         public var iconEspaceExt:Class; 
-         [Bindable]
-         [Embed(source="../images/espace_interieurP.png")] 
-         public var iconEspaceInt:Class; 
-         [Bindable]
-         [Embed(source="../images/parcelle_exterieureP.png")] 
-         public var iconParcelleExt:Class; 
-         [Bindable]
-         [Embed(source="../images/voirieP.png")] 
-         public var iconVoirie:Class; 
-         [Bindable]
-         [Embed(source="../images/chaine_de_deplacementP.png")] 
-         public var iconChaine:Class; 
-         [Bindable]
-         [Embed(source="../images/axe_de_transportP.png")] 
-         public var iconAxe:Class; 
+         [Embed(source="../images/tarte.png")] 
+         public var iconTarte:Class; 
          
       [Bindable] public var categories:Object = 
         { 
           "grille_1": {
     	    "id": "1",
-	          "titre": "Geolocalisation",
+	          "titre": "Categories socio-professionnelles",
               "color": 0x3366F,
-	          "icon": iconObjet,
+	          "icon": iconTarte,
               "markers": []},
-         "grille_66": {
-        	"id": "66",
-        	"titre": "Territoire",
+         "grille_2": {
+        	"id": "2",
+        	"titre": "Ages des locataires",
             "color": 0x990000,
-            "icon": iconObjet,
+            "icon": iconBarre,
             "markers": []}, 
-          "grille_55": {
-    	    "id": "55",
-	          "titre": "Etablissement",
+          "grille_3": {
+    	    "id": "3",
+	          "titre": "Composition des familles",
               "color": 0x3366F,
-	          "icon": iconEtablissement,
+	          "icon": iconRadar,
               "markers": []},
-          "grille_62": {
-        	"id": "62",
-	          "titre": "Voirie",
+          "grille_4": {
+        	"id": "4",
+	          "titre": "Nombre de personne par logement",
               "color": 0xFF33FF,
 	          "icon": iconVoirie,
               "markers": []},

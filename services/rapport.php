@@ -1,4 +1,6 @@
 <?php
+set_time_limit(1000);
+
 //en attendant la nouvelle version
 //on utilise les requêtes de la version XUL
 require_once( "../param/ParamPage.php" );
@@ -38,6 +40,7 @@ $rm = $m->findByIdDoc($_REQUEST['model']);
 
 //echo $pathModel; 
 $odf = new odf($rm['path_source']);
+
 
 //création d'un rapport pour un établissement
 $odf->setVars('commune', utf8_encode($g->TitreParent));
@@ -217,12 +220,12 @@ foreach($xmlProb->rows->row as $r){
 	    $probs->setVars('prob_num', $j);     
 	    $probs->setVars('prob_ariane', $strAriane);
     	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
+    	
 		if(count($arrDocs)>0){    
 	    	$probs->setImage('prob_img', $arrDocs[0]->path); 
 	    }else{
 	    	$probs->setImage('prob_img', '../images/check_no.png'); 
 	    }
-	    
 	}
 	
     //$_SESSION['ForceCalcul'] = true;
@@ -286,15 +289,15 @@ foreach($xmlProb->rows->row as $r){
 }
 $probs->merge();
 $odf->mergeSegment($probs);
-/*
 
-*/
+/**/
 
 $odf->exportAsAttachedFile();
 
-}catch (Zend_Exception $e) {
+}catch (SegmentException  $e) {
 	echo "Récupère exception: " . get_class($e) . "\n";
     echo "Message: " . $e->getMessage() . "\n";
+    var_dump($e);
 }
 
 function getCout($g, $id, $arrP, $idDon=-1, $lib=false){

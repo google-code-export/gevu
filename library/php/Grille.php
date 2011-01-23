@@ -47,6 +47,24 @@ class Grille{
 		
     }
 
+    function RechercheRubId($champ,$valeur,$idGrille=-1) {
+		if($this->trace)
+			echo "Grille:RechercheRubId://recherche l'id d'une rubrique avec sa valeur = $valeur et son champ=$champ <br/>";
+
+		if($idGrille==-1)$idGrille=$this->id;
+
+		$arrVarVal = array(
+			array("-idGrille-", $idGrille)
+			,array("-champ-", $champ)
+			,array("-valeur-", $valeur)
+			);
+		$rows = $this->site->RequeteSelect('Grille_RechercheRubId',$arrVarVal);
+		$row =  mysql_fetch_assoc($rows);
+		return $row["idRub"];
+    	
+    }
+      
+    
 	public function GetCritereObs($idRub, $cri)
 	{
 		
@@ -433,7 +451,6 @@ class Grille{
 		$arrG = array();
 		//r?cup?re les grilles pour le site
 		if($this->site->infos["SITE_ENFANT"]==-1){ 					
-			//$arrG = $this->FiltreRubAvecGrille($idRub,$idGrille,true,$GetAll);								
 			$path = PathRoot."/bdd/carto/ArboGrille_".$this->site->id."_".$idRub."_".$idGrille.".xml";
 			$xml = $this->site->GetFile($path);
 			if(!$xml){
@@ -441,7 +458,7 @@ class Grille{
 				$arr = $this->GetRubGeoGrille($idGrille,$idRub,$this->site,$rs,"",$arrG,$GetAll);
 				$arrG = $arr[0];
 				$xmlG = $arr[1];			
-				$this->site->SaveFile($path,utf8_encode($xmlG));
+				$this->site->SaveFile($path,$xmlG);
 			}			
 		}else{
 			//r?cup?re les grille des sites dans le cas d'un site parent 					
@@ -458,9 +475,11 @@ class Grille{
 					//r?cup?ration des rubrique avec la grille
 					$rs = $grille->FiltreRubAvecGrille($idRub,$idGrille,false,$GetAll);
 					$arr = $grille->GetRubGeoGrille($idGrille,$idRub,$oSiteEnf,$rs,$xmlG,$arrG,$GetAll);
-					$arrG = $arr[0];
-					$xmlG = $arr[1];					
-					$oSiteEnf->SaveFile($path,utf8_encode($xmlG));
+					if($arr[1]!=""){
+						$arrG = $arr[0];
+						$xmlG = $arr[1];					
+						$oSiteEnf->SaveFile($path,$xmlG);
+					}
 				}else{
 					//construction du tableau
 					$key = $oSiteEnf->id."_".$idRub."_".$idGrille;
@@ -478,6 +497,8 @@ class Grille{
 		$xml = "";
 		while($row = mysql_fetch_assoc($rs)) {
 			$key = $oSiteEnf->strtokey($row["titre"]."_".$oSiteEnf->id."_".$row["id_rubrique"]);
+			//pour suprimer les doublons entre site
+			$key = $oSiteEnf->strtokey($row["titre"]."_".$row["id_rubrique"]);
 			
 			$xml = "<terre checked='1' idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$row["titre"]."\" idGrille='".$idGrille."' >";
 			
@@ -539,7 +560,10 @@ class Grille{
 		}else{
 			$sqlEnf = "INNER JOIN spip_rubriques_enfants re ON re.id_rubrique = r.id_rubrique AND re.id_parent =".$id;
 		}
-	
+		if($GetAll==="parent"){
+			$sqlEnf = "INNER JOIN spip_rubriques re ON re.id_rubrique = r.id_parent AND re.id_rubrique =".$id;
+		}
+		
 		$sql = "SELECT DISTINCT r.id_rubrique, r.titre, f.id_form, f.titre gTitre
 			FROM spip_rubriques r
 			".$sqlEnf."
@@ -860,7 +884,7 @@ class Grille{
 			$xul.="<vbox>";
 				if($r["idCont"]!=$oidCont){
 					$xul.="<hbox>";
-						$xul.="<label value=\"Problème n° ".$r["idPbPlan"]." : ".$this->site->XmlParam->XML_entities($r["TextCont"])."\"/>";
+						$xul.="<label value=\"Problï¿½me nï¿½ ".$r["idPbPlan"]." : ".$this->site->XmlParam->XML_entities($r["TextCont"])."\"/>";
 						$xul.="<label class='text-linkAdmin' onclick=\"OuvreControle(".$r["idDonneCont"].");\" value='(".$r["idCont"].")'/>";
 		    		$xul.="</hbox>";
 				}
@@ -2138,7 +2162,8 @@ class Grille{
 							$AddGeo = "";
 						}else{
 							$carto = "";
-							$AddGeo ="<button label='Ajouter une gï¿½olocalisation' oncommand=\"AddPlacemark(".$r["idRub"].",'".$this->type."');\"/>";
+							$m = "Ajouter une position";
+							$AddGeo ="<button label='".$m."' oncommand=\"AddPlacemark(".$r["idRub"].",'".$this->type."');\"/>";
 						}
 						
 						//construction des ?l?ments du panel 
@@ -2751,7 +2776,7 @@ class Grille{
 		//v?rifie s'il faut ajouter le bouton de cr?ation de placemark
 		$geo = $this->VerifDonneeLienGrille($idDon,$this->site->infos["GRILLE_GEO"]); 
 		if(!$geo && $idGrille!=$this->site->infos["GRILLE_REP_CON"]){
-			$form .="<button label='Ajouter une g?olocalisation' oncommand=\"AddPlacemark();\"/>";
+			$form .="<button label='Ajouter une gÃ©olocalisation' oncommand=\"AddPlacemark();\"/>";
 		}
 		if($geo && $idGrille==$this->site->infos["GRILLE_OBS"])
 			$form .= $this->GetXulForm($geo, $this->site->infos["GRILLE_GEO"]);
@@ -2785,7 +2810,7 @@ class Grille{
 				case "multiple_1":
 					//construstion r?glementaire
 					if($r['valeur']=="multiple_1_1")
-						$labels .= '<label value="Réglementaire"/>';
+						$labels .= '<label value="Rï¿½glementaire"/>';
 					//construstion souhaitable
 					if($r['valeur']=="multiple_1_2")
 						$labels .= '<label value="Souhaitable"/>';
@@ -2802,7 +2827,7 @@ class Grille{
 					if($r['valeur']=="multiple_2_5")
 						$labels .= '<label value="ERP_IOP existant"/>';
 					if($r['valeur']=="multiple_2_6")
-						$labels .= '<label value="Modalité particulière"/>';
+						$labels .= '<label value="Modalitï¿½ particuliï¿½re"/>';
 					break;
 				case "multiple_3":
 					//construstion des icones

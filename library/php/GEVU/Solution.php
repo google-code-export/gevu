@@ -22,9 +22,9 @@ class GEVU_Solution{
 	public function getCols(){
 
     	$arr = array("cols"=>array(
-    		array("titre"=>"Mise à jour","champ"=>"maj","visible"=>true)
+    		array("titre"=>"Mise Ã  jour","champ"=>"maj","visible"=>true)
     		, array("titre"=>"Id. solution","champ"=>"id_solution","visible"=>true)
-    		, array("titre"=>"Libellé","champ"=>"lib","visible"=>true)
+    		, array("titre"=>"LibellÃ©","champ"=>"lib","visible"=>true)
     		, array("titre"=>"Type de solution","champ"=>"id_type_solution","visible"=>true,"objName"=>"Model_DbTable_Gevu_typesxsolutions")    		
     		));    	
     	return $arr;

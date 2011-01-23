@@ -9,6 +9,7 @@ import mx.controls.Alert;
 import mx.events.DropdownEvent;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
+import mx.managers.PopUpManager;
 
 //include the constant definition of the server endpoint URL
 include "grillesconfig.as";
@@ -28,12 +29,10 @@ public var idExi:String = "1";
 
 public function init():void
 {
-	/*
 	var twLog:twLogin= twLogin(
         PopUpManager.createPopUp(this, twLogin, true));
 	twLog.endPoint=ENDPOINT_SERVICE;
     PopUpManager.centerPopUp(twLog);
-	*/
 	
     srvBD.send();    	
 } 

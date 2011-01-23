@@ -9,10 +9,11 @@
 <sourceAttachmentPath/>
 </compiler>
 <applications>
-<application path="gevu.mxml"/>
 <application path="grilles.mxml"/>
-<application path="rapports.mxml"/>
 <application path="onadaflex.mxml"/>
+<application path="rapports.mxml"/>
+<application path="gevu.mxml"/>
+<application path="Radar.mxml"/>
 </applications>
 <modules/>
 <buildCSSFiles/>

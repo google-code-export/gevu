@@ -20,7 +20,7 @@ class Granulat
   
 
   	function __tostring() {
-    return "Cette classe permet de d�finir et manipuler un granulat : .<br/>";
+    return "Cette classe permet de définir et manipuler un granulat : .<br/>";
     }
 
   	function __construct($id, $site, $complet=true) {

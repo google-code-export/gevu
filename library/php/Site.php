@@ -10,7 +10,7 @@ class Site{
   public $infos;
   
   function __tostring() {
-    return "Cette classe permet de définir et manipuler un site.<br/>";
+    return "Cette classe permet de dï¿½finir et manipuler un site.<br/>";
     }
 
   function __construct($sites, $id, $complet=true) {
@@ -33,7 +33,51 @@ class Site{
 	//echo "FIN new Site <br/>";
 		
     }
-    
+
+	function RequeteSelect($function,$arrVarVal,$obj=false){
+         
+	$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='".$function."']";
+	$Q = $this->XmlParam->GetElements($Xpath);
+	$select=$Q[0]->select;
+	$from=$Q[0]->from;
+	$where=$Q[0]->where;
+	if($obj){
+		foreach($obj as $t=>$v){
+			$select=str_replace($t, $v,$select);    
+			$from=str_replace($t, $v,$from);
+			$where=str_replace($t, $v,$where);
+			//vÃ©rifie s'il faut ajouter des sous from
+			if($v!="" && $v!="Cherche"){
+				$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Cherche".$t."']";
+				$sQ = $this->XmlParam->GetElements($Xpath);
+				$sfrom=$sQ[0]->from;
+				if($sfrom){
+					$from.=$this->RequeteGetFiltre($v,$t,$sfrom);
+				}				
+			}
+		}
+	}else{
+		foreach($arrVarVal as $VarVal){
+			$select=str_replace($VarVal[0], $VarVal[1],$select);    
+			$from=str_replace($VarVal[0], $VarVal[1],$from);        
+			$where=str_replace($VarVal[0], $VarVal[1],$where);      
+		}
+	}
+	$order="";
+	if(isset($_POST['orderField']) && $_POST['orderField']!="" && !strpos($where, "ORDER BY")){
+		$order = " ORDER BY ".$_POST['orderField']." ".$_POST['orderDirection'];
+	}
+	
+	
+	$sql = $select.$from.$where.$order;
+	$db = new mysql ($this->infos["SQL_HOST"], $this->infos["SQL_LOGIN"], $this->infos["SQL_PWD"], $this->infos["SQL_DB"]);
+	$link=$db->connect();   
+	$result = $db->query($sql);
+	$db->close($link);
+	
+	return $result;
+	        
+	}    
 	public function GetCurl($url)
 	{
 	
@@ -63,7 +107,7 @@ class Site{
 	public function GetFile($path){
 
 	    if(!$_SESSION['ForceCalcul'] && file_exists($path)){
-			$contents = file_get_contents($path);
+	    	$contents = file_get_contents($path);
 			return $contents;
 		}else{
 			return false;	
@@ -84,7 +128,7 @@ class Site{
 		if($siteDst==-1)
 			$siteDst=$this->id;
     	
-		//récupère les mots clefs de la source
+		//rï¿½cupï¿½re les mots clefs de la source
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='GetMotsClef']";
 		if($this->trace)
 			echo "Site:Synchronise:Xpath=".$Xpath."<br/>";
@@ -97,7 +141,7 @@ class Site{
 		if($this->trace)
 			echo "Site:Synchronise:sql=".$sql."<br/>";
 		while ($row =  $db->fetch_assoc($rows)) {
-			//vérifie l'existence dans la destination
+			//vï¿½rifie l'existence dans la destination
 			$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='VerifMotsClef']";
 			$Q = $this->site->XmlParam->GetElements($Xpath);
 			$where = str_replace("-idGroupe-", $row['id_groupe'], $Q[0]->where);
@@ -132,7 +176,7 @@ class Site{
     	if($siteDst==-1)
 			$siteDst=$this->id;
     	
-		//récupère les rubriques de l'auteur
+		//rï¿½cupï¿½re les rubriques de l'auteur
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='GetRubriquesAuteur']";
 		if($this->trace)
 			echo "Site:Synchronise2:Xpath=".$Xpath."<br/>";
@@ -282,7 +326,7 @@ class Site{
 		if($this->scope!=-1){		
 			foreach($this->scope as $param=>$val)
 			{
-				//prise en compte du tableau des valeurs de paramètre à modifier
+				//prise en compte du tableau des valeurs de paramï¿½tre ï¿½ modifier
 				if(is_array($type_select)){
 					$i = 0;
 					$change = false;
@@ -318,7 +362,7 @@ class Site{
 				}
 			}
 		}
-		//enlève la dernière virgule
+		//enlï¿½ve la derniï¿½re virgule
 		$url = substr($url, 0, -1);
 		
 		return $url;
@@ -359,7 +403,7 @@ class Site{
 			$site = $this;
 		
 		$SitesEnfants = $site->infos["SITE_ENFANT"];
-		//echo "vérifie le calcul des sites enfants ".$SitesEnfants."<br/>";
+		//echo "vï¿½rifie le calcul des sites enfants ".$SitesEnfants."<br/>";
 		$NbT = 0;
 		if(is_array($SitesEnfants)){
 			//boucle sur les enfants
@@ -371,7 +415,7 @@ class Site{
 				$R = $this->GetSiteResult($siteEnf);
 				if($R){
 					$Result[$i] = $R;
-					//enregistre le résultat
+					//enregistre le rï¿½sultat
 					$site->NbsTopics[$SiteEnfant]=$Result[$i]["rstRub"]["nb"];
 					//additionne le nombre de topic du site enfant
 					//$NbT += $site->NbsTopics[$SiteEnfant];
@@ -381,7 +425,7 @@ class Site{
 
 			}	
 		}
-		// enregistre le résultat
+		// enregistre le rï¿½sultat
 		//ajoute le nb de TOPIC du scope
 		//$NbT += $site->NbsTopics[$site->id];
 		$R = $this->GetSiteResult($site);
@@ -430,7 +474,7 @@ class Site{
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='GetTreeChildren_".$type."']";
 		$Q = $this->XmlParam->GetElements($Xpath);
 		if($id==-1){
-			//récupère la valeur par defaut
+			//rï¿½cupï¿½re la valeur par defaut
 			$attrs = $Q[0]->where[0]->attributes();
 			if($attrs["def"])
 				$id = $attrs["def"];
@@ -479,7 +523,7 @@ class Site{
 
  function stripAccents($string)
   {
-    return strtr($string,'àáâãäçèéêëìíîïñòóôõöùúûüıÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜİ',
+    return strtr($string,'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½',
 		 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
   }
   function strtokey($str)
@@ -501,11 +545,11 @@ class Site{
     $key = str_replace("<i>", "", $key);
     $key = str_replace("</i>", "", $key);
     $key = str_replace(":", "", $key);
-    $key = str_replace("«", "", $key);
-    $key = str_replace("»", "", $key);
+    $key = str_replace("ï¿½", "", $key);
+    $key = str_replace("ï¿½", "", $key);
     $key = str_replace("/", "", $key);
-    $key = str_replace("“", "", $key);
-    $key = str_replace("”", "", $key);
+    $key = str_replace("ï¿½", "", $key);
+    $key = str_replace("ï¿½", "", $key);
         
     $key = strtolower($key);
     return $this->stripAccents($key);
