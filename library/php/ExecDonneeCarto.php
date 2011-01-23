@@ -29,7 +29,9 @@ if(isset($_GET['theme'])){
 
 switch ($fonction) {
 	case 'get_markers':
+		$idGlobal = $_GET['id'];
 		$resultat = get_marker($objSite, $_GET['id'], $_GET['southWestLat'], $_GET['northEastLat'],$_GET['southWestLng'], $_GET['northEastLng'], $_GET['zoom'], $_GET['MapQuery'], $themes);
+		Header("content-type: application/xml");
 		break;
 	case 'get_theme_markers':
 		get_theme_markers($_GET['id']);
@@ -153,11 +155,11 @@ function get_arbo_parc($objSite) {
 					//on ferme le précédent territoire
 					$xml .= "</terre >";
 				}
-				$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["idRubAnt"]."' titreRub=\"".utf8_encode($r["titreAnt"])."\" >";
+				$xml .= "<terre checked='2' idSite='".$objSite->id."' idRub='".$r["idRubAnt"]."' titreRub=\"".utf8_encode($r["titreAnt"])."\" >";
 				$idRubAntO=$r["idRubAnt"];
 			}
 		
-			$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["idRubBat"]."' titreRub=\"".utf8_encode($r["titreBat"])."\" />";
+			$xml .= "<terre checked='3' idSite='".$objSite->id."' idRub='".$r["idRubBat"]."' titreRub=\"".utf8_encode($r["titreBat"])."\" />";
 		}
 		$xml .= "</terre >";
 		$xml .= "</terres>";
@@ -508,6 +510,8 @@ function sauve_marker($action,$id,$zoommin,$zoommax,$lat,$lng,$adresse,$type) {
 
 function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, $northEastLng, $zoom, $query="", $themes="", $i = 0) {
 
+	//por récupérer les bonnes grilles
+	global $idGlobal;
 
 	// on récupère les markers suivants les coordonnée
 	$NewQuery = "idFiche";
@@ -597,12 +601,19 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 			$saveStat = true;
 			
 			//$xml .= $g->GetEtatDiag(true,true);
-
-			//r�cup�re les grilles du granulat 
-			$xmlRub.= $g->GetXmlGrilles();
-			//r�cup�re les mots-clef du granulat
-			$xmlRub.= $g->GetXmlGrilleMots();
-						
+			if($query=="admin"){
+				//récupère les grilles du granulat global
+				$gG = new Granulat($idGlobal, $objSite,false);
+				//r�cup�re les grilles du granulat 
+				$xmlRub.= $gG->GetXmlGrilles();
+				//r�cup�re les mots-clef du granulat
+				$xmlRub.= $gG->GetXmlGrilleMots();
+			}else{
+				//r�cup�re les grilles du granulat 
+				$xmlRub.= $g->GetXmlGrilles();
+				//r�cup�re les mots-clef du granulat
+				$xmlRub.= $g->GetXmlGrilleMots();
+			}						
 		//}
 		
 		//ajoute le bassin de gare

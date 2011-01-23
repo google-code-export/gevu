@@ -52,6 +52,7 @@
 	private var accBassin:vbBassinGare;
 	private var accActeurs:vbActeurs;
 	public var accKML:vbCoucheKml;
+	public var accStat:cnvStat;
 
       [Embed(source="/images/A.png")] [Bindable] private var AIcon:Class;
       [Embed(source="/images/B.png")] [Bindable] private var BIcon:Class;
@@ -102,9 +103,9 @@
 
 		private function InitBoxStat():void{
 			
-			mapHolder.percentWidth=50;
+			//mapHolder.percentWidth=50;
 			//boxTree.percentWidth=20
-			boxEtatLieux.percentWidth=30;
+			//boxEtatLieux.percentWidth=30;
 			
 		}
 		
@@ -521,6 +522,37 @@
         }
       	
       }
+      
+    public function chargeStat(markerXml:XML):void {
+      	   	
+		//on vide l'accordion
+		if(accStat!=null){
+			accEtatLieu.removeChild(accStat);
+		}
+		accStat=null;
+		var idGrille:String = "";
+		var idArt:String; 
+    	var resultType:XMLList = markerXml.grilles.grille;
+    	if(resultType.length()>0){
+	        for each (var gr:XML in resultType){
+	            //on cherche les grilles de stat antenne et batiment
+	            if(gr.@id=="87" || gr.@id=="82"){
+		            idGrille = gr.@id;
+		            idArt = gr.@idArt
+		            break;		        		            	
+	            }
+	        }
+	        if(idGrille!=""){
+				accStat = new cnvStat();
+				accStat.urlSrv = this.urlExeAjax;
+				accStat.idArt = idArt;
+				accStat.idGrille = idGrille;
+				accStat.idSite = this.site; 
+		       	accEtatLieu.addChild(accStat);   	
+	        }
+        }
+		      	
+	}
 
 	public function createMarkerX(markerXml:XML): Marker {
 
@@ -625,12 +657,18 @@
      private function showStat(markerXml:XML):void {
         //affiche la box des stats
         InitBoxStat();
-        pEtatLieu.title = markerXml.@titre;
+        EtatLieuTitre.text = markerXml.@titre;
         idRub.text = markerXml.@idRub;
         idSite.text = markerXml.@idSite;
 
+		//vérifie s'il faut charger le détail des stats
+
 	    //charge le kml
     	chargeKML(markerXml);
+    	
+    	//charge les stat
+    	chargeStat(markerXml);
+    	
         //paramètre la requête pour récupérer le bon fichier xml
 		srvEtatDiag.cancel();
 		var params:Object = new Object();
@@ -654,7 +692,7 @@
 		params.site = idSite;
 		params.idDoc = idDoc;
 
-		titreSelect = pEtatLieu.title+" : "+titreSelect;
+		titreSelect = EtatLieuTitre.text+" : "+titreSelect;
 
 		wListe.useHttpService(urlExeAjax,params,titreSelect);
 

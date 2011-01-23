@@ -235,6 +235,11 @@
 			$grille = new Grille($objSite);
 			$resultat = $grille->GetTreeProb($_GET['idRub'],false,false,true);
 			break;
+		case 'GetStat':
+			$s = new Stat($objSite);
+			$resultat = $s->getXmlStat($_GET['type'], $_GET['idArt'], $_GET['idGrille']);
+			Header("content-type: application/xml");
+			break;
 		default:
 			//$resultat = AddDocToArt();
 	}
