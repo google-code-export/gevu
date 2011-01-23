@@ -36,9 +36,12 @@ todo :
  
   
  <mx:Panel title="GEVU Global EValuation Urbaine " width="100%" height="100%">
-	<mx:CheckBox visible="true" label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" />
+ 	<mx:HBox>
+		<mx:CheckBox visible="true" label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" />
+ 	    <mx:LinkButton label="Nettoyer la carte" click="PurgeCarte()"/>
+ 	</mx:HBox>
  	<mx:HDividedBox width="100%" height="100%">
-		<mx:Accordion id="boxTree" minWidth="300" width="30%" height="100%">
+		<mx:Accordion id="boxTree" minWidth="200" width="25%" height="100%">
 			<mx:Canvas label="ELEMENTS DE DIAGNOSTIC" width="100%" height="100%">
 		 		<mx:Panel title="Choisissez les éléments à afficher" width="100%" height="100%" borderColor="#080202">
 			   		<ns2:treeEtatLieux id="treeEtatLieux" width="100%" height="100%" >
@@ -70,11 +73,11 @@ todo :
 	   <mx:UIComponent id="mapHolder"
 	      initialize="onHolderCreated(event);"
 	      resize="onHolderResized(event)"
-	      width="70%" height="100%"/>
+	      width="50%" height="100%"/>
  
-	   <mx:VBox id="boxEtatLieux" width="0%" height="100%" >
-	 		<mx:Panel id="pEtatLieu" title="Choisissez un territoire" width="100%" height="100%" borderColor="#443838">
-			    <mx:LinkButton label="Nettoyer la carte" click="PurgeCarte()"/>
+	   <mx:VBox id="boxEtatLieux" width="340" height="100%" >
+			<mx:Label id="EtatLieuTitre" text="Veuillez sélectionner un élément" />			    	
+	 		<mx:Canvas id="pEtatLieu" width="100%" height="100%" borderColor="#443838">
 	
 			    <mx:Accordion id="accEtatLieu"  width="100%" height="100%" >
 			    	<mx:VBox label="Diagnostic" >
@@ -158,7 +161,7 @@ todo :
 	
 			    </mx:Accordion>
 			
-			</mx:Panel>			
+			</mx:Canvas>			
 			
 	   </mx:VBox>  
 

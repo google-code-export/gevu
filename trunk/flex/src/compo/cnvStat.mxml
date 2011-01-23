@@ -1,9 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
-	<mx:Accordion x="0" y="0" width="100%" height="100%">
+<mx:Canvas label="ANALYSES" xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 creationComplete="initApp()"
+	width="100%" height="100%">
+	<mx:Script><![CDATA[
+		import mx.rpc.http.HTTPService;
+		import mx.rpc.events.ResultEvent;
+		import mx.collections.*;
+		import mx.charts.*;
+		import mx.charts.series.*;
+		import mx.charts.renderers.*;
+		import mx.charts.events.*;
+
+        [Bindable] 	public var urlSrv:String;
+        [Bindable] 	public var idSite:String;
+        [Bindable] 	public var idArt:String;
+        [Bindable] 	public var idGrille:String;
+		[Bindable]	private var rsSocios:Object;
+		
+		public function initApp():void {
+			var url:String = "?f=GetStat&type=socio&site="+idSite+"&idArt="+idArt+"&idGrille="+idGrille
+			getXml(url, setSocio);
+        }
+
+	    public function setSocio(event:ResultEvent):void{	        
+	        rsSocios = event.result;
+	    }
+	
+		public function getXml(param:String, callback:Function):void {
+
+			var strUrl:String = urlSrv+param;
+  			var srv:HTTPService = new HTTPService();
+  			srv.addEventListener(ResultEvent.RESULT,callback);
+  			srv.url=strUrl;
+  			srv.send();
+	    }
+
+
+	]]></mx:Script>
+
+
+	<mx:Accordion x="10" width="100%" height="100%">
 		<mx:Canvas label="POPULATION" width="100%" height="100%">
-			<mx:Accordion x="0" y="0" width="100%" height="100%">
+			<mx:Accordion x="10" y="0" width="100%" height="100%">
 				<mx:Canvas label="Categories socio-professionnelles" width="100%" height="100%">
+					<mx:HBox width="100%" height="100%">
+					     <mx:PieChart id="chartSocio" width="100%" height="100%" 
+					        dataProvider="{rsSocios.dataset.item}" showDataTips="true" >
+					        <mx:series>
+					           <mx:PieSeries field="nb" nameField="socio" labelPosition="callout" />
+					        </mx:series>
+					     </mx:PieChart>
+					</mx:HBox>
 				</mx:Canvas>
 				<mx:Canvas label="Ages des locataires" width="100%" height="100%">
 				</mx:Canvas>
@@ -18,7 +65,7 @@
 			</mx:Accordion>
 		</mx:Canvas>
 		<mx:Canvas label="PATRIMOINE" width="100%" height="100%">
-			<mx:Accordion x="0" y="0" width="100%" height="100%">
+			<mx:Accordion x="10" y="0" width="100%" height="100%">
 				<mx:Canvas label="TRANCHE" width="100%" height="100%">
 				</mx:Canvas>
 				<mx:Canvas label="ZUS" width="100%" height="100%">
@@ -36,7 +83,7 @@
 			</mx:Accordion>
 		</mx:Canvas>
 		<mx:Canvas label="PERFORMANCE ENERGIE" width="100%" height="100%">
-			<mx:Accordion x="0" y="0" width="100%" height="100%">
+			<mx:Accordion x="10" y="0" width="100%" height="100%">
 				<mx:Canvas label="CHAUFFAGE" width="100%" height="100%">
 				</mx:Canvas>
 				<mx:Canvas label="DIAGNIOSTIC DE PERFORMANCE" width="100%" height="100%">
