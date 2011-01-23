@@ -36,9 +36,13 @@ todo :
  
   
  <mx:Panel title="GEVU Global EValuation Urbaine " width="100%" height="100%">
- 	<mx:HBox>
+ 	<mx:HBox width="100%">
+ 		<mx:Label text="V 0.66" />
 		<mx:CheckBox visible="true" label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" />
  	    <mx:LinkButton label="Nettoyer la carte" click="PurgeCarte()"/>
+ 	    <mx:VBox horizontalAlign="right" width="100%" >
+	 	    <mx:Label id="EtatLieuTitre" fontSize="16" text="Veuillez sélectionner un élément" />			    	
+ 	    </mx:VBox>
  	</mx:HBox>
  	<mx:HDividedBox width="100%" height="100%">
 		<mx:Accordion id="boxTree" minWidth="200" width="25%" height="100%">
@@ -76,7 +80,6 @@ todo :
 	      width="50%" height="100%"/>
  
 	   <mx:VBox id="boxEtatLieux" width="340" height="100%" >
-			<mx:Label id="EtatLieuTitre" text="Veuillez sélectionner un élément" />			    	
 	 		<mx:Canvas id="pEtatLieu" width="100%" height="100%" borderColor="#443838">
 	
 			    <mx:Accordion id="accEtatLieu"  width="100%" height="100%" >
