@@ -155,8 +155,13 @@ class Model_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
         $query = $this->select()
                     ->from( array("g" => "gevu_produits") )                           
                     ->where( "g.id_produit = " . $id_produit );
-
-        return $this->fetchRow($query)->toArray(); 
+		$s = $this->fetchRow($query);
+        if($s){							
+			$arr = $s->toArray();
+		}else{
+			$arr = array("ref"=>-1,"description"=>"pas trouvé");
+		}                    
+        return $arr; 
     }
     /*
      * Recherche une entrée Gevu_produits avec la valeur spécifiée

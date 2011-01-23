@@ -1,4 +1,6 @@
 <?php
+	session_start();
+	
 /*
 header('Content-type: text/html; charset=iso-8859-1');
 header('Content-type: text/html; charset=UTF-8');
@@ -46,12 +48,18 @@ switch ($fonction) {
 		break;
 	case 'get_arbo_territoire':
 		$resultat = get_arbo_territoire($g->id,$objSite);
+		Header("content-type: application/xml");
+		break;
+	case 'get_arbo_parc':
+		$resultat = get_arbo_parc($objSite);
+		Header("content-type: application/xml");
 		break;
 	case 'get_stat_kml_handi':
 		$resultat = get_stat_kml_handi($g,$objSite);
 		break;
 	case 'get_arbo_grille':
 		$resultat = get_arbo_grille($g->id,$objSite,$_GET['idGrille']);
+		Header("content-type: application/xml");
 		break;
 	case 'GetAllEtatDiag':
 		$resultat = GetAllEtatDiag();
@@ -108,6 +116,56 @@ function get_arbo_grille($idRub,$objSite,$idGrille) {
 			
 }
 
+function get_arbo_parc($objSite) {
+	
+	$idGrille=$objSite->infos["GRILLE_TERRE"];
+	$grille = new Grille($objSite);
+	
+	$path = PathRoot."/bdd/carto/ArboParc_".$objSite->id.".xml";
+	$xml = $objSite->GetFile($path);
+	if(!$xml){
+		//récupération des territoires du granulat
+		$sql = "SELECT fdc0.valeur, r0.id_rubrique idRubAnt, r0.titre titreAnt, r.id_rubrique idRubBat, r.titre titreBat
+			FROM `spip_forms_donnees_champs` fdc0 
+			  INNER JOIN spip_forms_donnees fd0 ON fd0.id_donnee = fdc0.id_donnee AND fd0.id_form = 87
+			  INNER JOIN spip_forms_donnees_articles fda0 ON fda0.id_donnee = fdc0.id_donnee 
+			  INNER JOIN spip_articles a0 ON a0.id_article = fda0.id_article 
+			  INNER JOIN spip_rubriques r0 ON r0.id_rubrique = a0.id_rubrique 
+			
+			  INNER JOIN spip_forms_donnees_champs fdc ON fdc.champ = 'ligne_2' AND fdc.valeur = fdc0.valeur  
+			  INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fdc.id_donnee AND fd.id_form = 82
+			  INNER JOIN spip_forms_donnees_articles fda ON fda.id_donnee = fdc.id_donnee 
+			  INNER JOIN spip_articles a ON a.id_article = fda.id_article 
+			  INNER JOIN spip_rubriques r ON r.id_rubrique = a.id_rubrique 
+			WHERE fdc0.champ = 'ligne_1'
+			GROUP BY fdc0.valeur, r0.id_rubrique, r0.titre, r.id_rubrique, r.titre
+			ORDER BY fdc0.valeur, r0.titre, r.titre";
+		//echo $sql."<br/>";
+		$DB = new mysql($objSite->infos["SQL_HOST"], $objSite->infos["SQL_LOGIN"], $objSite->infos["SQL_PWD"], $objSite->infos["SQL_DB"]);
+		$DB->connect();
+		$req = $DB->query($sql);
+		$DB->close();
+		$xml = "<terres idSite='".$objSite->id."' >";
+		$idRubAntO = -1;
+		while($r = mysql_fetch_assoc($req)) {
+			if($idRubAntO!=$r["idRubAnt"]){
+				if($idRubAntO!=-1){
+					//on ferme le précédent territoire
+					$xml .= "</terre >";
+				}
+				$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["idRubAnt"]."' titreRub=\"".utf8_encode($r["titreAnt"])."\" >";
+				$idRubAntO=$r["idRubAnt"];
+			}
+		
+			$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["idRubBat"]."' titreRub=\"".utf8_encode($r["titreBat"])."\" />";
+		}
+		$xml .= "</terre >";
+		$xml .= "</terres>";
+		$objSite->SaveFile(PathRoot."/bdd/carto/ArboParc_".$objSite->id.".xml",$xml);
+	}
+	return $xml;
+}
+
 
 function get_arbo_territoire($idRub,$objSite,$niv=0) {
 	
@@ -115,9 +173,9 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 	$grille = new Grille($objSite);
 	
 	$path = PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml";
-//	$xml = $objSite->GetFile($path);
-//	if(!$xml){
-		//r�cup�ration des territoires du granulat
+	$xml = $objSite->GetFile($path);
+	if(!$xml){
+		//récupération des territoires du granulat
 		$sql = "SELECT dc.valeur, dc.champ, da.id_donnee, r.titre rTitre, r.id_rubrique
 				, m.titre mTitre, m.id_mot
 			FROM spip_articles a
@@ -142,31 +200,37 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 		while($r = mysql_fetch_assoc($req)) {
 			$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"".$r["rTitre"]."\" idGrille='".$idGrille."'   idMot='".$r["id_mot"]."'  titreMot=\"".$r["mTitre"]."\" >";
 	 		$xml .= get_arbo_territoire($r["id_rubrique"],$objSite,$niv+1);
-			//r�cup�ration des �l�ments des sites enfants
+			
+	 		/*récupération des sites enfants
 	 		if($objSite->infos["SITE_ENFANT"]!=-1){
-				//r�cup�ration des �tablissements
-	 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($r["id_rubrique"],$objSite->infos["GRILLE_ETAB"]);
-	 			if(count($arrG)>0){
-	 				$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Etablissements\" idGrille='".$idGrille."' >";
-		 			//trie le r�sultat
-		 			ksort($arrG); 					
-		 			foreach($arrG as  $key=>$val){
-		 				$xml.=$val["xml"];
-					}	
-					$xml .= "</terre>";				
-	 			}
-				//r�cup�ration des �'�tablissements
-	 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($r["id_rubrique"],$objSite->infos["GRILLE_VOIRIE"]);
-	 			if(count($arrG)>0){
-	 				$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Voiries\" idGrille='".$objSite->infos["GRILLE_VOIRIE"]."' >";
-		 			//trie le r�sultat
-		 			ksort($arrG); 					
-		 			foreach($arrG as  $key=>$val){
-		 				$xml.=$val["xml"];
-					}	
-					$xml .= "</terre>";				
-	 			}
+	 			foreach($objSite->infos["SITE_ENFANT"] as $id=>$type){
+		 			$SiteEnf = new Site($objSite->sites, $id);
+			 		$xml .= get_arbo_territoire($r["id_rubrique"],$SiteEnf,$niv+1);
+				}	 		
 	 		}
+			*/	 		
+	 		//récupération des établissements
+ 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($r["id_rubrique"],$objSite->infos["GRILLE_ETAB"],"parent");
+ 			if(count($arrG)>0){
+ 				$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Etablissements\" idGrille='".$idGrille."' >";
+	 			//trie le résultat
+	 			ksort($arrG); 					
+	 			foreach($arrG as  $key=>$val){
+	 				$xml.=$val["xml"];
+				}	
+				$xml .= "</terre>";				
+ 			}
+			//récupération des voiries
+ 			$arrG = $grille->FiltreRubAvecGrilleMultiSite($r["id_rubrique"],$objSite->infos["GRILLE_VOIRIE"],"parent");
+ 			if(count($arrG)>0){
+ 				$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"Voiries\" idGrille='".$objSite->infos["GRILLE_VOIRIE"]."' >";
+	 			//trie le résultat
+	 			ksort($arrG); 					
+	 			foreach($arrG as  $key=>$val){
+	 				$xml.=$val["xml"];
+				}	
+				$xml .= "</terre>";				
+ 			} 			
 	 		
 			$xml .= "</terre>";
 		}
@@ -174,7 +238,7 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 		if($niv==0)	
 			$xml .= "</terres>";
 		$objSite->SaveFile(PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml",utf8_encode($xml));
-//	}
+	}
 	return $xml;
 }
 

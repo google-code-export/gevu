@@ -29,32 +29,44 @@
   [Bindable] public var kmlZoom:int;
   [Bindable] private var kmlObj:Object = new Object();
 
+  [Bindable] public var zip:hbZip;
+
+
   public function Init():void {
   	if(kmlUrl=="")return;
-
-    var request:URLRequest = new URLRequest(kmlUrl);
-
-    var loader:URLLoader = new URLLoader();
-    
-    try {
-        loader.load(request);
-    }
-    catch (error:SecurityError)
-    {
-        trace("A SecurityError has occurred.");
-    }
-	
-	loader.addEventListener(Event.COMPLETE, loadKML);
-	loader.addEventListener(IOErrorEvent.IO_ERROR, httpFault);
+  	
+  	//vérifie s'il faut décompresser le kml
+  	if(kmlUrl.substr(-3)=="kmz"){
+  		zip = new hbZip();
+  		zip.file = kmlUrl;
+  		zip.callback = completeZip;
+  		this.addChild(zip); 		
+  	}else{
+	    var request:URLRequest = new URLRequest(kmlUrl);
+	    var loader:URLLoader = new URLLoader();
+	    try {
+	        loader.load(request);
+	    }
+	    catch (error:SecurityError)
+	    {
+	        trace("A SecurityError has occurred.");
+	    }	
+		loader.addEventListener(Event.COMPLETE, loadKML);
+		loader.addEventListener(IOErrorEvent.IO_ERROR, httpFault);  		
+  	}
 	
 	
   }
 
-  public function loadKML(event:Event):void {
-  	//trace(event.target.data);
+	private function completeZip(s:String):void {
+		readKML(s);
+		this.removeChild(zip);
+	}
+			
+
+  private function readKML(strKML:String):void {
 
     try {
-	  	var strKML:String = event.target.data;
 	
   		//nettoie le namespace du kml
 	  	var deb:int=strKML.indexOf("<kml");
@@ -85,7 +97,19 @@
 			kmlObj.children = getChildrenFeatures(Container(rootFeature));
 		}
     } catch (e:TypeError) {
-        trace("Could not parse the XML file.");
+        trace("Impossible de lire le KML.");
+    }
+  	
+  }
+
+  public function loadKML(event:Event):void {
+  	//trace(event.target.data);
+
+    try {
+	  	var strKML:String = event.target.data;
+		readKML(strKML);
+    } catch (e:TypeError) {
+        trace("Impossible de charger le KML.");
     }
 
   }
@@ -155,38 +179,33 @@
   	// at this point it can either be a placemark or a groundoverlay
   	if (feature is Placemark) {
   		var placemark:Placemark = com.google.maps.extras.xmlparsers.kml.Placemark::Placemark(feature);
-  		if (placemark.geometry != null) {
-  			if (placemark.geometry is com.google.maps.extras.xmlparsers.kml.Point::Point) {
-  				var point: com.google.maps.extras.xmlparsers.kml.Point::Point = com.google.maps.extras.xmlparsers.kml.Point::Point(placemark.geometry);
-  				var latlng:LatLng = new LatLng(point.coordinates.coordsList[0].lat, point.coordinates.coordsList[0].lon);
-  				obj.mapObject = new Marker(latlng);
-  				mapP.addOverlay(obj.mapObject);
-  			} else if (placemark.geometry is LineString) {
-  				var lineString:LineString = LineString(placemark.geometry);
-  				obj.mapObject = new Polyline(getCoordinatesLatLngs(lineString.coordinates));
-  				mapP.addOverlay(obj.mapObject);
-  			}  else if (placemark.geometry is LinearRing) {
-  				var linearRing:LinearRing = LinearRing(placemark.geometry);
-  				obj.mapObject = new Polyline(getCoordinatesLatLngs(linearRing.coordinates));
-  				mapP.addOverlay(obj.mapObject);
-  			}  else if (placemark.geometry is Polygon) {
-  				var polygon:Polygon = Polygon(placemark.geometry);
-  				obj.mapObject = new com.google.maps.overlays.Polygon::Polygon(getCoordinatesLatLngs(polygon.outerBoundaryIs.linearRing.coordinates));
-  				mapP.addOverlay(obj.mapObject);
-  			} 
+  		if (placemark.geometry != null) {  			
+			getMapObject(obj, placemark.geometry);	  			
   		}
-  	} else if (feature is com.google.maps.extras.xmlparsers.kml.GroundOverlay::GroundOverlay) {
-  		var groundOverlay:com.google.maps.extras.xmlparsers.kml.GroundOverlay::GroundOverlay = com.google.maps.extras.xmlparsers.kml.GroundOverlay::GroundOverlay(feature);
+  	} else if (feature is  com.google.maps.extras.xmlparsers.kml.GroundOverlay::GroundOverlay) {
+  		var grOver:com.google.maps.extras.xmlparsers.kml.GroundOverlay::GroundOverlay = com.google.maps.extras.xmlparsers.kml.GroundOverlay::GroundOverlay(feature);
+  		getGround(obj, grOver.icon, grOver.latLonBox);
+  	} else if (feature is KmlGroundOverlay) {
+  		var kGrOver:KmlGroundOverlay = KmlGroundOverlay(feature);
+  		getGround(obj, kGrOver.icon, kGrOver.latLonBox);
+  	}
+  }
+
+  private function getGround(obj:Object, ic:Icon, latLonB:LatLonBox):void{
+  	
 	  	var testLoader:Loader = new Loader();
-	  	var urlRequest:URLRequest = new URLRequest(groundOverlay.icon.href);
-	    testLoader.contentLoaderInfo.addEventListener(
-	      Event.COMPLETE,
+	  	var urlRequest:URLRequest = new URLRequest(ic.href);
+	    testLoader.contentLoaderInfo.addEventListener(Event.COMPLETE,
 	      function(e:Event):void {
-	        obj.mapObject = new com.google.maps.overlays.GroundOverlay::GroundOverlay(
-	        testLoader,
-	        new LatLngBounds(new LatLng(groundOverlay.latLonBox.south,groundOverlay.latLonBox.west), new LatLng(groundOverlay.latLonBox.north,groundOverlay.latLonBox.east)));
-	        mapP.addOverlay(obj.mapObject);
-	    });
+	        	obj.mapObject = new com.google.maps.overlays.GroundOverlay::GroundOverlay(
+		        	testLoader
+		        	, new LatLngBounds(new LatLng(latLonB.south,latLonB.west)
+		        	, new LatLng(latLonB.north,latLonB.east)
+		        	)
+		        );
+	    	    mapP.addOverlay(obj.mapObject);
+	    	}
+	    );
 	    testLoader.contentLoaderInfo.addEventListener(
 	      IOErrorEvent.IO_ERROR,
 	      function(e:Event):void {
@@ -195,15 +214,49 @@
 	    testLoader.contentLoaderInfo.addEventListener(
 	      ProgressEvent.PROGRESS,
 	      function(e:Event):void {
-	        
 	        var i:int=0;
-	        
 	    });
 	    
-	    	 
-	    
 	    testLoader.load(urlRequest); 
-  	}
+
+  }
+
+
+  private function getMapObject(obj:Object, geo:Geometry):void{
+  	
+  		if (geo is com.google.maps.extras.xmlparsers.kml.Point::Point) {
+  			var point: com.google.maps.extras.xmlparsers.kml.Point::Point = com.google.maps.extras.xmlparsers.kml.Point::Point(geo);
+  			var latlng:LatLng = new LatLng(point.coordinates.coordsList[0].lat, point.coordinates.coordsList[0].lon);
+  			obj.mapObject = new Marker(latlng);
+  			mapP.addOverlay(obj.mapObject);
+  		} else if (geo is LineString) {
+  			var lineString:LineString = LineString(geo);
+  			obj.mapObject = new Polyline(getCoordinatesLatLngs(lineString.coordinates));
+  			mapP.addOverlay(obj.mapObject);
+  		}  else if (geo is LinearRing) {
+  			var linearRing:LinearRing = LinearRing(geo);
+  			obj.mapObject = new Polyline(getCoordinatesLatLngs(linearRing.coordinates));
+  			mapP.addOverlay(obj.mapObject);
+  		}  else if (geo is KmlPolygon) {
+  			var Kpoly:KmlPolygon = KmlPolygon(geo);
+  			obj.mapObject = new com.google.maps.overlays.Polygon::Polygon(getCoordinatesLatLngs(Kpoly.outerBoundaryIs.linearRing.coordinates));
+  			mapP.addOverlay(obj.mapObject);
+  		}  else if (geo is Polygon) {
+  			var polygon:Polygon = Polygon(geo);
+  			obj.mapObject = new com.google.maps.overlays.Polygon::Polygon(getCoordinatesLatLngs(polygon.outerBoundaryIs.linearRing.coordinates));
+  			mapP.addOverlay(obj.mapObject);
+  		}  else if (geo is OuterBoundaryIs) {
+  			var outerBound:OuterBoundaryIs = OuterBoundaryIs(geo);
+  			obj.mapObject = new Polyline(getCoordinatesLatLngs(outerBound.linearRing.coordinates));
+  			mapP.addOverlay(obj.mapObject);
+  		}  else if (geo is MultiGeometry) {
+  			var geos:MultiGeometry = MultiGeometry(geo);
+  			//for (var i:Number = 0; i < geos.geometries.length; i++) {
+  			for each (var o:Geometry in geos.geometries){
+					getMapObject(obj, o);	  				  				
+  			}
+  		} 
+  	
   }
   
   public function getCoordinatesLatLngs(coordinates:Coordinates):Array {

@@ -266,6 +266,19 @@
 	<!-- Gestion des requêtes SPIP -->		
 	<XmlParam nom="GetOntoTree">
 		<Querys>
+
+			<!-- Recherche une rubrique par rapport à un egrille et un champ -->
+			<Query fonction="Grille_RechercheRubId">
+				<select>SELECT a.id_rubrique idRub </select>
+				<from> FROM spip_forms_donnees fd
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_donnee = fd.id_donnee 
+INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee 
+	AND fdc.champ = "-champ-" AND fdc.valeur = "-valeur-"
+INNER JOIN spip_articles a ON a.id_article = fda.id_article 
+				 </from>
+				<where> WHERE fd.id_form = -idGrille-</where>
+			</Query>
+
 				
 <!-- Requêtes pour la création des arbres  -->
 			<Query fonction="GetTreeChildren_SigProb">
@@ -316,7 +329,7 @@
 				<col tag="titre"/>
 				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
 				<from> FROM spip_rubriques r
-					INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique AND mr.id_mot IN (54,56,57,58,59,60,138,139,146)
+					INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique AND mr.id_mot IN (54,56,57,58,59,60,138,139,146,249)
 				</from>
 				<where def="1942"> WHERE id_parent = -parent- GROUP BY r.id_rubrique ORDER BY r.titre </where>
 				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Terre');"/>

@@ -152,11 +152,12 @@ class Segment implements IteratorAggregate, Countable
      */
     public function setImage($key, $value)
     {
+
         $filename = strtok(strrchr($value, '/'), '/.');
         $file = substr(strrchr($value, '/'), 1);
         $size = @getimagesize($value);
         if ($size === false) {
-            throw new OdfException("Invalid image");
+            throw new SegmentException("Invalid image");
         }
         list ($width, $height) = $size;
         $width *= Odf::PIXEL_TO_CM;

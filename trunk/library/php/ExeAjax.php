@@ -319,12 +319,11 @@
 
 	    //pour flex force l'affichage des images
 		$_SESSION['ShowDocs']=true;
-		/*
+		
 		$path = PathRoot."/bdd/EtatDiag/".$site->id."_".$g->id."_flex.xml";
 	    $contents = $site->GetFile($path);
    		if(!$contents)
-		*/
-   			$contents = $g->GetEtatDiag(true,true);
+			$contents = $g->GetEtatDiag(true,true);
 
    		return $contents; 
 	}
@@ -352,6 +351,8 @@
 	}
 	
 	function SetChoixAffichage($idXul,$valeur){
+		if($valeur==="true")$valeur=true;
+		if($valeur==="false")$valeur=false;
 		$_SESSION[$idXul] = $valeur;
 		return "_SESSION[".$idXul."]=".$_SESSION[$idXul];
 	}
@@ -1074,7 +1075,7 @@
 		$grille->AddQuestionReponse(2170,$id);
 				
 		//ajoute une sous-rubrique espace gen->Signal�tique
-		$id = $g->SetNewEnfant("Signal�tique");
+		$id = $g->SetNewEnfant("Signalétique");
 		//ajoute les QuestionsR�ponses
 		$grille->AddQuestionReponse(72,$id);
 				
