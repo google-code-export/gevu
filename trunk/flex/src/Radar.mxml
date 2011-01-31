@@ -9,9 +9,18 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import compo.cnvStat;
 		
 		
     private function init():void {
+
+				var accStat:cnvStat = new cnvStat();
+				accStat.urlSrv = "http://localhost/gevu/library/php/ExeAjax.php";
+				accStat.idArt = "28817";
+				accStat.idGrille = "87";
+				accStat.idSite = "alceane"; 
+		       	charts.addChild(accStat);   	
+
       chart.addAxis('A');
       chart.addAxis('B');
       chart.addAxis('C');
@@ -23,6 +32,8 @@
 			
 		]]>
 	</mx:Script>
-    
-  <boost:RadarChart id="chart" width="100%" height="100%" />
+  <mx:HBox id="charts" width="100%" height="100%" >
+	  <boost:RadarChart id="chart" width="100%" height="100%" />
+  	
+  </mx:HBox>  
 </mx:Application>

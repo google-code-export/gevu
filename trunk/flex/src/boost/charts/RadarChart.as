@@ -340,15 +340,29 @@ package boost.charts {
 			
 			axis.labels = new Array();
 			
-			for(var i:Number = 1; i <= axis.max; i++) {
-				var label:Label = new Label();
-				label.data = i;
-				label.text = i.toString();
-				label.setStyle('textAlign', 'center');
-				axis.labels.push(label);
-				addChild(label);
+			//pas plus de x labels
+			var x:int = 6 
+			if(axis.max<x){
+				for(var i:Number = 1; i <= axis.max; i++) {
+					var label:Label = new Label();
+					label.data = i;
+					label.text = i.toString();
+					label.setStyle('textAlign', 'center');
+					axis.labels.push(label);
+					addChild(label);
+				}
+			}else{
+				for(var j:Number = 1; j <= x; j++) {
+					var lbl:Label = new Label();
+					var nb:int = int(axis.max/x*j);
+					lbl.data = nb
+					lbl.text = nb.toString();
+					lbl.setStyle('textAlign', 'center');
+					axis.labels.push(lbl);
+					addChild(lbl);
+				}
 			}
-
+			
 			if(axis.label)
 				removeChild(axis.label);
 				
@@ -582,7 +596,6 @@ package boost.charts {
 			g.lineTo(axis.end.x, axis.end.y);
 			
 			positionAxisLabel(axis);
-			
 			for each(var label:Label in axis.labels) {
 				positionAxisLabels(axis, label);
 			}
@@ -614,6 +627,7 @@ package boost.charts {
 				serie.points = new Array();
 					
 				for each(var axis:RadarAxis in axes) {
+					var x:Number = serie.data[axis.name];
 					var sar:Number = ((serie.data[axis.name] / axis.max) * axis.length) + getStyle('centerRadius');
 					var point:Point = new Point(
 						_center.x + Math.cos(axis.angle) * sar,
@@ -687,7 +701,7 @@ package boost.charts {
 			}
 			
 			g.endFill();
-			
+
 			eventBlock = false;
 		}
 		
