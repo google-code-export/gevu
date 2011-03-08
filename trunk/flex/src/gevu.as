@@ -156,6 +156,7 @@
 					titreSelect = allSeries[i].legendData[0].label;	
                 }
             }
+            
             idDoc = niv+strHandi; 
             //exécute la requête
             ShowListeDiag(idSite.text, idRub.text, idDoc, titreSelect);
