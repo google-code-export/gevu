@@ -50,7 +50,10 @@ $odf->setVars('etablissement', utf8_encode($g->titre));
 //récupération des images
 $arrDocs = $g->GetDocs($g->id,"1,2");
 if(count($arrDocs)>0){
-	$odf->setImage('img_etab', $arrDocs[0]->path);
+	if($arrDocs[0]->largeur > $arrDocs[0]->hauteur)
+    	$odf->setImage('img_etab', $arrDocs[0]->path,0,9);
+    else		
+    	$odf->setImage('img_etab', $arrDocs[0]->path,9,0);
 }else{
 	//sans image on en met une par defaut
 	$odf->setImage('img_etab', '../images/check_no.png');
@@ -150,7 +153,10 @@ foreach($rBats as $r){
 	
 	$arrDocs = $gBat->GetDocs($gBat->id,"1,2");
 	if(count($arrDocs)>0){
-    	$plans->setImage('plan_bat_img', $arrDocs[0]->path);	
+		if($arrDocs[0]->largeur > $arrDocs[0]->hauteur)
+	    	$plans->setImage('plan_bat_img', $arrDocs[0]->path,0,9);	    	
+	    else		
+	    	$plans->setImage('plan_bat_img', $arrDocs[0]->path,9,0);
 	}else{
     	$plans->setImage('plan_bat_img', '../images/check_no.png');	
 	}
@@ -177,7 +183,10 @@ foreach($rBats as $r){
 		$plans->plan_nivs->plan_niv_nom('Plan niveau :' . utf8_encode($niv->titre));
 		$arrDocs = $niv->GetDocs($niv->id,"1,2");
 		if(count($arrDocs)>0){
-        	$plans->plan_nivs->setImage('plan_niv_img', $arrDocs[0]->path);
+			if($arrDocs[0]->largeur > $arrDocs[0]->hauteur)
+		    	$plans->plan_nivs->setImage('plan_niv_img', $arrDocs[0]->path,0,9);	    	
+		    else		
+		    	$plans->plan_nivs->setImage('plan_niv_img', $arrDocs[0]->path,9,0);        	
     	}else{
         	$plans->plan_nivs->setImage('plan_niv_img', '../images/check_no.png');
 		}
@@ -222,8 +231,11 @@ foreach($xmlProb->rows->row as $r){
     	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
     	
 		if(count($arrDocs)>0){    
-	    	$probs->setImage('prob_img', $arrDocs[0]->path); 
-	    }else{
+			if($arrDocs[0]->largeur > $arrDocs[0]->hauteur)
+		    	$probs->setImage('prob_img', $arrDocs[0]->path,0,9);	    	
+		    else		
+		    	$probs->setImage('prob_img', $arrDocs[0]->path,9,0);        	
+		}else{
 	    	$probs->setImage('prob_img', '../images/check_no.png'); 
 	    }
 	}
