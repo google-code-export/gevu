@@ -300,7 +300,9 @@
     public function readXmlParc(event:Event):void{
         //récupère le parc
         var parcXML:XML = new XML(event.target.data);
-        rsParc = parcXML.terre;
+		if(parcXML.terre){
+	        rsParc = parcXML.terre;
+		}
     }
 
 	public function ForceCalcul():void{
