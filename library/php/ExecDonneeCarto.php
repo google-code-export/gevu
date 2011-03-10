@@ -161,7 +161,7 @@ function get_arbo_parc($objSite) {
 		
 			$xml .= "<terre checked='3' idSite='".$objSite->id."' idRub='".$r["idRubBat"]."' titreRub=\"".utf8_encode($r["titreBat"])."\" />";
 		}
-		$xml .= "</terre >";
+		if($idRubAntO!=-1)$xml .= "</terre >";
 		$xml .= "</terres>";
 		$objSite->SaveFile(PathRoot."/bdd/carto/ArboParc_".$objSite->id.".xml",$xml);
 	}
