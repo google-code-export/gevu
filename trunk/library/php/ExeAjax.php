@@ -157,11 +157,9 @@
 			$synchro->CleanDocuments();
 			break;		
 		case 'AddDocToArt':
-			//$resultat = AddDocToArt($_GET['path'], $_GET['idArt'], $_GET['doc']);
 			$resultat = AddDocToArt($_GET['idDoc']);
 			break;
 		case 'GetAdminRub':
-			//$resultat = AddDocToArt($_GET['path'], $_GET['idArt'], $_GET['doc']);
 			$resultat = GetAdminRub($_GET['idAuteur']);
 			break;
 		case 'ClearArticle':
@@ -570,6 +568,32 @@
 					,'taille'=>$_FILES['filename']['size']
 					,'largeur'=>$imageInfo[0]
 					,'hauteur'=>$imageInfo[1]
+					,'idArt'=>$arrIdDoc[4]
+					); 
+			break;
+			case 'pdf':
+				$imageInfo = getimagesize($objSite->infos["pathUpload"].$extention.'/'.$FicDst);
+				$row = array(
+					'titre'=>$_FILES['filename']['name']
+					,'type'=>41
+					,'desc'=>''
+					,'fichier'=>'IMG/pdf/'.$FicDst
+					,'taille'=>$_FILES['filename']['size']
+					,'largeur'=>0
+					,'hauteur'=>0
+					,'idArt'=>$arrIdDoc[4]
+					); 
+			break;
+			case 'doc':
+				$imageInfo = getimagesize($objSite->infos["pathUpload"].$extention.'/'.$FicDst);
+				$row = array(
+					'titre'=>$_FILES['filename']['name']
+					,'type'=>33
+					,'desc'=>''
+					,'fichier'=>'IMG/doc/'.$FicDst
+					,'taille'=>$_FILES['filename']['size']
+					,'largeur'=>0
+					,'hauteur'=>0
 					,'idArt'=>$arrIdDoc[4]
 					); 
 			break;

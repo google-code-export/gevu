@@ -5,7 +5,7 @@ class Xul{
   private $site;
  
     function __tostring() {
-    return "Cette classe permet la création dynamique d'objet XUL.<br/>";
+    return "Cette classe permet la crï¿½ation dynamique d'objet XUL.<br/>";
     }
 
     function __construct($site, $id=-1, $complet=true) {
@@ -73,7 +73,7 @@ class Xul{
     	$gra = new Granulat(-1,$this->site);
     	$docs = $gra->GetArtDocs($idArt);
 
-    	$images = "";$sons="";$videos="";
+    	$images = "";$sons="";$videos="";$docus="";
 		$icones ="";
 		$js = "GetFriseDocs(this.id,".$idArt.",'FriseDocs".$idArt."');";
     	foreach($docs as $doc)
@@ -89,7 +89,13 @@ class Xul{
 					$images ="<image id='ico_images' onclick=\"".$js."\" src='design/images/jpg.png' />";
 					break;
 				case 2: //'png'
-					$images ="<image id='ico_images' onclick=\"".$js."\" src='design/images/jpg.png' />";
+					$docus .="<image id='ico_images' onclick=\"".$js."\" src='design/images/jpg.png' />";
+					break;
+				case 33: //'doc'
+					$images ="<image id='ico_images' onclick=\"document.location.href='".$doc->fichier."'\" src='design/images/doc.png' />";
+					break;
+				case 41: //'pdf'
+					$docus .="<image id='ico_images' onclick=\"document.location.href='".$doc->fichier."'\" src='design/images/pdf.png' />";
 					break;
 			}
 		}
@@ -117,6 +123,10 @@ class Xul{
 				$frise .= $sons;			
 				$icones .= 	"<icone id='sons' />";		
 			}
+			if($docus!=""){
+				$frise .= $docus;			
+				$icones .= 	"<icone id='docs' />";		
+			}
 		}			
 		$frise .="</hbox>";
 		if(!$xml)
@@ -129,7 +139,7 @@ class Xul{
     
     
     function GetMenuPopUp($idRub,$typeSrc,$niv=0,$SaveFile=true,$gra=false){
-    	//vérifie s'il faut calculer les menus de la base
+    	//vï¿½rifie s'il faut calculer les menus de la base
     	if($idRub){
 	    	$gra = new Granulat($idRub,$this->site);
     	}else{
@@ -146,7 +156,7 @@ class Xul{
 		if($menusDst){			
 	    	foreach($menusDst as $mDst)
 			{
-				//vérifie s'il faut calculer les menus de la base
+				//vï¿½rifie s'il faut calculer les menus de la base
 				if($idRub){    	
 			    	$rows = $gra->GetTreeChildren($mDst["codeTree"]);
 			    	if($rows){
@@ -155,13 +165,13 @@ class Xul{
 			    		$menu .='<menu id="MenuPopUp_'.$typeSrc.'_'.$mDst["codeTree"].'_'.$idRub.'" label="'.$mnuLabel.'" ><menupopup >';
 				    	while($r = mysql_fetch_assoc($rows))
 						{
-							//récupération du js
+							//rï¿½cupï¿½ration du js
 							$Xpath = "/XmlParams/XmlParam[@nom='MenuNavig']/menuSrc[@code='".$typeSrc."']/menuDst[@codeTree='".$mDst["codeTree"]."']/js";
 							$js = $this->site->GetJs($Xpath, array($idRub,$lib,$mDst["codeTree"],$mDst["codeSaisi"],$r["id"]));
-							//création de l'item
+							//crï¿½ation de l'item
 			    			$mnuLabel = $this->site->XmlParam->XML_entities($r["titre"]);
 							$menu .= '<menuitem '.$js.' label="'.$mnuLabel.'"/>';
-							//vérifie la création d'un sous menu calculer dans la base
+							//vï¿½rifie la crï¿½ation d'un sous menu calculer dans la base
 							$sousmenu = $this->GetMenuPopUp($r["id"],$mDst["codeSaisi"],$niv+1,false);
 							if($sousmenu!=""){
 								$menu .= $sousmenu;
@@ -177,7 +187,7 @@ class Xul{
 		    		$mnuLabel = " - ".$lib."";
 		    		$menu .='<menu id="MenuPopUp_'.$typeSrc.'_'.$mDst["codeTree"].'_'.$idRub.'" label="'.$mnuLabel.'" ><menupopup >';
 				}
-				//vérifie la création d'un sous menu présent dans le xml
+				//vï¿½rifie la crï¿½ation d'un sous menu prï¿½sent dans le xml
     			foreach($mDst->menuSrc as $mSrcEnf){
 					$sousmenu = $this->GetMenuPopUp($r["id"],$mSrcEnf["code"],$niv+1,false);
 					if($sousmenu!=""){
@@ -256,7 +266,7 @@ class Xul{
 			$id=$this->id;
 		//echo "$id, $niv<br/>";
 			
-		//création du granulat
+		//crï¿½ation du granulat
 		$g = new Granulat($id, $this->site);
 		
 		$FilAriane="";
@@ -286,9 +296,9 @@ class Xul{
 			}
 		}
 				
-		//pour le dernier élément du fil
+		//pour le dernier ï¿½lï¿½ment du fil
 		if($niv==0){
-			//on crée un menu
+			//on crï¿½e un menu
 			$menu = $this->GetMenuPopUp(false,$xmlType["codeSaisi"],0,false,$g);
 			$FilAriane.=$menu;
 		}
@@ -341,7 +351,7 @@ class Xul{
 
 	function GetTabPanels($src, $id, $dst="Rub", $recur = false){
 
-		//récupère les articles de la rubrique
+		//rï¿½cupï¿½re les articles de la rubrique
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetXulTabPanels".$dst."']";
 		$Q = $this->site->XmlParam->GetElements($Xpath);
 		$where = str_replace("-id-", $id, $Q[0]->where);
@@ -365,7 +375,7 @@ class Xul{
 			//$tabpanel .= '<groupbox >';	
 			//$tabpanel .= '<caption label="'.$r["titre"].'"/>';
 			if($Q[0]->dst=='Form')
-				//ajoute les données de chaque article
+				//ajoute les donnï¿½es de chaque article
 				$tabpanel .= $this->GetXulForm($r["id"], $id);
 			else
 				//ajoute la tabbox de destination
@@ -380,7 +390,7 @@ class Xul{
     function GetForm($idDon, $idGrille) {
   
   
-		//requête pour récupérer les données de la grille
+		//requï¿½te pour rï¿½cupï¿½rer les donnï¿½es de la grille
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetDonnee']";
 		$Q = $this->site->XmlParam->GetElements($Xpath);
 		$where = str_replace("-id-", $idDon, $Q[0]->where);
@@ -397,12 +407,12 @@ class Xul{
 		//ajoute les controls pour chaque grille
 		$form = '<hbox flex="1">';	
 		$form .= '<groupbox >';	
-		$form .= '<caption label="Donnée : '.$idDon.'"/>';
+		$form .= '<caption label="Donnï¿½e : '.$idDon.'"/>';
 		while($r = $db->fetch_assoc($req)) {
 			$idDoc = 'val'.DELIM.$r["id_donnee"].DELIM.$r["champ"];
 			switch ($idGrille) {
 				case $this->site->infos["GRILLE_REG_LEG"]:
-					//construstion de la règle législative
+					//construstion de la rï¿½gle lï¿½gislative
 					$form .= $this->GetXulRegLeg($idDoc, $r);
 					break;
 				default:
@@ -435,19 +445,19 @@ class Xul{
 	function GetRegLeg($id, $row)
 	{
 		
-		/*résultat de row
+		/*rï¿½sultat de row
 		champ 	rang 	titre 	type 	obligatoire 	extra_info 	
-		ligne_1 	6 	valeur étalon 	ligne 	  	  	  	  	  	 
-		ligne_2 	7 	valeur étalon 2 	ligne 	  	  	  	  	  	 
+		ligne_1 	6 	valeur ï¿½talon 	ligne 	  	  	  	  	  	 
+		ligne_2 	7 	valeur ï¿½talon 2 	ligne 	  	  	  	  	  	 
 		ligne_3 	4 	Nom de la valeur 	ligne 	  	  	  	  	  	 
-		mot_1 	5 	opérateur 		mot 	18 	  	  	  	 
-		mot_2 	8 	Unités 		mot 	19 	  	  	  	 
-		select_1 	9 	règle respectée 	select radio		
+		mot_1 	5 	opï¿½rateur 		mot 	18 	  	  	  	 
+		mot_2 	8 	Unitï¿½s 		mot 	19 	  	  	  	 
+		select_1 	9 	rï¿½gle respectï¿½e 	select radio		
 		*/
 		
 		switch ($row['champ']) {
 			case 'ligne_1':
-				//récupération des js
+				//rï¿½cupï¿½ration des js
 				$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetDonnee']/js[@type='textbox']";
 				$js = $this->site->GetJs($Xpath, array($id));
 				//construction du control
@@ -455,7 +465,7 @@ class Xul{
 				$control .= '<label id="trace'.$id.'" value=""/>';
 				break;
 			case 'ligne_2':
-				//récupération des js
+				//rï¿½cupï¿½ration des js
 				$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetDonnee']/js[@type='textbox']";
 				$js = $this->site->GetJs($Xpath, array($id));
 				//construction du control
@@ -499,7 +509,7 @@ class Xul{
 		$control = '';
 		switch ($row['type']) {
 			case 'select':
-				//récupération des js
+				//rï¿½cupï¿½ration des js
 				$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetDonnee']/js[@type='radio']";
 				$js = $this->site->GetJs($Xpath, array($id));
 				//construction du control
@@ -513,7 +523,7 @@ class Xul{
 				$control .= '</groupbox>';
 				break;
 			case 'mot':
-				//récupération des js
+				//rï¿½cupï¿½ration des js
 				$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetDonnee']/js[@type='radio']";
 				$js = $this->site->GetJs($Xpath, array($id));
 				//construction du control
@@ -542,7 +552,7 @@ class Xul{
 
 	function GetChoixVal($row)
 	{
-		//requête pour récupérer les données de la grille
+		//requï¿½te pour rï¿½cupï¿½rer les donnï¿½es de la grille
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetChoix".$row['type']."']";
 		$Q = $this->site->XmlParam->GetElements($Xpath);
 		$where = str_replace("-id-", $row['grille'], $Q[0]->where);
@@ -574,15 +584,15 @@ class Xul{
 	function GetTree($type, $Cols, $js, $id){
 		
 
-		//récupération des colonnes
+		//rï¿½cupï¿½ration des colonnes
 		$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='GetTreeChildren_".$type."']/col";
 		$Cols = $this->site->XmlParam->GetElements($Xpath);		
 
 		
-		//une seule sélection possible seltype='single' onselect=\"GetTreeSelect('tree".$type."','TreeTrace',2)" seltype='multiple' single
+		//une seule sï¿½lection possible seltype='single' onselect=\"GetTreeSelect('tree".$type."','TreeTrace',2)" seltype='multiple' single
 		//	class='editableTree' 			width='100px' height='100px' 
 
-		//récupération des js
+		//rï¿½cupï¿½ration des js
 		$Xpath = "/XmlParams/XmlParam[@nom='".$objSite->scope['ParamNom']."']/Querys/Query[@fonction='GetTreeChildren_".$type."']/js";
 		$js = $this->site->GetJs($Xpath, array($type,$id));
 		
@@ -599,7 +609,7 @@ class Xul{
 		$i=0;
 		foreach($Cols as $Col)
 		{
-			//la première colonne est le bouton pour déplier
+			//la premiï¿½re colonne est le bouton pour dï¿½plier
 			if($i!=0){
 				if($Col["hidden"])
 					$visible = $Col["hidden"];
@@ -647,7 +657,7 @@ class Xul{
 		$Q = $this->site->XmlParam->GetElements($Xpath);
 		//print_r($Q);
 		if($id==-1){
-			//récupère la valeur par defaut
+			//rï¿½cupï¿½re la valeur par defaut
 			$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='GetTreeChildren_".$type."']/from";
 			$attrs =$this->site->XmlParam->GetElements($Xpath);
 			//print_r( $attrs[0]["def"]);
@@ -702,7 +712,7 @@ class Xul{
 			}
 			$tree .= '</treerow>'.EOL;
 			if($this->trace)
-				echo "//vérifie s'il faut afficher une hiérarchie ".$type." <br/>";
+				echo "//vï¿½rifie s'il faut afficher une hiï¿½rarchie ".$type." <br/>";
 			
 			if($type=="site")
 				$tree .= $this->GetTreeChildren("SitePage", -1, $r[0]);
