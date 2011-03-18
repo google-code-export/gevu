@@ -773,7 +773,7 @@ class Grille{
 
 	}
     
-    function GetTreeProb($idRub, $rs=false, $arr=false, $force=false){
+    function GetTreeProb($idRub, $rs=false, $arr=false, $force=false, $rapport=false){
     	
 		$path = PathRoot."/bdd/EtatDiag/GetTreeProb_".$this->site->id."_".$idRub."_".$rs."_".$arr.".xml";
 		if(!$force){
@@ -884,7 +884,11 @@ class Grille{
 			$xul.="<vbox>";
 				if($r["idCont"]!=$oidCont){
 					$xul.="<hbox>";
-						$xul.="<label value=\"Probl�me n� ".$r["idPbPlan"]." : ".$this->site->XmlParam->XML_entities($r["TextCont"])."\"/>";
+						if($rapport){
+							$xul.="<label value=\"".$this->site->XmlParam->XML_entities($r["affir"])."\"/>";
+						}else{
+							$xul.="<label value=\"Problème n° ".$r["idPbPlan"]." : ".$this->site->XmlParam->XML_entities($r["TextCont"])."\"/>";
+						}
 						$xul.="<label class='text-linkAdmin' onclick=\"OuvreControle(".$r["idDonneCont"].");\" value='(".$r["idCont"].")'/>";
 		    		$xul.="</hbox>";
 				}
@@ -1149,7 +1153,7 @@ class Grille{
 			$xul.="<vbox>";
 			if($r["idCont"]!=$oidCont && !$AjoutObs){
 				$xul.="<hbox>";
-					$xul.="<label value=\"Probl�me n� ".$r["idPbPlan"]." : ".$this->site->XmlParam->XML_entities($r["TextCont"])."\"/>";
+					$xul.="<label value=\"Problème n° ".$r["idPbPlan"]." : ".$this->site->XmlParam->XML_entities($r["TextCont"])."\"/>";
 					$xul.="<label   value='(".$r["idCont"].")'/>";
 					$xul.="<!--<label value=\" Commentaires : ".$r["obs"]."\"/> -->";
 	    		$xul.="</hbox>";
@@ -2810,7 +2814,7 @@ class Grille{
 				case "multiple_1":
 					//construstion r?glementaire
 					if($r['valeur']=="multiple_1_1")
-						$labels .= '<label value="R�glementaire"/>';
+						$labels .= '<label value="Réglementaire"/>';
 					//construstion souhaitable
 					if($r['valeur']=="multiple_1_2")
 						$labels .= '<label value="Souhaitable"/>';
@@ -2827,7 +2831,7 @@ class Grille{
 					if($r['valeur']=="multiple_2_5")
 						$labels .= '<label value="ERP_IOP existant"/>';
 					if($r['valeur']=="multiple_2_6")
-						$labels .= '<label value="Modalit� particuli�re"/>';
+						$labels .= '<label value="Modalité particuliére"/>';
 					break;
 				case "multiple_3":
 					//construstion des icones

@@ -120,7 +120,7 @@ public function setImage($key, $value, $width=0, $height=0)
             if (($width == 0) && ($height > 0)){
                 $width = $height * ($owidth/$oheight);
             }
-            //Remove this section if no GD/temp directory
+            /*Remove this section if no GD/temp directory
             $widthp = round($width / Odf::PIXEL_TO_CM, 0);
             $heightp = round($height / Odf::PIXEL_TO_CM, 0);
             $save = $yourtempdirectory . date("Y-m-d_H-i-s") . rand() . '.jpg';
@@ -131,7 +131,7 @@ public function setImage($key, $value, $width=0, $height=0)
             $value = $save;
             $filename = strtok(strrchr($value, '/'), '/.');
             $file = substr(strrchr($value, '/'), 1);
-           //Remove to here
+           Remove to here*/
         }
        
         $xml = <<<IMG

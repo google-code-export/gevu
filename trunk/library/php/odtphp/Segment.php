@@ -150,7 +150,7 @@ class Segment implements IteratorAggregate, Countable
      * @throws OdfException
      * @return Segment
      */
-    public function setImage($key, $value)
+    public function setImage($key, $value, $width=0, $height=0)
     {
 
         $filename = strtok(strrchr($value, '/'), '/.');
@@ -159,15 +159,40 @@ class Segment implements IteratorAggregate, Countable
         if ($size === false) {
             throw new SegmentException("Invalid image");
         }
-        list ($width, $height) = $size;
-        $width *= Odf::PIXEL_TO_CM;
-        $height *= Odf::PIXEL_TO_CM;
+        if (($width==0)&&($height==0)){
+            list ($width, $height) = $size;
+            $width *= Odf::PIXEL_TO_CM;
+            $height *= Odf::PIXEL_TO_CM;
+        } else {
+            list ($owidth, $oheight) = $size;
+            if (($width > 0) && ($height == 0)){
+                $height = $width * ($oheight/$owidth);
+            }
+            if (($width == 0) && ($height > 0)){
+                $width = $height * ($owidth/$oheight);
+            }
+            /*Remove this section if no GD/temp directory
+            $widthp = round($width / Odf::PIXEL_TO_CM, 0);
+            $heightp = round($height / Odf::PIXEL_TO_CM, 0);
+            $save = $yourtempdirectory . date("Y-m-d_H-i-s") . rand() . '.jpg';
+            $tn = imagecreatetruecolor($widthp, $heightp) ;   
+            $image = imagecreatefromjpeg($value);
+            imagecopyresampled($tn, $image, 0, 0, 0, 0, $widthp, $heightp, $owidth, $oheight) ;
+            imagejpeg($tn, $save, 100);
+            $value = $save;
+            $filename = strtok(strrchr($value, '/'), '/.');
+            $file = substr(strrchr($value, '/'), 1);
+           Remove to here*/
+        }
+       
         $xml = <<<IMG
-<draw:frame draw:style-name="fr1" draw:name="$filename" text:anchor-type="char" svg:width="{$width}cm" svg:height="{$height}cm" draw:z-index="3"><draw:image xlink:href="Pictures/$file" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>
+<draw:frame draw:style-name="fr1" draw:name="$filename" text:anchor-type="as-char" svg:width="{$width}cm" svg:height="{$height}cm" draw:z-index="3"><draw:image xlink:href="Pictures/$file" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>
 IMG;
         $this->images[$value] = $file;
         $this->setVars($key, $xml, false);
         return $this;
+        
+    
     }	
     /**
      * Shortcut to retrieve a child

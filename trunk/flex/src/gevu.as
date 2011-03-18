@@ -27,7 +27,7 @@
       import mx.rpc.events.ResultEvent;
 
 
-    private var site:String="alceane";
+    private var site:String="trouvilleERP1";
     /*prod
    	private var urlExeAjax:String="http://www.gevu.org/library/php/ExeAjax.php";
 	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRQz39mjOVnM1cIqThEYinQ2UMSLChQ5GzeL0LKmVf54ALsifsQIHmMHMQ";
