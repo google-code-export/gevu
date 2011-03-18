@@ -209,7 +209,7 @@ $odf->setImage('img_cadastre', '../images/kml.png');
 $probs = $odf->setSegment('probs');
 //récupère les problèmes
 //$url = WebRoot.'/library/php/ExeAjax.php?f=GetTreeProb&site='.$objSite->id.'&id='.$r->treecell[0]['label'].'&type=Bat';
-$strXml = utf8_encode($grille->GetTreeProb($r->treecell[0]['label']));
+$strXml = utf8_encode($grille->GetTreeProb($r->treecell[0]['label'], false, false, false, true));
 $xmlProb = simplexml_load_string($strXml);
 $j=1;
 
@@ -249,7 +249,7 @@ foreach($xmlProb->rows->row as $r){
 		$tof = $r->vbox[4]->hbox[1]->label[2]['value'];
     	$idDonRef = substr($r->vbox[4]->hbox[0]->label[1]['onclick'],14,-2);
     	$const = $r->vbox[4]->hbox[0]->label[0]['value'];
-    	$const = substr($const,strpos($const, ":")+1);
+    	//$const = substr($const,strpos($const, ":")+1);
     	$code = mb_detect_encoding($const, "auto");
     	if($code != "UTF-8" && $code != "ASCII"){
     		$const  = "";
@@ -275,10 +275,12 @@ foreach($xmlProb->rows->row as $r){
 	}
 
 	//ajoute les images réglementaires
-	for ($i = 3; $i < count($LegProb->hbox[0]->label); $i++) { 
-    	$src = getImgReg($regle, $LegProb->hbox[0]->label[$i]['value']);
-    	$probs->rowprob->regimg->setImage('prob_reg', $src);
-		$probs->rowprob->regimg->merge();
+	for ($i = 3; $i < count($LegProb->hbox[0]->label); $i++) {
+    	$src = getImgReg($regle."", $LegProb->hbox[0]->label[$i]['value']."");
+    	if($src != '../images/check_no.png'){
+	    	$probs->rowprob->regimg->setImage('prob_reg', $src);
+			$probs->rowprob->regimg->merge();
+    	}
     }
 
     foreach($LegProb->hbox[1]->image as $img){
@@ -366,10 +368,10 @@ function getCout($g, $id, $arrP, $idDon=-1, $lib=false){
 }
 
 function getImgReg($regle, $type){
-	if($regle=="Réglementaire"){
-		$regle="R";
-	}else{
+	if($regle=="Souhaitable"){
 		$regle="S";
+	}else{
+		$regle="R";
 	}
 	$path = '../images/check_no.png';
 	if($type=="EPR_IOP"){
