@@ -38,8 +38,10 @@ $rm = $m->findByIdDoc($_REQUEST['model']);
 //chargement du modèle de rapport
 //$pathModel = PathRoot.'/data/rapports/models/RAPPORTDIAGVF.odt';
 
-//echo $pathModel; 
-$odf = new odf($rm['path_source']);
+//echo $pathModel;
+//pour le debugage
+$ps = str_replace("/home/gevun/www/", "C:/wamp/www/gevu/", $rm['path_source']);
+$odf = new odf($ps);
 
 
 //création d'un rapport pour un établissement
@@ -207,102 +209,106 @@ $odf->mergeSegment($bats);
 $odf->setImage('img_cadastre', '../images/kml.png');
 
 $probs = $odf->setSegment('probs');
-//récupère les problèmes
-//$url = WebRoot.'/library/php/ExeAjax.php?f=GetTreeProb&site='.$objSite->id.'&id='.$r->treecell[0]['label'].'&type=Bat';
-$strXml = utf8_encode($grille->GetTreeProb($r->treecell[0]['label'], false, false, false, true));
-$xmlProb = simplexml_load_string($strXml);
-$j=1;
 
-foreach($xmlProb->rows->row as $r){
-	$refsProb = explode("*", $r->vbox[0]->label["id"]);
-	//si le hbox n'est pas vide on passe à un nouveau lieu
-	if($r->vbox[2]->hbox){
-		//on enregistre le problème précédent
-		if($j>1)$probs->merge();
-		
-		//on crée le nouveau problème
-		$idRubLieu = substr($r->vbox[2]->hbox->label["id"],9);
-		$gProb = new Granulat($idRubLieu, $objSite);
-		
-		//$strAriane = utf8_encode($gProb->GetFilAriane());
-		$strAriane = utf8_encode($gProb->TitreParent." | ".$gProb->titre);
-	    $probs->setVars('prob_num', $j);     
-	    $probs->setVars('prob_ariane', $strAriane);
-    	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
-    	
-		if(count($arrDocs)>0){    
-			if($arrDocs[0]->largeur > $arrDocs[0]->hauteur)
-		    	$probs->setImage('prob_img', $arrDocs[0]->path,0,9);	    	
-		    else		
-		    	$probs->setImage('prob_img', $arrDocs[0]->path,9,0);        	
-		}else{
-	    	$probs->setImage('prob_img', '../images/check_no.png'); 
-	    }
-	}
+//pour chaque batiments
+foreach($rBats as $r){
+
+	//récupère les problèmes
+	//$url = WebRoot.'/library/php/ExeAjax.php?f=GetTreeProb&site='.$objSite->id.'&id='.$r->treecell[0]['label'].'&type=Bat';
+	$strXml = utf8_encode($grille->GetTreeProb($r->treecell[0]['label']));
+	$xmlProb = simplexml_load_string($strXml);
+	$j=0;
 	
-    //$_SESSION['ForceCalcul'] = true;
-    //$strXml = $gProb->GetEtatDiag(true, true);
-    //$strXml = $grille->GetEtatDiagListeTot($gProb->id);
-    //$Probs = simplexml_load_string($strXml);
-	
-	if(count($r->vbox[4]->hbox)==2){
-		$tof = $r->vbox[4]->hbox[1]->label[2]['value'];
-    	$idDonRef = substr($r->vbox[4]->hbox[0]->label[1]['onclick'],14,-2);
-    	$const = $r->vbox[4]->hbox[0]->label[0]['value'];
-    	//$const = substr($const,strpos($const, ":")+1);
-    	$code = mb_detect_encoding($const, "auto");
-    	if($code != "UTF-8" && $code != "ASCII"){
-    		$const  = "";
-    	}
-	    //récupère la légende du problème
-		$xmlLeg = utf8_encode($grille->GetXulLegendeControle($idDonRef,$objSite->infos["GRILLE_CONTROL_".$_SESSION['version']]));
-	    $LegProb = simplexml_load_string($xmlLeg);
-	}else{
-		$tof = $r->vbox[4]->hbox->label[2]['value'];	
-	}
-	$regle = $LegProb->hbox[0]->label[2]['value'];
-	$cri = $LegProb->hbox[0]->label[1]['value'];
-    $probs->rowprob->prob_const($const);
-    $probs->rowprob->prob_mesure('prob_mesure :'.$j);
-    
-    //ajoute les observations
-    $rs = $grille->GetCritereObs($idRubLieu,$cri);
-	while($r = mysql_fetch_assoc($rs)){
-		if($r['ComVal3']!=""){
-	    	$probs->rowprob->probobs->obs_diag(utf8_encode($r['ComVal3']));
-			$probs->rowprob->probobs->merge();
+	foreach($xmlProb->rows->row as $rP){
+		$refsProb = explode("*", $rP->vbox[0]->label["id"]);
+		//si le hbox n'est pas vide on passe à un nouveau lieu
+		if($rP->vbox[2]->hbox){
+			//on enregistre le problème précédent
+			$j++;
+			if($j>1)$probs->merge();
+			
+			//on crée le nouveau problème
+			$idRubLieu = substr($rP->vbox[2]->hbox->label["id"],9);
+			$gProb = new Granulat($idRubLieu, $objSite);
+			
+			//$strAriane = utf8_encode($gProb->GetFilAriane());
+			$strAriane = utf8_encode($gProb->TitreParent." | ".$gProb->titre);
+		    $probs->setVars('prob_num', $j);     
+		    $probs->setVars('prob_ariane', $strAriane);
+	    	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
+	    	
+			if(count($arrDocs)>0){    
+				if($arrDocs[0]->largeur > $arrDocs[0]->hauteur)
+			    	$probs->setImage('prob_img', $arrDocs[0]->path,0,9);	    	
+			    else		
+			    	$probs->setImage('prob_img', $arrDocs[0]->path,9,0);        	
+			}else{
+		    	$probs->setImage('prob_img', '../images/check_no.png'); 
+		    }
+		    
 		}
-	}
-
-	//ajoute les images réglementaires
-	for ($i = 3; $i < count($LegProb->hbox[0]->label); $i++) {
-    	$src = getImgReg($regle."", $LegProb->hbox[0]->label[$i]['value']."");
-    	if($src != '../images/check_no.png'){
+		
+	    //$_SESSION['ForceCalcul'] = true;
+	    //$strXml = $gProb->GetEtatDiag(true, true);
+	    //$strXml = $grille->GetEtatDiagListeTot($gProb->id);
+	    //$Probs = simplexml_load_string($strXml);
+		
+		if(count($rP->vbox[4]->hbox)==2){
+			$tof = $rP->vbox[4]->hbox[1]->label[2]['value'];
+	    	$idDonRef = substr($rP->vbox[4]->hbox[0]->label[1]['onclick'],14,-2);
+	    	$const = $rP->vbox[4]->hbox[0]->label[0]['value'];
+	    	$const = substr($const,strpos($const, ":")+1);
+	    	$code = mb_detect_encoding($const, "auto");
+	    	if($code != "UTF-8" && $code != "ASCII"){
+	    		$const  = "";
+	    	}
+		    //récupère la légende du problème
+			$xmlLeg = utf8_encode($grille->GetXulLegendeControle($idDonRef,$objSite->infos["GRILLE_CONTROL_".$_SESSION['version']]));
+		    $LegProb = simplexml_load_string($xmlLeg);
+		}else{
+			$tof = $rP->vbox[4]->hbox->label[2]['value'];	
+		}
+		$regle = $LegProb->hbox[0]->label[2]['value'];
+		$cri = $LegProb->hbox[0]->label[1]['value'];
+	    $probs->rowprob->prob_const($const);
+	    $probs->rowprob->prob_mesure('prob_mesure :'.$j);
+	    
+	    //ajoute les observations
+	    $rs = $grille->GetCritereObs($idRubLieu,$cri);
+		while($rO = mysql_fetch_assoc($rs)){
+			if($rO['ComVal3']!=""){
+		    	$probs->rowprob->probobs->obs_diag(utf8_encode($rO['ComVal3']));
+				$probs->rowprob->probobs->merge();
+			}
+		}
+	
+		//ajoute les images réglementaires
+		for ($i = 3; $i < count($LegProb->hbox[0]->label); $i++) { 
+	    	$src = getImgReg($regle, $LegProb->hbox[0]->label[$i]['value']);
 	    	$probs->rowprob->regimg->setImage('prob_reg', $src);
 			$probs->rowprob->regimg->merge();
-    	}
-    }
+	    }
+	
+	    foreach($LegProb->hbox[1]->image as $img){
+	    	$src = str_replace(WebRoot,PathRoot,$img['src']);
+	    	$probs->rowprob->probimg->setImage('prob_defici', $src);;
+			$probs->rowprob->probimg->merge();
+	    }
+	    //$probs->rowprob->setImage('prob_niv_gen', '../images/audio2.jpg');
+	    $arrSolus = getCout($g, $idRubLieu, $arrP, $refsProb[2], true);
+	    foreach($arrSolus as $solus){
+		    $probs->rowprob->probsolus->prob_solus($solus[0]);
+		    $probs->rowprob->probsolus->prob_prod($solus[1]);
+		    $probs->rowprob->probsolus->prob_cout($solus[2]);    
+			$probs->rowprob->probsolus->merge();
+	    }
+	    
+		$probs->rowprob->merge();
+	}
+	$probs->merge();
+	$odf->mergeSegment($probs);
 
-    foreach($LegProb->hbox[1]->image as $img){
-    	$src = str_replace(WebRoot,PathRoot,$img['src']);
-    	$probs->rowprob->probimg->setImage('prob_defici', $src);;
-		$probs->rowprob->probimg->merge();
-    }
-    //$probs->rowprob->setImage('prob_niv_gen', '../images/audio2.jpg');
-    $arrSolus = getCout($g, $idRubLieu, $arrP, $refsProb[2], true);
-    foreach($arrSolus as $solus){
-	    $probs->rowprob->probsolus->prob_solus($solus[0]);
-	    $probs->rowprob->probsolus->prob_prod($solus[1]);
-	    $probs->rowprob->probsolus->prob_cout($solus[2]);    
-		$probs->rowprob->probsolus->merge();
-    }
- 
-    
-    $j++;
-	$probs->rowprob->merge();
 }
-$probs->merge();
-$odf->mergeSegment($probs);
 
 /**/
 

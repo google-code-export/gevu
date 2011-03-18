@@ -1337,7 +1337,7 @@ function GetFichierKml(doc)
 		document.documentElement.style.cursor = "wait";
 		netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
 		
-		var types = new Array("kml", "kmz", "flv", "mpg", "mov", "mp3");
+		var types = new Array("doc", "kml", "kmz", "flv", "mpg", "mov", "mp3", "pdf");
 		fichierCourant = GetFichier(types);
 		//fichierCourant = document.getElementById("NomFichier").value;
 		

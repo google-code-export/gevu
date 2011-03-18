@@ -173,7 +173,7 @@ public function calculerRapport(send:Boolean):*{
 		pArr.push({"idSolus":idSolus, "couts":pProb});
 	}	
 	var pxml:String = JSON.encode(pArr);
-    
+	trace(pxml);    
     if(!send) return pxml;
 
 	var request:URLRequest = new URLRequest(ENDPOINT_RAPPORT);
