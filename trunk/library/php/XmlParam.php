@@ -46,7 +46,7 @@ Class XmlParam{
 	
 	public function XML_entities($str)
 	{
-		//$str = str_replace("'","''",$str);
+		$str = str_replace('"',"",$str);
 	    return preg_replace(array("'&'", "'\"'", "'<'", "'>'"), array('&#38;', '&#34;','&lt;','&gt;'), $str);
 	}
 

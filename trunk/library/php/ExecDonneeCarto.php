@@ -111,7 +111,8 @@ function get_arbo_grille($idRub,$objSite,$idGrille) {
 	 		
 			$xml .= "</grilles>";
 
-		$objSite->SaveFile($path,utf8_encode($xml));
+		$xml = utf8_encode($xml);
+		$objSite->SaveFile($path,$xml);
 	}		
 	return $xml;
 	
@@ -229,7 +230,14 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 	 			//trie le résultat
 	 			ksort($arrG); 					
 	 			foreach($arrG as  $key=>$val){
-	 				$xml.=$val["xml"];
+					//récupération des voies
+ 					$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$val["rub"]["id_rubrique"]."' titreRub=\"".$val["rub"]["titre"]."\" idGrille='".$val["rub"]["id_form"]."' >";
+	 				$arrV = $grille->FiltreRubAvecGrilleMultiSite($val["rub"]["id_rubrique"],78,"parent");
+		 			foreach($arrV as  $keyV=>$valV){
+		 				$xml.=$valV["xml"];
+		 			}
+					$xml .= "</terre>";						 			
+	 				//$xml.=$val["xml"];
 				}	
 				$xml .= "</terre>";				
  			} 			
@@ -239,7 +247,8 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 				
 		if($niv==0)	
 			$xml .= "</terres>";
-		$objSite->SaveFile(PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml",utf8_encode($xml));
+		$xml = utf8_encode($xml);
+		$objSite->SaveFile(PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml",$xml);
 	}
 	return $xml;
 }

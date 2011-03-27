@@ -52,6 +52,12 @@
          [Embed(source="../images/voirieP.png")] 
          public var iconVoirie:Class; 
          [Bindable]
+         [Embed(source="../images/voie.png")] 
+         public var iconVoie:Class; 
+         [Bindable]
+         [Embed(source="../images/segment.png")] 
+         public var iconSegment:Class; 
+         [Bindable]
          [Embed(source="../images/chaine_de_deplacementP.png")] 
          public var iconChaine:Class; 
          [Bindable]
@@ -128,9 +134,9 @@
               "markers": []},
           "grille_69": {
         	"id": "69",
-	          "titre": "Elément de voirie",
+	          "titre": "Objet de Voirie",
               "color": 0x2a09f7,
-	          "icon": iconVoirie,
+	          "icon": iconObjet,
               "markers": []},
           "grille_60": {
         	"id": "60",
@@ -186,18 +192,18 @@
               "color": 0x080202,
 	          "icon": iconAxe,
               "markers": []},
-          "grille_73": {
-        	"id": "73",
-	          "titre": "Voie",
+          "grille_80": {
+        	"id": "80",
+	          "titre": "Segment",
               "color": 0x080202,
-	          "icon": iconVoirie,
+	          "icon": iconSegment,
               "markers": []},
           "grille_78": {
         	"id": "78",
 	          "titre": "Voie",
               "color": 0x080202,
-	          "icon": iconVoirie,
-              "markers": []}
+	          "icon": iconVoie,
+              "markers": []}              
 		};
     
             /* Variables used to construct the ArrayCollection data provider
@@ -216,7 +222,10 @@
             ]; 
             /* Second top-level node and its children.*/ 
             public var nestArrayVoirie:Array = [
-                {label:"Elément de voirie", cat:categories["grille_69"], data:"child data"}
+                {label:"Voie", cat:categories["grille_78"], children: [
+	                {label:"Segment", cat:categories["grille_80"], data:"child data"}
+                    ,{label:"Objet de voie", cat:categories["grille_69"], data:"child data"}
+                ]}
             ];
             
             public var nestArrayLigne:Array = [

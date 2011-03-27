@@ -40,7 +40,8 @@ $rm = $m->findByIdDoc($_REQUEST['model']);
 
 //echo $pathModel;
 //pour le debugage
-$ps = str_replace("/home/gevun/www/", "C:/wamp/www/gevu/", $rm['path_source']);
+//$ps = str_replace("/home/gevun/www/", "C:/wamp/www/gevu/", $rm['path_source']);
+$ps = $rm['path_source'];
 $odf = new odf($ps);
 
 
@@ -111,13 +112,13 @@ $odf->setVars('etab_proprio', utf8_encode($dons[0]->textbox[5]['value']));
 $odf->setVars('etab_adresse', $dons[0]->textbox[2]['value'].', '.$dons[0]->textbox[3]['value'].', '.$dons[0]->textbox[4]['value']);
 
 
+$e_bats = $odf->setSegment('etab_bats');
+//initialise la liste des éléments de diagnostics
+$arrEleDiag = array();
+
 //récupère la liste des batiments
-//$url = WebRoot.'/library/php/ExeAjax.php?f=GetTree&site='.$objSite->id.'&ParamNom=GetOntoTree&type=bat&id='.$g->id;
-//$objSite->GetCurl($url);
 $strXml = utf8_encode($grille->GetTree('bat',$g->id));
 $xmlBats = simplexml_load_string($strXml);
-
-$e_bats = $odf->setSegment('etab_bats');
 $rBats = $xmlBats->xpath("/tree/treechildren/treeitem/treerow");
 foreach($rBats as $r){
 	$e_bats->setVars('bat_nom', $r->treecell[1]['label']);
@@ -141,14 +142,50 @@ foreach($rBats as $r){
 	$e_bats->setVars('bat_parcking_out', $opt[0]['label']);
 	$e_bats->setVars('bat_date_construction', $dons[0]->textbox[13]['value']);
 	$e_bats->merge();
+	
+	//enregistre l'élément
+	$arrEleDiag[] = array("id"=>$r->treecell[0]['label']."","nom"=>$r->treecell[1]['label']."");
+	
 }
+
+//récupère la liste des parcelles
+$strXml = utf8_encode($grille->GetTree('parcelle',$g->id));
+$xmlBats = simplexml_load_string($strXml);
+$rBats = $xmlBats->xpath("/tree/treechildren/treeitem/treerow");
+foreach($rBats as $r){
+	$e_bats->setVars('bat_nom', $r->treecell[1]['label']);
+	//récupère les infos du batiment
+	//$url = WebRoot.'/library/php/ExeAjax.php?f=GetTabForm&ParamNom=GetTabForm&site='.$objSite->id.'&id='.$r->treecell[0]['label'].'&type=Bat';
+	$strXml = utf8_encode($grille->GetXulTab('Parcelle', $r->treecell[0]['label'], 'Parcelle'));
+	$xmlBat = simplexml_load_string($strXml);
+	$dons = $xmlBat->xpath($XpInfos);
+	
+	$opt = $xmlBat->xpath($XpInfos."/menulist[7]/menupopup/menuitem[@selected='true']/@label");
+	$e_bats->setVars('bat_classement', $opt[0]['label']);
+	$opt = $xmlBat->xpath($XpInfos."/menulist[5]/menupopup/menuitem[@selected='true']/@label");
+	$e_bats->setVars('bat_zppaup', $opt[0]['label']);
+	$opt = $xmlBat->xpath($XpInfos."/menulist[8]/menupopup/menuitem[@selected='true']/@label");
+	$e_bats->setVars('bat_nb_niveau', $opt[0]['label']);
+	$opt = $xmlBat->xpath($XpInfos."/menulist[12]/menupopup/menuitem[@selected='true']/@label");
+	$e_bats->setVars('bat_nb_ascenseur', $opt[0]['label']);
+	$opt = $xmlBat->xpath($XpInfos."/menulist[14]/menupopup/menuitem[@selected='true']/@label");
+	$e_bats->setVars('bat_parcking_in', $opt[0]['label']);
+	$opt = $xmlBat->xpath($XpInfos."/menulist[15]/menupopup/menuitem[@selected='true']/@label");
+	$e_bats->setVars('bat_parcking_out', $opt[0]['label']);
+	$e_bats->setVars('bat_date_construction', $dons[0]->textbox[13]['value']);
+	$e_bats->merge();
+
+	//enregistre l'élément
+	$arrEleDiag[] = array("id"=>$r->treecell[0]['label']."","nom"=>$r->treecell[1]['label']."");
+}
+
 $odf->mergeSegment($e_bats);
 
 
 $bats = $odf->setSegment('bats');
 $plans = $odf->setSegment('plan_bats');
-foreach($rBats as $r){
-	$idBat = $r->treecell[0]['label']."";
+foreach($arrEleDiag as $r){
+	$idBat = $r['id'];
     $gBat = new Granulat($idBat,$objSite);
 	
 	$plans->setVars('plan_bat_nom', 'Plan : ' . utf8_encode($gBat->titre));
@@ -166,7 +203,7 @@ foreach($rBats as $r){
 	//calcul le cout pour le batiments
 	$arrCout = getCout($g, $idBat, $arrP);
 		
-	$bats->setVars('bat_nom', $r->treecell[1]['label']);
+	$bats->setVars('bat_nom', $r['nom']);
 	$bats->setVars('bat_cout_reg', $arrCout["reg"]);
     $bats->setVars('bat_cout_sou', $arrCout["sou"]);
     $bats->setVars('bat_cout_tot', $arrCout["reg"]+$arrCout["sou"]);
@@ -211,13 +248,13 @@ $odf->setImage('img_cadastre', '../images/kml.png');
 $probs = $odf->setSegment('probs');
 
 //pour chaque batiments
-foreach($rBats as $r){
+$j=0;
+foreach($arrEleDiag as $r){
 
 	//récupère les problèmes
 	//$url = WebRoot.'/library/php/ExeAjax.php?f=GetTreeProb&site='.$objSite->id.'&id='.$r->treecell[0]['label'].'&type=Bat';
-	$strXml = utf8_encode($grille->GetTreeProb($r->treecell[0]['label']));
+	$strXml = utf8_encode($grille->GetTreeProb($r['id']));
 	$xmlProb = simplexml_load_string($strXml);
-	$j=0;
 	
 	foreach($xmlProb->rows->row as $rP){
 		$refsProb = explode("*", $rP->vbox[0]->label["id"]);
@@ -225,7 +262,9 @@ foreach($rBats as $r){
 		if($rP->vbox[2]->hbox){
 			//on enregistre le problème précédent
 			$j++;
-			if($j>1)$probs->merge();
+			if($j>1){
+				$probs->merge();
+			}
 			
 			//on crée le nouveau problème
 			$idRubLieu = substr($rP->vbox[2]->hbox->label["id"],9);
@@ -284,7 +323,7 @@ foreach($rBats as $r){
 	
 		//ajoute les images réglementaires
 		for ($i = 3; $i < count($LegProb->hbox[0]->label); $i++) { 
-	    	$src = getImgReg($regle, $LegProb->hbox[0]->label[$i]['value']);
+	    	$src = getImgReg($regle."", $LegProb->hbox[0]->label[$i]['value']."");
 	    	$probs->rowprob->regimg->setImage('prob_reg', $src);
 			$probs->rowprob->regimg->merge();
 	    }
@@ -306,9 +345,8 @@ foreach($rBats as $r){
 		$probs->rowprob->merge();
 	}
 	$probs->merge();
-	$odf->mergeSegment($probs);
-
 }
+$odf->mergeSegment($probs);
 
 /**/
 
@@ -379,7 +417,7 @@ function getImgReg($regle, $type){
 	}else{
 		$regle="R";
 	}
-	$path = '../images/check_no.png';
+	$path = '';
 	if($type=="EPR_IOP"){
 		$path = '../images/'.$regle.'ERP.png';
 	}
@@ -394,6 +432,13 @@ function getImgReg($regle, $type){
 	}
 	if($type=="Travail"){
 		$path = '../images/'.$regle.'CT.png';
+	}
+	if($type=="ModalitÃ© particuliÃ©re"){
+		$path = '../images/'.$regle.'MODPART.png';
+	}
+	
+	if($path==''){
+		$path = '../images/check_no.png';	
 	}
 	
 	return $path;

@@ -499,14 +499,14 @@ class Grille{
 			$key = $oSiteEnf->strtokey($row["titre"]."_".$oSiteEnf->id."_".$row["id_rubrique"]);
 			//pour suprimer les doublons entre site
 			$key = $oSiteEnf->strtokey($row["titre"]."_".$row["id_rubrique"]);
-			
-			$xml = "<terre checked='1' idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$row["titre"]."\" idGrille='".$idGrille."' >";
+			$titre = utf8_encode($this->site->XmlParam->XML_entities($row["titre"]));
+			$xml = "<terre checked='1' idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$titre."\" idGrille='".$idGrille."' >";
 			
 			$geo = $g->GetGeo($row["id_rubrique"]);
 			$xml .= "<CartoDonnee lat='".$geo['lat']."'";		
 			$xml .= " lng='".$geo['lng']."'";
 			$xml .= " idRub='".$row['id_rubrique']."'";				
-			$xml .= " titre=\"".utf8_encode($this->site->XmlParam->XML_entities($row["titre"]))."\"";
+			$xml .= " titre=\"".$titre."\"";
 			$xml .= " idSite='".$oSiteEnf->id."'";
 			$xml .= " zoommin='".$geo['zoom']."'";
 			$xml .= " kml='".$geo['kml']."'";
