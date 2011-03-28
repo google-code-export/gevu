@@ -32,7 +32,10 @@
          public var iconNiveau:Class; 
          [Bindable]
          [Embed(source="../images/objetP.png")] 
-         public var iconObjet:Class; 
+         public var iconObjet:Class;
+         [Bindable]
+         [Embed(source="../images/objet_voie.png")] 
+         public var iconObjetVoie:Class; 
          [Bindable]
          [Embed(source="../images/parkingP.jpg")] 
          public var iconParking:Class; 
@@ -84,12 +87,6 @@
               "color": 0x3366F,
 	          "icon": iconEtablissement,
               "markers": []},
-          "grille_62": {
-        	"id": "62",
-	          "titre": "Voirie",
-              "color": 0xFF33FF,
-	          "icon": iconVoirie,
-              "markers": []},
           "grille_61": {
         	"id": "61",
 	          "titre": "Espace extérieur",
@@ -130,12 +127,6 @@
         	"id": "64",
 	          "titre": "Objet extérieur",
               "color": 0x9b0f7c,
-	          "icon": iconObjet,
-              "markers": []},
-          "grille_69": {
-        	"id": "69",
-	          "titre": "Objet de Voirie",
-              "color": 0x2a09f7,
 	          "icon": iconObjet,
               "markers": []},
           "grille_60": {
@@ -192,6 +183,24 @@
               "color": 0x080202,
 	          "icon": iconAxe,
               "markers": []},
+          "grille_62": {
+        	"id": "62",
+	          "titre": "Voirie",
+              "color": 0xFF33FF,
+	          "icon": iconVoirie,
+              "markers": []},
+          "grille_69": {
+        	"id": "69",
+	          "titre": "Elément de Voirie",
+              "color": 0x2a09f7,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_79": {
+        	"id": "79",
+	          "titre": "Objet de Voirie",
+              "color": 0x2a09f7,
+	          "icon": iconObjetVoie,
+              "markers": []},
           "grille_80": {
         	"id": "80",
 	          "titre": "Segment",
@@ -224,7 +233,7 @@
             public var nestArrayVoirie:Array = [
                 {label:"Voie", cat:categories["grille_78"], children: [
 	                {label:"Segment", cat:categories["grille_80"], data:"child data"}
-                    ,{label:"Objet de voie", cat:categories["grille_69"], data:"child data"}
+                    ,{label:"Objet de voie", cat:categories["grille_79"], data:"child data"}
                 ]}
             ];
             
