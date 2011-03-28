@@ -420,7 +420,7 @@ class Grille{
     function SetEtatDiagDonnees($idEtat,$from,$where){
 		$sql = "INSERT INTO ona_etatdiag_donnees (id_etatdiag, idDonRep, idDonCont) SELECT ".$idEtat."
 				, fdcRep.id_donnee 
-				, fdCont.id_donnee "
+				, fdcRef.id_donnee "
 			.$from.$where;
 		$db = new mysql ($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$db->connect();
@@ -435,13 +435,10 @@ class Grille{
 		$db = new mysql ($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 		$db->connect();
 		$db->query($sql);
-		$db->close();
     	
 		//supprime les ?tatdiag
 		$sql = "DELETE FROM ona_etatdiag 
 			WHERE id_rubrique=".$idRub." AND handi=".$handi;
-		$db = new mysql ($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
-		$db->connect();
 		$db->query($sql);
 		$db->close();
     }
@@ -668,6 +665,7 @@ class Grille{
 			$sql = $Q[0]->select.$from.$where;
 			$db = new mysql ($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 			$db->connect();
+			
 			$result = $db->query($sql);
 			if($this->trace)
 				echo "Grille:GetEtatDiagOui".$this->site->infos["SQL_LOGIN"]." ".$sql."<br/>";
@@ -723,7 +721,7 @@ class Grille{
 	public function GetEtatDiagApplicable($ids,$idRub,$calcul)
 	{
 		if(!$calcul){
-			$r =  $this-> GetEtatDiagSum($idRub,4);		
+			$r =  $this->GetEtatDiagSum($idRub,4);		
 		}else{
 			//r?cup?re le nombre de crit?res valid?s
 			$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetEtatDiagApplicable']";
