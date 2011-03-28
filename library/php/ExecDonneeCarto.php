@@ -111,7 +111,7 @@ function get_arbo_grille($idRub,$objSite,$idGrille) {
 	 		
 			$xml .= "</grilles>";
 
-		$xml = utf8_encode($xml);
+		//$xml = utf8_encode($xml);
 		$objSite->SaveFile($path,$xml);
 	}		
 	return $xml;
@@ -247,7 +247,7 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 				
 		if($niv==0)	
 			$xml .= "</terres>";
-		$xml = utf8_encode($xml);
+		//$xml = utf8_encode($xml);
 		$objSite->SaveFile(PathRoot."/bdd/carto/ArboTerritoire_".$objSite->id."_".$idRub.".xml",$xml);
 	}
 	return $xml;
