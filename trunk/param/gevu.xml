@@ -1278,7 +1278,7 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 					INNER JOIN spip_rubriques_enfants re ON re.id_rubrique = eta.id_rubrique </from>
 				<where> WHERE re.id_parent=-idRub- AND handi=-handi- </where>
 			</Query> 
-			<Query fonction="Grille_GetEtatDiagOui">
+			<Query fonction="Grille_GetEtatDiagOuiOLD">
 				<select>
 					SELECT  COUNT(fdcMoteur.valeur) moteur
 					, COUNT(fdcAudio.valeur) audio
@@ -1311,7 +1311,32 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 				<where> WHERE r.id_rubrique IN(-ids-)</where>
 			</Query>
 
-			<Query fonction="Grille_GetEtatDiagHandi">
+			<Query fonction="Grille_GetEtatDiagOui">
+				<select>SELECT  COUNT(gc3.id_critere) moteur
+					, COUNT(gc1.id_critere) audio
+					, COUNT(gc4.id_critere) visu
+					, COUNT(gc2.id_critere) cog
+				</select>
+				<from> 
+					FROM spip_rubriques r 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcRep.valeur AND m.titre='Oui'
+					
+					LEFT JOIN gevu.gevu_criteres gc1 ON gc1.ref = fdcRef.valeur AND gc1.handicateur_auditif > 0
+		          	LEFT JOIN gevu.gevu_criteres gc2 ON gc2.ref = fdcRef.valeur AND gc2.handicateur_cognitif > 0
+		          	LEFT JOIN gevu.gevu_criteres gc3 ON gc3.ref = fdcRef.valeur AND gc3.handicateur_moteur > 0
+		          	LEFT JOIN gevu.gevu_criteres gc4 ON gc4.ref = fdcRef.valeur AND gc4.handicateur_visuel > 0					
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-)</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagHandiOLD">
 				<select>
 					SELECT  
 					 COUNT(fdcM.valeur)	moteur			 
@@ -1350,6 +1375,38 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 				<where> WHERE r.id_rubrique IN(-ids-)</where>
 			</Query>
 
+			<Query fonction="Grille_GetEtatDiagHandi">
+				<select>
+					SELECT  
+					COUNT(gc3.id_critere) moteur
+					, COUNT(gc1.id_critere) audio
+					, COUNT(gc4.id_critere) visu
+					, COUNT(gc2.id_critere) cog	 			 
+				</select>
+				<from> 
+					FROM spip_rubriques r 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcRep.valeur AND m.titre='Non'
+					
+					INNER JOIN spip_forms_donnees fdCont ON fdCont.id_form IN (54,70)
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = fdCont.id_donnee
+					   AND fdcCont.champ = 'ligne_1' AND fdcCont.valeur = fdcRef.valeur 
+
+			          LEFT JOIN gevu.gevu_criteres gc1 ON gc1.ref = fdcRef.valeur AND gc1.handicateur_auditif = -handi-
+			          LEFT JOIN gevu.gevu_criteres gc2 ON gc2.ref = fdcRef.valeur AND gc2.handicateur_cognitif = -handi-
+			          LEFT JOIN gevu.gevu_criteres gc3 ON gc3.ref = fdcRef.valeur AND gc3.handicateur_moteur = -handi-
+			          LEFT JOIN gevu.gevu_criteres gc4 ON gc4.ref = fdcRef.valeur AND gc4.handicateur_visuel = -handi-
+
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-)</where>
+			</Query>
+
 			<Query fonction="Grille_GetEtatDiagOuiListe__">
 				<select>
 					SELECT DISTINCT r.id_rubrique
@@ -1382,7 +1439,7 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 					ORDER BY r.id_rubrique, a.id_article
 				</where>
 			</Query>
-			<Query fonction="Grille_GetEtatDiagOuiListe">
+			<Query fonction="Grille_GetEtatDiagOuiListeOld">
 				<select>
 					SELECT DISTINCT r.id_rubrique
 						, fdcRef.valeur valRef
@@ -1409,7 +1466,57 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 				</where>
 			</Query>
 
+			<Query fonction="Grille_GetEtatDiagOuiListe">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+			            , gc.ref valRef
+						, gc.affirmation affirm
+						, oed.idDonRep
+						, oed.idDonCont
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+						INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+							AND oe.handi = -handi- AND -TypeHandi-
+						INNER JOIN ona_etatdiag_donnees oed ON oed.id_etatdiag = oe.id_etatdiag
+						
+						INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = oed.idDonRep 
+						INNER JOIN spip_mots m ON m.id_mot = fdcRef.valeur AND m.titre='Oui'
+						
+						INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont AND fdcCont.champ = 'ligne_1'             
+			            INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcCont.valeur AND handicateur_-TypeHandi- = -valeur- 
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique
+				</where>
+			</Query>
+
 			<Query fonction="Grille_GetEtatDiagHandiListe">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+			            , gc.ref valRef
+						, gc.affirmation affirm
+						, oed.idDonRep
+						, oed.idDonCont
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+					INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+						AND oe.handi = -handi- AND -TypeHandi-
+					INNER JOIN ona_etatdiag_donnees oed ON oed.id_etatdiag = oe.id_etatdiag
+
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = oed.idDonRep 
+					INNER JOIN spip_mots m ON m.id_mot = fdcRef.valeur AND m.titre='Non'
+					
+					
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont AND fdcCont.champ = 'ligne_1'             
+		            INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcCont.valeur AND handicateur_-TypeHandi- = -valeur- 
+
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique
+				</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagHandiListeOLD">
 				<select>
 					SELECT DISTINCT r.id_rubrique
 						, fdcRef.valeur valRef
@@ -1500,7 +1607,7 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 				</where>
 			</Query>
 
-			<Query fonction="Grille_GetEtatDiagApplicable">
+			<Query fonction="Grille_GetEtatDiagApplicableOLD">
 				<select>
 					SELECT  
 					 SUM(fdcM.valeur)	moteur			 
@@ -1536,6 +1643,27 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 				</from>
 				<where> WHERE r.id_rubrique IN(-ids-)</where>
 			</Query>
+			<Query fonction="Grille_GetEtatDiagApplicable">
+				<select>
+					SELECT  SUM(gc.handicateur_moteur) moteur
+					, SUM(gc.handicateur_auditif) audio
+					, SUM(gc.handicateur_visuel) visu
+					, SUM(gc.handicateur_cognitif) cog
+				</select>
+				<from> 
+					FROM spip_rubriques r 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1' AND fdcRep.valeur IN (1,2,141) 
+					
+					INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcRef.valeur					
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-)</where>
+			</Query>					
 
 			<Query fonction="Grille_GetListeSignalementProblemeStat">
 				<select>
