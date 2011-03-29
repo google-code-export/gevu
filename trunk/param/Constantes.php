@@ -52,8 +52,9 @@ $SiteGlobal = array(
 	"GRILLE_GEORSS" => 81,
 
 	"CHAMPS_CONTROL_DIAG" => array("moteur"=>"ligne_2","audio"=>"ligne_3","visu"=>"ligne_4","cog"=>"ligne_5"),
-	"CHAMPS_CONTROL_DEFFICIENCE" => array("champ"=>"multiple_3","valeur"=>array("moteur"=>"multiple_3_1","audio"=>"multiple_3_2","visu"=>"multiple_3_3","cog"=>"multiple_3_4")),
-
+	//"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+	"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+		
 	"MOT_CLEF_OBS" => 151,
 	"MOT_CLEF_DEF_TYPE_CARTE" => 4,
 	"MOT_CLEF_PANG" => 64,
@@ -129,8 +130,9 @@ $SiteTrouville = array(
 	"GRILLE_GEORSS" => 81,
 
 	"CHAMPS_CONTROL_DIAG" => array("moteur"=>"ligne_2","audio"=>"ligne_3","visu"=>"ligne_4","cog"=>"ligne_5"),
-	"CHAMPS_CONTROL_DEFFICIENCE" => array("champ"=>"multiple_3","valeur"=>array("moteur"=>"multiple_3_1","audio"=>"multiple_3_2","visu"=>"multiple_3_3","cog"=>"multiple_3_4")),
-
+	//"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+	"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+		
 	"MOT_CLEF_OBS" => 151,
 	"MOT_CLEF_DEF_TYPE_CARTE" => 4,
 	"MOT_CLEF_PANG" => 64,
@@ -200,8 +202,9 @@ $SiteAlceane = array(
 	"GRILLE_GEORSS" => 81,
 
 	"CHAMPS_CONTROL_DIAG" => array("moteur"=>"ligne_2","audio"=>"ligne_3","visu"=>"ligne_4","cog"=>"ligne_5"),
-	"CHAMPS_CONTROL_DEFFICIENCE" => array("champ"=>"multiple_3","valeur"=>array("moteur"=>"multiple_3_1","audio"=>"multiple_3_2","visu"=>"multiple_3_3","cog"=>"multiple_3_4")),
-
+	//"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+	"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+		
 	"MOT_CLEF_OBS" => 151,
 	"MOT_CLEF_DEF_TYPE_CARTE" => 4,
 	"MOT_CLEF_PANG" => 64,
@@ -272,8 +275,9 @@ $SiteTrouvilleERP1 = array(
 	"GRILLE_GEORSS" => 81,
 
 	"CHAMPS_CONTROL_DIAG" => array("moteur"=>"ligne_2","audio"=>"ligne_3","visu"=>"ligne_4","cog"=>"ligne_5"),
-	"CHAMPS_CONTROL_DEFFICIENCE" => array("champ"=>"multiple_3","valeur"=>array("moteur"=>"multiple_3_1","audio"=>"multiple_3_2","visu"=>"multiple_3_3","cog"=>"multiple_3_4")),
-
+	//"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+	"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+		
 	"MOT_CLEF_OBS" => 151,
 	"MOT_CLEF_DEF_TYPE_CARTE" => 4,
 	"MOT_CLEF_PANG" => 64,
@@ -345,8 +349,9 @@ $SiteTrouvilleERP2 = array(
 	"GRILLE_GEORSS" => 81,
 
 	"CHAMPS_CONTROL_DIAG" => array("moteur"=>"ligne_2","audio"=>"ligne_3","visu"=>"ligne_4","cog"=>"ligne_5"),
-	"CHAMPS_CONTROL_DEFFICIENCE" => array("champ"=>"multiple_3","valeur"=>array("moteur"=>"multiple_3_1","audio"=>"multiple_3_2","visu"=>"multiple_3_3","cog"=>"multiple_3_4")),
-
+	//"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+	"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+		
 	"MOT_CLEF_OBS" => 151,
 	"MOT_CLEF_DEF_TYPE_CARTE" => 4,
 	"MOT_CLEF_PANG" => 64,
@@ -417,8 +422,9 @@ $SiteTrouvilleVoirie1 = array(
 	"GRILLE_GEORSS" => 81,
 
 	"CHAMPS_CONTROL_DIAG" => array("moteur"=>"ligne_2","audio"=>"ligne_3","visu"=>"ligne_4","cog"=>"ligne_5"),
-	"CHAMPS_CONTROL_DEFFICIENCE" => array("champ"=>"multiple_3","valeur"=>array("moteur"=>"multiple_3_1","audio"=>"multiple_3_2","visu"=>"multiple_3_3","cog"=>"multiple_3_4")),
-
+	//"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+	"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+				
 	"MOT_CLEF_OBS" => 151,
 	"MOT_CLEF_DEF_TYPE_CARTE" => 4,
 	"MOT_CLEF_PANG" => 64,
@@ -489,8 +495,9 @@ $SiteTrouvilleVoirie2 = array(
 	"GRILLE_GEORSS" => 81,
 
 	"CHAMPS_CONTROL_DIAG" => array("moteur"=>"ligne_2","audio"=>"ligne_3","visu"=>"ligne_4","cog"=>"ligne_5"),
-	"CHAMPS_CONTROL_DEFFICIENCE" => array("champ"=>"multiple_3","valeur"=>array("moteur"=>"multiple_3_1","audio"=>"multiple_3_2","visu"=>"multiple_3_3","cog"=>"multiple_3_4")),
-
+	//"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+	"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+		
 	"MOT_CLEF_OBS" => 151,
 	"MOT_CLEF_DEF_TYPE_CARTE" => 4,
 	"MOT_CLEF_PANG" => 64,
@@ -560,8 +567,9 @@ $SiteTrouvilleVoirie3 = array(
 	"GRILLE_GEORSS" => 81,
 
 	"CHAMPS_CONTROL_DIAG" => array("moteur"=>"ligne_2","audio"=>"ligne_3","visu"=>"ligne_4","cog"=>"ligne_5"),
-	"CHAMPS_CONTROL_DEFFICIENCE" => array("champ"=>"multiple_3","valeur"=>array("moteur"=>"multiple_3_1","audio"=>"multiple_3_2","visu"=>"multiple_3_3","cog"=>"multiple_3_4")),
-
+	//"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+	"CHAMPS_CONTROL_DEFFICIENCE" => array("moteur"=>"handicateur_moteur","audio"=>"handicateur_auditif","visu"=>"handicateur_visuel","cog"=>"handicateur_cognitif"),
+		
 	"MOT_CLEF_OBS" => 151,
 	"MOT_CLEF_DEF_TYPE_CARTE" => 4,
 	"MOT_CLEF_PANG" => 64,
