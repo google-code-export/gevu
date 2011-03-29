@@ -1483,7 +1483,7 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 						INNER JOIN spip_mots m ON m.id_mot = fdcRef.valeur AND m.titre='Oui'
 						
 						INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont AND fdcCont.champ = 'ligne_1'             
-			            INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcCont.valeur AND handicateur_-TypeHandi- = -valeur- 
+			            INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcCont.valeur AND -champ- > 0 
 				</from>
 				<where> WHERE r.id_parent = -idRub- 
 					ORDER BY r.id_rubrique
@@ -1508,7 +1508,7 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 					
 					
 					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont AND fdcCont.champ = 'ligne_1'             
-		            INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcCont.valeur AND handicateur_-TypeHandi- = -valeur- 
+		            INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcCont.valeur AND -champ- = -valeur- 
 
 				</from>
 				<where> WHERE r.id_parent = -idRub- 
@@ -1645,10 +1645,10 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 			</Query>
 			<Query fonction="Grille_GetEtatDiagApplicable">
 				<select>
-					SELECT  SUM(gc.handicateur_moteur) moteur
-					, SUM(gc.handicateur_auditif) audio
-					, SUM(gc.handicateur_visuel) visu
-					, SUM(gc.handicateur_cognitif) cog
+					SELECT  COUNT(gc.handicateur_moteur) moteur
+					, COUNT(gc.handicateur_auditif) audio
+					, COUNT(gc.handicateur_visuel) visu
+					, COUNT(gc.handicateur_cognitif) cog
 				</select>
 				<from> 
 					FROM spip_rubriques r 
@@ -1867,7 +1867,7 @@ INNER JOIN spip_mots m ON m.id_mot = mr.id_mot
 				<dst>Form</dst>
 			</Query>
 
-			<Query fonction="Grille_GetLegendeControle">
+			<Query fonction="Grille_GetLegendeControleOLD">
 				<select>SELECT dc.valeur, dc.champ, dc.id_donnee, fc.id_form grille, fc.titre, fc.type, fc.extra_info </select>
 				<from> FROM spip_forms_donnees_champs dc
 				INNER JOIN spip_forms_champs fc ON fc.champ = dc.champ
@@ -1875,6 +1875,24 @@ INNER JOIN spip_mots m ON m.id_mot = mr.id_mot
 				<where> WHERE dc.id_donnee =-id- AND fc.id_form =-idGrille-
 				ORDER BY fc.rang, dc.champ</where>
 			</Query>
+
+			<Query fonction="Grille_GetLegendeControle">
+				<select>SELECT c.ref
+				  , c.handicateur_auditif audio, c.handicateur_cognitif cog, c.handicateur_moteur moteur, c.handicateur_visuel visu 
+				  , tc.lib type, td.lib droit
+				</select>
+				<from> FROM spip_forms_donnees_champs dc
+INNER JOIN spip_forms_champs fc ON fc.champ = dc.champ AND fc.champ = 'ligne_1'
+INNER JOIN gevu.gevu_criteres c ON c.ref = dc.valeur
+LEFT JOIN gevu.gevu_criteresxtypesxcriteres ctc ON ctc.id_type_critere = c.id_critere
+LEFT JOIN gevu.gevu_typesxcriteres tc ON tc.id_type_critere = ctc.id_type_critere
+LEFT JOIN gevu.gevu_criteresxtypesxdroits ctd ON ctd.id_critere = c.id_critere
+LEFT JOIN gevu.gevu_typesxdroits td ON td.id_type_droit = ctd.id_type_droit 
+				 </from>
+				<where> WHERE dc.id_donnee =-id- AND fc.id_form =-idGrille-
+				ORDER BY fc.rang, dc.champ</where>
+			</Query>
+
 			
 			<Query fonction="Grille_GetDonnee">
 				<select>SELECT fda.id_article, dc.valeur, dc.champ, dc.id_donnee

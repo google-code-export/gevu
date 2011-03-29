@@ -217,12 +217,14 @@ class Grille{
 		if($arrDoc[0]==0){
 			//r?cup?re les crit?re suivant leur validation
 			$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetEtatDiagOuiListe']";
-			$champ = $this->site->infos["CHAMPS_CONTROL_DEFFICIENCE"]["champ"];
-			$valeur = $this->site->infos["CHAMPS_CONTROL_DEFFICIENCE"]["valeur"][$arrDoc[1]];
+			//$champ = $this->site->infos["CHAMPS_CONTROL_DEFFICIENCE"]["champ"];
+			//$valeur = $this->site->infos["CHAMPS_CONTROL_DEFFICIENCE"]["valeur"][$arrDoc[1]];
+			$champ = $this->site->infos["CHAMPS_CONTROL_DEFFICIENCE"][$arrDoc[1]];
 		}else{
 			//r?cup?re les crit?re suivant leur validation
 			$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetEtatDiagHandiListe']";
-			$champ = $this->site->infos["CHAMPS_CONTROL_DIAG"][$arrDoc[1]];
+			//$champ = $this->site->infos["CHAMPS_CONTROL_DIAG"][$arrDoc[1]];
+			$champ = $this->site->infos["CHAMPS_CONTROL_DEFFICIENCE"][$arrDoc[1]];
 			$valeur = $arrDoc[0];
 		}
 
@@ -2807,7 +2809,23 @@ class Grille{
 		$ico2 = "";
 		$ico3 = "";
 		$ico4 = "";
+		$oRef = -1;
 		while($r = $db->fetch_assoc($req)) {
+			if($oRef!=$r["ref"]){
+				//construstion des icones
+				if($r['moteur']>0)
+					$ico1 = '<image src="'.$this->site->infos["pathImages"].'moteur'.$r['moteur'].'.jpg"/>';
+				if($r['audio']>0)
+					$ico2 = '<image src="'.$this->site->infos["pathImages"].'audio'.$r['audio'].'.jpg"/>';
+				if($r['visu']>0)
+					$ico3 = '<image src="'.$this->site->infos["pathImages"].'visu'.$r['visu'].'.jpg"/>';
+				if($r['cog']>0)
+					$ico4 = '<image src="'.$this->site->infos["pathImages"].'cog'.$r['cog'].'.jpg"/>';
+				$labels .= '<label value="'.$r['type'].'"/>';
+				$labels .= '<label value="'.$r['ref'].'"/>';				
+			}
+			$labels .= '<label value="'.$r['droit'].'"/>';
+			/*
 			switch ($r["champ"]) {
 				case "multiple_1":
 					//construstion r?glementaire
@@ -2867,7 +2885,8 @@ class Grille{
 				case "ligne_1": //r?f?rence
 					$labels .= '<label value="'.$r['valeur'].'"/>';
 					break;
-			}					
+			}
+			*/					
 		}
 		//v?rifie s'il n'y a d'erreur sur les icones
 		if(substr($ico1,-1)!=">" && $ico1!="")$ico1.='.jpg"/>';
