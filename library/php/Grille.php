@@ -543,6 +543,7 @@ class Grille{
 			}
 			*/
 			$xml .= "</terre>";
+			$row['site'] = $oSiteEnf->id;
 			$arrG[$key]= array("xml"=>$xml,"rub"=>$row);
 			$xmlG .= $xml;
 		}
