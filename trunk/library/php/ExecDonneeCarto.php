@@ -231,7 +231,7 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 	 			ksort($arrG); 					
 	 			foreach($arrG as  $key=>$val){
 					//récupération des voies
- 					$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$val["rub"]["id_rubrique"]."' titreRub=\"".$val["rub"]["titre"]."\" idGrille='".$val["rub"]["id_form"]."' >";
+ 					$xml .= "<terre checked='1' idSite='".$val["rub"]["site"]."' idRub='".$val["rub"]["id_rubrique"]."' titreRub=\"".$val["rub"]["titre"]."\" idGrille='".$val["rub"]["id_form"]."' >";
 	 				$arrV = $grille->FiltreRubAvecGrilleMultiSite($val["rub"]["id_rubrique"],78,"parent");
 		 			foreach($arrV as  $keyV=>$valV){
 		 				$xml.=$valV["xml"];
