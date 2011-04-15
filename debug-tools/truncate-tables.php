@@ -10,16 +10,24 @@
     $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die ('Error connecting to mysql');
     
     /* try to connect to the database */
-    $dbname = 'gevu_trouville_voirie1';
+    $dbname = 'gevu_solus';
     mysql_select_db($dbname);
 
-    $num = 0;
     $show = "SHOW TABLES";
     $show_res = mysql_query($show,$conn) or die(mysql_error()); 
     
+    echo "<p>start truncating \"".$dbname."\"\n<ol>\n";
     while($row = mysql_fetch_array($show_res)) {
-        $sql = "TRUNCATE TABLE '".$row[$num]."'";
-        mysql_query($sql) or die(mysql_error());
-        $num++;
+        $sql = "TRUNCATE TABLE  `".$row[0]."`";
+        // $sql = "DELETE * FROM '".$row[$num]."'";
+        if(!mysql_query($sql)){
+        	echo "Can't truncate \"".$row[0]."\".<br>\n";
+        	die(mysql_error());
+        }
+        else {
+        	echo "\t<li> \"".$row[0]."\" was truncated.</li>\n";
+        }
     }
+    echo "</ol>\nwork was done!<br>";
+    
 ?>
