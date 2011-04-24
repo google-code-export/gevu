@@ -8,12 +8,15 @@
         $dbuser = 'root';
         $dbpass = '';
         $dbname = 'gevu_truc';
+        $addUnivers = false;
     }
     else{
         $dbhost = isset($_POST['dbhost']) ? $_POST['dbhost'] : '';
         $dbname = isset($_POST['dbname']) ? $_POST['dbname'] : '';
         $dbuser = isset($_POST['dbuser']) ? $_POST['dbuser'] : '';
         $dbpass = isset($_POST['dbpass']) ? $_POST['dbpass'] : '';
+        $addUnivers = isset($_POST['mon_champ'][0]) ? true : false;
+        if ($_POST['mon_champ'][0]<>"addUniversToGevuLieux") $addUnivers=false; 
     }
  ?>
 <html>
@@ -34,16 +37,32 @@
                                       /></td></tr>
             <tr><td>password:</td><td><input type="password" name="dbpass"
                                       /></td></tr>
-            <tr><td colspan ="2" align="center"><input type="submit"   name="valider" value="OK"/></td></tr>
+            <tr><td colspan ="2"><input type="checkbox" name="mon_champ[]"
+                                        value="addUniversToGevuLieux" <?php if($addUnivers)echo "checked"; ?>/>add 'univers' to 'gevu_lieux'</td></tr>
+            <tr><td colspan ="2"><hr></td></tr>
+            <tr><td colspan ="2" align="center"><input type="submit" name="valider" value="OK"/></td></tr>
           </table>
         </form>
         <?php    
             if ( $dbhost && $dbname && $dbuser ){
                 echo "\n<hr>\n";
                 truncateTables($dbhost,$dbname,$dbuser,$dbpass);
+                if($addUnivers){
+	                // Créer le noeud de base (créer univers)
+                    $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die ('Error connecting to mysql');
+                    mysql_select_db($dbname);
+                    $sql="INSERT INTO gevu_lieux
+                          (`id_rubrique`, `lib`, `id_parent`, `id_instant`, `lft`, `rgt`, `niv`, `maj`, `lieu_parent`)
+                          VALUES
+                          (0, 'univers', 0, 0, 0, 1 ,0 ,now() ,'-1')";
+                    $result = mysql_query($sql);
+                    if (!$result) "<p>'gevu_lieux' wasn't found in the selected database ...</p>";
+                    else echo "<p>univers was added!</p>";                    
+                    mysql_close($conn);
+                }
             }
             else{
-                echo "<p>please set host name, database and user name";
+                echo "<p>please set host name, database and user name</p>";
             }
         ?>
     </body>
@@ -60,18 +79,19 @@
         $show = "SHOW TABLES";
         $show_res = mysql_query($show,$conn) or die(mysql_error());
 
-        echo "<p>start truncating \"".$dbname."\" @ ".date("d/m/Y - H:i:s",time())."\n<ol>\n";
+        echo "<p>\nstart truncating \"".$dbname."\" @ ".date("d/m/Y - H:i:s",time())."\n<ol>\n";
         while($row = mysql_fetch_array($show_res)) {
             $sql = "TRUNCATE TABLE  `".$row[0]."`";
             //$sql = "DELETE * FROM '".$row[0]."'";
             if(!mysql_query($sql)){
-                echo "Can't truncate \"".$row[0]."\".<br>\n";
+                echo "Can't truncate \"".$row[0]."\".<br/>\n";
                 die(mysql_error());
             }
             else {
                 echo "\t<li> \"".$row[0]."\" was truncated.</li>\n";
             }
         }
-        echo "</ol>\nwork was done!<br>";
+        echo "</ol>\ntruncation was done!<br/>\n</p>";
+        mysql_close($conn);
     }
 ?>
