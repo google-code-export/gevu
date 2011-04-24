@@ -347,6 +347,8 @@ function PurgeRubrique(idRub, idSrc) {
 		if (answer){
 			var doc = document.getElementById("FormSaisi");
 			var url = urlExeAjax+"?f=CleanRubrique&deb="+idRub+"&fin="+idRub;
+			// remplacé par une autre fonction qui supprime proprement
+			//var url = urlExeAjax+"?f=DelRubrique&idRub="+idRub;
 			AppendResult(url,doc);
 		}
 				
