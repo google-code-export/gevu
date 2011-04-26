@@ -2,9 +2,8 @@
 
 /**********************************
 * - problème de parenthèse dans les titre!
-* y'a t-il un risque de trouver des doubles quotes ou pas? comment y remédier? 
-* 
-* - dans mes fonctions: l'id du parent doit-être celui de $dbN et pas celuis de $dbO
+* y'a t-il un risque de trouver des doubles quotes ou pas?
+* comment y remédier? (problème d'inction SQL)
 */
 
 $dbN = "gevu_solus";    
@@ -36,7 +35,7 @@ define('merge', true);
 if(!merge){
     migreBase($dbN, $dbO);
 }else{
-    CompareBases($dbN, $dbO);
+    MergeBases($dbN, $dbO);
 }
 
 
@@ -828,14 +827,14 @@ function migreBase($dbN, $dbO){
  * des attributs différents 
  */
 
-function CompareBases($dbN, $dbO, $idRub=5479, $niv=0){
+function MergeBases($dbN, $dbO, $idRub=5479, $niv=0){
 /*
  * comme la france n'est pas dans $dbN, il y a une coupure dans la hiérarchie (pas de fils de 
  * UNIVERS dans cette base). Soit on inclus la France, soit on ajoute le code si dessous.
  * Autre incohérence: Univers a un id=0 et est fils de 0!!! tout comme territoire et compagnie.
  */
 
-    // pour chaque enfant de FRANCE, appliquer CompareBase(...)
+    // pour chaque enfant de FRANCE, appliquer CompareBaseCore(...)
     $sql = "SELECT r.id_rubrique FROM $dbO.spip_rubriques r
             WHERE r.id_parent = $idRub";
     $res = mysql_query($sql);
@@ -844,37 +843,35 @@ function CompareBases($dbN, $dbO, $idRub=5479, $niv=0){
     ++$niv;
     while($row=mysql_fetch_array($res))
     {
-        CompareBasesCore($dbN, $dbO, $row['id_rubrique'], $niv);
+        MergeBasesCore($dbN, $dbO, $idRub, $row['id_rubrique'], $niv);
     }
-    /*
-     * code qui aurait du être éxécuté:        
-    CompareBasesCore($dbN, $dbO, 5479, $niv???);
-    */
 }
 
-function CompareBasesCore($dbN, $dbO, $idRub, $niv=1){
-/* !!! niv est nécessaire ? à vérifier ...
- * $niv<0  =>  niveau inconnu.
- * doit chercher dans toute la base
+function MergeBasesCore($dbN, $dbO, $idRubParent, $idRubEnfant, $niv=1){
+/*
+ * - $idRubParent est la rubrique parent inscrite dans $dbN,
+ * - $idRubEnfant est la rubrique enfant inscrite dans $dbO
  */
 
-    // récupérer les paramètres de $idRub
-    $sql = "SELECT titre, id_parent FROM $dbO.spip_rubriques r
-            WHERE r.id_rubrique=$idRub";
+    // récupérer les paramètres de $idRubEnfant
+    $sql = "SELECT titre FROM $dbO.spip_rubriques r
+            WHERE r.id_rubrique=$idRubEnfant";
     $res = mysql_query($sql);
     if (!$res) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
     $row = mysql_fetch_array($res);
 
-    // cherche le noeud $idRub dans $dbN en ce basant sur les paramètres précédents
-    $sql = "SELECT id_lieu FROM $dbN.gevu_lieux r
-            WHERE r.lib=\"".$row['titre']."\" AND id_parent=".$row['id_parent'];
+    // cherche le noeud $idRubEnfant dans $dbN en ce basant sur les paramètres précédents
+    $sql = "SELECT id_rubrique FROM $dbN.gevu_lieux r
+            WHERE r.lib=\"".$row['titre']."\" AND id_parent=".$idRubParent;
+    $str="\t- noeud à copier: \"".$row['titre']."\" fils de $idRubParent <br/>";
     $res = mysql_query($sql);
     if (!$res) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+    $row=mysql_fetch_array($res);
     
     // s'il n'éxiste pas
-    if (mysql_fetch_array($res)==NULL)
+    if ($row==NULL)
     {
-        echo "\t- noeud à copier: \"".$row['titre']."\" fils de ".$row['id_parent']."<br/>";
+        echo $str;
         // copier ce noeud et sa descendance via setLieuxHierarchie()
         
         // modifier les (gauche-droite)s des noeuds à droite des ajouts
@@ -884,15 +881,16 @@ function CompareBasesCore($dbN, $dbO, $idRub, $niv=1){
     else
     {
         // appliquer la fonction de façon récursive sur tout les enfants de $idRub
+        $idRubParent=$row['id_rubrique'];
         $sql = "SELECT r.id_rubrique FROM $dbO.spip_rubriques r
-                WHERE r.id_parent = $idRub";
+                WHERE r.id_parent = $idRubEnfant";
         $res = mysql_query($sql);
         if (!$res) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         
         ++$niv;
         while($row=mysql_fetch_array($res))
         {
-            CompareBasesCore($dbN, $dbO, $row['id_rubrique'], $niv);
+            MergeBasesCore($dbN, $dbO, $idRubParent, $row['id_rubrique'], $niv);
         }   
     }
 }
@@ -950,55 +948,4 @@ function setLieuxHierarchie($idParent, $dbN, $dbO, $idInstant, $idRub, $lft, $rg
 
 //fermeture de la connexion    
 mysql_close($ldb);
-?>
-
-
-<?php
-/**
- * setLieuxHierarchie(...) fonctionel: à piocher dedans en cas de pépin
- * 
-
-function setLieuxHierarchie($idParent, $dbN, $dbO, $idInstant, $idRub, $lft, $rgt, $niv=1){
-
-    //récupère les enfants de la rubrique
-    $sql = "SELECT r.id_rubrique, r.titre, r.id_parent
-            FROM $dbO.spip_rubriques r
-            WHERE id_parent = $idRub";
-    $res = mysql_query($sql);
-
-    while($row=mysql_fetch_array($res)) {
-        $lft++;
-        $rgt++;
-    
-        //on insert un lieu pour récupérer l'identifiant
-        $sql = "INSERT INTO $dbN.gevu_lieux
-                (id_instant, lieu_parent, id_rubrique, lib, id_parent, lft, rgt, niv, maj)
-                SELECT $idInstant, $idParent, r.id_rubrique, r.titre, r.id_parent, $lft, $rgt, $niv, r.maj 
-                FROM $dbO.spip_rubriques r
-                WHERE id_rubrique = ".$row['id_rubrique'];
-        $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
-        $idLieu = mysql_insert_id();
-    
-        echo str_repeat("----", $niv)." ".$row['id_rubrique'].' -> lft: '.$lft.' rgt: '.$rgt.' niv: '.$niv.'<br/>';
-        $arr= setLieuxHierarchie($idLieu, $dbN, $dbO, $idInstant, $row['id_rubrique'], $lft, $rgt, $niv+1);
-        if($lft<$arr[0]){
-            $rgt=$arr[1];
-        }else{
-            $lft=$arr[0];   //----
-            $rgt=$arr[1];   //----
-        }
-
-        echo str_repeat("----", $niv)." ".$row['id_rubrique'].' <-> lft: '.$lft.' rgt: '.$rgt.' niv: '.$niv.'<br/>';
-    
-        //on met à jour le gauche droite
-        $sql = "UPDATE $dbN.gevu_lieux SET lft = $lft, rgt = $rgt WHERE id_lieu = ".$idLieu;
-        $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
-        $lft = $rgt;         //----
-        $rgt= $lft+1;        //----
-    }
-    return array($lft,$rgt);        
-}
-**/
 ?>
