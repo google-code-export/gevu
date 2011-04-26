@@ -39,13 +39,13 @@
                                       /></td></tr>
             <tr><td colspan ="2"><input type="checkbox" name="mon_champ[]"
                                         value="addUniversToGevuLieux" <?php if($addUnivers)echo "checked"; ?>/>add 'univers' to 'gevu_lieux'</td></tr>
-            <tr><td colspan ="2"><hr></td></tr>
+            <tr><td colspan ="2"><hr /></td></tr>
             <tr><td colspan ="2" align="center"><input type="submit" name="valider" value="OK"/></td></tr>
           </table>
         </form>
         <?php    
             if ( $dbhost && $dbname && $dbuser ){
-                echo "\n<hr>\n";
+                echo "\n<hr />\n";
                 truncateTables($dbhost,$dbname,$dbuser,$dbpass);
                 if($addUnivers){
 	                // Créer le noeud de base (créer univers)
@@ -84,14 +84,14 @@
             $sql = "TRUNCATE TABLE  `".$row[0]."`";
             //$sql = "DELETE * FROM '".$row[0]."'";
             if(!mysql_query($sql)){
-                echo "Can't truncate \"".$row[0]."\".<br/>\n";
+                echo "Can't truncate \"".$row[0]."\".<br />\n";
                 die(mysql_error());
             }
             else {
                 echo "\t<li> \"".$row[0]."\" was truncated.</li>\n";
             }
         }
-        echo "</ol>\ntruncation was done!<br/>\n</p>";
+        echo "</ol>\ntruncation was done!<br />\n</p>";
         mysql_close($conn);
     }
 ?>
