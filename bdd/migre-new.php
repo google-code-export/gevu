@@ -972,9 +972,15 @@ function CopieNoueuds($dbN, $dbO)
         if (!$res) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
 
         // ajuster les (gauche-droite)s des autres noeuds
+        $diff = $r['m']-$lft;
+        $sql = "UPDATE gevu_lieux SET lft=lft+$diff WHERE lft>$lft AND id_lieu<$idLieu";
+        $res = mysql_query($sql);
+        if (!$res) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+        $sql = "UPDATE gevu_lieux SET rgt=rgt+$diff,id_instant=$idInstant WHERE rgt>$lft AND id_lieu<$idLieu";
+        $res = mysql_query($sql);
+        if (!$res) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
         
-                           
-       echo "</li>\n";
+        echo "</li>\n";
     }
     echo "</ul>\n";
 }
