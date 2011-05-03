@@ -296,7 +296,7 @@ class Grille{
 					$xul.="</hbox>";
 					
 		    	//ajoute l'affirmation
-				$xul .= '<textbox  multiline="true" id="'.$id.'" value="'.$this->site->XmlParam->XML_entities($r['affirm']).'"/>';			
+				$xul .= '<textbox  multiline="true" id="'.$r["id_rubrique"].'" value="'.$this->site->XmlParam->XML_entities($r['affirm']).'"/>';			
 				//finalise le crit?re				
 				if($PourFlex)
 					$xul .= "</crit>";
@@ -495,9 +495,9 @@ class Grille{
 		$g = new Granulat($idRub,$oSiteEnf,false);
 		$xml = "";
 		while($row = mysql_fetch_assoc($rs)) {
-			$key = $oSiteEnf->strtokey($row["titre"]."_".$oSiteEnf->id."_".$row["id_rubrique"]);
+			//$key = $oSiteEnf->strtokey($row["titre"]."_".$oSiteEnf->id."_".$row["id_rubrique"]);
 			//pour suprimer les doublons entre site
-			$key = $oSiteEnf->strtokey($row["titre"]."_".$row["id_rubrique"]);
+			$key = $oSiteEnf->strtokey(utf8_encode($row["titre"])."_".$row["id_rubrique"]);
 			$titre = utf8_encode($this->site->XmlParam->XML_entities($row["titre"]));
 			$xml = "<terre checked='1' idSite='".$oSiteEnf->id."' idRub='".$row["id_rubrique"]."' titreRub=\"".$titre."\" idGrille='".$idGrille."' >";
 			
@@ -2823,7 +2823,8 @@ class Grille{
 				if($r['cog']>0)
 					$ico4 = '<image src="'.$this->site->infos["pathImages"].'cog'.$r['cog'].'.jpg"/>';
 				$labels .= '<label value="'.$r['type'].'"/>';
-				$labels .= '<label value="'.$r['ref'].'"/>';				
+				$labels .= '<label value="'.$r['ref'].'"/>';
+				$oRef=$r["ref"];				
 			}
 			$labels .= '<label value="'.$r['droit'].'"/>';
 			/*

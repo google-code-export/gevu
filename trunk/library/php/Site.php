@@ -549,8 +549,10 @@ class Site{
     $key = str_replace("�", "", $key);
     $key = str_replace("/", "", $key);
     $key = str_replace("�", "", $key);
-    $key = str_replace("�", "", $key);
-        
+    $key = str_replace("é", "e", $key);
+    $key = str_replace("è", "e", $key);
+    $key = str_replace("ê", "e", $key);
+    
     $key = strtolower($key);
     return $this->stripAccents($key);
   }

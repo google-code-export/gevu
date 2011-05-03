@@ -15,6 +15,7 @@ class Granulat
   public $trace;
   public $TypeTree;
   public $TypeSaisie;
+  public $domEtat;
   
   public $site;
   
@@ -130,17 +131,50 @@ class Granulat
 		//$ids = $this->GetIdsScope();
    		$path = PathRoot."/bdd/EtatDiag/".$this->site->id."_".$this->id."_".$idDoc."_".$PourFlex.".xml";
 	    $contents = $this->site->GetFile($path);
-   		if($contents)
-   			return $contents;
-	    		    	
-		//construction du xml
-		$grille = new Grille($this->site);
-		$xul = $grille->GetEtatDiagListe($this->id,$idDoc,$PourFlex,$this->IdParent);
+   		if(!$contents){   			
+			//construction du xml
+			$grille = new Grille($this->site);
+			$contents = utf8_encode($grille->GetEtatDiagListe($this->id,$idDoc,$PourFlex,$this->IdParent));
 		
-		if($SaveFile)
-			$this->site->SaveFile($path,$xul);
+			if($SaveFile)
+				$this->site->SaveFile($path,$contents);
+   		}
+			
+		$pathJumeau = PathRoot."/bdd/EtatDiag/".$this->site->id."_".$this->id."_".$idDoc."_".$PourFlex."_jumeau.xml";
+	    $contentsJumeau = $this->site->GetFile($pathJumeau);
+   		if(!$contentsJumeau){
+   			//récupère les jumeaux 
+	   		$req = $this->GetJumeaux();
+					
+			//récupère la liste des états jumeaux
+			$aJumeau = false;
+			while($r = mysql_fetch_assoc($req)) {
+				foreach($r as $k=>$val){
+					if($k!="id_rubrique" && $val != null){
+						if(!$aJumeau){
+							//supprime la fin du xml : </vbox>
+							$contents = substr($contents,0,-7);
+							$aJumeau = true;					
+						}
+						//récupère la liste des etat diag
+						$oSiteJumeau = new Site($this->site->sites,$k,false);
+						$grille = new Grille($oSiteJumeau);
+						$contentsJumeau = utf8_encode($grille->GetEtatDiagListe($this->id,$idDoc,$PourFlex,$this->IdParent));
+						//suprime le début <vbox flex='1'> et la fin du xml </vbox>
+						$contentsJumeau = substr($contentsJumeau,15,-7);
+						$contents .= $contentsJumeau;
+					}
+				}		
+			}
+			if($aJumeau){
+				//ajoute la fin du xml : </vbox>
+				$contents .= "</vbox>";
+				if($SaveFile)
+					$this->site->SaveFile($pathJumeau,$contents);
+			}
+   		}
 
-		return $xul;
+		return $contents; 
 		
 	}
 
@@ -232,6 +266,7 @@ class Granulat
 	function GetEtatDiag($PourFlex=false,$SaveFile=false,$calcul=false){
 		
 		$deb = microtime(true);
+				
 		if($this->trace)
 	    	echo $deb."Granulat:GetEtatDiag: id= $this->id<br/>";
 
@@ -253,7 +288,7 @@ class Granulat
 				while ($r =  mysql_fetch_assoc($rs)) {
 					//cr�ation du granulta
 					$g = new Granulat($r["id_rubrique"],$this->site,false);
-					$g->GetEtatDiag($PourFlex,$SaveFile,true);
+					$g->GetEtatDiag($PourFlex,$SaveFile,$calcul);
 				}
 			}
 		}
@@ -263,7 +298,7 @@ class Granulat
 		$Etat2 = $grille->GetEtatDiagHandi($ids,2,$this->id,$calcul);
 		$Etat3 = $grille->GetEtatDiagHandi($ids,3,$this->id,$calcul);
 		$EtatAppli = $grille->GetEtatDiagApplicable($ids,$this->id,$calcul);
-
+		
 		//sort dans le cas du calcul
 		$fin = microtime(true)-$deb;
 		if($this->trace)
@@ -284,7 +319,7 @@ class Granulat
 		
 		$cogObst = $this->GetHandiObstacle($Etat1,$Etat2,$Etat3,"cog");
 		$cog = $this->GetHandiAccess($cogObst,$EtatAppli["r"]["cog"],$Etat3["r"]["cog"]);
-
+		
 		//calculer les icones suppl�mentaires
 		$FormIds = $this->GetFormIds(-1,$this->id);
 		//ajoute le parent
@@ -310,15 +345,17 @@ class Granulat
 		//r�cup�re le niveau d'ach�vement de l'�tat
 		$numDiag = $grille->GetNumEtatDiagFait($this->id)." sur ".$numDiag;	
 		//initialisation du xml
-		$xml = "<EtatDiag idSite='".$this->site->id."' idRub='".$this->id."' titre=\"".$this->titre."\" TauxCalc='".$numDiag."' >";
+		$xml = "<EtatDiag idSite='".$this->site->id."' idRub='".$this->id."' titre=\"".utf8_encode($this->titre)."\" TauxCalc='".$numDiag."' >";
 		//construction du xml
 		if($PourFlex){
+			
 			$xml .= "<Obstacles id='moteur' >
 				<niv0>".$EtatOui["r"]["moteur"]."</niv0>
 				<niv1>".$Etat1["r"]["moteur"]."</niv1>
 				<niv2>".$Etat2["r"]["moteur"]."</niv2>
 				<niv3>".$Etat3["r"]["moteur"]."</niv3>
 				<handi>".$moteur."</handi>
+				<appli>".$EtatAppli["r"]["moteur"]."</appli>
 			</Obstacles>";
 			$xml .= "<Obstacles id='audio' >
 				<niv0>".$EtatOui["r"]["audio"]."</niv0>
@@ -326,6 +363,7 @@ class Granulat
 				<niv2>".$Etat2["r"]["audio"]."</niv2>
 				<niv3>".$Etat3["r"]["audio"]."</niv3>
 				<handi>".$audio."</handi>
+				<appli>".$EtatAppli["r"]["audio"]."</appli>
 			</Obstacles>";
 			$xml .= "<Obstacles id='cognitif' >
 				<niv0>".$EtatOui["r"]["cog"]."</niv0>
@@ -333,6 +371,7 @@ class Granulat
 				<niv2>".$Etat2["r"]["cog"]."</niv2>
 				<niv3>".$Etat3["r"]["cog"]."</niv3>
 				<handi>".$cog."</handi>
+				<appli>".$EtatAppli["r"]["cog"]."</appli>
 			</Obstacles>";
 			$xml .= "<Obstacles id='visuel' >
 				<niv0>".$EtatOui["r"]["visu"]."</niv0>
@@ -340,7 +379,9 @@ class Granulat
 				<niv2>".$Etat2["r"]["visu"]."</niv2>
 				<niv3>".$Etat3["r"]["visu"]."</niv3>
 				<handi>".$visu."</handi>
+				<appli>".$EtatAppli["r"]["visu"]."</appli>
 			</Obstacles>";
+			
 			$xml .= $Icos; 
 			$xml .= $IcosDoc;
 			$xml .= $this->GetStatBassinGare();
@@ -367,10 +408,167 @@ class Granulat
 			$this->site->SaveFile($path,$xml);
 		}
 		
+		//vérifie si la même rubrique est présente dans les sites enfants
+		
+		
 		return $xml;
 		
 	}
-  
+
+	function GetJumeaux(){
+
+		//construction de la requête
+		$select = "SELECT r.id_rubrique";
+		$from = " FROM ".$this->site->infos["SQL_DB"].".spip_rubriques r ";
+		$where = " WHERE r.id_rubrique =".$this->id;
+		$oSitesFreres = array();
+		$i = 1;
+		if($this->site->infos["SITE_PARENT"]!=-1){
+			//récupère les parents du site
+	 		foreach($this->site->infos["SITE_PARENT"] as $idSiteParent=>$typeSiteParent)
+			{
+				$siteParent = new Site($this->site->sites,$idSiteParent,false);
+				//construction de la requête pour chaque frères
+				if($siteParent->infos["SITE_ENFANT"]!=-1){
+			 		foreach($siteParent->infos["SITE_ENFANT"] as $idSiteFrere=>$typeSiteFrere)
+					{
+						if($idSiteFrere!=$this->site->id){
+							$oSiteFrere = new Site($this->site->sites,$idSiteFrere,false);
+							$select .= ", r".$i.".id_rubrique ".$idSiteFrere;
+							$from .= " LEFT JOIN ".$oSiteFrere->infos["SQL_DB"].".spip_rubriques r".$i." ON r".$i.".id_rubrique = r.id_rubrique AND r".$i.".titre = r.titre";
+							$i++;
+						}
+					}
+				}
+			}
+		}
+		
+		$sql = $select.$from.$where;
+		
+		$DB = new mysql($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
+		$req = $DB->query($sql);
+		$DB->close();
+	
+		return $req;
+	}
+	
+	function GetEtatDiagFrere($xmlEtatDiag="", $SaveFile="true"){
+
+		$req = $this->GetJumeaux();
+				
+		//ajoute l'état de diagnostic pour chaque rubrique frère
+		$EtatsDiags = "<EtatsDiags>".$xmlEtatDiag;
+		$aFrere =false;
+		while($r = mysql_fetch_assoc($req)) {
+			foreach($r as $k=>$val){
+				if($k!="id_rubrique" && $val != null){
+					$aFrere = true;
+					$oSiteFrere = new Site($this->site->sites,$k,false);
+					$g = new Granulat($val,$oSiteFrere);
+					$EtatsDiags .= $g->GetEtatDiag(true,true);
+				}
+			}		
+		}
+		if(!$aFrere){
+			$EtatsDiags = "";
+		}else{
+			$EtatsDiags .= "</EtatsDiags>";
+			$EtatsDiags = utf8_encode($EtatsDiags);
+		}
+		
+		if($SaveFile){
+			$path = PathRoot."/bdd/EtatDiag/".$this->site->id."_".$this->id."_flex_frere.xml";
+			$this->site->SaveFile($path,$EtatsDiags);
+		}
+		
+		return $EtatsDiags;	
+	}
+	
+	function GetEtatDiagFamille($path, $pathFrere, $pathEtatFamille){
+	
+	
+		$this->domEtat = new DOMDocument;
+		$this->domEtat->Load($path);
+		$xpath = new DOMXPath($this->domEtat);
+
+		$domFrere = new DomDocument;
+		$domFrere->load($pathFrere);
+		$xpathFrere = new DomXPath($domFrere);
+
+		$Sumquery = "sum(/EtatsDiags/EtatDiag/Obstacles[@id='moteur'])";
+		$sum = $xpathFrere->evaluate($Sumquery);
+		
+		//calcul les état pour la famille
+		$this->CalculEtatDiagFamille("moteur", $xpath, $xpathFrere);		
+		$this->CalculEtatDiagFamille("audio", $xpath, $xpathFrere);		
+		$this->CalculEtatDiagFamille("cognitif", $xpath, $xpathFrere);		
+		$this->CalculEtatDiagFamille("visuel", $xpath, $xpathFrere);		
+				
+		$this->domEtat->save($pathEtatFamille);	
+	
+		return $this->domEtat->saveXML(); 
+	}
+
+	function CalculEtatDiagFamille($handi, $xpath, $xpathFrere){
+
+		$sums = array();
+		//additionne et remplace chaque niveau de EtatDiag
+		for($i=0; $i<4; $i++){
+			$query = "/EtatDiag/Obstacles[@id='".$handi."']/niv".$i;
+			$entries = $xpath->query($query);		
+			$element = $entries->item(0); 		
+			$Sumquery = "sum(/EtatsDiags".$query.")";
+			$sums[$i] = $xpathFrere->evaluate($Sumquery);
+	
+			$xEl = $this->domEtat->createElement("niv".$i);
+			$text = $this->domEtat->createTextNode($sums[$i]);
+			$xEl->appendChild($text);
+		    $element->parentNode->replaceChild($xEl, $element);
+		}
+		//additionne et remplace le nombre de critère applicable
+		$query = "/EtatDiag/Obstacles[@id='".$handi."']/appli";
+		$entries = $xpath->query($query);		
+		$element = $entries->item(0); 		
+		$Sumquery = "sum(/EtatsDiags".$query.")";
+		$sums[4] = $xpathFrere->evaluate($Sumquery);
+		$xEl = $this->domEtat->createElement("appli");
+		$text = $this->domEtat->createTextNode($sums[4]);
+		$xEl->appendChild($text);
+	    $element->parentNode->replaceChild($xEl, $element);
+		
+		//calcul l'handicateur
+		$Obst = $sums[1]+($sums[2]*2)+($sums[3]*3);
+		$h = $this->GetHandiAccess($Obst,$sums[4],$sums[3]);		
+		
+		//remplace l'handicateur
+		$query = "/EtatDiag/Obstacles[@id='".$handi."']/handi";
+		$entries = $xpath->query($query);		
+		$element = $entries->item(0); 		
+		$xEl = $this->domEtat->createElement("handi");
+		$text = $this->domEtat->createTextNode($h);
+		$xEl->appendChild($text);
+	    $element->parentNode->replaceChild($xEl, $element);
+
+	    //modifie le taux de calcul une seule fois
+	    $TCfait = 0;  		
+	    $TCafaire = 0;  		
+	    if($handi == "moteur"){
+			$query = "/EtatsDiags/EtatDiag";
+	    	$entries = $xpathFrere->query($query);
+	    	foreach($entries as $xEl){
+	    		$attTC = $xEl->getAttribute("TauxCalc");
+	    		//décompose le texte
+	    		$arrTC = explode(" sur ",$attTC);
+	    		$TCfait += $arrTC[0];  		
+	    		$TCafaire += $arrTC[1];  		
+	    	}
+			$query = "/EtatDiag";
+			$entries = $xpath->query($query);		
+	    	$element = $entries->item(0); 		
+	    	$element->setAttribute("TauxCalc", $TCfait." sur ".$TCafaire);
+	    }
+	}
+	
 	function GetHandiObstacle($Etat1,$Etat2,$Etat3,$Handi){
 		$handi = $Etat1["r"][$Handi]
 			+($Etat2["r"][$Handi]*2)

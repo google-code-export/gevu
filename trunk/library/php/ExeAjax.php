@@ -50,7 +50,7 @@
 			$resultat = $g->GetEtatDiagListe($_GET['idDoc']);
 			break;
 		case 'GetFlexEtatDiagListe':
-			$resultat = GetFlexEtatDiagListe($objSite,$g ,$_GET['idDoc']);
+			echo GetFlexEtatDiagListe($objSite,$g ,$_GET['idDoc']);
 			break;
 		case 'GetStatEtatDiag':
 			$resultat = GetStatEtatDiag($objSite, $g);
@@ -323,12 +323,32 @@
 	    //pour flex force l'affichage des images
 		$_SESSION['ShowDocs']=true;
 		
+		//récupère l'état du lieu
 		$path = PathRoot."/bdd/EtatDiag/".$site->id."_".$g->id."_flex.xml";
 	    $contents = $site->GetFile($path);
-   		if(!$contents)
+   		if(!$contents){
 			$contents = $g->GetEtatDiag(true,true);
+   		}
 
-   		return $contents; 
+   		//récupère l'état du lieu et de ses frères
+		$pathFrere = PathRoot."/bdd/EtatDiag/".$site->id."_".$g->id."_flex_frere.xml";
+	    $contentsFrere = $site->GetFile($pathFrere);
+   		if(!$contentsFrere){
+			$contentsFrere = $g->GetEtatDiagFrere($contents);
+   		}
+
+   		if($contentsFrere==""){
+   			return $contents; 
+   		}
+   		
+   		//calcul l'état de la famille
+		$pathEtatFamille = PathRoot."/bdd/EtatDiag/".$site->id."_".$g->id."_flex_famille.xml";
+	    $contentsFamille = $site->GetFile($pathEtatFamille);
+   		if(!$contentsFamille){
+			$contentsFamille = $g->GetEtatDiagFamille($path, $pathFrere, $pathEtatFamille);
+   		}
+		   		
+   		return $contentsFamille; 
 	}
 	
 	function SetElementChaine($objSite,$idRubSrc,$idRubDst,$idMot){

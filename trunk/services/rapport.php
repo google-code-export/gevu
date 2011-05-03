@@ -274,8 +274,10 @@ foreach($arrEleDiag as $r){
 			$strAriane = utf8_encode($gProb->TitreParent." | ".$gProb->titre);
 		    $probs->setVars('prob_num', $j);     
 		    $probs->setVars('prob_ariane', $strAriane);
-	    	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
-	    	
+		    if($gProb->IdParent){
+		    	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
+		    }
+			    	
 			if(count($arrDocs)>0){    
 				if($arrDocs[0]->largeur > $arrDocs[0]->hauteur)
 			    	$probs->setImage('prob_img', $arrDocs[0]->path,0,9);	    	
@@ -307,7 +309,7 @@ foreach($arrEleDiag as $r){
 		}else{
 			$tof = $rP->vbox[4]->hbox->label[2]['value'];	
 		}
-		$regle = $LegProb->hbox[0]->label[2]['value'];
+		$type = $LegProb->hbox[0]->label[0]['value'];
 		$cri = $LegProb->hbox[0]->label[1]['value'];
 	    $probs->rowprob->prob_const($const);
 	    $probs->rowprob->prob_mesure('prob_mesure :'.$j);
@@ -322,8 +324,8 @@ foreach($arrEleDiag as $r){
 		}
 	
 		//ajoute les images réglementaires
-		for ($i = 3; $i < count($LegProb->hbox[0]->label); $i++) { 
-	    	$src = getImgReg($regle."", $LegProb->hbox[0]->label[$i]['value']."");
+		for ($i = 2; $i < count($LegProb->hbox[0]->label); $i++) { 
+	    	$src = getImgReg($type."", $LegProb->hbox[0]->label[$i]['value']."");
 	    	$probs->rowprob->regimg->setImage('prob_reg', $src);
 			$probs->rowprob->regimg->merge();
 	    }
@@ -411,30 +413,30 @@ function getCout($g, $id, $arrP, $idDon=-1, $lib=false){
 	
 }
 
-function getImgReg($regle, $type){
-	if($regle=="Souhaitable"){
-		$regle="S";
+function getImgReg($type, $regle){
+	if($type=="Souhaitable"){
+		$type="S";
 	}else{
-		$regle="R";
+		$type="R";
 	}
 	$path = '';
-	if($type=="EPR_IOP"){
-		$path = '../images/'.$regle.'ERP.png';
+	if($regle=="ERP_IOP"){
+		$path = '../images/'.$type.'ERP.png';
 	}
-	if($type=="ERP_IOP existant"){
-		$path = '../images/'.$regle.'ERPexistant.png';
+	if($regle=="ERP_IOP existant"){
+		$path = '../images/'.$type.'ERPexistant.png';
 	}
-	if($type=="Voirie"){
-		$path = '../images/'.$regle.'VOIRIE.png';
+	if($regle=="Voirie"){
+		$path = '../images/'.$type.'VOIRIE.png';
 	}
-	if($type=="Logement"){
-		$path = '../images/'.$regle.'LOGEMENT.png';
+	if($regle=="Logement"){
+		$path = '../images/'.$type.'LOGEMENT.png';
 	}
-	if($type=="Travail"){
-		$path = '../images/'.$regle.'CT.png';
+	if($regle=="Travail"){
+		$path = '../images/'.$type.'CT.png';
 	}
-	if($type=="ModalitÃ© particuliÃ©re"){
-		$path = '../images/'.$regle.'MODPART.png';
+	if($regle=="Modalité particulière"){
+		$path = '../images/'.$type.'MODPART.png';
 	}
 	
 	if($path==''){

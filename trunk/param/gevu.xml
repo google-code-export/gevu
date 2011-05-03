@@ -1884,7 +1884,7 @@ INNER JOIN spip_mots m ON m.id_mot = mr.id_mot
 				<from> FROM spip_forms_donnees_champs dc
 INNER JOIN spip_forms_champs fc ON fc.champ = dc.champ AND fc.champ = 'ligne_1'
 INNER JOIN gevu.gevu_criteres c ON c.ref = dc.valeur
-LEFT JOIN gevu.gevu_criteresxtypesxcriteres ctc ON ctc.id_type_critere = c.id_critere
+LEFT JOIN gevu.gevu_criteresxtypesxcriteres ctc ON ctc.id_critere = c.id_critere
 LEFT JOIN gevu.gevu_typesxcriteres tc ON tc.id_type_critere = ctc.id_type_critere
 LEFT JOIN gevu.gevu_criteresxtypesxdroits ctd ON ctd.id_critere = c.id_critere
 LEFT JOIN gevu.gevu_typesxdroits td ON td.id_type_droit = ctd.id_type_droit 
