@@ -77,7 +77,14 @@
 	  		+strKML.substr(fin);
 	  	//nettoie le ballon visibility
 	  	var pattern:RegExp = /<gx:balloonVisibility>1<\/gx:balloonVisibility>/;
+	  	//problème des plans qui ne point pas vers la bonne uri
+	  	var find:int = strKML.search("gevu.eu");
+	  	if(find>0){
+	  		strKML = strKML.replace("http://www.gevu.eu/trouville/spip1","http://www.gevu.org/spip/trouville_erp1");
+	  	}
+
 	  	pureKML = pureKML.replace(pattern,"");
+
 	
 	  	//création de l'objet à partir de la chaine
 	 	var kml:Kml22 = new Kml22(pureKML);

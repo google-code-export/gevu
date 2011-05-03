@@ -184,7 +184,7 @@ public function resultHandlerService(result:ResultEvent):void
 private function DroitHandler(e:Object):void
 {
 	vsDroit.selectedChild = viewDroit;
-    ROCDr.findByIdProduit(idCritere);
+    ROCDr.findByIdCritere(idCritere);
 }
 
 private function deleteDroit():void {
@@ -200,14 +200,14 @@ private function deleteDroitClickHandler(event:CloseEvent):void
 {
     if (event.detail == Alert.YES) 
     {
-		ROCDr.remove(idCritere,dgDroit.selectedItem['id_type_droit']);
+		ROCDr.remove(dgDroit.selectedItem['id_type_droit']);
     }
 }
 
 private function DeficiHandler(e:Object):void
 {
 	vsDefici.selectedChild = viewDefici;
-    ROCDe.findByIdProduit(idCritere);
+    ROCDe.findByIdCritere(idCritere);
 }
 
 private function deleteDefici():void {
@@ -223,14 +223,14 @@ private function deleteDeficiClickHandler(event:CloseEvent):void
 {
     if (event.detail == Alert.YES) 
     {
-		ROCDe.remove(idCritere,dgDefici.selectedItem['id_type_deficience']);
+		ROCDe.remove(dgDefici.selectedItem['id_type_deficience']);
     }
 }
 
 private function TypeCriHandler(e:Object):void
 {
 	vsTypeCri.selectedChild = viewTypeCri;
-    ROCC.findByIdProduit(idCritere);
+    ROCC.findByIdCritere(idCritere);
 }
 
 private function deleteTypeCri():void {
@@ -246,7 +246,7 @@ private function deleteTypeCriClickHandler(event:CloseEvent):void
 {
     if (event.detail == Alert.YES) 
     {
-		ROCC.remove(idCritere,dgTypeCri.selectedItem['id_type_critere']);
+		ROCC.remove(dgTypeCri.selectedItem['id_type_critere']);
     }
 }
 

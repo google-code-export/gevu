@@ -23,7 +23,7 @@
 				var target:LinkButton = LinkButton(event.target);
 				var arrId:Array = target.id.split("_"); 
 				//this.parentApplication.getXmlCarto(idRub);
-				this.parentApplication.showMarkerId(arrId[1]);
+				this.parentApplication.showMarkerId(arrId[1],arrId[0]);
 			}
 
             public function SetFilAriane():void {

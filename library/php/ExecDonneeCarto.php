@@ -201,7 +201,7 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 		else
 			$xml="";
 		while($r = mysql_fetch_assoc($req)) {
-			$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"".$r["rTitre"]."\" idGrille='".$idGrille."'   idMot='".$r["id_mot"]."'  titreMot=\"".$r["mTitre"]."\" >";
+			$xml .= "<terre checked='1' idSite='".$objSite->id."' idRub='".$r["id_rubrique"]."' titreRub=\"".utf8_encode($r["rTitre"])."\" idGrille='".$idGrille."'   idMot='".$r["id_mot"]."'  titreMot=\"".utf8_encode($r["mTitre"])."\" >";
 	 		$xml .= get_arbo_territoire($r["id_rubrique"],$objSite,$niv+1);
 			
 	 		/*récupération des sites enfants
@@ -231,9 +231,10 @@ function get_arbo_territoire($idRub,$objSite,$niv=0) {
 	 			ksort($arrG); 					
 	 			foreach($arrG as  $key=>$val){
 					//récupération des voies
- 					$xml .= "<terre checked='1' idSite='".$val["rub"]["site"]."' idRub='".$val["rub"]["id_rubrique"]."' titreRub=\"".$val["rub"]["titre"]."\" idGrille='".$val["rub"]["id_form"]."' >";
+ 					$xml .= "<terre checked='1' idSite='".$val["rub"]["site"]."' idRub='".$val["rub"]["id_rubrique"]."' titreRub=\"".utf8_encode($val["rub"]["titre"])."\" idGrille='".$val["rub"]["id_form"]."' >";
 	 				$arrV = $grille->FiltreRubAvecGrilleMultiSite($val["rub"]["id_rubrique"],78,"parent");
-		 			foreach($arrV as  $keyV=>$valV){
+	 				ksort($arrV); 					
+	 				foreach($arrV as  $keyV=>$valV){
 		 				$xml.=$valV["xml"];
 		 			}
 					$xml .= "</terre>";						 			

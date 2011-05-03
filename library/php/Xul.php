@@ -285,7 +285,7 @@ class Xul{
 		$Xpath = "/XmlParams/XmlParam[@nom='FilAriane']/js";
 		$js = $this->site->GetJs($Xpath, array($g->IdParent,utf8_decode($xmlType["lib"]),$xmlType["codeTree"],$xmlType["codeSaisi"],$g->id,$xmlType["codeSaisi"]));
 		
-		$FilAriane.="<label id='fIN_".$id."' ".$js." value=\"".$g->titre."\"/>";
+		$FilAriane.="<label id='".$this->site->id."_".$id."' ".$js." value=\"".$g->titre."\"/>";
 		
 		//pour les liens vers l'admin spip
 		if(isset($_SESSION['role'])){
