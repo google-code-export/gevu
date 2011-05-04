@@ -14,8 +14,8 @@
 * - changer le status de $ListEntree (j'aime pas l'idée d'une variable globale)
 */
 
-$dbN = "gevu_solus";    
-$dbO = "gevu_global";
+$dbN = "gevu_test";    
+$dbO = "gevu_trouville_erp2";
 
 $ldb = mysql_connect("localhost", "root", "") or die("Impossible de se connecter : " . mysql_error());    
 mysql_select_db($dbN);
@@ -898,7 +898,7 @@ function ChercheDifferencesCore($dbN, $dbO, $idRubParent, $idRubEnfant, $niv=1){
         $temp['idParent']=$idRubParent;
         $temp['titre']=$titre;
         $temp['niv']=$niv;
-        $temp['lieuParent']=$lieuParent;
+        $temp['lieuParent']=-1;
         $ListEntree[]=$temp;
     }
     
@@ -947,7 +947,7 @@ function CopieNoueuds($dbN, $dbO)
 
         //récupère le lft du parent
         $sql= "SELECT lft, id_rubrique FROM $dbN.gevu_lieux g
-               WHERE g.id_lieu=".$Noeud[idParent];
+               WHERE g.id_lieu=".$Noeud['idParent'];
         $res = mysql_query($sql);
         if (!$res) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
         $row=mysql_fetch_array($res);
@@ -987,7 +987,7 @@ function CopieNoueuds($dbN, $dbO)
         if (!$res) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
         
         // et enfin, copier les diagnostiques et états
-        // CopieEtats($dbN, $dbO, $idLieu, $idInstant);
+        CopieEtats($dbN, $dbO, $idLieu, $idInstant);
         
         echo "</li>\n";
     }
@@ -1636,58 +1636,6 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant){
     if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
     echo "$dbO ELEMENTS VOIRIE : ".mysql_affected_rows()."<br />";   
         
-    
-    
-    /*
-     *  Ce qui suit correspond à quoi? comment exclure les donnés déjà dans $dbN? 
-     */
-    //DOCUMENTS
-    $sql = "INSERT INTO $dbN.gevu_docs
-    (tronc, id_instant, path_source, titre, content_type, maj)
-    SELECT id_document
-            , $idInstant
-            , fichier
-            , d.titre
-            , mime_type
-            , d.date 
-    FROM $dbO.spip_documents d
-            INNER JOIN $dbO.spip_types_documents td ON td.id_type = d.id_type
-    ";
-    $result = mysql_query($sql);
-    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
-    echo "$dbO DOCUMENTS : ".mysql_affected_rows()."<br />"; 
-       
-    //DOCUMENTS LIEUX
-    $sql = "INSERT INTO $dbN.gevu_docsxlieux
-    (id_doc, id_lieu, id_instant)
-    SELECT gd.id_doc
-            , l.id_lieu
-            , $idInstant
-    FROM $dbN.gevu_docs gd
-            INNER JOIN $dbO.spip_documents d ON d.id_document = gd.tronc AND gd.id_instant = $idInstant
-            INNER JOIN $dbO.spip_documents_rubriques dr ON dr.id_document = d.id_document
-            INNER JOIN $dbN.gevu_lieux l ON l.id_rubrique = dr.id_rubrique  AND l.id_instant = $idInstant
-    ";
-    $result = mysql_query($sql);
-    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
-    echo "$dbO DOCUMENTS LIEUX rubrique: ".mysql_affected_rows()."<br />";   
-       
-    $sql = "INSERT INTO $dbN.gevu_docsxlieux
-    (id_doc, id_lieu, id_instant)
-    SELECT gd.id_doc
-            , l.id_lieu
-            , $idInstant
-    FROM $dbN.gevu_docs gd
-            INNER JOIN $dbO.spip_documents d ON d.id_document = gd.tronc AND gd.id_instant = $idInstant
-            INNER JOIN $dbO.spip_documents_articles da ON da.id_document = d.id_document
-            INNER JOIN $dbO.spip_articles a ON a.id_article = da.id_article
-            INNER JOIN $dbN.gevu_lieux l ON l.id_rubrique = a.id_rubrique AND l.id_instant = $idInstant
-    ";
-    $result = mysql_query($sql);
-    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
-    echo "$dbO DOCUMENTS LIEUX article: ".mysql_affected_rows()."<br />";    
-        
-        
     //OBSERVATIONS
     //on ne conserve que le champ photo
     //les champs 'fichier' et 'doc' devront �tre ajouter � la table gevu_doc
@@ -1721,10 +1669,53 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant){
     $result = mysql_query($sql);
     if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
     echo "$dbO OBSERVATIONS: ".mysql_affected_rows()."<br />";       
-
+    
+    
+    /*
+     *  Importation des documents
+     * Penser à migrer les fichiers dans le répertoire qui va bien
+     * ATTENTION les fichiers KML et KMZ ont des liens en durs vers des documents images
+     * il faut exécuter la migration de ces liens...
+     */ 
+    //DOCUMENTS
+    $sql = "INSERT INTO $dbN.gevu_docs
+    (tronc, id_instant, path_source, titre, content_type, maj)
+    SELECT d.id_document
+            , $idInstant
+            , fichier
+            , d.titre
+            , mime_type
+            , d.date 
+    FROM $dbO.spip_documents d
+           INNER JOIN $dbO.spip_types_documents td ON td.id_type = d.id_type
+	       INNER JOIN $dbO.spip_documents_articles da ON da.id_document = d.id_document
+	       INNER JOIN $dbO.spip_articles a ON a.id_article = da.id_article
+	       INNER JOIN $dbN.gevu_lieux l ON l.id_rubrique = a.id_rubrique AND l.id_instant = $idInstant
+    WHERE l.id_lieu>=$idLieu
+	       ";
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO DOCUMENTS : ".mysql_affected_rows()."<br />"; 
+       
+    //DOCUMENTS LIEUX  
+    $sql = "INSERT INTO $dbN.gevu_docsxlieux
+    (id_doc, id_lieu, id_instant)
+    SELECT gd.id_doc
+            , l.id_lieu
+            , $idInstant
+    FROM $dbN.gevu_docs gd
+            INNER JOIN $dbO.spip_documents d ON d.id_document = gd.tronc AND gd.id_instant = $idInstant
+            INNER JOIN $dbO.spip_documents_articles da ON da.id_document = d.id_document
+            INNER JOIN $dbO.spip_articles a ON a.id_article = da.id_article
+            INNER JOIN $dbN.gevu_lieux l ON l.id_rubrique = a.id_rubrique AND l.id_instant = $idInstant
+    WHERE l.id_lieu>=$idLieu
+            ";
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO DOCUMENTS LIEUX article: ".mysql_affected_rows()."<br />";    
 
     //AUTEURS
-    //l'importation n'est � faire que une fois
+    //
     $sql = "INSERT INTO $dbN.gevu_exis
     (nom, url, mail, mdp, mdp_sel, role)
     SELECT a.nom
@@ -1734,13 +1725,16 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant){
         , alea_actuel
         , statut
     FROM $dbO.spip_auteurs a
+    	WHERE a.email NOT IN (SELECT mail FROM $dbN.gevu_exis)
     ";
-    //$result = mysql_query($sql);
-    //if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
-    $sql = "UPDATE gevu_exis SET role = 'manager'";
-    //$result = mysql_query($sql);
-    //if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
-    //echo "$dbO AUTEURS: ".mysql_affected_rows()."<br />";       
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO AUTEURS : ".mysql_affected_rows()."<br />"; 
+    
+    /*
+     * VOIR s'il faut migrer les auteurs de chaque diagnostic ???
+     */
+    
         
     echo "FIN IMPORT --------------------<br />--------------<br />";
 }
