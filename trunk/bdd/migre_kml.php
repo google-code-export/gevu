@@ -1,5 +1,5 @@
 <?php
-	$site = "trouvilleERP1";
+	$site = "trouvilleVoirie1";
 	require_once("../param/ParamPage.php");
 	require_once('../library/php/odtphp/zip/PclZipProxy.php');
 	require_once('../library/php/odtphp/zip/PhpZipProxy.php');
@@ -56,6 +56,20 @@
 					echo substr($content, $pos, strpos($content, "</href>", $pos)-$pos)."<br/><br/>";
 		    		$modif = true;
 				}
+				//vérifie si on a faire à un geo rss
+			    $find = "http://maps.google.fr/maps/ms?client=firefox-";
+			    $pos = strpos($content, $find);
+				if ($pos !== false) {
+					//récupère le lien
+					$lien = substr($content, $pos, strpos($content, "</href>", $pos)-$pos);
+					$lien = str_replace("&amp;","&",$lien);
+					echo $lien."<br/>";
+					//récupère le contenu 
+					$content = $objSite->GetCurl($lien);
+					echo $content."<br/>";
+					$modif = true;
+				}
+				
 				if($modif){
 					//enregistre le fichier
 					$fp = fopen($filename, 'w');

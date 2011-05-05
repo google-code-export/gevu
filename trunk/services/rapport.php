@@ -278,11 +278,15 @@ foreach($arrEleDiag as $r){
 		    	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
 		    }
 			    	
-			if(count($arrDocs)>0){    
-				if($arrDocs[0]->largeur > $arrDocs[0]->hauteur)
-			    	$probs->setImage('prob_img', $arrDocs[0]->path,0,9);	    	
-			    else		
-			    	$probs->setImage('prob_img', $arrDocs[0]->path,9,0);        	
+			if(count($arrDocs)>0){
+
+				foreach($arrDocs as $Docs){				
+					if($Docs->largeur > $Docs->hauteur)
+				    	$probs->probimgs->setImage('prob_img', $Docs->path,0,9);	    	
+				    else		
+				    	$probs->probimgs->setImage('prob_img', $Docs->path,9,0);
+				    $probs->probimgs->merge();
+				}        	
 			}else{
 		    	$probs->setImage('prob_img', '../images/check_no.png'); 
 		    }

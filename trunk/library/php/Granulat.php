@@ -1277,8 +1277,8 @@ class Granulat
 			LEFT JOIN spip_documents_articles doca ON doca.id_article = a.id_article
 			LEFT JOIN spip_documents dArt ON dArt.id_document = doca.id_document AND dArt.id_type IN (".$this->site->infos["CARTE_TYPE_DOC"].")
 				".$where."
-			GROUP BY r.id_rubrique
-			LIMIT 0 , ".MaxMarker;
+			ORDER BY dc1.valdec, dArt.fichier DESC
+			LIMIT 0 , 1";
 		//echo $sql."<br/>";
 		$db = new mysql ($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
 	
@@ -1321,7 +1321,8 @@ class Granulat
 			$result['idType'] = $r['type'];
 			$result['adresse'] = $r['adresse'];		
 			//lien vers le kml
-			$kml="";
+			$kml="";		
+			
 			if($r['docArtkml'])
 				$kml = $this->site->infos["pathSpip"].$r['docArtkml'];
 			if($kml=="")	

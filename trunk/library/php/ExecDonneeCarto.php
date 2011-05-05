@@ -615,7 +615,7 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 				//récupère les grilles du granulat global
 				$gG = new Granulat($idGlobal, $objSite,false);
 				//r�cup�re les grilles du granulat 
-				$xmlRub.= $gG->GetXmlGrilles();
+				$xmlRub.= utf8_encode($gG->GetXmlGrilles());
 				//r�cup�re les mots-clef du granulat
 				$xmlRub.= $gG->GetXmlGrilleMots();
 			}else{
@@ -652,8 +652,9 @@ function get_marker($objSite, $id, $southWestLat, $northEastLat, $southWestLng, 
 	//gestion de la g�olocalisation par le parent quand la requ�te est vide
 	if($i==0){
 		$g = new Granulat($id, $objSite);
-		if($g->IdParent!=0)
+		if($g->IdParent!=0){
 			$xml = get_marker($objSite, $g->IdParent, $southWestLat, $northEastLat, $southWestLng, $northEastLng, $zoom, $query, $themes, $i);		
+		}		
 	}else{
 		//calcul toute les donn�es vides
 		if($query=="allEtatDiag"){

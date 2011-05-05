@@ -495,6 +495,10 @@ class Grille{
 		$g = new Granulat($idRub,$oSiteEnf,false);
 		$xml = "";
 		while($row = mysql_fetch_assoc($rs)) {
+			if($row["id_rubrique"]==10584){
+				$toto = 1;
+			}
+			
 			//$key = $oSiteEnf->strtokey($row["titre"]."_".$oSiteEnf->id."_".$row["id_rubrique"]);
 			//pour suprimer les doublons entre site
 			$key = $oSiteEnf->strtokey(utf8_encode($row["titre"])."_".$row["id_rubrique"]);
