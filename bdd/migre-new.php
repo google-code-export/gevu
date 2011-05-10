@@ -14,8 +14,8 @@
 * - changer le status de $ListEntree (j'aime pas l'idée d'une variable globale)
 */
 
-$dbN = "gevu_test";    
-$dbO = "gevu_trouville_erp2";
+$dbN = "gevu_solus";    
+$dbO = "gevu_trouville_voirie1";
 
 $ldb = mysql_connect("localhost", "root", "") or die("Impossible de se connecter : " . mysql_error());    
 mysql_select_db($dbN);
@@ -905,6 +905,9 @@ function ChercheDifferencesCore($dbN, $dbO, $idRubParent, $idRubEnfant, $niv=1){
     // s'il éxiste
     else
     {
+        // vérifié que tous les états du noeud sont dans $dbN. Sinon, les copiers
+        verifierEtats($dbN, $dbO, $row['id_lieu'], $idRubEnfant);
+    
         // appliquer la fonction de façon récursive sur tout les enfants de $idRub
         $idRubParent=$row['id_lieu'];
         $sql = "SELECT r.id_rubrique FROM $dbO.spip_rubriques r
@@ -993,6 +996,35 @@ function CopieNoueuds($dbN, $dbO)
     }
     echo "</ul>\n";
 }
+
+function verifierEtats($dbN, $dbO, $idLieux, $idRub){
+    // ici, on doit vérifier que $idLieux et $idRub ont les  mêmes états
+
+    //DIAGNOSTICS 
+    //on ne conserve que les réponses 'non' et 'sous réserve'
+    // pour les questions qui ne sont pas interméfiaire
+    $sql= "SELECT c.id_critere, fdc1.valeur, $idInstant, l.id_lieu, fd.id_donnee, fd.date 
+           FROM $dbO.spip_forms_donnees fd
+            INNER JOIN $dbO.spip_forms_donnees_champs fdc1 ON fdc1.id_donnee = fd.id_donnee
+                    AND fdc1.champ = 'mot_1' 
+            INNER JOIN $dbO.spip_forms_donnees_champs fdc2 ON fdc2.id_donnee = fd.id_donnee
+                    AND fdc2.champ = 'ligne_1' 
+            INNER JOIN $dbO.spip_forms_donnees_articles fda ON fda.id_donnee = fd.id_donnee
+            INNER JOIN $dbO.spip_articles a ON a.id_article = fda.id_article
+            INNER JOIN $dbN.gevu_lieux l ON l.id_rubrique = a.id_rubrique AND l.id_instant = $idInstant
+            LEFT JOIN $dbN.gevu_criteres c ON c.ref = fdc2.valeur
+    WHERE fd.id_form =59 AND l.id_lieu=$idLieu 
+    GROUP BY fd.id_donnee";
+
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO DOCUMENTS LIEUX article: ".mysql_affected_rows()."<br />";
+    
+
+    
+   
+}
+
 
 function CopieEtats($dbN, $dbO, $idLieu, $idInstant){
     //DIAGNOSTICS 
@@ -1735,8 +1767,6 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant){
      * VOIR s'il faut migrer les auteurs de chaque diagnostic ???
      */
     
-        
-    echo "FIN IMPORT --------------------<br />--------------<br />";
 }
 
 /*

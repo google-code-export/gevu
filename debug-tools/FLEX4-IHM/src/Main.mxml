@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+				layout="vertical"
+				horizontalAlign="center" height="300" width="500"
+				verticalAlign="middle" initialize="init();">
+	
+	<mx:Script>
+		<![CDATA[
+			/*
+			private function boutonClickHandler():void{
+				txtInput.text="Hello World of Zero!";
+			}*/
+			
+			private function init():void {
+				// send the http request
+				httpTree.send();
+			}
+			
+			private function treeLoaded():void {
+				// assign the http result data as xml to tree element
+				xmlTree = XML(httpTree.lastResult.node);
+				treeTree.dataProvider = xmlTree;
+			}	
+		]]>
+	</mx:Script>
+	
+	<mx:XML id="xmlTree"/>
+	
+	<mx:HTTPService id="httpTree" url="../../../bdd/hierarchie.xml"
+					resultFormat="e4x" result="treeLoaded()"/>
+	
+	<mx:Tree id="treeTree" dataProvider="{httpTree}" labelField="@lib" showRoot="true" height="200" width="100%" />
+	<!--
+	<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle">
+		<mx:Button label="Cliquez moi!" cornerRadius="10" fontFamily="Georgia" fontStyle="italic" fontSize="12" textAlign="center" color="#41203F" click="boutonClickHandler()"/>
+		<mx:TextInput text="test" fontSize="12" fontWeight="normal" id="txtInput" width="150" height="20"/>
+	</mx:HBox>
+	-->
+</mx:Application>
