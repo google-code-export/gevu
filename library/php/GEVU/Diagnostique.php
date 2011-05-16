@@ -19,7 +19,7 @@ class GEVU_Diagnostique{
     
 	public function getSon($idParent=0){
     	$t = new Model_DbTable_Gevu_lieux();
-    	$r = $t->findById_parent(1);
+    	$r = $t->findById_parent($idParent);
     	return $r;
     }
 }
