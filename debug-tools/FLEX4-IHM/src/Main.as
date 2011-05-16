@@ -7,8 +7,6 @@ private function boutonClickHandler():void{
 	txtInput.text="Hello World of Zero!";
 }*/
 
-private var popup:LoginWindow;
-
 private function init():void {
 	// send the http request
 	httpTree.send();
@@ -25,7 +23,7 @@ private function treeLoaded():void {
 import mx.rpc.events.ResultEvent;
 
 private function onStartup() : void {
-	roDiagnostique.GetSon();
+	roDiagnostique.getAll();
 }
 
 private function doContactsResult( event:ResultEvent ) : void {
