@@ -29,3 +29,8 @@ private function onStartup() : void {
 private function doContactsResult( event:ResultEvent ) : void {
 	dg.dataProvider = event.result; 
 }
+
+import mx.events.TreeEvent
+private function treeItemOpened( event:TreeEvent ) : void {
+	
+}

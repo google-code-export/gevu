@@ -16,7 +16,7 @@
 					resultFormat="e4x" result="treeLoaded()"/>
 	
 	<mx:Tree id="treeTree" dataProvider="{httpTree}" labelField="@lib" showRoot="true" height="40%" width="100%"
-		 itemOpening="treeItemOpened()" />
+		 itemOpening="treeItemOpened( event )" />
 	<!--
 	<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle">
 		<mx:Button label="Cliquez moi!" cornerRadius="10" fontFamily="Georgia" fontStyle="italic" fontSize="12" textAlign="center" color="#41203F" click="boutonClickHandler()"/>
