@@ -1,17 +1,26 @@
 <?php
 class GEVU_Diagnostique{
-    public function getAll()
-    {
-        $dbSolus = new Model_DbTable_Gevu_lieux();
-        $rs = $dbSolus->getAll();
-        return $rs->toArray();
+    
+    public function getAll(){
+    	
+    	$t = new Model_DbTable_Gevu_lieux();
+    	$r = $t->getAll();
+    	return $r;
+    	 
+    /*
+        mysql_connect('localhost', 'root', '');
+        mysql_select_db('gevu_solus');
+        $res = mysql_query('SELECT id_lieu,lib FROM gevu_lieux');
+        while($row=mysql_fetch_assoc($res)){
+            $t[]=$row;
+        }
+        return $t;*/
     }
     
-    public function getOne($idLieu)
-    {
-        $dbSolus = new Model_DbTable_Gevu_lieux();
-        $rs = $dbSolus->findById_lieu($idLieu);
-        return $rs->toArray();
+	public function getSon($idParent=0){
+    	$t = new Model_DbTable_Gevu_lieux();
+    	$r = $t->findById_parent(1);
+    	return $r;
     }
 }
 ?>
