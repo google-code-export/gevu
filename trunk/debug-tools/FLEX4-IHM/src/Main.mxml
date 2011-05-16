@@ -9,13 +9,14 @@
 	<mx:XML id="xmlTree"/>
 	
 	<mx:RemoteObject id="roDiagnostique" destination="zend" source="Model_DbTable_Gevu_Diagnostique">
-		<mx:method name="GetSon" result="doContactsResult( event )" />
+		<mx:method name="getAll" result="doContactsResult( event )" />
 	</mx:RemoteObject>
 	
 	<mx:HTTPService id="httpTree" url="../../../bdd/hierarchie.xml"
 					resultFormat="e4x" result="treeLoaded()"/>
 	
-	<mx:Tree id="treeTree" dataProvider="{httpTree}" labelField="@lib" showRoot="true" height="50%" width="100%" />
+	<mx:Tree id="treeTree" dataProvider="{httpTree}" labelField="@lib" showRoot="true" height="40%" width="100%"
+		 itemOpening="treeItemOpened()" />
 	<!--
 	<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle">
 		<mx:Button label="Cliquez moi!" cornerRadius="10" fontFamily="Georgia" fontStyle="italic" fontSize="12" textAlign="center" color="#41203F" click="boutonClickHandler()"/>
@@ -23,7 +24,7 @@
 	</mx:HBox>
 	-->
 	
-	<mx:Panel width="100%" height="50%" layout="vertical" title="Contacts" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+	<mx:Panel width="100%" height="40%" layout="vertical" title="Contacts" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
 			  horizontalAlign="center" horizontalCenter="0" verticalCenter="0">
 		
 		<mx:DataGrid id="dg" width="100%" height="100%">
@@ -32,5 +33,6 @@
 				<mx:DataGridColumn headerText="Titre" dataField="lib" />
 			</mx:columns>
 		</mx:DataGrid>
-	</mx:Panel>	
+	</mx:Panel>
+	<mx:TextArea width="100%" height="20%" id="debug_text" />
 </mx:Application>
