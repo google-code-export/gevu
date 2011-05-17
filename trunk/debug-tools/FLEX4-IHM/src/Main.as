@@ -26,7 +26,11 @@ private function onStartup() : void {
 	roDiagnostique.getAll();
 }
 
-private function doContactsResult( event:ResultEvent ) : void {
+private function dogetAllResult( event:ResultEvent ) : void {
+	dg.dataProvider = event.result; 
+}
+
+private function dogetSonResult( event:ResultEvent ) : void {
 	dg.dataProvider = event.result; 
 }
 
@@ -34,3 +38,8 @@ import mx.events.TreeEvent
 private function treeItemOpened( event:TreeEvent ) : void {
 	
 }
+
+private function testButtinClicked() : void {
+	debugTest.text+="\nbuttin clicked"
+	roDiagnostique.getSon(1);
+} 
