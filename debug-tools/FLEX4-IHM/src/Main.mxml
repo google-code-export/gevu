@@ -2,14 +2,15 @@
 
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
 				layout="vertical"
-				horizontalAlign="center" height="70%" width="70%"
+				horizontalAlign="center" height="100%" width="70%"
 				verticalAlign="middle" initialize="init();" creationComplete="onStartup()">
 	
 	<mx:Script source="Main.as" />
 	<mx:XML id="xmlTree"/>
 	
-	<mx:RemoteObject id="roDiagnostique" destination="zend" source="Model_DbTable_Gevu_Diagnostique">
-		<mx:method name="getAll" result="doContactsResult( event )" />
+	<mx:RemoteObject id="roDiagnostique" destination="zend" source="GEVU_Diagnostique">
+		<mx:method name="getAll" result="dogetAllResult( event )" />
+		<mx:method name="getSon" result="dogetSonResult( event )" />
 	</mx:RemoteObject>
 	
 	<mx:HTTPService id="httpTree" url="../../../bdd/hierarchie.xml"
@@ -34,5 +35,8 @@
 			</mx:columns>
 		</mx:DataGrid>
 	</mx:Panel>
-	<mx:TextArea width="100%" height="20%" id="debug_text" />
+	<mx:VBox width="100%" horizontalAlign="center">
+		<mx:Button id="testButton" label="change"  click="testButtinClicked();"/>
+	</mx:VBox>
+	<mx:TextArea id="debugTest" width="60%" />
 </mx:Application>
