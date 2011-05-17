@@ -192,6 +192,22 @@ class Model_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
+    
+	/*
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param int $lieu_parent
+     */
+    public function findByLieu_parent($lieu_parent)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_lieux") )                           
+                    ->where( "g.lieu_parent = ?", $lieu_parent );
+
+        return $this->fetchAll($query)->toArray(); 
+    }
+    
     /*
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.

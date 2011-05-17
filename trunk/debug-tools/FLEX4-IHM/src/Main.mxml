@@ -11,32 +11,33 @@
 	<mx:RemoteObject id="roDiagnostique" destination="zend" source="GEVU_Diagnostique">
 		<mx:method name="getAll" result="dogetAllResult( event )" />
 		<mx:method name="getSon" result="dogetSonResult( event )" />
+		<mx:method name="getFields" result="displayNodeProperties( event )" />
 	</mx:RemoteObject>
 	
 	<mx:HTTPService id="httpTree" url="../../../bdd/hierarchie.xml"
 					resultFormat="e4x" result="treeLoaded()"/>
 	
-	<mx:Tree id="treeTree" dataProvider="{httpTree}" labelField="@lib" showRoot="true" height="40%" width="100%"
-		 itemOpening="treeItemOpened( event )" />
-	<!--
-	<mx:HBox width="100%" horizontalAlign="center" verticalAlign="middle">
-		<mx:Button label="Cliquez moi!" cornerRadius="10" fontFamily="Georgia" fontStyle="italic" fontSize="12" textAlign="center" color="#41203F" click="boutonClickHandler()"/>
-		<mx:TextInput text="test" fontSize="12" fontWeight="normal" id="txtInput" width="150" height="20"/>
+
+	<mx:HBox width="100%" height="70%" horizontalAlign="center">
+		<mx:Tree id="treeTree" dataProvider="{httpTree}" labelField="@lib" showRoot="true"
+			height="100%" width="40%"
+			itemOpening="treeItemOpened( event );"
+			change="treeItemClicked( event );"/>
+		<mx:Panel width="60%" height="100%" layout="vertical" title="Contacts" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+				  horizontalAlign="center" horizontalCenter="0" verticalCenter="0">		
+			<mx:DataGrid id="dg" width="100%" height="100%">
+				<mx:columns>
+					<mx:DataGridColumn headerText="Propriété" dataField="prop" />
+					<mx:DataGridColumn headerText="Valeur" dataField="val" />
+				</mx:columns>
+			</mx:DataGrid>
+		</mx:Panel>
 	</mx:HBox>
-	-->
 	
-	<mx:Panel width="100%" height="40%" layout="vertical" title="Contacts" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
-			  horizontalAlign="center" horizontalCenter="0" verticalCenter="0">
-		
-		<mx:DataGrid id="dg" width="100%" height="100%">
-			<mx:columns>
-				<mx:DataGridColumn headerText="ID" dataField="id_lieu" />
-				<mx:DataGridColumn headerText="Titre" dataField="lib" />
-			</mx:columns>
-		</mx:DataGrid>
-	</mx:Panel>
-	<mx:VBox width="100%" horizontalAlign="center">
-		<mx:Button id="testButton" label="change"  click="testButtinClicked();"/>
+	
+	<mx:VBox width="100%" height="30%" horizontalAlign="center" verticalAlign="middle">
+		<mx:Button id="testButton" label="change" height="20%"  click="testButtinClicked();"/>
+		<mx:TextArea id="debugTest" width="80%" height="80%" editable="false" />
 	</mx:VBox>
-	<mx:TextArea id="debugTest" width="60%" />
+	
 </mx:Application>
