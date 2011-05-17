@@ -3,8 +3,9 @@ require_once( "../param/ParamAppli.php" );
 
 try {
 
-/*$t = new GEVU_Diagnostique();
-$r=$t->getSon(-1);*/
+$t = new GEVU_Diagnostique();
+$t->getAll();
+$r=$t->getXmlNode(2);
 
 /*
 $s = new Model_DbTable_Gevu_solutions();

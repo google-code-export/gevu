@@ -6,7 +6,6 @@
 				verticalAlign="middle" initialize="init();" creationComplete="onStartup()">
 	
 	<mx:Script source="Main.as" />
-	<mx:XML id="xmlTree"/>
 	
 	<mx:RemoteObject id="roDiagnostique" destination="zend" source="GEVU_Diagnostique">
 		<mx:method name="getAll" result="dogetAllResult( event )" />
@@ -19,7 +18,10 @@
 	
 
 	<mx:HBox width="100%" height="70%" horizontalAlign="center">
-		<mx:Tree id="treeTree" dataProvider="{httpTree}" labelField="@lib" showRoot="true"
+		<!-- the following line may be in the treeTree:
+		dataProvider="{httpTree}"
+		-->
+		<mx:Tree id="treeTree" labelField="@lib" showRoot="true"
 			height="100%" width="40%"
 			itemOpening="treeItemOpened( event );"
 			change="treeItemClicked( event );"/>
