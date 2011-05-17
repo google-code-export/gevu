@@ -30,5 +30,29 @@ class GEVU_Diagnostique{
     	$r = $t->findById_lieu($idLieu);
     	return $r;
     }
+    
+	/**
+    * @param int $idLieu
+    * @return string
+    */
+	public function getXmlNode($idLieu=0){
+		$xml="";
+    	$t = new Model_DbTable_Gevu_lieux();
+    	$r = $t->findById_lieu($idLieu);
+    	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".$r[0]['lib']."\" niv=\"".$r[0]['niv'];
+    	
+    	$r = $t->findByLieu_parent($idLieu);
+    	if(count($r)==0){
+    		$xml.=" />\n";
+    	}
+    	else{
+    		$xml.=">\n";
+    		foreach ($r as $v){
+	    		$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".$v['lib']."\" niv=\"".$v['niv'].">\n<node />\n</node>\n";
+    		}
+    		$xml.="</node>\n";
+		}
+    	return $xml;
+    }
 }
 ?>
