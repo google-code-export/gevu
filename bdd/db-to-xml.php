@@ -1,6 +1,6 @@
 <?php
 
-$dbN = "gevu_test";
+$dbN = "gevu_solus";
 $ldb = mysql_connect("localhost", "root", "") or die("Impossible de se connecter : " . mysql_error());    
 mysql_select_db($dbN);
 
@@ -24,7 +24,7 @@ function ParcoursNoeuds(&$fp, $lieuParent){
     $sql = "SELECT r.id_lieu, r.lib, r.niv FROM gevu_lieux r
             WHERE r.lieu_parent = $lieuParent";
     $res = mysql_query($sql);
-    if (!$res) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    if (!$res) echo 'Requï¿½te invalide : ' . mysql_error().'<br />'.$sql.'<br />';
     
     while($row=mysql_fetch_array($res)){
     
@@ -32,7 +32,7 @@ function ParcoursNoeuds(&$fp, $lieuParent){
         $sql = "SELECT COUNT(*) FROM gevu_lieux r
                 WHERE r.lieu_parent = \"".$row['id_lieu']."\"";
         $ress = mysql_query($sql);
-        if (!$ress) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+        if (!$ress) echo 'Requï¿½te invalide : ' . mysql_error().'<br />'.$sql.'<br />';
         $n = mysql_fetch_array($ress);
     
         if($n[0]>0)
