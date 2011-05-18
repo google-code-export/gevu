@@ -4,19 +4,20 @@ import mx.events.ListEvent;
 import mx.events.TreeEvent;
 import mx.rpc.events.ResultEvent;
 
-private var arr:Array;
-private var arrc:ArrayCollection;
+
 private var TreeObject:XML;
+private var xmlTree:XML
 
 private function init():void {
-	/*  old methode, with an xml file
-	// send the http request
-	httpTree.send();
-	*/
+	/*  old methode, with an xml file 
+	httpTree.send(); */
 	
-	var xmlTree:XML = 
-	<hierarchie>
-	</hierarchie>;
+	xmlTree = 
+	<node idLieu="-1" lib="root">
+	</node>;
+	treeTree.dataProvider=xmlTree;
+	roDiagnostique.getXmlNode(1);
+	treeTree.showRoot=false;
 }
 
 private function treeLoaded():void {
@@ -47,12 +48,11 @@ private function treeItemClicked( event:ListEvent ) : void {
 	logThis( "tree item has been clicked. item is:"+
 			 event.currentTarget.selectedItem.attribute("lib") );
 	
-	roDiagnostique.getFields(tt);
+	if(tt>0) roDiagnostique.getFields(tt);
 }
 
-private function testButtinClicked() : void {
+private function testButtonClicked() : void {
 	logThis("button clicked");
-	roDiagnostique.getSon(-1);
 } 
 
 private function logThis( txt : String ) : void {
@@ -60,14 +60,23 @@ private function logThis( txt : String ) : void {
 }
 
 private function displayNodeProperties( event:ResultEvent ) : void {
-	arrc=new ArrayCollection();
-	arr=new Array();
-	var obj1:Object={prop:"niv",		val:event.result[0].niv};	arr.push(obj1);
-	var obj2:Object={prop:"lib",		val:event.result[0].lib};	arr.push(obj2);
-	var obj3:Object={prop:"id_lieu",	val:event.result[0].id_lieu};	arr.push(obj3);
-	var obj4:Object={prop:"id_parent",	val:event.result[0].lieu_parent};	arr.push(obj4);
+	var obj:Object;
+	var arr:Array = new Array();
+	var arrc:ArrayCollection = new ArrayCollection();
+	
+	obj={prop:"niv",		val:event.result[0].niv};			arr.push(obj);
+	obj={prop:"lib",		val:event.result[0].lib};			arr.push(obj);
+	obj={prop:"id_lieu",	val:event.result[0].id_lieu};		arr.push(obj);
+	obj={prop:"id_parent",	val:event.result[0].lieu_parent};	arr.push(obj);
 	
 	arrc.source=arr;
 	dg.dataProvider=arrc
 }
 
+private function updateTreeStructure( event:ResultEvent ) : void {
+	//xmlTree.appendChild(event.result);
+	treeTree.dataProvider[0].appendChild(event.result);
+	logThis(xmlTree);
+
+	//treeTree.dataProvider=xmlTree;
+}
