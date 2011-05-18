@@ -43,12 +43,17 @@ class GEVU_Diagnostique{
     	
     	$r = $t->findByLieu_parent($idLieu);
     	if(count($r)==0){
-    		$xml.=" />\n";
+    		$xml.="\" />\n";
     	}
     	else{
-    		$xml.=">\n";
+    		$xml.="\">\n";
     		foreach ($r as $v){
-	    		$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".$v['lib']."\" niv=\"".$v['niv'].">\n<node />\n</node>\n";
+    			$s = $t->findByLieu_parent($v['id_lieu']);
+    			if(count($s)==0){
+	    			$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".$v['lib']."\" niv=\"".$v['niv']."\" />\n";
+    			}else{
+    				$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".$v['lib']."\" niv=\"".$v['niv']."\">\n<node id=\"-10\"/>\n</node>\n";
+    			}
     		}
     		$xml.="</node>\n";
 		}
