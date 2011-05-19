@@ -71,7 +71,9 @@ class GEVU_Diagnostique{
     		}
     		$xml.="</node>\n";
 		}
-    	return $xml;
+		$dom = new DomDocument();
+		$dom->loadXML($xml);
+    	return $dom;
     }
 }
 ?>
