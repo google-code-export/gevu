@@ -42,5 +42,15 @@ enlever la ligne 901
 http://www.gevu.org/bdd/gevu_test.sql.zip
 
 ------------
-
+sécuriser le xml (ne pas inclure les string directement) puis utiliser le dom
+voir comment modifier les icones des tree de façoon simple
+gérer le cache
+afficher le type de noeud
 récupérer les infos grace aux requetes sql
+changer l'interface
+
+
+----
+comment faire une requete avec zend
+------
+
