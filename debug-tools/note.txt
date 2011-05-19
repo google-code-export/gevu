@@ -1,0 +1,46 @@
+Paris XIII:     Samuel, Nasser, Viviane
+Lille:          Frank Bodin, JB, Vianel ***, Romain
+
+arborescance: sur chaque étape de l'arborescance, on colle des critères/questions
+
+il y aura plusieurs interfaces/application flex: une pour la saisi des données, une pour créer des rapports, une pour visiualiser les résultats
+
+----
+
+pour supprimer proprement une rubrique:
+http://localhost/gevu/library/php/ExeAjax.php?f=DelRubrique&idRub=6926&site=gevu_trouville_voirie1
+
+modifier ligne 349 de interface.js
+
+----
+
+problématique
+résultat
+prise en main php/flex
+
+
+remote object hierarchique
+
+<xml>
+titre
+idlieu
+niveau
+carte donnée
+lat
+long
+zoom
+</xml>
+
+- ajouté des données sur les états relié à chaque lieu dans le fichier xml
+- ou créer un service qui me donne un remote object sur les états liés à un lieu
+
+http://www.gevu.org/library/php/ExecDonneeCarto.php?f=get_arbo_territoire&id=5479&site=trouville
+http://code.google.com/p/gevu/source/browse/trunk/flex/src/gevu.as#327
+
+enlever la ligne 901
+
+http://www.gevu.org/bdd/gevu_test.sql.zip
+
+------------
+
+récupérer les infos grace aux requetes sql
