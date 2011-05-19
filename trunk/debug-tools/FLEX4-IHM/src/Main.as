@@ -1,17 +1,16 @@
 // ActionScript file
 import mx.collections.ArrayCollection;
+import mx.controls.Alert;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
 import mx.rpc.events.ResultEvent;
+import mx.rpc.events.FaultEvent;
 
 
 private var TreeObject:XML;
 private var xmlTree:XML
 
 private function init():void {
-	/*  old methode, with an xml file 
-	httpTree.send(); */
-	
 	xmlTree = 
 	<node idLieu="-1" lib="root" fake="0">
 		<node idLieu="1" lib="univers" fake="0">
@@ -21,24 +20,9 @@ private function init():void {
 	treeTree.dataProvider=xmlTree;
 	roDiagnostique.getXmlNode(1);
 	treeTree.showRoot=false;
-}
-
-private function treeLoaded():void {
-	// assign the http result data as xml to tree element
-	TreeObject = XML(httpTree.lastResult.node);
-	treeTree.dataProvider = TreeObject;
 }	
 
 private function onStartup() : void {
-	/* roDiagnostique.getAll(); */
-}
-
-private function dogetAllResult( event:ResultEvent ) : void {
-	dg.dataProvider = event.result; 
-}
-
-private function dogetSonResult( event:ResultEvent ) : void {
-	dg.dataProvider = event.result; 
 }
 
 private function treeItemOpened( event:TreeEvent ) : void {
@@ -62,18 +46,11 @@ private function treeItemClicked( event:ListEvent ) : void {
 
 private function testButtonClicked() : void {
 	logThis("button clicked");
-	
-	//var x:XML = <root></root>;
-	//x.appendChild(event.result);
-	//var idnoeud:int;
-	//idnoeud = x.node.attribute("idLieu");
-	var i:int = -10;
-	delete  treeTree.dataProvider[0].descendants().(@idLieu == i)[0];
-	logThis("ok?");
 } 
 
 private function logThis( txt : String ) : void {
 	debugTest.text+=txt+"\n";
+	debugTest.verticalScrollPosition = debugTest.maxVerticalScrollPosition;
 }
 
 private function displayNodeProperties( event:ResultEvent ) : void {
@@ -102,6 +79,8 @@ private function updateTreeStructure( event:ResultEvent ) : void {
 	
 	/* delete the old fake one */
 	delete  treeTree.dataProvider[0].descendants().(@idLieu==idnoeud)[0].children()[0];
-	
-	//logThis(xmlTree);
+}
+
+public function faultHandlerService(fault:FaultEvent):void {
+	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
 }
