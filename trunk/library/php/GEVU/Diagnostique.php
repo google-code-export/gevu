@@ -39,20 +39,21 @@ class GEVU_Diagnostique{
 		$xml="";
     	$t = new Model_DbTable_Gevu_lieux();
     	$r = $t->findById_lieu($idLieu);
-    	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".$r[0]['lib']."\" niv=\"".$r[0]['niv'];
+    	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".$r[0]['lib']."\" niv=\"".$r[0]['niv']."\" fake=\"0\"";
     	
     	$r = $t->findByLieu_parent($idLieu);
     	if(count($r)==0){
-    		$xml.="\" />\n";
+    		$xml.=" />\n";
     	}
     	else{
-    		$xml.="\">\n";
+    		$xml.=">\n";
     		foreach ($r as $v){
+    			$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".$v['lib']."\" niv=\"".$v['niv']."\" fake=\"0\"";
     			$s = $t->findByLieu_parent($v['id_lieu']);
     			if(count($s)==0){
-	    			$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".$v['lib']."\" niv=\"".$v['niv']."\" />\n";
+	    			$xml.=" />\n";
     			}else{
-    				$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".$v['lib']."\" niv=\"".$v['niv']."\">\n<node id=\"-10\"/>\n</node>\n";
+    				$xml.=">\n<node idLieu=\"-10\" fake=\"1\" />\n</node>\n";
     			}
     		}
     		$xml.="</node>\n";
