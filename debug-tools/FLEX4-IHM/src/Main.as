@@ -13,7 +13,10 @@ private function init():void {
 	httpTree.send(); */
 	
 	xmlTree = 
-	<node idLieu="-1" lib="root">
+	<node idLieu="-1" lib="root" fake="0">
+		<node idLieu="1" lib="univers" fake="0">
+			<node idLieu="-10"  fake="1" />
+		</node>
 	</node>;
 	treeTree.dataProvider=xmlTree;
 	roDiagnostique.getXmlNode(1);
@@ -40,6 +43,12 @@ private function dogetSonResult( event:ResultEvent ) : void {
 
 private function treeItemOpened( event:TreeEvent ) : void {
 	logThis("tree item has been developped");
+	if (event.item.node.attribute("fake")==1)
+	{
+		logThis("has fake child, must be reloaded");
+		var i:int = event.item.attribute("idLieu");
+		roDiagnostique.getXmlNode(i);
+	}
 }
 
 private function treeItemClicked( event:ListEvent ) : void {
@@ -53,6 +62,14 @@ private function treeItemClicked( event:ListEvent ) : void {
 
 private function testButtonClicked() : void {
 	logThis("button clicked");
+	
+	//var x:XML = <root></root>;
+	//x.appendChild(event.result);
+	//var idnoeud:int;
+	//idnoeud = x.node.attribute("idLieu");
+	var i:int = -10;
+	delete  treeTree.dataProvider[0].descendants().(@idLieu == i)[0];
+	logThis("ok?");
 } 
 
 private function logThis( txt : String ) : void {
@@ -74,9 +91,17 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 }
 
 private function updateTreeStructure( event:ResultEvent ) : void {
-	//xmlTree.appendChild(event.result);
-	treeTree.dataProvider[0].appendChild(event.result);
-	logThis(xmlTree);
-
-	//treeTree.dataProvider=xmlTree;
+	/* get the id of the node */
+	var x:XML = <root></root>;
+	x.appendChild(event.result);
+	var idnoeud:int;
+	idnoeud = x.node.attribute("idLieu");
+	
+	/* add the new real node */
+	treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0].appendChild(x.node.node);
+	
+	/* delete the old fake one */
+	delete  treeTree.dataProvider[0].descendants().(@idLieu==idnoeud)[0].children()[0];
+	
+	//logThis(xmlTree);
 }
