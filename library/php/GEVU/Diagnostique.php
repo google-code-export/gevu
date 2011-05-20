@@ -1,4 +1,5 @@
 <?php
+
 class GEVU_Diagnostique{
     
     /**
@@ -39,7 +40,7 @@ class GEVU_Diagnostique{
 		$xml="";
     	$z = new Model_DbTable_Gevu_lieux();
     	$r = $z->findById_lieu($idLieu);
-    	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".$r[0]['lib']."\" niv=\"".$r[0]['niv']."\" fake=\"0\"";
+    	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".htmlspecialchars($r[0]['lib'])."\" niv=\"".$r[0]['niv']."\" fake=\"0\"";
     	
     	$r = $z->findByLieu_parent($idLieu);
     	if(count($r)==0){
@@ -48,7 +49,7 @@ class GEVU_Diagnostique{
     	else{
     		$xml.=">\n";
     		foreach ($r as $v){
-    			$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".$v['lib']."\" niv=\"".$v['niv']."\" fake=\"0\"";
+    			$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".htmlspecialchars($v['lib'])."\" niv=\"".$v['niv']."\" fake=\"0\"";
     			$s = $z->findByLieu_parent($v['id_lieu']);
     			if(count($s)==0){
 	    			$xml.=" />\n";
@@ -57,7 +58,7 @@ class GEVU_Diagnostique{
     				//-----------
     				$xml.=">\n";
     				foreach ($s as $w){
-    					$xml.="<node idLieu=\"".$w['id_lieu']."\" lib=\"".$w['lib']."\" niv=\"".$w['niv']."\" fake=\"0\"";
+    					$xml.="<node idLieu=\"".$w['id_lieu']."\" lib=\"".htmlspecialchars($w['lib'])."\" niv=\"".$w['niv']."\" fake=\"0\"";
     					$t = $z->findByLieu_parent($w['id_lieu']);
     					if(count($t)==0){
 	    					$xml.=" />\n";

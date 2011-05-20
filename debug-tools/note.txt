@@ -42,9 +42,9 @@ enlever la ligne 901
 http://www.gevu.org/bdd/gevu_test.sql.zip
 
 ------------
-sécuriser le xml (ne pas inclure les string directement) puis utiliser le dom
+sécuriser le xml (ne pas inclure les string directement) puis utiliser le dom >>> fait
 voir comment modifier les icones des tree de façoon simple
-gérer le cache
+gérer le cache (Zend_Cache: http://code.google.com/p/generateur/source/browse/trunk/library/Gen/Moteur.php#68 http://code.google.com/p/generateur/source/browse/trunk/library/Gen/Moteur.php#1350)
 afficher le type de noeud
 récupérer les infos grace aux requetes sql
 changer l'interface
@@ -54,3 +54,36 @@ changer l'interface
 comment faire une requete avec zend
 ------
 
+trouville-surmer > Eglise StMichel > Accès à l'église
+
+
+SELECT b1.lib, b2.nom
+FROM gevu_lieux as b1
+INNER JOIN gevu_batiments as b2
+on b1.id_lieu=b2.id_lieu
+
+SELECT b1.id_lieu,  b2.id_lieu,  b3.id_lieu,  b4.id_lieu,  b5.id_lieu,  b6.id_lieu,  b7.id_lieu,
+       b8.id_lieu,  b9.id_lieu,  b10.id_lieu, b11.id_lieu, b12.id_lieu, b13.id_lieu, b14.id_lieu,
+       b15.id_lieu, b16.id_lieu, b17.id_lieu, b18.id_lieu, b19.id_lieu
+FROM gevu_lieux b1
+LEFT JOIN gevu_diagnostics b2           ON b1.id_lieu=b2.id_lieu
+LEFT JOIN gevu_diagnosticsxvoirie b3    ON b1.id_lieu=b3.id_lieu
+LEFT JOIN gevu_docsxlieux b4            ON b1.id_lieu=b4.id_lieu
+LEFT JOIN gevu_espaces b5               ON b1.id_lieu=b5.id_lieu
+LEFT JOIN gevu_espacesxexterieurs b6    ON b1.id_lieu=b6.id_lieu
+LEFT JOIN gevu_espacesxinterieurs b7    ON b1.id_lieu=b7.id_lieu
+LEFT JOIN gevu_etablissements b8        ON b1.id_lieu=b8.id_lieu
+LEFT JOIN gevu_georss b9                ON b1.id_lieu=b9.id_lieu
+LEFT JOIN gevu_geos b10                 ON b1.id_lieu=b10.id_lieu
+LEFT JOIN gevu_batiments b11            ON b1.id_lieu=b11.id_lieu
+LEFT JOIN gevu_niveaux b12              ON b1.id_lieu=b12.id_lieu
+LEFT JOIN gevu_objetsxexterieurs b13    ON b1.id_lieu=b13.id_lieu
+LEFT JOIN gevu_objetsxinterieurs b14    ON b1.id_lieu=b14.id_lieu
+LEFT JOIN gevu_objetsxvoiries b15       ON b1.id_lieu=b15.id_lieu
+LEFT JOIN gevu_observations b16         ON b1.id_lieu=b16.id_lieu
+LEFT JOIN gevu_parcelles b17            ON b1.id_lieu=b17.id_lieu
+LEFT JOIN gevu_problemes b18            ON b1.id_lieu=b18.id_lieu
+LEFT JOIN gevu_synchros b19             ON b1.id_lieu=b19.id_lieu
+WHERE b1.id_lieu=$id
+
+(SELECT * FROM gevu_lieux g1 INNER JOIN gevu_diagnostics g2 WHERE g1.id_lieu=$id)
