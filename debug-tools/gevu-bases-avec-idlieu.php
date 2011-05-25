@@ -29,9 +29,9 @@
 	$max = count($tab);
 	if($max>0){
 		// first request
-		$req1 = "SELECT b.id_lieu";
-		for ($i=0; $i<$max; ++$i){
-			$req1.= ", b$i.id_lieu";
+		$req1 = "SELECT b0.id_lieu B0 ";
+		for ($i=1; $i<$max; ++$i){
+			$req1.= ", b$i.id_lieu B$i";
 		}
 		$req1.="\n  FROM gevu_lieux b\n";
 		for ($i=0; $i<$max; ++$i){
@@ -40,11 +40,11 @@
 		$req1.="WHERE b.id_lieu=\$id";
 		
 		//second request
-		$req2="SET @id=\$id\n";
+		$req2="SET @id=\$id;\n";
 		for($i=0; $i<($max-1); ++$i){
-			$req2.="(SELECT * FROM gevu_lieux g1 INNER JOIN $tab[$i] WHERE g1.id_lieu=@id)\n  UNION\n";
+			$req2.="(SELECT $i Bi FROM gevu_lieux g1 INNER JOIN $tab[$i] g2 ON g1.id_lieu=g2.id_lieu WHERE g1.id_lieu=@id)\n  UNION\n";
 		}
-		$req2.="(SELECT * FROM gevu_lieux g1 INNER JOIN ".$tab[($max-1)]." WHERE g1.id_lieu=@id)\n  UNION\n";
+		$req2.="(SELECT ".($max-1)." NMB FROM gevu_lieux g1 INNER JOIN ".$tab[($max-1)]." g2 ON g1.id_lieu=g2.id_lieu WHERE g1.id_lieu=@id);\n";
 	}
 	echo "<p>\nfirst request:\n<br />\n".$req1."\n</p>\n";
 	echo "<p>\nsecond request:\n<br />\n".$req2."\n</p>\n";
