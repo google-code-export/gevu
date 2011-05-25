@@ -76,5 +76,20 @@ class GEVU_Diagnostique{
 		$dom->loadXML($xml);
     	return $dom;
     }
+    
+    /**
+    * @param int $idLieu
+    * @return array
+    */
+    public function getNodeType($idLieu=0){
+        $table = new Model_DbTable_Gevu_lieux();
+        
+        $select = $table->select(Zend_Db_Table::SELECT_WITH_FROM_PART);
+       
+        $select->setIntegrityCheck(false)
+               ->where('id_lieu = ?', '3')
+               ->join('gevu_docsxlieux', 'gevu_lieux.id_lieu=gevu_docsxlieux.id_lieu')
+               ->where('accounts.account_name = ?', 'Bob');
+    }
 }
 ?>
