@@ -2,10 +2,24 @@
 require_once( "../param/ParamAppli.php" );
 
 try {
-
-/*$t = new GEVU_Diagnostique();
+    // cache fonctionel
+    /*$frontendOptions = array(
+       'lifetime' => 7200, // temps de vie du cache de 2 heures
+       'automatic_serialization' => true
+    );  
+    $backendOptions = array(
+        // Répertoire où stocker les fichiers de cache
+        'cache_dir' => './tmp/'
+    ); 
+    // créer un objet Zend_Cache_Core
+    $cache = Zend_Cache::factory('Core',
+                                 'File',
+                                 $frontendOptions,
+                                 $backendOptions);*/
+    
+$t = new GEVU_Diagnostique();
 $t->getAll();
-$r=$t->getXmlNode(3);*/
+$r=$t->getXmlNode(3);
 
 /*
 $s = new Model_DbTable_Gevu_solutions();
