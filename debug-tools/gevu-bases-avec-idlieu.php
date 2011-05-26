@@ -44,22 +44,31 @@
 		for($i=0; $i<($max-1); ++$i){
 			$req2.="(SELECT $i Bi FROM $tab[$i] g WHERE g.id_lieu=@id)  UNION\n";
 		}
-		$req2.="(SELECT ".($max-1)." NMB FROM gevu_lieux g1 INNER JOIN ".$tab[($max-1)]." g2 ON g1.id_lieu=g2.id_lieu WHERE g1.id_lieu=@id);\n";
+		$req2.="(SELECT ".($max-1)." Bi FROM gevu_lieux g1 INNER JOIN ".$tab[($max-1)]." g2 ON g1.id_lieu=g2.id_lieu WHERE g1.id_lieu=@id);\n";
 		
+		//3rd request
+		$req3="";
+		for($i=0; $i<($max-1); ++$i){
+			$req3.="(SELECT $i Bi FROM $tab[$i] g WHERE g.id_lieu=\$idLieu)  UNION\n";
+		}
+		$req3.="(SELECT ".($max-1)." Bi FROM gevu_lieux g1 INNER JOIN ".$tab[($max-1)]." g2 ON g1.id_lieu=g2.id_lieu WHERE g1.id_lieu=@id);\n";
+		
+	
 		// 1st php instructions
 		$inst1="\t\t\$table = new Model_DbTable_Gevu_lieux();\n\n";
 		for($i=0; $i<$max; ++$i){
-			$inst1.="\t\t\$s = \$table->select()\n";
+			$inst1.="\t\t\$s[$i] = \$table->select()\n";
 			$inst1.="\t\t->from( array(\"g\" => \"$tab[$i]\"),array(\"Bi\" => \"($i)\") )";
 			$inst1.="\t\t->where( \"g.id_lieu = ?\", \$idLieu )";
 			$inst1.="\t\t->group(\"Bi\");\n";
-			$inst1.="\t\t\$rows = \$table->fetchAll(\$s)->toArray();\n";
+			$inst1.="\t\t\$rows = \$table->fetchAll(\$s[$i])->toArray();\n";
 			$inst1.="\t\tif(count(\$rows)>0) \$result[]=\$rows[0];\n\n";
 		}
 		
 	}
 	echo "<p>\nfirst request:\n<br />\n".$req1."\n</p>\n";
 	echo "<p>\nsecond request:\n<br />\n".$req2."\n</p>\n";
+	echo "<p>\nthird request:\n<br />\n".$req3."\n</p>\n";
 	echo "<p>\nfirst instrunctions:\n<br />\n".$inst1."\n</p>\n";
 
 mysql_close($ldb);

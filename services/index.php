@@ -18,8 +18,9 @@ try {
                                  $backendOptions);*/
     
 $t = new GEVU_Diagnostique();
-$t->getAll();
 $r=$t->getXmlNode(3);
+$s=$t->getNodeType(3);
+$t->getFields(3);
 
 /*
 $s = new Model_DbTable_Gevu_solutions();

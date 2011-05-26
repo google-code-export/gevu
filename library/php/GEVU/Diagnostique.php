@@ -3,8 +3,32 @@
 class GEVU_Diagnostique{
     
     var $manager;
+    var $TableNames;
     
     function __construct(){
+    
+    	$this->TableNames = array(
+    		"batiments", 
+			"diagnostics", 
+			"diagnosticsxvoirie", 
+			"docsxlieux", 
+			"espaces", 
+			"espacesxexterieurs", 
+			"espacesxinterieurs", 
+			"etablissements", 
+			"georss", 
+			"geos", 
+			"niveaux", 
+			"objetsxexterieurs", 
+			"objetsxinterieurs", 
+			"objetsxvoiries", 
+			"observations", 
+			"parcelles", 
+			"problemes", 
+			"synchros"
+    	);
+    	
+    	
         $frontendOptions = array(
             'lifetime' => 7200, // temps de vie du cache de 2 heures
             'automatic_serialization' => true
@@ -47,7 +71,9 @@ class GEVU_Diagnostique{
 	public function getFields($idLieu=0){
     	$t = new Model_DbTable_Gevu_lieux();
     	$r = $t->findById_lieu($idLieu);
-    	return $r;
+    	$tmp = $this->getNodeType($idLieu);
+    	$r[0]['type'] = $tmp;
+    	return $r[0];
     }
     
 	/**
@@ -102,10 +128,10 @@ class GEVU_Diagnostique{
     
     /**
     * @param int $idLieu
-    * @return int
+    * @return array
     */
     public function getNodeType($idLieu=0){
-        $table = new Model_DbTable_Gevu_lieux();
+        /*$table = new Model_DbTable_Gevu_lieux();
                
         $s = $table	->select()
                     ->from( array("g" => "gevu_lieux"),array('Bi' => '(1)') )                           
@@ -114,35 +140,49 @@ class GEVU_Diagnostique{
                
         $rows = $table->fetchAll($s)->toArray();
         if(count($rows)>0) $result[]=$rows[0];
-    
-    
-    	$table = new Model_DbTable_Gevu_lieux();
 
-		$s = $table->select()
-		->from( array("g" => "gevu_batiments"),array("Bi" => "(0)") )		->where( "g.id_lieu = ?", $idLieu )		->group("Bi");
-		$rows = $table->fetchAll($s)->toArray();
-		if(count($rows)>0) $result[]=$rows[0];
-
-		
-        
-        
-        $iu=5;
+		$ss = $table->select()
+					->from( array("g" => "gevu_batiments"),array("Bi" => "(0)") )
+					->where( "g.id_lieu = ?", $idLieu )
+					->group("Bi");
+		$rows = $table->fetchAll($ss);
+		if(count($rows)>0) $result[]=$rows[0];*/
         
         
 		/*******************************************/
         /*******************************************/
-        /*$STRING = "SET @id=3;
-				   (SELECT 0 Bi FROM gevu_batiments g WHERE g.id_lieu=@id)";
+        $str=  "(SELECT 0 Bi FROM gevu_batiments g WHERE g.id_lieu=$idLieu)  UNION
+        		(SELECT 1 Bi FROM gevu_diagnostics g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 2 Bi FROM gevu_diagnosticsxvoirie g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 3 Bi FROM gevu_docsxlieux g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 4 Bi FROM gevu_espaces g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 5 Bi FROM gevu_espacesxexterieurs g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 6 Bi FROM gevu_espacesxinterieurs g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 7 Bi FROM gevu_etablissements g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 8 Bi FROM gevu_georss g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 9 Bi FROM gevu_geos g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 10 Bi FROM gevu_niveaux g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 11 Bi FROM gevu_objetsxexterieurs g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 12 Bi FROM gevu_objetsxinterieurs g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 13 Bi FROM gevu_objetsxvoiries g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 14 Bi FROM gevu_observations g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 15 Bi FROM gevu_parcelles g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 16 Bi FROM gevu_problemes g WHERE g.id_lieu=$idLieu)  UNION
+				(SELECT 17 Bi FROM gevu_lieux g1 INNER JOIN gevu_synchros g2 ON g1.id_lieu=g2.id_lieu WHERE g1.id_lieu=@id);";
+				
         $db = Zend_Db_Table::getDefaultAdapter();
-    	$stmt = $db->query($STRING);
-    	$stmt->setFetchMode(Zend_Db::FETCH_OBJ);
-    	$result = $stmt->fetchAll();*/
+    	$stmt = $db->query($str);
+    	$stmt->setFetchMode(Zend_Db::FETCH_NUM);
+    	$result = $stmt->fetchAll();
     	
         /*******************************************/
     	/*******************************************/
-        
-        
-        return $iu;
+    	
+    	for($i=0; $i<count($result); ++$i){
+    		$res[]=$this->TableNames[$result[$i][0]];
+    	}
+    	
+        return $res;
     }
 }
 ?>

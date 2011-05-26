@@ -1,10 +1,12 @@
 // ActionScript file
+import flash.events.ErrorEvent;
+
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
-import mx.rpc.events.ResultEvent;
 import mx.rpc.events.FaultEvent;
+import mx.rpc.events.ResultEvent;
 
 
 private var TreeObject:XML;
@@ -58,10 +60,24 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	var arr:Array = new Array();
 	var arrc:ArrayCollection = new ArrayCollection();
 	
-	obj={prop:"niv",		val:event.result[0].niv};			arr.push(obj);
-	obj={prop:"lib",		val:event.result[0].lib};			arr.push(obj);
-	obj={prop:"id_lieu",	val:event.result[0].id_lieu};		arr.push(obj);
-	obj={prop:"id_parent",	val:event.result[0].lieu_parent};	arr.push(obj);
+	var tmpArr:Array;
+	var tmpStr:String;
+	tmpArr = event.result.type;
+	
+	if(!tmpArr){
+		tmpStr="-";
+	}else{
+		tmpStr=tmpArr[0];
+		for (var i:int=1; i<tmpArr.length; ++i){
+			tmpStr+=", "+tmpArr[i];
+		}
+	}
+	
+	obj={prop:"lib",		val:event.result.lib};			arr.push(obj);
+	obj={prop:"id_lieu",	val:event.result.id_lieu};		arr.push(obj);
+	obj={prop:"id_parent",	val:event.result.lieu_parent};	arr.push(obj);
+	obj={prop:"niv",		val:event.result.niv};			arr.push(obj);
+	obj={prop:"type",		val:tmpStr};					arr.push(obj);
 	
 	arrc.source=arr;
 	dg.dataProvider=arrc
@@ -81,6 +97,36 @@ private function updateTreeStructure( event:ResultEvent ) : void {
 	delete  treeTree.dataProvider[0].descendants().(@idLieu==idnoeud)[0].children()[0];
 }
 
-public function faultHandlerService(fault:FaultEvent):void {
-	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+public function faultHandlerService(fault:FaultEvent, os:String=""):void {
+	var str:String;
+	
+	trace(fault.fault.faultCode.toString());
+	trace(fault.fault.faultDetail.toString());
+	trace(fault.fault.faultString.toString());
+	trace(fault.fault.rootCause.toString());
+	
+	str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+	      "Detail: "+fault.fault.faultDetail.toString()+"\n"+
+	      "String: "+fault.fault.faultString.toString()+"\n";
+	
+	if (os!="")
+		os = " - "+os;
+	Alert.show(str, "FaultHandlerService"+os);
+}
+
+public function ErrorHandlerService(fault:ErrorEvent, os:String=""):void {
+	var str:String;
+	/*
+	trace(fault.fault.faultCode.toString());
+	trace(fault.fault.faultDetail.toString());
+	trace(fault.fault.faultString.toString());
+	trace(fault.fault.rootCause.toString());
+	
+	str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+	      "Detail: "+fault.fault.faultDetail.toString()+"\n"+
+	      "String: "+fault.fault.faultString.toString()+"\n";*/
+	
+	if (os!="")
+		os = " - "+os;
+	Alert.show(str, "ErrorHandlerService"+os);
 }
