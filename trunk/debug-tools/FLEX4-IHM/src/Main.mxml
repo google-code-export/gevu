@@ -3,14 +3,15 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
 				layout="horizontal"
 				horizontalAlign="center" height="100%" width="80%"
-				verticalAlign="middle" initialize="init();" creationComplete="onStartup()">
+				verticalAlign="middle" initialize="init();" creationComplete="onStartup()"
+				error="ErrorHandlerService(event)">
 	
 	<mx:Script source="Main.as" />
 	
 	<mx:RemoteObject id="roDiagnostique"
 					 destination="zend"
 					 source="GEVU_Diagnostique"
-					 fault="faultHandlerService(event);logThis(&quot;error: remote object&quot;);">
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
 		<mx:method name="getFields"		result="displayNodeProperties( event );" />
 		<mx:method name="getXmlNode"	result="updateTreeStructure( event );" />
 	</mx:RemoteObject>
