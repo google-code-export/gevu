@@ -27,6 +27,22 @@
 	echo "</ul>\n<br />\n";
 	
 	$max = count($tab);
+	
+	$dom = new DomDocument();
+	
+	$root=$dom->createElement("root");
+	for ($i=0; $i<$max; ++$i){
+		$node=$dom->createElement("table");
+		$node->setAttribute("string", $tab[$i]);
+		$node->setAttribute("titre", $tab[$i]);
+		$node->setAttribute("id", $i);
+		
+		$root->appendChild($node);
+	}
+	$dom->appendChild($root);
+	$dom->save("../bdd/ListeDesTables.xml");
+	
+	
 	if($max>0){
 		// first request
 		$req1 = "SELECT b0.id_lieu B0 ";

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<root>
+<table string="Batiments" titre="gevu_batiments" id="0"/>
+<table string="Diagnostics" titre="gevu_diagnostics" id="1"/>
+<table string="Diagnosticsxvoirie" titre="gevu_diagnosticsxvoirie" id="2"/>
+<table string="Docsxlieux" titre="gevu_docsxlieux" id="3"/>
+<table string="Espaces" titre="gevu_espaces" id="4"/>
+<table string="Espacesxexterieurs" titre="gevu_espacesxexterieurs" id="5"/>
+<table string="Espacesxinterieurs" titre="gevu_espacesxinterieurs" id="6"/>
+<table string="Etablissements" titre="gevu_etablissements" id="7"/>
+<table string="Georss" titre="gevu_georss" id="8"/>
+<table string="Geos" titre="gevu_geos" id="9"/>
+<table string="Niveaux" titre="gevu_niveaux" id="10"/>
+<table string="Objetsxexterieurs" titre="gevu_objetsxexterieurs" id="11"/>
+<table string="Objetsxinterieurs" titre="gevu_objetsxinterieurs" id="12"/>
+<table string="Objetsxvoiries" titre="gevu_objetsxvoiries" id="13"/>
+<table string="Observations" titre="gevu_observations" id="14"/>
+<table string="Parcelles" titre="gevu_parcelles" id="15"/>
+<table string="Problemes" titre="gevu_problemes" id="16"/>
+<table string="Synchros" titre="gevu_synchros" id="17"/>
+</root>

@@ -6,6 +6,7 @@
 				verticalAlign="middle" initialize="init();" creationComplete="onStartup()"
 				error="ErrorHandlerService(event)">
 	
+	<mx:Script source="included_ressources.as" />
 	<mx:Script source="Main.as" />
 	
 	<mx:RemoteObject id="roDiagnostique"
@@ -17,7 +18,7 @@
 	</mx:RemoteObject>
 
 	<mx:HBox width="80%" height="100%" horizontalAlign="center">
-		<mx:Tree id="treeTree" labelField="@lib" showRoot="false"
+		<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
 			height="100%" width="40%"
 			itemOpening="treeItemOpened( event );"
 			change="treeItemClicked( event );"/>
