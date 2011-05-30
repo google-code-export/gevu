@@ -1,12 +1,17 @@
 // ActionScript file
 import flash.events.ErrorEvent;
 
+import formulaires.formulaire_batiments;
+
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
+import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
+
+import mx.containers.TitleWindow;
 
 
 private var TreeObject:XML;
@@ -47,6 +52,9 @@ private function treeItemClicked( event:ListEvent ) : void {
 }
 
 private function testButtonClicked() : void {
+	var _window:TitleWindow;
+	_window = TitleWindow(PopUpManager.createPopUp(this, formulaire_batiments, true));
+	PopUpManager.centerPopUp(_window);
 	logThis("button clicked");
 } 
 

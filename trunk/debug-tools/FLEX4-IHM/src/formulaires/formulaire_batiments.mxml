@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" showCloseButton="true" close="closeHandler(event)"
+	horizontalAlign="center" verticalAlign="middle" height="500" width="300">
+	<mx:Script>
+		<![CDATA[
+		
+		/** popup end event listner:
+		 * http://www.flex-tutorial.fr/2009/01/14/flex-popup-centrer-une-fenetre-popup-avec-la-methode-centerpopup/ **/
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			private function closeHandler(event:CloseEvent):void{
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+
+	<mx:TextArea height="70%" width="70%" text="Texte dans une TextArea qui va être ajouté à une PopUp bla bla"/>
+
+</mx:TitleWindow>

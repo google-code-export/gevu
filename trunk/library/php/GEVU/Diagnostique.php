@@ -110,7 +110,7 @@ class GEVU_Diagnostique{
         					if(count($t)==0){
     	    					$xml.=" />\n";
         					}else{
-        						$xml.=">\n<node idLieu=\"-10\" lib=\"loading...\" fake=\"1\" />\n</node>\n";
+        						$xml.=">\n<node idLieu=\"-10\" lib=\"loading...\" fake=\"1\" icon=\"voieIcon\" />\n</node>\n";
         					}
         				}
         				$xml.="</node>\n";
