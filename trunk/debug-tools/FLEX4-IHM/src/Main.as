@@ -4,6 +4,7 @@ import flash.events.ErrorEvent;
 import formulaires.formulaire_batiments;
 
 import mx.collections.ArrayCollection;
+import mx.containers.TitleWindow;
 import mx.controls.Alert;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
@@ -11,11 +12,11 @@ import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 
-import mx.containers.TitleWindow;
-
 
 private var TreeObject:XML;
 private var xmlTree:XML
+
+private var SelectedNode:int;
 
 private function init():void {
 	xmlTree = 
@@ -43,18 +44,18 @@ private function treeItemOpened( event:TreeEvent ) : void {
 }
 
 private function treeItemClicked( event:ListEvent ) : void {
-	var tt:int;
-	tt = event.currentTarget.selectedItem.attribute("idLieu");
+	SelectedNode = event.currentTarget.selectedItem.attribute("idLieu");
 	logThis( "tree item has been clicked. item is:"+
 			 event.currentTarget.selectedItem.attribute("lib") );
 	
-	if(tt>0) roDiagnostique.getFields(tt);
+	if(SelectedNode>0) roDiagnostique.getFields(SelectedNode);
 }
 
 private function testButtonClicked() : void {
-	var _window:TitleWindow;
-	_window = TitleWindow(PopUpManager.createPopUp(this, formulaire_batiments, true));
+	var _window:formulaire_batiments;
+	_window = formulaire_batiments(PopUpManager.createPopUp(this, formulaire_batiments, true));
 	PopUpManager.centerPopUp(_window);
+	_window.showNode(SelectedNode);
 	logThis("button clicked");
 } 
 
@@ -69,15 +70,14 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	var arrc:ArrayCollection = new ArrayCollection();
 	
 	var tmpArr:Array;
-	var tmpStr:String;
+	var tmpStr:String="";
 	tmpArr = event.result.type;
 	
 	if(!tmpArr){
 		tmpStr="-";
 	}else{
-		tmpStr=tmpArr[0];
-		for (var i:int=1; i<tmpArr.length; ++i){
-			tmpStr+=", "+tmpArr[i];
+		for (var i:int=0; i<tmpArr.length; ++i){
+			tmpStr+=tmpArr[i]['name']+"  ";
 		}
 	}
 	
@@ -105,14 +105,8 @@ private function updateTreeStructure( event:ResultEvent ) : void {
 	delete  treeTree.dataProvider[0].descendants().(@idLieu==idnoeud)[0].children()[0];
 }
 
-public function faultHandlerService(fault:FaultEvent, os:String=""):void {
+private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 	var str:String;
-	
-	trace(fault.fault.faultCode.toString());
-	trace(fault.fault.faultDetail.toString());
-	trace(fault.fault.faultString.toString());
-	trace(fault.fault.rootCause.toString());
-	
 	str = "Code: "+fault.fault.faultCode.toString()+"\n"+
 	      "Detail: "+fault.fault.faultDetail.toString()+"\n"+
 	      "String: "+fault.fault.faultString.toString()+"\n";
@@ -122,7 +116,7 @@ public function faultHandlerService(fault:FaultEvent, os:String=""):void {
 	Alert.show(str, "FaultHandlerService"+os);
 }
 
-public function ErrorHandlerService(fault:ErrorEvent, os:String=""):void {
+private function ErrorHandlerService(fault:ErrorEvent, os:String=""):void {
 	var str:String;
 	/*
 	trace(fault.fault.faultCode.toString());

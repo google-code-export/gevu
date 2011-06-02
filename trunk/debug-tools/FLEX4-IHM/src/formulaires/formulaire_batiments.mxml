@@ -1,19 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" showCloseButton="true" close="closeHandler(event)"
-	horizontalAlign="center" verticalAlign="middle" height="500" width="300">
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+				showCloseButton="true" close="closeHandler(event)"
+				horizontalAlign="center" verticalAlign="middle" height="550" width="500"
+				layout="horizontal" >
+	
+	<mx:RemoteObject id="roDiagnostique"
+					 destination="zend"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="getNodeRelatedData"	result="updateWindow( event );" />
+	</mx:RemoteObject>
+	
+	<maps:Map xmlns:maps="com.google.maps.*" id="map" mapevent_mapready="onMapReady(event)" 
+			  width="100%" height="100%"
+			  key="ABQIAAAA8_1FP-PBAiNx9JdgQX0PRRT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSz-J6BALOe3GlE03Le8F7bsysG1w" sensor="false"/>
+
+	<mx:VBox height="85%" horizontalAlign="center" verticalAlign="top">
+		<mx:Button label="+" click="zoomInEvent(event)" />
+		<mx:Button label="-" click="zoomOutEvent(event)" />
+	</mx:VBox>
+			 
+	
 	<mx:Script>
 		<![CDATA[
-		
-		/** popup end event listner:
-		 * http://www.flex-tutorial.fr/2009/01/14/flex-popup-centrer-une-fenetre-popup-avec-la-methode-centerpopup/ **/
+			import com.google.maps.interfaces.IMapType;
+			import com.google.maps.controls.ZoomControl;
+			import com.google.maps.controls.PositionControl;
+			import com.google.maps.controls.MapTypeControl;
+			
+			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
 			private function closeHandler(event:CloseEvent):void{
 				PopUpManager.removePopUp(this);
 			}
+			
+			public function showNode( idLieu:int ) : void{
+				roDiagnostique.getNodeRelatedData(idLieu);
+			}
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			private function updateWindow(  event:ResultEvent ) : void {
+				var tmpArr:Array = event.result as Array;
+				for (var i:int=0; i< tmpArr.length; ++i){
+					if(tmpArr[i]['id']==9) {
+						var f1:Number = parseFloat(tmpArr[i]['data']['lat']);
+						var f2:Number = parseFloat(tmpArr[i]['data']['lng']);
+						var i1:LatLng = new LatLng(f1,f2);
+						f1 = parseFloat(tmpArr[i]['data']['zoom_max']);
+						f2 = parseFloat(tmpArr[i]['data']['zoom_min']);
+						var i2:int = (f1+f2)/2;
+						var i3:IMapType = MapType.SATELLITE_MAP_TYPE;
+						this.map.setCenter(i1,
+							               f2,
+										   i3);
+					}
+					
+				}
+			}
+			
+			private function zoomInEvent( event:Event ) : void{
+				map.zoomIn();
+			}
+			
+			private function zoomOutEvent( event:Event ) : void{
+				map.zoomIn();
+			}
+			
+			///------------------------------------------------------
 		]]>
 	</mx:Script>
-
-	<mx:TextArea height="70%" width="70%" text="Texte dans une TextArea qui va être ajouté à une PopUp bla bla"/>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import com.google.maps.LatLng;
+			import com.google.maps.Map;
+			import com.google.maps.MapEvent;
+			import com.google.maps.MapType;
+			
+			private function onMapReady(event:Event):void {
+				map.setCenter(new LatLng(47,2), 5, MapType.SATELLITE_MAP_TYPE);
+				this.map.addControl(new ZoomControl());
+				this.map.addControl(new PositionControl());
+				map.addControl(new MapTypeControl());
+			}
+		]]>
+	</mx:Script>
 
 </mx:TitleWindow>

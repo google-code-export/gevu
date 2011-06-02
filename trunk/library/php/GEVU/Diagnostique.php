@@ -81,8 +81,8 @@ class GEVU_Diagnostique{
     * @return string
     */
 	public function getXmlNode($idLieu=0){
-	   $mdhash = md5("GEVU_Diagnostique-getXmlNode-$idLieu");
-	   $xml = $this->manager->load($mdhash);
+	   $shhash = sha1("GEVU_Diagnostique-getXmlNode-$idLieu");
+	   $xml = $this->manager->load($shhash);
         if(!$xml){
     		$xml="";
         	$z = new Model_DbTable_Gevu_lieux();
@@ -119,7 +119,7 @@ class GEVU_Diagnostique{
         		}
         		$xml.="</node>\n";
     		}
-    		$this->manager->save($xml, $mdhash);
+    		$this->manager->save($xml, $shhash);
         }
         $dom = new DomDocument();
         $dom->loadXML($xml);
@@ -179,9 +179,72 @@ class GEVU_Diagnostique{
     	/*******************************************/
     	
     	for($i=0; $i<count($result); ++$i){
-    		$res[]=$this->TableNames[$result[$i][0]];
+            $tt['id']=$result[$i][0];
+            $tt['name']=$this->TableNames[$result[$i][0]];
+    		$res[]=$tt;
     	}
     	
+        return $res;
+    }
+    
+    /**
+    * @param int $idLieu
+    * @return array
+    */
+    public function getNodeRelatedData($idLieu=0){
+    
+        $shhash = sha1("GEVU_Diagnostique-getNodeRelatedData-$idLieu");
+        $res = $this->manager->load($shhash);
+        
+        if(!$res){
+            $c = new Model_DbTable_Gevu_lieux();
+            $tmp['id'] = -1;
+            $tmp['name'] = 'General';
+            $xx=$c->findById_lieu($idLieu);
+            $tmp['data'] = $xx[0];
+            $res[]=$tmp;
+            
+            $NodeType=$this->getNodeType($idLieu);
+            
+            foreach($NodeType as $V){
+                
+                switch($V['id']){
+                case 0:  $c = new Model_DbTable_Gevu_batiments();           break;
+                case 1:  $c = new Model_DbTable_Gevu_diagnostics();         break;
+                case 2:  $c = new Model_DbTable_Gevu_diagnosticsxvoirie();  break;
+                case 3:
+                    $c=NULL;
+                    break;
+                case 4:  $c = new Model_DbTable_Gevu_espaces();             break;
+                case 5:  $c = new Model_DbTable_Gevu_espacesxexterieurs();  break;
+                case 6:  $c = new Model_DbTable_Gevu_espacesxinterieurs();  break;
+                case 7:  $c = new Model_DbTable_Gevu_etablissements();      break;
+                case 8:  $c = new Model_DbTable_Gevu_georss();              break;
+                case 9:  $c = new Model_DbTable_Gevu_geos();                break;
+                case 10: $c = new Model_DbTable_Gevu_niveaux();             break;
+                case 11: $c = new Model_DbTable_Gevu_objetsxexterieurs();   break;
+                case 12: $c = new Model_DbTable_Gevu_objetsxinterieurs();   break;
+                case 13: $c = new Model_DbTable_Gevu_objetsxvoiries();      break;
+                case 14: $c = new Model_DbTable_Gevu_observations();        break;
+                case 15: $c = new Model_DbTable_Gevu_parcelles();           break;
+                case 16: $c = new Model_DbTable_Gevu_problemes();           break;
+                case 17: $c=NULL;
+                    break;
+                            
+                default:
+                    $res=NULL;
+                    break;
+                }
+                if($c==NULL) continue;
+                $tmp['id'] = $V['id'];
+                $tmp['name'] = $V['name'];
+                $xx=$c->findById_lieu($idLieu);
+                $tmp['data'] = $xx[0];
+                $res[]=$tmp;
+            }
+            
+            $this->manager->save($res, $shhash);
+        }
         return $res;
     }
 }
