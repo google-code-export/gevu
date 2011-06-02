@@ -20,7 +20,7 @@ try {
 $t = new GEVU_Diagnostique();
 $r=$t->getXmlNode(3);
 $s=$t->getNodeType(3);
-$t->getFields(3);
+$wxwx=$t->getNodeRelatedData(3);
 
 /*
 $s = new Model_DbTable_Gevu_solutions();
