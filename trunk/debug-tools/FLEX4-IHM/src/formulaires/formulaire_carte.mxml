@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--in the following class, this option may be added
   showCloseButton="true" close="closeHandler(event)"-->
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" height="100%" width="95%" horizontalCenter="0">
 	
 	<mx:RemoteObject id="roDiagnostique"
 					 destination="zend"
@@ -24,7 +24,6 @@
 			import com.google.maps.Map;
 			import com.google.maps.MapEvent;
 			import com.google.maps.MapType;
-			
 			import com.google.maps.controls.ControlPosition;
 			import com.google.maps.controls.MapTypeControl;
 			import com.google.maps.controls.PositionControl;
@@ -42,6 +41,15 @@
 			
 			public function showNode( idLieu:int ) : void{
 				roDiagnostique.getNodeRelatedData(idLieu);
+			}
+			
+			public function showLatLng( lat:Number, lng:Number, zoom:int = 10) : void {
+						//var i1:LatLng = new LatLng(lat,lng);
+						//var i2:int = (f1+f2)/2;
+						//var i3:IMapType = MapType.SATELLITE_MAP_TYPE;
+						this.map.setCenter(new LatLng(lat,lng),
+							zoom,
+							MapType.SATELLITE_MAP_TYPE);
 			}
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
