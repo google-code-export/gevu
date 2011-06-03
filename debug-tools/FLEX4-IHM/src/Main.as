@@ -1,9 +1,13 @@
 // ActionScript file
 import adobe.utils.MMEndCommand;
 
+import com.google.maps.Map;
+
 import flash.events.ErrorEvent;
 
-import formulaires.formulaire_batiments;
+import formulaires.formulaire_autres;
+import formulaires.formulaire_carte;
+import formulaires.formulaire_general;
 
 import mx.collections.ArrayCollection;
 import mx.containers.TitleWindow;
@@ -32,7 +36,19 @@ private function init():void {
 	treeTree.showRoot=false;
 }	
 
+private var FormulaireGeneral:formulaire_general;
+private var FormulaireAutres:formulaire_autres;
+private var map:formulaire_carte;
+
 private function onStartup() : void {
+	map = new formulaire_carte();
+	FormulaireGeneral = new formulaire_general();
+	FormulaireAutres = new formulaire_autres();
+	
+	GeneralTab.addChild(FormulaireGeneral);
+	AutresTab.addChild(FormulaireAutres);
+	MapTab.addChild(map);
+	
 	//var fb:formulaire_batiments = new formulaire_batiments;
 	//fb.percentWidth=100;
 	//fb.percentHeight=100;
@@ -54,8 +70,8 @@ private function treeItemClicked( event:ListEvent ) : void {
 	logThis( "tree item has been clicked. item is:"+
 			 event.currentTarget.selectedItem.attribute("lib") );
 	
-	if(SelectedNode>0) roDiagnostique.getFields(SelectedNode);
-	map.showNode(SelectedNode);
+	if(SelectedNode>0) roDiagnostique.getNodeRelatedData(SelectedNode);
+	//map.showNode(SelectedNode);
 }
 
 private function testButtonClicked() : void {
@@ -73,10 +89,12 @@ private function logThis( txt : String ) : void {
 
 private function displayNodeProperties( event:ResultEvent ) : void {
 	var obj:Object;
-	var arr:Array = new Array();
-	var arrc:ArrayCollection = new ArrayCollection();
+	var arr1:Array = new Array();
+	var arrc1:ArrayCollection = new ArrayCollection();
+	var arr2:Array = new Array();
+	var arrc2:ArrayCollection = new ArrayCollection();
 	
-	var tmpArr:Array;
+	/*var tmpArr:Array;
 	var tmpStr:String="";
 	tmpArr = event.result.type;
 	
@@ -87,15 +105,36 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 			tmpStr+=tmpArr[i]['name']+"  ";
 		}
 	}
+	*/
+	var i:int;
+	var tmpStr:String="";
 	
-	obj={prop:"lib",		val:event.result.lib};			arr.push(obj);
-	obj={prop:"id_lieu",	val:event.result.id_lieu};		arr.push(obj);
-	obj={prop:"id_parent",	val:event.result.lieu_parent};	arr.push(obj);
-	obj={prop:"niv",		val:event.result.niv};			arr.push(obj);
-	obj={prop:"type",		val:tmpStr};					arr.push(obj);
+	for (i=1; i<event.result.length; ++i){
+		tmpStr+=event.result[i]['name']+"  ";
+	}
+	obj={prop:"lib",		val:event.result[0].data.lib};			arr1.push(obj);
+	obj={prop:"id_lieu",	val:event.result[0].data.id_lieu};		arr1.push(obj);
+	obj={prop:"id_parent",	val:event.result[0].data.lieu_parent};	arr1.push(obj);
+	obj={prop:"niv",		val:event.result[0].data.niv};			arr1.push(obj);
+	obj={prop:"type",		val:tmpStr};							arr1.push(obj);
 	
-	arrc.source=arr;
-	FormulaireGeneral.Tableau.dataProvider=arrc;
+	arrc1.source=arr1;
+	FormulaireGeneral.Tableau.dataProvider=arrc1;
+	
+	for (i=1; i<event.result.length; ++i){
+		tmpStr+=event.result[i]['name']+"  ";
+		for (var j:String in event.result[i].data){
+			obj={prop:j, val:event.result[i].data[j]};
+			arr2.push(obj);
+		}
+		
+		if(event.result[i]['id']==9)
+			map.showLatLng(event.result[i].data.lat,
+			               event.result[i].data.lng,
+						   event.result[i].data.zoom_min);
+	}
+	arrc2.source=arr2;
+	FormulaireAutres.Tableau.dataProvider=arrc2;
 }
 
 private function updateTreeStructure( event:ResultEvent ) : void {

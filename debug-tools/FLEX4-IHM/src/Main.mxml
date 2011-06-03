@@ -13,7 +13,7 @@
 					 destination="zend"
 					 source="GEVU_Diagnostique"
 					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
-		<mx:method name="getFields"		result="displayNodeProperties( event );" />
+		<mx:method name="getNodeRelatedData"	result="displayNodeProperties( event );" />
 		<mx:method name="getXmlNode"	result="updateTreeStructure( event );" />
 	</mx:RemoteObject>
 
@@ -22,17 +22,16 @@
 			height="100%" width="40%"
 			itemOpening="treeItemOpened( event );"
 			change="treeItemClicked( event );"/>
-		<mx:TabNavigator width="60%" height="100%">
-			<mx:Canvas label="Map" width="100%" height="100%" id="MapTab">
-				<formulaires:formulaire_batiments id="map" height="100%" width="100%" />
-			</mx:Canvas>
-			<mx:Canvas label="General" width="100%" height="100%">
-				<formulaires:formulaire_autres id="FormulaireGeneral" />
-			</mx:Canvas>
-			<mx:Canvas label="Autres" width="100%" height="100%">
-				<formulaires:formulaire_autres id="FormulaireAutre" />
-			</mx:Canvas>
-		</mx:TabNavigator>
+		<mx:Accordion id="Tab" width="60%" height="100%" visible="true">
+			<mx:Canvas label="General" id="GeneralTab" width="100%" height="100%" />
+			<mx:Canvas label="Map" id="MapTab" width="100%" height="100%" />
+			<mx:Canvas label="Autres" id="AutresTab" width="100%" height="100%" />
+		</mx:Accordion>
+		<!--<mx:TabNavigator id="Tab" width="60%" height="100%" visible="true">
+			<mx:Canvas label="General" id="GeneralTab" width="100%" height="100%" />
+			<mx:Canvas label="Map" id="MapTab" width="100%" height="100%" />
+			<mx:Canvas label="Autres" id="AutresTab" width="100%" height="100%" />
+		</mx:TabNavigator>-->
 	</mx:HBox>
 	
 	<mx:VBox width="20%" height="100%" horizontalAlign="center" verticalAlign="middle">
