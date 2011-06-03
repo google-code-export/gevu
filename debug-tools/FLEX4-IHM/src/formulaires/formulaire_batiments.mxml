@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
-				showCloseButton="true" close="closeHandler(event)"
-				horizontalAlign="center" verticalAlign="middle" height="550" width="500"
-				layout="horizontal" >
+<!--in the following class, this option may be added
+  showCloseButton="true" close="closeHandler(event)"-->
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml">
 	
 	<mx:RemoteObject id="roDiagnostique"
 					 destination="zend"
@@ -14,19 +13,23 @@
 	<maps:Map xmlns:maps="com.google.maps.*" id="map" mapevent_mapready="onMapReady(event)" 
 			  width="100%" height="100%"
 			  key="ABQIAAAA8_1FP-PBAiNx9JdgQX0PRRT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSz-J6BALOe3GlE03Le8F7bsysG1w" sensor="false"/>
-
-	<mx:VBox height="85%" horizontalAlign="center" verticalAlign="top">
-		<mx:Button label="+" click="zoomInEvent(event)" />
-		<mx:Button label="-" click="zoomOutEvent(event)" />
-	</mx:VBox>
 			 
 	
 	<mx:Script>
 		<![CDATA[
-			import com.google.maps.interfaces.IMapType;
-			import com.google.maps.controls.ZoomControl;
-			import com.google.maps.controls.PositionControl;
+			
+			///------------------------------------------------------
+			
+			import com.google.maps.LatLng;
+			import com.google.maps.Map;
+			import com.google.maps.MapEvent;
+			import com.google.maps.MapType;
+			
+			import com.google.maps.controls.ControlPosition;
 			import com.google.maps.controls.MapTypeControl;
+			import com.google.maps.controls.PositionControl;
+			import com.google.maps.controls.ZoomControl;
+			import com.google.maps.interfaces.IMapType;
 			
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
@@ -67,38 +70,29 @@
 						this.map.setCenter(i1,
 							               f2,
 										   i3);
-					}
-					
+					}		
 				}
 			}
 			
-			private function zoomInEvent( event:Event ) : void{
-				map.zoomIn();
-			}
-			
-			private function zoomOutEvent( event:Event ) : void{
-				map.zoomIn();
+			private function onMapReady(event:Event):void {
+				map.setCenter(new LatLng(47,2), 5, MapType.SATELLITE_MAP_TYPE);
+				/*var p1:ControlPosition =
+					new ControlPosition(ControlPosition.ANCHOR_TOP_LEFT, 22, 50);
+				var p2:ControlPosition =
+					new ControlPosition(ControlPosition.ANCHOR_BOTTOM_LEFT, 1, 40);
+				var myZoomControl:ZoomControl = new ZoomControl();
+				var myPositionControl:PositionControl = new PositionControl();
+				myZoomControl.setControlPosition(p1);
+				myPositionControl.setControlPosition(p2);*/
+				
+				this.map.addControl(new MapTypeControl());
+				this.map.addControl(new PositionControl());
+				this.map.addControl(new ZoomControl());
+				
 			}
 			
 			///------------------------------------------------------
 		]]>
 	</mx:Script>
-	
-	<mx:Script>
-		<![CDATA[
-			
-			import com.google.maps.LatLng;
-			import com.google.maps.Map;
-			import com.google.maps.MapEvent;
-			import com.google.maps.MapType;
-			
-			private function onMapReady(event:Event):void {
-				map.setCenter(new LatLng(47,2), 5, MapType.SATELLITE_MAP_TYPE);
-				this.map.addControl(new ZoomControl());
-				this.map.addControl(new PositionControl());
-				map.addControl(new MapTypeControl());
-			}
-		]]>
-	</mx:Script>
 
-</mx:TitleWindow>
+</mx:Canvas>

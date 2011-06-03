@@ -1,4 +1,6 @@
 // ActionScript file
+import adobe.utils.MMEndCommand;
+
 import flash.events.ErrorEvent;
 
 import formulaires.formulaire_batiments;
@@ -31,6 +33,10 @@ private function init():void {
 }	
 
 private function onStartup() : void {
+	//var fb:formulaire_batiments = new formulaire_batiments;
+	//fb.percentWidth=100;
+	//fb.percentHeight=100;
+	//MapTab.addChild(fb);
 }
 
 private function treeItemOpened( event:TreeEvent ) : void {
@@ -49,13 +55,14 @@ private function treeItemClicked( event:ListEvent ) : void {
 			 event.currentTarget.selectedItem.attribute("lib") );
 	
 	if(SelectedNode>0) roDiagnostique.getFields(SelectedNode);
+	map.showNode(SelectedNode);
 }
 
 private function testButtonClicked() : void {
-	var _window:formulaire_batiments;
-	_window = formulaire_batiments(PopUpManager.createPopUp(this, formulaire_batiments, true));
+	/*var _window:formulaire_batiments;
+	_window = formulaire_batiments(PopUpManager.createPopUp(this, formulaire_batiments, false));
 	PopUpManager.centerPopUp(_window);
-	_window.showNode(SelectedNode);
+	_window.showNode(SelectedNode);*/
 	logThis("button clicked");
 } 
 
@@ -88,7 +95,7 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	obj={prop:"type",		val:tmpStr};					arr.push(obj);
 	
 	arrc.source=arr;
-	dg.dataProvider=arrc
+	FormulaireGeneral.Tableau.dataProvider=arrc;
 }
 
 private function updateTreeStructure( event:ResultEvent ) : void {
