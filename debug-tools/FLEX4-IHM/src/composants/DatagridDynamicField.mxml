@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" horizontalAlign="center" initialize="init()"
+		 creationComplete="creComp()" >
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Button;
+			import mx.controls.CheckBox;
+			//private var but:Button;
+			//private var che:CheckBox;
+			
+			private function init() : void {
+				
+				//but = new Button();
+				//che = new CheckBox();
+				//but.visible=false;
+				//but.includeInLayout=false;
+				//che.visible=false;
+				//che.includeInLayout=false;
+				//but.percentHeight=1;
+				//che.percentHeight=1;
+				//addChild(che);
+				//addChild(but);
+				
+			}
+			
+			private function creComp() : void {
+
+				switch (data.type){
+				case "0":
+					but.includeInLayout=true;
+					but.visible=true;
+					break;
+				
+				case "1":
+					
+					che.includeInLayout=true;
+					che.visible=true;
+					break;
+				}
+			}
+			// propriété pour la nouvelle valeur
+			public var result:Boolean=false;
+			
+		]]>
+	</mx:Script>
+	<mx:CheckBox id="che" selected="{data.activation}" updateComplete="result=che.selected"
+				 visible="false" includeInLayout="false"/>
+	<mx:Button id="but" visible="false" includeInLayout="false"/>
+</mx:VBox>

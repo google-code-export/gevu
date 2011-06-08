@@ -17,26 +17,53 @@
 		<mx:method name="getXmlNode"	result="updateTreeStructure( event );" />
 	</mx:RemoteObject>
 
-	<mx:HBox width="80%" height="100%" horizontalAlign="center">
+	<mx:HBox width="100%" height="100%" horizontalAlign="center">
 		<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
 			height="100%" width="40%"
 			itemOpening="treeItemOpened( event );"
 			change="treeItemClicked( event );"/>
-		<mx:Accordion id="Tab" width="60%" height="100%" visible="true">
+		<mx:TabNavigator id="Tab" width="75%" height="100%" visible="true">
 			<mx:Canvas label="General" id="GeneralTab" width="100%" height="100%" />
 			<mx:Canvas label="Map" id="MapTab" width="100%" height="100%" />
 			<mx:Canvas label="Autres" id="AutresTab" width="100%" height="100%" />
-		</mx:Accordion>
+			<mx:Canvas label="Test" id="TestTab" width="100%" height="100%" />
+			<mx:Canvas label="debug" id="DebugTab" width="100%" height="100%">
+				<mx:VBox width="80%" height="100%" horizontalAlign="center" verticalAlign="middle">
+					<mx:TextArea id="debugTest" width="100%" height="90%" editable="false"  wordWrap="false"/>
+					<mx:Button id="testButton" label="change" click="testButtonClicked();"/>
+				</mx:VBox>
+			</mx:Canvas>
+			<mx:Canvas label="truc">
+				<mx:HBox width="100%" height="100%">
+					<mx:VBox id="vbox1"
+							 width="120"
+							 height="100%"
+							 backgroundColor="haloOrange">
+						<mx:Label text="VBox 1" />
+						<mx:Button label="Help"
+								   click="vbox2.visible = true" />
+					</mx:VBox>
+					<mx:VBox id="vbox2"
+							 width="120"
+							 height="100%"
+							 backgroundColor="haloGreen"
+							 creationComplete="vbox2.visible = false"
+							 includeInLayout="{vbox2.visible}">
+						<mx:Label text="VBox 2" />
+					</mx:VBox>
+					<mx:VBox id="vbox3"
+							 width="100%"
+							 height="100%"
+							 backgroundColor="haloBlue">
+						<mx:Label text="VBox 3" />
+					</mx:VBox>
+				</mx:HBox>
+			</mx:Canvas>
+		</mx:TabNavigator>
 		<!--<mx:TabNavigator id="Tab" width="60%" height="100%" visible="true">
-			<mx:Canvas label="General" id="GeneralTab" width="100%" height="100%" />
-			<mx:Canvas label="Map" id="MapTab" width="100%" height="100%" />
-			<mx:Canvas label="Autres" id="AutresTab" width="100%" height="100%" />
 		</mx:TabNavigator>-->
+		<!--<mx:Accordion id="Tab" width="60%" height="100%" visible="true">
+		</mx:Accordion>-->
 	</mx:HBox>
-	
-	<mx:VBox width="20%" height="100%" horizontalAlign="center" verticalAlign="middle">
-		<mx:TextArea id="debugTest" width="100%" height="90%" editable="false"  wordWrap="false"/>
-		<mx:Button id="testButton" label="change" click="testButtonClicked();"/>
-	</mx:VBox>
 	
 </mx:Application>

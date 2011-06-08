@@ -5,9 +5,7 @@ import com.google.maps.Map;
 
 import flash.events.ErrorEvent;
 
-import formulaires.formulaire_autres;
-import formulaires.formulaire_carte;
-import formulaires.formulaire_general;
+import formulaires.*;
 
 import mx.collections.ArrayCollection;
 import mx.containers.TitleWindow;
@@ -18,6 +16,23 @@ import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 
+[Bindable] private var mesDonnees_AC:ArrayCollection = new ArrayCollection([
+	{Type:"Voiture", Marque:"Renault", 
+		Couleur:"Rouge", activation:true, prix:80000, type:"0"}, 
+	{Type:"Voiture", Marque:"Renault", 
+		Couleur:"Vert", activation:false, prix:35000, type:"1"},  
+	{Type:"Voiture", Marque:"Peugeot", 
+		Couleur:"Jaune", activation:false, prix:22300, type:"0"},  
+	{Type:"Voiture", Marque:"Citroen", 
+		Couleur:"Orange", activation:true, prix:20000, type:"1"},  
+	{Type:"Moto", Marque:"Honda", 
+		Couleur:"Rouge", activation:false, prix:20000, type:"0"}, 
+	{Type:"Moto", Marque:"Honda", 
+		Couleur:"Rouge", activation:false, prix:30000, type:"0" },  
+	{Type:"Moto", Marque:"Yamaha", 
+		Couleur:"Rouge", activation:false, prix:3000, type:"1"},  
+	{Type:"Moto", Marque:"Yamaha", 
+		Couleur:"Rouge", activation:false, prix:1200, type:"0"} ]);
 
 private var TreeObject:XML;
 private var xmlTree:XML
@@ -39,15 +54,20 @@ private function init():void {
 private var FormulaireGeneral:formulaire_general;
 private var FormulaireAutres:formulaire_autres;
 private var map:formulaire_carte;
+private var tstgrid:formulaire_test;
 
 private function onStartup() : void {
 	map = new formulaire_carte();
 	FormulaireGeneral = new formulaire_general();
 	FormulaireAutres = new formulaire_autres();
+	tstgrid = new formulaire_test();
 	
 	GeneralTab.addChild(FormulaireGeneral);
 	AutresTab.addChild(FormulaireAutres);
 	MapTab.addChild(map);
+	TestTab.addChild(tstgrid);
+	tstgrid.dg.dataProvider=mesDonnees_AC;
+	;
 	
 	//var fb:formulaire_batiments = new formulaire_batiments;
 	//fb.percentWidth=100;
@@ -83,8 +103,8 @@ private function testButtonClicked() : void {
 } 
 
 private function logThis( txt : String ) : void {
-	debugTest.text+=txt+"\n";
-	debugTest.verticalScrollPosition = debugTest.maxVerticalScrollPosition;
+	//debugTest.text+=txt+"\n";
+	//debugTest.verticalScrollPosition = debugTest.maxVerticalScrollPosition;
 }
 
 private function displayNodeProperties( event:ResultEvent ) : void {
