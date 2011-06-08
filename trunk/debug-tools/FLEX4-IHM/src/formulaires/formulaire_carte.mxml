@@ -17,9 +17,6 @@
 	
 	<mx:Script>
 		<![CDATA[
-			
-			///------------------------------------------------------
-			
 			import com.google.maps.LatLng;
 			import com.google.maps.Map;
 			import com.google.maps.MapEvent;
@@ -29,12 +26,19 @@
 			import com.google.maps.controls.PositionControl;
 			import com.google.maps.controls.ZoomControl;
 			import com.google.maps.interfaces.IMapType;
+			import com.google.maps.overlays.Marker;
+			import com.google.maps.overlays.MarkerOptions;
+			import com.google.maps.styles.FillStyle;
+			import com.google.maps.styles.StrokeStyle;
 			
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			private var marker:Marker;
+			
 			private function closeHandler(event:CloseEvent):void{
 				PopUpManager.removePopUp(this);
 			}
@@ -50,6 +54,7 @@
 						this.map.setCenter(new LatLng(lat,lng),
 							zoom,
 							MapType.SATELLITE_MAP_TYPE);
+						marker.setLatLng(new LatLng(lat, lng));
 			}
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
@@ -78,6 +83,7 @@
 						this.map.setCenter(i1,
 							               f2,
 										   i3);
+						marker.setLatLng(i1);
 					}		
 				}
 			}
@@ -96,6 +102,17 @@
 				this.map.addControl(new MapTypeControl());
 				this.map.addControl(new PositionControl());
 				this.map.addControl(new ZoomControl());
+				
+				marker = new Marker(
+					new LatLng(47,2),
+					new MarkerOptions({
+						strokeStyle: new StrokeStyle({color: 0x223344}),
+						fillStyle: new FillStyle({color: 0x987654, alpha: 0.8}),
+						radius: 12,
+						hasShadow: true
+					}));
+				map.addOverlay(marker);
+
 				
 			}
 			
