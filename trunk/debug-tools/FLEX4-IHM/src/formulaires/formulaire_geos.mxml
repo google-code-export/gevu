@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" height="100%" horizontalCenter="0">
+	<mx:DataGrid id="Tableau" width="100%" height="100%">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Paramètre" dataField="prop" width="120" />
+			<mx:DataGridColumn headerText="Valeur" dataField="val" itemRenderer="composants.DatagridDynamicField" />
+		</mx:columns>
+	</mx:DataGrid>
 	
+	<mx:Script>
+		<![CDATA[
+			
+			//import mx.rpc.events.ResultEvent;
+			import mx.collections.ArrayCollection;
+			
+			public function displayNodeProperties( NodeData:Object ) : void {
+				var obj:Object;
+				var arr:Array = new Array();
+				var arr1:Array = new Array();
+				var arrc:ArrayCollection = new ArrayCollection();
+				
+				obj={prop:"adresse",		val:NodeData.adresse, type:3};			arr.push(obj);
+				obj={prop:"latitude",		val:NodeData.lat, type:2};				arr.push(obj);
+				obj={prop:"longitude",		val:NodeData.lng, type:2};				arr.push(obj);
+				obj={prop:"zoom minimum",	val:NodeData.zoom_min, type:1};			arr.push(obj);
+				obj={prop:"zoom maximum",	val:NodeData.zoom_max, type:1};			arr.push(obj);
+				obj={prop:"kml",			val:NodeData.kml, type:3};				arr.push(obj);
+				obj={prop:"date de MAJ",	val:NodeData.maj, type:4};				arr.push(obj);
+				obj={prop:"id_geo",			val:NodeData.id_geo, type:1};			arr.push(obj);
+				obj={prop:"id_type_carte",	val:NodeData.id_type_carte, type:1};	arr.push(obj);
+				obj={prop:"id_donee",		val:NodeData.id_donnee, type:1};		arr.push(obj);
+				obj={prop:"id_instant",		val:NodeData.id_instant, type:1};		arr.push(obj);
+				
+				arrc.source=arr;
+				Tableau.dataProvider=arrc;
+			}
+		]]>
+	</mx:Script>
 </mx:Canvas>

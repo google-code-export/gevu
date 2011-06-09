@@ -18,21 +18,21 @@ import mx.rpc.events.ResultEvent;
 
 [Bindable] private var mesDonnees_AC:ArrayCollection = new ArrayCollection([
 	{Type:"Voiture", Marque:"Renault", 
-		Couleur:"Rouge", activation:true, prix:80000, type:"0"}, 
+		Couleur:"Rouge", activation:true, prix:80000, type:"0", val:"sdf"}, 
 	{Type:"Voiture", Marque:"Renault", 
-		Couleur:"Vert", activation:false, prix:35000, type:"1"},  
+		Couleur:"Vert", activation:false, prix:35000, type:"1", val:1},  
 	{Type:"Voiture", Marque:"Peugeot", 
-		Couleur:"Jaune", activation:false, prix:22300, type:"0"},  
+		Couleur:"Jaune", activation:false, prix:22300, type:"0", val:100},  
 	{Type:"Voiture", Marque:"Citroen", 
-		Couleur:"Orange", activation:true, prix:20000, type:"1"},  
+		Couleur:"Orange", activation:true, prix:20000, type:"1", val:false},  
 	{Type:"Moto", Marque:"Honda", 
-		Couleur:"Rouge", activation:false, prix:20000, type:"0"}, 
+		Couleur:"Rouge", activation:false, prix:20000, type:"0", val:"qsd"}, 
 	{Type:"Moto", Marque:"Honda", 
-		Couleur:"Rouge", activation:false, prix:30000, type:"0" },  
+		Couleur:"Rouge", activation:false, prix:30000, type:"0", val:"qsd" },  
 	{Type:"Moto", Marque:"Yamaha", 
-		Couleur:"Rouge", activation:false, prix:3000, type:"1"},  
+		Couleur:"Rouge", activation:false, prix:3000, type:"1", val:"qsd"},  
 	{Type:"Moto", Marque:"Yamaha", 
-		Couleur:"Rouge", activation:false, prix:1200, type:"0"} ]);
+		Couleur:"Rouge", activation:false, prix:1200, type:"1", val:"qsd"} ]);
 
 private var TreeObject:XML;
 private var xmlTree:XML
@@ -55,24 +55,21 @@ private var FormulaireGeneral:formulaire_general;
 private var FormulaireAutres:formulaire_autres;
 private var map:formulaire_carte;
 private var tstgrid:formulaire_test;
+private var FormulaireGeos:formulaire_geos;
 
 private function onStartup() : void {
 	map = new formulaire_carte();
 	FormulaireGeneral = new formulaire_general();
 	FormulaireAutres = new formulaire_autres();
+	FormulaireGeos = new formulaire_geos();
 	tstgrid = new formulaire_test();
 	
 	GeneralTab.addChild(FormulaireGeneral);
 	AutresTab.addChild(FormulaireAutres);
 	MapTab.addChild(map);
 	TestTab.addChild(tstgrid);
+	GeosTab.addChild(FormulaireGeos);
 	tstgrid.dg.dataProvider=mesDonnees_AC;
-	;
-	
-	//var fb:formulaire_batiments = new formulaire_batiments;
-	//fb.percentWidth=100;
-	//fb.percentHeight=100;
-	//MapTab.addChild(fb);
 }
 
 private function treeItemOpened( event:TreeEvent ) : void {
@@ -149,9 +146,8 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 		}
 		
 		if(event.result[i]['id']==9)
-			map.showLatLng(event.result[i].data.lat,
-			               event.result[i].data.lng,
-						   event.result[i].data.zoom_min);
+			//map.showLatLng(event.result[i].data.lat, event.result[i].data.lng, event.result[i].data.zoom_min);
+			FormulaireGeos.displayNodeProperties( event.result[i].data);
 	}
 	arrc2.source=arr2;
 	FormulaireAutres.Tableau.dataProvider=arrc2;
