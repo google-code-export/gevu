@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" horizontalAlign="center" initialize="init()"
-		 creationComplete="creComp()" >
+		 creationComplete="creComp()"
+		 width="100%" height="100%">
+	
+	
+	<!--
+	note dor data type:
+	 1- int
+	 2- number
+	 3- string
+	 4- datetime
+	-->
+	
 	<mx:Script>
 		<![CDATA[
 			import mx.controls.Button;
@@ -25,17 +36,17 @@
 			
 			private function creComp() : void {
 
+				com.visible=false;
+				num.visible=false;
+				che.visible=false;
 				switch (data.type){
-				case "0":
-					but.includeInLayout=true;
-					but.visible=true;
+				case 1:
 					break;
 				
-				case "1":
+				case 2:
 					
-					che.includeInLayout=true;
-					che.visible=true;
 					break;
+				
 				}
 			}
 			// propriété pour la nouvelle valeur
@@ -43,7 +54,17 @@
 			
 		]]>
 	</mx:Script>
-	<mx:CheckBox id="che" selected="{data.activation}" updateComplete="result=che.selected"
-				 visible="false" includeInLayout="false"/>
-	<mx:Button id="but" visible="false" includeInLayout="false"/>
+	<mx:VBox id="che" visible="true" includeInLayout="{che.visible}">
+		<mx:CheckBox id="iii"  selected="{data.activation}" updateComplete="result=iii.selected" />
+	</mx:VBox>
+	<mx:VBox id="lab" visible="true" includeInLayout="{lab.visible}">
+		<mx:TextInput text="{data.val}" width="100%" height="100%" />
+	</mx:VBox>
+	<mx:VBox id="com" visible="true" includeInLayout="{com.visible}">
+		<mx:ComboBox width="100%" height="100%" />
+	</mx:VBox>
+	<mx:VBox id="num" visible="true" includeInLayout="{num.visible}" >
+		<mx:NumericStepper  />
+	</mx:VBox>
+	
 </mx:VBox>
