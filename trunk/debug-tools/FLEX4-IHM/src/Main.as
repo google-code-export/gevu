@@ -88,7 +88,7 @@ private function treeItemClicked( event:ListEvent ) : void {
 			 event.currentTarget.selectedItem.attribute("lib") );
 	
 	if(SelectedNode>0) roDiagnostique.getNodeRelatedData(SelectedNode);
-	//map.showNode(SelectedNode);
+	map.showNode(SelectedNode);
 }
 
 private function testButtonClicked() : void {
