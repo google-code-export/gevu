@@ -1271,12 +1271,18 @@ INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
 			</Query>
 
 
-			<Query fonction="Grille_GetEtatDiagSum">
+			<Query fonction="Grille_GetEtatDiagSumOLD">
 				<select>
 					SELECT SUM(audio) audio, SUM(cog) cog, SUM(moteur) moteur, SUM(visu) visu </select>
 				<from> FROM ona_etatdiag eta
 					INNER JOIN spip_rubriques_enfants re ON re.id_rubrique = eta.id_rubrique </from>
 				<where> WHERE re.id_parent=-idRub- AND handi=-handi- </where>
+			</Query> 
+			<Query fonction="Grille_GetEtatDiagSum">
+				<select>
+					SELECT SUM(audio) audio, SUM(cog) cog, SUM(moteur) moteur, SUM(visu) visu </select>
+				<from> FROM ona_etatdiag eta </from>
+				<where> WHERE eta.id_rubrique=-idRub- AND eta.handi=-handi- </where>
 			</Query> 
 			<Query fonction="Grille_GetEtatDiagOuiOLD">
 				<select>
