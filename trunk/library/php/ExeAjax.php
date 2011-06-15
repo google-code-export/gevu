@@ -56,7 +56,7 @@
 			$resultat = GetStatEtatDiag($objSite, $g);
 			break;
 		case 'GetEtatDiag':
-			$resultat = $g->GetEtatDiag();
+			$resultat = $g->GetEtatDiag(false,false,$_SESSION['ForceCalcul']);
 			break;
 		case 'GetTreeProb':
 			$resultat = GetTreeProb($_GET['id']);

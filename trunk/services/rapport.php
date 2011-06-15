@@ -1,5 +1,6 @@
 <?php
-set_time_limit(1000);
+set_time_limit(3000);
+$temps_debut = microtime(true);
 
 //en attendant la nouvelle version
 //on utilise les requêtes de la version XUL
@@ -40,8 +41,8 @@ $rm = $m->findByIdDoc($_REQUEST['model']);
 
 //echo $pathModel;
 //pour le debugage
-//$ps = str_replace("/home/gevun/www/", "C:/wamp/www/gevu/", $rm['path_source']);
-$ps = $rm['path_source'];
+$ps = str_replace("/home/gevun/www/", "C:/wamp/www/gevu/", $rm['path_source']);
+//$ps = $rm['path_source'];
 $odf = new odf($ps);
 
 
@@ -249,6 +250,8 @@ $probs = $odf->setSegment('probs');
 
 //pour chaque batiments
 $j=0;
+$z=0;
+$arrIdParent = array();
 foreach($arrEleDiag as $r){
 
 	//récupère les problèmes
@@ -272,27 +275,41 @@ foreach($arrEleDiag as $r){
 			
 			//$strAriane = utf8_encode($gProb->GetFilAriane());
 			$strAriane = utf8_encode($gProb->TitreParent." | ".$gProb->titre);
-		    $probs->setVars('prob_num', $j);     
+			//echo "-".$j." - ".$strAriane."<br/>"; 
+			//$temps_fin = microtime(true);
+			//echo 'Temps : '.round($temps_fin - $temps_debut, 4)." s. <br/>";
+			$probs->setVars('prob_num', $j);     
 		    $probs->setVars('prob_ariane', $strAriane);
-		    if($gProb->IdParent){
-		    	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
-		    }
-			    	
-			if(count($arrDocs)>0){
-
-				foreach($arrDocs as $Docs){				
-					if($Docs->largeur > $Docs->hauteur)
-				    	$probs->probimgs->setImage('prob_img', $Docs->path,0,9);	    	
-				    else		
-				    	$probs->probimgs->setImage('prob_img', $Docs->path,9,0);
-				    $probs->probimgs->merge();
-				}        	
-			}else{
-		    	$probs->setImage('prob_img', '../images/check_no.png'); 
-		    }
 		    
-		}
 		
+		    if($gProb->IdParent && !in_array($gProb->IdParent,$arrIdParent)){
+		    	$arrIdParent[] = $gProb->IdParent;
+		    	$arrDocs = $gProb->GetDocs($gProb->IdParent,"1,2");
+				if(count($arrDocs)>0){
+	
+					$maxTof = false;			
+					foreach($arrDocs as $Docs){	
+						if(!$maxTof){
+							$maxTof = true;			
+							if($Docs->largeur > $Docs->hauteur)
+						    	$probs->probimgs->setImage('prob_img', $Docs->path,0,9);	    	
+						    else		
+						    	$probs->probimgs->setImage('prob_img', $Docs->path,9,0);
+						    $probs->probimgs->merge();
+							//pour les traces
+							//$z++;
+							//echo "  - ".$z." - ".$Docs->path."<br/>"; 
+						}
+					}        	
+				}else{
+				   	$probs->probimgs->setImage('prob_img', '../images/check_no.png');	    	
+				    $probs->probimgs->merge();
+				}
+			}else{
+			   	$probs->probimgs->setImage('prob_img', '../images/check_yes.png');	    	
+			    $probs->probimgs->merge();
+		    }
+		}
 	    //$_SESSION['ForceCalcul'] = true;
 	    //$strXml = $gProb->GetEtatDiag(true, true);
 	    //$strXml = $grille->GetEtatDiagListeTot($gProb->id);

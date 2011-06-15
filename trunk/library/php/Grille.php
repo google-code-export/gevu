@@ -430,17 +430,29 @@ class Grille{
      }
     
     function DelEtatDiag($idRub,$handi){
-		//supprime la relation des ?tatdiag au donn?e
+		$db = new mysql ($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
+		$db->connect();
+    	//supprime la relation des ?tatdiag au donn?e
     	$sql = "DELETE FROM ona_etatdiag_donnees 
 			WHERE id_etatdiag IN (SELECT id_etatdiag FROM ona_etatdiag 
 					WHERE id_rubrique=".$idRub." AND handi=".$handi.")";
-		$db = new mysql ($this->site->infos["SQL_HOST"], $this->site->infos["SQL_LOGIN"], $this->site->infos["SQL_PWD"], $this->site->infos["SQL_DB"]);
-		$db->connect();
 		$db->query($sql);
-    	
+		/*
+		$sql = "DELETE FROM ona_etatdiag_donnees 
+			WHERE id_etatdiag IN (SELECT eta.id_etatdiag FROM ona_etatdiag eta
+					INNER JOIN spip_rubriques_enfants re ON re.id_rubrique = eta.id_rubrique  
+					WHERE re.id_parent=".$idRub." AND handi=".$handi.")"; 		
+		$db->query($sql);
+		*/
 		//supprime les ?tatdiag
 		$sql = "DELETE FROM ona_etatdiag 
 			WHERE id_rubrique=".$idRub." AND handi=".$handi;
+		$db->query($sql);
+		/*
+		$sql = "DELETE FROM ona_etatdiag 
+			WHERE id_rubrique IN (SELECT re.id_rubrique FROM spip_rubriques_enfants re WHERE re.id_parent=".$idRub.")
+			 AND handi=".$handi;
+		*/ 		
 		$db->query($sql);
 		$db->close();
     }
@@ -659,7 +671,7 @@ class Grille{
     public function GetEtatDiagOui($ids,$idRub,$calcul)
 	{
 		if(!$calcul){
-			$r =  $this-> GetEtatDiagSum($idRub,0);		
+			$r =  $this->GetEtatDiagSum($idRub,0);		
 		}else{
 			//r?cup?re le nombre de crit?res valid?s
 			$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetEtatDiagOui']";
@@ -693,7 +705,7 @@ class Grille{
 	public function GetEtatDiagHandi($ids,$handi,$idRub,$calcul)
 	{
 		if(!$calcul){
-			$r =  $this-> GetEtatDiagSum($idRub,$handi);		
+			$r =  $this->GetEtatDiagSum($idRub,$handi);		
 		}else{
 			//r?cup?re le nombre de crit?res valid?s
 			$Xpath = "/XmlParams/XmlParam/Querys/Query[@fonction='Grille_GetEtatDiagHandi']";

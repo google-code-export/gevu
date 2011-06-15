@@ -276,14 +276,14 @@ class Granulat
 		//calculer l'état du diagnostique
 		$grille = new Grille($this->site);
 		$numDiag=0;
-		if(!$calcul){
+		if($calcul){
 			//r�cup�re les rubriques ayant un diagnostique
 			$rs = $grille->FiltreRubAvecGrille($this->id,$this->site->infos["GRILLE_REP_CON"]);
 			$numDiag = mysql_num_rows($rs);
 			$fin = microtime(true)-$deb;
 			if($this->trace)
 	    		echo "Granulat:GetEtatDiag:FiltreRubAvecGrille  id = $this->id num = $num  $fin<br/>";
-			if($_SESSION['ForceCalcul']){
+			if(){
 				//calcul les diagnostiques
 				while ($r =  mysql_fetch_assoc($rs)) {
 					//cr�ation du granulta
