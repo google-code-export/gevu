@@ -283,7 +283,7 @@ class Granulat
 			$fin = microtime(true)-$deb;
 			if($this->trace)
 	    		echo "Granulat:GetEtatDiag:FiltreRubAvecGrille  id = $this->id num = $num  $fin<br/>";
-			if(){
+			if($_SESSION['ForceCalcul']){
 				//calcul les diagnostiques
 				while ($r =  mysql_fetch_assoc($rs)) {
 					//cr�ation du granulta
