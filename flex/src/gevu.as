@@ -33,13 +33,18 @@
 	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRQz39mjOVnM1cIqThEYinQ2UMSLChQ5GzeL0LKmVf54ALsifsQIHmMHMQ";
     private var urlAllEtatDiag:String="http://www.gevu.org/library/php/ExecDonneeCarto.php?f=GetAllEtatDiag&site="+site;
     private var urlExeCarto:String="http://www.gevu.org/library/php/ExecDonneeCarto.php";
+	public const ENDPOINT_SERVICE:String = "http://www.gevu.org/services/index.php";
 	*/
 	//local
    	private var urlExeAjax:String="http://localhost/gevu/library/php/ExeAjax.php";
 	private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRSAqqCYJRNRYB52nvFZykN9ZY0cdhRvfhvUr_7t7Rz5_XNkPGDb_GYlQA";
     private var urlAllEtatDiag:String="http://localhost/gevu/library/php/ExecDonneeCarto.php?f=GetAllEtatDiag&site="+site;
     private var urlExeCarto:String="http://localhost/gevu/library/php/ExecDonneeCarto.php";
+	public const ENDPOINT_SERVICE:String = "http://localhost/gevu/services/index.php";
 	//
+	[Bindable]
+	public var exi:Object;
+	private var idExi:String = "";
 	
     private var map:Map;
     private var markers:XMLList;
@@ -95,6 +100,12 @@
 
 
 		private function init():void{
+			//construction de la fenêtre d'édition
+			var twLog:twLogin= twLogin(
+		        PopUpManager.createPopUp(this, twLogin, true));
+			twLog.endPoint=ENDPOINT_SERVICE;
+		    PopUpManager.centerPopUp(twLog);
+			
 			getXmlTerre("?f=get_arbo_territoire&id=5479&site="+site,readXmlTerre);
 			if(site=="alceane"){
 				getXmlTerre("?f=get_arbo_parc&site="+site,readXmlParc);				

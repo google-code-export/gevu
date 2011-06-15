@@ -16,12 +16,12 @@ try {
                                  'File',
                                  $frontendOptions,
                                  $backendOptions);*/
-    
+/*    
 $t = new GEVU_Diagnostique();
 $r=$t->getXmlNode(3);
 $s=$t->getNodeType(3);
 $wxwx=$t->getNodeRelatedData(3);
-
+*/
 /*
 $s = new Model_DbTable_Gevu_solutions();
 $rs = $s->remove(526);
