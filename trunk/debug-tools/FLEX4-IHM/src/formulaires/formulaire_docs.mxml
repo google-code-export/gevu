@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" height="100%" horizontalCenter="0">
+	
+	<mx:VBox height="100%" width="100%">
+		
+		<!--  -->
+		
+		<mx:List height="130" width="100%" id="doclist" change="itemClicked( event );" />
+		
+		<!--  -->
+		
+		<mx:Grid width="100%">
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="33%" height="100%">
+					<mx:Label text="titre" />
+				</mx:GridItem>
+				<mx:GridItem width="67%" height="100%">
+					<mx:TextInput id="F01" width="100%"/>
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="33%" height="100%">
+					<mx:Label text="url" />
+				</mx:GridItem>
+				<mx:GridItem width="67%" height="100%">
+					<mx:TextInput id="F02" width="100%"/>
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="33%" height="100%">
+					<mx:Label text="branche"/>
+				</mx:GridItem>
+				<mx:GridItem width="67%" height="100%">
+					<mx:NumericStepper id="F03" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="33%" height="100%">
+					<mx:Label text="tronc" />
+				</mx:GridItem>
+				<mx:GridItem width="67%" height="100%">
+					<mx:TextInput id="F04" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="33%" height="100%">
+					<mx:Label text="content_type" />
+				</mx:GridItem>
+				<mx:GridItem width="67%" height="100%">
+					<mx:TextInput id="F05" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="33%" height="100%">
+					<mx:Label text="path_source" />
+				</mx:GridItem>
+				<mx:GridItem width="67%" height="100%">
+					<mx:TextInput id="F06" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="33%" height="100%">
+					<mx:Label text="date de MAJ" />
+				</mx:GridItem>
+				<mx:GridItem width="67%" height="100%">
+					<mx:TextInput id="F07" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="33%" height="100%">
+					<mx:Label text="id_doc" />
+				</mx:GridItem>
+				<mx:GridItem width="67%" height="100%">
+					<mx:Label id="F08" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="33%" height="100%">
+					<mx:Label text="id_instant" />
+				</mx:GridItem>
+				<mx:GridItem width="67%" height="100%">
+					<mx:Label id="F09" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+		</mx:Grid>
+		
+		<!--  -->
+		
+	</mx:VBox>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			
+			private var DocsData : Object;
+			
+			public function displayNodeProperties( NodeData:Object ) : void {
+				var tmpdata:Array = [];
+				
+				DocsData = NodeData;
+				
+				for(var i:String in NodeData){
+					tmpdata.push( NodeData[i].titre );
+				}
+				doclist.dataProvider = tmpdata;
+				displayDocProperties(0);
+			}
+			
+			public function displayDocProperties( i:int ) : void {
+				
+				F01.data = DocsData[i].titre;
+				F02.data = DocsData[i].url;
+				F03.data = DocsData[i].branche;
+				F04.data = DocsData[i].tronc;
+				F05.data = DocsData[i].content_type;
+				F06.data = DocsData[i].path_source;
+				F07.data = DocsData[i].maj;
+				F08.data = DocsData[i].id_doc;
+				F09.data = DocsData[i].id_instant;
+				
+			}
+			
+			private function itemClicked( event:ListEvent ) : void {
+				displayDocProperties( event.currentTarget.selectedIndex );
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>

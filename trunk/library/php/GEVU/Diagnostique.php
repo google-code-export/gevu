@@ -212,9 +212,8 @@ class GEVU_Diagnostique{
                 case 0:  $c = new Model_DbTable_Gevu_batiments();           break;
                 case 1:  $c = new Model_DbTable_Gevu_diagnostics();         break;
                 case 2:  $c = new Model_DbTable_Gevu_diagnosticsxvoirie();  break;
-                case 3:
-                    $c=NULL;
-                    break;
+                case 3:  $c=3;
+                         break;
                 case 4:  $c = new Model_DbTable_Gevu_espaces();             break;
                 case 5:  $c = new Model_DbTable_Gevu_espacesxexterieurs();  break;
                 case 6:  $c = new Model_DbTable_Gevu_espacesxinterieurs();  break;
@@ -236,10 +235,24 @@ class GEVU_Diagnostique{
                     break;
                 }
                 if($c==NULL) continue;
+                if($c==3){
+                    $tp = new Model_DbTable_Gevu_docsxlieux();
+                    $tp2 = new Model_DbTable_Gevu_docs();
+                    $rs = $tp->findById_lieu($idLieu);
+                    $tmp['id'] = $V['id'];
+                    $tmp['name'] = $V['name'];
+                    $tmp['data']=NULL;
+                    for($i=0; $i<count($rs); ++$i){
+                        $rs2 = $tp2->findByIdDoc($rs[$i]['id_doc']);
+                        $tmp['data'][$i] = $rs2;
+                    }
+                    $res[]=$tmp;
+                    continue;
+                }
                 $tmp['id'] = $V['id'];
                 $tmp['name'] = $V['name'];
                 $xx=$c->findById_lieu($idLieu);
-                $tmp['data'] = $xx[0];
+                $tmp['data'] = $xx;
                 $res[]=$tmp;
             }
             

@@ -3,74 +3,80 @@
 	<mx:Grid width="100%">
 		<mx:GridRow width="100%" height="100%">
 			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="adresse" />
+				<mx:Label text="nom" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F01" width="100%"/>
+				<mx:TextInput id="F1" width="100%"/>
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
 			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="latitude"/>
+				<mx:Label text="ref" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:NumericStepper id="F02" width="100%" minimum="-40" maximum="+40" stepSize="0.000001"/>
+				<mx:TextInput id="F2" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
 			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="longitude" />
+				<mx:Label text="fonction" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:NumericStepper id="F03" width="100%"  minimum="-40" maximum="+40" stepSize="0.000001"/>
+				<mx:TextInput id="F3" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="zoom minimum" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:NumericStepper id="F04" width="100%"  minimum="0" maximum="16"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="zoom maximum" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:NumericStepper id="F05" width="100%"  minimum="0" maximum="16" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="kml" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F06" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
+		
+		
+		
+		
 		<mx:GridRow width="100%" height="100%">
 			<mx:GridItem width="40%" height="100%">
 				<mx:Label text="date de MAJ" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F07" width="100%" />
+				<mx:TextInput id="F4" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		
+		
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_diag_voirie" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F5" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
 			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_geo" />
+				<mx:Label text="id_lieu" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F08" width="100%" />
+				<mx:Label id="F6" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
 			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_type_carte" />
+				<mx:Label text="id_instant" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F09" width="100%" />
+				<mx:Label id="F7" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_type_espace" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F8" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_type_specifique_ext" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F9" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -81,32 +87,22 @@
 				<mx:Label id="F10" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_instant" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F11" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
 	</mx:Grid>
 	
 	<mx:Script>
 		<![CDATA[
 			
 			public function displayNodeProperties( NodeData:Object ) : void {
-				
-				F01.data = NodeData.adresse;
-				F02.data = NodeData.lat;
-				F03.data = NodeData.lng;
-				F04.data = NodeData.zoom_min;
-				F05.data = NodeData.zoom_max;
-				F06.data = NodeData.kml;
-				F07.data = NodeData.maj;
-				F08.data = NodeData.id_geo;
-				F09.data = NodeData.id_type_carte;
+				F1.data = NodeData.nom;
+				F2.data = NodeData.ref;
+				F3.data = NodeData.fonction;
+				F4.data = NodeData.maj;
+				F5.data = NodeData.id_espace_ext;
+				F6.data = NodeData.id_lieu;
+				F7.data = NodeData.id_instant;
+				F8.data = NodeData.id_type_espace;
+				F9.data = NodeData.id_type_specifique_ext;
 				F10.data = NodeData.id_donnee;
-				F11.data = NodeData.id_instant;
 			}
 		]]>
 	</mx:Script>
