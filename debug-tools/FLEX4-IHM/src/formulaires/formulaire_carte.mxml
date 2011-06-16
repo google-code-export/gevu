@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--in the following class, this option may be added
-  showCloseButton="true" close="closeHandler(event)"-->
+showCloseButton="true" close="closeHandler(event)"-->
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" height="100%" width="95%" horizontalCenter="0">
 	
 	<mx:RemoteObject id="roDiagnostique"
@@ -13,7 +13,7 @@
 	<maps:Map xmlns:maps="com.google.maps.*" id="map" mapevent_mapready="onMapReady(event)" 
 			  width="100%" height="100%"
 			  key="ABQIAAAA8_1FP-PBAiNx9JdgQX0PRRT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSz-J6BALOe3GlE03Le8F7bsysG1w" sensor="false"/>
-			 
+	
 	
 	<mx:Script>
 		<![CDATA[
@@ -48,13 +48,16 @@
 			}
 			
 			public function showLatLng( lat:Number, lng:Number, zoom:int = 10) : void {
-						//var i1:LatLng = new LatLng(lat,lng);
-						//var i2:int = (f1+f2)/2;
-						//var i3:IMapType = MapType.SATELLITE_MAP_TYPE;
-						this.map.setCenter(new LatLng(lat,lng),
-							zoom,
-							MapType.SATELLITE_MAP_TYPE);
-						marker.setLatLng(new LatLng(lat, lng));
+				//var i1:LatLng = new LatLng(lat,lng);
+				//var i2:int = (f1+f2)/2;
+				//var i3:IMapType = MapType.SATELLITE_MAP_TYPE;
+				
+				
+				
+				this.map.setCenter(new LatLng(lat,lng),
+					zoom,
+					MapType.SATELLITE_MAP_TYPE);
+				marker.setLatLng(new LatLng(lat, lng));
 			}
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
@@ -73,16 +76,16 @@
 				var tmpArr:Array = event.result as Array;
 				for (var i:int=0; i< tmpArr.length; ++i){
 					if(tmpArr[i]['id']==9) {
-						var f1:Number = parseFloat(tmpArr[i]['data']['lat']);
-						var f2:Number = parseFloat(tmpArr[i]['data']['lng']);
+						var f1:Number = parseFloat(tmpArr[i]['data'][0]['lat']);
+						var f2:Number = parseFloat(tmpArr[i]['data'][0]['lng']);
 						var i1:LatLng = new LatLng(f1,f2);
-						f1 = parseFloat(tmpArr[i]['data']['zoom_max']);
-						f2 = parseFloat(tmpArr[i]['data']['zoom_min']);
+						f1 = parseFloat(tmpArr[i]['data'][0]['zoom_max']);
+						f2 = parseFloat(tmpArr[i]['data'][0]['zoom_min']);
 						var i2:int = (f1+f2)/2;
 						var i3:IMapType = MapType.SATELLITE_MAP_TYPE;
 						this.map.setCenter(i1,
-							               f2,
-										   i3);
+							f2,
+							i3);
 						marker.setLatLng(i1);
 					}		
 				}
@@ -91,9 +94,9 @@
 			private function onMapReady(event:Event):void {
 				map.setCenter(new LatLng(47,2), 5, MapType.SATELLITE_MAP_TYPE);
 				/*var p1:ControlPosition =
-					new ControlPosition(ControlPosition.ANCHOR_TOP_LEFT, 22, 50);
+				new ControlPosition(ControlPosition.ANCHOR_TOP_LEFT, 22, 50);
 				var p2:ControlPosition =
-					new ControlPosition(ControlPosition.ANCHOR_BOTTOM_LEFT, 1, 40);
+				new ControlPosition(ControlPosition.ANCHOR_BOTTOM_LEFT, 1, 40);
 				var myZoomControl:ZoomControl = new ZoomControl();
 				var myPositionControl:PositionControl = new PositionControl();
 				myZoomControl.setControlPosition(p1);
@@ -112,12 +115,12 @@
 						hasShadow: true
 					}));
 				map.addOverlay(marker);
-
+				
 				
 			}
 			
 			///------------------------------------------------------
 		]]>
 	</mx:Script>
-
+	
 </mx:Canvas>

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" height="100%" horizontalCenter="0" verticalScrollPolicy="auto">
+	<mx:Grid width="100%">
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="nom" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F01" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="ref" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F02" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="adresse" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F03" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="commune" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F04" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="pays" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F05" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="code_postal" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F06" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="contact_proprietaire" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F07" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="contact_delegataire" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F08" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="contact_gardien" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F09" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="horaires_gardien" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F10" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="horaires_batiment" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F11" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="superficie_parcelle"/>
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:NumericStepper id="F12" width="100%" stepSize="1"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="superficie_batiment" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:NumericStepper id="F13" width="100%"  stepSize="1"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="date_achevement" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F14" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="date_depot_permis" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F15" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="date_reha" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F16" width="100%"/>
+			</mx:GridItem>
+		</mx:GridRow>
+		
+		
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_1" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F17" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_2" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F18" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_3" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F19" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_4" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F20" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_5" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F21" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_6" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F22" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_7" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F23" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_8" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F24" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_9" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F25" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_10" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F26" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_11" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F27" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_12" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F28" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_13" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F29" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_14" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F30" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_15" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F31" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="date de MAJ" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F32" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_batiment" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F33" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_donnee" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F34" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_lieu" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F35" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_instant" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F36" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+	</mx:Grid>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			public function displayNodeProperties( NodeData:Object ) : void {
+				
+				F01.data = NodeData.nom;
+				F02.data = NodeData.ref;
+				F03.data = NodeData.adresse;
+				F04.data = NodeData.commune;
+				F05.data = NodeData.pays;
+				F06.data = NodeData.code_postal;
+				F07.data = NodeData.contact_proprietaire;
+				F08.data = NodeData.contact_delegataire;
+				F09.data = NodeData.contact_gardien;
+				F10.data = NodeData.horaires_gardien;
+				F11.data = NodeData.horaires_batiment;
+				F12.data = NodeData.superficie_parcelle;
+				F13.data = NodeData.superficie_batiment;
+				F14.data = NodeData.date_achevement;
+				F15.data = NodeData.date_depot_permis;
+				F16.data = NodeData.date_reha;
+				F17.data = NodeData.reponse_1;
+				F18.data = NodeData.reponse_2;
+				F19.data = NodeData.reponse_3;
+				F20.data = NodeData.reponse_4;
+				F21.data = NodeData.reponse_5;
+				F22.data = NodeData.reponse_6;
+				F23.data = NodeData.reponse_7;
+				F24.data = NodeData.reponse_8;
+				F25.data = NodeData.reponse_9;
+				F26.data = NodeData.reponse_10;
+				F27.data = NodeData.reponse_11;
+				F28.data = NodeData.reponse_12;
+				F29.data = NodeData.reponse_13;
+				F30.data = NodeData.reponse_14;
+				F31.data = NodeData.reponse_15;
+				F32.data = NodeData.maj;
+				F33.data = NodeData.id_batiment;
+				F34.data = NodeData.id_donnee;
+				F35.data = NodeData.id_lieu;
+				F36.data = NodeData.id_instant;
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>

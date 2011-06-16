@@ -16,12 +16,14 @@ try {
                                  'File',
                                  $frontendOptions,
                                  $backendOptions);*/
-/*    
+    
+$zbzbzb = new Model_DbTable_Gevu_docsxlieux();
+$wistiti = $zbzbzb->findById_lieu(3);
 $t = new GEVU_Diagnostique();
-$r=$t->getXmlNode(3);
-$s=$t->getNodeType(3);
+//$r=$t->getXmlNode(3);
+//$s=$t->getNodeType(3);
 $wxwx=$t->getNodeRelatedData(3);
-*/
+
 /*
 $s = new Model_DbTable_Gevu_solutions();
 $rs = $s->remove(526);
@@ -94,6 +96,7 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_docsxproduits')
 	->setClass('Model_DbTable_Gevu_rapports')
 	->setClass('Model_DbTable_Gevu_lieux')
+	->setClass('Model_DbTable_Gevu_docsxlieux')
 	->setClass('GEVU_Diagnostique')
 	
 	//pour l'authentification
