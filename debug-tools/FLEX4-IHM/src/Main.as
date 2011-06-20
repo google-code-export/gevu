@@ -57,40 +57,94 @@ private var FormulaireEtablissements:formulaire_etablissements;
 private var FormulaireGeorss:formulaire_georss;
 private var FormulaireGeos:formulaire_geos;
 
-private function removeTabs() : void {
+private function reorganizeTabs(arr:Array) : void {
 	
-	if(Tab.getChildByName("BatimentsTab")!=null)
-		Tab.removeChild( BatimentsTab );
-	
-	if(Tab.getChildByName("DiagnosticsTab")!=null)
-		Tab.removeChild( DiagnosticsTab );
-	
-	if(Tab.getChildByName("DiagnosticsxvoirieTab")!=null)
-		Tab.removeChild( DiagnosticsxvoirieTab );
-	
-	if(Tab.getChildByName("DocsTab")!=null)
-		Tab.removeChild( DocsTab );
-	
-	if(Tab.getChildByName("EspacesxexterieursTab")!=null)
-		Tab.removeChild( EspacesxexterieursTab );
-		
-	if(Tab.getChildByName("EspacesxinterieursTab")!=null)
-		Tab.removeChild( EspacesxinterieursTab );
-		
-	if(Tab.getChildByName("EtablissementsTab")!=null)
-		Tab.removeChild( EtablissementsTab );
-		
-	if(Tab.getChildByName("GeorssTab")!=null)
-		Tab.removeChild( GeorssTab );		
-	
-	if(Tab.getChildByName("GeosTab")!=null)
-		Tab.removeChild( GeosTab );
-	
+	if(Tab.getChildByName("BatimentsTab")==null){
+		if(inArray(arr, "BatimentsTab")){
+			Tab.addChild( BatimentsTab );
+		}
+	}else{
+		if(!inArray(arr, "BatimentsTab")){
+			Tab.removeChild( BatimentsTab );
+		}
+	}
+	if(Tab.getChildByName("DiagnosticsTab")==null){
+		if(inArray(arr, "DiagnosticsTab")){
+			Tab.addChild( DiagnosticsTab );
+		}
+	}else{
+		if(!inArray(arr, "DiagnosticsTab")){
+			Tab.removeChild( DiagnosticsTab );
+		}
+	}
+	if(Tab.getChildByName("DiagnosticsxvoirieTab")==null){
+		if(inArray(arr, "DiagnosticsxvoirieTab")){
+			Tab.addChild( DiagnosticsxvoirieTab );
+		}
+	}else{
+		if(!inArray(arr, "DiagnosticsxvoirieTab")){
+			Tab.removeChild( DiagnosticsxvoirieTab );
+		}
+	}
+	if(Tab.getChildByName("DocsTab")==null){
+		if(inArray(arr, "DocsTab")){
+			Tab.addChild( DocsTab );
+		}
+	}else{
+		if(!inArray(arr, "DocsTab")){
+			Tab.removeChild( DocsTab );
+		}
+	}
+	if(Tab.getChildByName("EspacesxexterieursTab")==null){
+		if(inArray(arr, "EspacesxexterieursTab")){
+			Tab.addChild( EspacesxexterieursTab );
+		}
+	}else{
+		if(!inArray(arr, "EspacesxexterieursTab")){
+			Tab.removeChild( EspacesxexterieursTab );
+		}
+	}
+	if(Tab.getChildByName("EspacesxinterieursTab")==null){
+		if(inArray(arr, "EspacesxinterieursTab")){
+			Tab.addChild( EspacesxinterieursTab );
+		}
+	}else{
+		if(!inArray(arr, "EspacesxinterieursTab")){
+			Tab.removeChild( EspacesxinterieursTab );
+		}
+	}
+	if(Tab.getChildByName("EtablissementsTab")==null){
+		if(inArray(arr, "EtablissementsTab")){
+			Tab.addChild( EtablissementsTab );
+		}
+	}else{
+		if(!inArray(arr, "EtablissementsTab")){
+			Tab.removeChild( EtablissementsTab );
+		}
+	}
+	if(Tab.getChildByName("GeorssTab")==null){
+		if(inArray(arr, "GeorssTab")){
+			Tab.addChild( GeorssTab );
+		}
+	}else{
+		if(!inArray(arr, "GeorssTab")){
+			Tab.removeChild( GeorssTab );
+		}
+	}
+	if(Tab.getChildByName("GeosTab")==null){
+		if(inArray(arr, "GeosTab")){
+			Tab.addChild( GeosTab );
+		}
+	}else{
+		if(!inArray(arr, "GeosTab")){
+			Tab.removeChild( GeosTab );
+		}
+	}
 }
 
 private function onStartup() : void {
 	map = new formulaire_carte();
-	removeTabs();
+	reorganizeTabs(new Array());
 	
 	FormulaireGeneral = new formulaire_general();
 	FormulaireBatiments = new formulaire_batiments();
@@ -173,52 +227,51 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	arrc1.source=arr1;
 	FormulaireGeneral.Tableau.dataProvider=arrc1;
 	
-	
-	removeTabs();
-	
+	var childToPreserve:Array = new Array();
 	
 	for (i=1; i<event.result.length; ++i){
 		
 		if(event.result[i]['id']==0){
 			FormulaireBatiments.displayNodeProperties( event.result[i].data[0] );
-			Tab.addChild( BatimentsTab );
+			childToPreserve.push("BatimentsTab");
 		}
 		if(event.result[i]['id']==1){
 			FormulaireDiagnostics.displayNodeProperties( event.result[i].data );
-			Tab.addChild( DiagnosticsTab );
+			childToPreserve.push("DiagnosticsTab");
 		}
 		if(event.result[i]['id']==2){
 			FormulaireDiagnosticsxvoirie.displayNodeProperties( event.result[i].data[0] );
-			Tab.addChild( DiagnosticsxvoirieTab );
+			childToPreserve.push("DiagnosticsxvoirieTab");
 		}
 		if(event.result[i]['id']==3){
 			FormulaireDocs.displayNodeProperties( event.result[i].data );
-			Tab.addChild( DocsTab );
+			childToPreserve.push("DocsTab");
 		}
 		if(event.result[i]['id']==5){
 			FormulaireEspacesxexterieurs.displayNodeProperties( event.result[i].data[0] );
-			Tab.addChild( EspacesxexterieursTab );
+			childToPreserve.push("EspacesxexterieursTab");
 		}
 		if(event.result[i]['id']==6){
 			FormulaireEspacesinterieurs.displayNodeProperties( event.result[i].data[0] );
-			Tab.addChild( EspacesxinterieursTab );
+			childToPreserve.push("EspacesxinterieursTab");
 		}
 		if(event.result[i]['id']==7){
 			FormulaireEtablissements.displayNodeProperties( event.result[i].data[0] );
-			Tab.addChild( EtablissementsTab );
+			childToPreserve.push("EtablissementsTab");
 		}
 		if(event.result[i]['id']==8){
 			FormulaireGeorss.displayNodeProperties( event.result[i].data[0] );
-			Tab.addChild( GeorssTab );
+			childToPreserve.push("GeorssTab");
 		}
 		if(event.result[i]['id']==9){
 			map.showLatLng(event.result[i].data[0].lat,
 				           event.result[i].data[0].lng,
 						   event.result[i].data[0].zoom_min);
 			FormulaireGeos.displayNodeProperties( event.result[i].data[0] );
-			Tab.addChild( GeosTab );
+			childToPreserve.push("GeosTab");
 		}
 	}
+	reorganizeTabs(childToPreserve);
 }
 
 private function updateTreeStructure( event:ResultEvent ) : void {
@@ -261,4 +314,12 @@ private function ErrorHandlerService(fault:ErrorEvent, os:String=""):void {
 	if (os!="")
 		os = " - "+os;
 	Alert.show(str, "ErrorHandlerService"+os);
+}
+
+private function inArray(arr:Array, val:String):Boolean{
+	for(var i:int; i<arr.length; ++i){
+		if(arr[i]==val)
+			return true;
+	}
+	return false;
 }
