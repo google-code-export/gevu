@@ -26,7 +26,6 @@
 		<mx:TabNavigator id="Tab" width="75%" height="100%" visible="true">
 			<mx:Canvas label="General" id="GeneralTab" width="100%" height="100%" />
 			<mx:Canvas label="Map" id="MapTab" width="100%" height="100%" />
-			<mx:Canvas label="A" id="AutresTab" width="100%" height="100%" />
 			<mx:Canvas label="d" id="DebugTab" width="100%" height="100%">
 				<mx:VBox width="80%" height="100%" horizontalAlign="center" verticalAlign="middle">
 					<mx:TextArea id="debugTest" width="100%" height="90%" editable="false"  wordWrap="false"/>
@@ -59,11 +58,14 @@
 					</mx:VBox>
 				</mx:HBox>
 			</mx:Canvas>
-			<mx:Canvas label="Batiments" id="BatimentsTab" width="100%" height="100%" visible="true" />
-			<mx:Canvas label="Diagnostiques" id="DiagnosticsTab" width="100%" height="100%" visible="true" />
-			<mx:Canvas label="Diagnostiques voirie" id="DiagnosticsxvoirieTab" width="100%" height="100%" visible="true" />
-			<mx:Canvas label="Docs" id="DocsTab" width="100%" height="100%" visible="true" />
-			<mx:Canvas label="Espaces Exterieurs" id="EspacesxexterieursTab" width="100%" height="100%" visible="true" />
+			<mx:Canvas label="Batiments" id="BatimentsTab" width="100%" height="100%" />
+			<mx:Canvas label="Diagnostiques" id="DiagnosticsTab" width="100%" height="100%" />
+			<mx:Canvas label="Diagnostiques voirie" id="DiagnosticsxvoirieTab" width="100%" height="100%" />
+			<mx:Canvas label="Docs" id="DocsTab" width="100%" height="100%" />
+			<mx:Canvas label="Espaces Exterieurs" id="EspacesxexterieursTab" width="100%" height="100%" />
+			<mx:Canvas label="Espaces Interieurs" id="EspacesxinterieursTab" width="100%" height="100%" />
+			<mx:Canvas label="Etablissements" id="EtablissementsTab" width="100%" height="100%" />
+			<mx:Canvas label="Georss" id="GeorssTab" width="100%" height="100%" />
 			<mx:Canvas label="Geos" id="GeosTab" width="100%" height="100%" visible="true" />
 		</mx:TabNavigator>
 		<!--<mx:TabNavigator id="Tab" width="60%" height="100%" visible="true">

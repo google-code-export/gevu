@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" height="100%" horizontalCenter="0">
+	<mx:Grid width="100%">
+		
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="url" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F1" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="date de MAJ" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F2" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_georss" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F3" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_instant" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F4" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_lieu" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F5" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="id_donnee" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:Label id="F6" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+	</mx:Grid>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			public function displayNodeProperties( NodeData:Object ) : void {
+				F1.data = NodeData.url;
+				F2.data = NodeData.maj;
+				F3.data = NodeData.id_georss;
+				F4.data = NodeData.id_instant;
+				F5.data = NodeData.id_lieu;
+				F6.data = NodeData.id_donnee;
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>

@@ -1,9 +1,37 @@
-<html>
+<?php define("DEBUG_MODE", false); ?>
+<?php
+    if (DEBUG_MODE){
+        $dbN = "gevu_solus";    
+		$dbO = "gevu_alceane";
+		$showdiff = true;
+    }
+    else{
+        $dbO = isset($_POST['dbO']) ? $_POST['dbO'] : '';
+        $dbN = isset($_POST['dbN']) ? $_POST['dbN'] : '';
+        $showdiff = isset($_POST['mon_champ'][0]) ? true : false;
+        if ($_POST['mon_champ'][0]<>"showdiff") $showdiff=false; 
+    }
+ ?>
+ <html>
     <head>
         <title>Migre.php - Migration de bases du modèle SPIP au Nested Sets</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     </head>
     <body>
+    <form method="POST">
+          <table>
+            <tr><td>spip database:</td><td><input type="text" name="dbO"
+                                        <?php if($dbO) echo "value=\"".$dbO."\""; ?>
+                                       /></td></tr>
+            <tr><td>new database:</td><td><input type="text" name="dbN"
+                                           <?php if($dbN) echo "value=\"".$dbN."\""; ?>
+                                           /></td></tr>
+            <tr><td colspan ="2"><input type="checkbox" name="mon_champ[]"
+                                        value="showdiff" <?php if($showdiff)echo "checked"; ?>/>afficher les diff. (sans fusion)</td></tr>
+            <tr><td colspan ="2"><hr /></td></tr>
+            <tr><td colspan ="2" align="center"><input type="submit" name="valider" value="OK"/></td></tr>
+          </table>
+        </form>
 <?php
 
 /**********************************
@@ -14,39 +42,55 @@
 * - changer le status de $ListEntree (j'aime pas l'idée d'une variable globale)
 */
 
-$dbN = "gevu_solus";    
-$dbO = "gevu_trouville_voirie1";
-
-$ldb = mysql_connect("localhost", "root", "") or die("Impossible de se connecter : " . mysql_error());    
-mysql_select_db($dbN);
-
-/* 
- * Chercher un lft=0 (chercher univers).
- * Si n'existe pas, c'est que les tableaux sont vides.
- * Créer ce noeud de base (créer univers)
- */
-$sql = "SELECT * FROM gevu_lieux WHERE lft=0";
-$result = mysql_query($sql);
-if (!$result) die('Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />');
-if(mysql_fetch_array($result)==NULL){
-    echo "gauche=0 est introuvable. l'univers sera créé ...<p>";
-    $sql="INSERT INTO $dbN.gevu_lieux
-          (`id_rubrique`, `lib`, `id_parent`, `id_instant`, `lft`, `rgt`, `niv`, `maj`, `lieu_parent`)
-          VALUES
-          (0, 'univers', 0, 0, 0, 1 ,0 ,now() ,'-1')";
-    $result = mysql_query($sql);
-    if (!$result) die('Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />');
-}
-
-define('merge', true);
-
-if(!merge){
-    migreBase($dbN, $dbO);
-    echo "<p>migration de $dbO vers $dbN terminé.</p>\n";
-}else{
-    ChercheDifferences($dbN, $dbO);
-    CopieNoueuds($dbN, $dbO);
-    echo "<p>fusion des bases $dbO et $dbN terminé.</p>\n";
+if($dbN && $dbO){
+	$ldb = mysql_connect("localhost", "root", "") or die("Impossible de se connecter : " . mysql_error());    
+	mysql_select_db($dbN);
+	
+	/* 
+	 * Chercher un lft=0 (chercher univers).
+	 * Si n'existe pas, c'est que les tableaux sont vides.
+	 * Créer ce noeud de base (créer univers)
+	 */
+	$sql = "SELECT * FROM gevu_lieux WHERE lft=0";
+	$result = mysql_query($sql);
+	if (!$result) die('Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />');
+	if(mysql_fetch_array($result)==NULL){
+	    echo "gauche=0 est introuvable. l'univers sera créé ...<p>";
+	    $sql="INSERT INTO $dbN.gevu_lieux
+	          (`id_rubrique`, `lib`, `id_parent`, `id_instant`, `lft`, `rgt`, `niv`, `maj`, `lieu_parent`)
+	          VALUES
+	          (0, 'univers', 0, 0, 0, 1 ,0 ,now() ,'-1')";
+	    $result = mysql_query($sql);
+	    if (!$result) die('Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />');
+	}
+	
+	define('merge', true);
+	
+	if(!merge){
+	    echo "<p>migration en cours ...</p>\n";
+		migreBase($dbN, $dbO);
+	    echo "<p>migration de $dbO vers $dbN terminé.</p>\n";
+	}else{
+		
+	    if($showdiff){
+	    	global $ListEntree;
+	    	ChercheDifferences($dbN, $dbO);
+	    	echo "liste des noeuds à copier:";
+	    	echo "<ul>\n";
+	    	foreach( $ListEntree as $atable){
+	    		echo "<li> ".$atable['titre']."fils de ".$atable['lieuParent']." au niveau ".$atable['niv']." </li>";
+	    	}
+	    	echo "</ul>\n";
+	    }else{
+	    	echo "<p>fusion en cours ...</p>\n";
+	    	ChercheDifferences($dbN, $dbO);
+	    	CopieNoueuds($dbN, $dbO);
+	    	echo "<p>fusion des bases $dbO et $dbN terminé.</p>\n";
+	    }	   
+	}
+	
+	//fermeture de la connexion    
+	mysql_close($ldb);
 }
 
 
@@ -945,7 +989,7 @@ function CopieNoueuds($dbN, $dbO)
     // Copie les noeuds se trouvant dans $ListEntree de $db0 vers $dbN
     echo "<ul>\n";
     foreach($ListEntree as $Noeud){
-        echo "\t<li><b>noeud à copier: \"".$Noeud['titre']."\"
+        echo "\tnoeud à copier:<li><b>\"".$Noeud['titre']."\"
               fils de ".$Noeud['idParent']." au niveau ".$Noeud['niv']."</b><br />\n";
 
         //récupère le lft du parent
@@ -998,7 +1042,7 @@ function CopieNoueuds($dbN, $dbO)
 }
 
 function verifierEtats($dbN, $dbO, $idLieux, $idRub){
-    // ici, on doit vérifier que $idLieux et $idRub ont les  mêmes états
+    /*// ici, on doit vérifier que $idLieux et $idRub ont les  mêmes états
 
     //DIAGNOSTICS 
     //on ne conserve que les réponses 'non' et 'sous réserve'
@@ -1019,10 +1063,7 @@ function verifierEtats($dbN, $dbO, $idLieux, $idRub){
     $result = mysql_query($sql);
     if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
     echo "$dbO DOCUMENTS LIEUX article: ".mysql_affected_rows()."<br />";
-    
-
-    
-   
+    */   
 }
 
 
@@ -1797,7 +1838,9 @@ function setLieuxHierarchie($idParent, $dbN, $dbO, $idInstant, $idRub, $lft, $rg
         if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
         $idLieu = mysql_insert_id();
    	
-        echo str_repeat("----", $niv)." ".$row['id_rubrique']." -> lft: ".$lft." rgt: ".$rgt." niv: ".$niv."<br />\n";
+        if(DEBUG_MODE){
+        	echo str_repeat("----", $niv)." ".$row['id_rubrique']." -> lft: ".$lft." rgt: ".$rgt." niv: ".$niv."<br />\n";
+        }
         $arr= setLieuxHierarchie($idLieu, $dbN, $dbO, $idInstant, $row['id_rubrique'], $lft, $rgt, $niv+1);
         if($lft<$arr[0]){
             $rgt=$arr[1];
@@ -1806,7 +1849,9 @@ function setLieuxHierarchie($idParent, $dbN, $dbO, $idInstant, $idRub, $lft, $rg
             $rgt=$arr[1];	//----
         }
 
-        echo str_repeat("----", $niv)." ".$row['id_rubrique']." <-> lft: ".$lft." rgt: ".$rgt." niv: ".$niv."<br />\n";
+        if(DEBUG_MODE){
+        	echo str_repeat("----", $niv)." ".$row['id_rubrique']." <-> lft: ".$lft." rgt: ".$rgt." niv: ".$niv."<br />\n";
+        }
 	
         //on met à jour le gauche droite
         $sql = "UPDATE $dbN.gevu_lieux SET lft = $lft, rgt = $rgt WHERE id_lieu = ".$idLieu;
@@ -1818,9 +1863,6 @@ function setLieuxHierarchie($idParent, $dbN, $dbO, $idInstant, $idRub, $lft, $rg
     return array($lft,$rgt);		
 }
 
-
-//fermeture de la connexion    
-mysql_close($ldb);
 ?>
     </body>
 </html>

@@ -7,8 +7,9 @@
         $dbhost = 'localhost';
         $dbuser = 'root';
         $dbpass = '';
-        $dbname = 'gevu_truc';
+        $dbname = 'gevu_solus';
         $addUnivers = false;
+        $truncateAll = false;
     }
     else{
         $dbhost = isset($_POST['dbhost']) ? $_POST['dbhost'] : '';
@@ -17,6 +18,8 @@
         $dbpass = isset($_POST['dbpass']) ? $_POST['dbpass'] : '';
         $addUnivers = isset($_POST['mon_champ'][0]) ? true : false;
         if ($_POST['mon_champ'][0]<>"addUniversToGevuLieux") $addUnivers=false; 
+        $truncateAll = isset($_POST['mon_champ2'][0]) ? true : false;
+        if ($_POST['mon_champ2'][0]<>"truncateAllTables") $truncateAll=false; 
     }
  ?>
 <html>
@@ -38,6 +41,8 @@
                                       /></td></tr>
             <tr><td>password:</td><td><input type="password" name="dbpass"
                                       /></td></tr>
+            <tr><td colspan ="2"><input type="checkbox" name="mon_champ2[]"
+                                        value="truncateAllTables" <?php if($truncateAll)echo "checked"; ?>/>truncate all tables</td></tr>
             <tr><td colspan ="2"><input type="checkbox" name="mon_champ[]"
                                         value="addUniversToGevuLieux" <?php if($addUnivers)echo "checked"; ?>/>add 'univers' to 'gevu_lieux'</td></tr>
             <tr><td colspan ="2"><hr /></td></tr>
@@ -47,9 +52,14 @@
         <?php    
             if ( $dbhost && $dbname && $dbuser ){
                 echo "\n<hr />\n";
-                truncateTables($dbhost,$dbname,$dbuser,$dbpass);
+                if($truncateAll){
+                	truncateTables($dbhost,$dbname,$dbuser,$dbpass);
+                }else{
+                	truncateSomeTables($dbhost,$dbname,$dbuser,$dbpass);
+                }
+                	
                 if($addUnivers){
-	                // Créer le noeud de base (créer univers)
+	                // CrÃ©er le noeud de base (crÃ©er univers)
                     $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die ('Error connecting to mysql');
                     mysql_select_db($dbname);
                     $sql="INSERT INTO gevu_lieux
@@ -90,6 +100,54 @@
             }
             else {
                 echo "\t<li> \"".$row[0]."\" was truncated.</li>\n";
+            }
+        }
+        echo "</ol>\ntruncation was done!<br />\n</p>";
+        mysql_close($conn);
+    }
+    
+    function truncateSomeTables($dbhost,$dbname,$dbuser,$dbpass){
+    
+    	$TablesToTruncate = array(
+    								gevu_lieux,
+    								gevu_diagnostics,
+								    gevu_problemes,
+								    gevu_geos,
+								    gevu_georss,
+								    gevu_niveaux,
+								    gevu_batiments,
+								    gevu_etablissements,
+								    gevu_espaces,
+								    gevu_espacesxinterieurs,
+								    gevu_parcelles,
+								    gevu_espacesxexterieurs,
+								    gevu_diagnosticsxvoirie,
+								    gevu_objetsxinterieurs,
+								    gevu_objetsxexterieurs,
+								    gevu_objetsxvoiries,
+								    gevu_observations,
+    								gevu_docs,
+    								gevu_docsxlieux,
+    								gevu_exis
+    							  );
+        /* try to connect to the server */
+        $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die ('Error connecting to mysql');
+
+        /* try to connect to the database */
+        mysql_select_db($dbname);
+
+        $show = "SHOW TABLES";
+        $show_res = mysql_query($show,$conn) or die(mysql_error());
+
+        echo "<p>\nstart truncating \"".$dbname."\" @ ".date("d/m/Y - H:i:s",time())."\n<ol>\n";
+        foreach ($TablesToTruncate as $t) {
+            $sql = "TRUNCATE TABLE  `".$t."`";
+            if(!mysql_query($sql)){
+                echo "Can't truncate \"".$t."\".<br />\n";
+                die(mysql_error());
+            }
+            else {
+                echo "\t<li> \"".$t."\" was truncated.</li>\n";
             }
         }
         echo "</ol>\ntruncation was done!<br />\n</p>";
