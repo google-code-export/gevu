@@ -1,18 +1,12 @@
 // ActionScript file
-import adobe.utils.MMEndCommand;
-
-import com.google.maps.Map;
-
 import flash.events.ErrorEvent;
 
 import formulaires.*;
 
 import mx.collections.ArrayCollection;
-import mx.containers.TitleWindow;
 import mx.controls.Alert;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
-import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 
@@ -52,13 +46,15 @@ private function init():void {
 }	
 
 private var FormulaireGeneral:formulaire_general;
-private var FormulaireAutres:formulaire_autres;
 private var map:formulaire_carte;
 private var FormulaireBatiments:formulaire_batiments;
 private var FormulaireDiagnostics:formulaire_diagnostics;
 private var FormulaireDiagnosticsxvoirie:formulaire_diagnosticsxvoirie;
 private var FormulaireDocs:formulaire_docs;
 private var FormulaireEspacesxexterieurs:formulaire_espacesxexterieurs;
+private var FormulaireEspacesinterieurs:formulaire_espacesxinterieurs;
+private var FormulaireEtablissements:formulaire_etablissements;
+private var FormulaireGeorss:formulaire_georss;
 private var FormulaireGeos:formulaire_geos;
 
 private function removeTabs() : void {
@@ -77,6 +73,15 @@ private function removeTabs() : void {
 	
 	if(Tab.getChildByName("EspacesxexterieursTab")!=null)
 		Tab.removeChild( EspacesxexterieursTab );
+		
+	if(Tab.getChildByName("EspacesxinterieursTab")!=null)
+		Tab.removeChild( EspacesxinterieursTab );
+		
+	if(Tab.getChildByName("EtablissementsTab")!=null)
+		Tab.removeChild( EtablissementsTab );
+		
+	if(Tab.getChildByName("GeorssTab")!=null)
+		Tab.removeChild( GeorssTab );		
 	
 	if(Tab.getChildByName("GeosTab")!=null)
 		Tab.removeChild( GeosTab );
@@ -88,22 +93,26 @@ private function onStartup() : void {
 	removeTabs();
 	
 	FormulaireGeneral = new formulaire_general();
-	FormulaireAutres = new formulaire_autres();
 	FormulaireBatiments = new formulaire_batiments();
 	FormulaireDiagnostics = new formulaire_diagnostics();
 	FormulaireDiagnosticsxvoirie = new formulaire_diagnosticsxvoirie();
 	FormulaireDocs = new formulaire_docs();
 	FormulaireEspacesxexterieurs = new formulaire_espacesxexterieurs();
+	FormulaireEspacesinterieurs = new formulaire_espacesxinterieurs();
+	FormulaireEtablissements = new formulaire_etablissements;
+	FormulaireGeorss = new formulaire_georss;
 	FormulaireGeos = new formulaire_geos();
 	
 	GeneralTab.addChild(FormulaireGeneral);
-	AutresTab.addChild(FormulaireAutres);
 	MapTab.addChild(map);
 	BatimentsTab.addChild(FormulaireBatiments);
 	DocsTab.addChild(FormulaireDocs);
 	DiagnosticsTab.addChild(FormulaireDiagnostics);
 	DiagnosticsxvoirieTab.addChild(FormulaireDiagnosticsxvoirie);
 	EspacesxexterieursTab.addChild(FormulaireEspacesxexterieurs);
+	EspacesxinterieursTab.addChild(FormulaireEspacesinterieurs);
+	EtablissementsTab.addChild(FormulaireEtablissements);
+	GeorssTab.addChild(FormulaireGeorss);
 	GeosTab.addChild(FormulaireGeos);
 	
 }
@@ -148,8 +157,6 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	var obj:Object;
 	var arr1:Array = new Array();
 	var arrc1:ArrayCollection = new ArrayCollection();
-	var arr2:Array = new Array();
-	var arrc2:ArrayCollection = new ArrayCollection();
 	
 	var i:int;
 	var tmpStr:String="";
@@ -171,11 +178,6 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	
 	
 	for (i=1; i<event.result.length; ++i){
-		tmpStr+=event.result[i]['name']+"  ";
-		for (var j:String in event.result[i].data){
-			obj={prop:j, val:event.result[i].data[j]};
-			arr2.push(obj);
-		}
 		
 		if(event.result[i]['id']==0){
 			FormulaireBatiments.displayNodeProperties( event.result[i].data[0] );
@@ -197,6 +199,18 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 			FormulaireEspacesxexterieurs.displayNodeProperties( event.result[i].data[0] );
 			Tab.addChild( EspacesxexterieursTab );
 		}
+		if(event.result[i]['id']==6){
+			FormulaireEspacesinterieurs.displayNodeProperties( event.result[i].data[0] );
+			Tab.addChild( EspacesxinterieursTab );
+		}
+		if(event.result[i]['id']==7){
+			FormulaireEtablissements.displayNodeProperties( event.result[i].data[0] );
+			Tab.addChild( EtablissementsTab );
+		}
+		if(event.result[i]['id']==8){
+			FormulaireGeorss.displayNodeProperties( event.result[i].data[0] );
+			Tab.addChild( GeorssTab );
+		}
 		if(event.result[i]['id']==9){
 			map.showLatLng(event.result[i].data[0].lat,
 				           event.result[i].data[0].lng,
@@ -205,8 +219,6 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 			Tab.addChild( GeosTab );
 		}
 	}
-	arrc2.source=arr2;
-	FormulaireAutres.Tableau.dataProvider=arrc2;
 }
 
 private function updateTreeStructure( event:ResultEvent ) : void {

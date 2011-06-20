@@ -17,12 +17,6 @@ try {
                                  $frontendOptions,
                                  $backendOptions);*/
     
-$zbzbzb = new Model_DbTable_Gevu_docsxlieux();
-$wistiti = $zbzbzb->findById_lieu(3);
-$t = new GEVU_Diagnostique();
-//$r=$t->getXmlNode(3);
-//$s=$t->getNodeType(3);
-$wxwx=$t->getNodeRelatedData(3);
 
 /*
 $s = new Model_DbTable_Gevu_solutions();

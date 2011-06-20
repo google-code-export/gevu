@@ -45,3 +45,9 @@ gestion de mdp:
 LoginManager.php
 twLogin.mxml
 -----------
+
+http://framework.zend.com/manual/fr/zend.session.introduction.html
+
+Diagnostique:    
+
+fil d'ariane dans général+migre de carte vers 

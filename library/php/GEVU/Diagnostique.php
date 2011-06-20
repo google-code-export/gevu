@@ -34,10 +34,10 @@ class GEVU_Diagnostique{
             'automatic_serialization' => true
         );  
         $backendOptions = array(
-            // Répertoire où stocker les fichiers de cache
+            // Rï¿½pertoire oï¿½ stocker les fichiers de cache
             'cache_dir' => '../tmp/'
         ); 
-        // créer un objet Zend_Cache_Core
+        // crï¿½er un objet Zend_Cache_Core
         $this->manager = Zend_Cache::factory('Core',
                                      'File',
                                      $frontendOptions,

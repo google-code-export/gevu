@@ -279,5 +279,30 @@ class Model_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
+	/*
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param datetime $idLieu
+     * @return array
+     */
+    public function getFullPath($idLieu)
+    {
+        $str = "SELECT parent.lib, parent.id_lieu
+				FROM gevu_lieux node, gevu_lieux parent
+				WHERE node.lft
+				BETWEEN parent.lft
+				AND parent.rgt
+				AND node.id_lieu =$idLieu
+				ORDER BY parent.lft";
+                    
+        $db = Zend_Db_Table::getDefaultAdapter();
+    	$stmt = $db->query($str);
+    	$stmt->setFetchMode(Zend_Db::FETCH_NUM);
+    	$result = $stmt->fetchAll();
+
+        return $result; 
+    }
+    
     
 }
