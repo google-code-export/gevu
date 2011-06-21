@@ -1,10 +1,13 @@
 // ActionScript file
+
 import flash.events.ErrorEvent;
 
 import formulaires.*;
 
 import mx.collections.ArrayCollection;
+import mx.collections.XMLListCollection;
 import mx.controls.Alert;
+import mx.events.ItemClickEvent;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
 import mx.rpc.events.FaultEvent;
@@ -12,8 +15,8 @@ import mx.rpc.events.ResultEvent;
 
 private var TreeObject:XML;
 private var xmlTree:XML
-
 private var SelectedNode:int;
+private var ButtonArray:Array;
 
 private function init():void {
 	xmlTree = 
@@ -245,9 +248,10 @@ private function testButtonClicked() : void {
 	//GeosTab.visible=false;
 	/*Tab.removeChild(GeosTab);
 	Tab.addChild(GeosTab);*/
-	
-	var a:Array = new Array(new Array("a"), new Array("bb"), new Array("ccc"), new Array("dddd"));
-	BC.updateBreadCrumb(a);
+	var xl:XMLListCollection=new XMLListCollection();
+	xl.addItem(treeTree.dataProvider.descendants().(@idLieu == 1));
+	xl.addItem(treeTree.dataProvider.descendants().(@idLieu == 2));
+	treeTree.openItems = xl;
 	
 	logThis("button clicked");
 } 
@@ -280,7 +284,7 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	
 	for (i=1; i<event.result.length; ++i){
 		if(event.result[i]['id']==-2){
-			BC.updateBreadCrumb( event.result[i].data );
+			updateBreadCrumb( event.result[i].data );
 		}
 		if(event.result[i]['id']==0){
 			FormulaireBatiments.displayNodeProperties( event.result[i].data[0] );
@@ -393,4 +397,39 @@ private function inArray(arr:Array, val:String):Boolean{
 			return true;
 	}
 	return false;
+}
+			
+private function answerToBreadCrumbChange(event:ItemClickEvent):void {					
+	trace( ButtonArray[event.index]['id'] );
+	/*
+	 * from here:
+	 * I can try to open the node called "ButtonArray[event.index]['id']"
+	 * and modify tree's view depending on it.
+	 */
+	 
+	var xl:XMLListCollection=new XMLListCollection();
+	var i:int;
+	
+	for (i=0; i<ButtonArray.length; ++i){
+		if (i == event.index)
+			break;
+		trace( ButtonArray[i]['id'] );
+		xl.addItem(treeTree.dataProvider.descendants().(@idLieu == ButtonArray[i]['id'])[0]);
+	}
+	treeTree.openItems = xl;
+	var xxx:XML = treeTree.dataProvider.descendants().(@idLieu == ButtonArray[event.index]['id'])[0];
+	//treeTree.selectedItem = treeTree.dataProvider.descendants().(@idLieu == ButtonArray[event.index]['id'])[0];
+	//treeTree.selectedItem = xxx;
+}
+				
+private function updateBreadCrumb(arr:Array):void{
+	//
+	var i:int;
+	var obj:Object;
+	ButtonArray=[];
+	for (i=0; i<arr.length; ++i){
+		obj={label:arr[i][0], id:arr[i][1]};
+		ButtonArray[i]=obj;
+	}
+	BC.dataProvider = ButtonArray;
 }

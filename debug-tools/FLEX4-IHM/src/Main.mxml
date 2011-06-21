@@ -18,7 +18,8 @@
 	</mx:RemoteObject>
 
 	<mx:VBox height="100%" width="100%">
-		<composants:Breadcrumb id="BC" />
+		<mx:ButtonBar id="BC"	borderStyle="solid" horizontalGap="2"
+								itemClick="answerToBreadCrumbChange(event);" />
 		
 		<!--*************************-->
 		
