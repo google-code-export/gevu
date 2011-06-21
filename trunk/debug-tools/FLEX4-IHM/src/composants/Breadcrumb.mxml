@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="30"
+	initialize="init();" >
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Button;
+			
+			private var ButtonArray:Array;
+			
+			private function init():void{
+				ButtonArray = new Array();
+			}
+			
+			public function updateBreadCrumb(arr:Array):void{
+				//
+				var i:int;
+				var tempButton:Button;
+				this.removeAllChildren();
+				ButtonArray = [];
+				
+				for (i=0; i<arr.length; ++i){
+					tempButton = new Button();
+					tempButton.label = arr[i][0];
+					tempButton.maxWidth=100;
+					ButtonArray[i]=tempButton;
+					this.addChild(ButtonArray[i]);
+				}
+			}
+		]]>
+	</mx:Script>
+</mx:HBox>

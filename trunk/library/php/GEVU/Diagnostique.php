@@ -203,6 +203,11 @@ class GEVU_Diagnostique{
             $xx=$c->findById_lieu($idLieu);
             $tmp['data'] = $xx[0];
             $res[]=$tmp;
+            $tmp['id'] = -2;
+            $tmp['name'] = 'BreadCrumb';
+            $xx=$c->getFullPath($idLieu);
+            $tmp['data'] = $xx;
+            $res[]=$tmp;
             
             $NodeType=$this->getNodeType($idLieu);
             
