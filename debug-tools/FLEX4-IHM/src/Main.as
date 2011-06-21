@@ -253,7 +253,7 @@ private function testButtonClicked() : void {
 } 
 
 private function logThis( txt : String ) : void {
-	trace( " - "+txt+"\n");
+	//debugTest.text+=txt+"\n";
 }
 
 private function displayNodeProperties( event:ResultEvent ) : void {
