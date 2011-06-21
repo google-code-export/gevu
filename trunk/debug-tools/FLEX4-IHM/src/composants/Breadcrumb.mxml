@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="30"
-	initialize="init();" >
+<mx:ButtonBar xmlns:mx="http://www.adobe.com/2006/mxml"
+	borderStyle="solid" horizontalGap="2"
+	itemClick="itemClicked(event);" >
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.controls.Button;
+		
+			import mx.events.ItemClickEvent;
 			
 			private var ButtonArray:Array;
 			
-			private function init():void{
-				ButtonArray = new Array();
-			}
+			private function itemClicked(event:ItemClickEvent):void {
+				
+				trace( ButtonArray[event.index][1] );
+            }
 			
 			public function updateBreadCrumb(arr:Array):void{
 				//
 				var i:int;
-				var tempButton:Button;
-				this.removeAllChildren();
-				ButtonArray = [];
-				
+				var obj:Object;
+				ButtonArray=[];
 				for (i=0; i<arr.length; ++i){
-					tempButton = new Button();
-					tempButton.label = arr[i][0];
-					tempButton.maxWidth=100;
-					ButtonArray[i]=tempButton;
-					this.addChild(ButtonArray[i]);
+					obj={label:arr[i][0], id:arr[i][1]};
+					ButtonArray[i]=obj;
 				}
+				this.dataProvider = ButtonArray;
 			}
+		
 		]]>
 	</mx:Script>
-</mx:HBox>
+</mx:ButtonBar>
