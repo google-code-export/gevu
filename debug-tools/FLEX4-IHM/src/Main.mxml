@@ -4,7 +4,7 @@
 				layout="horizontal"
 				horizontalAlign="center" height="100%" width="80%"
 				verticalAlign="middle" initialize="init();" creationComplete="onStartup()"
-				error="ErrorHandlerService(event)" xmlns:maps="com.google.maps.*" xmlns:formulaires="formulaires.*">
+				error="ErrorHandlerService(event)" xmlns:maps="com.google.maps.*" xmlns:formulaires="formulaires.*" xmlns:composants="composants.*">
 	
 	<mx:Script source="included_ressources.as" />
 	<mx:Script source="Main.as" />
@@ -17,7 +17,12 @@
 		<mx:method name="getXmlNode"	result="updateTreeStructure( event );" />
 	</mx:RemoteObject>
 
-	<mx:HBox width="100%" height="100%" horizontalAlign="center">
+	<mx:VBox height="100%" width="100%">
+		<composants:Breadcrumb id="BC" />
+		
+		<!--*************************-->
+		
+		<mx:HBox width="100%" height="100%" horizontalAlign="center">
 		<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
 			height="100%" width="40%"
 			itemOpening="treeItemOpened( event );"
@@ -62,16 +67,22 @@
 			<mx:Canvas label="Diagnostiques" id="DiagnosticsTab" width="100%" height="100%" />
 			<mx:Canvas label="Diagnostiques voirie" id="DiagnosticsxvoirieTab" width="100%" height="100%" />
 			<mx:Canvas label="Docs" id="DocsTab" width="100%" height="100%" />
+			<mx:Canvas label="Espaces" id="EspacesTab" width="100%" height="100%" />
 			<mx:Canvas label="Espaces Exterieurs" id="EspacesxexterieursTab" width="100%" height="100%" />
 			<mx:Canvas label="Espaces Interieurs" id="EspacesxinterieursTab" width="100%" height="100%" />
 			<mx:Canvas label="Etablissements" id="EtablissementsTab" width="100%" height="100%" />
 			<mx:Canvas label="Georss" id="GeorssTab" width="100%" height="100%" />
-			<mx:Canvas label="Geos" id="GeosTab" width="100%" height="100%" visible="true" />
+			<mx:Canvas label="Geos" id="GeosTab" width="100%" height="100%" />
+			<mx:Canvas label="Niveaux" id="NiveauxTab" width="100%" height="100%" />
+			<mx:Canvas label="Objets Exterieurs" id="ObjetsxexterieursTab" width="100%" height="100%" />
+			<mx:Canvas label="Objets Interieurs" id="ObjetsxinterieursTab" width="100%" height="100%" />
+			<mx:Canvas label="Objets Voiries" id="ObjetsxvoiriesTab" width="100%" height="100%" />
 		</mx:TabNavigator>
 		<!--<mx:TabNavigator id="Tab" width="60%" height="100%" visible="true">
 		</mx:TabNavigator>-->
 		<!--<mx:Accordion id="Tab" width="60%" height="100%" visible="true">
 		</mx:Accordion>-->
 	</mx:HBox>
+	</mx:VBox>
 	
 </mx:Application>
