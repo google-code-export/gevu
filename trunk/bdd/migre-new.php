@@ -78,7 +78,7 @@ if($dbN && $dbO){
 	    	echo "liste des noeuds à copier:";
 	    	echo "<ul>\n";
 	    	foreach( $ListEntree as $atable){
-	    		echo "<li> ".$atable['titre']."fils de ".$atable['lieuParent']." au niveau ".$atable['niv']." </li>";
+	    		echo "<li> \"".$atable['titre']."\" fils de ".$atable['lieuParent']." au niveau ".$atable['niv']." </li>";
 	    	}
 	    	echo "</ul>\n";
 	    }else{
@@ -987,9 +987,9 @@ function CopieNoueuds($dbN, $dbO)
     
     
     // Copie les noeuds se trouvant dans $ListEntree de $db0 vers $dbN
-    echo "<ul>\n";
+    echo "noeuds à copier:<ul>\n";
     foreach($ListEntree as $Noeud){
-        echo "\tnoeud à copier:<li><b>\"".$Noeud['titre']."\"
+        echo "\t<li><b>\"".$Noeud['titre']."\"
               fils de ".$Noeud['idParent']." au niveau ".$Noeud['niv']."</b><br />\n";
 
         //récupère le lft du parent
