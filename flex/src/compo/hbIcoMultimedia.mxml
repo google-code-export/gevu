@@ -5,13 +5,16 @@
 	>
  <mx:Script>
 		<![CDATA[
-		
-       	import mx.managers.PopUpManager;
-		import compo.twPhotoListe;
+			import com.google.analytics.debug._Style;
+			
+			import compo.twPhotoListe;
+			
+			import mx.managers.PopUpManager;
 		
       	[Embed(source="../images/jpg.png")] [Bindable] private var PhotoIcon:Class;
       	[Embed(source="../images/mpg.png")] [Bindable] private var FilmIcon:Class;
       	[Embed(source="../images/mp3.png")] [Bindable] private var SonIcon:Class;
+		[Embed(source="../images/pdf.png")] [Bindable] private var PdfIcon:Class;
 
 		public var idRub:String;
 		public var idSite:String;
@@ -20,6 +23,8 @@
 		public var photo:Boolean;
 		public var film:Boolean;
 		public var son:Boolean;
+		public var doc:Boolean;
+		private var urlPdf:String; 
 		
 		public function Init(EtatDiag:Object, Rub:String, Site:String, Ajax:String):void {	
 			idRub=Rub;
@@ -39,12 +44,12 @@
 	        	}else{
 			        for each (var ico:Object in rsEtatDiag.EtatDiag.icones[1].icone)
 			        {
-			        	showIcone(ico.id);	        	
+			        	showIcone(ico);	        	
 			        }
 	        	}
 	        }
 	        //vérifie qu'au moins une icone est affichée
-	        if(photo||film||son){
+	        if(photo||film||son||doc){
 	        	return true;
 	        }else{
 	        	return false;
@@ -58,15 +63,21 @@
     		imgFilm.visible=true;
     	if(son)
     		imgSon.visible=true;      			
+		if(doc)
+			imgDoc.visible=true;      			
 	}
 
-      public function showIcone(type:String):void{
-    	if(type=="images")
+      public function showIcone(ico:Object):void{
+    	if(ico.id=="images")
     		photo=true;
-    	if(type=="videos")
+    	if(ico.id=="videos")
     		film=true;
-    	if(type=="sons")
+    	if(ico.id=="sons")
     		son=true;      	
+		if(ico.id=="docs"){
+			doc = true;
+			urlPdf = ico.value;
+		}
       }
         
 
@@ -85,7 +96,12 @@
         PopUpManager.centerPopUp(wPhotoListe);
 
      }
-
+	
+	private function go():void {
+		var targetURL:URLRequest = new URLRequest (urlPdf);		
+		navigateToURL(targetURL, "_blank");
+	}
+			
      private function ShowListeFilm():void {
 
      }
@@ -99,5 +115,6 @@
    	<mx:LinkButton id="imgPhoto" visible="false" icon="{PhotoIcon}" click="ShowListePhoto();" />
    	<mx:LinkButton id="imgFilm" visible="false" icon="{FilmIcon}" click="ShowListeFilm();" />
    	<mx:LinkButton id="imgSon" visible="false" icon="{SonIcon}" click="ShowListeSon();" />
+	<mx:LinkButton id="imgDoc" visible="false" icon="{PdfIcon}" click="go()" />
 	
 </mx:HBox>
