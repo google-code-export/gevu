@@ -78,7 +78,7 @@ if($dbN && $dbO){
 	    	echo "liste des noeuds à copier:";
 	    	echo "<ul>\n";
 	    	foreach( $ListEntree as $atable){
-	    		echo "<li> \"".$atable['titre']."\" fils de ".$atable['lieuParent']." au niveau ".$atable['niv']." </li>";
+	    		echo "<li> \"".$atable['titre']."\", id=".$atable['idEnfant']." fils de ".$atable['idParent']." au niveau ".$atable['niv']." (lieu parent=".$atable['lieuParent'].") </li>";
 	    	}
 	    	echo "</ul>\n";
 	    }else{
