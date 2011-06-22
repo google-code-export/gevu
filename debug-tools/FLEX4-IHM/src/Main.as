@@ -406,20 +406,14 @@ private function answerToBreadCrumbChange(event:ItemClickEvent):void {
 	 * I can try to open the node called "ButtonArray[event.index]['id']"
 	 * and modify tree's view depending on it.
 	 */
-	 
-	var xl:XMLListCollection=new XMLListCollection();
-	var i:int;
-	
-	for (i=0; i<ButtonArray.length; ++i){
-		if (i == event.index)
-			break;
-		trace( ButtonArray[i]['id'] );
-		xl.addItem(treeTree.dataProvider.descendants().(@idLieu == ButtonArray[i]['id'])[0]);
-	}
-	treeTree.openItems = xl;
-	var xxx:XML = treeTree.dataProvider.descendants().(@idLieu == ButtonArray[event.index]['id'])[0];
-	//treeTree.selectedItem = treeTree.dataProvider.descendants().(@idLieu == ButtonArray[event.index]['id'])[0];
-	//treeTree.selectedItem = xxx;
+	 var tmpXml:XML = treeTree.dataProvider.descendants().(@idLieu == ButtonArray[event.index]['id'])[0];
+	treeTree.selectedItem = tmpXml;
+	treeTree.expandItem(tmpXml, false);
+	SelectedNode = ButtonArray[event.index]['id'];
+	logThis( "tree item has been clicked. item is:"+
+			 ButtonArray[event.index]['label'] );
+	if(SelectedNode>0) roDiagnostique.getNodeRelatedData(SelectedNode);
+	map.showNode(SelectedNode);
 }
 				
 private function updateBreadCrumb(arr:Array):void{
