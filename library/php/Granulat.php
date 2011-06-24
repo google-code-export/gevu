@@ -276,7 +276,7 @@ class Granulat
 		//calculer l'état du diagnostique
 		$grille = new Grille($this->site);
 		$numDiag=0;
-		if($calcul){
+		if(!$calcul){
 			//r�cup�re les rubriques ayant un diagnostique
 			$rs = $grille->FiltreRubAvecGrille($this->id,$this->site->infos["GRILLE_REP_CON"]);
 			$numDiag = mysql_num_rows($rs);
