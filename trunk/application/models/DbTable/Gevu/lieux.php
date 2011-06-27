@@ -302,7 +302,5 @@ class Model_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     	$result = $stmt->fetchAll();
 
         return $result; 
-    }
-    
-    
+    }    
 }

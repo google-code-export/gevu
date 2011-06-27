@@ -213,34 +213,13 @@ class GEVU_Diagnostique{
             
             foreach($NodeType as $V){
                 
-                switch($V['id']){
-                case 0:  $c = new Model_DbTable_Gevu_batiments();           break;
-                case 1:  $c = new Model_DbTable_Gevu_diagnostics();         break;
-                case 2:  $c = new Model_DbTable_Gevu_diagnosticsxvoirie();  break;
-                case 3:  $c=3;
-                         break;
-                case 4:  $c = new Model_DbTable_Gevu_espaces();             break;
-                case 5:  $c = new Model_DbTable_Gevu_espacesxexterieurs();  break;
-                case 6:  $c = new Model_DbTable_Gevu_espacesxinterieurs();  break;
-                case 7:  $c = new Model_DbTable_Gevu_etablissements();      break;
-                case 8:  $c = new Model_DbTable_Gevu_georss();              break;
-                case 9:  $c = new Model_DbTable_Gevu_geos();                break;
-                case 10: $c = new Model_DbTable_Gevu_niveaux();             break;
-                case 11: $c = new Model_DbTable_Gevu_objetsxexterieurs();   break;
-                case 12: $c = new Model_DbTable_Gevu_objetsxinterieurs();   break;
-                case 13: $c = new Model_DbTable_Gevu_objetsxvoiries();      break;
-                case 14: $c = new Model_DbTable_Gevu_observations();        break;
-                case 15: $c = new Model_DbTable_Gevu_parcelles();           break;
-                case 16: $c = new Model_DbTable_Gevu_problemes();           break;
-                case 17: $c=NULL;
-                    break;
-                            
-                default:
-                    $res=NULL;
-                    break;
-                }
-                if($c==NULL) continue;
-                if($c==3){
+                if($V['id']==0){
+                	$c = new Model_DbTable_Gevu_batiments();           
+                }elseif($V['id']==1){
+                	$c = new Model_DbTable_Gevu_diagnostics();         
+                }elseif($V['id']==2){
+                	$c = new Model_DbTable_Gevu_diagnosticsxvoirie();  
+                }elseif($V['id']==3){
                     $tp = new Model_DbTable_Gevu_docsxlieux();
                     $tp2 = new Model_DbTable_Gevu_docs();
                     $rs = $tp->findById_lieu($idLieu);
@@ -253,7 +232,43 @@ class GEVU_Diagnostique{
                     }
                     $res[]=$tmp;
                     continue;
+                }elseif($V['id']==4){
+                	$c = new Model_DbTable_Gevu_espaces();             
+                }elseif($V['id']==5){
+                	$c = new Model_DbTable_Gevu_espacesxexterieurs();  
+                }elseif($V['id']==6){
+                	$c = new Model_DbTable_Gevu_espacesxinterieurs();  
+                }elseif($V['id']==7){
+                	$c = new Model_DbTable_Gevu_etablissements();      
+                }elseif($V['id']==8){
+                	$c = new Model_DbTable_Gevu_georss();              
+                }elseif($V['id']==9){
+                	$c = new Model_DbTable_Gevu_geos();                
+                }elseif($V['id']==10){
+                	$c = new Model_DbTable_Gevu_niveaux();             
+                }elseif($V['id']==11){
+                	$c = new Model_DbTable_Gevu_objetsxexterieurs();   
+                }elseif($V['id']==12){
+                	$c = new Model_DbTable_Gevu_objetsxinterieurs();   
+                }elseif($V['id']==13){
+                	$c = new Model_DbTable_Gevu_objetsxvoiries();      
+                	$tmp['id'] = $V['id'];
+                	$tmp['name'] = $V['name'];
+                	$xx=$c->findById_lieu($idLieu);
+                	$tmp['data'] = $xx;
+                	//---
+                	$res[]=$tmp;
+                }elseif($V['id']==14){
+                	$c = new Model_DbTable_Gevu_observations();        
+                }elseif($V['id']==15){
+                	$c = new Model_DbTable_Gevu_parcelles();           
+                }elseif($V['id']==16){
+                	$c = new Model_DbTable_Gevu_problemes();           
+                }elseif($V['id']==17){
+                	$c=NULL;
+                
                 }
+
                 $tmp['id'] = $V['id'];
                 $tmp['name'] = $V['name'];
                 $xx=$c->findById_lieu($idLieu);

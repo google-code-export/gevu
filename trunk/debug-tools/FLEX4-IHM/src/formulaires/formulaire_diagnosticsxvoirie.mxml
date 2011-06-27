@@ -29,38 +29,6 @@
 				<mx:TextInput id="F3" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_diag_voirie" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F4" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_lieu" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F5" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_instant" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F6" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_donnee" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F7" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
 	</mx:Grid>
 	
 	<mx:Script>
@@ -71,10 +39,6 @@
 				F1.data = NodeData.nom;
 				F2.data = NodeData.ref;
 				F3.data = NodeData.maj;
-				F4.data = NodeData.id_diag_voirie;
-				F5.data = NodeData.id_lieu;
-				F6.data = NodeData.id_instant;
-				F7.data = NodeData.id_donnee;
 			}
 		]]>
 	</mx:Script>
