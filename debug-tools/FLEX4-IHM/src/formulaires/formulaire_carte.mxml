@@ -93,15 +93,6 @@ showCloseButton="true" close="closeHandler(event)"-->
 			
 			private function onMapReady(event:Event):void {
 				map.setCenter(new LatLng(47,2), 5, MapType.SATELLITE_MAP_TYPE);
-				/*var p1:ControlPosition =
-				new ControlPosition(ControlPosition.ANCHOR_TOP_LEFT, 22, 50);
-				var p2:ControlPosition =
-				new ControlPosition(ControlPosition.ANCHOR_BOTTOM_LEFT, 1, 40);
-				var myZoomControl:ZoomControl = new ZoomControl();
-				var myPositionControl:PositionControl = new PositionControl();
-				myZoomControl.setControlPosition(p1);
-				myPositionControl.setControlPosition(p2);*/
-				
 				this.map.addControl(new MapTypeControl());
 				this.map.addControl(new PositionControl());
 				this.map.addControl(new ZoomControl());
@@ -110,9 +101,9 @@ showCloseButton="true" close="closeHandler(event)"-->
 					new LatLng(47,2),
 					new MarkerOptions({
 						strokeStyle: new StrokeStyle({color: 0x223344}),
-						fillStyle: new FillStyle({color: 0x987654, alpha: 0.8}),
 						radius: 12,
-						hasShadow: true
+						hasShadow: true,
+						draggable: true
 					}));
 				map.addOverlay(marker);
 				

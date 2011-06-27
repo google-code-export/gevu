@@ -57,38 +57,6 @@
 				<mx:TextInput id="F07" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_geo" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F08" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_type_carte" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F09" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_donnee" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F10" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_instant" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F11" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
 	</mx:Grid>
 	
 	<mx:Script>
@@ -103,10 +71,6 @@
 				F05.data = NodeData.zoom_max;
 				F06.data = NodeData.kml;
 				F07.data = NodeData.maj;
-				F08.data = NodeData.id_geo;
-				F09.data = NodeData.id_type_carte;
-				F10.data = NodeData.id_donnee;
-				F11.data = NodeData.id_instant;
 			}
 		]]>
 	</mx:Script>

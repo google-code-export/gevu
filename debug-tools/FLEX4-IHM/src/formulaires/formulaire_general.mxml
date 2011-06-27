@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" height="100%" horizontalCenter="0">
-	<mx:DataGrid id="Tableau" width="100%" height="100%">
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" height="100%" horizontalCenter="0"
+	verticalScrollPolicy="on" >
+	<mx:DataGrid id="Tableau" width="100%" height="20%">
 		<mx:columns>
 			<mx:DataGridColumn headerText="Paramètre" dataField="prop" width="120" />
 			<mx:DataGridColumn headerText="Valeur" dataField="val" />
 		</mx:columns>
 	</mx:DataGrid>
-</mx:Canvas>
+</mx:VBox>

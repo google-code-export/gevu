@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml" >
+	
+	<mx:RemoteObject id="roMotsClefs"
+					 destination="zend"
+					 source="Model_DbTable_Gevu_motsclefs"
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="getAllByType"	result="setDataList( event );" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.controls.Alert;
+			
+			private var DataList:Array;
+		
+			private function init() : void {
+				DataList = [];
+			}
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+				      "Detail: "+fault.fault.faultDetail.toString()+"\n"+
+				      "String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			public function setKeyword(k:int):void{
+				for(var i:int=0; i<DataList.length; ++i){
+					if(DataList[i]['id_motclef']==k){
+						this.selectedIndex=i;
+					}
+				}
+			}
+			
+			public function setListType(i:int):void{
+				roMotsClefs.getAllByType(i);
+			}
+			
+			private function setDataList(event:ResultEvent):void{
+				DataList = [];
+				var dp:Array=[];
+				for(var i:int=0; i<event.result.length; ++i){
+					DataList.push(event.result[i]);
+					dp.push(event.result[i]['titre']);
+				}
+				dataProvider = dp;
+			}
+		
+		]]>
+
+	</mx:Script>
+	
+</mx:ComboBox>

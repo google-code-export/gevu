@@ -64,20 +64,8 @@
 					</mx:VBox>
 				</mx:HBox>
 			</mx:Canvas>
-			<mx:Canvas label="Batiments" id="BatimentsTab" width="100%" height="100%" />
-			<mx:Canvas label="Diagnostiques" id="DiagnosticsTab" width="100%" height="100%" />
-			<mx:Canvas label="Diagnostiques voirie" id="DiagnosticsxvoirieTab" width="100%" height="100%" />
-			<mx:Canvas label="Docs" id="DocsTab" width="100%" height="100%" />
-			<mx:Canvas label="Espaces" id="EspacesTab" width="100%" height="100%" />
-			<mx:Canvas label="Espaces Exterieurs" id="EspacesxexterieursTab" width="100%" height="100%" />
-			<mx:Canvas label="Espaces Interieurs" id="EspacesxinterieursTab" width="100%" height="100%" />
-			<mx:Canvas label="Etablissements" id="EtablissementsTab" width="100%" height="100%" />
-			<mx:Canvas label="Georss" id="GeorssTab" width="100%" height="100%" />
+
 			<mx:Canvas label="Geos" id="GeosTab" width="100%" height="100%" />
-			<mx:Canvas label="Niveaux" id="NiveauxTab" width="100%" height="100%" />
-			<mx:Canvas label="Objets Exterieurs" id="ObjetsxexterieursTab" width="100%" height="100%" />
-			<mx:Canvas label="Objets Interieurs" id="ObjetsxinterieursTab" width="100%" height="100%" />
-			<mx:Canvas label="Objets Voiries" id="ObjetsxvoiriesTab" width="100%" height="100%" />
 		</mx:TabNavigator>
 		<!--<mx:TabNavigator id="Tab" width="60%" height="100%" visible="true">
 		</mx:TabNavigator>-->

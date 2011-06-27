@@ -81,11 +81,13 @@ if($dbN && $dbO){
 	    		echo "<li> \"".$atable['titre']."\", id=".$atable['idEnfant']." fils de ".$atable['idParent']." au niveau ".$atable['niv']." (lieu parent=".$atable['lieuParent'].") </li>";
 	    	}
 	    	echo "</ul>\n";
+	    	verifBase();
 	    }else{
 	    	echo "<p>fusion en cours ...</p>\n";
 	    	ChercheDifferences($dbN, $dbO);
 	    	CopieNoueuds($dbN, $dbO);
 	    	echo "<p>fusion des bases $dbO et $dbN terminé.</p>\n";
+	    	verifBase();
 	    }	   
 	}
 	
@@ -1861,6 +1863,34 @@ function setLieuxHierarchie($idParent, $dbN, $dbO, $idInstant, $idRub, $lft, $rg
         $rgt= $lft+1;	     //----
     }
     return array($lft,$rgt);		
+}
+
+function verifBase(){
+	$sql = "SELECT ll.cnt FROM
+	             (SELECT COUNT(*) cnt FROM gevu_lieux GROUP BY lft)
+	             AS ll
+	        WHERE ll.cnt>1
+	        GROUP BY ll.cnt";
+	$res = mysql_query($sql);
+	if (!$res) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+	if(mysql_fetch_array($res)) {
+		echo "<p>erreur dans la migration: il existe plusieurs lft égaux</p>";
+	}else{
+		echo "pas d'erreur dans lft <br />";
+	}
+	
+$sql = "SELECT ll.cnt FROM
+	             (SELECT COUNT(*) cnt FROM gevu_lieux GROUP BY rgt)
+	             AS ll
+	        WHERE ll.cnt>1
+	        GROUP BY ll.cnt";
+	$res = mysql_query($sql);
+	if (!$res) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+	if(mysql_fetch_array($res)) {
+		echo "<p>erreur dans la migration: il existe plusieurs rgt égaux</p>";
+	}else{
+		echo "pas d'erreur dans rgt <br />";
+	}
 }
 
 ?>
