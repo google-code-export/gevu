@@ -92,6 +92,7 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_lieux')
 	->setClass('Model_DbTable_Gevu_docsxlieux')
 	->setClass('Model_DbTable_Gevu_motsclefs')
+	->setClass('GEVU_ModifBase')
 	->setClass('GEVU_Diagnostique')
 	
 	//pour l'authentification
