@@ -51,127 +51,81 @@ private function reorganizeTabs(arr:Array) : void {
 	
 	
 	var chldArr:Array = FormulaireGeneral.getChildren();
-	for (var i:int=0; i<chldArr.length; ++i){
-		trace(chldArr[i].id)
-	}
-	
-	if(FormulaireGeneral.getChildByName("FormulaireBatiments")==null){
+
+		if(inArray(chldArr, FormulaireBatiments)){
+			FormulaireGeneral.removeChild( FormulaireBatiments );
+		}
+		if(inArray(chldArr, FormulaireDiagnostics)){
+			FormulaireGeneral.removeChild( FormulaireDiagnostics );
+		}
+		if(inArray(chldArr, FormulaireDiagnosticsxvoirie)){
+			FormulaireGeneral.removeChild( FormulaireDiagnosticsxvoirie );
+		}
+		if(inArray(chldArr, FormulaireDocs)){
+			FormulaireGeneral.removeChild( FormulaireDocs );
+		}
+		if(inArray(chldArr, FormulaireEspaces)){
+			FormulaireGeneral.removeChild( FormulaireEspaces );
+		}
+		if(inArray(chldArr, FormulaireEspacesxexterieurs)){
+			FormulaireGeneral.removeChild( FormulaireEspacesxexterieurs );
+		}
+		if(inArray(chldArr, FormulaireEspacesinterieurs)){
+			FormulaireGeneral.removeChild( FormulaireEspacesinterieurs );
+		}
+		if(inArray(chldArr, FormulaireEtablissements)){
+			FormulaireGeneral.removeChild( FormulaireEtablissements );
+		}
+		if(inArray(chldArr, FormulaireNiveaux)){
+			FormulaireGeneral.removeChild( FormulaireNiveaux );
+		}
+		if(inArray(chldArr, FormulaireObjetsxexterieurs)){
+			FormulaireGeneral.removeChild( FormulaireObjetsxexterieurs );
+		}
+		if(inArray(chldArr, FormulaireObjetsxinterieurs)){
+			FormulaireGeneral.removeChild( FormulaireObjetsxinterieurs );
+		}
+		if(inArray(chldArr, FormulaireObjetsxvoiries)){
+			FormulaireGeneral.removeChild( FormulaireObjetsxvoiries );
+		}
+		//----
 		if(inArray(arr, "FormulaireBatiments")){
 			FormulaireGeneral.addChild( FormulaireBatiments );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireBatiments")){
-			FormulaireGeneral.removeChild( FormulaireBatiments );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireDiagnostics")==null){
 		if(inArray(arr, "FormulaireDiagnostics")){
 			FormulaireGeneral.addChild( FormulaireDiagnostics );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireDiagnostics")){
-			FormulaireGeneral.removeChild( FormulaireDiagnostics );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireDiagnosticsxvoirie")==null){
 		if(inArray(arr, "FormulaireDiagnosticsxvoirie")){
 			FormulaireGeneral.addChild( FormulaireDiagnosticsxvoirie );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireDiagnosticsxvoirie")){
-			FormulaireGeneral.removeChild( FormulaireDiagnosticsxvoirie );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireDocs")==null){
 		if(inArray(arr, "FormulaireDocs")){
 			FormulaireGeneral.addChild( FormulaireDocs );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireDocs")){
-			FormulaireGeneral.removeChild( FormulaireDocs );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireEspaces")==null){
 		if(inArray(arr, "FormulaireEspaces")){
 			FormulaireGeneral.addChild( FormulaireEspaces );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireEspaces")){
-			FormulaireGeneral.removeChild( FormulaireEspaces );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireEspacesxexterieurs")==null){
 		if(inArray(arr, "FormulaireEspacesxexterieurs")){
 			FormulaireGeneral.addChild( FormulaireEspacesxexterieurs );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireEspacesxexterieurs")){
-			FormulaireGeneral.removeChild( FormulaireEspacesxexterieurs );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireEspacesinterieurs")==null){
 		if(inArray(arr, "FormulaireEspacesinterieurs")){
 			FormulaireGeneral.addChild( FormulaireEspacesinterieurs );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireEspacesinterieurs")){
-			FormulaireGeneral.removeChild( FormulaireEspacesinterieurs );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireEtablissements")==null){
 		if(inArray(arr, "FormulaireEtablissements")){
 			FormulaireGeneral.addChild( FormulaireEtablissements );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireEtablissements")){
-			FormulaireGeneral.removeChild( FormulaireEtablissements );
-		}
-	}
-	if(GeosTab.getChildByName("FormulaireGeos")==null){
-		if(inArray(arr, "FormulaireGeos")){
-			GeosTab.addChild( FormulaireGeos );
-		}
-	}else{
-		if(!inArray(arr, "FormulaireGeos")){
-			GeosTab.removeChild( FormulaireGeos );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireNiveaux")==null){
 		if(inArray(arr, "FormulaireNiveaux")){
 			FormulaireGeneral.addChild( FormulaireNiveaux );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireNiveaux")){
-			FormulaireGeneral.removeChild( FormulaireNiveaux );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireObjetsxexterieurs")==null){
 		if(inArray(arr, "FormulaireObjetsxexterieurs")){
 			FormulaireGeneral.addChild( FormulaireObjetsxexterieurs );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireObjetsxexterieurs")){
-			FormulaireGeneral.removeChild( FormulaireObjetsxexterieurs );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireObjetsxinterieurs")==null){
 		if(inArray(arr, "FormulaireObjetsxinterieurs")){
 			FormulaireGeneral.addChild( FormulaireObjetsxinterieurs );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireObjetsxinterieurs")){
-			FormulaireGeneral.removeChild( FormulaireObjetsxinterieurs );
-		}
-	}
-	if(FormulaireGeneral.getChildByName("FormulaireObjetsxvoiries")==null){
 		if(inArray(arr, "FormulaireObjetsxvoiries")){
 			FormulaireGeneral.addChild( FormulaireObjetsxvoiries );
 		}
-	}else{
-		if(!inArray(arr, "FormulaireObjetsxvoiries")){
-			FormulaireGeneral.removeChild( FormulaireObjetsxvoiries );
-		}
-	}
+	
 }
 
 
@@ -387,7 +341,7 @@ private function ErrorHandlerService(fault:ErrorEvent, os:String=""):void {
 	Alert.show(str, "ErrorHandlerService"+os);
 }
 
-private function inArray(arr:Array, val:String):Boolean{
+private function inArray(arr:Array, val:Object):Boolean{
 	for(var i:int; i<arr.length; ++i){
 		if(arr[i]==val)
 			return true;
