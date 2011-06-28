@@ -52,80 +52,79 @@ private function reorganizeTabs(arr:Array) : void {
 	
 	var chldArr:Array = FormulaireGeneral.getChildren();
 
-		if(inArray(chldArr, FormulaireBatiments)){
-			FormulaireGeneral.removeChild( FormulaireBatiments );
-		}
-		if(inArray(chldArr, FormulaireDiagnostics)){
-			FormulaireGeneral.removeChild( FormulaireDiagnostics );
-		}
-		if(inArray(chldArr, FormulaireDiagnosticsxvoirie)){
-			FormulaireGeneral.removeChild( FormulaireDiagnosticsxvoirie );
-		}
-		if(inArray(chldArr, FormulaireDocs)){
-			FormulaireGeneral.removeChild( FormulaireDocs );
-		}
-		if(inArray(chldArr, FormulaireEspaces)){
-			FormulaireGeneral.removeChild( FormulaireEspaces );
-		}
-		if(inArray(chldArr, FormulaireEspacesxexterieurs)){
-			FormulaireGeneral.removeChild( FormulaireEspacesxexterieurs );
-		}
-		if(inArray(chldArr, FormulaireEspacesinterieurs)){
-			FormulaireGeneral.removeChild( FormulaireEspacesinterieurs );
-		}
-		if(inArray(chldArr, FormulaireEtablissements)){
-			FormulaireGeneral.removeChild( FormulaireEtablissements );
-		}
-		if(inArray(chldArr, FormulaireNiveaux)){
-			FormulaireGeneral.removeChild( FormulaireNiveaux );
-		}
-		if(inArray(chldArr, FormulaireObjetsxexterieurs)){
-			FormulaireGeneral.removeChild( FormulaireObjetsxexterieurs );
-		}
-		if(inArray(chldArr, FormulaireObjetsxinterieurs)){
-			FormulaireGeneral.removeChild( FormulaireObjetsxinterieurs );
-		}
-		if(inArray(chldArr, FormulaireObjetsxvoiries)){
-			FormulaireGeneral.removeChild( FormulaireObjetsxvoiries );
-		}
-		//----
-		if(inArray(arr, "FormulaireBatiments")){
-			FormulaireGeneral.addChild( FormulaireBatiments );
-		}
-		if(inArray(arr, "FormulaireDiagnostics")){
-			FormulaireGeneral.addChild( FormulaireDiagnostics );
-		}
-		if(inArray(arr, "FormulaireDiagnosticsxvoirie")){
-			FormulaireGeneral.addChild( FormulaireDiagnosticsxvoirie );
-		}
-		if(inArray(arr, "FormulaireDocs")){
-			FormulaireGeneral.addChild( FormulaireDocs );
-		}
-		if(inArray(arr, "FormulaireEspaces")){
-			FormulaireGeneral.addChild( FormulaireEspaces );
-		}
-		if(inArray(arr, "FormulaireEspacesxexterieurs")){
-			FormulaireGeneral.addChild( FormulaireEspacesxexterieurs );
-		}
-		if(inArray(arr, "FormulaireEspacesinterieurs")){
-			FormulaireGeneral.addChild( FormulaireEspacesinterieurs );
-		}
-		if(inArray(arr, "FormulaireEtablissements")){
-			FormulaireGeneral.addChild( FormulaireEtablissements );
-		}
-		if(inArray(arr, "FormulaireNiveaux")){
-			FormulaireGeneral.addChild( FormulaireNiveaux );
-		}
-		if(inArray(arr, "FormulaireObjetsxexterieurs")){
-			FormulaireGeneral.addChild( FormulaireObjetsxexterieurs );
-		}
-		if(inArray(arr, "FormulaireObjetsxinterieurs")){
-			FormulaireGeneral.addChild( FormulaireObjetsxinterieurs );
-		}
-		if(inArray(arr, "FormulaireObjetsxvoiries")){
-			FormulaireGeneral.addChild( FormulaireObjetsxvoiries );
-		}
-	
+	if(inArray(chldArr, FormulaireBatiments)){
+		FormulaireGeneral.removeChild( FormulaireBatiments );
+	}
+	if(inArray(chldArr, FormulaireDiagnostics)){
+		FormulaireGeneral.removeChild( FormulaireDiagnostics );
+	}
+	if(inArray(chldArr, FormulaireDiagnosticsxvoirie)){
+		FormulaireGeneral.removeChild( FormulaireDiagnosticsxvoirie );
+	}
+	if(inArray(chldArr, FormulaireDocs)){
+		FormulaireGeneral.removeChild( FormulaireDocs );
+	}
+	if(inArray(chldArr, FormulaireEspaces)){
+		FormulaireGeneral.removeChild( FormulaireEspaces );
+	}
+	if(inArray(chldArr, FormulaireEspacesxexterieurs)){
+		FormulaireGeneral.removeChild( FormulaireEspacesxexterieurs );
+	}
+	if(inArray(chldArr, FormulaireEspacesinterieurs)){
+		FormulaireGeneral.removeChild( FormulaireEspacesinterieurs );
+	}
+	if(inArray(chldArr, FormulaireEtablissements)){
+		FormulaireGeneral.removeChild( FormulaireEtablissements );
+	}
+	if(inArray(chldArr, FormulaireNiveaux)){
+		FormulaireGeneral.removeChild( FormulaireNiveaux );
+	}
+	if(inArray(chldArr, FormulaireObjetsxexterieurs)){
+		FormulaireGeneral.removeChild( FormulaireObjetsxexterieurs );
+	}
+	if(inArray(chldArr, FormulaireObjetsxinterieurs)){
+		FormulaireGeneral.removeChild( FormulaireObjetsxinterieurs );
+	}
+	if(inArray(chldArr, FormulaireObjetsxvoiries)){
+		FormulaireGeneral.removeChild( FormulaireObjetsxvoiries );
+	}
+	//----
+	if(inArray(arr, "FormulaireBatiments")){
+		FormulaireGeneral.addChild( FormulaireBatiments );
+	}
+	if(inArray(arr, "FormulaireDiagnostics")){
+		FormulaireGeneral.addChild( FormulaireDiagnostics );
+	}
+	if(inArray(arr, "FormulaireDiagnosticsxvoirie")){
+		FormulaireGeneral.addChild( FormulaireDiagnosticsxvoirie );
+	}
+	if(inArray(arr, "FormulaireDocs")){
+		FormulaireGeneral.addChild( FormulaireDocs );
+	}
+	if(inArray(arr, "FormulaireEspaces")){
+		FormulaireGeneral.addChild( FormulaireEspaces );
+	}
+	if(inArray(arr, "FormulaireEspacesxexterieurs")){
+		FormulaireGeneral.addChild( FormulaireEspacesxexterieurs );
+	}
+	if(inArray(arr, "FormulaireEspacesinterieurs")){
+		FormulaireGeneral.addChild( FormulaireEspacesinterieurs );
+	}
+	if(inArray(arr, "FormulaireEtablissements")){
+		FormulaireGeneral.addChild( FormulaireEtablissements );
+	}
+	if(inArray(arr, "FormulaireNiveaux")){
+		FormulaireGeneral.addChild( FormulaireNiveaux );
+	}
+	if(inArray(arr, "FormulaireObjetsxexterieurs")){
+		FormulaireGeneral.addChild( FormulaireObjetsxexterieurs );
+	}
+	if(inArray(arr, "FormulaireObjetsxinterieurs")){
+		FormulaireGeneral.addChild( FormulaireObjetsxinterieurs );
+	}
+	if(inArray(arr, "FormulaireObjetsxvoiries")){
+		FormulaireGeneral.addChild( FormulaireObjetsxvoiries );
+	}
 }
 
 
