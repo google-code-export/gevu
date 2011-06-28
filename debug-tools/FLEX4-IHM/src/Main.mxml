@@ -30,7 +30,9 @@
 			change="treeItemClicked( event );"
 			horizontalScrollPolicy="on" verticalScrollPolicy="on" />
 		<mx:TabNavigator id="Tab" width="75%" height="100%" visible="true">
-			<mx:Canvas label="General" id="GeneralTab" width="100%" height="100%" />
+			<mx:Canvas label="General" id="GeneralTab" width="100%" height="100%">
+				<formulaires:formulaire_general id="FormulaireGeneral" />
+			</mx:Canvas>
 			<mx:Canvas label="Map" id="MapTab" width="100%" height="100%" />
 			<mx:Canvas label="d" id="DebugTab" width="100%" height="100%">
 				<mx:VBox width="90%" height="100%" horizontalAlign="center" horizontalCenter="0" >

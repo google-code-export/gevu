@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" height="100%" horizontalCenter="0">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" horizontalCenter="0">
 	<mx:Grid width="100%">
 		
 		<mx:GridRow width="100%" height="100%">
