@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
 	width="95%" horizontalCenter="0" xmlns:composants="composants.*"
-	initialize="init();" title="Diagnostics" maxHeight="300">
+	title="Problemes" maxHeight="300" >
 	
 	<mx:RemoteObject id="roCrit"
 					 destination="zend"
@@ -25,10 +25,26 @@
 			</mx:GridRow>
 			<mx:GridRow width="100%" height="100%">
 				<mx:GridItem width="40%" height="100%">
-					<mx:Label text="id_reponse" />
+					<mx:Label text="num_marker" />
 				</mx:GridItem>
 				<mx:GridItem width="60%" height="100%">
-					<composants:KeywordsList id="F3" width="100%" />
+					<mx:Text id="F4" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="40%" height="100%">
+					<mx:Label text="mesure" />
+				</mx:GridItem>
+				<mx:GridItem width="60%" height="100%">
+					<mx:Text id="F5" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="40%" height="100%">
+					<mx:Label text="observations" />
+				</mx:GridItem>
+				<mx:GridItem width="60%" height="100%">
+					<mx:Text id="F6" width="100%" />
 				</mx:GridItem>
 			</mx:GridRow>
 		</mx:Grid>
@@ -37,9 +53,6 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.containers.GridItem;
-			import mx.containers.GridRow;
-			import mx.containers.Grid;
 			import mx.events.ListEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
@@ -55,7 +68,7 @@
 				var j:int=0;
 				for(var i:String in NodeData){
 					++j;
-					tmpdata.push( "diagnostique n° "+j );
+					tmpdata.push( "probleme n° "+j );
 				}
 				diaglist.dataProvider = tmpdata;
 				displayDocProperties(0);
@@ -64,15 +77,13 @@
 			public function displayDocProperties( i:int ) : void {
 				
 				roCrit.findById_critere( DiagData[i].id_critere );
-				F3.setKeyword( DiagData[i].id_reponse );
+				F4.data = DiagData[i].num_marker;
+				F5.data = DiagData[i].mesure;
+				F6.data = DiagData[i].observations;
 			}
 			
 			private function itemClicked( event:ListEvent ) : void {
 				displayDocProperties( event.currentTarget.selectedIndex );
-			}
-			
-			private function init():void{
-				F3.setListType(2);				
 			}
 			
 			private function setCritLabel(event:ResultEvent):void{

@@ -45,6 +45,8 @@ private var FormulaireNiveaux:formulaire_niveaux;
 private var FormulaireObjetsxexterieurs:formulaire_objetsxexterieurs;
 private var FormulaireObjetsxinterieurs:formulaire_objetsxinterieurs;
 private var FormulaireObjetsxvoiries:formulaire_objetsxvoiries;
+private var FormulaireObservations:formulaire_observations;
+private var FormulaireProblemes:formulaire_problemes;
 
 
 private function reorganizeTabs(arr:Array) : void {
@@ -88,6 +90,12 @@ private function reorganizeTabs(arr:Array) : void {
 	if(inArray(chldArr, FormulaireObjetsxvoiries)){
 		FormulaireGeneral.removeChild( FormulaireObjetsxvoiries );
 	}
+	if(inArray(chldArr, FormulaireObservations)){
+		FormulaireGeneral.removeChild( FormulaireObservations );
+	}
+	if(inArray(chldArr, FormulaireProblemes)){
+		FormulaireGeneral.removeChild( FormulaireProblemes );
+	}
 	//----
 	if(inArray(arr, "FormulaireBatiments")){
 		FormulaireGeneral.addChild( FormulaireBatiments );
@@ -125,6 +133,12 @@ private function reorganizeTabs(arr:Array) : void {
 	if(inArray(arr, "FormulaireObjetsxvoiries")){
 		FormulaireGeneral.addChild( FormulaireObjetsxvoiries );
 	}
+	if(inArray(arr, "FormulaireObservations")){
+		FormulaireGeneral.addChild( FormulaireObservations );
+	}
+	if(inArray(arr, "FormulaireProblemes")){
+		FormulaireGeneral.addChild( FormulaireProblemes );
+	}
 }
 
 
@@ -144,6 +158,8 @@ private function onStartup() : void {
     FormulaireObjetsxexterieurs = new formulaire_objetsxexterieurs();
     FormulaireObjetsxinterieurs = new formulaire_objetsxinterieurs();
     FormulaireObjetsxvoiries = new formulaire_objetsxvoiries();
+    FormulaireObservations = new formulaire_observations();
+    FormulaireProblemes = new formulaire_problemes();
 	
 	MapTab.addChild(map);
 	GeosTab.addChild(FormulaireGeos);
@@ -160,6 +176,8 @@ private function onStartup() : void {
     FormulaireGeneral.addChild(FormulaireObjetsxexterieurs);
     FormulaireGeneral.addChild(FormulaireObjetsxinterieurs);
     FormulaireGeneral.addChild(FormulaireObjetsxvoiries);
+    FormulaireGeneral.addChild(FormulaireObservations);
+    FormulaireGeneral.addChild(FormulaireProblemes);
 	
 	reorganizeTabs(new Array());
 	
@@ -293,6 +311,14 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 		if(event.result[i]['id']==13){
 			FormulaireObjetsxvoiries.displayNodeProperties( event.result[i].data[0] );
 			childToPreserve.push("FormulaireObjetsxvoiries");
+		}
+		if(event.result[i]['id']==14){
+			FormulaireObservations.displayNodeProperties( event.result[i].data );
+			childToPreserve.push("FormulaireObservations");
+		}
+		if(event.result[i]['id']==16){
+			FormulaireProblemes.displayNodeProperties( event.result[i].data );
+			childToPreserve.push("FormulaireProblemes");
 		}
 	}
 	reorganizeTabs(childToPreserve);
