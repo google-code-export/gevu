@@ -7,6 +7,13 @@ class GEVU_ModifBase{
      * @param array $existe 
      */
 	function updateTable($T, $id, $data){
+		$fp = fopen("c:/debug.txt", "a+");
+		fputs($fp, date("d/m/Y - H:i:s",time())."\n");
+    	fputs($fp, "\$T=$T\t\$id=$id\n");
+    	foreach ($data as $key => $val){
+    		fputs($fp, "\t$key =  $val\n");
+    	}
+    	fputs($fp, "\n");
 		switch($T){
 		case 0:
 			break;

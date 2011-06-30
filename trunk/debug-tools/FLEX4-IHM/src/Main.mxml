@@ -19,7 +19,8 @@
 
 	<mx:VBox height="100%" width="100%">
 		<mx:ButtonBar id="BC"	borderStyle="solid" horizontalGap="2"
-								itemClick="answerToBreadCrumbChange(event);" />
+								itemClick="answerToBreadCrumbChange(event);" maxWidth="850">
+		</mx:ButtonBar>
 		
 		<!--*************************-->
 		

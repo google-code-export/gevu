@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
 	width="95%" horizontalCenter="0" xmlns:composants="composants.*"
-	initialize="init();" title="Diagnostics" maxHeight="300">
+	initialize="init();" title="Observations" maxHeight="300" >
 	
 	<mx:RemoteObject id="roCrit"
 					 destination="zend"
@@ -31,15 +31,28 @@
 					<composants:KeywordsList id="F3" width="100%" />
 				</mx:GridItem>
 			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="40%" height="100%">
+					<mx:Label text="num_marker" />
+				</mx:GridItem>
+				<mx:GridItem width="60%" height="100%">
+					<mx:Text id="F4" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
+			<mx:GridRow width="100%" height="100%">
+				<mx:GridItem width="40%" height="100%">
+					<mx:Label text="lib" />
+				</mx:GridItem>
+				<mx:GridItem width="60%" height="100%">
+					<mx:Text id="F5" width="100%" />
+				</mx:GridItem>
+			</mx:GridRow>
 		</mx:Grid>
 		
 	</mx:VBox>
 	
 	<mx:Script>
 		<![CDATA[
-			import mx.containers.GridItem;
-			import mx.containers.GridRow;
-			import mx.containers.Grid;
 			import mx.events.ListEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
@@ -55,7 +68,7 @@
 				var j:int=0;
 				for(var i:String in NodeData){
 					++j;
-					tmpdata.push( "diagnostique n° "+j );
+					tmpdata.push( "observation n° "+j );
 				}
 				diaglist.dataProvider = tmpdata;
 				displayDocProperties(0);
@@ -65,6 +78,8 @@
 				
 				roCrit.findById_critere( DiagData[i].id_critere );
 				F3.setKeyword( DiagData[i].id_reponse );
+				F4.data = DiagData[i].num_marker;
+				F5.data = DiagData[i].lib;
 			}
 			
 			private function itemClicked( event:ListEvent ) : void {
@@ -72,7 +87,7 @@
 			}
 			
 			private function init():void{
-				F3.setListType(2);				
+				F3.setListType(2);
 			}
 			
 			private function setCritLabel(event:ResultEvent):void{

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml" >
+<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml" change="keywordChanged()" >
 	
 	<mx:RemoteObject id="roMotsClefs"
 					 destination="zend"
@@ -15,6 +15,7 @@
 			import mx.controls.Alert;
 			
 			private var DataList:Array;
+			public var acualId:int;
 		
 			private function init() : void {
 				DataList = [];
@@ -35,8 +36,13 @@
 				for(var i:int=0; i<DataList.length; ++i){
 					if(DataList[i]['id_motclef']==k){
 						this.selectedIndex=i;
+						acualId=k;
 					}
 				}
+			}
+			
+			public function keywordChanged() : void {
+				acualId=DataList[this.selectedIndex]['id_motclef']; 
 			}
 			
 			public function setListType(i:int):void{

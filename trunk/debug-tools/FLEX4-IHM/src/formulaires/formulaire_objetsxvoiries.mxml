@@ -36,16 +36,33 @@
 			</mx:GridItem>
 		</mx:GridRow>
 	</mx:Grid>
-	
+	<!--
+	<mx:RemoteObject id="roBis"
+					 destination="zend"
+					 source="Model_DbTable_Gevu_objetsxvoiries"
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="edit"	result=";" />	
+	</mx:RemoteObject>
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
 					 source="GEVU_ModifBase"
 					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
 		<mx:method name="getAllByType"	result=";" />
 	</mx:RemoteObject>
+	-->
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					 source="GEVU_ModifBase"
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="getAllByType"	result=";" />
+		<mx:method name="updateTable"	result=";" />
+	</mx:RemoteObject>
 	<mx:Script>
 		<![CDATA[
 		
+			private function aaa():void{
+				
+			}
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.controls.Alert;
@@ -78,10 +95,13 @@
 			private function appMod() : void {
 				trace("node will be modifies: id_objet_voirie="+FieldId);
 				var obj : Object;
-				obj = {nom:F1.data,
-				       ref:F2.data,
-				       id_objet_voirie:F7.data};
-				roModifBase.getAllByType(13, FieldId, obj);
+				trace(F1.text);
+				trace(F2.text);
+				trace(F7.acualId);
+				obj = {nom:F1.text,
+				       ref:F2.text,
+				       id_type_objet_voirie:F7.acualId};
+				roModifBase.updateTable(13, FieldId, obj);
 			}
 		]]>
 	</mx:Script>
