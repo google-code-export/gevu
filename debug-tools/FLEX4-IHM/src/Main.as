@@ -9,16 +9,22 @@ import mx.collections.XMLListCollection;
 import mx.controls.Alert;
 import mx.events.ItemClickEvent;
 import mx.events.ListEvent;
+import mx.events.MenuEvent;
 import mx.events.TreeEvent;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
+
+
 
 private var TreeObject:XML;
 private var xmlTree:XML
 private var SelectedNode:int;
 private var ButtonArray:Array;
+private var NodeTypes:Array;
+private var TablesNames:Array;
 
 private function init():void {
+	roDiagnostique.getTablesNames();
 	xmlTree = 
 	<node idLieu="-1" lib="root" fake="0">
 		<node idLieu="1" lib="univers" fake="0">
@@ -46,6 +52,7 @@ private var FormulaireObjetsxexterieurs:formulaire_objetsxexterieurs;
 private var FormulaireObjetsxinterieurs:formulaire_objetsxinterieurs;
 private var FormulaireObjetsxvoiries:formulaire_objetsxvoiries;
 private var FormulaireObservations:formulaire_observations;
+private var FormulaireParcelles:formulaire_parcelles;
 private var FormulaireProblemes:formulaire_problemes;
 
 
@@ -54,49 +61,13 @@ private function reorganizeTabs(arr:Array) : void {
 	
 	var chldArr:Array = FormulaireGeneral.getChildren();
 
-	if(inArray(chldArr, FormulaireBatiments)){
-		FormulaireGeneral.removeChild( FormulaireBatiments );
+	for(var i:int=0; i<chldArr.length; ++i){
+		if(chldArr[i]==TableauGeneral || chldArr[i]==mBar)
+			continue;
+		FormulaireGeneral.removeChild( chldArr[i] );
 	}
-	if(inArray(chldArr, FormulaireDiagnostics)){
-		FormulaireGeneral.removeChild( FormulaireDiagnostics );
-	}
-	if(inArray(chldArr, FormulaireDiagnosticsxvoirie)){
-		FormulaireGeneral.removeChild( FormulaireDiagnosticsxvoirie );
-	}
-	if(inArray(chldArr, FormulaireDocs)){
-		FormulaireGeneral.removeChild( FormulaireDocs );
-	}
-	if(inArray(chldArr, FormulaireEspaces)){
-		FormulaireGeneral.removeChild( FormulaireEspaces );
-	}
-	if(inArray(chldArr, FormulaireEspacesxexterieurs)){
-		FormulaireGeneral.removeChild( FormulaireEspacesxexterieurs );
-	}
-	if(inArray(chldArr, FormulaireEspacesinterieurs)){
-		FormulaireGeneral.removeChild( FormulaireEspacesinterieurs );
-	}
-	if(inArray(chldArr, FormulaireEtablissements)){
-		FormulaireGeneral.removeChild( FormulaireEtablissements );
-	}
-	if(inArray(chldArr, FormulaireNiveaux)){
-		FormulaireGeneral.removeChild( FormulaireNiveaux );
-	}
-	if(inArray(chldArr, FormulaireObjetsxexterieurs)){
-		FormulaireGeneral.removeChild( FormulaireObjetsxexterieurs );
-	}
-	if(inArray(chldArr, FormulaireObjetsxinterieurs)){
-		FormulaireGeneral.removeChild( FormulaireObjetsxinterieurs );
-	}
-	if(inArray(chldArr, FormulaireObjetsxvoiries)){
-		FormulaireGeneral.removeChild( FormulaireObjetsxvoiries );
-	}
-	if(inArray(chldArr, FormulaireObservations)){
-		FormulaireGeneral.removeChild( FormulaireObservations );
-	}
-	if(inArray(chldArr, FormulaireProblemes)){
-		FormulaireGeneral.removeChild( FormulaireProblemes );
-	}
-	//----
+	
+	
 	if(inArray(arr, "FormulaireBatiments")){
 		FormulaireGeneral.addChild( FormulaireBatiments );
 	}
@@ -136,6 +107,9 @@ private function reorganizeTabs(arr:Array) : void {
 	if(inArray(arr, "FormulaireObservations")){
 		FormulaireGeneral.addChild( FormulaireObservations );
 	}
+	if(inArray(arr, "FormulaireParcelles")){
+		FormulaireGeneral.addChild( FormulaireParcelles );
+	}
 	if(inArray(arr, "FormulaireProblemes")){
 		FormulaireGeneral.addChild( FormulaireProblemes );
 	}
@@ -159,6 +133,7 @@ private function onStartup() : void {
     FormulaireObjetsxinterieurs = new formulaire_objetsxinterieurs();
     FormulaireObjetsxvoiries = new formulaire_objetsxvoiries();
     FormulaireObservations = new formulaire_observations();
+	FormulaireParcelles = new formulaire_parcelles();
     FormulaireProblemes = new formulaire_problemes();
 	
 	MapTab.addChild(map);
@@ -177,14 +152,12 @@ private function onStartup() : void {
     FormulaireGeneral.addChild(FormulaireObjetsxinterieurs);
     FormulaireGeneral.addChild(FormulaireObjetsxvoiries);
     FormulaireGeneral.addChild(FormulaireObservations);
+	FormulaireGeneral.addChild(FormulaireParcelles);
     FormulaireGeneral.addChild(FormulaireProblemes);
 	
 	reorganizeTabs(new Array());
 	
 	//--------------------
-	
-	
-	
 	
 	SelectedNode = 1;
 	roDiagnostique.getNodeRelatedData(SelectedNode);
@@ -211,19 +184,6 @@ private function treeItemClicked( event:ListEvent ) : void {
 }
 
 private function testButtonClicked() : void {
-	/*var _window:formulaire_batiments;
-	_window = formulaire_batiments(PopUpManager.createPopUp(this, formulaire_batiments, false));
-	PopUpManager.centerPopUp(_window);
-	_window.showNode(SelectedNode);*/
-	
-	//GeosTab.visible=false;
-	/*Tab.removeChild(GeosTab);
-	Tab.addChild(GeosTab);*/
-	var xl:XMLListCollection=new XMLListCollection();
-	xl.addItem(treeTree.dataProvider.descendants().(@idLieu == 1));
-	xl.addItem(treeTree.dataProvider.descendants().(@idLieu == 2));
-	treeTree.openItems = xl;
-	
 	logThis("button clicked");
 } 
 
@@ -249,11 +209,15 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	obj={prop:"type",		val:tmpStr};							arr1.push(obj);
 	
 	arrc1.source=arr1;
-	FormulaireGeneral.Tableau.dataProvider=arrc1;
+	TableauGeneral.dataProvider=arrc1;
 	
 	var childToPreserve:Array = new Array();
 	
+	NodeTypes = [];
 	for (i=1; i<event.result.length; ++i){
+		if(event.result[i]['id']>=0)
+			NodeTypes.push( event.result[i]['id'] );
+		
 		if(event.result[i]['id']==-2){
 			updateBreadCrumb( event.result[i].data );
 		}
@@ -316,12 +280,28 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 			FormulaireObservations.displayNodeProperties( event.result[i].data );
 			childToPreserve.push("FormulaireObservations");
 		}
+		if(event.result[i]['id']==15){
+			FormulaireParcelles.displayNodeProperties( event.result[i].data[0] );
+			childToPreserve.push("FormulaireParcelles");
+		}
 		if(event.result[i]['id']==16){
 			FormulaireProblemes.displayNodeProperties( event.result[i].data );
 			childToPreserve.push("FormulaireProblemes");
 		}
 	}
 	reorganizeTabs(childToPreserve);
+	
+	var xl:XMLList = mBar.dataProvider[2].children();
+	while (xl.length()!=0)
+		delete xl[0];
+	trace(NodeTypes);
+	for(i=0; i<NodeTypes.length; ++i){
+		if(NodeTypes[i]<0)
+			continue;
+		var myXML:XML = <item />;
+		myXML.@label=TablesNames[NodeTypes[i]];
+		mBar.dataProvider[2].appendChild(myXML);
+	}
 }
 
 private function updateTreeStructure( event:ResultEvent ) : void {
@@ -351,16 +331,6 @@ private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 
 private function ErrorHandlerService(fault:ErrorEvent, os:String=""):void {
 	var str:String;
-	/*
-	trace(fault.fault.faultCode.toString());
-	trace(fault.fault.faultDetail.toString());
-	trace(fault.fault.faultString.toString());
-	trace(fault.fault.rootCause.toString());
-	
-	str = "Code: "+fault.fault.faultCode.toString()+"\n"+
-	      "Detail: "+fault.fault.faultDetail.toString()+"\n"+
-	      "String: "+fault.fault.faultString.toString()+"\n";*/
-	
 	if (os!="")
 		os = " - "+os;
 	Alert.show(str, "ErrorHandlerService"+os);
@@ -401,4 +371,100 @@ private function updateBreadCrumb(arr:Array):void{
 		ButtonArray[i]=obj;
 	}
 	BC.dataProvider = ButtonArray;
+}
+
+private function saveDatas():void{
+	roDiagnostique.removeNodeRelatedData(SelectedNode);
+	trace(NodeTypes);
+	for(var i:int=0; i<NodeTypes.length; ++i){
+		if(NodeTypes[i]==0){
+			FormulaireBatiments.saveModifications();
+		}
+		if(NodeTypes[i]==2){
+			FormulaireDiagnosticsxvoirie.saveModifications();
+		}
+		if(NodeTypes[i]==4){
+			FormulaireEspaces.saveModifications();
+		}
+		if(NodeTypes[i]==5){
+			FormulaireEspacesxexterieurs.saveModifications();
+		}
+		if(NodeTypes[i]==6){
+			FormulaireEspacesinterieurs.saveModifications();
+		}
+		if(NodeTypes[i]==7){
+			FormulaireEtablissements.saveModifications();
+		}
+		if(NodeTypes[i]==10){
+			FormulaireNiveaux.saveModifications();
+		}
+		if(NodeTypes[i]==11){
+			FormulaireObjetsxexterieurs.saveModifications();
+		}
+		if(NodeTypes[i]==12){
+			FormulaireObjetsxinterieurs.saveModifications();
+		}
+		if(NodeTypes[i]==13){
+			FormulaireObjetsxvoiries.saveModifications();
+		}
+		if(NodeTypes[i]==15){
+			FormulaireParcelles.saveModifications();
+		}
+	}
+}
+//-------------------
+
+private function handleMenuClick(evt:MenuEvent):void {
+	/*Alert.show("le sous menu "+evt.index +" a été selectioné"
+	           +"\nle menu est "+mBar.selectedIndex);*/
+	var n:int = NodeTypes[evt.index];
+	if(mBar.selectedIndex==2){
+		if(n==0){
+			FormulaireBatiments.deleteData();
+		}
+		if(n==2){
+			FormulaireDiagnosticsxvoirie.deleteData();
+		}
+		if(n==4){
+			FormulaireEspaces.deleteData();
+		}
+		if(n==5){
+			FormulaireEspacesxexterieurs.deleteData();
+		}
+		if(n==6){
+			FormulaireEspacesinterieurs.deleteData();
+		}
+		if(n==7){
+			FormulaireEtablissements.deleteData();
+		}
+		if(n==10){
+			FormulaireNiveaux.deleteData();
+		}
+		if(n==11){
+			FormulaireObjetsxexterieurs.deleteData();
+		}
+		if(n==12){
+			FormulaireObjetsxinterieurs.deleteData();
+		}
+		if(n==13){
+			FormulaireObjetsxvoiries.deleteData();
+		}
+		if(n==15){
+			FormulaireParcelles.deleteData();
+		}
+		
+		roDiagnostique.removeNodeRelatedData(SelectedNode);
+		if(SelectedNode>0) roDiagnostique.getNodeRelatedData(SelectedNode);
+		map.showNode(SelectedNode);
+	}
+}
+private function menuClique():void{
+	var n:int = mBar.selectedIndex;
+	if( n==1 ){
+		saveDatas();
+	}	
+}
+
+private function setTablesNames( event:ResultEvent ) : void {
+	TablesNames = event.result as Array;
 }

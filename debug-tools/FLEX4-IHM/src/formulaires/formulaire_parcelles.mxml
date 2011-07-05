@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
 		  width="95%" horizontalCenter="0" xmlns:composants="composants.*"
-		  title="Objets voiries" maxHeight="300">
+		  title="Parcelles" maxHeight="300">
 
 	<mx:Grid width="100%" initialize="init();">
 		<mx:GridRow width="100%" height="100%">
@@ -23,22 +23,67 @@
 		
 		<mx:GridRow width="100%" height="100%">
 			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="date de MAJ" />
+				<mx:Label text="adresse" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
 				<mx:TextInput id="F3" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
+		
+		
 		<mx:GridRow width="100%" height="100%">
 			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_type_objet_voirie" />
+				<mx:Label text="commune" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<composants:KeywordsList id="F7" width="100%" />
+				<mx:TextInput id="F4" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="pays" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F5" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="code_postal" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F6" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="contact_proprietaire" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<mx:TextInput id="F7" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		
+		
+		
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_1" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<composants:KeywordsList id="F8" width="100%" />
+			</mx:GridItem>
+		</mx:GridRow>
+		<mx:GridRow width="100%" height="100%">
+			<mx:GridItem width="40%" height="100%">
+				<mx:Label text="reponse_2" />
+			</mx:GridItem>
+			<mx:GridItem width="60%" height="100%">
+				<composants:KeywordsList id="F9" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 	</mx:Grid>
-
+	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
 					 source="GEVU_ModifBase"
@@ -66,28 +111,41 @@
 			
 			private var FieldId : int;
 			private function init():void{
-				F7.setListType(40);
+				F8.setListType(2);
+				F9.setListType(2);
 			}
 			
 			public function displayNodeProperties( NodeData:Object ) : void {
 				F1.data = NodeData.nom;
 				F2.data = NodeData.ref;
-				F3.data = NodeData.maj;
-				F7.setKeyword(NodeData.id_type_objet_voirie);
+				F3.data = NodeData.adresse;
+				F4.data = NodeData.commune;
+				F5.data = NodeData.pays;
+				F6.data = NodeData.code_postal;
+				F7.data = NodeData.contact_proprietaire;
+				F8.setKeyword(NodeData.reponse_1);
+				F9.setKeyword(NodeData.reponse_2);
 				
-				FieldId = NodeData.id_objet_voirie;
+				FieldId = NodeData.id_parcelle;
 			}
 			
 			public function saveModifications() : void {
 				var arr:Array = new Array();
 				arr["nom"]=F1.text;
 				arr["ref"]=F2.text;
-				arr["id_type_objet_voirie"]=F7.acualId;
-				roModifBase.updateTable(13, FieldId, arr);
+				arr["adresse"]=F3.text;
+				arr["commune"]=F4.text;
+				arr["pays"]=F5.text;
+				arr["code_postal"]=F6.text;
+				arr["contact_proprietaire"]=F7.text;
+				arr["reponse_1"]=F8.acualId;
+				arr["reponse_2"]=F9.acualId;
+				
+				roModifBase.updateTable(15, FieldId, arr);
 			}
 			
 			public function deleteData():void{
-				roModifBase.deleteNode(13, FieldId);
+				roModifBase.deleteNode(15, FieldId);
 			}
 		]]>
 	</mx:Script>

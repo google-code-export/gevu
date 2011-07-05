@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" horizontalCenter="0">
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" horizontalCenter="0"
+		   maxHeight="300" title="Docs">
 	
 	<mx:VBox height="100%" width="100%">
 		
@@ -108,4 +109,4 @@
 			
 		]]>
 	</mx:Script>
-</mx:Canvas>
+</mx:Panel>

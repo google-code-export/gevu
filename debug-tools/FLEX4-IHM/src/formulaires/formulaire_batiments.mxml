@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" horizontalCenter="0" verticalScrollPolicy="auto">
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		  width="95%" horizontalCenter="0" verticalScrollPolicy="auto"
+		  maxHeight="700" title="Batiments" xmlns:composants="composants.*"
+		  initialize="init();">
 	<mx:Grid width="100%">
 		<mx:GridRow width="100%" height="100%">
 			<mx:GridItem width="40%" height="100%">
@@ -137,7 +140,7 @@
 				<mx:Label text="reponse_1" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F17" width="100%" />
+				<composants:KeywordsList id="F17" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -145,7 +148,7 @@
 				<mx:Label text="reponse_2" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F18" width="100%" />
+				<composants:KeywordsList id="F18" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -153,7 +156,7 @@
 				<mx:Label text="reponse_3" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F19" width="100%" />
+				<composants:KeywordsList id="F19" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -161,7 +164,7 @@
 				<mx:Label text="reponse_4" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F20" width="100%" />
+				<composants:KeywordsList id="F20" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -169,7 +172,7 @@
 				<mx:Label text="reponse_5" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F21" width="100%" />
+				<composants:KeywordsList id="F21" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -177,7 +180,7 @@
 				<mx:Label text="reponse_6" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F22" width="100%" />
+				<composants:KeywordsList id="F22" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -185,7 +188,7 @@
 				<mx:Label text="reponse_7" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F23" width="100%" />
+				<composants:KeywordsList id="F23" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -193,7 +196,7 @@
 				<mx:Label text="reponse_8" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F24" width="100%" />
+				<composants:KeywordsList id="F24" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -201,7 +204,7 @@
 				<mx:Label text="reponse_9" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F25" width="100%" />
+				<composants:KeywordsList id="F25" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -209,7 +212,7 @@
 				<mx:Label text="reponse_10" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F26" width="100%" />
+				<composants:KeywordsList id="F26" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -217,7 +220,7 @@
 				<mx:Label text="reponse_11" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F27" width="100%" />
+				<composants:KeywordsList id="F27" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -225,7 +228,7 @@
 				<mx:Label text="reponse_12" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F28" width="100%" />
+				<composants:KeywordsList id="F28" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -233,7 +236,7 @@
 				<mx:Label text="reponse_13" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F29" width="100%" />
+				<composants:KeywordsList id="F29" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -241,7 +244,7 @@
 				<mx:Label text="reponse_14" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F30" width="100%" />
+				<composants:KeywordsList id="F30" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 		<mx:GridRow width="100%" height="100%">
@@ -249,21 +252,54 @@
 				<mx:Label text="reponse_15" />
 			</mx:GridItem>
 			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F31" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="date de MAJ" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F32" width="100%" />
+				<composants:KeywordsList id="F31" width="100%" />
 			</mx:GridItem>
 		</mx:GridRow>
 	</mx:Grid>
 	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					 source="GEVU_ModifBase"
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="updateTable"	result=";" />
+		<mx:method name="deleteNode"	result=";" />
+	</mx:RemoteObject>
+	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			private var FieldId : int;
+			private function init():void{
+				F17.setListType(2);
+				F18.setListType(2);
+				F19.setListType(2);
+				F20.setListType(2);
+				F21.setListType(31);
+				F22.setListType(2);
+				F23.setListType(2);
+				F24.setListType(2);
+				F25.setListType(2);
+				F26.setListType(2);
+				F27.setListType(2);
+				F28.setListType(26);
+				F29.setListType(2);
+				F30.setListType(2);
+				F31.setListType(2);
+			}
 			
 			public function displayNodeProperties( NodeData:Object ) : void {
 				
@@ -283,23 +319,64 @@
 				F14.data = NodeData.date_achevement;
 				F15.data = NodeData.date_depot_permis;
 				F16.data = NodeData.date_reha;
-				F17.data = NodeData.reponse_1;
-				F18.data = NodeData.reponse_2;
-				F19.data = NodeData.reponse_3;
-				F20.data = NodeData.reponse_4;
-				F21.data = NodeData.reponse_5;
-				F22.data = NodeData.reponse_6;
-				F23.data = NodeData.reponse_7;
-				F24.data = NodeData.reponse_8;
-				F25.data = NodeData.reponse_9;
-				F26.data = NodeData.reponse_10;
-				F27.data = NodeData.reponse_11;
-				F28.data = NodeData.reponse_12;
-				F29.data = NodeData.reponse_13;
-				F30.data = NodeData.reponse_14;
-				F31.data = NodeData.reponse_15;
-				F32.data = NodeData.maj;
+				F17.setKeyword(NodeData.reponse_1);
+				F18.setKeyword(NodeData.reponse_2);
+				F19.setKeyword(NodeData.reponse_3);
+				F20.setKeyword(NodeData.reponse_4);
+				F21.setKeyword(NodeData.reponse_5);
+				F22.setKeyword(NodeData.reponse_6);
+				F23.setKeyword(NodeData.reponse_7);
+				F24.setKeyword(NodeData.reponse_8);
+				F25.setKeyword(NodeData.reponse_9);
+				F26.setKeyword(NodeData.reponse_10);
+				F27.setKeyword(NodeData.reponse_11);
+				F28.setKeyword(NodeData.reponse_12);
+				F29.setKeyword(NodeData.reponse_13);
+				F30.setKeyword(NodeData.reponse_14);
+				F31.setKeyword(NodeData.reponse_15);
+				
+				FieldId = NodeData.id_batiment;
+			}
+			
+			public function saveModifications() : void {
+				var arr:Array = new Array();
+				arr["nom"]=F01.text;
+				arr["ref"]=F02.text;
+				arr["adresse"]=F03.text;
+				arr["commune"]=F04.text;
+				arr["pays"]=F05.text;
+				arr["code_postal"]=F06.text;
+				arr["contact_proprietaire"]=F07.text;
+				arr["contact_delegataire"]=F08.text;
+				arr["contact_gardien"]=F09.text;
+				arr["horaires_gardien"]=F10.text;
+				arr["horaires_batiment"]=F11.text;
+				arr["superficie_parcelle"]=F12.value;
+				arr["superficie_batiment"]=F13.value;
+				arr["date_achevement"]=F14.text;
+				arr["date_depot_permis"]=F15.text;
+				arr["date_reha"]=F16.text;
+				arr["reponse_1"]=F17.acualId;
+				arr["reponse_2"]=F18.acualId;
+				arr["reponse_3"]=F19.acualId;
+				arr["reponse_4"]=F20.acualId;
+				arr["reponse_5"]=F21.acualId;
+				arr["reponse_6"]=F22.acualId;
+				arr["reponse_7"]=F23.acualId;
+				arr["reponse_8"]=F24.acualId;
+				arr["reponse_9"]=F25.acualId;
+				arr["reponse_10"]=F26.acualId;
+				arr["reponse_11"]=F27.acualId;
+				arr["reponse_12"]=F28.acualId;
+				arr["reponse_13"]=F29.acualId;
+				arr["reponse_14"]=F30.acualId;
+				arr["reponse_15"]=F31.acualId;
+				roModifBase.updateTable(0, FieldId, arr);
+			}
+			
+			public function deleteData():void{
+				roModifBase.deleteNode(0, FieldId);
 			}
 		]]>
 	</mx:Script>
-</mx:Canvas>
+</mx:Panel>

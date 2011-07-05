@@ -6,7 +6,7 @@
 	<mx:RemoteObject id="roCrit"
 					 destination="zend"
 					 source="Model_DbTable_Gevu_criteres"
-					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+					 fault="faultHandlerService(event, &quot;Remote Object in diagnostics&quot;);">
 		<mx:method name="findById_critere"	result="setCritLabel( event );" />
 	</mx:RemoteObject>
 	
