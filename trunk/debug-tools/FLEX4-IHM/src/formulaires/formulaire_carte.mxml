@@ -2,7 +2,7 @@
 <!--in the following class, this option may be added
 showCloseButton="true" close="closeHandler(event)"-->
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" height="100%" width="95%" horizontalCenter="0">
-	
+<!--	
 	<mx:RemoteObject id="roDiagnostique"
 					 destination="zend"
 					 source="GEVU_Diagnostique"
@@ -14,10 +14,10 @@ showCloseButton="true" close="closeHandler(event)"-->
 			  width="100%" height="100%"
 			  key="ABQIAAAA8_1FP-PBAiNx9JdgQX0PRRT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSz-J6BALOe3GlE03Le8F7bsysG1w" sensor="false"/>
 	
-	
+	-->
 	<mx:Script>
 		<![CDATA[
-			import com.google.maps.LatLng;
+			/*import com.google.maps.LatLng;
 			import com.google.maps.Map;
 			import com.google.maps.MapEvent;
 			import com.google.maps.MapType;
@@ -42,24 +42,19 @@ showCloseButton="true" close="closeHandler(event)"-->
 			private function closeHandler(event:CloseEvent):void{
 				PopUpManager.removePopUp(this);
 			}
-			
+			*/
 			public function showNode( idLieu:int ) : void{
-				roDiagnostique.getNodeRelatedData(idLieu);
+				//roDiagnostique.getNodeRelatedData(idLieu);
 			}
 			
 			public function showLatLng( lat:Number, lng:Number, zoom:int = 10) : void {
-				//var i1:LatLng = new LatLng(lat,lng);
-				//var i2:int = (f1+f2)/2;
-				//var i3:IMapType = MapType.SATELLITE_MAP_TYPE;
-				
-				
-				
+				/*
 				this.map.setCenter(new LatLng(lat,lng),
 					zoom,
 					MapType.SATELLITE_MAP_TYPE);
-				marker.setLatLng(new LatLng(lat, lng));
+				marker.setLatLng(new LatLng(lat, lng));*/
 			}
-			
+			/*
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
 				
@@ -108,9 +103,7 @@ showCloseButton="true" close="closeHandler(event)"-->
 				map.addOverlay(marker);
 				
 				
-			}
-			
-			///------------------------------------------------------
+			}*/
 		]]>
 	</mx:Script>
 	

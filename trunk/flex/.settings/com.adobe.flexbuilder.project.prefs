@@ -1,3 +1,4 @@
-#Thu Jun 16 10:03:48 CEST 2011
+#Thu May 26 02:25:47 CEST 2011
 eclipse.preferences.version=1
-upgradeSDK/fb4=Flex 3.6
+upgradeSDK/fb4=Flex 3.2
+useFlex3CompatibilityMode/fb4=true

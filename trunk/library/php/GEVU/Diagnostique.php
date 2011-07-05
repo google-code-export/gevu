@@ -193,7 +193,7 @@ class GEVU_Diagnostique{
     */
     public function getNodeRelatedData($idLieu=0){
     
-        $shhash = sha1("GEVU_Diagnostique-getNodeRelatedData-$idLieu");
+        $shhash = sha1("GEVU_Diagnostique-NodeRelatedData-$idLieu");
         $res = $this->manager->load($shhash);
         
         if(!$res){
@@ -252,12 +252,6 @@ class GEVU_Diagnostique{
                 	$c = new Model_DbTable_Gevu_objetsxinterieurs();   
                 }elseif($V['id']==13){
                 	$c = new Model_DbTable_Gevu_objetsxvoiries();      
-                	$tmp['id'] = $V['id'];
-                	$tmp['name'] = $V['name'];
-                	$xx=$c->findById_lieu($idLieu);
-                	$tmp['data'] = $xx;
-                	//---
-                	$res[]=$tmp;
                 }elseif($V['id']==14){
                 	$c = new Model_DbTable_Gevu_observations();        
                 }elseif($V['id']==15){
@@ -266,7 +260,7 @@ class GEVU_Diagnostique{
                 	$c = new Model_DbTable_Gevu_problemes();           
                 }elseif($V['id']==17){
                 	$c=NULL;
-                
+                    continue;
                 }
 
                 $tmp['id'] = $V['id'];
@@ -279,6 +273,21 @@ class GEVU_Diagnostique{
             $this->manager->save($res, $shhash);
         }
         return $res;
+    }
+    
+    /**
+    * @param int $idLieu
+    */
+    function removeNodeRelatedData($idLieu){
+        $shhash = sha1("GEVU_Diagnostique-NodeRelatedData-$idLieu");
+        $res = $this->manager->remove($shhash);
+    }
+    
+    /**
+    * @return array
+    */
+    function getTablesNames(){
+        return $this->TableNames;
     }
 }
 ?>

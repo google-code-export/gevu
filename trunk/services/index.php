@@ -16,6 +16,9 @@ try {
                                  'File',
                                  $frontendOptions,
                                  $backendOptions);*/
+
+$aaa = new GEVU_Diagnostique();
+$bbb = $aaa->getNodeRelatedData(419);
     
 
 /*

@@ -2,7 +2,7 @@
 
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
 				layout="horizontal"
-				horizontalAlign="center" height="100%" width="80%"
+				horizontalAlign="center" height="100%" width="85%"
 				verticalAlign="middle" initialize="init();" creationComplete="onStartup()"
 				error="ErrorHandlerService(event)" xmlns:maps="com.google.maps.*" xmlns:formulaires="formulaires.*" xmlns:composants="composants.*">
 	
@@ -12,68 +12,96 @@
 	<mx:RemoteObject id="roDiagnostique"
 					 destination="zend"
 					 source="GEVU_Diagnostique"
-					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+					 fault="faultHandlerService(event, &quot;Remote Object - Main.mxml&quot;);">
 		<mx:method name="getNodeRelatedData"	result="displayNodeProperties( event );" />
 		<mx:method name="getXmlNode"	result="updateTreeStructure( event );" />
+		<mx:method name="removeNodeRelatedData"	result=";" />
+		<mx:method name="getTablesNames"	result="setTablesNames( event )" />
 	</mx:RemoteObject>
 
 	<mx:VBox height="100%" width="100%">
-		<mx:ButtonBar id="BC"	borderStyle="solid" horizontalGap="2"
-								itemClick="answerToBreadCrumbChange(event);" maxWidth="850">
+		<mx:ButtonBar id="BC" horizontalGap="2"
+								itemClick="answerToBreadCrumbChange(event);" maxWidth="750">
 		</mx:ButtonBar>
 		
 		<!--*************************-->
 		
 		<mx:HBox width="100%" height="100%" horizontalAlign="center">
-		<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
-			height="100%" width="40%"
-			itemOpening="treeItemOpened( event );"
-			change="treeItemClicked( event );"
-			horizontalScrollPolicy="on" verticalScrollPolicy="on" />
-		<mx:TabNavigator id="Tab" width="75%" height="100%" visible="true">
-			<mx:Canvas label="General" id="GeneralTab" width="100%" height="100%">
-				<formulaires:formulaire_general id="FormulaireGeneral" />
-			</mx:Canvas>
-			<mx:Canvas label="Map" id="MapTab" width="100%" height="100%" />
-			<mx:Canvas label="Geos" id="GeosTab" width="100%" height="100%" />
-			<mx:Canvas label="d" id="DebugTab" width="100%" height="100%">
-				<mx:VBox width="90%" height="100%" horizontalAlign="center" horizontalCenter="0" >
-					<mx:TextArea id="debugTest" width="100%" height="90%" editable="false"  wordWrap="false" />
-					<mx:Button id="testButton" label="change" click="testButtonClicked();"/>
-				</mx:VBox>
-			</mx:Canvas>
-			<mx:Canvas label="t">
-				<mx:HBox width="90%" height="100%" horizontalCenter="0">
-					<mx:VBox id="vbox1"
-							 width="120"
-							 height="100%"
-							 backgroundColor="haloOrange">
-						<mx:Label text="VBox 1" />
-						<mx:Button label="Help"
-								   click="vbox2.visible = !vbox2.visible" />
-					</mx:VBox>
-					<mx:VBox id="vbox2"
-							 width="120"
-							 height="100%"
-							 backgroundColor="haloGreen"
-							 creationComplete="vbox2.visible = false"
-							 includeInLayout="{vbox2.visible}">
-						<mx:Label text="VBox 2" />
-					</mx:VBox>
-					<mx:VBox id="vbox3"
-							 width="100%"
-							 height="100%"
-							 backgroundColor="haloBlue">
-						<mx:Label text="VBox 3" />
-					</mx:VBox>
-				</mx:HBox>
-			</mx:Canvas>
-		</mx:TabNavigator>
-		<!--<mx:TabNavigator id="Tab" width="60%" height="100%" visible="true">
-		</mx:TabNavigator>-->
-		<!--<mx:Accordion id="Tab" width="60%" height="100%" visible="true">
-		</mx:Accordion>-->
-	</mx:HBox>
+			<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
+					 height="100%" width="40%"
+					 itemOpening="treeItemOpened( event );"
+					 change="treeItemClicked( event );"
+					 horizontalScrollPolicy="on" verticalScrollPolicy="on" />
+			
+			
+			<mx:VBox width="75%" height="100%">
+				<mx:MenuBar id="mBar" labelField="@label"
+							click="menuClique()" 
+							itemClick="handleMenuClick(event)">
+					<mx:XMLList>
+						<item label="créer">
+							<item label="SubMenuItem A-1" enabled="false"/>
+							<item label="SubMenuItem A-2"/>
+						</item>
+						<item label="enregistrer"/>
+						<item label="supprimer"/>
+					</mx:XMLList>
+				</mx:MenuBar>
+				
+				<mx:TabNavigator id="Tab" width="100%" height="100%" visible="true">
+					<mx:Canvas label="General" id="GeneralTab" width="100%" height="100%">
+						<mx:VBox id="FormulaireGeneral" width="95%" horizontalCenter="0"
+								 xmlns:formulaires="formulaires.*">
+							
+							<mx:DataGrid id="TableauGeneral" width="100%" minHeight="100" maxHeight="150">
+								<mx:columns>
+									<mx:DataGridColumn headerText="Paramètre" dataField="prop" width="120" />
+									<mx:DataGridColumn headerText="Valeur" dataField="val" />
+								</mx:columns>
+							</mx:DataGrid>
+						</mx:VBox>
+					</mx:Canvas>
+					<mx:Canvas label="Map" id="MapTab" width="100%" height="100%" />
+					<mx:Canvas label="Geos" id="GeosTab" width="100%" height="100%" />
+					<mx:Canvas label="d" id="DebugTab" width="100%" height="100%">
+						<mx:VBox width="90%" height="100%" horizontalAlign="center" horizontalCenter="0" >
+							<mx:TextArea id="debugTest" width="100%" height="90%" editable="false"  wordWrap="false" />
+							<mx:Button id="testButton" label="change" click="testButtonClicked();"/>
+						</mx:VBox>
+					</mx:Canvas>
+					<mx:Canvas label="t">
+						<mx:HBox width="90%" height="100%" horizontalCenter="0">
+							<mx:VBox id="vbox1"
+									 width="120"
+									 height="100%"
+									 backgroundColor="haloOrange">
+								<mx:Label text="VBox 1" />
+								<mx:Button label="Help"
+										   click="vbox2.visible = !vbox2.visible" />
+							</mx:VBox>
+							<mx:VBox id="vbox2"
+									 width="120"
+									 height="100%"
+									 backgroundColor="haloGreen"
+									 creationComplete="vbox2.visible = false"
+									 includeInLayout="{vbox2.visible}">
+								<mx:Label text="VBox 2" />
+							</mx:VBox>
+							<mx:VBox id="vbox3"
+									 width="100%"
+									 height="100%"
+									 backgroundColor="haloBlue">
+								<mx:Label text="VBox 3" />
+							</mx:VBox>
+						</mx:HBox>
+					</mx:Canvas>
+				</mx:TabNavigator>
+			</mx:VBox>
+			<!--<mx:TabNavigator id="Tab" width="60%" height="100%" visible="true">
+			</mx:TabNavigator>-->
+			<!--<mx:Accordion id="Tab" width="60%" height="100%" visible="true">
+			</mx:Accordion>-->
+		</mx:HBox>
 	</mx:VBox>
 	
 </mx:Application>
