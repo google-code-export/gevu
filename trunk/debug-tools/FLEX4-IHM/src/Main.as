@@ -273,7 +273,7 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 			childToPreserve.push("FormulaireObjetsxinterieurs");
 		}
 		if(event.result[i]['id']==13){
-			FormulaireObjetsxvoiries.displayNodeProperties( event.result[i].data[0] );
+			FormulaireObjetsxvoiries.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireObjetsxvoiries");
 		}
 		if(event.result[i]['id']==14){
