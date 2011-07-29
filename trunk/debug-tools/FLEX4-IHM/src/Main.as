@@ -7,6 +7,7 @@ import formulaires.*;
 import mx.collections.ArrayCollection;
 import mx.collections.XMLListCollection;
 import mx.controls.Alert;
+import mx.events.CloseEvent;
 import mx.events.ItemClickEvent;
 import mx.events.ListEvent;
 import mx.events.MenuEvent;
@@ -117,6 +118,9 @@ private function reorganizeTabs(arr:Array) : void {
 
 
 private function onStartup() : void {
+	
+	TableauGeneral.visible=true;
+	
 	map = new formulaire_carte();
 	FormulaireGeos = new formulaire_geos();
 	
@@ -179,7 +183,10 @@ private function treeItemClicked( event:ListEvent ) : void {
 	logThis( "tree item has been clicked. item is:"+
 			 event.currentTarget.selectedItem.attribute("lib") );
 	
-	if(SelectedNode>0) roDiagnostique.getNodeRelatedData(SelectedNode);
+	if(SelectedNode>0){
+		checkIfDataSaved();
+		roDiagnostique.getNodeRelatedData(SelectedNode);
+	}
 	map.showNode(SelectedNode);
 }
 
@@ -214,6 +221,10 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	var childToPreserve:Array = new Array();
 	
 	NodeTypes = [];
+	var xl1:XMLList = mBar.dataProvider[0].children();
+	while (xl1.length()!=0)
+		delete xl1[0];
+	
 	for (i=1; i<event.result.length; ++i){
 		if(event.result[i]['id']>=0)
 			NodeTypes.push( event.result[i]['id'] );
@@ -221,8 +232,24 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 		if(event.result[i]['id']==-2){
 			updateBreadCrumb( event.result[i].data );
 		}
+		
+		if(event.result[i]['id']==-3){
+			var ooo:Array = event.result[i].data as Array;
+			var myXML:XML;
+			if(ooo.length==0){
+				myXML = <item />;
+				myXML.@label=TablesNames[9];
+				mBar.dataProvider[0].appendChild(myXML);
+			}
+			for(var ij:int=0; ij<ooo.length; ++ij){
+				myXML = <item />;
+				myXML.@label=TablesNames[ooo[ij]];
+				mBar.dataProvider[0].appendChild(myXML);
+			}
+		}
+		
 		if(event.result[i]['id']==0){
-			FormulaireBatiments.displayNodeProperties( event.result[i].data[0] );
+			FormulaireBatiments.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireBatiments");
 		}
 		if(event.result[i]['id']==1){
@@ -230,7 +257,7 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 			childToPreserve.push("FormulaireDiagnostics");
 		}
 		if(event.result[i]['id']==2){
-			FormulaireDiagnosticsxvoirie.displayNodeProperties( event.result[i].data[0] );
+			FormulaireDiagnosticsxvoirie.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireDiagnosticsxvoirie");
 		}
 		if(event.result[i]['id']==3){
@@ -238,38 +265,39 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 			childToPreserve.push("FormulaireDocs");
 		}
 		if(event.result[i]['id']==4){
-			FormulaireEspaces.displayNodeProperties( event.result[i].data );
+			FormulaireEspaces.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireEspaces");
 		}
 		if(event.result[i]['id']==5){
-			FormulaireEspacesxexterieurs.displayNodeProperties( event.result[i].data[0] );
+			FormulaireEspacesxexterieurs.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireEspacesxexterieurs");
 		}
 		if(event.result[i]['id']==6){
-			FormulaireEspacesinterieurs.displayNodeProperties( event.result[i].data[0] );
+			FormulaireEspacesinterieurs.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireEspacesinterieurs");
 		}
 		if(event.result[i]['id']==7){
-			FormulaireEtablissements.displayNodeProperties( event.result[i].data[0] );
+			FormulaireEtablissements.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireEtablissements");
 		}
 		if(event.result[i]['id']==9){
 			map.showLatLng(event.result[i].data[0].lat,
 				           event.result[i].data[0].lng,
 						   event.result[i].data[0].zoom_min);
-			FormulaireGeos.displayNodeProperties( event.result[i].data[0] );
+			FormulaireGeos.NodeData = event.result[i].data[0];
+			map.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireGeos");
 		}
 		if(event.result[i]['id']==10){
-			FormulaireNiveaux.displayNodeProperties( event.result[i].data[0] );
+			FormulaireNiveaux.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireNiveaux");
 		}
 		if(event.result[i]['id']==11){
-			FormulaireObjetsxexterieurs.displayNodeProperties( event.result[i].data[0] );
+			FormulaireObjetsxexterieurs.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireObjetsxexterieurs");
 		}
 		if(event.result[i]['id']==12){
-			FormulaireObjetsxinterieurs.displayNodeProperties( event.result[i].data[0] );
+			FormulaireObjetsxinterieurs.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireObjetsxinterieurs");
 		}
 		if(event.result[i]['id']==13){
@@ -281,7 +309,7 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 			childToPreserve.push("FormulaireObservations");
 		}
 		if(event.result[i]['id']==15){
-			FormulaireParcelles.displayNodeProperties( event.result[i].data[0] );
+			FormulaireParcelles.NodeData = event.result[i].data[0];
 			childToPreserve.push("FormulaireParcelles");
 		}
 		if(event.result[i]['id']==16){
@@ -291,17 +319,19 @@ private function displayNodeProperties( event:ResultEvent ) : void {
 	}
 	reorganizeTabs(childToPreserve);
 	
-	var xl:XMLList = mBar.dataProvider[2].children();
-	while (xl.length()!=0)
-		delete xl[0];
+	var xl2:XMLList = mBar.dataProvider[2].children();
+	while (xl2.length()!=0)
+		delete xl2[0];
 	trace(NodeTypes);
+	
+	// update create & delete submenus 
 	for(i=0; i<NodeTypes.length; ++i){
 		if(NodeTypes[i]<0)
 			continue;
-		var myXML:XML = <item />;
-		myXML.@label=TablesNames[NodeTypes[i]];
-		mBar.dataProvider[2].appendChild(myXML);
-	}
+		var myXML2:XML = <item />;
+		myXML2.@label=TablesNames[NodeTypes[i]];
+		mBar.dataProvider[2].appendChild(myXML2);
+	}	
 }
 
 private function updateTreeStructure( event:ResultEvent ) : void {
@@ -357,7 +387,10 @@ private function answerToBreadCrumbChange(event:ItemClickEvent):void {
 	SelectedNode = ButtonArray[event.index]['id'];
 	logThis( "tree item has been clicked. item is:"+
 			 ButtonArray[event.index]['label'] );
-	if(SelectedNode>0) roDiagnostique.getNodeRelatedData(SelectedNode);
+	if(SelectedNode>0){
+		checkIfDataSaved();
+		roDiagnostique.getNodeRelatedData(SelectedNode);
+	}
 	map.showNode(SelectedNode);
 }
 				
@@ -395,6 +428,9 @@ private function saveDatas():void{
 		if(NodeTypes[i]==7){
 			FormulaireEtablissements.saveModifications();
 		}
+		if(NodeTypes[i]==9){
+			FormulaireGeos.saveModifications();
+		}
 		if(NodeTypes[i]==10){
 			FormulaireNiveaux.saveModifications();
 		}
@@ -414,10 +450,13 @@ private function saveDatas():void{
 }
 //-------------------
 
+// function called when a submenu is clicked: it's used for create & delete submenus
 private function handleMenuClick(evt:MenuEvent):void {
 	/*Alert.show("le sous menu "+evt.index +" a été selectioné"
 	           +"\nle menu est "+mBar.selectedIndex);*/
 	var n:int = NodeTypes[evt.index];
+	
+	// delete the node n
 	if(mBar.selectedIndex==2){
 		if(n==0){
 			FormulaireBatiments.deleteData();
@@ -453,6 +492,50 @@ private function handleMenuClick(evt:MenuEvent):void {
 			FormulaireParcelles.deleteData();
 		}
 		
+		
+		
+		roDiagnostique.removeNodeRelatedData(SelectedNode);
+		if(SelectedNode>0) roDiagnostique.getNodeRelatedData(SelectedNode);
+		map.showNode(SelectedNode);
+	}
+	
+	
+	if(mBar.selectedIndex==0){
+		if(n==0){
+			FormulaireBatiments.deleteData();
+		}
+		if(n==2){
+			FormulaireDiagnosticsxvoirie.deleteData();
+		}
+		if(n==4){
+			FormulaireEspaces.deleteData();
+		}
+		if(n==5){
+			FormulaireEspacesxexterieurs.deleteData();
+		}
+		if(n==6){
+			FormulaireEspacesinterieurs.deleteData();
+		}
+		if(n==7){
+			FormulaireEtablissements.deleteData();
+		}
+		if(n==10){
+			FormulaireNiveaux.deleteData();
+		}
+		if(n==11){
+			FormulaireObjetsxexterieurs.deleteData();
+		}
+		if(n==12){
+			FormulaireObjetsxinterieurs.deleteData();
+		}
+		if(n==13){
+			FormulaireObjetsxvoiries.deleteData();
+		}
+		if(n==15){
+			FormulaireParcelles.deleteData();
+		}
+		
+		
 		roDiagnostique.removeNodeRelatedData(SelectedNode);
 		if(SelectedNode>0) roDiagnostique.getNodeRelatedData(SelectedNode);
 		map.showNode(SelectedNode);
@@ -468,3 +551,43 @@ private function menuClique():void{
 private function setTablesNames( event:ResultEvent ) : void {
 	TablesNames = event.result as Array;
 }
+
+private function checkIfDataSaved():void{
+	if(FormulaireObjetsxvoiries.valChanged==true ||
+	   FormulaireBatiments.valChanged==true ||
+	   FormulaireDiagnosticsxvoirie.valChanged==true){
+		Alert.show("Voulez-vous sauvegarder",
+				   "Sauver...",
+				   Alert.YES | Alert.NO,
+				   this,
+				   ToSaveOrNotToSaveHandle);
+		
+		FormulaireBatiments.valChanged=false;
+		FormulaireDiagnosticsxvoirie.valChanged=false;
+		FormulaireObjetsxvoiries.valChanged=false;
+	}
+}
+
+private function ToSaveOrNotToSaveHandle(event:CloseEvent):void{
+	switch (event.detail){
+		case Alert.YES:
+			trace("ok");
+			// save data:
+			saveDatas();
+			break;
+		default:
+			trace("no")
+			break;
+	}
+}
+
+//private function AddArrays(a1:Array, a2:Array):Array{
+//	var i:int;
+//	var a3:Array = a1;
+//	for(i=0; i<a2.length; ++i){
+//		if(inArray(a3, a2[i]==false){
+//			a3.push(a2[i]);
+//		}
+//	}
+//	return a1;
+//}

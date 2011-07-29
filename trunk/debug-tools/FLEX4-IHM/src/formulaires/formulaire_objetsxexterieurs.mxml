@@ -1,56 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" horizontalCenter="0"
-		  title="Objets exterieurs" maxHeight="300" >
-	<mx:Grid width="100%">
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="nom" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F1" width="100%"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="ref" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F2" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="fonctions" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F3" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		  title="Objets exterieurs"
+		  initialize="valChanged = false;">
+	<mx:VBox>
 
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+			<mx:HBox width="100%">
+				<mx:Label text="nom" />
+				<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
+			</mx:HBox>
+
+			<mx:HBox width="100%">
+				<mx:Label text="ref" />
+				<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
+			</mx:HBox>
+
+			<mx:HBox width="100%">
+				<mx:Label text="fonctions" />
+				<mx:TextInput id="F3" width="100%" data="{NodeData.fonctions}" change="valChanged=true;" />
+			</mx:HBox>
+
+			<mx:HBox width="100%">
 				<mx:Label text="id_type_objet" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F8" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:TextInput id="F8" width="100%" data="{NodeData.id_type_objet}" change="valChanged=true;" />
+			</mx:HBox>
+
+			<mx:HBox width="100%">
 				<mx:Label text="id_type_objet_ext" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F9" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-	</mx:Grid>
+				<mx:TextInput id="F9" width="100%" data="{NodeData.id_type_objet_ext}" change="valChanged=true;" />
+			</mx:HBox>
+
+	</mx:VBox>
 	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
-					 source="GEVU_ModifBase"
+					 source="Model_DbTable_Gevu_objetsxexterieurs"
 					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
-		<mx:method name="updateTable"	result=";" />
-		<mx:method name="deleteNode"	result=";" />
+		<mx:method name="edit"	result=";" />
+		<mx:method name="remove"	result=";" />
 	</mx:RemoteObject>
 	
 	<mx:Script>
@@ -59,6 +45,9 @@
 			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var NodeData:Object;
+			public var valChanged:Boolean;
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -71,18 +60,6 @@
 				Alert.show(str, "FaultHandlerService"+os);
 			}
 			
-			private var FieldId : int;
-			
-			public function displayNodeProperties( NodeData:Object ) : void {
-				F1.data = NodeData.nom;
-				F2.data = NodeData.ref;
-				F3.data = NodeData.fonctions;
-				F8.data = NodeData.id_type_objet;
-				F9.data = NodeData.id_type_objet_ext;
-				
-				FieldId = NodeData.id_objet_ext;
-			}
-			
 			public function saveModifications() : void {
 				var arr:Array = new Array();
 				arr["nom"]=F1.text;
@@ -90,11 +67,12 @@
 				arr["fonctions"]=F3.text;
 				arr["id_type_objet"]=F8.text;
 				arr["id_type_objet_ext"]=F9.text;
-				roModifBase.updateTable(11, FieldId, arr);
+				roModifBase.edit(NodeData.id_objet_ext, arr);
+				valChanged = false;
 			}
 			
 			public function deleteData():void{
-				roModifBase.deleteNode(11, FieldId);
+				roModifBase.remove(NodeData.id_objet_ext);
 			}
 		]]>
 	</mx:Script>

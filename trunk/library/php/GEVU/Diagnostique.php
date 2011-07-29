@@ -211,6 +211,34 @@ class GEVU_Diagnostique{
             
             $NodeType=$this->getNodeType($idLieu);
             
+            $tmp['id'] = -3;
+            $tmp['name'] = 'allowed creations';
+            $str = "SELECT g1.id_accept id
+                    FROM gevu_tablearborescence g1
+                    WHERE g1.id_table in (";
+            $mwxc = count($NodeType);
+            if($mwxc==0){
+                $xx=array();
+                $tmp['data'] = $xx;
+                $res[]=$tmp;
+            }else{
+	            for($wxc=0; $wxc<($mwxc-1); ++$wxc){
+	                $str = $str.$NodeType[$wxc]['id'].", ";
+	            }
+	            $str = $str.$NodeType[$wxc]['id'].")
+	                    GROUP BY id_accept";
+	            $db = Zend_Db_Table::getDefaultAdapter();
+	            $stmt = $db->query($str);
+	            $stmt->setFetchMode(Zend_Db::FETCH_NUM);
+	            $xx = $stmt->fetchAll();
+	            $tmp['data'] = $xx;
+                $res[]=$tmp;
+            }
+            
+           
+            
+            
+            
             foreach($NodeType as $V){
                 
                 if($V['id']==0){
