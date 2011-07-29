@@ -1,48 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" horizontalCenter="0"
-		  title="Espaces interieurs" maxHeight="300" >
-	<mx:Grid width="100%">
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="nom" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F1" width="100%"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="ref" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F2" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="fonction" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F3" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		  title="Espaces interieurs"
+		  initialize="valChanged = false;">
+	<mx:VBox>
+
+		<mx:HBox width="100%">
+			<mx:Label text="nom" />
+			<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
+		</mx:HBox>
 		
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="id_type_specifique_int" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:Label id="F8" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-	</mx:Grid>
+		<mx:HBox width="100%">
+			<mx:Label text="ref" />
+			<mx:TextInput id="F2" width="100%"  data="{NodeData.ref}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="fonction" />
+			<mx:TextInput id="F3" width="100%" data="{NodeData.fonction}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="id_type_specifique_int" />
+			<mx:Label id="F8" width="100%" data="{NodeData.id_type_specifique_int}" />
+		</mx:HBox>
+
+	</mx:VBox>
 	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
-					 source="GEVU_ModifBase"
+					 source="Model_DbTable_Gevu_espacesxinterieurs"
 					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
-		<mx:method name="updateTable"	result=";" />
-		<mx:method name="deleteNode"	result=";" />
+		<mx:method name="edit"	result=";" />
+		<mx:method name="remove"	result=";" />
 	</mx:RemoteObject>
 	
 	<mx:Script>
@@ -50,6 +39,9 @@
 			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var NodeData:Object;
+			public var valChanged:Boolean;
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -62,28 +54,19 @@
 				Alert.show(str, "FaultHandlerService"+os);
 			}
 			
-			private var FieldId : int;
-			
-			public function displayNodeProperties( NodeData:Object ) : void {
-				F1.data = NodeData.nom;
-				F2.data = NodeData.ref;
-				F3.data = NodeData.fonction;
-				F8.data = NodeData.id_type_specifique_int;
-				
-				FieldId = NodeData.id_espace_int;
-			}
-			
 			public function saveModifications() : void {
 				var arr:Array = new Array();
 				arr["nom"]=F1.text;
 				arr["ref"]=F2.text;
 				arr["fonction"]=F3.text;
 				arr["id_type_specifique_int"]=F8.text;
-				roModifBase.updateTable(6, FieldId, arr);
+				roModifBase.edit(NodeData.id_espace_int, arr);
+				
+				valChanged = false;
 			}
 			
 			public function deleteData():void{
-				roModifBase.deleteNode(6, FieldId);
+				roModifBase.remove(NodeData.id_espace_int);
 			}
 		]]>
 	</mx:Script>

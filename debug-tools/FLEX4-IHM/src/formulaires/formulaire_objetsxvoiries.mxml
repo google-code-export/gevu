@@ -6,15 +6,15 @@
 	<mx:VBox initialize="init();">
 		<mx:HBox>
 			<mx:Label text="nom" width="100" />
-			<mx:TextInput id="F1" width="100%" text="{NodeData.nom}" />
+			<mx:TextInput id="F1" width="100%" text="{NodeData.nom}" change="valChanged=true;" />
 		</mx:HBox>
 		<mx:HBox>
 			<mx:Label text="ref" width="100" />
-			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" />
+			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="valChanged=true;" />
 		</mx:HBox>
 		<mx:HBox>
 			<mx:Label text="Mise à jour" width="100" />
-			<mx:DateField id="F3" width="100%" text="{NodeData.maj}" />
+			<mx:DateField id="F3" width="100%" text="{NodeData.maj}" change="valChanged=true;" />
 		</mx:HBox>
 		<mx:HBox>
 			<mx:Label text="Type d'objet" width="100" />
@@ -24,18 +24,12 @@
 
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
-					 source="GEVU_ModifBase"
-					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
-		<mx:method name="updateTable"	result=";" />
-		<mx:method name="deleteNode"	result=";" />
-	</mx:RemoteObject>
-	<mx:RemoteObject id="roObjVoirie"
-					 destination="zend"
 					 source="Model_DbTable_Gevu_objetsxvoiries"
-					 fault="faultHandlerService(event, 'Remote Object');">
-		<mx:method name="edit"	result="resultHandlerService(event);" />
-		<mx:method name="remove"	result="resultHandlerService(event);" />
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="edit"	result=";" />
+		<mx:method name="remove"	result=";" />
 	</mx:RemoteObject>
+	
 	<mx:Script>
 		<![CDATA[
 
@@ -44,6 +38,7 @@
 			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] public var NodeData:Object;
+			public var valChanged:Boolean;
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -56,20 +51,9 @@
 				Alert.show(str, "FaultHandlerService"+os);
 			}
 			
-			private var FieldId : int;
 			private function init():void{
+				valChanged = false;
 				F7.setListType(40);
-			}
-			
-			public function displayNodeProperties() : void {
-				/*
-				F1.data = NodeData.nom;
-				F2.data = NodeData.ref;
-				F3.data = NodeData.maj;
-				F7.setKeyword(NodeData.id_type_objet_voirie);
-				
-				FieldId = NodeData.id_objet_voirie;
-				*/
 			}
 			
 			public function saveModifications() : void {
@@ -77,19 +61,14 @@
 				arr["nom"]=F1.text;
 				arr["ref"]=F2.text;
 				arr["id_type_objet_voirie"]=F7.acualId;
-				//roModifBase.updateTable(13, FieldId, arr);
-				roObjVoirie.edit(NodeData.id_objet_voirie, arr);
+				
+				roModifBase.edit(NodeData.id_objet_voirie, arr);
+				valChanged = false;
 			}
 			
 			public function deleteData():void{
-				//roModifBase.deleteNode(13, FieldId);
-				roObjVoirie.remove(NodeData.id_objet_voirie);
-			}
-			public function resultHandlerService(result:ResultEvent):void
-			{
-				//TODO : gérer l'actualisation du formulaire si aucune erreur
-				var toto:String = "toto";
-			}			
+				roModifBase.remove(NodeData.id_objet_voirie);
+			}		
 		]]>
 	</mx:Script>
 </mx:Panel>

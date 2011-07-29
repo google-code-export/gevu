@@ -1,65 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" horizontalCenter="0"
-		  title="Objets interieurs" maxHeight="300" xmlns:composants="composants.*"
-		   initialize="init();">
-	<mx:Grid width="100%">
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		  title="Objets interieurs"
+		  xmlns:composants="composants.*"
+		  initialize="init();">
+	<mx:VBox>
+			<mx:HBox width="100%">
 				<mx:Label text="nom" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F1" width="100%"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="ref" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F2" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="fonctions" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F3" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:TextInput id="F3" width="100%" data="{NodeData.fonctions}" change="valChanged=true;" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="reponse_1" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F4" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:TextInput id="F4" width="100%" data="{NodeData.reponse_1}" change="valChanged=true;" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="reponse_2" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F5" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:TextInput id="F5" width="100%"  data="{NodeData.reponse_2}" change="valChanged=true;" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="id_type_objet" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<composants:KeywordsList id="F10" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-	</mx:Grid>
+				<composants:KeywordsList id="F10" width="100%" selectedIndex="{F10.setKeyword(NodeData.id_type_objet)}" change="valChanged=true;" />
+			</mx:HBox>
+		
+	</mx:VBox>
 	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
-					 source="GEVU_ModifBase"
+					 source="Model_DbTable_Gevu_objetsxinterieurs"
 					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
-		<mx:method name="updateTable"	result=";" />
-		<mx:method name="deleteNode"	result=";" />
+		<mx:method name="edit"	result=";" />
+		<mx:method name="remove"	result=";" />
 	</mx:RemoteObject>
 	
 	<mx:Script>
@@ -68,6 +45,9 @@
 			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var NodeData:Object;
+			public var valChanged:Boolean;
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -80,19 +60,6 @@
 				Alert.show(str, "FaultHandlerService"+os);
 			}
 			
-			private var FieldId:int;
-			
-			public function displayNodeProperties( NodeData:Object ) : void {
-				F1.data = NodeData.nom;
-				F2.data = NodeData.ref;
-				F3.data = NodeData.fonctions;
-				F4.data = NodeData.reponse_1;
-				F5.data = NodeData.reponse_2;
-				F10.setKeyword(NodeData.id_type_objet);
-				
-				FieldId = NodeData.id_objet_int;
-			}
-			
 			public function saveModifications() : void {
 				var arr:Array = new Array();
 				arr["nom"]=F1.text;
@@ -101,15 +68,17 @@
 				arr["reponse_1"]=F4.text;
 				arr["reponse_2"]=F5.text;
 				arr["id_type_objet"]=F10.acualId;
-				roModifBase.updateTable(12, FieldId, arr);
+				roModifBase.edit(NodeData.id_objet_int, arr);
+				valChanged = false;
 			}
 			
 			private function init():void{
+				valChanged = false;
 				F10.setListType(51);
 			}
 			
 			public function deleteData():void{
-				roModifBase.deleteNode(12, FieldId);
+				roModifBase.remove(NodeData.id_objet_int);
 			}
 		]]>
 	</mx:Script>

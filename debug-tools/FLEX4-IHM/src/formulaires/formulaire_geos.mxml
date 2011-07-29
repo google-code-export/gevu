@@ -1,77 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="95%" horizontalCenter="0">
-	<mx:Grid width="100%">
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+				title="Geos" close="closeHandler(event)" showCloseButton="true">
+	<mx:VBox>
+			<mx:HBox width="100%">
 				<mx:Label text="adresse" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F01" width="100%"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:TextInput id="F01" width="100%" data="{NodeData.adresse}"/>
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="latitude"/>
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:NumericStepper id="F02" width="100%" minimum="-40" maximum="+40" stepSize="0.000001"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:NumericStepper id="F02" width="100%"
+								   minimum="-40" maximum="+40" stepSize="0.000001"
+								   data="{NodeData.lat}" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="longitude" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:NumericStepper id="F03" width="100%"  minimum="-40" maximum="+40" stepSize="0.000001"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:NumericStepper id="F03" width="100%"
+								   minimum="-40" maximum="+40" stepSize="0.000001"
+								   data="{NodeData.lng}" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="zoom minimum" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:NumericStepper id="F04" width="100%"  minimum="0" maximum="16"/>
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:NumericStepper id="F04" width="100%"
+								   minimum="0" maximum="16"
+								   data="{NodeData.zoom_min}" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="zoom maximum" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:NumericStepper id="F05" width="100%"  minimum="0" maximum="16" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
+				<mx:NumericStepper id="F05" width="100%"
+								   minimum="0" maximum="16"
+								   data="{NodeData.zoom_max}" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 				<mx:Label text="kml" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F06" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-		<mx:GridRow width="100%" height="100%">
-			<mx:GridItem width="40%" height="100%">
-				<mx:Label text="date de MAJ" />
-			</mx:GridItem>
-			<mx:GridItem width="60%" height="100%">
-				<mx:TextInput id="F07" width="100%" />
-			</mx:GridItem>
-		</mx:GridRow>
-	</mx:Grid>
+				<mx:TextInput id="F06" width="100%" data="{NodeData.kml}" />
+			</mx:HBox>
+		
+			<mx:HBox width="100%">
+				<mx:Spacer width="40%"/>
+				<mx:Button id="save" label="enregistrer" click="saveClicked();"/>
+				<mx:Spacer width="40%"/>
+			</mx:HBox>
+
+	</mx:VBox>
+	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					 source="Model_DbTable_Gevu_geos"
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="edit"	result=";" />
+		<mx:method name="remove"	result=";" />
+	</mx:RemoteObject>
+	<mx:RemoteObject id="roDiagnostique"
+					 destination="zend"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, &quot;Remote Object - Main.mxml&quot;);">
+		<mx:method name="removeNodeRelatedData"	result=";" />
+	</mx:RemoteObject>
 	
 	<mx:Script>
 		<![CDATA[
+		
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
 			
-			public function displayNodeProperties( NodeData:Object ) : void {
+			[Bindable] public var NodeData:Object;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
 				
-				F01.data = NodeData.adresse;
-				F02.data = NodeData.lat;
-				F03.data = NodeData.lng;
-				F04.data = NodeData.zoom_min;
-				F05.data = NodeData.zoom_max;
-				F06.data = NodeData.kml;
-				F07.data = NodeData.maj;
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
 			}
+			
+			public function saveModifications() : void {
+				var arr:Array = new Array();
+				arr["adresse"]=F01.data;
+				arr["lat"]=F02.data;
+				arr["lng"]=F03.data;
+				arr["zoom_min"]=F04.data;
+				arr["zoom_max"]=F05.data;
+				arr["kml"]=F06.data;
+				
+				roModifBase.edit(NodeData.id_geo, arr);
+			}
+			
+			public function deleteData():void{
+				roModifBase.remove(NodeData.id_lieu);
+			}	
+			
+			private function closeHandler(event:CloseEvent):void{
+				PopUpManager.removePopUp(this);
+			}
+
+			private function saveClicked():void{
+				saveModifications();
+				roDiagnostique.removeNodeRelatedData(NodeData.id_lieu);
+				PopUpManager.removePopUp(this);
+			}
+	
 		]]>
 	</mx:Script>
-</mx:Canvas>
+</mx:TitleWindow>
