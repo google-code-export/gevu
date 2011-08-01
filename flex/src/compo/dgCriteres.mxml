@@ -108,6 +108,9 @@ private function insertItem():void {
     	if(ctlVal.className=="TextInput" || ctlVal.className=="TextArea"){
     		val=ctlVal.text;
     	}
+		if(ctlVal.className=="NumericStepper"){
+			val=ctlVal.value;
+		}
     	//vérifie si le champ est obligatoire
     	if(!VerifChampOblig(val, ctlVal))return;
     	//incrémente le tableau
@@ -200,7 +203,7 @@ private function deleteDroitClickHandler(event:CloseEvent):void
 {
     if (event.detail == Alert.YES) 
     {
-		ROCDr.remove(dgDroit.selectedItem['id_type_droit']);
+		ROCDr.remove(ROCDr, dgDroit.selectedItem['id_type_droit']);
     }
 }
 
@@ -223,7 +226,7 @@ private function deleteDeficiClickHandler(event:CloseEvent):void
 {
     if (event.detail == Alert.YES) 
     {
-		ROCDe.remove(dgDefici.selectedItem['id_type_deficience']);
+		ROCDe.remove(idCritere,dgDefici.selectedItem['id_type_deficience']);
     }
 }
 
@@ -246,7 +249,7 @@ private function deleteTypeCriClickHandler(event:CloseEvent):void
 {
     if (event.detail == Alert.YES) 
     {
-		ROCC.remove(dgTypeCri.selectedItem['id_type_critere']);
+		ROCC.remove(idCritere, dgTypeCri.selectedItem['id_type_critere']);
     }
 }
 
