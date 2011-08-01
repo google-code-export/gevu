@@ -86,13 +86,14 @@ class Model_DbTable_Gevu_criteresxtypesxdeficiences extends Zend_Db_Table_Abstra
      * Recherche une entrée Gevu_criteresxtypesxdeficiences avec la clef primaire spécifiée
      * et supprime cette entrée.
      *
-     * @param integer $id
+     * @param integer $idDef
+     * @param integer $idCrit
      *
      * @return void
      */
-    public function remove($id)
+    public function remove($idCrit, $idDef)
     {
-        $this->delete('gevu_criteresxtypesxdeficiences.id_type_deficience = ' . $id);
+        $this->delete('gevu_criteresxtypesxdeficiences.id_type_deficience = ' . $idDef.' AND gevu_criteresxtypesxdeficiences.id_critere = '.$idCrit);
     }
     
     /**

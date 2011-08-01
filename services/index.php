@@ -17,8 +17,8 @@ try {
                                  $frontendOptions,
                                  $backendOptions);*/
 
-$aaa = new GEVU_Diagnostique();
-$bbb = $aaa->getNodeRelatedData(419);
+//$aaa = new GEVU_Diagnostique();
+//$bbb = $aaa->getNodeRelatedData(419);
     
 
 /*
@@ -50,13 +50,16 @@ $s = new Model_DbTable_Gevu_produits();
 $rs = $s->getAll();
 $data = array("url"=>"kjh","titre"=>"csv","content_type"=>"text/csv");
 $s->ajouter($data,false);
-
 $lm = new AUTH_LoginManager();
 $u = new AUTH_LoginVO();
 $u->username="samszo";
-$u->password="Samszo0";
+$u->password="samszo";
 $au = $lm->verifyUser($u);
 */
+
+$s = new Model_DbTable_Gevu_criteresxtypesxdeficiences();
+$rs = $s->remove(1,1);
+	
 
 
 $server = new Zend_Amf_Server();
@@ -118,6 +121,7 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	;
 	
 $server->setClassMap('LoginVO','AUTH_LoginVO');	
+$server->setProduction(false);
 
 $response = $server->handle();
 

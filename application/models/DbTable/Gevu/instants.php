@@ -41,7 +41,7 @@ class Model_DbTable_Gevu_instants extends Zend_Db_Table_Abstract
 		$select = $this->select();
 		$select->from($this, array('id_instant'));
 		foreach($data as $k=>$v){
-			$select->where($k.' = ?', $val);
+			$select->where($k.' = ?', $k);
 		}
 	    $rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_instant; else $id=false;

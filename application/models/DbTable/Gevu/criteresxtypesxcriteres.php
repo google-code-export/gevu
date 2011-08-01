@@ -86,13 +86,14 @@ class Model_DbTable_Gevu_criteresxtypesxcriteres extends Zend_Db_Table_Abstract
      * Recherche une entrée Gevu_criteresxtypesxcriteres avec la clef primaire spécifiée
      * et supprime cette entrée.
      *
-     * @param integer $id
+     * @param integer $idType
+     * @param integer $idCrit
      *
      * @return void
      */
-    public function remove($id)
+    public function remove($idCrit, $idType)
     {
-        $this->delete('gevu_criteresxtypesxcriteres.id_type_critere = ' . $id);
+        $this->delete('gevu_criteresxtypesxcriteres.id_type_critere = ' . $idType.' AND gevu_criteresxtypesxcriteres.id_critere ='.$idCrit );
     }
     
     /**

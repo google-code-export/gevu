@@ -41,7 +41,7 @@ class Model_DbTable_Gevu_produitsxexperimentations extends Zend_Db_Table_Abstrac
 		$select = $this->select();
 		$select->from($this, array('id_produit'));
 		foreach($data as $k=>$v){
-			$select->where($k.' = ?', $val);
+			$select->where($k.' = ?', $v);
 		}
 	    $rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_produit; else $id=false;
