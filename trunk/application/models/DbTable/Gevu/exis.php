@@ -41,7 +41,7 @@ class Model_DbTable_Gevu_exis extends Zend_Db_Table_Abstract
 		$select = $this->select();
 		$select->from($this, array('id_exi'));
 		foreach($data as $k=>$v){
-			$select->where($k.' = ?', $val);
+			$select->where($k.' = ?', $v);
 		}
 	    $rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_exi; else $id=false;
