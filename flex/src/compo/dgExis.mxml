@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns2="compo.*"
+	creationComplete="Init()"
+	width="100%" height="100%">
+	<mx:Script>
+        <![CDATA[
+import mx.containers.TitleWindow;
+import mx.events.FlexEvent;
+import mx.controls.ComboBox;
+import mx.containers.Form;
+import mx.containers.FormItem;
+
+import mx.collections.ArrayCollection;
+import mx.collections.IViewCursor;
+import mx.collections.Sort;
+import mx.collections.SortField;
+
+import mx.controls.Alert;
+import mx.controls.DataGrid;
+import mx.controls.dataGridClasses.DataGridColumn;
+import mx.controls.listClasses.IDropInListItemRenderer;
+import mx.controls.CheckBox;
+
+import mx.events.CloseEvent;
+import mx.events.DataGridEvent;
+
+import mx.managers.CursorManager;
+
+import mx.rpc.AsyncToken;
+import mx.rpc.events.FaultEvent;
+import mx.rpc.events.ResultEvent;
+import mx.rpc.http.HTTPService;
+
+import mx.managers.PopUpManager;
+
+import compo.*;
+
+/**
+ * paramétrage de l'objet
+ */
+[Bindable] public var endPoint:String;
+[Bindable] public var idExi:String;
+[Bindable] public var bInit:Boolean=true;
+[Bindable] public var bInsert:Boolean=true;
+[Bindable] public var twAR:twAjoutRef;
+
+private var idExiContact:int;	
+
+
+private function selectItem(event:Event):void {
+	var item:Object=event.currentTarget.selectedItem;
+	if(item){
+		idExiContact = item.id_exi;
+		UpdNom.text=item.nom;
+		UpdUrl.text=item.url;
+		UpdMail.text=item.mail;
+		//pas de transmission de mot de passe
+		UpdMdp.text="";
+		var i:int=UpdRole.getIndex(item.role);
+		UpdRole.cb.selectedIndex=i;
+		ROEC.findByIdExi(idExiContact);
+		//ROED.findByIdExi(idExiContact);
+	}
+}
+
+public function Init():void 
+{
+    //chargement des données
+    if(bInit)RO.getAll();
+    if(bInsert)selectedChild=insert;
+        
+}
+
+private function updateItem():void
+{
+	//création du tableau de valeur
+	var vn:Array = new Array();
+	
+	vn["nom"] = UpdNom.text;
+	if(UpdMdp.text!="")	vn["mdp"] = this.UpdMdp.text ;
+	vn["role"] = this.UpdRole.cb.selectedItem['lib'];
+	vn["mail"] = this.UpdMail.text;
+	vn["url"] = this.UpdUrl.text;
+	
+	RO.edit(idExiContact,vn);	
+}
+
+private function insertAnnuler():void {
+	if(this.bInsert){
+		twAR.ferme();
+	}else{
+		this.selectedChild = view;
+	}
+}
+
+private function insertItem():void {
+
+	//création du tableau de param
+	var pArr:Array = new Array;
+	var val:String="";
+    var frmC:Array = insertForm.getChildren();
+	//boucle sur chaque composant du modèle
+    for each(var ctl:Object in frmC){
+    	//récupère l'identifiant de la valeur
+    	var ctlId:String=ctl.id;
+		//récupère le contrôle d'édition
+		var ctlVal:Object=ctl.getChildAt(0);
+		//vérifie le type pour récupérer les modifs
+    	if(ctlVal.className=="cbGroupeMot"){
+    		val=ctlVal.cb.selectedItem[ctl.id];
+    	}
+    	if(ctlVal.className=="TextInput" || ctlVal.className=="TextArea"){
+    		val=ctlVal.text;
+    	}
+    	//vérifie si le champ est obligatoire
+    	if(!VerifChampOblig(val, ctlVal))return;
+    	//incrémente le tableau
+		pArr[ctlId]=val;
+   	}
+   	
+	RO.ajouter(pArr);
+	
+}
+
+		
+private function VerifChampOblig(val:String, ctlVal:Object):Boolean{
+	
+	if(val!="")return true;
+
+	var verif:Boolean=true;
+	
+	if(ctlVal.id=="nom"){
+		Alert.show("Le login est obligatoire.");
+		return false;
+	}
+
+	if(ctlVal.id=="mdp"){
+		Alert.show("Le mot de passe est obligatoire.");
+		return false;
+	}
+
+	if(ctlVal.id=="role"){
+		Alert.show("Le rôle est obligatoire.");
+		return false;
+	}
+	return verif;
+}
+
+private function insertItemHandler(e:Object):void
+{
+	if(twAR){
+		twAR.ferme();
+	}else{
+	    this.selectedChild = view;
+	    RO.getAll();
+	}
+}
+
+private function fillGridHandler(e:Object, dg:DataGrid):void
+{
+	if(!e)return;
+    dg.dataProvider = e.result as Array;
+}
+
+private function deleteItem():void {
+    
+    if (dataGrid.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression de cet élément ?",
+        "Confirmation Suppression", 3, this, deleteClickHandler);
+    }
+   
+}
+
+private function deleteClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		RO.remove(idExiContact);
+    }
+}
+
+public function faultHandlerService(fault:FaultEvent):void
+{
+	
+	Alert.show(fault.fault.faultString, "FaultHandlerService");
+}
+ 
+public function resultHandlerService(result:ResultEvent):void
+{
+	RO.getAll();
+}
+
+private function deleteDroit():void {
+	
+	if (this.dgDroit.selectedItem)
+	{
+		Alert.show("Confirmez-vous la suppression du droit pour ce compte ?",
+			"Confirmation Suppression", 3, this, deleteDroitClickHandler);
+	}
+	
+}
+private function deleteDroitClickHandler(event:CloseEvent):void
+{
+	if (event.detail == Alert.YES) 
+	{
+		ROED.remove(idExiContact, dgDroit.selectedItem['id_droit']);
+	}
+}
+private function DroitHandler(e:Object):void
+{
+	vsDroit.selectedChild = viewDroit;
+	ROED.findByIdExi(idExiContact);
+}
+						
+private function deleteExiContact():void {
+	
+	if (this.dgExiContact.selectedItem)
+	{
+		Alert.show("Confirmez-vous la suppression du contact pour ce compte ?",
+			"Confirmation Suppression", 3, this, deleteExiContactClickHandler);
+	}
+	
+}
+private function deleteExiContactClickHandler(event:CloseEvent):void
+{
+	if (event.detail == Alert.YES) 
+	{
+		ROEC.remove(idExiContact, dgExiContact.selectedItem['id_contact']);
+	}
+}
+private function ExiContactHandler(e:Object):void
+{
+	vsExiContact.selectedChild = viewExiContact;
+	ROEC.findByIdExi(idExiContact);
+}
+						
+
+        ]]>
+    </mx:Script>
+    
+	<mx:RemoteObject id="RO"
+	    	source="Model_DbTable_Gevu_exis" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="getAll"  result="fillGridHandler(event,dataGrid)"/>  	
+	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="ajouter"  result="insertItemHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROED"
+					 source="Model_DbTable_Gevu_exisxdroits" destination="zend" 
+					 endpoint="{endPoint}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="findByIdExi"  result="fillGridHandler(event,dgDroit)"/>  	
+		<mx:method name="remove"  result="DroitHandler(event)"/>  	
+		<mx:method name="ajouter"  result="DroitHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROEC"
+					 source="Model_DbTable_Gevu_exisxcontacts" destination="zend" 
+					 endpoint="{endPoint}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="findByIdExi"  result="fillGridHandler(event,dgExiContact)"/>  	
+		<mx:method name="remove"  result="ExiContactHandler(event)"/>  	
+		<mx:method name="ajouter"  result="ExiContactHandler(event)"/>  	
+	</mx:RemoteObject>
+	
+	<mx:Canvas id="view" width="100%" height="100%">
+		<mx:HBox width="100%" height="100%">
+			<mx:VBox width="100%" height="100%" >		
+				<mx:HBox id="AddDelete" >		
+					<mx:LinkButton id="btnAddNew" click="this.selectedChild = insert;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un compte" />
+					<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un compte" />
+				</mx:HBox>
+				<mx:VBox id="fiche" width="100%" >
+					<mx:HRule/>				
+				</mx:VBox>
+				<mx:HBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+					<mx:DataGrid 
+						id="dataGrid"
+						editable="false"
+						resizableColumns="true" 
+						click="selectItem(event);"
+						textAlign="left"
+						width="100%" height="100%"
+						>			
+						<mx:columns>
+							<mx:DataGridColumn visible="false" headerText="id_exi" dataField="id_exi" />
+							<mx:DataGridColumn headerText="Login" dataField="nom" />   					
+						</mx:columns>
+					</mx:DataGrid>
+					<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+						<mx:HBox >
+							<mx:VBox>
+								<mx:Label text="Login:" />
+				            	<mx:TextInput id="UpdNom" />							
+							</mx:VBox>
+							<mx:VBox>
+								<mx:Label text="Mot de passe:" />
+				            	<mx:TextInput id="UpdMdp" displayAsPassword="true" />							
+							</mx:VBox>
+						</mx:HBox>
+						<mx:VBox>
+							<mx:Label text="Url:" />
+							<mx:TextInput width="100%" id="UpdUrl" />							
+						</mx:VBox>
+						<mx:VBox>
+							<mx:Label text="Mail:" />
+							<mx:TextInput width="100%" id="UpdMail" />							
+						</mx:VBox>
+						<mx:HBox >
+							<mx:VBox>
+								<mx:Label text="Rôle:"/>
+								<ns2:cbGroupeMot id="UpdRole" titre="un role" keyName="id_role"  objName="Model_DbTable_Gevu_roles" endPoint="{RO.endpoint}" bAjout="false" />						
+							</mx:VBox>
+						</mx:HBox>			
+						<mx:Button  label="Enregistrer" click="updateItem()" />
+					</mx:VBox>
+				</mx:HBox>
+				<mx:Panel title="Contact(s) lié(s)" width="100%" height="100%" layout="absolute">
+					<mx:ViewStack id="vsExiContact" width="100%" height="100%">
+						<mx:VBox id="viewExiContact" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+							<mx:HBox>
+								<mx:LinkButton click="vsExiContact.selectedChild = insertExiContact;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un contact pour ce compte" />
+								<mx:LinkButton click="deleteExiContact()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un contact pour ce compte" />							
+							</mx:HBox>							
+							<mx:DataGrid width="100%" height="100%" id="dgExiContact">
+								<mx:columns>
+									<mx:DataGridColumn headerText="Nom" dataField="nom" />
+									<mx:DataGridColumn headerText="Prénom" dataField="prenom" />
+									<mx:DataGridColumn headerText="Mobile" dataField="mobile" />
+									<mx:DataGridColumn headerText="Fax" dataField="fax" />
+									<mx:DataGridColumn headerText="Mail" dataField="mail" />
+									<mx:DataGridColumn headerText="Id Contact" dataField="id_contact" visible="false"/>
+								</mx:columns>
+							</mx:DataGrid>					
+						</mx:VBox>
+						<mx:VBox id="insertExiContact" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+							<mx:Label text="Choisissez un contact :"/> 
+							<ns2:cbGroupeMot titre="un contact" labelName="nom" keyName="id_contact" id="cbContact" objName="Model_DbTable_Gevu_contacts" objMethode="getAllNomPrenom" endPoint="{RO.endpoint}" bAjout="false" />
+							<mx:HBox>
+								<mx:Button label="Enregistrer" click="ROEC.ajouter(idExiContact,cbContact.cb.selectedItem['id_contact']);" />
+								<mx:Button label="Annuler" click="vsExiContact.selectedChild = viewExiContact;" />				
+							</mx:HBox>							
+						</mx:VBox>
+					</mx:ViewStack>											
+				</mx:Panel>
+			</mx:VBox>
+
+			<mx:VBox id="detail" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+				<mx:HBox width="100%" height="100%" >
+					<mx:Panel title="Droits GEVU" width="100%" height="100%" layout="absolute">
+						<mx:ViewStack id="vsDroit" width="100%" height="100%">
+							<mx:VBox id="viewDroit" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:HBox>
+									<mx:LinkButton click="vsDroit.selectedChild = insertDroit;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un droit pour ce contact" />
+									<mx:LinkButton click="deleteDroit()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un droit pour ce contact" />							
+								</mx:HBox>							
+								<mx:DataGrid width="100%" height="100%" id="dgDroit">
+									<mx:columns>
+										<mx:DataGridColumn headerText="Type de droit" dataField="lib" />
+										<mx:DataGridColumn headerText="Id Droit" dataField="id_droit" visible="false"/>
+									</mx:columns>
+								</mx:DataGrid>					
+							</mx:VBox>
+							<mx:VBox id="insertDroit" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:Label text="Choisissez un droit :"/> 
+								<ns2:cbGroupeMot titre="un droit" labelName="nom" keyName="id_droit" id="cbDroit" objName="Model_DbTable_Gevu_droits" endPoint="{RO.endpoint}" bAjout="false" />
+								<mx:HBox>
+									<mx:Button label="Enregistrer" click="ROED.ajouter(idExiContact,cbDroit.cb.selectedItem['id_droit']);" />
+									<mx:Button label="Annuler" click="vsDroit.selectedChild = viewDroit;" />				
+								</mx:HBox>							
+							</mx:VBox>
+						</mx:ViewStack>											
+					</mx:Panel>
+				</mx:HBox>						
+			</mx:VBox>		
+					
+		</mx:HBox>
+
+	</mx:Canvas>
+	<mx:Canvas id="insert" width="100%" height="100%" >
+		<mx:VBox>			
+			<mx:Form width="100%" height="100%" id="insertForm">			                    		
+	            <mx:FormItem label="login:" id="nom" >
+	            	<mx:TextInput />
+	            </mx:FormItem>
+	            <mx:FormItem label="Mot de passe:" id="mdp" >
+	            	<mx:TextInput displayAsPassword="true" />
+	            </mx:FormItem>
+				<mx:FormItem label="Rôle:" id="role" >
+					<ns2:cbGroupeMot titre="un rôle" keyName="id_role"  objName="Model_DbTable_Gevu_roles" endPoint="{RO.endpoint}" />						
+				</mx:FormItem>
+			</mx:Form>			
+			<mx:HBox>
+				<mx:Button label="Enregistrer" click="insertItem()" />
+				<mx:Button label="Annuler" click="insertAnnuler()" />				
+			</mx:HBox>
+		</mx:VBox>
+	</mx:Canvas>
+
+	 
+</mx:ViewStack>

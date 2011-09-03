@@ -38,9 +38,11 @@
 			    ROS.findByTronc(objParam);
 			}			
 			if(objMethode=="findByIdLieu"){
-				if(objParam){
-				    ROS.findByIdLieu(objParam);					
-				}else return;
+				if(!objParam)return;
+			    ROS.findByIdLieu(objParam);					
+			}			
+			if(objMethode=="getAllNomPrenom"){
+				ROS.getAllNomPrenom();					
 			}			
 		}else{
 		    //chargement des données
@@ -143,6 +145,7 @@
 	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
 	 	<mx:method name="findByTronc"  result="fillHandler(event)" />
 	 	<mx:method name="findByIdLieu"  result="fillHandler(event)" />
+		<mx:method name="getAllNomPrenom"  result="fillHandler(event)" />
 	 	<mx:method name="remove"  result="init()" />
 	</mx:RemoteObject>
  

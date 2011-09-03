@@ -179,7 +179,7 @@ private function deleteClickHandler(event:CloseEvent):void
 
 public function faultHandlerService(fault:FaultEvent):void
 {
-	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+	Alert.show(fault.fault.faultString, "FaultHandlerService");
 }
  
 public function resultHandlerService(result:ResultEvent):void
@@ -260,7 +260,6 @@ private function deleteEntrepriseClickHandler(event:CloseEvent):void
 						<mx:DataGridColumn visible="false" headerText="id_exi" dataField="id_exi" />
 						<mx:DataGridColumn headerText="Nom" dataField="nom" />   					
 						<mx:DataGridColumn headerText="Prénom" dataField="prenom" />   					
-						<mx:DataGridColumn headerText="¨Voie" dataField="voie" />   					
 	   					<mx:DataGridColumn headerText="Tél. fixe"  dataField="fixe" />
 	   					<mx:DataGridColumn headerText="Tél. mobile"  dataField="mobile" />
 	   					<mx:DataGridColumn headerText="Fax"  dataField="fax" />
@@ -350,9 +349,6 @@ private function deleteEntrepriseClickHandler(event:CloseEvent):void
 	            </mx:FormItem>
 	            <mx:FormItem label="Mail:" id="mail" >
 	            	<mx:TextInput />
-	            </mx:FormItem>
-	            <mx:FormItem label="id exi:" visible="false" id="id_exi" >
-	            	<mx:TextInput text="-1" />
 	            </mx:FormItem>
 			</mx:Form>			
 			<mx:HBox>

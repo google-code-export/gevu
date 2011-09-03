@@ -19,6 +19,7 @@
 
 			[Bindable] public var colorTheme:uint= 0xCCB5A3;
 			[Bindable] public var endPoint:String;
+			[Bindable] public var callback:Function;
 			
 			private function VerifMdp():void{
 				
@@ -44,7 +45,9 @@
 					Alert.show("Ce login n'est pas dans la base.\nVous êtes connecté comme invité.", 'Vérification authentification', mx.controls.Alert.OK);
 				}else{
 					this.parentApplication.exi = result.result;
-					this.parentApplication.boxGen.visible = true;	
+					this.parentApplication.idExi = result.result.idExi;
+					this.parentApplication.boxGen.visible = true;
+					this.callback();
 					PopUpManager.removePopUp(this);
 				}
 			}      

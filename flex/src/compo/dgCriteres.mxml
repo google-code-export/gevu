@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:ViewStack xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:ns2="compo.*"
-	creationComplete="Init()"
+	creationComplete=""
 	width="100%" height="100%">
 	<mx:Script>
         <![CDATA[
@@ -203,7 +203,7 @@ private function deleteDroitClickHandler(event:CloseEvent):void
 {
     if (event.detail == Alert.YES) 
     {
-		ROCDr.remove(ROCDr, dgDroit.selectedItem['id_type_droit']);
+		ROCDr.remove(idCritere, dgDroit.selectedItem['id_type_droit']);
     }
 }
 
