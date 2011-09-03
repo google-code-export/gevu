@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier contient la classe Gevu_solutionsxcouts.
+ * Ce fichier contient la classe Gevu_droits.
  *
 
  * @copyright  2010 Samuel Szoniecky
@@ -9,28 +9,28 @@
 
 
 /**
- * Classe ORM qui représente la table 'gevu_solutionsxcouts'.
+ * Classe ORM qui représente la table 'gevu_droits'.
  *
 
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_solutionsxcouts extends Zend_Db_Table_Abstract
+class Model_DbTable_Gevu_droits extends Zend_Db_Table_Abstract
 {
     
     /*
      * Nom de la table.
      */
-    protected $_name = 'gevu_solutionsxcouts';
+    protected $_name = 'gevu_droits';
     
     /*
      * Clef primaire de la table.
      */
-    protected $_primary = 'id_solution';
+    protected $_primary = 'id_droit';
 
     
     /**
-     * Vérifie si une entrée Gevu_solutionsxcouts existe.
+     * Vérifie si une entrée Gevu_droits existe.
      *
      * @param array $data
      *
@@ -39,24 +39,24 @@ class Model_DbTable_Gevu_solutionsxcouts extends Zend_Db_Table_Abstract
     public function existe($data)
     {
 		$select = $this->select();
-		$select->from($this, array('id_solution'));
+		$select->from($this, array('id_droit'));
 		foreach($data as $k=>$v){
 			$select->where($k.' = ?', $v);
 		}
 	    $rows = $this->fetchAll($select);        
-	    if($rows->count()>0)$id=$rows[0]->id_solution; else $id=false;
+	    if($rows->count()>0)$id=$rows[0]->id_droit; else $id=false;
         return $id;
     } 
         
     /**
-     * Ajoute une entrée Gevu_solutionsxcouts.
+     * Ajoute une entrée Gevu_droits.
      *
      * @param array $data
      * @param boolean $existe
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=false)
+    public function ajouter($data, $existe=true)
     {
     	$id=false;
     	if($existe)$id = $this->existe($data);
@@ -67,7 +67,7 @@ class Model_DbTable_Gevu_solutionsxcouts extends Zend_Db_Table_Abstract
     } 
            
     /**
-     * Recherche une entrée Gevu_solutionsxcouts avec la clef primaire spécifiée
+     * Recherche une entrée Gevu_droits avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
      *
      * @param integer $id
@@ -77,11 +77,11 @@ class Model_DbTable_Gevu_solutionsxcouts extends Zend_Db_Table_Abstract
      */
     public function edit($id, $data)
     {        
-        $this->update($data, 'gevu_solutionsxcouts.id_solution = ' . $id);
+        $this->update($data, 'gevu_droits.id_droit = ' . $id);
     }
     
     /**
-     * Recherche une entrée Gevu_solutionsxcouts avec la clef primaire spécifiée
+     * Recherche une entrée Gevu_droits avec la clef primaire spécifiée
      * et supprime cette entrée.
      *
      * @param integer $id
@@ -90,17 +90,17 @@ class Model_DbTable_Gevu_solutionsxcouts extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
-        $this->delete('gevu_solutionsxcouts.id_solution = ' . $id);
+        $this->delete('gevu_droits.id_droit = ' . $id);
     }
     
     /**
-     * Récupère toutes les entrées Gevu_solutionsxcouts avec certains critères
+     * Récupère toutes les entrées Gevu_droits avec certains critères
      * de tri, intervalles
      */
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-                    ->from( array("gevu_solutionsxcouts" => "gevu_solutionsxcouts") );
+                    ->from( array("gevu_droits" => "gevu_droits") );
                     
         if($order != null)
         {
@@ -116,13 +116,13 @@ class Model_DbTable_Gevu_solutionsxcouts extends Zend_Db_Table_Abstract
     }
 
     /**
-     * Récupère les spécifications des colonnes Gevu_solutionsxcouts 
+     * Récupère les spécifications des colonnes Gevu_droits 
      */
     public function getCols(){
 
     	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_solution","champ"=>"id_solution","visible"=>true),
-    	array("titre"=>"id_cout","champ"=>"id_cout","visible"=>true),
+    	   	array("titre"=>"id_droit","champ"=>"id_droit","visible"=>true),
+    	array("titre"=>"lib","champ"=>"lib","visible"=>true),
         	
     		));    	
     	return $arr;
@@ -130,32 +130,32 @@ class Model_DbTable_Gevu_solutionsxcouts extends Zend_Db_Table_Abstract
     }     
     
     /*
-     * Recherche une entrée Gevu_solutionsxcouts avec la valeur spécifiée
+     * Recherche une entrée Gevu_droits avec la valeur spécifiée
      * et retourne cette entrée.
      *
-     * @param int $id_solution
+     * @param int $id_droit
      */
-    public function findById_solution($id_solution)
+    public function findById_droit($id_droit)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_solutionsxcouts") )                           
-                    ->where( "g.id_solution = ?", $id_solution);
+                    ->from( array("g" => "gevu_droits") )                           
+                    ->where( "g.id_droit = ?", $id_droit );
 
-        return $this->fetchRow($query)->toArray(); 
+        return $this->fetchAll($query)->toArray(); 
     }
     /*
-     * Recherche une entrée Gevu_solutionsxcouts avec la valeur spécifiée
+     * Recherche une entrée Gevu_droits avec la valeur spécifiée
      * et retourne cette entrée.
      *
-     * @param int $id_cout
+     * @param varchar $lib
      */
-    public function findById_cout($id_cout)
+    public function findByLib($lib)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_solutionsxcouts") )                           
-                    ->where( "g.id_cout = ?", $id_cout );
+                    ->from( array("g" => "gevu_droits") )                           
+                    ->where( "g.lib = ?", $lib );
 
-        return $this->fetchRow($query)->toArray(); 
+        return $this->fetchAll($query)->toArray(); 
     }
     
     

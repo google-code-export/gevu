@@ -2,7 +2,7 @@
 /**
  * Ce fichier contient la classe Gevu_exis.
  *
- * @copyright  2008 Gabriel Malkas
+
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
 */
@@ -11,7 +11,7 @@
 /**
  * Classe ORM qui représente la table 'gevu_exis'.
  *
- * @copyright  2008 Gabriel Malkas
+
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
@@ -99,7 +99,7 @@ class Model_DbTable_Gevu_exis extends Zend_Db_Table_Abstract
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-                    ->from( array("gevu_exis" => "gevu_exis") );
+                    ->from(array("gevu_exis" => "gevu_exis"),array("id_exi","nom","url","mail","role"));
                     
         if($order != null)
         {
