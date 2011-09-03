@@ -89,10 +89,10 @@ class Xul{
 					$images ="<image id='ico_images' onclick=\"".$js."\" src='design/images/jpg.png' />";
 					break;
 				case 2: //'png'
-					$docus .="<image id='ico_images' onclick=\"".$js."\" src='design/images/jpg.png' />";
+					$images .="<image id='ico_images' onclick=\"".$js."\" src='design/images/jpg.png' />";
 					break;
 				case 33: //'doc'
-					$images ="<image id='ico_images' onclick=\"document.location.href='".$doc->fichier."'\" src='design/images/doc.png' />";
+					$docus ="<image id='ico_images' onclick=\"document.location.href='".$doc->fichier."'\" src='design/images/doc.png' />";
 					break;
 				case 41: //'pdf'
 					$docus .="<image id='ico_images' onclick=\"document.location.href='".$doc->fichier."'\" src='design/images/pdf.png' />";

@@ -60,7 +60,7 @@ if(!$site)
 $_SESSION['site']=$site;
 
 if(!isset($_SESSION['ShowLegendeControle']))
-	$_SESSION['ShowLegendeControle']=false;
+	$_SESSION['ShowLegendeControle']=true;
 if(!isset($_SESSION['ShowCarte']))
 	$_SESSION['ShowCarte']=false;
 if(!isset($_SESSION['ShowDocs']))
