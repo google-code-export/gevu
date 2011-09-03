@@ -2,26 +2,12 @@
 require_once( "../param/ParamAppli.php" );
 
 try {
-    // cache fonctionel
-    /*$frontendOptions = array(
-       'lifetime' => 7200, // temps de vie du cache de 2 heures
-       'automatic_serialization' => true
-    );  
-    $backendOptions = array(
-        // Répertoire où stocker les fichiers de cache
-        'cache_dir' => './tmp/'
-    ); 
-    // créer un objet Zend_Cache_Core
-    $cache = Zend_Cache::factory('Core',
-                                 'File',
-                                 $frontendOptions,
-                                 $backendOptions);*/
-
-//$aaa = new GEVU_Diagnostique();
-//$bbb = $aaa->getNodeRelatedData(419);
-    
 
 /*
+	
+$aaa = new Model_DbTable_Gevu_contacts();
+$bbb = $aaa->getAllNomPrenom();
+    
 $s = new Model_DbTable_Gevu_solutions();
 $rs = $s->remove(526);
 
@@ -33,11 +19,9 @@ $s->edit(6, $data);
 $s = new Model_DbTable_Gevu_contacts();
 $data = array("nom"=>"kj","prenom"=>"kj","fixe"=>"kj","mobile"=>"kj","mail"=>"kj","url"=>"kj","observations"=>"kj");
 $s->ajouter($data);
-	
-$s = new Model_DbTable_Gevu_docs();
+$s = new Model_DbTable_Gevu_droits();
 $rs = $s->getAll();
 print_r($rs);
-	
 $s = new Model_DbTable_Gevu_solutionsxproduits();
 $rs = $s->findByIdProduit(6);
 
@@ -50,6 +34,7 @@ $s = new Model_DbTable_Gevu_produits();
 $rs = $s->getAll();
 $data = array("url"=>"kjh","titre"=>"csv","content_type"=>"text/csv");
 $s->ajouter($data,false);
+
 $lm = new AUTH_LoginManager();
 $u = new AUTH_LoginVO();
 $u->username="samszo";
@@ -57,8 +42,8 @@ $u->password="samszo";
 $au = $lm->verifyUser($u);
 */
 
-$s = new Model_DbTable_Gevu_criteresxtypesxdeficiences();
-$rs = $s->remove(1,1);
+//$s = new Model_DbTable_Gevu_criteresxtypesxdeficiences();
+//$rs = $s->remove(1,1);
 	
 
 
@@ -113,6 +98,12 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_parcelles')
 	->setClass('Model_DbTable_Gevu_geos')
 	->setClass('Model_DbTable_Gevu_tablearborescence')
+	->setClass('Model_DbTable_Gevu_droits')
+	->setClass('Model_DbTable_Gevu_exis')
+	->setClass('Model_DbTable_Gevu_exisxdroits')
+	->setClass('Model_DbTable_Gevu_exisxcontacts')
+	->setClass('Model_DbTable_Gevu_roles')
+	
 	
 	
 	//pour l'authentification
