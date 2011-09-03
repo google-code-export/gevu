@@ -2,7 +2,7 @@
 /**
  * Ce fichier contient la classe Gevu_typesxcontroles.
  *
- * @copyright  2008 Gabriel Malkas
+
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
 */
@@ -11,7 +11,7 @@
 /**
  * Classe ORM qui représente la table 'gevu_typesxcontroles'.
  *
- * @copyright  2008 Gabriel Malkas
+
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
@@ -97,7 +97,7 @@ class Model_DbTable_Gevu_typesxcontroles extends Zend_Db_Table_Abstract
      * Récupère toutes les entrées Gevu_typesxcontroles avec certains critères
      * de tri, intervalles
      */
-    public function getAll($order=null, $limit=0, $from=0)
+    public function getAll($order="lib", $limit=0, $from=0)
     {
         $query = $this->select()
                     ->from( array("gevu_typesxcontroles" => "gevu_typesxcontroles") );

@@ -11,7 +11,6 @@
 /**
  * Classe ORM qui représente la table 'gevu_contacts'.
  *
- * @copyright  2008 Gabriel Malkas
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
@@ -113,27 +112,7 @@ class Model_DbTable_Gevu_contacts extends Zend_Db_Table_Abstract
         }
 
         return $this->fetchAll($query)->toArray();
-    }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_contacts 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_contact","champ"=>"id_contact","visible"=>true),
-    	array("titre"=>"nom","champ"=>"nom","visible"=>true),
-    	array("titre"=>"prenom","champ"=>"prenom","visible"=>true),
-    	array("titre"=>"fixe","champ"=>"fixe","visible"=>true),
-    	array("titre"=>"mobile","champ"=>"mobile","visible"=>true),
-    	array("titre"=>"fax","champ"=>"fax","visible"=>true),
-    	array("titre"=>"mail","champ"=>"mail","visible"=>true),
-    	array("titre"=>"id_exi","champ"=>"id_exi","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
+    }  
     
     /*
      * Recherche une entrée Gevu_contacts avec la valeur spécifiée
@@ -234,18 +213,16 @@ class Model_DbTable_Gevu_contacts extends Zend_Db_Table_Abstract
         return $this->fetchRow($query)->toArray(); 
     }
     /*
-     * Recherche une entrée Gevu_contacts avec la valeur spécifiée
-     * et retourne cette entrée.
+     * Retourne toute les entrées en concaténant le prénom et le nom
+     * utiliser pour les combobox.
      *
-     * @param int $id_exi
      */
-    public function findById_exi($id_exi)
+    public function getAllNomPrenom()
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_contacts") )                           
-                    ->where( "g.id_exi = ?", $id_exi );
-
-        return $this->fetchRow($query)->toArray(); 
+			->from( array("g" => "gevu_contacts"),array("nom"=>"CONCAT(UCASE(nom),' ',prenom)","id_contact") );                           
+		
+        return $this->fetchAll($query)->toArray(); 
     }
     
     

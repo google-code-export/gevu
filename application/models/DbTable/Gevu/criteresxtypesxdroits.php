@@ -2,7 +2,7 @@
 /**
  * Ce fichier contient la classe Gevu_criteresxtypesxdroits.
  *
- * @copyright  2008 Gabriel Malkas
+
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
 */
@@ -11,7 +11,7 @@
 /**
  * Classe ORM qui représente la table 'gevu_criteresxtypesxdroits'.
  *
- * @copyright  2008 Gabriel Malkas
+
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
