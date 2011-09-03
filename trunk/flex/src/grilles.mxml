@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" pageTitle="grilles" 
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" pageTitle="GEVU grilles" 
 		backgroundGradientColors="[#ffffff, #ffffff]"
 		xmlns:ns2="compo.*"
-		creationComplete="init()"
+		creationComplete="login()"
 		>
-<!--
-todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
--->
     <mx:Script source="grillesScript.as" />
 
 	<mx:VBox width="100%" height="100%" id="boxGen" visible="false" >
 		<mx:HBox>
-			<mx:Label text="V 0.62" />
-			<mx:LinkButton id="btnAjoutUti" click="init();" icon="@Embed('images/ajoutUti.jpg')" toolTip="Ajouter un utilisateur" />					
-			<mx:LinkButton label="Mon profil" click="init();" />
-			<mx:LinkButton label="Mes données" click="init();" />
-			<mx:LinkButton label="Connexion/Déconnexion" click="init();" />		
+			<mx:Image source="@Embed('images/logo.png')" />
+			<mx:VBox>
+				<mx:Label text="V 0.149" />
+				<mx:Label fontSize="16" text="Grilles de paramétrages de l'application GEVU"/>		
+			</mx:VBox>
 		</mx:HBox>
 
 			<mx:VBox id="boxGrid" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"   >
@@ -39,6 +36,10 @@ todo : http://livedocs.adobe.com/flex/3/html/celleditor_9.html#225396
 
 					<mx:Canvas id="tabContact" label="Contacts" width="100%" height="100%">
 						<ns2:dgContacts id="dgContact" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
+					</mx:Canvas>
+
+					<mx:Canvas id="tabExis" label="Comptes" width="100%" height="100%">
+						<ns2:dgExis id="dgExis" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
 					</mx:Canvas>
 
 				</mx:TabNavigator>

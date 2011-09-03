@@ -38,9 +38,11 @@
 
 			public function ajouter():void
 			{
+				/*
 				if(parentApplication.idExi){
 					objParam["id_exi"] = parentApplication.idExi;					
 				}
+				*/
 				objParam["lib"] = inText.text;
 				ROS.ajouter(objParam);	
 			}      

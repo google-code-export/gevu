@@ -21,16 +21,21 @@ include "grillesconfig.as";
 public var dataArr:ArrayCollection = new ArrayCollection();
 [Bindable]
 public var exi:Object;
-private var idExi:String = "";
+[Bindable] public var idExi:String = "";
 
  
-public function init():void
+public function login():void
 {
 	//construction de la fenêtre d'édition
 	var twLog:twLogin= twLogin(
         PopUpManager.createPopUp(this, twLogin, true));
 	twLog.endPoint=ENDPOINT_SERVICE;
+	twLog.callback = init;
     PopUpManager.centerPopUp(twLog);
         	
 } 
  
+public function init():void
+{
+	dgCritere.Init();
+}

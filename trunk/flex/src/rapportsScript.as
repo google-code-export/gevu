@@ -32,10 +32,16 @@ public function init():void
 	var twLog:twLogin= twLogin(
         PopUpManager.createPopUp(this, twLogin, true));
 	twLog.endPoint=ENDPOINT_SERVICE;
+	twLog.callback = getBD;
     PopUpManager.centerPopUp(twLog);
-	
-    srvBD.send();    	
+	    	
 } 
+
+public function getBD():void{
+	//récupère les base de donnée suivant un utilisateur
+	urlBD += "&idExi="+idExi;
+	srvBD.send();
+}
 
 public function readXmlBD(event:ResultEvent):void{
     //récupère les geoloc
