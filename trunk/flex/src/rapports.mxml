@@ -18,7 +18,7 @@
  	<mx:method name="edit"  result="fillHandler(event)"/>  	
 </mx:RemoteObject>
 	    
-<mx:Panel id="boxGen" visible="false" title="V 0.62 GEVU Global EValuation Urbaine : RAPPORTS " width="100%" height="100%">
+<mx:Panel id="boxGen" visible="false" title="V 0.155 GEVU Global EValuation Urbaine : Création des rapports " width="100%" height="100%">
  	<mx:HBox paddingLeft="6" verticalAlign="middle">
  		<mx:VBox>
 			<mx:CheckBox label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" /> 			
