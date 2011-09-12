@@ -7,7 +7,6 @@
 <mx:Script source="rapportsScript.as" />
 <mx:Style source="rapport.css"/>
 
-<mx:HTTPService id="srvBD" url="{urlBD}" result="readXmlBD(event);" showBusyCursor="true" /> 
 <mx:HTTPService id="srvEtab" result="readXmlEtab(event);" showBusyCursor="true" /> 
 <mx:HTTPService id="srvSolus" result="readXmlSolus(event);" showBusyCursor="true" /> 
 <mx:HTTPService id="srvFC" showBusyCursor="true" /> 
@@ -25,7 +24,7 @@
 			<mx:CheckBox label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" /> 			
 		 	<mx:ComboBox id="cbBD"  
 				dataProvider="{rsBD}"
-				labelField="label"
+				labelField="lib"
 				data="value"
 				prompt="Choisissez une base de donnée..."
 				rowCount="6"

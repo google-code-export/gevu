@@ -37,5 +37,5 @@ public function login():void
  
 public function init():void
 {
-	dgCritere.Init();
+
 }

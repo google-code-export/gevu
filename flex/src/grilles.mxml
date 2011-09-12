@@ -18,6 +18,11 @@
 			<mx:VBox id="boxGrid" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"   >
 				
 				<mx:TabNavigator x="0" y="10" width="100%" height="100%" id="tabNavig" >
+					
+					<mx:Canvas id="tabExis" label="Comptes" width="100%" height="100%">
+						<ns2:dgExis id="dgExis" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
+					</mx:Canvas>
+					
 					<mx:Canvas id="tabCrit" label="Critères" width="100%" height="100%" activate="true">
 						<ns2:dgCriteres id="dgCritere" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
 					</mx:Canvas>
@@ -37,11 +42,6 @@
 					<mx:Canvas id="tabContact" label="Contacts" width="100%" height="100%">
 						<ns2:dgContacts id="dgContact" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
 					</mx:Canvas>
-
-					<mx:Canvas id="tabExis" label="Comptes" width="100%" height="100%">
-						<ns2:dgExis id="dgExis" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
-					</mx:Canvas>
-
 				</mx:TabNavigator>
 			
 			</mx:VBox>

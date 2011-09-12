@@ -3,13 +3,17 @@ import com.adobe.serialization.json.JSON;
 import compo.*;
 
 import flash.events.Event;
+import flash.net.URLRequest;
+import flash.net.URLRequestMethod;
+import flash.net.URLVariables;
+import flash.net.navigateToURL;
 
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.events.DropdownEvent;
+import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
-import mx.managers.PopUpManager;
 
 //include the constant definition of the server endpoint URL
 include "grillesconfig.as";
@@ -21,8 +25,7 @@ public var exi:Object;
 [Bindable]
 public var idExi:String = "1";
 
-[Bindable] private var urlBD:String = ENDPOINT_EXEAJAX+"?f=GetBDs";
-[Bindable] private var rsBD:Object;
+[Bindable] private var rsBD:Array;
 [Bindable] public var selectedBD:Object;
 [Bindable] private var rsEtab:Object;
 [Bindable] public var selectedEtab:Object;
@@ -32,20 +35,19 @@ public function init():void
 	var twLog:twLogin= twLogin(
         PopUpManager.createPopUp(this, twLogin, true));
 	twLog.endPoint=ENDPOINT_SERVICE;
-	twLog.callback = getBD;
+	twLog.callback = setBD;
     PopUpManager.centerPopUp(twLog);
 	    	
 } 
 
-public function getBD():void{
-	//récupère les base de donnée suivant un utilisateur
-	urlBD += "&idExi="+idExi;
-	srvBD.send();
-}
-
-public function readXmlBD(event:ResultEvent):void{
-    //récupère les geoloc
-    rsBD = event.result.menuitems.menuitem;
+public function setBD():void{
+	//initialise la liste des bases de données suivant un utilisateur
+	rsBD = JSON.decode(this.exi.droit_1);
+	//mise au format de l'identifiant du site
+	for each(var bdd:Object in rsBD){
+		var idSite:String = bdd.id; 
+		bdd.id = idSite.substr(2);
+	}
 }
 
 public function readXmlEtab(event:ResultEvent):void{
@@ -73,12 +75,12 @@ public function readXmlSolus(event:ResultEvent):void{
 public function choixBD(event:DropdownEvent):void{
 	
 	selectedBD = this.cbBD.selectedItem;
-    
+	
 	srvEtab.cancel();
 	srvEtab.url = ENDPOINT_EXECARTO
 	var params:Object = new Object();
 	params.f = "get_arbo_grille";
-	params.site = selectedBD.value;
+	params.site = selectedBD.id;
 	params.idGrille = 55;
 	trace ("choixBD:srvEtab.url="+ENDPOINT_EXECARTO+"?f="+params.f+"&site="+params.site+"&idGrille="+params.idGrille);
 	srvEtab.send(params);
@@ -103,7 +105,7 @@ public function showSolusProbEtab():void {
 		srvSolus.url = ENDPOINT_EXEAJAX;
 		var params:Object = new Object();
 		params.f = "GetSolusProbEtab";
-		params.site = selectedBD.value;
+		params.site = selectedBD.id;
 		params.idEtab = selectedEtab.idRub;
 		trace ("showSolusProbEtab:srvSolus.url="+ENDPOINT_EXEAJAX+"?f="+params.f+"&site="+params.site+"&idEtab="+params.idEtab);
 		srvSolus.send(params);		
@@ -185,7 +187,7 @@ public function calculerRapport(send:Boolean):*{
 	var request:URLRequest = new URLRequest(ENDPOINT_RAPPORT);
 	var variables:URLVariables = new URLVariables();
 	variables.pxml=pxml;
-	variables.site=selectedBD.value;
+	variables.site=selectedBD.id;
 	variables.id=selectedEtab.idRub;
 	variables.model=cbModel.cb.selectedItem["id_doc"];
 	request.data = variables;
@@ -262,7 +264,7 @@ private function SauveSelection():void{
 		if(pxml){
 			var pArr:Array = new Array;
 			var idRapport:String = cbSelection.cb.selectedItem["id_rapport"];
-			pArr["site"]=selectedBD.value;
+			pArr["site"]=selectedBD.id;
 			pArr["id_exi"]=idExi;
 			pArr["selection"]=pxml;
 			pArr["id_lieu"]=selectedEtab.idRub;		
