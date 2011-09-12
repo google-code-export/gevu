@@ -60,7 +60,7 @@ private function selectItem(event:Event):void {
 		var i:int=UpdRole.getIndex(item.role);
 		UpdRole.cb.selectedIndex=i;
 		ROEC.findByIdExi(idExiContact);
-		//ROED.findByIdExi(idExiContact);
+		dgDroits.Init(idExiContact);
 	}
 }
 
@@ -191,28 +191,6 @@ public function resultHandlerService(result:ResultEvent):void
 {
 	RO.getAll();
 }
-
-private function deleteDroit():void {
-	
-	if (this.dgDroit.selectedItem)
-	{
-		Alert.show("Confirmez-vous la suppression du droit pour ce compte ?",
-			"Confirmation Suppression", 3, this, deleteDroitClickHandler);
-	}
-	
-}
-private function deleteDroitClickHandler(event:CloseEvent):void
-{
-	if (event.detail == Alert.YES) 
-	{
-		ROED.remove(idExiContact, dgDroit.selectedItem['id_droit']);
-	}
-}
-private function DroitHandler(e:Object):void
-{
-	vsDroit.selectedChild = viewDroit;
-	ROED.findByIdExi(idExiContact);
-}
 						
 private function deleteExiContact():void {
 	
@@ -249,16 +227,6 @@ private function ExiContactHandler(e:Object):void
 	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
 	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
 	 	<mx:method name="ajouter"  result="insertItemHandler(event)"/>  	
-	</mx:RemoteObject>
-
-	<mx:RemoteObject id="ROED"
-					 source="Model_DbTable_Gevu_exisxdroits" destination="zend" 
-					 endpoint="{endPoint}"
-					 showBusyCursor="true"
-					 fault="faultHandlerService(event)">
-		<mx:method name="findByIdExi"  result="fillGridHandler(event,dgDroit)"/>  	
-		<mx:method name="remove"  result="DroitHandler(event)"/>  	
-		<mx:method name="ajouter"  result="DroitHandler(event)"/>  	
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROEC"
@@ -356,28 +324,7 @@ private function ExiContactHandler(e:Object):void
 			<mx:VBox id="detail" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
 				<mx:HBox width="100%" height="100%" >
 					<mx:Panel title="Droits GEVU" width="100%" height="100%" layout="absolute">
-						<mx:ViewStack id="vsDroit" width="100%" height="100%">
-							<mx:VBox id="viewDroit" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-								<mx:HBox>
-									<mx:LinkButton click="vsDroit.selectedChild = insertDroit;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un droit pour ce contact" />
-									<mx:LinkButton click="deleteDroit()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un droit pour ce contact" />							
-								</mx:HBox>							
-								<mx:DataGrid width="100%" height="100%" id="dgDroit">
-									<mx:columns>
-										<mx:DataGridColumn headerText="Type de droit" dataField="lib" />
-										<mx:DataGridColumn headerText="Id Droit" dataField="id_droit" visible="false"/>
-									</mx:columns>
-								</mx:DataGrid>					
-							</mx:VBox>
-							<mx:VBox id="insertDroit" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-								<mx:Label text="Choisissez un droit :"/> 
-								<ns2:cbGroupeMot titre="un droit" labelName="nom" keyName="id_droit" id="cbDroit" objName="Model_DbTable_Gevu_droits" endPoint="{RO.endpoint}" bAjout="false" />
-								<mx:HBox>
-									<mx:Button label="Enregistrer" click="ROED.ajouter(idExiContact,cbDroit.cb.selectedItem['id_droit']);" />
-									<mx:Button label="Annuler" click="vsDroit.selectedChild = viewDroit;" />				
-								</mx:HBox>							
-							</mx:VBox>
-						</mx:ViewStack>											
+						<ns2:dgDroits visible="false" id="dgDroits" bInsert="false" endPoint="{endPoint}" width="100%" height="100%" />
 					</mx:Panel>
 				</mx:HBox>						
 			</mx:VBox>		
