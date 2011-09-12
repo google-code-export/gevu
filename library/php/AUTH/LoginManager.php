@@ -107,45 +107,42 @@ class AUTH_LoginManager {
 		// Add groups to the Role registry using Zend_Acl_Role
 		// Guest does not inherit access controls.
 		// Order matters here, we go from the most	restricted to the least restricted
-		$acl->addRole(new Zend_Acl_Role('guest'));
-		$acl->addRole(new Zend_Acl_Role('manager'), 'guest');
-		$acl->addRole(new Zend_Acl_Role('admin'), 'manager');
+		$dbRole = new Model_DbTable_Gevu_roles();
+		$rs = $dbRole->getAll();
+		foreach ($rs as $r){
+			if($r['inherit']!=""){
+				$acl->addRole(new Zend_Acl_Role($r['lib'],$r['inherit']));							
+			}else{
+				$acl->addRole(new Zend_Acl_Role($r['lib']));							
+			}
+			$res = json_decode($r['params']);
+			if($res==""){
+				$acl->allow($r['lib']);	
+			}else{
+				foreach ($res as $re){
+					// setup the resource privs
+					if(!$acl->has($re->lib))	$acl->addResource($re->lib);
+					// application de la ressource
+					$acl->allow($r['lib'], null, $re->lib);				
+				}
+			}
+		}
 		
-		// Administrator does not inherit access controls, All access is granted
-		$acl->addRole(new Zend_Acl_Role('Super'));
-		
-		// setup the resource privs
-		$acl->add(new Zend_Acl_Resource('viewPublicUI'));
-		$acl->add(new Zend_Acl_Resource('viewRestrictedUI'));
-		$acl->add(new Zend_Acl_Resource('viewLogs'));
-		$acl->add(new Zend_Acl_Resource('createManager'));
-		
-		// Guest may only view the public interface
-		$acl->allow('guest', null, 'viewPublicUI');
-		
-		// manager inherits viewPublicUI privilege from guest,but also needs additional
-		// privileges
-		$acl->allow('manager', null, array('viewRestrictedUI'));
-		
-		// admin inherits viewRestrictedUI privilege from
-		// manager, but also needs additional privileges
-		$acl->allow('admin', null, array('createManager'));
-		
-		// Super inherits nothing, but is allowed all privileges
-		$acl->allow('Super');
-		
-		// userRoleVO to Privs Map
-		$userRolePrivs = new AUTH_AccessPrivsVO();
-		$userRolePrivs->idExi = $userId;
-		$userRolePrivs->ExiRole = $userRole;
-		$userRolePrivs->viewPublicUI =
-		$acl->isAllowed($userRole, null, 'viewPublicUI') ?	"allowed" : "denied";
-		$userRolePrivs->viewRestrictedUI =
-			$acl->isAllowed($userRole, null, 'viewRestrictedUI') ? "allowed" : "denied";
-		$userRolePrivs->createManager =
-			$acl->isAllowed($userRole, null, 'createManager') ?	"allowed" : "denied";
-		$userRolePrivs->viewLogs =
-			$acl->isAllowed($userRole, null, 'viewLogs') ?	"allowed" : "denied";
+		//création du tableau des droits
+		$userRolePrivs = array();		
+		$userRolePrivs["idExi"] = $userId;
+		$userRolePrivs["ExiRole"] = $userRole;
+		//ajoute les autorisations liées au role
+		$rs = $acl->getResources();
+		foreach ($rs as $r){
+			$userRolePrivs[$r] = $acl->isAllowed($userRole, null, $r);			
+		}
+		//ajoute les autorisations liées au droit de l'utilisateur
+		$dbDroits = new Model_DbTable_Gevu_exisxdroits();
+		$rs = $dbDroits->findByIdExi($userId);
+		foreach ($rs as $r){
+			$userRolePrivs["droit_".$r['id_droit']] = $r['params'];						
+		}
 		
 		return $userRolePrivs;
 	

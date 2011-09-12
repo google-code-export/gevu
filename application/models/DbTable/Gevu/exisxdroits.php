@@ -26,7 +26,7 @@ class Model_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
     /*
      * Clef primaire de la table.
      */
-    protected $_primary = 'id_exi';
+    protected $_primary = array('id_exi','id_droit');
 
     
     /**
@@ -36,14 +36,13 @@ class Model_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
      *
      * @return integer
      */
-    public function existe($data)
+    public function existe($idExi, $idDroit)
     {
 		$select = $this->select();
 		$select->from($this, array('id_exi'));
-		foreach($data as $k=>$v){
-			$select->where($k.' = ?', $v);
-		}
-	    $rows = $this->fetchAll($select);        
+		$select->where('id_exi = ?', $idExi);
+		$select->where('id_droit = ?', $idDroit);
+		$rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_exi; else $id=false;
         return $id;
     } 
@@ -51,17 +50,17 @@ class Model_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
     /**
      * Ajoute une entrée Gevu_exisxdroits.
      *
-     * @param array $data
-     * @param boolean $existe
+     * @param integer $idDroit
+     * @param integer $idExi
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($idExi, $idDroit, $existe=true)
     {
     	$id=false;
-    	if($existe)$id = $this->existe($data);
+    	if($existe)$id = $this->existe($idExi, $idDroit);
     	if(!$id){
-    	 	$id = $this->insert($data);
+    	 	$id = $this->insert(array("id_exi"=>$idExi, "id_droit"=>$idDroit));
     	}
     	return $id;
     } 
@@ -70,14 +69,15 @@ class Model_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
      * Recherche une entrée Gevu_exisxdroits avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
      *
-     * @param integer $id
-     * @param array $data
+     * @param integer $idDroit
+     * @param integer $idExi
+     * @param string $data
      *
      * @return void
      */
-    public function edit($id, $data)
+    public function edit($idExi, $idDroit, $data)
     {        
-        $this->update($data, 'gevu_exisxdroits.id_exi = ' . $id);
+        $this->update($data, 'gevu_exisxdroits.id_exi = '.$idExi.' AND gevu_exisxdroits.id_droit = '.$idDroit);
     }
     
     /**
@@ -114,21 +114,6 @@ class Model_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_exisxdroits 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_exi","champ"=>"id_exi","visible"=>true),
-    	array("titre"=>"id_droit","champ"=>"id_droit","visible"=>true),
-    	array("titre"=>"params","champ"=>"params","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_exisxdroits avec la valeur spécifiée
@@ -139,8 +124,11 @@ class Model_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
     public function findByIdExi($id_exi)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_exisxdroits") )                           
-                    ->where( "g.id_exi = ?", $id_exi );
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from( array("ed" => "gevu_exisxdroits"))                           
+            ->joinInner(array('d' => 'gevu_droits'),
+            	'd.id_droit = ed.id_droit',array("id_droit", "lib"))
+			->where( "ed.id_exi = ?", $id_exi );
 
         return $this->fetchAll($query)->toArray(); 
     }

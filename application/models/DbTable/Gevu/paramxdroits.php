@@ -1,27 +1,26 @@
 <?php
 /**
- * Ce fichier contient la classe Gevu_droits.
+ * Ce fichier contient la classe Gevu_paramxdroits.
  *
-
+ * @copyright  2008 Gabriel Malkas
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
 */
 
 
 /**
- * Classe ORM qui représente la table 'gevu_droits'.
+ * Classe ORM qui représente la table 'gevu_paramxdroits'.
  *
-
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_droits extends Zend_Db_Table_Abstract
+class Model_DbTable_Gevu_paramxdroits extends Zend_Db_Table_Abstract
 {
     
     /*
      * Nom de la table.
      */
-    protected $_name = 'gevu_droits';
+    protected $_name = 'gevu_paramxdroits';
     
     /*
      * Clef primaire de la table.
@@ -30,7 +29,7 @@ class Model_DbTable_Gevu_droits extends Zend_Db_Table_Abstract
 
     
     /**
-     * Vérifie si une entrée Gevu_droits existe.
+     * Vérifie si une entrée Gevu_paramxdroits existe.
      *
      * @param array $data
      *
@@ -49,7 +48,7 @@ class Model_DbTable_Gevu_droits extends Zend_Db_Table_Abstract
     } 
         
     /**
-     * Ajoute une entrée Gevu_droits.
+     * Ajoute une entrée Gevu_paramxdroits.
      *
      * @param array $data
      * @param boolean $existe
@@ -67,7 +66,7 @@ class Model_DbTable_Gevu_droits extends Zend_Db_Table_Abstract
     } 
            
     /**
-     * Recherche une entrée Gevu_droits avec la clef primaire spécifiée
+     * Recherche une entrée Gevu_paramxdroits avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
      *
      * @param integer $id
@@ -77,11 +76,11 @@ class Model_DbTable_Gevu_droits extends Zend_Db_Table_Abstract
      */
     public function edit($id, $data)
     {        
-        $this->update($data, 'gevu_droits.id_droit = ' . $id);
+        $this->update($data, 'gevu_paramxdroits.id_droit = ' . $id);
     }
     
     /**
-     * Recherche une entrée Gevu_droits avec la clef primaire spécifiée
+     * Recherche une entrée Gevu_paramxdroits avec la clef primaire spécifiée
      * et supprime cette entrée.
      *
      * @param integer $id
@@ -90,17 +89,17 @@ class Model_DbTable_Gevu_droits extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
-        $this->delete('gevu_droits.id_droit = ' . $id);
+        $this->delete('gevu_paramxdroits.id_droit = ' . $id);
     }
     
     /**
-     * Récupère toutes les entrées Gevu_droits avec certains critères
+     * Récupère toutes les entrées Gevu_paramxdroits avec certains critères
      * de tri, intervalles
      */
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-                    ->from( array("gevu_droits" => "gevu_droits") );
+                    ->from( array("gevu_paramxdroits" => "gevu_paramxdroits") );
                     
         if($order != null)
         {
@@ -114,23 +113,9 @@ class Model_DbTable_Gevu_droits extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_droits 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_droit","champ"=>"id_droit","visible"=>true),
-    	array("titre"=>"lib","champ"=>"lib","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
-    
+   
     /*
-     * Recherche une entrée Gevu_droits avec la valeur spécifiée
+     * Recherche une entrée Gevu_paramxdroits avec la valeur spécifiée
      * et retourne cette entrée.
      *
      * @param int $id_droit
@@ -138,22 +123,22 @@ class Model_DbTable_Gevu_droits extends Zend_Db_Table_Abstract
     public function findByIdDroit($id_droit)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_droits") )                           
+                    ->from( array("g" => "gevu_paramxdroits") )                           
                     ->where( "g.id_droit = ?", $id_droit );
 
         return $this->fetchAll($query)->toArray(); 
     }
     /*
-     * Recherche une entrée Gevu_droits avec la valeur spécifiée
+     * Recherche une entrée Gevu_paramxdroits avec la valeur spécifiée
      * et retourne cette entrée.
      *
-     * @param varchar $lib
+     * @param text $params
      */
-    public function findByLib($lib)
+    public function findByParams($params)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_droits") )                           
-                    ->where( "g.lib = ?", $lib );
+                    ->from( array("g" => "gevu_paramxdroits") )                           
+                    ->where( "g.params = ?", $params );
 
         return $this->fetchAll($query)->toArray(); 
     }
