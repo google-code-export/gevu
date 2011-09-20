@@ -2,14 +2,12 @@
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" >
 	<mx:Script>
         <![CDATA[
+        	import mx.controls.Alert;
         	import mx.events.CloseEvent;
-	import mx.managers.CursorManager;
-	import mx.managers.PopUpManager;
-
-	import mx.rpc.events.FaultEvent;
-	import mx.rpc.events.ResultEvent;
-
-	import mx.controls.Alert;
+        	import mx.managers.CursorManager;
+        	import mx.managers.PopUpManager;
+        	import mx.rpc.events.FaultEvent;
+        	import mx.rpc.events.ResultEvent;
 
 	/**
 	 * paramétrage de l'objet
@@ -19,6 +17,7 @@
 	[Bindable] public var objMethode:String="getAll";
 	[Bindable] public var objParam:String;
 	[Bindable] public var objSource:String="";
+	[Bindable] public var doSource:Object;
 	[Bindable] public var keyName:String;
 	[Bindable] public var labelName:String="lib";
 	[Bindable] public var titre:String="un mot clef";
@@ -43,6 +42,12 @@
 			}			
 			if(objMethode=="getAllNomPrenom"){
 				ROS.getAllNomPrenom();					
+			}			
+			if(objMethode=="getListe"){
+				ROS.getListe();					
+			}			
+			if(objMethode=="getAllByType"){
+				ROS.getAllByType(objParam);					
 			}			
 		}else{
 		    //chargement des données
@@ -133,6 +138,9 @@
 		if(objName=="Model_DbTable_Gevu_rapports"){
 			this.parentApplication.ShowSelection(cb.selectedItem["selection"])
 		}
+		if(objName=="Model_DbTable_Gevu_motsclefs"){
+			doSource.setCondRep(cb.selectedItem)
+		}
 	}
 
         ]]>
@@ -146,7 +154,10 @@
 	 	<mx:method name="findByTronc"  result="fillHandler(event)" />
 	 	<mx:method name="findByIdLieu"  result="fillHandler(event)" />
 		<mx:method name="getAllNomPrenom"  result="fillHandler(event)" />
+		<mx:method name="getListe"  result="fillHandler(event)" />
 	 	<mx:method name="remove"  result="init()" />
+		<mx:method name="getAllByType"   result="fillHandler(event)"  />
+		
 	</mx:RemoteObject>
  
 <mx:ComboBox id="cb" change="changeItem()" prompt="{annonce}" />

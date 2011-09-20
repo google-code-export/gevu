@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
+	title="Formulaires "
+	showCloseButton="true"
+	close="PopUpManager.removePopUp(this);"  
+	width="600" height="500"
+	xmlns:ns2="compo.*"
+    creationComplete="creationCompleteHandler(event)"	
+	>
+	<mx:Script>
+        <![CDATA[
+			import compo.*;
+			
+			import mx.events.FlexEvent;
+			import mx.managers.CursorManager;
+			import mx.managers.PopUpManager;
+			
+			[Bindable] public var colorTheme:uint= 0xCCB5A3;
+			[Bindable] public var dt:Object;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				this.title += dt.lib;
+				if(dt.id_type_controle==44){
+					var fg:formulaire_etablissements = new formulaire_etablissements();
+					cnvFormGen.addChild(fg);
+				}
+				var dc:cnvDiagCritere = new cnvDiagCritere();
+				dc.dt = dt;
+				cnvCrit.addChild(dc);
+				cnvDroite.width = 0;
+
+			}
+			
+		]]>
+    </mx:Script>
+		<mx:HDividedBox width="100%" height="100%">
+			<mx:Canvas id="cnvGauche" width="100%" height="100%">
+				<mx:Accordion width="100%" height="100%">
+					<mx:Canvas id="cnvFormGen" width="100%" height="100%" label="Formulaire générale">
+					</mx:Canvas>
+					<mx:Canvas  id="cnvCrit"  width="100%" height="100%" label="Critères">
+					</mx:Canvas>
+				</mx:Accordion>
+			</mx:Canvas>
+			<mx:Canvas id="cnvDroite" width="100%" height="100%">
+				<mx:Accordion width="100%" height="100%">
+					<mx:Canvas width="100%" height="100%" label="Cartographie">
+					</mx:Canvas>
+					<mx:Canvas width="100%" height="100%" label="Documents">
+					</mx:Canvas>		
+					<mx:Canvas width="100%" height="100%" label="Statistiques">
+					</mx:Canvas>		
+				</mx:Accordion>
+			</mx:Canvas>
+		</mx:HDividedBox>
+</mx:TitleWindow>

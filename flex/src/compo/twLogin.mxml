@@ -6,15 +6,16 @@
 	>
 	<mx:Script>
         <![CDATA[
+	       	import com.adobe.serialization.json.JSON;
+	       	
+	       	import mx.controls.Alert;
+	       	import mx.core.Application;
+	       	import mx.managers.CursorManager;
 	       	import mx.managers.PopUpManager;
-			import mx.managers.CursorManager;
-			import mx.core.Application;
-			import mx.controls.Alert;
-
-			import mx.rpc.AsyncToken;
-			import mx.rpc.events.FaultEvent;
-			import mx.rpc.events.ResultEvent;
-			import mx.rpc.http.HTTPService;
+	       	import mx.rpc.AsyncToken;
+	       	import mx.rpc.events.FaultEvent;
+	       	import mx.rpc.events.ResultEvent;
+	       	import mx.rpc.http.HTTPService;
 
 
 			[Bindable] public var colorTheme:uint= 0xCCB5A3;
@@ -42,16 +43,26 @@
 					return;
 				}
 				if(result.result.idExi==null){
-					Alert.show("Ce login n'est pas dans la base.\nVous êtes connecté comme invité.", 'Vérification authentification', mx.controls.Alert.OK);
+					Alert.show("Ce login n'est pas dans la base.\nVous ne pouvez pas être connecté comme invité.", 'Vérification authentification', mx.controls.Alert.OK);
 				}else{
-					this.parentApplication.exi = result.result;
-					this.parentApplication.idExi = result.result.idExi;
-					this.parentApplication.boxGen.visible = true;
-					this.callback();
-					PopUpManager.removePopUp(this);
+					var arrApp:Array = JSON.decode(result.result.droit_2);
+					if(isAuthApp(arrApp,"2_"+this.parentApplication.name)){
+						this.parentApplication.exi = result.result;
+						this.parentApplication.idExi = result.result.idExi;
+						this.parentApplication.boxGen.visible = true;
+						this.callback();
+						PopUpManager.removePopUp(this);
+					}else{
+						Alert.show("Vous n'êtes pas autorisé à utiliser cette application.", 'Vérification authentification', mx.controls.Alert.OK);
+					}
 				}
 			}      
-			
+			private function isAuthApp(arr:Array, appName:String):Boolean {
+				for each(var app:Object in arr){
+					if(app.id == appName) return true;
+				}
+				return false;
+			}
         ]]>
     </mx:Script>
 	<mx:RemoteObject

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:GridItem xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+ 	creationComplete="init()"
+ 	borderColor="#1F5377" borderStyle="solid" borderThickness="1" horizontalAlign="center" verticalAlign="middle"
+ 	paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2"
+ 	dragDrop="dragDropHandler(event)"
+  	dragEnter="dragEnterHandler(event)"
+	mouseDown="dragStartHandler(event)"	
+ >
+	<mx:Script>
+		<![CDATA[
+			import mx.core.DragSource;
+			import mx.events.DragEvent;
+			import mx.managers.DragManager;
+			import mx.managers.PopUpManager;
+			
+			[Bindable] public var colorBG:uint= 0xF5D03A;
+			[Bindable] public var dt:Object;
+			
+			public function init():void{
+
+			}
+						
+			protected function deleteItem(event:MouseEvent):void
+			{
+				parent.removeChild(DisplayObject(this));
+			}
+			protected function voirCritere(event:MouseEvent):void
+			{
+				var tw:twFormControle = twFormControle(PopUpManager.createPopUp(this, twFormControle)); 
+				tw.dt = this.dt;
+				PopUpManager.centerPopUp(tw);
+				
+			}
+			
+			protected function dragDropHandler(event:DragEvent):void
+			{
+				var dst:Object=event.currentTarget;
+				var src:Object=event.dragInitiator;
+				if(matches(src, dst))
+					this.parent.setChildIndex(DisplayObject(src),this.parent.getChildIndex(DisplayObject(dst)));
+			}
+			
+			protected function dragEnterHandler(event:DragEvent):void
+			{
+				var dst:Object=event.currentTarget;
+				var src:Object=event.dragInitiator;
+				if(matches(src, dst))
+					DragManager.acceptDragDrop(grdItemScenar(dst));
+				
+			}
+			
+			protected function dragStartHandler(event:MouseEvent):void
+			{
+				var src:Object=event.currentTarget;
+				if(src.className != "grdItemScenar")return
+				var dragSource:DragSource = new DragSource;
+				DragManager.showFeedback(DragManager.MOVE);
+				DragManager.doDrag(grdItemScenar(src), dragSource, event);
+			}
+			private function matches(src:Object, dst:Object):Boolean{
+				if(dst.className != "grdItemScenar" || src.className != "grdItemScenar" || src.parent != dst.parent)return false 
+				
+				if(grdItemScenar(src).cnv.getStyle("backgroundColor") != grdItemScenar(dst).cnv.getStyle("backgroundColor"))return false
+				else return true;
+			}			
+						
+		]]>
+	</mx:Script>
+		<mx:VBox>			
+			<mx:Canvas id="cnv" width="50" height="50" backgroundColor="{colorBG}" 
+					   dragDrop="parentApplication.dgScen.dragDropHandler(event)"
+					   dragEnter="parentApplication.dgScen.dragEnterHandler(event)">
+			</mx:Canvas>
+		</mx:VBox>
+		<mx:VBox id="img" visible="false" horizontalAlign="center" >
+			<mx:Image mouseDown="deleteItem(event)" toolTip="Supprimer l'élément"  source="images/DeleteRecord.png" />			
+			<mx:Image mouseDown="voirCritere(event)" toolTip="Voir le(s) formulaire(s)"  source="images/eye.gif" />			
+		</mx:VBox>
+</mx:GridItem>

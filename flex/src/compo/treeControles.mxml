@@ -6,13 +6,13 @@
 	creationComplete="initCollections()" >
 	<mx:Script>
         <![CDATA[
-      import mundigo.CustomTreeDataDescriptor;
-      import mundigo.CustomTreeItemRenderer;
+      import gevu.CustomTreeDataDescriptor;
+      import gevu.CustomTreeItemRenderer;
            
       import mx.collections.*;
       import mx.controls.treeClasses.*;
 
-            [Bindable]
+          [Bindable]
          [Embed(source="../images/batimentP.png")] 
          public var iconBatiment:Class; 
          [Bindable]
