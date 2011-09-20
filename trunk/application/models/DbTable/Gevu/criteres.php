@@ -120,6 +120,19 @@ class Model_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
     }
 
     /**
+     * Récupère toutes les entrées Gevu_criteres pour les afficher dans une lsite
+     * 
+     */
+    public function getListe()
+    {
+        $query = $this->select()
+        	->from(array("g" => "gevu_criteres"), array('id_critere','criteres', "label"=>"CONCAT(UCASE(ref),' ',SUBSTRING(criteres,1,16))"));
+
+        return $this->fetchAll($query)->toArray();
+    }
+        
+    
+    /**
      * Récupère les spécifications des colonnes Gevu_criteres 
      */
     public function getCols(){
@@ -160,13 +173,13 @@ class Model_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
      *
      * @param int $id_type_controle
      */
-    public function findById_type_controle($id_type_controle)
+    public function findByIdTypeControle($id_type_controle)
     {
         $query = $this->select()
                     ->from( array("g" => "gevu_criteres") )                           
                     ->where( "g.id_type_controle = " . $id_type_controle );
 
-        return $this->fetchRow($query)->toArray(); 
+        return $this->fetchAll($query)->toArray(); 
     }
     /*
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée

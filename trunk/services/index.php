@@ -2,12 +2,10 @@
 require_once( "../param/ParamAppli.php" );
 
 try {
-
 /*
-
 	
-$aaa = new Model_DbTable_Gevu_exisxdroits();
-$bbb = $aaa->ajouter(2, 2);
+$aaa = new Model_DbTable_Gevu_criteres();
+$bbb = $aaa->getListe();
 
 $s = new Model_DbTable_Gevu_solutions();
 $rs = $s->remove(526);
@@ -104,6 +102,9 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_exisxdroits')
 	->setClass('Model_DbTable_Gevu_exisxcontacts')
 	->setClass('Model_DbTable_Gevu_roles')	
+	->setClass('Model_DbTable_Gevu_scenario')
+	->setClass('Model_DbTable_Gevu_typexmotsclefs')
+		
 	
 	//pour l'authentification
 	->setClass("AUTH_LoginManager")
