@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+		 xmlns:ns2="compo.*"
+		 >		
+		<mx:Script>
+			<![CDATA[
+				include "../grillesconfig.as";
+				
+				// Define variables for the new data.
+				public var newPhone:String;
+				public var newConfirmed:Boolean;
+				
+			]]>     
+		</mx:Script>
+		
+		<!-- Display item label.-->
+		<mx:Label text="{data.label}"/>
+	
+		<ns2:cbGroupeMot titre="un critère" keyName="id_critere" labelName="label" bAjout="false" objMethode="getListe" id="cbCri" objName="Model_DbTable_Gevu_criteres" endPoint="{ENDPOINT_SERVICE}" />
+		
+		<!-- Display the text 'Phone:' and let the user edit it.-->
+		<mx:HBox>
+			<mx:Text text="Phone:"/>
+			<mx:TextInput id="contactPhone" 
+						  width="150" 
+						  text="{data.phone}"
+						  change="newPhone=contactPhone.text;"/>
+		</mx:HBox>
+		
+		<!-- Display the status using a CheckBox control 
+		and let the user edit it.-->
+		<mx:CheckBox id="confirmed" 
+					 label="Confirmed"
+					 selected="{data.status}" 
+					 click="newConfirmed=confirmed.selected;"/>
+	
+</mx:VBox>

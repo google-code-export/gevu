@@ -2,6 +2,7 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" pageTitle="GEVU grilles" 
 		backgroundGradientColors="[#ffffff, #ffffff]"
 		xmlns:ns2="compo.*"
+		name="gevu_grilles"
 		creationComplete="login()"
 		>
     <mx:Script source="grillesScript.as" />
@@ -19,6 +20,10 @@
 				
 				<mx:TabNavigator x="0" y="10" width="100%" height="100%" id="tabNavig" >
 					
+					<mx:Canvas id="tabScen" label="Scenario" width="100%" height="100%">
+						<ns2:dgScenario id="dgScen" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
+					</mx:Canvas>
+
 					<mx:Canvas id="tabExis" label="Comptes" width="100%" height="100%">
 						<ns2:dgExis id="dgExis" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
 					</mx:Canvas>

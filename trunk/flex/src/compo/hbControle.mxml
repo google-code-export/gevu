@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 creationComplete="init()"
+	  verticalAlign="middle"
+	  horizontalAlign="center"
+	  mouseDown="parentApplication.dgScen.beginDragAndDrop(event)"
+	>
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Text;
+			[Bindable] public var dt:Object;
+			[Bindable] public var imgSrc:String;
+			[Bindable] public var lbl:String;
+			[Bindable] public var idTypeControle:int
+			
+			public function init():void{
+				if(dt.icone!=""){
+					imgSrc="images/"+dt.icone;
+				}else{
+					imgSrc="images/interrogation.gif";
+					var txt:Text = new Text();
+					txt.text = dt.lib;
+					this.addChild(txt);
+				}
+				lbl = dt.lib;					
+			}
+		]]>
+	</mx:Script>
+	<mx:Image source="{imgSrc}" toolTip="{lbl}" />
+</mx:VBox>

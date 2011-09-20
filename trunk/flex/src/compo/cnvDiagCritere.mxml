@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+ creationComplete="creationCompleteHandler(event)"
+ xmlns:compo="compo.*"
+		   >
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.core.DragSource;
+			import mx.core.IUIComponent;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.DragManager;
+			import mx.rpc.events.FaultEvent;
+
+			[Bindable] public var arrCrit:Array;
+			[Bindable] public var dt:Object;
+			private var xmlTree:XML;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				ROC.findByIdTypeControle(dt.id_type_controle);
+				xmlTree = 
+					<node idCrit="-1" ref="critères" isBranch="true">
+					</node>;
+				tree.dataProvider=xmlTree;
+				
+			}
+			private function fillCritere(e:Object):void
+			{
+				if(!e || e.result.length==0)return;
+				arrCrit = e.result as Array;
+				dataGrid.dataProvider = arrCrit;
+			}
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+//merci à http://www.flex-blog.com/drag-and-drop-from-datagrid-or-advanceddatagrid-to-tree/
+			private function doDragDrop(event:DragEvent):void
+			{
+				var item:XML;
+				// cancel default
+				event.preventDefault();
+				
+				// get the drag format (its always items in our case
+				// when you are dragging FROM a Tree its treeItems
+				var draggedFormat:String = event.dragSource.formats[0];
+				
+				// Get the dragged items
+				var draggedItems:Array = event.dragSource.dataForFormat(draggedFormat) as Array;
+				
+				// Calculate the index in the Tree where the items were dropped
+				var dropIndex:int = tree.calculateDropIndex(event);
+
+				//dans le cas d'un datagrid								
+				// Set the selected index of the Tree to the dropIndex
+				tree.selectedIndex = dropIndex;
+				
+				// Check if we are dropping on a node
+				
+				// Add each dragged item to the Tree by apppending it
+				// as a child of the selected node in the Tree.
+				for each( var object:Object in draggedItems )
+				{
+					// create item
+					item = <node></node>;
+					// set the attribut
+					if(draggedFormat=="treeItems"){
+						item.@ref = object.@ref;						
+						item.@criteres = object.@criteres;
+						//on supprime l'ancien noeud
+						delete  tree.dataProvider[0].descendants().(@ref==item.@ref)[0];
+					}else{
+						item.@criteres = object.criteres;
+						item.@ref = object.ref;
+					}
+					item.@isBranch = "false";
+					
+					// use appendChild to add the item.
+					var si:XML = XML(tree.selectedItem);
+					// (if selected item is an item then append to parent)
+					if( si.@isBranch == "true")
+					{
+						si.appendChild(item);
+					}
+					else{
+						si.@isBranch = true;
+						si.appendChild(item);
+					}
+
+				}
+			}
+			
+			private function doDragEnter(event:DragEvent):void
+			{
+				// Cancel default behaviour
+				event.preventDefault();
+				// Tell the DragManager that the Tree will accent the DragDrop
+				DragManager.acceptDragDrop( Tree(event.target) );
+				// hide the "drop line" that is shown in Tree control
+				// when dropping in a Tree
+				tree.showDropFeedback(event);
+			}
+			
+			private function doDragOver(event:DragEvent):void
+			{
+				// Show the default "drop line" in the Tree control
+				tree.showDropFeedback(event);
+				// Cancel default behavious
+				event.preventDefault();
+			}
+			
+			private function doDragExit(event:DragEvent):void
+			{
+				// hide the "drop line" that is shown in Tree control
+				// when dropping in a Tree
+				tree.hideDropFeedback(event);
+			}
+			
+			private function doDragComplete(event:DragEvent):void
+			{
+				// hide the "drop line" that is shown in Tree control
+				// when dropping in a Tree
+				tree.hideDropFeedback(event);
+			}
+									
+			protected function dataGrid_clickHandler(event:MouseEvent):void
+			{
+				var s:Object=event.currentTarget.selectedItem;
+				if(s)critSelect.text = s.criteres;				
+			}
+			
+			protected function tree_clickHandler(event:MouseEvent):void
+			{
+				if(!event.currentTarget.selectedItem)return;
+				var item:XML=event.currentTarget.selectedItem as XML;
+				if(item.children().length()>0){
+					lblRep.text = "condition";
+				}else{
+					item.@isBranch = false;
+					lblRep.text = "réponse";					
+				}
+				//met à jour l'affichage du critère
+				critSelect.text = item.@criteres;
+
+			}
+			public function setCondRep(cbItem:Object):void{
+				var item:XML=tree.selectedItem as XML;
+				//enregistre les référence de la condition
+				item.@CondRep = cbRep.objParam+"_"+cbItem[cbRep.keyName];
+				//change le libellé du noeud
+				var lib:String = item.@ref
+				var arrLib:Array = lib.split(" : ");
+				item.@ref = arrLib[0]+" : "+cbItem[cbRep.labelName];
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="ROC"
+					 source="Model_DbTable_Gevu_criteres" destination="zend" 
+					 endpoint="{parentApplication.ENDPOINT_SERVICE}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="findByIdTypeControle"  result="fillCritere(event)"/>  	
+	</mx:RemoteObject>
+	<mx:VBox left="4" right="4" top="4" bottom="4">
+		<mx:Text fontSize="12" fontWeight="bold" id="critSelect" text="" width="100%" />
+		<mx:HBox height="100%" width="100%" >
+			<mx:DataGrid 
+				id="dataGrid"
+				editable="false"
+				resizableColumns="true" 
+				textAlign="left"
+				width="100%" height="100%"
+				allowMultipleSelection="true" 
+				dragEnabled="true" 
+				dropEnabled="true" 
+				dragMoveEnabled="true"
+				 click="dataGrid_clickHandler(event)"
+				>			
+				<mx:columns>
+					<mx:DataGridColumn headerText="Référence" dataField="ref"  />   					
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:VBox width="100%" height="100%">				
+				<mx:Tree id="tree" 
+						 width="100%" height="100%"
+						 labelField="@ref"
+						 showRoot="true"
+						  dragEnabled="true"
+						 dropEnabled="true"
+						 dragOver="doDragOver(event)"
+						 dragDrop="doDragDrop(event)"
+						 dragEnter="doDragEnter(event)"
+						 dragExit="doDragExit(event)"
+						 click="tree_clickHandler(event)"
+						 />
+				<mx:VBox width="100%" >
+					<mx:HBox width="100%">
+						<mx:Label id="lblRep" text=""/>
+						<compo:cbGroupeMot id="cbRep"  endPoint="{ROC.endpoint}" doSource="{this}" objName="Model_DbTable_Gevu_motsclefs" objMethode="getAllByType" labelName="titre" keyName="id_motclef" objParam="2" bAjout="false" /> 
+					</mx:HBox>
+				</mx:VBox>								
+			</mx:VBox>
+		
+		</mx:HBox>
+	</mx:VBox>
+		
+</mx:Canvas>

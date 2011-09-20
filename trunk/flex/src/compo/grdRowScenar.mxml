@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:GridRow xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+ creationComplete="init()"
+ borderColor="#1F5377" borderStyle="solid" borderThickness="2" horizontalAlign="center" verticalAlign="middle"
+ paddingTop="3" paddingBottom="3" paddingLeft="3" paddingRight="3"
+ xmlns:ns2="compo.*"
+ >
+	<mx:Script>
+		<![CDATA[
+			import compo.*;
+						
+			public function init():void{
+			}
+						
+		]]>
+	</mx:Script>
+	<ns2:grdItemScenar colorBG="#5D9B34" />
+</mx:GridRow>
