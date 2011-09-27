@@ -15,7 +15,7 @@
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_docsxsolutions extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_docsxsolutions extends Zend_Db_Table_Abstract
 {
     
     /*
@@ -91,7 +91,7 @@ class Model_DbTable_Gevu_docsxsolutions extends Zend_Db_Table_Abstract
     public function remove($id)
     {
         $this->delete('gevu_docsxsolutions.id_doc = ' . $id);
-        $dbDocs = new Model_DbTable_Gevu_docs();
+        $dbDocs = new Models_DbTable_Gevu_docs();
         $dbDocs->remove($id);
     }
     

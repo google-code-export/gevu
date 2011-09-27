@@ -15,7 +15,7 @@
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_solutionsxmetiers extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_solutionsxmetiers extends Zend_Db_Table_Abstract
 {
     
     /*
@@ -29,12 +29,12 @@ class Model_DbTable_Gevu_solutionsxmetiers extends Zend_Db_Table_Abstract
     protected $_referenceMap    = array(
         'Metiers' => array(
             'columns'           => 'id_solution',
-            'refTableClass'     => 'Model_DbTable_Gevu_solutions',
+            'refTableClass'     => 'Models_DbTable_Gevu_solutions',
             'refColumns'        => 'id_concept'
         )
         ,'Solutions' => array(
             'columns'           => 'id_metier',
-            'refTableClass'     => 'Model_DbTable_Gevu_metiers',
+            'refTableClass'     => 'Models_DbTable_Gevu_metiers',
             'refColumns'        => 'id_metier'
         )
 	);	

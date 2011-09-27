@@ -15,7 +15,7 @@
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 {
     
     /*
@@ -178,6 +178,20 @@ class Model_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
         $query = $this->select()
                     ->from( array("g" => "gevu_criteres") )                           
                     ->where( "g.id_type_controle = " . $id_type_controle );
+
+        return $this->fetchAll($query)->toArray(); 
+    }
+    /*
+     * Recherche une entrée Gevu_criteres avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param int $id_type_controle
+     */
+    public function findByIdsControles($ids)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_criteres") )                           
+                    ->where( "g.id_type_controle IN (".$ids.")");
 
         return $this->fetchAll($query)->toArray(); 
     }

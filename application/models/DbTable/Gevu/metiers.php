@@ -15,7 +15,7 @@
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_metiers extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_metiers extends Zend_Db_Table_Abstract
 {
     
     /*
@@ -32,7 +32,7 @@ class Model_DbTable_Gevu_metiers extends Zend_Db_Table_Abstract
      * dépendance avec les autres tables.
      */
     protected $_dependentTables = array(
-		'Model_DbTable_Gevu_metiersxsolutions'
+		'Models_DbTable_Gevu_metiersxsolutions'
 		);
     
     /**

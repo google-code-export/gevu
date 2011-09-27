@@ -15,7 +15,7 @@
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
 {
     
     /*
@@ -32,8 +32,8 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
      * dépendance avec les autres tables.
      */
     protected $_dependentTables = array(
-		'Model_DbTable_Gevu_metiersxsolutions'
-		,'Model_DbTable_Gevu_typesxsolutions'
+		'Models_DbTable_Gevu_metiersxsolutions'
+		,'Models_DbTable_Gevu_typesxsolutions'
 	);
     
     /**
@@ -71,10 +71,10 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
     	 	$id = $this->insert($data);
     	}
     	//on crée un cout pour la solution
-		$s = new Model_DbTable_Gevu_couts();
+		$s = new Models_DbTable_Gevu_couts();
 		$data = array("unite"=>0);
 		$idC = $s->ajouter($data);
-		$s = new Model_DbTable_Gevu_solutionsxcouts();
+		$s = new Models_DbTable_Gevu_solutionsxcouts();
 		$data = array("id_solution"=>$id,"id_cout"=>$idC);
 		$s->ajouter($data,false);
     	
@@ -105,13 +105,13 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
-    	$dbE = new Model_DbTable_Gevu_solutionsxcouts();
+    	$dbE = new Models_DbTable_Gevu_solutionsxcouts();
     	$dbE->remove($id);
-    	$dbE = new Model_DbTable_Gevu_solutionsxcriteres();
+    	$dbE = new Models_DbTable_Gevu_solutionsxcriteres();
     	$dbE->remove($id);
-    	$dbE = new Model_DbTable_Gevu_solutionsxmetiers();
+    	$dbE = new Models_DbTable_Gevu_solutionsxmetiers();
     	$dbE->remove($id);
-    	$dbE = new Model_DbTable_Gevu_solutionsxproduits();
+    	$dbE = new Models_DbTable_Gevu_solutionsxproduits();
     	$dbE->remove($id);
     	$this->delete('gevu_solutions.id_solution = ' . $id);
     }
@@ -155,7 +155,7 @@ class Model_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
     		array("titre"=>"Mise à jour","champ"=>"maj","visible"=>true)
     		, array("titre"=>"Id. solution","champ"=>"id_solution","visible"=>true)
     		, array("titre"=>"Libellé","champ"=>"lib","visible"=>true)
-    		, array("titre"=>"Type de solution","champ"=>"id_type_solution","visible"=>true,"objName"=>"Model_DbTable_Gevu_typesxsolutions")
+    		, array("titre"=>"Type de solution","champ"=>"id_type_solution","visible"=>true,"objName"=>"Models_DbTable_Gevu_typesxsolutions")
     		));    	
     	return $arr;
 		
