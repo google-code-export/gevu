@@ -15,7 +15,7 @@
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_typesxsolutions extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_typesxsolutions extends Zend_Db_Table_Abstract
 {
     
     /*

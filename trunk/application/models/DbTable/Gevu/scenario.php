@@ -14,7 +14,7 @@
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
 {
     
     /*
@@ -75,7 +75,8 @@ class Model_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
      * @return void
      */
     public function edit($id, $data)
-    {        
+    {
+    	$data['maj'] = new Zend_Db_Expr('NOW()');        
         $this->update($data, 'gevu_scenario.id_scenario = ' . $id);
     }
     
@@ -85,11 +86,15 @@ class Model_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
      *
      * @param integer $id
      *
-     * @return void
+     * @return integer
      */
     public function remove($id)
     {
+    	$dbScene = new Models_DbTable_Gevu_scenes;
+    	$dbScene->removeScenario($id);
         $this->delete('gevu_scenario.id_scenario = ' . $id);
+        return -1;
+        
     }
     
     /**

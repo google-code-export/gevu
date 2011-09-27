@@ -14,7 +14,7 @@
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_exisxcontacts extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_exisxcontacts extends Zend_Db_Table_Abstract
 {
     
     /*

@@ -15,7 +15,7 @@
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
 {
     
     /*
@@ -64,10 +64,10 @@ class Model_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
     	 	$id = $this->insert($data);
     	}
     	//on crée un cout pour le produit
-		$s = new Model_DbTable_Gevu_couts();
+		$s = new Models_DbTable_Gevu_couts();
 		$data = array("unite"=>0);
 		$idC = $s->ajouter($data);
-		$s = new Model_DbTable_Gevu_produitsxcouts();
+		$s = new Models_DbTable_Gevu_produitsxcouts();
 		$data = array("id_produit"=>$id,"id_cout"=>$idC);
 		$s->ajouter($data,false);
 		
