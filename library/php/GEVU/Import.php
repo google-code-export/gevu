@@ -64,22 +64,22 @@ class GEVU_Import{
     
     public function saveDoc($data, $dataDoc){
 
-		$doc = new Model_DbTable_Gevu_docs();
+		$doc = new Models_DbTable_Gevu_docs();
 		$idDoc = $doc->ajouter($dataDoc,false);
 
-		$ins = new Model_DbTable_Gevu_instants();
+		$ins = new Models_DbTable_Gevu_instants();
 		$nom = get_class();
 		$idIns = $ins->ajouter(array("nom"=>$nom."_addDoc","id_exi"=>$data['idExi']),false);
 		
-		$exidoc = new Model_DbTable_Gevu_instantsxdocs();
+		$exidoc = new Models_DbTable_Gevu_instantsxdocs();
 		$exidoc->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns),false);
 		
 		if($data['objName']=='img_solus'){
-			$doc_obj = new Model_DbTable_Gevu_docsxsolutions();
+			$doc_obj = new Models_DbTable_Gevu_docsxsolutions();
 			$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_solution"=>$data['objId']),false);		
 		}
 		if($data['objName']=='img_produit'){
-			$doc_obj = new Model_DbTable_Gevu_docsxproduits();
+			$doc_obj = new Models_DbTable_Gevu_docsxproduits();
 			$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_produit"=>$data['objId']),false);		
 		}
 		    	
@@ -87,14 +87,14 @@ class GEVU_Import{
 
     public function traiteDoc($idDoc, $creerModele=false){
 
-		$doc = new Model_DbTable_Gevu_docs();
+		$doc = new Models_DbTable_Gevu_docs();
 		$docInfos = $doc->findById_doc($idDoc);    		
     	
     	//chargement du fichier
 		$chaines = file($docInfos['path_source']);
 		
 		//chargement de la description du traitement 
-		$pimp = new Model_DbTable_Gevu_paramximport();
+		$pimp = new Models_DbTable_Gevu_paramximport();
 		$trtmts = $pimp->findByType_import($docInfos['tronc']);
 		
 		// parcourt toute les lignes du fichier
@@ -150,18 +150,18 @@ class GEVU_Import{
 				    case 'csv_criteres':
 			    		//création des valeurs
 			    		$json = '{';
-			    		foreach($Querys['Model_DbTable_Gevu_criteres'] as $kQ=>$v){
+			    		foreach($Querys['Models_DbTable_Gevu_criteres'] as $kQ=>$v){
 			    			$json .= '"'.key($v).'":"'.str_replace('"','\"',$v[key($v)]).'",';
 			    		}
 			    		$json=substr($json,0,-1).'}';
 			    		$vals = json_decode($json,true); 
 				    	//on crée le critère
-				    	$objDb = new Model_DbTable_Gevu_criteres();
+				    	$objDb = new Models_DbTable_Gevu_criteres();
 						$id = $objDb->ajouter($vals,false);
 	
 						//puis les tables asocciées
 						foreach($Querys as $kQ=>$vQ){
-							if($kQ!='Model_DbTable_Gevu_criteres'){							
+							if($kQ!='Models_DbTable_Gevu_criteres'){							
 								$objDb = new $kQ();
 								foreach($Querys[$kQ] as $v){
 									$objDb->ajouter($id,$v[key($v)]);
@@ -172,19 +172,19 @@ class GEVU_Import{
 				    
 					case 'csv_solutions':
 						//vérifie si une solution est définie
-						if(array_key_exists('Model_DbTable_Gevu_solutions', $Querys)){
+						if(array_key_exists('Models_DbTable_Gevu_solutions', $Querys)){
 				    		//création des valeurs
 				    		$json = '{';
-				    		foreach($Querys['Model_DbTable_Gevu_solutions'] as $kQ=>$v){
+				    		foreach($Querys['Models_DbTable_Gevu_solutions'] as $kQ=>$v){
 				    			$json .= '"'.key($v).'":"'.str_replace('"','\"',$v[key($v)]).'",';
 				    		}
 				    		$json=substr($json,0,-1).'}';
 				    		$vals = json_decode($json,true); 
-					    	$objDb = new Model_DbTable_Gevu_solutions();
+					    	$objDb = new Models_DbTable_Gevu_solutions();
 							$id = $objDb->ajouter($vals);
 							//puis les tables asocciées
 							foreach($Querys as $kQ=>$vQ){
-								if($kQ!='Model_DbTable_Gevu_solutions'){							
+								if($kQ!='Models_DbTable_Gevu_solutions'){							
 									$objDb = new $kQ();
 									foreach($Querys[$kQ] as $v){
 										$objDb->ajouter($id,$v[key($v)]);
@@ -196,19 +196,19 @@ class GEVU_Import{
 
 					case 'csv_solutions_cout':
 						//vérifie si une solution est définie
-						if(array_key_exists('Model_DbTable_Gevu_couts', $Querys)){
+						if(array_key_exists('Models_DbTable_Gevu_couts', $Querys)){
 				    		//création des valeurs
 				    		$json = '{';
-				    		foreach($Querys['Model_DbTable_Gevu_couts'] as $kQ=>$v){
+				    		foreach($Querys['Models_DbTable_Gevu_couts'] as $kQ=>$v){
 				    			$json .= '"'.key($v).'":"'.str_replace('"','\"',$v[key($v)]).'",';
 				    		}
 				    		$json=substr($json,0,-1).'}';
 				    		$vals = json_decode($json,true); 
-					    	$objDb = new Model_DbTable_Gevu_couts();
+					    	$objDb = new Models_DbTable_Gevu_couts();
 							$id = $objDb->ajouter($vals);
 							//puis les tables asocciées
 							foreach($Querys as $kQ=>$vQ){
-								if($kQ!='Model_DbTable_Gevu_couts'){							
+								if($kQ!='Models_DbTable_Gevu_couts'){							
 									$objDb = new $kQ();
 									foreach($Querys[$kQ] as $v){
 										$objDb->ajouter(array("id_cout"=>$id,key($v)=>$v[key($v)]));
