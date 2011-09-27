@@ -1,37 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
 		 xmlns:ns2="compo.*"
+		 creationComplete="creationCompleteHandler(event)"
 		 >		
 		<mx:Script>
 			<![CDATA[
-				include "../grillesconfig.as";
+				import mx.controls.Alert;
+				import mx.events.CloseEvent;
+				import mx.events.FlexEvent;
+				import mx.events.ListEvent;
+				import mx.managers.FocusManager;
+				import mx.rpc.events.FaultEvent;
+				import mx.rpc.events.ResultEvent;
 				
-				// Define variables for the new data.
-				public var newPhone:String;
-				public var newConfirmed:Boolean;
+				[Bindable] public var ref:String;
+				[Bindable] public var CondRep:String;
+				[Bindable] public var cbData:Array;				
+				[Bindable] public var si:int;				
+				[Bindable] public var remove:String="non";				
+
+				protected function cb_changeHandler(event:ListEvent):void
+				{
+					si=cb.selectedItem["id_motclef"];
+					CondRep = "2_"+si;
+					//change le libellé du noeud
+					var lib:String = data.@ref;
+					var arrLib:Array = lib.split(" : ");
+					ref = arrLib[0]+" : "+cb.selectedItem["titre"];
+					cnvDiagCritere(this.parentDocument).bChange = true;
+					cnvDiagCritere(this.parentDocument).setFocus();
+				}
+				
+				
+				protected function creationCompleteHandler(event:FlexEvent):void
+				{
+					ROMC.getAllByType(2);
+					ref = data.@ref;
+					CondRep = data.@CondRep;
+				}
+				protected function ROMC_resultHandler(e:ResultEvent):void
+				{
+					if(!e || !e.result)return;
+					cbData = e.result as Array;
+				}
+				private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+					var str:String;
+					str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+						"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+						"String: "+fault.fault.faultString.toString()+"\n";
+					
+					if (os!="")
+						os = " - "+os;
+					Alert.show(str, "FaultHandlerService"+os);
+				}
+				protected function deleteItem(event:MouseEvent):void
+				{
+					remove="oui";
+					cnvDiagCritere(this.parentDocument).bChange = true;
+					cnvDiagCritere(this.parentDocument).setFocus();
+				}
 				
 			]]>     
 		</mx:Script>
-		
-		<!-- Display item label.-->
-		<mx:Label text="{data.label}"/>
-	
-		<ns2:cbGroupeMot titre="un critère" keyName="id_critere" labelName="label" bAjout="false" objMethode="getListe" id="cbCri" objName="Model_DbTable_Gevu_criteres" endPoint="{ENDPOINT_SERVICE}" />
-		
-		<!-- Display the text 'Phone:' and let the user edit it.-->
-		<mx:HBox>
-			<mx:Text text="Phone:"/>
-			<mx:TextInput id="contactPhone" 
-						  width="150" 
-						  text="{data.phone}"
-						  change="newPhone=contactPhone.text;"/>
-		</mx:HBox>
-		
-		<!-- Display the status using a CheckBox control 
-		and let the user edit it.-->
-		<mx:CheckBox id="confirmed" 
-					 label="Confirmed"
-					 selected="{data.status}" 
-					 click="newConfirmed=confirmed.selected;"/>
+	<mx:RemoteObject id="ROMC"
+					 source="Models_DbTable_Gevu_motsclefs" destination="zend" 
+					 endpoint="{parentApplication.ENDPOINT_SERVICE}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="getAllByType" result="ROMC_resultHandler(event)"/>  	
+	</mx:RemoteObject>
+	<mx:HBox>
+		<mx:Label id="lblRef" fontSize="14" fontWeight="bold" text="{data.@ref}" />
+		<mx:Image mouseDown="deleteItem(event)" toolTip="Supprimer l'élément"  source="images/DeleteRecord.png" />			
+	</mx:HBox>	
+	<mx:ComboBox id="cb" dataProvider="{cbData}" labelField="titre" change="cb_changeHandler(event)"  prompt="Choisissez une réponse" />
 	
 </mx:VBox>

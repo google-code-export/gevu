@@ -86,7 +86,7 @@
 			twAMC.objName=this.objName;
 			twAMC.titre = "Ajouter "+titre;
 			twAMC.objSource = this;
-			if(objName=="Model_DbTable_Gevu_rapports"){
+			if(objName=="Models_DbTable_Gevu_rapports"){
 				var p:Array=new Array();
 				p['id_lieu']=this.objParam;
 				twAMC.objParam = p;	
@@ -135,10 +135,10 @@
 	
 	private function changeItem():void
 	{
-		if(objName=="Model_DbTable_Gevu_rapports"){
+		if(objName=="Models_DbTable_Gevu_rapports"){
 			this.parentApplication.ShowSelection(cb.selectedItem["selection"])
 		}
-		if(objName=="Model_DbTable_Gevu_motsclefs"){
+		if(objName=="Models_DbTable_Gevu_motsclefs"){
 			doSource.setCondRep(cb.selectedItem)
 		}
 	}

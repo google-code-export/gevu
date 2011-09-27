@@ -219,7 +219,7 @@ private function ExiContactHandler(e:Object):void
     </mx:Script>
     
 	<mx:RemoteObject id="RO"
-	    	source="Model_DbTable_Gevu_exis" destination="zend" 
+	    	source="Models_DbTable_Gevu_exis" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -230,7 +230,7 @@ private function ExiContactHandler(e:Object):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROEC"
-					 source="Model_DbTable_Gevu_exisxcontacts" destination="zend" 
+					 source="Models_DbTable_Gevu_exisxcontacts" destination="zend" 
 					 endpoint="{endPoint}"
 					 showBusyCursor="true"
 					 fault="faultHandlerService(event)">
@@ -285,7 +285,7 @@ private function ExiContactHandler(e:Object):void
 						<mx:HBox >
 							<mx:VBox>
 								<mx:Label text="Rôle:"/>
-								<ns2:cbGroupeMot id="UpdRole" titre="un role" keyName="id_role"  objName="Model_DbTable_Gevu_roles" endPoint="{RO.endpoint}" bAjout="false" />						
+								<ns2:cbGroupeMot id="UpdRole" titre="un role" keyName="id_role"  objName="Models_DbTable_Gevu_roles" endPoint="{RO.endpoint}" bAjout="false" />						
 							</mx:VBox>
 						</mx:HBox>			
 						<mx:Button  label="Enregistrer" click="updateItem()" />
@@ -311,7 +311,7 @@ private function ExiContactHandler(e:Object):void
 						</mx:VBox>
 						<mx:VBox id="insertExiContact" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 							<mx:Label text="Choisissez un contact :"/> 
-							<ns2:cbGroupeMot titre="un contact" labelName="nom" keyName="id_contact" id="cbContact" objName="Model_DbTable_Gevu_contacts" objMethode="getAllNomPrenom" endPoint="{RO.endpoint}" bAjout="false" />
+							<ns2:cbGroupeMot titre="un contact" labelName="nom" keyName="id_contact" id="cbContact" objName="Models_DbTable_Gevu_contacts" objMethode="getAllNomPrenom" endPoint="{RO.endpoint}" bAjout="false" />
 							<mx:HBox>
 								<mx:Button label="Enregistrer" click="ROEC.ajouter(idExiContact,cbContact.cb.selectedItem['id_contact']);" />
 								<mx:Button label="Annuler" click="vsExiContact.selectedChild = viewExiContact;" />				
@@ -342,7 +342,7 @@ private function ExiContactHandler(e:Object):void
 	            	<mx:TextInput displayAsPassword="true" />
 	            </mx:FormItem>
 				<mx:FormItem label="Rôle:" id="role" >
-					<ns2:cbGroupeMot titre="un rôle" keyName="id_role"  objName="Model_DbTable_Gevu_roles" endPoint="{RO.endpoint}" />						
+					<ns2:cbGroupeMot titre="un rôle" keyName="id_role"  objName="Models_DbTable_Gevu_roles" endPoint="{RO.endpoint}" />						
 				</mx:FormItem>
 			</mx:Form>			
 			<mx:HBox>

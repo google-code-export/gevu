@@ -2,44 +2,95 @@
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
 	title="Formulaires "
 	showCloseButton="true"
-	close="PopUpManager.removePopUp(this);"  
 	width="600" height="500"
 	xmlns:ns2="compo.*"
-    creationComplete="creationCompleteHandler(event)"	
+    creationComplete="creationCompleteHandler(event)"
+	close="closeHandler(event)"
 	>
 	<mx:Script>
         <![CDATA[
-			import compo.*;
+			import com.adobe.serialization.json.JSON;
 			
+			import compo.*;
+			import compo.form.*;
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.CursorManager;
 			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] public var colorTheme:uint= 0xCCB5A3;
-			[Bindable] public var dt:Object;
+			[Bindable] public var dtCrit:Object;
+			[Bindable] public var dtScen:Object;
+			[Bindable] public var idScene:int;
+			
+			public var dc:cnvDiagCritere;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
-				this.title += dt.lib;
-				if(dt.id_type_controle==44){
-					var fg:formulaire_etablissements = new formulaire_etablissements();
-					cnvFormGen.addChild(fg);
-				}
-				var dc:cnvDiagCritere = new cnvDiagCritere();
-				dc.dt = dt;
+				scenSelect.text = dtScen.lib;
+				this.title += dtCrit.lib;
+				var fg:DisplayObject;
+				if(dtCrit.id_type_controle==45)fg = new batiments();
+				if(dtCrit.id_type_controle==57)fg = new espaces();
+				if(dtCrit.id_type_controle==49)fg = new espacesxexterieurs();
+				if(dtCrit.id_type_controle==50)fg = new espacesxinterieurs();
+				if(dtCrit.id_type_controle==44)fg = new etablissements();
+				if(dtCrit.id_type_controle==46)fg = new niveaux();
+				if(dtCrit.id_type_controle==47)fg = new objetsxexterieurs();
+				if(dtCrit.id_type_controle==58)fg = new objetsxinterieurs();
+				if(dtCrit.id_type_controle==59)fg = new objetsxvoiries();
+				if(dtCrit.id_type_controle==51)fg = new parcelles();
+				if(fg)cnvFormGen.addChild(fg);
+
+				dc = new cnvDiagCritere();
+				dc.dt = dtCrit;
+				dc.idScene = idScene;
 				cnvCrit.addChild(dc);
 				cnvDroite.width = 0;
 
 			}
 			
+			protected function btnSauve_clickHandler(event:MouseEvent):void
+			{
+				dc.saveScene();
+			}
+						
+			protected function closeHandler(event:CloseEvent):void
+			{
+				if(dc.bChange){
+					Alert.show("Voulez-vous enregistrer vos modificatins ?",
+						"Confirmation fermeture", 3, this, sauveDc);
+				}
+				PopUpManager.removePopUp(this);				
+			}
+			
+			private function sauveDc(event:CloseEvent):void
+			{
+				if (event.detail == Alert.YES) 
+				{
+					dc.saveScene();
+				}
+			}
+			
+			
 		]]>
     </mx:Script>
+	
+	<mx:VBox width="100%" height="100%">		
+		<mx:HBox width="100%" >			
+			<mx:Label fontSize="12" fontWeight="bold" text="Scenario : "/>
+			<mx:Text id="scenSelect" fontSize="12" text="" />
+			<mx:Button id="btnSauve" click="btnSauve_clickHandler(event)" label="Enregistrer" toolTip="Enregistre les paramètres du scénario" />
+		</mx:HBox>			
 		<mx:HDividedBox width="100%" height="100%">
 			<mx:Canvas id="cnvGauche" width="100%" height="100%">
-				<mx:Accordion width="100%" height="100%">
-					<mx:Canvas id="cnvFormGen" width="100%" height="100%" label="Formulaire générale">
-					</mx:Canvas>
+				<mx:Accordion id="accGauche" width="100%" height="100%">
 					<mx:Canvas  id="cnvCrit"  width="100%" height="100%" label="Critères">
+					</mx:Canvas>
+					<mx:Canvas id="cnvFormGen" width="100%" height="100%" label="Formulaire générale">
 					</mx:Canvas>
 				</mx:Accordion>
 			</mx:Canvas>
@@ -54,4 +105,5 @@
 				</mx:Accordion>
 			</mx:Canvas>
 		</mx:HDividedBox>
+	</mx:VBox>
 </mx:TitleWindow>

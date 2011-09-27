@@ -188,7 +188,7 @@ private function DroitHandler(e:Object):void
     </mx:Script>
     
 	<mx:RemoteObject id="ROED"
-					 source="Model_DbTable_Gevu_exisxdroits" destination="zend" 
+					 source="Models_DbTable_Gevu_exisxdroits" destination="zend" 
 					 endpoint="{endPoint}"
 					 showBusyCursor="true"
 					 fault="faultHandlerService(event)">
@@ -198,7 +198,7 @@ private function DroitHandler(e:Object):void
 		<mx:method name="edit"  result="DroitHandler(event)"/>  	
 	</mx:RemoteObject>
 	<mx:RemoteObject id="ROD"
-					 source="Model_DbTable_Gevu_droits" destination="zend" 
+					 source="Models_DbTable_Gevu_droits" destination="zend" 
 					 endpoint="{endPoint}"
 					 showBusyCursor="true"
 					 fault="faultHandlerService(event)">
@@ -236,7 +236,7 @@ private function DroitHandler(e:Object):void
 	<mx:Canvas id="insert" width="100%" height="100%">
 		<mx:VBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 			<mx:Label text="Choisissez un droit :"/> 
-			<ns2:cbGroupeMot titre="un droit" keyName="id_droit" id="cbDroit" objName="Model_DbTable_Gevu_droits" endPoint="{endPoint}" bAjout="false" />
+			<ns2:cbGroupeMot titre="un droit" keyName="id_droit" id="cbDroit" objName="Models_DbTable_Gevu_droits" endPoint="{endPoint}" bAjout="false" />
 			<mx:HBox>
 				<mx:Button label="Enregistrer" click="ROED.ajouter(idExiContact,cbDroit.cb.selectedItem['id_droit']);" />
 				<mx:Button label="Annuler" click="selectedChild = view;" />				

@@ -3,7 +3,7 @@
 	
 	<mx:RemoteObject id="roMotsClefs"
 					 destination="zend"
-					 source="Model_DbTable_Gevu_motsclefs"
+					 source="Models_DbTable_Gevu_motsclefs"
 					 fault="faultHandlerService(event, &quot;Remote Object in KeywordsList&quot;);">
 		<mx:method name="getAllByType"	result="setDataList( event );" />
 	</mx:RemoteObject>
