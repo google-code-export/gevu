@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost
--- Généré le : Sam 03 Septembre 2011 à 05:31
+-- Généré le : Mar 27 Septembre 2011 à 19:33
 -- Version du serveur: 5.5.8
 -- Version de PHP: 5.3.5
 
@@ -25,7 +25,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Structure de la table `gevu_batiments`
 --
 
-DROP TABLE IF EXISTS `gevu_batiments`;
 CREATE TABLE IF NOT EXISTS `gevu_batiments` (
   `id_batiment` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -74,7 +73,6 @@ CREATE TABLE IF NOT EXISTS `gevu_batiments` (
 -- Structure de la table `gevu_contacts`
 --
 
-DROP TABLE IF EXISTS `gevu_contacts`;
 CREATE TABLE IF NOT EXISTS `gevu_contacts` (
   `id_contact` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -92,7 +90,6 @@ CREATE TABLE IF NOT EXISTS `gevu_contacts` (
 -- Structure de la table `gevu_contactsxentreprises`
 --
 
-DROP TABLE IF EXISTS `gevu_contactsxentreprises`;
 CREATE TABLE IF NOT EXISTS `gevu_contactsxentreprises` (
   `id_contact` int(11) NOT NULL,
   `id_entreprise` int(11) NOT NULL,
@@ -105,7 +102,6 @@ CREATE TABLE IF NOT EXISTS `gevu_contactsxentreprises` (
 -- Structure de la table `gevu_couts`
 --
 
-DROP TABLE IF EXISTS `gevu_couts`;
 CREATE TABLE IF NOT EXISTS `gevu_couts` (
   `id_cout` int(11) NOT NULL AUTO_INCREMENT,
   `id_instant` int(11) NOT NULL,
@@ -124,7 +120,6 @@ CREATE TABLE IF NOT EXISTS `gevu_couts` (
 -- Structure de la table `gevu_criteres`
 --
 
-DROP TABLE IF EXISTS `gevu_criteres`;
 CREATE TABLE IF NOT EXISTS `gevu_criteres` (
   `id_critere` int(11) NOT NULL AUTO_INCREMENT,
   `id_type_controle` int(11) NOT NULL,
@@ -145,7 +140,6 @@ CREATE TABLE IF NOT EXISTS `gevu_criteres` (
 -- Structure de la table `gevu_criteresxtypesxcriteres`
 --
 
-DROP TABLE IF EXISTS `gevu_criteresxtypesxcriteres`;
 CREATE TABLE IF NOT EXISTS `gevu_criteresxtypesxcriteres` (
   `id_type_critere` int(11) NOT NULL AUTO_INCREMENT,
   `id_critere` int(11) NOT NULL,
@@ -158,7 +152,6 @@ CREATE TABLE IF NOT EXISTS `gevu_criteresxtypesxcriteres` (
 -- Structure de la table `gevu_criteresxtypesxdeficiences`
 --
 
-DROP TABLE IF EXISTS `gevu_criteresxtypesxdeficiences`;
 CREATE TABLE IF NOT EXISTS `gevu_criteresxtypesxdeficiences` (
   `id_type_deficience` int(11) NOT NULL AUTO_INCREMENT,
   `id_critere` int(11) NOT NULL,
@@ -171,7 +164,6 @@ CREATE TABLE IF NOT EXISTS `gevu_criteresxtypesxdeficiences` (
 -- Structure de la table `gevu_criteresxtypesxdroits`
 --
 
-DROP TABLE IF EXISTS `gevu_criteresxtypesxdroits`;
 CREATE TABLE IF NOT EXISTS `gevu_criteresxtypesxdroits` (
   `id_type_droit` int(11) NOT NULL AUTO_INCREMENT,
   `id_critere` int(11) NOT NULL,
@@ -184,7 +176,6 @@ CREATE TABLE IF NOT EXISTS `gevu_criteresxtypesxdroits` (
 -- Structure de la table `gevu_diagnostics`
 --
 
-DROP TABLE IF EXISTS `gevu_diagnostics`;
 CREATE TABLE IF NOT EXISTS `gevu_diagnostics` (
   `id_diag` int(11) NOT NULL AUTO_INCREMENT,
   `id_critere` int(11) NOT NULL,
@@ -207,7 +198,6 @@ CREATE TABLE IF NOT EXISTS `gevu_diagnostics` (
 -- Structure de la table `gevu_diagnosticsxvoirie`
 --
 
-DROP TABLE IF EXISTS `gevu_diagnosticsxvoirie`;
 CREATE TABLE IF NOT EXISTS `gevu_diagnosticsxvoirie` (
   `id_diag_voirie` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -227,7 +217,6 @@ CREATE TABLE IF NOT EXISTS `gevu_diagnosticsxvoirie` (
 -- Structure de la table `gevu_docs`
 --
 
-DROP TABLE IF EXISTS `gevu_docs`;
 CREATE TABLE IF NOT EXISTS `gevu_docs` (
   `id_doc` int(11) NOT NULL AUTO_INCREMENT,
   `id_instant` int(11) NOT NULL,
@@ -248,7 +237,6 @@ CREATE TABLE IF NOT EXISTS `gevu_docs` (
 -- Structure de la table `gevu_docsxlieux`
 --
 
-DROP TABLE IF EXISTS `gevu_docsxlieux`;
 CREATE TABLE IF NOT EXISTS `gevu_docsxlieux` (
   `id_doc` int(11) NOT NULL,
   `id_lieu` int(11) NOT NULL,
@@ -263,7 +251,6 @@ CREATE TABLE IF NOT EXISTS `gevu_docsxlieux` (
 -- Structure de la table `gevu_docsxproduits`
 --
 
-DROP TABLE IF EXISTS `gevu_docsxproduits`;
 CREATE TABLE IF NOT EXISTS `gevu_docsxproduits` (
   `id_doc` int(11) NOT NULL,
   `id_produit` int(11) NOT NULL,
@@ -278,7 +265,6 @@ CREATE TABLE IF NOT EXISTS `gevu_docsxproduits` (
 -- Structure de la table `gevu_docsxsolutions`
 --
 
-DROP TABLE IF EXISTS `gevu_docsxsolutions`;
 CREATE TABLE IF NOT EXISTS `gevu_docsxsolutions` (
   `id_doc` int(11) NOT NULL,
   `id_solution` int(11) NOT NULL,
@@ -293,12 +279,12 @@ CREATE TABLE IF NOT EXISTS `gevu_docsxsolutions` (
 -- Structure de la table `gevu_droits`
 --
 
-DROP TABLE IF EXISTS `gevu_droits`;
 CREATE TABLE IF NOT EXISTS `gevu_droits` (
   `id_droit` int(11) NOT NULL AUTO_INCREMENT,
   `lib` varchar(255) COLLATE utf8_bin NOT NULL,
+  `params` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id_droit`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -306,7 +292,6 @@ CREATE TABLE IF NOT EXISTS `gevu_droits` (
 -- Structure de la table `gevu_entreprises`
 --
 
-DROP TABLE IF EXISTS `gevu_entreprises`;
 CREATE TABLE IF NOT EXISTS `gevu_entreprises` (
   `id_entreprise` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(100) COLLATE utf8_bin NOT NULL,
@@ -329,7 +314,6 @@ CREATE TABLE IF NOT EXISTS `gevu_entreprises` (
 -- Structure de la table `gevu_espaces`
 --
 
-DROP TABLE IF EXISTS `gevu_espaces`;
 CREATE TABLE IF NOT EXISTS `gevu_espaces` (
   `id_espace` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -353,7 +337,6 @@ CREATE TABLE IF NOT EXISTS `gevu_espaces` (
 -- Structure de la table `gevu_espacesxexterieurs`
 --
 
-DROP TABLE IF EXISTS `gevu_espacesxexterieurs`;
 CREATE TABLE IF NOT EXISTS `gevu_espacesxexterieurs` (
   `id_espace_ext` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -376,7 +359,6 @@ CREATE TABLE IF NOT EXISTS `gevu_espacesxexterieurs` (
 -- Structure de la table `gevu_espacesxinterieurs`
 --
 
-DROP TABLE IF EXISTS `gevu_espacesxinterieurs`;
 CREATE TABLE IF NOT EXISTS `gevu_espacesxinterieurs` (
   `id_espace_int` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -398,7 +380,6 @@ CREATE TABLE IF NOT EXISTS `gevu_espacesxinterieurs` (
 -- Structure de la table `gevu_etablissements`
 --
 
-DROP TABLE IF EXISTS `gevu_etablissements`;
 CREATE TABLE IF NOT EXISTS `gevu_etablissements` (
   `id_etablissement` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -429,7 +410,6 @@ CREATE TABLE IF NOT EXISTS `gevu_etablissements` (
 -- Structure de la table `gevu_exis`
 --
 
-DROP TABLE IF EXISTS `gevu_exis`;
 CREATE TABLE IF NOT EXISTS `gevu_exis` (
   `id_exi` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -447,7 +427,6 @@ CREATE TABLE IF NOT EXISTS `gevu_exis` (
 -- Structure de la table `gevu_exisxcontacts`
 --
 
-DROP TABLE IF EXISTS `gevu_exisxcontacts`;
 CREATE TABLE IF NOT EXISTS `gevu_exisxcontacts` (
   `id_exi` int(11) NOT NULL,
   `id_contact` int(11) NOT NULL,
@@ -462,14 +441,13 @@ CREATE TABLE IF NOT EXISTS `gevu_exisxcontacts` (
 -- Structure de la table `gevu_exisxdroits`
 --
 
-DROP TABLE IF EXISTS `gevu_exisxdroits`;
 CREATE TABLE IF NOT EXISTS `gevu_exisxdroits` (
   `id_exi` int(11) NOT NULL,
   `id_droit` int(11) NOT NULL,
   `params` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id_exi`,`id_droit`),
-  UNIQUE KEY `id_exi` (`id_exi`),
-  UNIQUE KEY `id_droit` (`id_droit`)
+  KEY `id_exi` (`id_exi`),
+  KEY `id_droit` (`id_droit`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
@@ -478,7 +456,6 @@ CREATE TABLE IF NOT EXISTS `gevu_exisxdroits` (
 -- Structure de la table `gevu_georss`
 --
 
-DROP TABLE IF EXISTS `gevu_georss`;
 CREATE TABLE IF NOT EXISTS `gevu_georss` (
   `id_georss` int(11) NOT NULL AUTO_INCREMENT,
   `id_instant` int(11) NOT NULL,
@@ -497,7 +474,6 @@ CREATE TABLE IF NOT EXISTS `gevu_georss` (
 -- Structure de la table `gevu_geos`
 --
 
-DROP TABLE IF EXISTS `gevu_geos`;
 CREATE TABLE IF NOT EXISTS `gevu_geos` (
   `id_geo` int(11) NOT NULL AUTO_INCREMENT,
   `id_instant` int(11) NOT NULL,
@@ -522,7 +498,6 @@ CREATE TABLE IF NOT EXISTS `gevu_geos` (
 -- Structure de la table `gevu_instants`
 --
 
-DROP TABLE IF EXISTS `gevu_instants`;
 CREATE TABLE IF NOT EXISTS `gevu_instants` (
   `id_instant` int(11) NOT NULL AUTO_INCREMENT,
   `maintenant` datetime NOT NULL,
@@ -538,7 +513,6 @@ CREATE TABLE IF NOT EXISTS `gevu_instants` (
 -- Structure de la table `gevu_instantsxdocs`
 --
 
-DROP TABLE IF EXISTS `gevu_instantsxdocs`;
 CREATE TABLE IF NOT EXISTS `gevu_instantsxdocs` (
   `id_doc` int(11) NOT NULL,
   `id_instant` int(11) NOT NULL,
@@ -551,7 +525,6 @@ CREATE TABLE IF NOT EXISTS `gevu_instantsxdocs` (
 -- Structure de la table `gevu_lieux`
 --
 
-DROP TABLE IF EXISTS `gevu_lieux`;
 CREATE TABLE IF NOT EXISTS `gevu_lieux` (
   `id_lieu` int(11) NOT NULL AUTO_INCREMENT,
   `id_rubrique` int(11) NOT NULL,
@@ -576,7 +549,6 @@ CREATE TABLE IF NOT EXISTS `gevu_lieux` (
 -- Structure de la table `gevu_metiers`
 --
 
-DROP TABLE IF EXISTS `gevu_metiers`;
 CREATE TABLE IF NOT EXISTS `gevu_metiers` (
   `id_metier` int(11) NOT NULL AUTO_INCREMENT,
   `lib` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -589,7 +561,6 @@ CREATE TABLE IF NOT EXISTS `gevu_metiers` (
 -- Structure de la table `gevu_motsclefs`
 --
 
-DROP TABLE IF EXISTS `gevu_motsclefs`;
 CREATE TABLE IF NOT EXISTS `gevu_motsclefs` (
   `id_motclef` bigint(21) NOT NULL,
   `titre` varchar(255) CHARACTER SET utf8 NOT NULL,
@@ -603,7 +574,6 @@ CREATE TABLE IF NOT EXISTS `gevu_motsclefs` (
 -- Structure de la table `gevu_niveaux`
 --
 
-DROP TABLE IF EXISTS `gevu_niveaux`;
 CREATE TABLE IF NOT EXISTS `gevu_niveaux` (
   `id_niveau` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -625,7 +595,6 @@ CREATE TABLE IF NOT EXISTS `gevu_niveaux` (
 -- Structure de la table `gevu_objetsxexterieurs`
 --
 
-DROP TABLE IF EXISTS `gevu_objetsxexterieurs`;
 CREATE TABLE IF NOT EXISTS `gevu_objetsxexterieurs` (
   `id_objet_ext` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -648,7 +617,6 @@ CREATE TABLE IF NOT EXISTS `gevu_objetsxexterieurs` (
 -- Structure de la table `gevu_objetsxinterieurs`
 --
 
-DROP TABLE IF EXISTS `gevu_objetsxinterieurs`;
 CREATE TABLE IF NOT EXISTS `gevu_objetsxinterieurs` (
   `id_objet_int` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -672,7 +640,6 @@ CREATE TABLE IF NOT EXISTS `gevu_objetsxinterieurs` (
 -- Structure de la table `gevu_objetsxvoiries`
 --
 
-DROP TABLE IF EXISTS `gevu_objetsxvoiries`;
 CREATE TABLE IF NOT EXISTS `gevu_objetsxvoiries` (
   `id_objet_voirie` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -693,7 +660,6 @@ CREATE TABLE IF NOT EXISTS `gevu_objetsxvoiries` (
 -- Structure de la table `gevu_observations`
 --
 
-DROP TABLE IF EXISTS `gevu_observations`;
 CREATE TABLE IF NOT EXISTS `gevu_observations` (
   `id_observations` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -714,7 +680,6 @@ CREATE TABLE IF NOT EXISTS `gevu_observations` (
 -- Structure de la table `gevu_paramximport`
 --
 
-DROP TABLE IF EXISTS `gevu_paramximport`;
 CREATE TABLE IF NOT EXISTS `gevu_paramximport` (
   `id_paramximport` int(11) NOT NULL AUTO_INCREMENT,
   `colSource` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -731,7 +696,6 @@ CREATE TABLE IF NOT EXISTS `gevu_paramximport` (
 -- Structure de la table `gevu_parcelles`
 --
 
-DROP TABLE IF EXISTS `gevu_parcelles`;
 CREATE TABLE IF NOT EXISTS `gevu_parcelles` (
   `id_parcelle` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -758,7 +722,6 @@ CREATE TABLE IF NOT EXISTS `gevu_parcelles` (
 -- Structure de la table `gevu_problemes`
 --
 
-DROP TABLE IF EXISTS `gevu_problemes`;
 CREATE TABLE IF NOT EXISTS `gevu_problemes` (
   `id_probleme` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -783,7 +746,6 @@ CREATE TABLE IF NOT EXISTS `gevu_problemes` (
 -- Structure de la table `gevu_produits`
 --
 
-DROP TABLE IF EXISTS `gevu_produits`;
 CREATE TABLE IF NOT EXISTS `gevu_produits` (
   `id_produit` int(11) NOT NULL AUTO_INCREMENT,
   `id_entreprise` int(11) NOT NULL,
@@ -803,7 +765,6 @@ CREATE TABLE IF NOT EXISTS `gevu_produits` (
 -- Structure de la table `gevu_produitsxcouts`
 --
 
-DROP TABLE IF EXISTS `gevu_produitsxcouts`;
 CREATE TABLE IF NOT EXISTS `gevu_produitsxcouts` (
   `id_produit` int(11) NOT NULL,
   `id_cout` int(11) NOT NULL,
@@ -816,7 +777,6 @@ CREATE TABLE IF NOT EXISTS `gevu_produitsxcouts` (
 -- Structure de la table `gevu_produitsxexperimentations`
 --
 
-DROP TABLE IF EXISTS `gevu_produitsxexperimentations`;
 CREATE TABLE IF NOT EXISTS `gevu_produitsxexperimentations` (
   `id_produit` int(11) NOT NULL,
   `id_experimentation` int(11) NOT NULL,
@@ -829,7 +789,6 @@ CREATE TABLE IF NOT EXISTS `gevu_produitsxexperimentations` (
 -- Structure de la table `gevu_rapports`
 --
 
-DROP TABLE IF EXISTS `gevu_rapports`;
 CREATE TABLE IF NOT EXISTS `gevu_rapports` (
   `id_rapport` int(11) NOT NULL AUTO_INCREMENT,
   `id_lieu` int(11) NOT NULL,
@@ -849,12 +808,46 @@ CREATE TABLE IF NOT EXISTS `gevu_rapports` (
 -- Structure de la table `gevu_roles`
 --
 
-DROP TABLE IF EXISTS `gevu_roles`;
 CREATE TABLE IF NOT EXISTS `gevu_roles` (
   `id_role` int(11) NOT NULL AUTO_INCREMENT,
   `lib` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `inherit` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `params` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_role`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `gevu_scenario`
+--
+
+CREATE TABLE IF NOT EXISTS `gevu_scenario` (
+  `id_scenario` int(11) NOT NULL AUTO_INCREMENT,
+  `lib` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `maj` datetime NOT NULL,
+  `params` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_scenario`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `gevu_scenes`
+--
+
+CREATE TABLE IF NOT EXISTS `gevu_scenes` (
+  `id_scene` int(11) NOT NULL AUTO_INCREMENT,
+  `id_scenario` int(11) NOT NULL,
+  `lib` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `params` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `maj` datetime NOT NULL,
+  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `xml` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_scene`),
+  KEY `id_scenario` (`id_scenario`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=24 ;
 
 -- --------------------------------------------------------
 
@@ -862,7 +855,6 @@ CREATE TABLE IF NOT EXISTS `gevu_roles` (
 -- Structure de la table `gevu_sites`
 --
 
-DROP TABLE IF EXISTS `gevu_sites`;
 CREATE TABLE IF NOT EXISTS `gevu_sites` (
   `id_site` int(11) NOT NULL AUTO_INCREMENT,
   `site_spip` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -877,7 +869,6 @@ CREATE TABLE IF NOT EXISTS `gevu_sites` (
 -- Structure de la table `gevu_solutions`
 --
 
-DROP TABLE IF EXISTS `gevu_solutions`;
 CREATE TABLE IF NOT EXISTS `gevu_solutions` (
   `id_solution` int(11) NOT NULL AUTO_INCREMENT,
   `ref` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -894,7 +885,6 @@ CREATE TABLE IF NOT EXISTS `gevu_solutions` (
 -- Structure de la table `gevu_solutionsxcouts`
 --
 
-DROP TABLE IF EXISTS `gevu_solutionsxcouts`;
 CREATE TABLE IF NOT EXISTS `gevu_solutionsxcouts` (
   `id_solution` int(11) NOT NULL,
   `id_cout` int(11) NOT NULL,
@@ -907,7 +897,6 @@ CREATE TABLE IF NOT EXISTS `gevu_solutionsxcouts` (
 -- Structure de la table `gevu_solutionsxcriteres`
 --
 
-DROP TABLE IF EXISTS `gevu_solutionsxcriteres`;
 CREATE TABLE IF NOT EXISTS `gevu_solutionsxcriteres` (
   `id_solution` int(11) NOT NULL,
   `id_critere` int(11) NOT NULL,
@@ -920,7 +909,6 @@ CREATE TABLE IF NOT EXISTS `gevu_solutionsxcriteres` (
 -- Structure de la table `gevu_solutionsxmetiers`
 --
 
-DROP TABLE IF EXISTS `gevu_solutionsxmetiers`;
 CREATE TABLE IF NOT EXISTS `gevu_solutionsxmetiers` (
   `id_solution` int(11) NOT NULL,
   `id_metier` int(11) NOT NULL,
@@ -933,7 +921,6 @@ CREATE TABLE IF NOT EXISTS `gevu_solutionsxmetiers` (
 -- Structure de la table `gevu_solutionsxproduits`
 --
 
-DROP TABLE IF EXISTS `gevu_solutionsxproduits`;
 CREATE TABLE IF NOT EXISTS `gevu_solutionsxproduits` (
   `id_solution` int(11) NOT NULL,
   `id_produit` int(11) NOT NULL,
@@ -946,7 +933,6 @@ CREATE TABLE IF NOT EXISTS `gevu_solutionsxproduits` (
 -- Structure de la table `gevu_synchros`
 --
 
-DROP TABLE IF EXISTS `gevu_synchros`;
 CREATE TABLE IF NOT EXISTS `gevu_synchros` (
   `id_lieu` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -957,7 +943,6 @@ CREATE TABLE IF NOT EXISTS `gevu_synchros` (
 -- Structure de la table `gevu_tree`
 --
 
-DROP TABLE IF EXISTS `gevu_tree`;
 CREATE TABLE IF NOT EXISTS `gevu_tree` (
   `top` smallint(6) DEFAULT NULL,
   `nodeID` smallint(6) DEFAULT NULL,
@@ -972,12 +957,13 @@ CREATE TABLE IF NOT EXISTS `gevu_tree` (
 -- Structure de la table `gevu_typesxcontroles`
 --
 
-DROP TABLE IF EXISTS `gevu_typesxcontroles`;
 CREATE TABLE IF NOT EXISTS `gevu_typesxcontroles` (
   `id_type_controle` int(11) NOT NULL AUTO_INCREMENT,
-  `lib` varchar(255) COLLATE utf8_bin NOT NULL,
+  `lib` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `icone` varchar(255) COLLATE utf8_bin NOT NULL,
+  `zend_obj` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id_type_controle`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=38 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=60 ;
 
 -- --------------------------------------------------------
 
@@ -985,7 +971,6 @@ CREATE TABLE IF NOT EXISTS `gevu_typesxcontroles` (
 -- Structure de la table `gevu_typesxcriteres`
 --
 
-DROP TABLE IF EXISTS `gevu_typesxcriteres`;
 CREATE TABLE IF NOT EXISTS `gevu_typesxcriteres` (
   `id_type_critere` int(11) NOT NULL AUTO_INCREMENT,
   `lib` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -998,7 +983,6 @@ CREATE TABLE IF NOT EXISTS `gevu_typesxcriteres` (
 -- Structure de la table `gevu_typesxdeficiences`
 --
 
-DROP TABLE IF EXISTS `gevu_typesxdeficiences`;
 CREATE TABLE IF NOT EXISTS `gevu_typesxdeficiences` (
   `id_type_deficience` int(11) NOT NULL AUTO_INCREMENT,
   `lib` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -1011,7 +995,6 @@ CREATE TABLE IF NOT EXISTS `gevu_typesxdeficiences` (
 -- Structure de la table `gevu_typesxdroits`
 --
 
-DROP TABLE IF EXISTS `gevu_typesxdroits`;
 CREATE TABLE IF NOT EXISTS `gevu_typesxdroits` (
   `id_type_droit` int(11) NOT NULL AUTO_INCREMENT,
   `lib` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -1024,9 +1007,23 @@ CREATE TABLE IF NOT EXISTS `gevu_typesxdroits` (
 -- Structure de la table `gevu_typesxsolutions`
 --
 
-DROP TABLE IF EXISTS `gevu_typesxsolutions`;
 CREATE TABLE IF NOT EXISTS `gevu_typesxsolutions` (
   `id_type_solution` int(11) NOT NULL AUTO_INCREMENT,
   `lib` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id_type_solution`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=DYNAMIC AUTO_INCREMENT=6 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `gevu_typexmotsclefs`
+--
+
+CREATE TABLE IF NOT EXISTS `gevu_typexmotsclefs` (
+  `id_type_motsclefs` bigint(21) NOT NULL AUTO_INCREMENT,
+  `id_parent` bigint(20) NOT NULL DEFAULT '0',
+  `titre` text COLLATE utf8_unicode_ci NOT NULL,
+  `descriptif` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_type_motsclefs`),
+  KEY `id_parent` (`id_parent`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=54 ;
