@@ -2,14 +2,13 @@
 require_once( "../param/ParamAppli.php" );
 
 try {
+		
 /*
+$s = new Models_DbTable_Gevu_scenes();
+$rs = $s->copier(array("id_scenario"=>3,"id_scene"=>12));
 	
 $aaa = new Model_DbTable_Gevu_criteres();
 $bbb = $aaa->getListe();
-
-$s = new Model_DbTable_Gevu_solutions();
-$rs = $s->remove(526);
-
 
 $s = new Model_DbTable_Gevu_criteres();
 $data = array("criteres"=>"La banque d'accueil permet la communication visuelle entre les usagers et le personnel","ref"=>"3_cr_acc_06","handicateur_moteur"=>"1","handicateur_auditif"=>"2","handicateur_visuel"=>"1","handicateur_cognitif"=>"3","id_type_controle"=>"1","affirmation"=>"La banque d'accueil ne permet pas la communication visuelle entre les usagers et le personnel");
@@ -53,10 +52,12 @@ $server = new Zend_Amf_Server();
 //cf. la suppression du paramam�tre en trop dans le block commentaire de Zend_Db_Table_Abstract->find()
 //$server->addDirectory(dirname(__FILE__) .'/../library/php/');
 
-// *ZAMFBROWSER IMPLEMENTATION*
+//* *ZAMFBROWSER IMPLEMENTATION*
 $server->setClass( "ZendAmfServiceBrowser" );
 ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
 
+$server->addDirectory(APPLICATION_PATH);
+/*
 $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_solutionsxmetiers')
 	->setClass('Model_DbTable_Gevu_solutionsxcriteres')
@@ -82,8 +83,8 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_lieux')
 	->setClass('Model_DbTable_Gevu_docsxlieux')
 	->setClass('Model_DbTable_Gevu_motsclefs')
-	->setClass('GEVU_ModifBase')
-	->setClass('GEVU_Diagnostique')
+	//->setClass('GEVU_ModifBase')
+	//->setClass('GEVU_Diagnostique')
 	->setClass('Model_DbTable_Gevu_objetsxvoiries')
 	->setClass('Model_DbTable_Gevu_batiments')
 	->setClass('Model_DbTable_Gevu_diagnosticsxvoirie')
@@ -104,15 +105,16 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_roles')	
 	->setClass('Model_DbTable_Gevu_scenario')
 	->setClass('Model_DbTable_Gevu_typexmotsclefs')
-		
+	->setClass('Model_DbTable_Gevu_scenes')
+*/		
 	
 	//pour l'authentification
-	->setClass("AUTH_LoginManager")
+$server->setClass("AUTH_LoginManager")
 	->setClass("AUTH_LoginVO")
 	;
 	
 $server->setClassMap('LoginVO','AUTH_LoginVO');	
-$server->setProduction(true);
+$server->setProduction(false);
 
 $response = $server->handle();
 
