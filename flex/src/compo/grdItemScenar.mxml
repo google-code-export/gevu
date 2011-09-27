@@ -9,26 +9,80 @@
  >
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
 			import mx.core.DragSource;
+			import mx.events.CloseEvent;
 			import mx.events.DragEvent;
 			import mx.managers.DragManager;
 			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] public var colorBG:uint= 0xF5D03A;
-			[Bindable] public var dt:Object;
+			[Bindable] public var dtCrit:Object;
+			[Bindable] public var bInit:Boolean=false;
+			[Bindable] public var bCopie:Boolean=false;
+			[Bindable] public var idScene:int;
 			
 			public function init():void{
-
+				if(bInit){
+					chargeCtl();
+				}
+			}
+			
+			public function chargeCtl():void{
+				var ctlDst:hbControle = new hbControle();
+				ctlDst.dt = dtCrit;
+				cnv.addChild(ctlDst);
+				//met la source au bon format
+				cnv.percentHeight = 100;
+				cnv.percentWidth = 100;
+				//change le fond 
+				cnv.setStyle("backgroundColor","white");
+				//affiche l'image de fermeture
+				img.visible = true;
+				if(!idScene){
+					//enregistre la scene
+					var vn:Array = new Array;
+					vn["id_scenario"]=grdRowScenar(this.parent).dtScen.id_scenario;
+					vn["type"]="DiagTypeControle_"+dtCrit.id_type_controle;
+					ROScenes.ajouter(vn);
+				}
+				if(bCopie){
+					//duplique la scene
+					var vnC:Array = new Array;
+					vnC["id_scenario"]=grdRowScenar(this.parent).dtScen.id_scenario;
+					vnC["id_scene"]=idScene;
+					ROScenes.ajouter(vnC);
+				}
 			}
 						
 			protected function deleteItem(event:MouseEvent):void
 			{
-				parent.removeChild(DisplayObject(this));
+				Alert.show("Confirmez-vous la suppression de cet élément ?",
+					"Confirmation Suppression", 3, this, deleteScenClickHandler);
 			}
+			private function deleteScenClickHandler(event:CloseEvent):void
+			{
+				if (event.detail == Alert.YES) 
+				{
+					ROScenes.remove(idScene);
+					parent.removeChild(DisplayObject(this));
+				}
+			}
+
+			protected function copieItem(event:MouseEvent):void
+			{
+				var dgScn:dgScenario = dgScenario(this.parentDocument); 
+				
+			}
+						
 			protected function voirCritere(event:MouseEvent):void
 			{
 				var tw:twFormControle = twFormControle(PopUpManager.createPopUp(this, twFormControle)); 
-				tw.dt = this.dt;
+				tw.dtCrit = this.dtCrit;
+				tw.dtScen = grdRowScenar(this.parent).dtScen;
+				tw.idScene = idScene;
 				PopUpManager.centerPopUp(tw);
 				
 			}
@@ -37,15 +91,24 @@
 			{
 				var dst:Object=event.currentTarget;
 				var src:Object=event.dragInitiator;
-				if(matches(src, dst))
+				if(matches(src, dst)==1)//déplace une item
 					this.parent.setChildIndex(DisplayObject(src),this.parent.getChildIndex(DisplayObject(dst)));
+				if(matches(src, dst)==2){
+					//ajoute une item
+					var c:grdItemScenar = new grdItemScenar();
+					c.dtCrit = grdItemScenar(src).dtCrit;
+					c.idScene = grdItemScenar(src).idScene;
+					c.bInit = true;
+					c.bCopie = true;
+					this.parent.addChildAt(c,this.parent.numChildren-1);
+				}
 			}
 			
 			protected function dragEnterHandler(event:DragEvent):void
 			{
 				var dst:Object=event.currentTarget;
 				var src:Object=event.dragInitiator;
-				if(matches(src, dst))
+				if(matches(src, dst)>0)
 					DragManager.acceptDragDrop(grdItemScenar(dst));
 				
 			}
@@ -55,26 +118,58 @@
 				var src:Object=event.currentTarget;
 				if(src.className != "grdItemScenar")return
 				var dragSource:DragSource = new DragSource;
-				DragManager.showFeedback(DragManager.MOVE);
 				DragManager.doDrag(grdItemScenar(src), dragSource, event);
 			}
-			private function matches(src:Object, dst:Object):Boolean{
-				if(dst.className != "grdItemScenar" || src.className != "grdItemScenar" || src.parent != dst.parent)return false 
+			private function matches(src:Object, dst:Object):int{
+				if(dst.className != "grdItemScenar" || src.className != "grdItemScenar")return -1 
 				
-				if(grdItemScenar(src).cnv.getStyle("backgroundColor") != grdItemScenar(dst).cnv.getStyle("backgroundColor"))return false
-				else return true;
+				if(src.parent == dst.parent){
+					if(grdItemScenar(src).cnv.getStyle("backgroundColor") != grdItemScenar(dst).cnv.getStyle("backgroundColor"))return -1
+					else{
+						DragManager.showFeedback(DragManager.MOVE);
+						return 1;
+					}
+				}
+				if(src.parent.parent == dst.parent.parent){
+					if(grdItemScenar(src).cnv.getStyle("backgroundColor") != grdItemScenar(dst).cnv.getStyle("backgroundColor")){
+						DragManager.showFeedback(DragManager.COPY);
+						return 2;
+					}					
+				}				
+				return -1;
 			}			
-						
+			protected function fillScene(event:ResultEvent):void
+			{
+				idScene = int(event.result);
+				
+			}
+			public function faultHandlerService(fault:FaultEvent):void
+			{				
+				Alert.show(fault.fault.faultString, "FaultHandlerService");
+			}
+			
 		]]>
 	</mx:Script>
-		<mx:VBox>			
+	<mx:RemoteObject id="ROScenes"
+					 source="Models_DbTable_Gevu_scenes" destination="zend" 
+					 endpoint="{parentApplication.ENDPOINT_SERVICE}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="ajouter"  result="fillScene(event)"/>  	
+		<mx:method name="copier"  result="fillScene(event)"/>  	
+		<mx:method name="remove" result="fillScene(event)"/>  	
+	</mx:RemoteObject>
+
+		<mx:VBox horizontalAlign="center" >			
+			<mx:HBox id="img" visible="false" verticalAlign="middle" >
+				<mx:Image mouseDown="deleteItem(event)" toolTip="Supprimer l'élément"  source="images/DeleteRecord.png" />
+				<mx:Image mouseDown="voirCritere(event)" toolTip="Voir le(s) formulaire(s)"  source="images/eye.gif" width="18" height="18" />
+				<mx:Image mouseDown="copieItem(event)" toolTip="Copier l'élément"  source="images/AddRecord.png" />
+			</mx:HBox>
 			<mx:Canvas id="cnv" width="50" height="50" backgroundColor="{colorBG}" 
 					   dragDrop="parentApplication.dgScen.dragDropHandler(event)"
-					   dragEnter="parentApplication.dgScen.dragEnterHandler(event)">
+					   dragEnter="parentApplication.dgScen.dragEnterHandler(event)" 
+					   >
 			</mx:Canvas>
-		</mx:VBox>
-		<mx:VBox id="img" visible="false" horizontalAlign="center" >
-			<mx:Image mouseDown="deleteItem(event)" toolTip="Supprimer l'élément"  source="images/DeleteRecord.png" />			
-			<mx:Image mouseDown="voirCritere(event)" toolTip="Voir le(s) formulaire(s)"  source="images/eye.gif" />			
 		</mx:VBox>
 </mx:GridItem>

@@ -274,7 +274,7 @@ private function TofRemoveHandler(e:Object):void
     </mx:Script>
     
 	<mx:RemoteObject id="RO"
-	    	source="Model_DbTable_Gevu_produits" destination="zend" 
+	    	source="Models_DbTable_Gevu_produits" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -286,7 +286,7 @@ private function TofRemoveHandler(e:Object):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROSP"
-	    	source="Model_DbTable_Gevu_solutionsxproduits" destination="zend" 
+	    	source="Models_DbTable_Gevu_solutionsxproduits" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -296,7 +296,7 @@ private function TofRemoveHandler(e:Object):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROC"
-	    	source="Model_DbTable_Gevu_couts" destination="zend" 
+	    	source="Models_DbTable_Gevu_couts" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -305,7 +305,7 @@ private function TofRemoveHandler(e:Object):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROTOF"
-	    	source="Model_DbTable_Gevu_docsxproduits" destination="zend" 
+	    	source="Models_DbTable_Gevu_docsxproduits" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -362,7 +362,7 @@ private function TofRemoveHandler(e:Object):void
 					<mx:HBox width="100%" >
 						<mx:VBox>
 							<mx:Label text="Entreprise:"/>
-			            	<ns2:cbGroupeMot id="UpdEntreprise" labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Model_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises" />						
+			            	<ns2:cbGroupeMot id="UpdEntreprise" labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Models_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises" />						
 						</mx:VBox>
 						<mx:VBox width="100%" >
 							<mx:Label text="Site web :" />
@@ -403,7 +403,7 @@ private function TofRemoveHandler(e:Object):void
 							<mx:VBox id="insertSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 								<mx:Label text="Choisissez une solution :"/> 
 				            	<ns2:cbGroupeMot titre="une solution" labelName="ref" bAjout="false" 
-				            		keyName="id_solution" id="cbSolus" objName="Model_DbTable_Gevu_solutions" 
+				            		keyName="id_solution" id="cbSolus" objName="Models_DbTable_Gevu_solutions" 
 				            		endPoint="{RO.endpoint}" />
 								<mx:HBox>
 									<mx:Button label="Enregistrer" click="ROSP.ajouter(cbSolus.cb.selectedItem['id_solution'],idProduit);" />
@@ -484,7 +484,7 @@ private function TofRemoveHandler(e:Object):void
 	            	<mx:TextInput width="100%" />
 	            </mx:FormItem>
 	            <mx:FormItem label="Entreprise:" id="id_entreprise" >
-	            	<ns2:cbGroupeMot labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Model_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises"  />						
+	            	<ns2:cbGroupeMot labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Models_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises"  />						
 	            </mx:FormItem>
 	            <mx:FormItem label="Site web:" id="url" width="100%" >
 	            	<mx:TextInput width="100%" />

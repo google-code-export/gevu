@@ -226,7 +226,7 @@ private function deleteContactClickHandler(event:CloseEvent):void
     </mx:Script>
     
 	<mx:RemoteObject id="RO"
-	    	source="Model_DbTable_Gevu_entreprises" destination="zend" 
+	    	source="Models_DbTable_Gevu_entreprises" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -238,7 +238,7 @@ private function deleteContactClickHandler(event:CloseEvent):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROC"
-	    	source="Model_DbTable_Gevu_contactsxentreprises" destination="zend" 
+	    	source="Models_DbTable_Gevu_contactsxentreprises" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -351,7 +351,7 @@ private function deleteContactClickHandler(event:CloseEvent):void
 							</mx:VBox>
 							<mx:VBox id="insertContact" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 								<mx:Label text="Choisissez un contact :"/> 
-				            	<ns2:cbGroupeMot titre="un contact" labelName="nom" keyName="id_contact" id="cbContact" objName="Model_DbTable_Gevu_contacts" endPoint="{RO.endpoint}" objSource="dgContacts" />
+				            	<ns2:cbGroupeMot titre="un contact" labelName="nom" keyName="id_contact" id="cbContact" objName="Models_DbTable_Gevu_contacts" endPoint="{RO.endpoint}" objSource="dgContacts" />
 								<mx:HBox>
 									<mx:Button label="Enregistrer" click="ROC.ajouter(cbContact.cb.selectedItem['id_contact'],idEntreprise);" />
 									<mx:Button label="Annuler" click="vsContact.selectedChild = viewContact;" />				

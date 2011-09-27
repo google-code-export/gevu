@@ -9,7 +9,7 @@ public const ENDPOINT_EXEAJAX:String = "http://www.gevu.org/library/php/ExeAjax.
 public const ENDPOINT_EXECARTO:String = "http://www.gevu.org/library/php/ExecDonneeCarto.php";
 public const ENDPOINT_RAPPORT:String = "http://www.gevu.org/services/rapport.php";
 */
-public const ENDPOINT_SERVICE:String = "http://localhost/gevu/services/index.php";
+[Bindable] public var ENDPOINT_SERVICE:String = "http://localhost/gevu/services/index.php";
 public const ENDPOINT_IMPORT:String = "http://localhost/gevu/services/import.php";
 public const ENDPOINT_EXEAJAX:String = "http://localhost/gevu/library/php/ExeAjax.php";
 public const ENDPOINT_EXECARTO:String = "http://localhost/gevu/library/php/ExecDonneeCarto.php";

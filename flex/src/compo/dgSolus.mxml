@@ -360,7 +360,7 @@ private function TofRemoveHandler(e:Object):void
     </mx:Script>
     
 	<mx:RemoteObject id="ROS"
-	    	source="Model_DbTable_Gevu_solutions" destination="zend" 
+	    	source="Models_DbTable_Gevu_solutions" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -372,7 +372,7 @@ private function TofRemoveHandler(e:Object):void
 	</mx:RemoteObject>
 	
 	<mx:RemoteObject id="ROSM"
-	    	source="Model_DbTable_Gevu_solutionsxmetiers" destination="zend" 
+	    	source="Models_DbTable_Gevu_solutionsxmetiers" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -382,7 +382,7 @@ private function TofRemoveHandler(e:Object):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROSC"
-	    	source="Model_DbTable_Gevu_solutionsxcriteres" destination="zend" 
+	    	source="Models_DbTable_Gevu_solutionsxcriteres" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -392,7 +392,7 @@ private function TofRemoveHandler(e:Object):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROSP"
-	    	source="Model_DbTable_Gevu_solutionsxproduits" destination="zend" 
+	    	source="Models_DbTable_Gevu_solutionsxproduits" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -402,7 +402,7 @@ private function TofRemoveHandler(e:Object):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROC"
-	    	source="Model_DbTable_Gevu_couts" destination="zend" 
+	    	source="Models_DbTable_Gevu_couts" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -411,7 +411,7 @@ private function TofRemoveHandler(e:Object):void
 	</mx:RemoteObject>
 
 	<mx:RemoteObject id="ROTOF"
-	    	source="Model_DbTable_Gevu_docsxsolutions" destination="zend" 
+	    	source="Models_DbTable_Gevu_docsxsolutions" destination="zend" 
 	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
@@ -456,7 +456,7 @@ private function TofRemoveHandler(e:Object):void
 						</mx:VBox>
 						<mx:VBox>
 							<mx:Label text="Type de solution:"/>
-			            	<ns2:cbGroupeMot id="UpdType" titre="un type de solution" keyName="id_type_solution"  objName="Model_DbTable_Gevu_typesxsolutions" endPoint="{ROS.endpoint}" />						
+			            	<ns2:cbGroupeMot id="UpdType" titre="un type de solution" keyName="id_type_solution"  objName="Models_DbTable_Gevu_typesxsolutions" endPoint="{ROS.endpoint}" />						
 						</mx:VBox>
 					</mx:HBox>			
 					<mx:Label text="libellé de la solution:" />
@@ -532,7 +532,7 @@ private function TofRemoveHandler(e:Object):void
 								</mx:VBox>
 								<mx:VBox id="insertProd" width="100%" height="100%" paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2"  >
 							    	<mx:Label text="Choisissez un produit :" fontWeight="bold" fontSize="18" />
-					            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un produit" keyName="id_produit" id="cbProduit" objName="Model_DbTable_Gevu_produits" endPoint="{ROS.endpoint}" />
+					            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un produit" keyName="id_produit" id="cbProduit" objName="Models_DbTable_Gevu_produits" endPoint="{ROS.endpoint}" />
 									<mx:HBox>
 										<mx:Button label="Enregistrer" click="ROSP.ajouter(idSolution, cbProduit.cb.selectedItem['id_produit']);" />
 										<mx:Button label="Annuler" click="vsProd.selectedChild = viewProd;" />				
@@ -556,7 +556,7 @@ private function TofRemoveHandler(e:Object):void
 								</mx:VBox>
 								<mx:VBox id="insertMetierSolus" width="100%" height="100%">
 									<mx:Label text="Choisissez un métier :" fontWeight="bold" fontSize="18" /> 
-					            	<ns2:cbGroupeMot titre="un métier" keyName="id_metier" id="cbMetier" objName="Model_DbTable_Gevu_metiers" endPoint="{ROS.endpoint}" />
+					            	<ns2:cbGroupeMot titre="un métier" keyName="id_metier" id="cbMetier" objName="Models_DbTable_Gevu_metiers" endPoint="{ROS.endpoint}" />
 									<mx:HBox>
 										<mx:Button label="Enregistrer" click="ROSM.ajouter(idSolution, cbMetier.cb.selectedItem['id_metier']);" />
 										<mx:Button label="Annuler" click="vsMetierSolus.selectedChild = viewMetierSolus;" />				
@@ -581,7 +581,7 @@ private function TofRemoveHandler(e:Object):void
 							</mx:VBox>
 							<mx:VBox id="insertCritereSolus" width="100%" height="100%"  >
 						    	<mx:Label text="Choisissez un critère :" fontWeight="bold" fontSize="18" />
-				            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un critère" keyName="id_critere" id="cbCritere" objName="Model_DbTable_Gevu_criteres" endPoint="{ROS.endpoint}" />
+				            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un critère" keyName="id_critere" id="cbCritere" objName="Models_DbTable_Gevu_criteres" endPoint="{ROS.endpoint}" />
 								<mx:HBox>
 									<mx:Button label="Enregistrer" click="ROSC.ajouter(idSolution, cbCritere.cb.selectedItem['id_critere']);" />
 									<mx:Button label="Annuler" click="vsCritereSolus.selectedChild = viewCritereSolus;" />				
@@ -604,7 +604,7 @@ private function TofRemoveHandler(e:Object):void
 	            	<mx:TextArea id="libSolus"  width="400" height="100" />
 	            </mx:FormItem>
 	            <mx:FormItem label="Type de solution:" id="id_type_solution" >
-	            	<ns2:cbGroupeMot titre="un type de solution" keyName="id_type_solution"  objName="Model_DbTable_Gevu_typesxsolutions" endPoint="{ROS.endpoint}" />
+	            	<ns2:cbGroupeMot titre="un type de solution" keyName="id_type_solution"  objName="Models_DbTable_Gevu_typesxsolutions" endPoint="{ROS.endpoint}" />
 	            </mx:FormItem>
 			</mx:Form>
 			<mx:HBox>

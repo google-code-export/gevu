@@ -5,32 +5,110 @@
 		   >
 	<mx:Script>
 		<![CDATA[
+			import com.adobe.serialization.json.JSON;
+			
+			import compo.vbEditTreeScen;
+			
+			import memorphic.xpath.XPathQuery;
+			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.core.DragSource;
 			import mx.core.IUIComponent;
+			import mx.events.CloseEvent;
 			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
 			import mx.managers.DragManager;
 			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
 
-			[Bindable] public var arrCrit:Array;
+			[Bindable] public var arrCrit:ArrayCollection;
 			[Bindable] public var dt:Object;
+			[Bindable] public var idScene:int;
+			[Bindable] public var arrMC:Array;				
+
+			[Bindable]
+			[Embed(source="../images/file.gif")] 
+			public var iconFile:Class; 			
+			[Bindable]
+			[Embed(source="../images/folder.gif")] 
+			public var iconFolder:Class; 			
+			[Bindable]
+			[Embed(source="../images/folder-open.gif")] 
+			public var iconFolderOpen:Class; 			
+			
 			private var xmlTree:XML;
+			public var bChange:Boolean=false;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
-				ROC.findByIdTypeControle(dt.id_type_controle);
-				xmlTree = 
-					<node idCrit="-1" ref="critères" isBranch="true">
-					</node>;
-				tree.dataProvider=xmlTree;
-				
+				ROScenes.findByIdScene(idScene);
+				ROC.findByIdTypeControle(dt.id_type_controle);				
 			}
+			
+			public function saveScene():void
+			{
+				//création du tableau de valeur
+				var vn:Array = new Array();
+				var params:Array = new Array();
+				
+				//récupèration des critère non utilisé
+				var ids:String = "-1";
+				/* plus nécessaire car on ne vide pas le datagrid
+				pour pouvoir faire de multiple scénario de critère
+				var critsNU:ArrayCollection = ArrayCollection(dataGrid.dataProvider);
+				for each (var cNU:Object in critsNU){
+					ids +=","+cNU.id_critere;
+				}
+				*/
+				//récupèration des critères sélectionné
+				tree.selectedIndex = 0;
+				var critsSE:XML =  XML(tree.selectedItem);
+				params.push({"idCritNU":ids,"idCritSE":critsSE.toXMLString()});
+				vn["params"] = JSON.encode(params);
+				vn["xml"] = critsSE.toXMLString();
+				//enregistrement des modifications
+				ROScenes.edit(idScene,vn);	
+			}
+			protected function fillScene(e:ResultEvent):void
+			{
+				if(!e || !e.result || e.result.length==0)return;
+				var arr:Array = e.result as Array;
+				if(arr[0]["params"] && arr[0]["params"]!="[]"){
+					var params:Object = JSON.decode(arr[0]["params"]);
+					/* plus nécessaire car on ne vide pas le datagrid
+					pour pouvoir faire de multiple scénario de critère
+					ROC.findByIdsControles(params[0]["idCritNU"]);
+					*/
+					xmlTree = XML(params[0]["idCritSE"]);
+				}else{
+					xmlTree =<node idCrit="-1" ref="critères" isBranch="true"></node>;
+				}
+				tree.dataProvider=xmlTree;
+				bChange = false;
+			}
+			
 			private function fillCritere(e:Object):void
 			{
 				if(!e || e.result.length==0)return;
-				arrCrit = e.result as Array;
+				/*ArrayCollection pour effectuer un refresh
+				mais attanetion au performances : http://blog.phiphou.com/index.php/?2009/01/18/148-performances-comparaison-rapide-entre-arraycollection-array-et-vector
+				*/
+				arrCrit = new ArrayCollection(e.result as Array);;
+				//ajoute le nombre d'utilisation
+				for each( var o:Object in arrCrit)
+				{
+					// create the XPathQuery instance and parse the path
+					var myQuery:XPathQuery = new XPathQuery("//node[@id_critere='"+o.id_critere+"']");
+					// execute the statement on an XML object and get the result
+					var result:XMLList = myQuery.exec(xmlTree);
+					o["NbUtil"] = result.length(); 
+				}
+				
 				dataGrid.dataProvider = arrCrit;
+				
 			}
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
@@ -71,19 +149,18 @@
 				// as a child of the selected node in the Tree.
 				for each( var object:Object in draggedItems )
 				{
-					// create item
-					item = <node></node>;
 					// set the attribut
 					if(draggedFormat=="treeItems"){
-						item.@ref = object.@ref;						
-						item.@criteres = object.@criteres;
+						item = cloneNode(object)
 						//on supprime l'ancien noeud
 						delete  tree.dataProvider[0].descendants().(@ref==item.@ref)[0];
 					}else{
-						item.@criteres = object.criteres;
+						// create item
+						item = <node></node>;
+						item.@id_critere = object.id_critere;
 						item.@ref = object.ref;
+						item.@isBranch = "false";
 					}
-					item.@isBranch = "false";
 					
 					// use appendChild to add the item.
 					var si:XML = XML(tree.selectedItem);
@@ -91,14 +168,40 @@
 					if( si.@isBranch == "true")
 					{
 						si.appendChild(item);
+						//incrémente le nombre d'utilisation
+						var i:int = arrCrit.getItemIndex(object);
+						arrCrit[i]["NbUtil"] ++;
 					}
 					else{
 						si.@isBranch = true;
 						si.appendChild(item);
 					}
-
 				}
+				//met à jour le grid
+				arrCrit.refresh();
+
+				bChange = true;
 			}
+			private function cloneNode(obj:Object):XML
+			{
+				// create item
+				var item:XML;
+				item = <node></node>;
+				item.@ref = obj.@ref;						
+				item.@criteres = obj.@criteres;
+				//on déplace les noeuds enfants
+				if(obj.children().length()>0){
+					for each( var ichild:Object in obj.children()){
+						item.appendChild(cloneNode(ichild));
+					}
+					item.@isBranch = "true";
+				}else{
+					item.@isBranch = "false";
+				}				
+				
+				return item
+			}
+				
 			
 			private function doDragEnter(event:DragEvent):void
 			{
@@ -143,35 +246,91 @@
 			{
 				if(!event.currentTarget.selectedItem)return;
 				var item:XML=event.currentTarget.selectedItem as XML;
-				if(item.children().length()>0){
-					lblRep.text = "condition";
-				}else{
-					item.@isBranch = false;
-					lblRep.text = "réponse";					
-				}
 				//met à jour l'affichage du critère
-				critSelect.text = item.@criteres;
+				critSelect.text = getCritText(item.@id_critere);
+			}
+			
+			private function getCritText(idCrit:String):String
+			{
+				for each (var cri:Object in this.arrCrit){
+					if(cri.id_critere==idCrit)return cri.criteres;
+				}
+				return "";				
+			}			
+						
+			// Define the event listener for the itemEditBeginning event 
+			// to disable editing when the user selects 
+			// the top node in the tree.
+			private function disableEditing(event:ListEvent):void {
+				if(event.rowIndex==0) {  
+					event.preventDefault(); 
+				}
+			}                                       
+			
+			// Define the event listener for the itemEditEnd event 
+			// to copy the updated data back to the data provider 
+			// of the Tree control.
+			public function processData(event:ListEvent):void {    
+				
+				// Disable copying data back to the control.
+				event.preventDefault();
+				
+				//Charge les valeurs
+				tree.editedItemRenderer.data.@ref =	vbEditTreeScen(event.currentTarget.itemEditorInstance).ref;
+				tree.editedItemRenderer.data.@CondRep =	vbEditTreeScen(event.currentTarget.itemEditorInstance).CondRep;
+				if(vbEditTreeScen(event.currentTarget.itemEditorInstance).remove=="oui"){
+					delete  tree.dataProvider[0].descendants().(@ref==tree.editedItemRenderer.data.@ref)[0];
+				}
 
+				// Close the cell editor.
+				tree.destroyItemEditor(); 
+				
+				// Notify the list control to update its display.
+				tree.dataProvider.notifyItemUpdate(tree.editedItemRenderer);
+			}                       			
+			
+			private function TreeIconFunction(item:Object):Class{
+				
+				if(item.@idCrit==-1){
+					tree.expandItem(item,true);
+				}
+				
+				if(item.@isBranch == "true"){
+					if(tree.isItemOpen(item)){
+						return iconFolderOpen;						
+					}else{
+						return iconFolder;
+					}
+					//tree.expandItem(item, false);					
+				}else{
+					return iconFile;					
+				}			
+				
+			}				
+			
+			protected function tree_itemEditBeginHandler(event:ListEvent):void
+			{
+				vbEditTreeScen(event.currentTarget.itemEditorInstance).cbData = arrMC;				
 			}
-			public function setCondRep(cbItem:Object):void{
-				var item:XML=tree.selectedItem as XML;
-				//enregistre les référence de la condition
-				item.@CondRep = cbRep.objParam+"_"+cbItem[cbRep.keyName];
-				//change le libellé du noeud
-				var lib:String = item.@ref
-				var arrLib:Array = lib.split(" : ");
-				item.@ref = arrLib[0]+" : "+cbItem[cbRep.labelName];
-			}
+						
 			
 		]]>
 	</mx:Script>
 	<mx:RemoteObject id="ROC"
-					 source="Model_DbTable_Gevu_criteres" destination="zend" 
-					 endpoint="{parentApplication.ENDPOINT_SERVICE}"
+					 source="Models_DbTable_Gevu_criteres" destination="zend" 
 					 showBusyCursor="true"
 					 fault="faultHandlerService(event)">
-		<mx:method name="findByIdTypeControle"  result="fillCritere(event)"/>  	
+		<mx:method name="findByIdTypeControle"  result="fillCritere(event)"/>
+		<mx:method name="findByIdsControles"  result="fillCritere(event)"/>
 	</mx:RemoteObject>
+	<mx:RemoteObject id="ROScenes"
+					 source="Models_DbTable_Gevu_scenes" destination="zend" 
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="edit"  result="fillScene(event)"/>  	
+		<mx:method name="findByIdScene"  result="fillScene(event)"/>  	
+	</mx:RemoteObject>
+	
 	<mx:VBox left="4" right="4" top="4" bottom="4">
 		<mx:Text fontSize="12" fontWeight="bold" id="critSelect" text="" width="100%" />
 		<mx:HBox height="100%" width="100%" >
@@ -180,38 +339,40 @@
 				editable="false"
 				resizableColumns="true" 
 				textAlign="left"
-				width="100%" height="100%"
+				height="100%"
+				width="166"
 				allowMultipleSelection="true" 
 				dragEnabled="true" 
 				dropEnabled="true" 
-				dragMoveEnabled="true"
-				 click="dataGrid_clickHandler(event)"
+				dragMoveEnabled="false"
+				click="dataGrid_clickHandler(event)"
 				>			
 				<mx:columns>
-					<mx:DataGridColumn headerText="Référence" dataField="ref"  />   					
+					<mx:DataGridColumn headerText="Référence" dataField="ref" width="132"  />   					
+					<mx:DataGridColumn headerText="Nb" dataField="NbUtil" />   					
 				</mx:columns>
 			</mx:DataGrid>
-			<mx:VBox width="100%" height="100%">				
-				<mx:Tree id="tree" 
-						 width="100%" height="100%"
-						 labelField="@ref"
-						 showRoot="true"
-						  dragEnabled="true"
-						 dropEnabled="true"
-						 dragOver="doDragOver(event)"
-						 dragDrop="doDragDrop(event)"
-						 dragEnter="doDragEnter(event)"
-						 dragExit="doDragExit(event)"
-						 click="tree_clickHandler(event)"
-						 />
-				<mx:VBox width="100%" >
-					<mx:HBox width="100%">
-						<mx:Label id="lblRep" text=""/>
-						<compo:cbGroupeMot id="cbRep"  endPoint="{ROC.endpoint}" doSource="{this}" objName="Model_DbTable_Gevu_motsclefs" objMethode="getAllByType" labelName="titre" keyName="id_motclef" objParam="2" bAjout="false" /> 
-					</mx:HBox>
-				</mx:VBox>								
-			</mx:VBox>
-		
+			<mx:Tree id="tree" 
+					 width="100%" height="100%"
+					 labelField="@ref"
+					 showRoot="true"
+					 dragEnabled="true"
+					 dropEnabled="true"
+					 dragOver="doDragOver(event)"
+					 dragDrop="doDragDrop(event)"
+					 dragEnter="doDragEnter(event)"
+					 dragExit="doDragExit(event)"
+					 
+					 editable="true"  
+					 itemEditor="compo.vbEditTreeScen" 
+					 editorHeightOffset="40" editorWidthOffset="200" 
+					 editorXOffset="10" editorYOffset="20"
+					 itemEditBeginning="disableEditing(event);" 
+					 itemEditEnd="processData(event);"
+
+					 iconFunction="TreeIconFunction"
+				 	 click="tree_clickHandler(event);"
+					 />
 		</mx:HBox>
 	</mx:VBox>
 		

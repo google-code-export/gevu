@@ -8,11 +8,13 @@
 	<mx:Script>
 		<![CDATA[
 			import compo.*;
+			[Bindable] public var dtScen:Object;
+			[Bindable] public var colorBG:uint= 0x5D9B34;
 						
 			public function init():void{
 			}
 						
 		]]>
 	</mx:Script>
-	<ns2:grdItemScenar colorBG="#5D9B34" />
+	<ns2:grdItemScenar id="grdISvide" colorBG="{colorBG}" />
 </mx:GridRow>
