@@ -16,7 +16,7 @@ $xul = new Xul($objSite);
 
 $idExi = 1;
 
-$c = new Model_DbTable_Gevu_contacts();
+$c = new Models_DbTable_Gevu_contacts();
 $arrContact = $c->findById_exi($idExi);
 
 //chargement des données d'établissement
@@ -31,8 +31,8 @@ if($pxml!=-1){
 
 $XpInfos = '/tabbox/tabpanels/tabpanel/tabbox/tabpanels/tabpanel/vbox/hbox[2]/grid/columns/column[2]'; 
 
-//récupère le modele
-$m = new Model_DbTable_Gevu_docs();
+//récupère le Modelse
+$m = new Models_DbTable_Gevu_docs();
 $rm = $m->findByIdDoc($_REQUEST['model']);
 
 
@@ -389,8 +389,8 @@ function getCout($g, $id, $arrP, $idDon=-1, $lib=false){
 	}
 	if($lib){
 		$arrLib = array();
-		$dbSolus = new Model_DbTable_Gevu_solutions();
-		$dbProds = new Model_DbTable_Gevu_produits();
+		$dbSolus = new Models_DbTable_Gevu_solutions();
+		$dbProds = new Models_DbTable_Gevu_produits();
 	}
 	$cReg=0; $cSou=0;
 	foreach($arrP as $solus){
