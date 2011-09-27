@@ -11,6 +11,7 @@ define ("SEP_PATH","/");
 set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\ZendFramework-1.10.8\library");
 set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\ZendFramework-1.10.8\extras\library");
 set_include_path(get_include_path().PATH_SEPARATOR.ROOT_PATH."\library\php");
+//set_include_path(get_include_path().PATH_SEPARATOR.ROOT_PATH."\application\models\DbTable\Gevu");
 
 // *ZAMFBROWSER IMPLEMENTATION*
 set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\ZamfBrowser\browser");
