@@ -2,7 +2,6 @@
 /**
  * Ce fichier contient la classe Gevu_batiments.
  *
- * @copyright  2008 Gabriel Malkas
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
 */
@@ -11,11 +10,10 @@
 /**
  * Classe ORM qui représente la table 'gevu_batiments'.
  *
- * @copyright  2008 Gabriel Malkas
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
  */
-class Model_DbTable_Gevu_batiments extends Zend_Db_Table_Abstract
+class Models_DbTable_Gevu_batiments extends Zend_Db_Table_Abstract
 {
     
     /*

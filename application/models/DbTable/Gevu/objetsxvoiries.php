@@ -90,7 +90,8 @@ class Models_DbTable_Gevu_objetsxvoiries extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
-        $this->delete('gevu_objetsxvoiries.id_objet_voirie = ' . $id);
+        //@TODO supprimer les lignes des autres tables
+    	$this->delete('gevu_objetsxvoiries.id_objet_voirie = ' . $id);
     }
     
     /**

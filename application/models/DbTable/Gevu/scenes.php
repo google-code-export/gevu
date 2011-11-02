@@ -55,7 +55,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($data, $existe=false)
     {
     	$id=false;
     	if($existe)$id = $this->existe($data);
