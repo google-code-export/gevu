@@ -101,6 +101,7 @@
 						//ajoute une item
 						var c:grdItemScenar = new grdItemScenar();
 						c.dtCrit = getDtCtl(etp.id_type_controle);
+						c.dtScen = this.dtScen;
 						c.idScene = etp.id_scene;
 						c.bInit = true;
 						r.addChild(c);	
@@ -118,7 +119,7 @@
 				return null;				
 			}
 
-			private function updateItem():void
+			public function updateItem():void
 			{
 				//création du tableau de valeur
 				var vn:Array = new Array();
@@ -243,7 +244,7 @@
 					//récupère le controle
 					var src:hbControle = hbControle(s);
 					//ajoute une colonne
-					var gISsrc:grdItemScenar = grdItemScenar(dst.parent.parent);
+					var gISsrc:grdItemScenar = grdItemScenar(dst.parent.parent.parent);
 					var gIS:grdItemScenar = new grdItemScenar();
 					var gRSsrc:grdRowScenar = grdRowScenar(gISsrc.parent);
 					gRSsrc.addChild(gIS);
@@ -255,6 +256,7 @@
 						grdScen.addChild(gRS);						
 					}
 					//ajoute le controle
+					gISsrc.dtScen = this.dtScen;
 					gISsrc.dtCrit = src.dt; 
 					gISsrc.chargeCtl();
 					//enregistre la modification
@@ -263,7 +265,8 @@
 			}
 			
 			private function matches(src:Object, dst:Object):Boolean{
-				if(dst.className != "Canvas" || src.className != "hbControle" || dst.numChildren>0)return false
+				//on vérifie que la destination est bonne
+				if(dst.className != "Canvas" || src.className != "hbControle" || dst.numChildren>0  || src.parent.parent == dst.parent.parent)return false
 				else return true;
 			}
 									
@@ -287,6 +290,11 @@
 			{
 				// TODO Auto-generated method stub
 				ScenHandler(event);
+			}
+			
+			private function testerScenario():void
+			{
+				// TODO créer uen fenêtre de saisie du scénario
 			}
 			
 		]]>
@@ -325,21 +333,28 @@
 						<mx:DataGridColumn headerText="Params" dataField="params" visible="false"/>
 					</mx:columns>
 				</mx:DataGrid>
-				<mx:Accordion >
+				<mx:Accordion id="accCtlScene" >
 					<mx:Canvas  id="cnvCrtl" label="Contrôles diponibles">
-						<mx:VBox id="vboxCtl"  height="600" width="200" horizontalAlign="center">
+						<mx:VBox id="vboxCtl"  height="400" width="200" horizontalAlign="center">
 						</mx:VBox>
 					</mx:Canvas>
-					<mx:Canvas id="cnvSceneCopie" minHeight="0" maxHeight="600" width="200" label="Scènes copiées">
-					</mx:Canvas>					
 				</mx:Accordion> 
 			</mx:VBox>	
 			<mx:VRule height="100%"/>
 			<mx:VBox height="100%" width="100%">
+				<mx:Label fontSize="18" fontWeight="bold" text="Scènes copiées" />
+				<mx:Grid borderColor="#E37D2A" borderStyle="solid" borderThickness="4"
+						 themeColor="#FFA200">
+					<mx:GridRow id="grSceneCopie" name="grSceneCopie">
+						
+					</mx:GridRow> 
+				</mx:Grid>				
+				<mx:Label fontSize="18" fontWeight="bold" text="Scenario" />
 				<mx:HBox>
 					<mx:Label  fontSize="12" fontWeight="bold" text="Nom:" />
 					<mx:TextInput id="UpdLib" change="UpdLib_changeHandler(event)" />
 					<mx:Button label="Enregistrer" click="updateItem()" toolTip="Enregistre les modification du scénario" />
+					<mx:Button label="Tester" click="testerScenario()" toolTip="Tester le scénario" />
 				</mx:HBox>
 				<mx:Grid id="grdScen" borderColor="#45A4CB" borderStyle="solid" borderThickness="4">
 				</mx:Grid>				

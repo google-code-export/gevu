@@ -25,12 +25,14 @@
 			[Bindable] public var dtCrit:Object;
 			[Bindable] public var dtScen:Object;
 			[Bindable] public var idScene:int;
+			[Bindable] public var compoScene:grdItemScenar;
 			
 			public var dc:cnvDiagCritere;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
-				scenSelect.text = dtScen.lib;
+				scenarSelect.text = dtScen.lib;
+				sceneSelect.text = idScene+" - scène "+ (compoScene.parent.parent.getChildIndex(compoScene.parent)+1)+ " étape "+(compoScene.parent.getChildIndex(compoScene)+1)+ "/"+(compoScene.parent.numChildren-1);
 				this.title += dtCrit.lib;
 				var fg:DisplayObject;
 				if(dtCrit.id_type_controle==45)fg = new batiments();
@@ -80,9 +82,10 @@
     </mx:Script>
 	
 	<mx:VBox width="100%" height="100%">		
-		<mx:HBox width="100%" >			
-			<mx:Label fontSize="12" fontWeight="bold" text="Scenario : "/>
-			<mx:Text id="scenSelect" fontSize="12" text="" />
+		<mx:HBox width="100%" verticalAlign="middle">
+			<mx:Label fontSize="12" fontWeight="bold" text="Scenario :"/>
+			<mx:Text id="scenarSelect" fontSize="16" text="" width="100%" />
+			<mx:Text id="sceneSelect" fontSize="12" text=""/>				
 			<mx:Button id="btnSauve" click="btnSauve_clickHandler(event)" label="Enregistrer" toolTip="Enregistre les paramètres du scénario" />
 		</mx:HBox>			
 		<mx:HDividedBox width="100%" height="100%">

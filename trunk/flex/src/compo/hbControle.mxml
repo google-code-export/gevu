@@ -3,7 +3,7 @@
 	 creationComplete="init()"
 	  verticalAlign="middle"
 	  horizontalAlign="center"
-	  mouseDown="parentApplication.dgScen.beginDragAndDrop(event)"
+	  mouseDown="DoDrag(event)"
 	>
 	<mx:Script>
 		<![CDATA[
@@ -11,7 +11,8 @@
 			[Bindable] public var dt:Object;
 			[Bindable] public var imgSrc:String;
 			[Bindable] public var lbl:String;
-			[Bindable] public var idTypeControle:int
+			[Bindable] public var idTypeControle:int;
+			[Bindable] public var bDoDrag:Boolean=true;
 			
 			public function init():void{
 				if(dt.icone!=""){
@@ -23,6 +24,11 @@
 					this.addChild(txt);
 				}
 				lbl = dt.lib;					
+			}
+			public function DoDrag(event:MouseEvent):void{
+				if(bDoDrag){
+					parentApplication.dgScen.beginDragAndDrop(event);
+				}
 			}
 		]]>
 	</mx:Script>
