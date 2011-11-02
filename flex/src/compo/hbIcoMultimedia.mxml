@@ -8,7 +8,8 @@
 			import com.google.analytics.debug._Style;
 			
 			import compo.twPhotoListe;
-			
+			import mx.controls.Alert;
+
 			import mx.managers.PopUpManager;
 		
       	[Embed(source="../images/jpg.png")] [Bindable] private var PhotoIcon:Class;
@@ -98,8 +99,10 @@
      }
 	
 	private function go():void {
-		var targetURL:URLRequest = new URLRequest (urlPdf);		
-		navigateToURL(targetURL, "_blank");
+		Alert.show(urlPdf, "url test");
+
+		//var targetURL:URLRequest = new URLRequest (urlPdf);
+		//navigateToURL(targetURL, "_blank");
 	}
 			
      private function ShowListeFilm():void {

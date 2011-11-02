@@ -21,8 +21,9 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
-    <application path="gevu.mxml"/>
+    <application path="diag.mxml"/>
     <application path="grilles.mxml"/>
+    <application path="gevu.mxml"/>
     <application path="rapports.mxml"/>
   </applications>
   <modules/>

@@ -58,6 +58,8 @@
 					remove="oui";
 					cnvDiagCritere(this.parentDocument).bChange = true;
 					cnvDiagCritere(this.parentDocument).setFocus();
+					//var i:int = arrCrit.getItemIndex(object);
+					//if(i>0) arrCrit[i]["NbUtil"] ++;
 				}
 				
 			]]>     

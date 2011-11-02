@@ -170,7 +170,7 @@
 						si.appendChild(item);
 						//incrémente le nombre d'utilisation
 						var i:int = arrCrit.getItemIndex(object);
-						arrCrit[i]["NbUtil"] ++;
+						if(i>0) arrCrit[i]["NbUtil"] ++;
 					}
 					else{
 						si.@isBranch = true;

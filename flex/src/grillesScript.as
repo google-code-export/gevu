@@ -35,8 +35,4 @@ public function login():void
 	*/
 	boxGen.visible = true;
 } 
- 
-public function init():void
-{
 
-}
