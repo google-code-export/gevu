@@ -107,7 +107,7 @@ class AUTH_LoginManager {
 		// Add groups to the Role registry using Zend_Acl_Role
 		// Guest does not inherit access controls.
 		// Order matters here, we go from the most	restricted to the least restricted
-		$dbRole = new Model_DbTable_Gevu_roles();
+		$dbRole = new Models_DbTable_Gevu_roles();
 		$rs = $dbRole->getAll();
 		foreach ($rs as $r){
 			if($r['inherit']!=""){
@@ -138,7 +138,7 @@ class AUTH_LoginManager {
 			$userRolePrivs[$r] = $acl->isAllowed($userRole, null, $r);			
 		}
 		//ajoute les autorisations liées au droit de l'utilisateur
-		$dbDroits = new Model_DbTable_Gevu_exisxdroits();
+		$dbDroits = new Models_DbTable_Gevu_exisxdroits();
 		$rs = $dbDroits->findByIdExi($userId);
 		foreach ($rs as $r){
 			$userRolePrivs["droit_".$r['id_droit']] = $r['params'];						
