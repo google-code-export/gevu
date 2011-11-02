@@ -115,26 +115,6 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
 
-    /**
-     * Récupère les spécifications des colonnes Gevu_lieux 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_rubrique","champ"=>"id_rubrique","visible"=>true),
-    	array("titre"=>"lib","champ"=>"lib","visible"=>true),
-    	array("titre"=>"id_parent","champ"=>"id_parent","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"lft","champ"=>"lft","visible"=>true),
-    	array("titre"=>"rgt","champ"=>"rgt","visible"=>true),
-    	array("titre"=>"niv","champ"=>"niv","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
@@ -302,5 +282,57 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     	$result = $stmt->fetchAll();
 
         return $result; 
+    }
+
+	/*
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne l'arbre de ces enfants
+     *
+     * @param int $idLieu
+     * @return DomDocument
+     */
+	public function getXmlNode($idLieu=0){
+	   $shhash = "GEVU_Diagnostique-getXmlNode-$idLieu";
+	   $xml = false;//$this->manager->load($shhash);
+       if(!$xml){
+    		$xml="";
+        	$r = $this->findById_lieu($idLieu);
+        	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".htmlspecialchars($r[0]['lib'])."\" niv=\"".$r[0]['niv']."\" fake=\"0\"";
+        	
+        	$r = $this->findByLieu_parent($idLieu);
+        	if(count($r)==0){
+        		$xml.=" />\n";
+        	}
+        	else{
+        		$xml.=">\n";
+        		foreach ($r as $v){
+        			$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".htmlspecialchars($v['lib'])."\" niv=\"".$v['niv']."\" fake=\"0\"";
+        			$s = $this->findByLieu_parent($v['id_lieu']);
+        			if(count($s)==0){
+    	    			$xml.=" />\n";
+        			}else{
+        				//$xml.=">\n<node idLieu=\"-10\" fake=\"1\" />\n</node>\n";
+        				//-----------
+        				$xml.=">\n";
+        				foreach ($s as $w){
+        					$xml.="<node idLieu=\"".$w['id_lieu']."\" lib=\"".htmlspecialchars($w['lib'])."\" niv=\"".$w['niv']."\" fake=\"0\"";
+        					$t = $this->findByLieu_parent($w['id_lieu']);
+        					if(count($t)==0){
+    	    					$xml.=" />\n";
+        					}else{
+        						$xml.=">\n<node idLieu=\"-10\" lib=\"loading...\" fake=\"1\" icon=\"voieIcon\" />\n</node>\n";
+        					}
+        				}
+        				$xml.="</node>\n";
+        				//-----------
+        			}
+        		}
+        		$xml.="</node>\n";
+    		}
+    		//$this->manager->save($xml, $shhash);
+        }
+        $dom = new DomDocument();
+        $dom->loadXML($xml);
+    	return $dom;
     }    
 }
