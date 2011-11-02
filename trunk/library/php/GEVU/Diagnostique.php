@@ -34,10 +34,10 @@ class GEVU_Diagnostique{
             'automatic_serialization' => true
         );  
         $backendOptions = array(
-            // R�pertoire o� stocker les fichiers de cache
+            // Répertoire où stocker les fichiers de cache
             'cache_dir' => '../tmp/'
         ); 
-        // cr�er un objet Zend_Cache_Core
+        // créer un objet Zend_Cache_Core
         $this->manager = Zend_Cache::factory('Core',
                                      'File',
                                      $frontendOptions,
@@ -49,7 +49,7 @@ class GEVU_Diagnostique{
     */
     public function getAll(){
     	
-    	$t = new Model_DbTable_Gevu_lieux();
+    	$t = new Models_DbTable_Gevu_lieux();
     	$r = $t->getAll();
     	return $r;
     }
@@ -59,7 +59,7 @@ class GEVU_Diagnostique{
     * @return array
     */
 	public function getSon($idParent=0){
-    	$t = new Model_DbTable_Gevu_lieux();
+    	$t = new Models_DbTable_Gevu_lieux();
     	$r = $t->findByLieu_parent($idParent);
     	return $r;
     }
@@ -69,7 +69,7 @@ class GEVU_Diagnostique{
     * @return array
     */
 	public function getFields($idLieu=0){
-    	$t = new Model_DbTable_Gevu_lieux();
+    	$t = new Models_DbTable_Gevu_lieux();
     	$r = $t->findById_lieu($idLieu);
     	$tmp = $this->getNodeType($idLieu);
     	$r[0]['type'] = $tmp;
@@ -80,12 +80,15 @@ class GEVU_Diagnostique{
     * @param int $idLieu
     * @return string
     */
-	public function getXmlNode($idLieu=0){
-	   $shhash = sha1("GEVU_Diagnostique-getXmlNode-$idLieu");
+	public function getXmlNode($idLieu=0, $idBase=false){
+	   $shhash = sha1("GEVU_Diagnostique-getXmlNode-$idBase-$idLieu");
 	   $xml = $this->manager->load($shhash);
         if(!$xml){
     		$xml="";
-        	$z = new Model_DbTable_Gevu_lieux();
+    		//connexion à la base
+    		$db = $this->getDb($idBase);
+    		//création de la table
+        	$z = new Models_DbTable_Gevu_lieux($db);
         	$r = $z->findById_lieu($idLieu);
         	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".htmlspecialchars($r[0]['lib'])."\" niv=\"".$r[0]['niv']."\" fake=\"0\"";
         	
@@ -124,6 +127,22 @@ class GEVU_Diagnostique{
         $dom = new DomDocument();
         $dom->loadXML($xml);
     	return $dom;
+    }
+    
+    /**
+    * @param string $idBase
+    * @return array
+    */
+    public function getDb($idBase){
+    	
+ 		$db = Zend_Db_Table::getDefaultAdapter();
+    	if($idBase){
+    		//change la connexion à la base
+			$arr = $db->getConfig();
+			$arr['dbname']=$idBase;
+			$db = Zend_Db::factory('PDO_MYSQL', $arr);	
+    	}
+    	return $db;
     }
     
     /**
@@ -197,7 +216,7 @@ class GEVU_Diagnostique{
         $res = $this->manager->load($shhash);
         
         if(!$res){
-            $c = new Model_DbTable_Gevu_lieux();
+            $c = new Models_DbTable_Gevu_lieux();
             $tmp['id'] = -1;
             $tmp['name'] = 'General';
             $xx=$c->findById_lieu($idLieu);
@@ -242,14 +261,14 @@ class GEVU_Diagnostique{
             foreach($NodeType as $V){
                 
                 if($V['id']==0){
-                	$c = new Model_DbTable_Gevu_batiments();           
+                	$c = new Models_DbTable_Gevu_batiments();           
                 }elseif($V['id']==1){
-                	$c = new Model_DbTable_Gevu_diagnostics();         
+                	$c = new Models_DbTable_Gevu_diagnostics();         
                 }elseif($V['id']==2){
-                	$c = new Model_DbTable_Gevu_diagnosticsxvoirie();  
+                	$c = new Models_DbTable_Gevu_diagnosticsxvoirie();  
                 }elseif($V['id']==3){
-                    $tp = new Model_DbTable_Gevu_docsxlieux();
-                    $tp2 = new Model_DbTable_Gevu_docs();
+                    $tp = new Models_DbTable_Gevu_docsxlieux();
+                    $tp2 = new Models_DbTable_Gevu_docs();
                     $rs = $tp->findById_lieu($idLieu);
                     $tmp['id'] = $V['id'];
                     $tmp['name'] = $V['name'];
@@ -261,31 +280,31 @@ class GEVU_Diagnostique{
                     $res[]=$tmp;
                     continue;
                 }elseif($V['id']==4){
-                	$c = new Model_DbTable_Gevu_espaces();             
+                	$c = new Models_DbTable_Gevu_espaces();             
                 }elseif($V['id']==5){
-                	$c = new Model_DbTable_Gevu_espacesxexterieurs();  
+                	$c = new Models_DbTable_Gevu_espacesxexterieurs();  
                 }elseif($V['id']==6){
-                	$c = new Model_DbTable_Gevu_espacesxinterieurs();  
+                	$c = new Models_DbTable_Gevu_espacesxinterieurs();  
                 }elseif($V['id']==7){
-                	$c = new Model_DbTable_Gevu_etablissements();      
+                	$c = new Models_DbTable_Gevu_etablissements();      
                 }elseif($V['id']==8){
-                	$c = new Model_DbTable_Gevu_georss();              
+                	$c = new Models_DbTable_Gevu_georss();              
                 }elseif($V['id']==9){
-                	$c = new Model_DbTable_Gevu_geos();                
+                	$c = new Models_DbTable_Gevu_geos();                
                 }elseif($V['id']==10){
-                	$c = new Model_DbTable_Gevu_niveaux();             
+                	$c = new Models_DbTable_Gevu_niveaux();             
                 }elseif($V['id']==11){
-                	$c = new Model_DbTable_Gevu_objetsxexterieurs();   
+                	$c = new Models_DbTable_Gevu_objetsxexterieurs();   
                 }elseif($V['id']==12){
-                	$c = new Model_DbTable_Gevu_objetsxinterieurs();   
+                	$c = new Models_DbTable_Gevu_objetsxinterieurs();   
                 }elseif($V['id']==13){
-                	$c = new Model_DbTable_Gevu_objetsxvoiries();      
+                	$c = new Models_DbTable_Gevu_objetsxvoiries();      
                 }elseif($V['id']==14){
-                	$c = new Model_DbTable_Gevu_observations();        
+                	$c = new Models_DbTable_Gevu_observations();        
                 }elseif($V['id']==15){
-                	$c = new Model_DbTable_Gevu_parcelles();           
+                	$c = new Models_DbTable_Gevu_parcelles();           
                 }elseif($V['id']==16){
-                	$c = new Model_DbTable_Gevu_problemes();           
+                	$c = new Models_DbTable_Gevu_problemes();           
                 }elseif($V['id']==17){
                 	$c=NULL;
                     continue;

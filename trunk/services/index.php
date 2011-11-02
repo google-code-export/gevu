@@ -38,18 +38,17 @@ $u = new AUTH_LoginVO();
 $u->username="samszo";
 $u->password="samszo";
 $au = $lm->verifyUser($u);
+
+$s = new GEVU_Diagnostique();
+$rs = $s->getXmlNode(1,"gevu_new_alceane");
 */
 
-//$s = new Model_DbTable_Gevu_criteresxtypesxdeficiences();
-//$rs = $s->remove(1,1);
 	
 
 
 $server = new Zend_Amf_Server();
-//voir s'il ne faut pas passer par des objects en dehors du framework pour �viter 
-//une s�rialisation trop lourde
-//des erreurs dans la s�rialisation
-//cf. la suppression du paramam�tre en trop dans le block commentaire de Zend_Db_Table_Abstract->find()
+//des erreurs dans la sérialisation
+//cf. la suppression du paramamètre en trop dans le block commentaire de Zend_Db_Table_Abstract->find()
 //$server->addDirectory(dirname(__FILE__) .'/../library/php/');
 
 //* *ZAMFBROWSER IMPLEMENTATION*
@@ -57,6 +56,14 @@ $server->setClass( "ZendAmfServiceBrowser" );
 ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
 
 $server->addDirectory(APPLICATION_PATH);
+
+$server->setClass('GEVU_Diagnostique');
+
+	//pour l'authentification
+$server->setClass("AUTH_LoginManager")
+	   ->setClass("AUTH_LoginVO");	
+$server->setClassMap('LoginVO','AUTH_LoginVO');	
+
 /*
 $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_solutionsxmetiers')
@@ -108,12 +115,6 @@ $server->setClass('Model_DbTable_Gevu_solutions')
 	->setClass('Model_DbTable_Gevu_scenes')
 */		
 	
-	//pour l'authentification
-$server->setClass("AUTH_LoginManager")
-	->setClass("AUTH_LoginVO")
-	;
-	
-$server->setClassMap('LoginVO','AUTH_LoginVO');	
 $server->setProduction(false);
 
 $response = $server->handle();

@@ -9,7 +9,7 @@ if(TRACE)
 	echo "index:login=$login, $mdp<br/>";
 
 header ("Content-type: application/vnd.mozilla.xul+xml; charset=iso-8859-15");
-header ("title: Saisi des diagnosics d'accessibilité");
+header ("title: Saisi des diagnosics d'accessibilitÃ©");
 echo '<' . '?xml version="1.0" encoding="iso-8859-15" ?' . '>';
 echo '<' . '?xml-stylesheet href="chrome://global/skin/" type="text/css"?' . '>' . "\n";
 echo ('<' . '?xml-stylesheet href="design/onada.css" type="text/css"?' . '>' . "\n");
@@ -25,7 +25,7 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 <window
     id="wSaisiDiag"
     flex="1"
-    title="Saisi des diagnosics d'accessibilité"
+    title="Saisi des diagnosics d'accessibilitÃ©"
     persist="screenX screenY width height"
     orient="horizontal"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -37,7 +37,7 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 	<script type="application/x-javascript" src="<?php echo $objSite->infos["pathXulJs"]; ?>tree.js"/>
 	<script type="application/x-javascript" src="<?php echo $objSite->infos["pathXulJs"]; ?>svg.js"/>
     <script>
-		//initialise le paramètrage du site
+		//initialise le paramï¿½trage du site
 		var lienAdminSpip = "<?php echo $objSite->infos["lienAdminSpip"]; ?>";
 		var urlExeAjax = "<?php echo $objSite->infos["urlExeAjax"]; ?>";
 		var urlSite = "<?php echo $objSite->infos["urlSite"]; ?>";
@@ -60,21 +60,21 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 			<menubar id='choix_diagnostic'>
 				<menu label="Gestion des bases" class="menubar" >
 					<menupopup >
-						<menuitem accesskey="d" label="Déconnexion" oncommand="window.location.replace('exit.php');"/>
+						<menuitem accesskey="d" label="Dï¿½connexion" oncommand="window.location.replace('exit.php');"/>
 						<!--  
 					    <menu label="Synchronisation">
 					      <menupopup id='mnuBarSynchro' >
 						    <menu label="<?php echo $SITES[SYNCSITE]["NOM"]; ?>-><?php echo $SITES[$site]["NOM"]; ?>">
 						      <menupopup >
-								<menuitem hidden="true" accesskey="s" label="Vérifier les paramètres" oncommand="SynchroniserMajParam();"/>
-								<menuitem accesskey="v" label="Vérifier les contrôles" oncommand="CompareRubSrcDst('CompareServeurLocal',80);"/>
-								<menuitem label="Vérifier l'élément en cours" oncommand="CompareRubSrcDst('CompareServeurLocal',document.getElementById('idRub').value);"/>
+								<menuitem hidden="true" accesskey="s" label="Vï¿½rifier les paramï¿½tres" oncommand="SynchroniserMajParam();"/>
+								<menuitem accesskey="v" label="Vï¿½rifier les contrï¿½les" oncommand="CompareRubSrcDst('CompareServeurLocal',80);"/>
+								<menuitem label="Vï¿½rifier l'ï¿½lï¿½ment en cours" oncommand="CompareRubSrcDst('CompareServeurLocal',document.getElementById('idRub').value);"/>
 						      </menupopup>
 						    </menu>
 						    <menu label="<?php echo $SITES[$site]["NOM"]; ?>-><?php echo $SITES[SYNCSITE]["NOM"]; ?>">
 						      <menupopup >
-								<menuitem hidden="true" accesskey="s" label="Vérifier les paramètres" oncommand="SynchroniserMajParam();"/>
-								<menuitem label="Vérifier l'élément en cours" oncommand="CompareRubSrcDst('CompareLocalServeur',document.getElementById('idRub').value);"/>
+								<menuitem hidden="true" accesskey="s" label="Vï¿½rifier les paramï¿½tres" oncommand="SynchroniserMajParam();"/>
+								<menuitem label="Vï¿½rifier l'ï¿½lï¿½ment en cours" oncommand="CompareRubSrcDst('CompareLocalServeur',document.getElementById('idRub').value);"/>
 						      </menupopup>
 						    </menu>
 					      </menupopup>
@@ -101,31 +101,31 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 						<menuitem id="version" checked="<?php if($_SESSION['version']=="V2") echo "true"; ?>" type="radio" label="V1" value='V2' oncommand="SetChoixDiagnostic();version = this.value;"/>
 					</menupopup>
 				</menu>
-				<menu label="Type de critère" class="menubar">
+				<menu label="Type de critï¿½re" class="menubar">
 					<menupopup id="mnuTypeCrit" onpopupshowing="javascript:;">
-						<menuitem id="type_controle1" type="checkbox" checked="<?php if($_SESSION['type_controle'][1]=="multiple_1_1") echo "true"; ?>" label="Réglementaire" value='multiple_1_1' oncommand="SetChoixDiagnostic();" />
+						<menuitem id="type_controle1" type="checkbox" checked="<?php if($_SESSION['type_controle'][1]=="multiple_1_1") echo "true"; ?>" label="Rï¿½glementaire" value='multiple_1_1' oncommand="SetChoixDiagnostic();" />
 						<menuitem id="type_controle2" type="checkbox" checked="<?php if($_SESSION['type_controle'][0]=="multiple_1_2") echo "true"; ?>" label="Souhaitable" value='multiple_1_2' oncommand="SetChoixDiagnostic();" />
 					</menupopup>
 				</menu>
-				<menu label="Contexte réglementaire" onpopupshowing="javascript:;" class="menubar">
+				<menu label="Contexte rï¿½glementaire" onpopupshowing="javascript:;" class="menubar">
 					<menupopup id="mnuContReg" >
 						<menuitem id="type_contexte1" type="checkbox" checked="<?php if($_SESSION['type_contexte'][0]=="multiple_2_1") echo "true"; ?>" label="Travail" value='multiple_2_1' oncommand="SetChoixDiagnostic();"/>
 						<menuitem id="type_contexte2" type="checkbox" checked="<?php if($_SESSION['type_contexte'][1]=="multiple_2_2") echo "true"; ?>" label="ERP/IOP" value='multiple_2_2' oncommand="SetChoixDiagnostic();"/>
 						<menuitem id="type_contexte3" type="checkbox" checked="<?php if($_SESSION['type_contexte'][2]=="multiple_2_3") echo "true"; ?>" label="Logement" value='multiple_2_3' oncommand="SetChoixDiagnostic();"/>
 						<menuitem id="type_contexte4" type="checkbox" checked="<?php if($_SESSION['type_contexte'][3]=="multiple_2_4") echo "true"; ?>" label="Voirie" value='multiple_2_4' oncommand="SetChoixDiagnostic();"/>
 						<menuitem id="type_contexte5" type="checkbox" checked="<?php if($_SESSION['type_contexte'][4]=="multiple_2_5") echo "true"; ?>" label="ERP/IOP existant" value='multiple_2_5' oncommand="SetChoixDiagnostic();"/>
-						<menuitem id="type_contexte6" type="checkbox" checked="<?php if($_SESSION['type_contexte'][5]=="multiple_2_6") echo "true"; ?>" label="Modalité particulière" value='multiple_2_6' oncommand="SetChoixDiagnostic();"/>
+						<menuitem id="type_contexte6" type="checkbox" checked="<?php if($_SESSION['type_contexte'][5]=="multiple_2_6") echo "true"; ?>" label="Modalitï¿½ particuliï¿½re" value='multiple_2_6' oncommand="SetChoixDiagnostic();"/>
 					</menupopup>
 				</menu>
-				<menu label="Contexte éditorial" onpopupshowing="javascript:;" class="menubar">
+				<menu label="Contexte ï¿½ditorial" onpopupshowing="javascript:;" class="menubar">
 					<menupopup id="mnuContEdit" >
 						<menuitem id="ContEditAll" type="radio" checked="<?php if($_SESSION['ContEditAll']) echo "true"; ?>" label="Tout" value='true' oncommand="SetChoixAffichage(this.id);"/>
-						<menuitem id="ContEditPublie" type="radio" checked="<?php if($_SESSION['ContEditPublie']) echo "true"; ?>" label="Publié" value='true' oncommand="SetChoixAffichage(this.id);"/>
+						<menuitem id="ContEditPublie" type="radio" checked="<?php if($_SESSION['ContEditPublie']) echo "true"; ?>" label="Publiï¿½" value='true' oncommand="SetChoixAffichage(this.id);"/>
 					</menupopup>
 				</menu>
 				<menu label="Affichage" onpopupshowing="javascript:;" class="menubar">
 					<menupopup id="mnuAffichage" >
-						<menuitem id="ShowLegendeControle" value="true" type="checkbox" checked="<?php if($_SESSION['ShowLegendeControle']) echo "true"; else echo "false"; ?>"  label="Montrer la légende des contrôles" oncommand="SetChoixAffichage(this.id);"/>
+						<menuitem id="ShowLegendeControle" value="true" type="checkbox" checked="<?php if($_SESSION['ShowLegendeControle']) echo "true"; else echo "false"; ?>"  label="Montrer la lï¿½gende des contrï¿½les" oncommand="SetChoixAffichage(this.id);"/>
 						<menuitem id="ShowCarte" value="true" type="checkbox" checked="<?php if($_SESSION['ShowCarte']) echo "true"; else echo "false"; ?>" label="Afficher la carte"  oncommand="SetChoixAffichage(this.id);" />
 						<menuitem id="ShowDocs" value="true" type="checkbox" checked="<?php if($_SESSION['ShowDocs']) echo "true"; else echo "false"; ?>" label="Afficher le(s) document(s)"  oncommand="SetChoixAffichage(this.id);" />
 						<menuitem id="ForceCalcul" value="true" type="checkbox" checked="<?php if($_SESSION['ForceCalcul']) echo "true"; else echo "false"; ?>" label="Forcer les calculs"  oncommand="SetChoixAffichage(this.id);" />
@@ -159,7 +159,7 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 				 	<label id="titreRub" value="Selectionner un territoire" class="titre" />
 					<label id="idRub" value="<?php echo $objSite->infos["RUB_TERRE"]; ?>" class="titreLiens" hidden="true"/>
 					<label id="libRub" value="" hidden="true"/>
-					<label value="Sélectionnez un établissement dans" id="TitreFormSaisi" hidden="true" />
+					<label value="Sï¿½lectionnez un ï¿½tablissement dans" id="TitreFormSaisi" hidden="true" />
 				</hbox>
 				<hbox id='treeRub' class="BoiteV" context="popterre" ></hbox>
 			</vbox>
@@ -191,8 +191,8 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
 	
 			<vbox class="BoiteV" id="syncV2" flex="1" hidden="true">
 				<hbox flex="1" hidden="true" >
-				 <label value="Sélectionnez un établissement dans" id="syncTitreFormSaisi" class="titre" />
-				 <label id="synclibRub" value="Le département du Nord" class="titre" />
+				 <label value="Sï¿½lectionnez un ï¿½tablissement dans" id="syncTitreFormSaisi" class="titre" />
+				 <label id="synclibRub" value="Le dï¿½partement du Nord" class="titre" />
 				</hbox>
 				<hbox class="bw" id="syncFormSaisi" flex="1">
 				</hbox>
@@ -216,7 +216,7 @@ echo '<'.'?xul-overlay href="overlay/EtatDiag.xul"?'.'>';
  	-->
  
 <script type="application/x-javascript" >
-	//met à jour le choix du diagnostic
+	//met ï¿½ jour le choix du diagnostic
 	SetChoixDiagnostic();
    	ChargeTreeFromAjax('idRub','treeRub','terre');
 </script>

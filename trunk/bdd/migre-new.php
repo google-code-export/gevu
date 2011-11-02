@@ -1,9 +1,11 @@
-<?php define("DEBUG_MODE", false); ?>
+<?php define("DEBUG_MODE", true); ?>
 <?php
     if (DEBUG_MODE){
-        $dbN = "gevu_solus";    
+        //$dbN = "gevu_solus";    
+		//$dbO = "gevu_alceane";
+        $dbN = "gevu_new_alceane";    
 		$dbO = "gevu_alceane";
-		$showdiff = true;
+		$showdiff = false;
     }
     else{
         $dbO = isset($_POST['dbO']) ? $_POST['dbO'] : '';
@@ -43,7 +45,7 @@
 */
 
 if($dbN && $dbO){
-	$ldb = mysql_connect("localhost", "root", "") or die("Impossible de se connecter : " . mysql_error());    
+	$ldb = mysql_connect("127.0.0.1", "root", "root") or die("Impossible de se connecter : " . mysql_error());    
 	mysql_select_db($dbN);
 	
 	/* 
@@ -1002,7 +1004,7 @@ function CopieNoueuds($dbN, $dbO)
         $row=mysql_fetch_array($res);
         $lft=$row['lft'];
                
-        // copier le noeud luis-même
+        // copier le noeud lui-même
         $sql = "INSERT INTO $dbN.gevu_lieux
                 (id_instant, lieu_parent, id_rubrique, lib, id_parent, lft, rgt, niv, maj)
                 SELECT $idInstant, ".$Noeud['idParent'].", r.id_rubrique, r.titre,".
