@@ -4,6 +4,9 @@ include "grillesconfig.as";
 import com.adobe.serialization.json.JSON;
 
 import compo.*;
+import compo.form.batiments;
+
+import flash.display.DisplayObject;
 
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
@@ -19,7 +22,7 @@ import mx.rpc.events.ResultEvent;
 
 private var TreeObject:XML;
 private var xmlTree:XML
-private var SelectedNode:int;
+private var idLieu:int;
 private var idBase:String 
 
 public function login():void
@@ -106,31 +109,21 @@ private function treeItemOpened(event:TreeEvent) : void {
 
 
 private function treeItemClicked(event:ListEvent) : void {
-	SelectedNode = event.currentTarget.selectedItem.attribute("idLieu");
+	idLieu = event.currentTarget.selectedItem.attribute("idLieu");
 	
-	if(SelectedNode>0) roDiagnostique.getNodeRelatedData(SelectedNode);
+	if(idLieu>0) roDiagnostique.getNodeRelatedData(idLieu, idBase);
 	
-	//map.showNode(SelectedNode);
+	//map.showNode(idLieu);
 }
 
 private function displayNodeProperties(event:ResultEvent) : void {
-	var obj:Object;
-	var arr1:Array = new Array();
-	var arrc1:ArrayCollection = new ArrayCollection;
+	var obj:Object = event.result;
 	
-	var i:int;
-	var tmpStr:String="";
-	
-	for (i=2; i<event.result.length; ++i){
-		tmpStr+=event.result[i]['name']+"  ";
+	for each(var o:Object in obj){
+		var dplObj:DisplayObject;
+		if(o=="") dplObj = new batiments();
+		boxDiag.addChild(dplObj);	
 	}
-	obj={prop:"lib",		val:event.result[0].data.lib};			arr1.push(obj);
-	obj={prop:"id_lieu",	val:event.result[0].data.id_lieu};		arr1.push(obj);
-	obj={prop:"id_parent",	val:event.result[0].data.lieu_parent};	arr1.push(obj);
-	obj={prop:"niv",		val:event.result[0].data.niv};			arr1.push(obj);
-	obj={prop:"type",		val:tmpStr};							arr1.push(obj);
-	
-	arrc1.source=arr1;
 		
 }
 
