@@ -5,32 +5,10 @@ class GEVU_Diagnostique{
     var $manager;
     var $TableNames;
     
-    function __construct(){
-    
-    	$this->TableNames = array(
-    		"batiments", 
-			"diagnostics", 
-			"diagnosticsxvoirie", 
-			"docsxlieux", 
-			"espaces", 
-			"espacesxexterieurs", 
-			"espacesxinterieurs", 
-			"etablissements", 
-			"georss", 
-			"geos", 
-			"niveaux", 
-			"objetsxexterieurs", 
-			"objetsxinterieurs", 
-			"objetsxvoiries", 
-			"observations", 
-			"parcelles", 
-			"problemes", 
-			"synchros"
-    	);
-    	
+    function __construct(){    	
     	
         $frontendOptions = array(
-            'lifetime' => 7200, // temps de vie du cache de 2 heures
+            'lifetime' => 1, // temps de vie du cache de 2 heures 7200
             'automatic_serialization' => true
         );  
         $backendOptions = array(
@@ -44,41 +22,12 @@ class GEVU_Diagnostique{
                                      $backendOptions); 
     }
     
-    /**
-    * @return array
-    */
-    public function getAll(){
-    	
-    	$t = new Models_DbTable_Gevu_lieux();
-    	$r = $t->getAll();
-    	return $r;
-    }
-    
-    /**
-    * @param int $idParent
-    * @return array
-    */
-	public function getSon($idParent=0){
-    	$t = new Models_DbTable_Gevu_lieux();
-    	$r = $t->findByLieu_parent($idParent);
-    	return $r;
-    }
     
 	/**
+	 * récupère la descendance d'un noeud au format xml
     * @param int $idLieu
-    * @return array
-    */
-	public function getFields($idLieu=0){
-    	$t = new Models_DbTable_Gevu_lieux();
-    	$r = $t->findById_lieu($idLieu);
-    	$tmp = $this->getNodeType($idLieu);
-    	$r[0]['type'] = $tmp;
-    	return $r[0];
-    }
-    
-	/**
-    * @param int $idLieu
-    * @return string
+    * @param string $idBase
+    * @return DomDocument
     */
 	public function getXmlNode($idLieu=0, $idBase=false){
 	   $shhash = sha1("GEVU_Diagnostique-getXmlNode-$idBase-$idLieu");
@@ -130,8 +79,9 @@ class GEVU_Diagnostique{
     }
     
     /**
+     * retourne une connexion à une base de donnée suivant son nom
     * @param string $idBase
-    * @return array
+    * @return Zend_Db_Table
     */
     public function getDb($idBase){
     	
@@ -145,177 +95,36 @@ class GEVU_Diagnostique{
     	return $db;
     }
     
-    /**
-    * @param int $idLieu
-    * @return array
-    */
-    public function getNodeType($idLieu=0){
-        /*$table = new Model_DbTable_Gevu_lieux();
-               
-        $s = $table	->select()
-                    ->from( array("g" => "gevu_lieux"),array('Bi' => '(1)') )                           
-                    ->where( "g.id_lieu = ?", $idLieu )
-                    ->group("Bi");
-               
-        $rows = $table->fetchAll($s)->toArray();
-        if(count($rows)>0) $result[]=$rows[0];
-
-		$ss = $table->select()
-					->from( array("g" => "gevu_batiments"),array("Bi" => "(0)") )
-					->where( "g.id_lieu = ?", $idLieu )
-					->group("Bi");
-		$rows = $table->fetchAll($ss);
-		if(count($rows)>0) $result[]=$rows[0];*/
-        
-        
-		/*******************************************/
-        /*******************************************/
-        $str=  "(SELECT 0 Bi FROM gevu_batiments g WHERE g.id_lieu=$idLieu)  UNION
-        		(SELECT 1 Bi FROM gevu_diagnostics g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 2 Bi FROM gevu_diagnosticsxvoirie g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 3 Bi FROM gevu_docsxlieux g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 4 Bi FROM gevu_espaces g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 5 Bi FROM gevu_espacesxexterieurs g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 6 Bi FROM gevu_espacesxinterieurs g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 7 Bi FROM gevu_etablissements g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 8 Bi FROM gevu_georss g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 9 Bi FROM gevu_geos g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 10 Bi FROM gevu_niveaux g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 11 Bi FROM gevu_objetsxexterieurs g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 12 Bi FROM gevu_objetsxinterieurs g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 13 Bi FROM gevu_objetsxvoiries g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 14 Bi FROM gevu_observations g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 15 Bi FROM gevu_parcelles g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 16 Bi FROM gevu_problemes g WHERE g.id_lieu=$idLieu)  UNION
-				(SELECT 17 Bi FROM gevu_lieux g1 INNER JOIN gevu_synchros g2 ON g1.id_lieu=g2.id_lieu WHERE g1.id_lieu=@id);";
-				
-        $db = Zend_Db_Table::getDefaultAdapter();
-    	$stmt = $db->query($str);
-    	$stmt->setFetchMode(Zend_Db::FETCH_NUM);
-    	$result = $stmt->fetchAll();
-    	
-        /*******************************************/
-    	/*******************************************/
-    	
-    	for($i=0; $i<count($result); ++$i){
-            $tt['id']=$result[$i][0];
-            $tt['name']=$this->TableNames[$result[$i][0]];
-    		$res[]=$tt;
-    	}
-    	
-        return $res;
-    }
     
     /**
-    * @param int $idLieu
-    * @return array
-    */
-    public function getNodeRelatedData($idLieu=0){
+     * Récupération des données liées à iun lieu
+     *
+     * @param int $idLieu
+    * @param string $idBase
+     * @return array
+     */
+    public function getNodeRelatedData($idLieu=0, $idBase=false){
     
         $shhash = sha1("GEVU_Diagnostique-NodeRelatedData-$idLieu");
         $res = $this->manager->load($shhash);
         
         if(!$res){
-            $c = new Models_DbTable_Gevu_lieux();
-            $tmp['id'] = -1;
-            $tmp['name'] = 'General';
-            $xx=$c->findById_lieu($idLieu);
-            $tmp['data'] = $xx[0];
-            $res[]=$tmp;
-            $tmp['id'] = -2;
-            $tmp['name'] = 'BreadCrumb';
-            $xx=$c->getFullPath($idLieu);
-            $tmp['data'] = $xx;
-            $res[]=$tmp;
+            $res = array();
             
-            $NodeType=$this->getNodeType($idLieu);
+            //connexion à la base
+    		$db = $this->getDb($idBase);
             
-            $tmp['id'] = -3;
-            $tmp['name'] = 'allowed creations';
-            $str = "SELECT g1.id_accept id
-                    FROM gevu_tablearborescence g1
-                    WHERE g1.id_table in (";
-            $mwxc = count($NodeType);
-            if($mwxc==0){
-                $xx=array();
-                $tmp['data'] = $xx;
-                $res[]=$tmp;
-            }else{
-	            for($wxc=0; $wxc<($mwxc-1); ++$wxc){
-	                $str = $str.$NodeType[$wxc]['id'].", ";
-	            }
-	            $str = $str.$NodeType[$wxc]['id'].")
-	                    GROUP BY id_accept";
-	            $db = Zend_Db_Table::getDefaultAdapter();
-	            $stmt = $db->query($str);
-	            $stmt->setFetchMode(Zend_Db::FETCH_NUM);
-	            $xx = $stmt->fetchAll();
-	            $tmp['data'] = $xx;
-                $res[]=$tmp;
-            }
-            
-           
-            
-            
-            
-            foreach($NodeType as $V){
-                
-                if($V['id']==0){
-                	$c = new Models_DbTable_Gevu_batiments();           
-                }elseif($V['id']==1){
-                	$c = new Models_DbTable_Gevu_diagnostics();         
-                }elseif($V['id']==2){
-                	$c = new Models_DbTable_Gevu_diagnosticsxvoirie();  
-                }elseif($V['id']==3){
-                    $tp = new Models_DbTable_Gevu_docsxlieux();
-                    $tp2 = new Models_DbTable_Gevu_docs();
-                    $rs = $tp->findById_lieu($idLieu);
-                    $tmp['id'] = $V['id'];
-                    $tmp['name'] = $V['name'];
-                    $tmp['data']=NULL;
-                    for($i=0; $i<count($rs); ++$i){
-                        $rs2 = $tp2->findByIdDoc($rs[$i]['id_doc']);
-                        $tmp['data'][$i] = $rs2;
-                    }
-                    $res[]=$tmp;
-                    continue;
-                }elseif($V['id']==4){
-                	$c = new Models_DbTable_Gevu_espaces();             
-                }elseif($V['id']==5){
-                	$c = new Models_DbTable_Gevu_espacesxexterieurs();  
-                }elseif($V['id']==6){
-                	$c = new Models_DbTable_Gevu_espacesxinterieurs();  
-                }elseif($V['id']==7){
-                	$c = new Models_DbTable_Gevu_etablissements();      
-                }elseif($V['id']==8){
-                	$c = new Models_DbTable_Gevu_georss();              
-                }elseif($V['id']==9){
-                	$c = new Models_DbTable_Gevu_geos();                
-                }elseif($V['id']==10){
-                	$c = new Models_DbTable_Gevu_niveaux();             
-                }elseif($V['id']==11){
-                	$c = new Models_DbTable_Gevu_objetsxexterieurs();   
-                }elseif($V['id']==12){
-                	$c = new Models_DbTable_Gevu_objetsxinterieurs();   
-                }elseif($V['id']==13){
-                	$c = new Models_DbTable_Gevu_objetsxvoiries();      
-                }elseif($V['id']==14){
-                	$c = new Models_DbTable_Gevu_observations();        
-                }elseif($V['id']==15){
-                	$c = new Models_DbTable_Gevu_parcelles();           
-                }elseif($V['id']==16){
-                	$c = new Models_DbTable_Gevu_problemes();           
-                }elseif($V['id']==17){
-                	$c=NULL;
-                    continue;
-                }
+        	$c = new Models_DbTable_Gevu_lieux($db);
 
-                $tmp['id'] = $V['id'];
-                $tmp['name'] = $V['name'];
-                $xx=$c->findById_lieu($idLieu);
-                $tmp['data'] = $xx;
-                $res[]=$tmp;
-            }
+            $res['ariane']=$c->getFullPath($idLieu);
+	        
+			$Rowset = $c->find($idLieu);
+			$lieu = $Rowset->current();
+            $dt = $c->getDependentTables();
+            foreach($dt as $t){
+				$items = $lieu->findDependentRowset($t);
+				if($items->count()) $res[$t]=$items->toArray();
+			}
             
             $this->manager->save($res, $shhash);
         }
@@ -330,11 +139,5 @@ class GEVU_Diagnostique{
         $res = $this->manager->remove($shhash);
     }
     
-    /**
-    * @return array
-    */
-    function getTablesNames(){
-        return $this->TableNames;
-    }
 }
 ?>
