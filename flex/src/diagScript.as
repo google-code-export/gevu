@@ -4,11 +4,29 @@ include "grillesconfig.as";
 import com.adobe.serialization.json.JSON;
 
 import compo.*;
+import compo.form.ariane;
 import compo.form.batiments;
+import compo.form.diagnostics;
+import compo.form.docsxlieux;
+import compo.form.espaces;
+import compo.form.espacesxexterieurs;
+import compo.form.espacesxinterieurs;
+import compo.form.etablissements;
+import compo.form.georss;
+import compo.form.geos;
+import compo.form.niveaux;
+import compo.form.objetsxexterieurs;
+import compo.form.objetsxinterieurs;
+import compo.form.objetsxvoiries;
+import compo.form.observations;
+import compo.form.parcelles;
+import compo.form.problemes;
 
 import flash.display.DisplayObject;
+import flash.utils.getDefinitionByName;
 
 import mx.collections.ArrayCollection;
+import mx.containers.Canvas;
 import mx.controls.Alert;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
@@ -24,6 +42,26 @@ private var TreeObject:XML;
 private var xmlTree:XML
 private var idLieu:int;
 private var idBase:String 
+
+//création des références d'objet pour la création dynamique
+private var o1:compo.form.ariane;
+private var o2:compo.form.batiments;
+private var o3:compo.form.diagnostics;
+private var o4:compo.form.docsxlieux;
+private var o5:compo.form.espaces;
+private var o6:compo.form.espacesxexterieurs;
+private var o7:compo.form.espacesxinterieurs;
+private var o8:compo.form.etablissements;
+private var o9:compo.form.georss;
+private var o10:compo.form.geos;
+private var o11:compo.form.niveaux;
+private var o12:compo.form.objetsxexterieurs;
+private var o13:compo.form.objetsxinterieurs;
+private var o14:compo.form.objetsxvoiries;
+private var o15:compo.form.observations;
+private var o16:compo.form.parcelles;
+private var o17:compo.form.problemes;
+
 
 public function login():void
 {
@@ -118,13 +156,29 @@ private function treeItemClicked(event:ListEvent) : void {
 
 private function displayNodeProperties(event:ResultEvent) : void {
 	var obj:Object = event.result;
+	var ClassReference:Class;
+	var instance:Object;
 	
-	for each(var o:Object in obj){
-		var dplObj:DisplayObject;
-		if(o=="") dplObj = new batiments();
-		boxDiag.addChild(dplObj);	
-	}
-		
+	//initialise les tabbox
+	boxDiag.removeAllChildren();
+	
+	for(var item:String in obj){
+		var arr:Array = item.split("_");
+		var className:String;
+		//vérifie si on traite un objet du modele
+		if(arr.length == 4){
+			className="compo.form."+arr[3];
+		}else{
+			className="compo.form."+item;
+		}
+		//création dynamique de l'objet
+		ClassReference = getDefinitionByName(className) as Class;			
+		instance = new ClassReference();
+		instance.NodeData = obj[item][0];
+		//ajoute l'objet au tabbox
+		boxDiag.addChild(DisplayObject(instance));	
+	}	
+	
 }
 
 private function updateTreeStructure(event:ResultEvent) : void {

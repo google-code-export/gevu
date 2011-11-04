@@ -28,7 +28,6 @@
 					<mx:Label text="id_reponse" />
 				</mx:GridItem>
 				<mx:GridItem width="60%" height="100%">
-					<composants:KeywordsList id="F3" width="100%" />
 				</mx:GridItem>
 			</mx:GridRow>
 			<mx:GridRow width="100%" height="100%">
@@ -58,13 +57,11 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.controls.Alert;
 			
-			private var DiagData : Object;
+			[Bindable] public var NodeData : Object;
 			
-			public function displayNodeProperties( NodeData:Object ) : void {
+			public function displayNodeProperties() : void {
 				var tmpdata:Array = [];
-				
-				DiagData = NodeData;
-				
+								
 				var j:int=0;
 				for(var i:String in NodeData){
 					++j;
@@ -76,10 +73,10 @@
 			
 			public function displayDocProperties( i:int ) : void {
 				
-				roCrit.findById_critere( DiagData[i].id_critere );
-				F3.setKeyword( DiagData[i].id_reponse );
-				F4.data = DiagData[i].num_marker;
-				F5.data = DiagData[i].lib;
+				roCrit.findById_critere(NodeData[i].id_critere );
+				//F3.setKeyword( DiagData[i].id_reponse );
+				F4.data = NodeData[i].num_marker;
+				F5.data = NodeData[i].lib;
 			}
 			
 			private function itemClicked( event:ListEvent ) : void {
@@ -87,7 +84,7 @@
 			}
 			
 			private function init():void{
-				F3.setListType(2);
+				//F3.setListType(2);
 			}
 			
 			private function setCritLabel(event:ResultEvent):void{
