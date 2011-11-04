@@ -58,12 +58,11 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.controls.Alert;
 			
-			private var DiagData : Object;
+			[Bindable] public var NodeData : Object;
 			
-			public function displayNodeProperties( NodeData:Object ) : void {
+			public function displayNodeProperties() : void {
 				var tmpdata:Array = [];
 				
-				DiagData = NodeData;
 				
 				var j:int=0;
 				for(var i:String in NodeData){
@@ -76,10 +75,10 @@
 			
 			public function displayDocProperties( i:int ) : void {
 				
-				roCrit.findById_critere( DiagData[i].id_critere );
-				F4.data = DiagData[i].num_marker;
-				F5.data = DiagData[i].mesure;
-				F6.data = DiagData[i].observations;
+				roCrit.findById_critere(NodeData.id_critere );
+				F4.data = NodeData.num_marker;
+				F5.data = NodeData.mesure;
+				F6.data = NodeData.observations;
 			}
 			
 			private function itemClicked( event:ListEvent ) : void {

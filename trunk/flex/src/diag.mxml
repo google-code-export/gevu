@@ -45,7 +45,8 @@ todo :
 				</mx:Canvas>
 				 
 		   <mx:VBox id="boxDiag" width="100%" height="100%" >
-				
+			   <mx:TabNavigator id="tabDiag" width="100%" height="100%" >
+			   </mx:TabNavigator>				
 		   </mx:VBox>  
 	
 		</mx:HDividedBox> 
