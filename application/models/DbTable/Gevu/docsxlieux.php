@@ -28,6 +28,13 @@ class Models_DbTable_Gevu_docsxlieux extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_doc';
 
+    protected $_referenceMap    = array(
+        'Lieux' => array(
+            'columns'           => 'id_lieu',
+            'refTableClass'     => 'Models_DbTable_Gevu_lieux',
+            'refColumns'        => 'id_lieu'
+        )
+    );	
     
     
     /*

@@ -26,6 +26,13 @@ class Models_DbTable_Gevu_batiments extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_batiment';
 
+    protected $_referenceMap    = array(
+        'Lieux' => array(
+            'columns'           => 'id_lieu',
+            'refTableClass'     => 'Models_DbTable_Gevu_lieux',
+            'refColumns'        => 'id_lieu'
+        )
+    );	
     
     /**
      * Vérifie si une entrée Gevu_batiments existe.

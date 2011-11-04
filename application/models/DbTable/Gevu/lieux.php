@@ -28,6 +28,26 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_lieu';
 
+	protected $_dependentTables = array(
+       "Models_DbTable_Gevu_batiments"
+       ,"Models_DbTable_Gevu_diagnostics"
+       ,"Models_DbTable_Gevu_diagnosticsxvoirie"
+       ,"Models_DbTable_Gevu_docsxlieux"
+       ,"Models_DbTable_Gevu_espaces"
+       ,"Models_DbTable_Gevu_espacesxexterieurs"
+       ,"Models_DbTable_Gevu_espacesxinterieurs"
+       ,"Models_DbTable_Gevu_etablissements"
+       ,"Models_DbTable_Gevu_georss"
+       ,"Models_DbTable_Gevu_geos"
+       ,"Models_DbTable_Gevu_niveaux"
+       ,"Models_DbTable_Gevu_objetsxexterieurs"
+       ,"Models_DbTable_Gevu_objetsxinterieurs"
+       ,"Models_DbTable_Gevu_objetsxvoiries"
+       ,"Models_DbTable_Gevu_observations"
+       ,"Models_DbTable_Gevu_parcelles"
+       ,"Models_DbTable_Gevu_problemes"
+       );
+    
     
     /**
      * Vérifie si une entrée Gevu_lieux existe.
@@ -268,20 +288,25 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      */
     public function getFullPath($idLieu)
     {
+    	/*
         $str = "SELECT parent.lib, parent.id_lieu
 				FROM gevu_lieux node, gevu_lieux parent
-				WHERE node.lft
-				BETWEEN parent.lft
-				AND parent.rgt
-				AND node.id_lieu =$idLieu
+				WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id_lieu =$idLieu
 				ORDER BY parent.lft";
-                    
         $db = Zend_Db_Table::getDefaultAdapter();
     	$stmt = $db->query($str);
     	$stmt->setFetchMode(Zend_Db::FETCH_NUM);
     	$result = $stmt->fetchAll();
-
-        return $result; 
+        */
+    	$query = $this->select()
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('node' => 'gevu_lieux'))
+            ->joinInner(array('parent' => 'gevu_lieux'),
+            	'node.lft BETWEEN parent.lft AND parent.rgt',array('lib', 'id_lieu'))
+            ->where( "node.id_lieu = ?", $idLieu)
+			->order("parent.lft");        
+		$result = $this->fetchAll($query);
+        return $result->toArray(); 
     }
 
 	/*

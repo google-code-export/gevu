@@ -28,6 +28,13 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_espace';
 
+    protected $_referenceMap    = array(
+        'Lieux' => array(
+            'columns'           => 'id_lieu',
+            'refTableClass'     => 'Models_DbTable_Gevu_lieux',
+            'refColumns'        => 'id_lieu'
+        )
+    );	
     
     /**
      * Vérifie si une entrée Gevu_espaces existe.
