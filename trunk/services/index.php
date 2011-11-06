@@ -1,59 +1,16 @@
 <?php
 require_once( "../param/ParamAppli.php" );
 
+
 try {
-		
-/*
-$s = new Models_DbTable_Gevu_scenes();
-$rs = $s->copier(array("id_scenario"=>3,"id_scene"=>12));
+	/*
+	$d = new GEVU_Diagnostique();
+	$db = $d->getDb("gevu_new_alceane");
+	$o = new Models_DbTable_Gevu_diagnostics($db);
+	$o->getAllDesc(13);
+	*/
 	
-$aaa = new Model_DbTable_Gevu_criteres();
-$bbb = $aaa->getListe();
-
-$s = new Model_DbTable_Gevu_criteres();
-$data = array("criteres"=>"La banque d'accueil permet la communication visuelle entre les usagers et le personnel","ref"=>"3_cr_acc_06","handicateur_moteur"=>"1","handicateur_auditif"=>"2","handicateur_visuel"=>"1","handicateur_cognitif"=>"3","id_type_controle"=>"1","affirmation"=>"La banque d'accueil ne permet pas la communication visuelle entre les usagers et le personnel");
-$s->edit(6, $data);
-
-$s = new Model_DbTable_Gevu_contacts();
-$data = array("nom"=>"kj","prenom"=>"kj","fixe"=>"kj","mobile"=>"kj","mail"=>"kj","url"=>"kj","observations"=>"kj");
-$s->ajouter($data);
-$s = new Model_DbTable_Gevu_droits();
-$rs = $s->getAll();
-print_r($rs);
-$s = new Model_DbTable_Gevu_solutionsxproduits();
-$rs = $s->findByIdProduit(6);
-
-$s = new Model_DbTable_Gevu_entreprises();
-$data = array("nom"=>"kj","num"=>"kj","voie"=>"kj","code_postal"=>"kj","ville"=>"kj","pays"=>"kj","telephone"=>"kj","fax"=>"kj","mail"=>"kj","url"=>"kj","observations"=>"kj");
-$s->ajouter($data);
-
-
-$s = new Model_DbTable_Gevu_produits();
-$rs = $s->getAll();
-$data = array("url"=>"kjh","titre"=>"csv","content_type"=>"text/csv");
-$s->ajouter($data,false);
-
-$lm = new AUTH_LoginManager();
-$u = new AUTH_LoginVO();
-$u->username="samszo";
-$u->password="samszo";
-$au = $lm->verifyUser($u);
-
-$s = new GEVU_Diagnostique();
-$rs = $s->getXmlNode(1,"gevu_new_alceane");
-*/
-
-	
-
-
 $server = new Zend_Amf_Server();
-//des erreurs dans la sérialisation
-//cf. la suppression du paramamètre en trop dans le block commentaire de Zend_Db_Table_Abstract->find()
-//$server->addDirectory(dirname(__FILE__) .'/../library/php/');
-
-//* *ZAMFBROWSER IMPLEMENTATION*
-$server->setClass( "ZendAmfServiceBrowser" );
-ZendAmfServiceBrowser::$ZEND_AMF_SERVER = $server;
 
 $server->addDirectory(APPLICATION_PATH);
 
@@ -64,64 +21,13 @@ $server->setClass("AUTH_LoginManager")
 	   ->setClass("AUTH_LoginVO");	
 $server->setClassMap('LoginVO','AUTH_LoginVO');	
 
-/*
-$server->setClass('Model_DbTable_Gevu_solutions')
-	->setClass('Model_DbTable_Gevu_solutionsxmetiers')
-	->setClass('Model_DbTable_Gevu_solutionsxcriteres')
-	->setClass('Model_DbTable_Gevu_solutionsxproduits')
-	->setClass('Model_DbTable_Gevu_docs')
-	->setClass('Model_DbTable_Gevu_metiers')
-	->setClass('Model_DbTable_Gevu_produits')
-	->setClass('Model_DbTable_Gevu_entreprises')
-	->setClass('Model_DbTable_Gevu_criteres')
-	->setClass('Model_DbTable_Gevu_criteresxtypesxdroits')
-	->setClass('Model_DbTable_Gevu_criteresxtypesxdeficiences')
-	->setClass('Model_DbTable_Gevu_criteresxtypesxcriteres')
-	->setClass('Model_DbTable_Gevu_typesxsolutions')
-	->setClass('Model_DbTable_Gevu_typesxcontroles')
-	->setClass('Model_DbTable_Gevu_typesxdroits')
-	->setClass('Model_DbTable_Gevu_typesxdeficiences')
-	->setClass('Model_DbTable_Gevu_typesxcriteres')	
-	->setClass('Model_DbTable_Gevu_contacts')
-	->setClass('Model_DbTable_Gevu_couts')
-	->setClass('Model_DbTable_Gevu_docsxsolutions')
-	->setClass('Model_DbTable_Gevu_docsxproduits')
-	->setClass('Model_DbTable_Gevu_rapports')
-	->setClass('Model_DbTable_Gevu_lieux')
-	->setClass('Model_DbTable_Gevu_docsxlieux')
-	->setClass('Model_DbTable_Gevu_motsclefs')
-	//->setClass('GEVU_ModifBase')
-	//->setClass('GEVU_Diagnostique')
-	->setClass('Model_DbTable_Gevu_objetsxvoiries')
-	->setClass('Model_DbTable_Gevu_batiments')
-	->setClass('Model_DbTable_Gevu_diagnosticsxvoirie')
-	->setClass('Model_DbTable_Gevu_espaces')
-	->setClass('Model_DbTable_Gevu_espacesxexterieurs')
-	->setClass('Model_DbTable_Gevu_espacesxinterieurs')
-	->setClass('Model_DbTable_Gevu_etablissements')
-	->setClass('Model_DbTable_Gevu_niveaux')
-	->setClass('Model_DbTable_Gevu_objetsxexterieurs')
-	->setClass('Model_DbTable_Gevu_objetsxinterieurs')
-	->setClass('Model_DbTable_Gevu_parcelles')
-	->setClass('Model_DbTable_Gevu_geos')
-	->setClass('Model_DbTable_Gevu_tablearborescence')
-	->setClass('Model_DbTable_Gevu_droits')
-	->setClass('Model_DbTable_Gevu_exis')
-	->setClass('Model_DbTable_Gevu_exisxdroits')
-	->setClass('Model_DbTable_Gevu_exisxcontacts')
-	->setClass('Model_DbTable_Gevu_roles')	
-	->setClass('Model_DbTable_Gevu_scenario')
-	->setClass('Model_DbTable_Gevu_typexmotsclefs')
-	->setClass('Model_DbTable_Gevu_scenes')
-*/		
-	
 $server->setProduction(false);
 
 $response = $server->handle();
+//var_dump($server->getFunctions());   		
 
 }catch (Zend_Exception $e) {
 	echo "Récupère exception: " . get_class($e) . "\n";
     echo "Message: " . $e->getMessage() . "\n";
 }
-   		
 echo $response;

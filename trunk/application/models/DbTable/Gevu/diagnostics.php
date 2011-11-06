@@ -122,24 +122,36 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
 
-    /**
-     * Récupère les spécifications des colonnes Gevu_diagnostics 
+    /*
+     * Recherche la description totale d'un diagnostic à partir d'un lieu
+     * et retourne cette entrée.
+     *
+     * @param int $idLieu
+    * @return array
      */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_diag","champ"=>"id_diag","visible"=>true),
-    	array("titre"=>"id_critere","champ"=>"id_critere","visible"=>true),
-    	array("titre"=>"id_reponse","champ"=>"id_reponse","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_donnee","champ"=>"id_donnee","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
+    public function getAllDesc($idLieu)
+    {
+    	$query = $this->select()
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('diag' => 'gevu_diagnostics'))
+        	->joinInner(array('crit' => 'gevu_criteres'),
+            	'diag.id_critere = crit.id_critere',array('id_type_controle','ref','handicateur_moteur','handicateur_auditif','handicateur_visuel','handicateur_cognitif','criteres'))
+        	->joinInner(array('inst' => 'gevu_instants'),
+            	'diag.id_instant = inst.id_instant',array('instant'=>"DATE_FORMAT(maintenant,'%W %d %M %Y')",'ici','nom'))
+        	->joinInner(array('exi' => 'gevu_exis'),
+            	'inst.id_exi = exi.id_exi',array('exis'=>'nom'))
+        	->joinInner(array('mc' => 'gevu_motsclefs'),
+            	'diag.id_reponse = mc.id_motclef',array('reponse'=>'titre'))
+        	->joinLeft(array('prob' => 'gevu_problemes'),
+            	'diag.id_lieu = prob.id_lieu AND diag.id_instant = prob.id_instant AND diag.id_critere = prob.id_critere',array('id_probleme','num_marker','mesure','observations','fichier','doc'))
+        	->joinLeft(array('obs' => 'gevu_observations'),
+            	'diag.id_lieu = obs.id_lieu AND diag.id_instant = obs.id_instant AND diag.id_critere = obs.id_critere',array('id_observations','id_reponse','num_marker','lib'))
+        	->where( "diag.id_lieu = ?", $idLieu)
+			->group(array('id_instant','id_critere'))
+        	->order(array('id_instant','id_critere'));        
+		$result = $this->fetchAll($query);
+        return $result->toArray(); 
+    }
     
     /*
      * Recherche une entrée Gevu_diagnostics avec la valeur spécifiée
