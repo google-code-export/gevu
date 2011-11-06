@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
-	width="95%" horizontalCenter="0" xmlns:composants="composants.*"
-	initialize="init();" title="Observations" maxHeight="300" >
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:compo="compo.*"
+		   label="Observations"
+		   width="100%" height="100%"
+	initialize="init();" >
 	
 	<mx:RemoteObject id="roCrit"
 					 destination="zend"
-					 source="Model_DbTable_Gevu_criteres"
-					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+					 source="Models_DbTable_Gevu_criteres"
+					 fault="faultHandlerService(event, 'Remote Object');">
 		<mx:method name="findById_critere"	result="setCritLabel( event );" />
 	</mx:RemoteObject>
 	
@@ -28,6 +30,7 @@
 					<mx:Label text="id_reponse" />
 				</mx:GridItem>
 				<mx:GridItem width="60%" height="100%">
+					<compo:KeywordsList id="F3" width="100%" />
 				</mx:GridItem>
 			</mx:GridRow>
 			<mx:GridRow width="100%" height="100%">
@@ -74,7 +77,7 @@
 			public function displayDocProperties( i:int ) : void {
 				
 				roCrit.findById_critere(NodeData[i].id_critere );
-				//F3.setKeyword( DiagData[i].id_reponse );
+				F3.setKeyword(NodeData[i].id_reponse );
 				F4.data = NodeData[i].num_marker;
 				F5.data = NodeData[i].lib;
 			}
@@ -84,7 +87,8 @@
 			}
 			
 			private function init():void{
-				//F3.setListType(2);
+				F3.setListType(2);
+				displayNodeProperties();
 			}
 			
 			private function setCritLabel(event:ResultEvent):void{
@@ -103,4 +107,4 @@
 			}
 		]]>
 	</mx:Script>
-</mx:Panel>
+</mx:Canvas>

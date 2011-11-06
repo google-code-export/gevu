@@ -1,23 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
-		  xmlns:composants="compo.*"
-		  label="Diagnostics"
-		  width="100%" height="100%"
-		  >
-
-	<mx:VBox>
-				<mx:Label text="adresse" />
-
-	</mx:VBox>
-	
-	
+		   xmlns:compo="compo.*"
+		   label="Diagnostics"
+		   width="100%" height="100%"
+		   >
 	<mx:Script>
 		<![CDATA[
-		
+			import mx.collections.ArrayCollection;
 			
 			[Bindable] public var NodeData:Object;
-						
-	
+			
+			/*
+			[Bindable]
+			private var dpFlatCrit:ArrayCollection = new ArrayCollection([
+				{instant:"18/02/2011", exis:"Toto", 
+					critere:"le machin est pas bien fait", reponse:"oui", observations:1, problemes:23}, 
+				{instant:"18/02/2011", exis:"Toto", 
+					critere:"le machin est bien", reponse:"non", observations:40000, problemes:23}, 
+				{instant:"18/02/2011", exis:"Tata", 
+					critere:"le machin est pas bien fait", reponse:"oui", observations:400, problemes:23}, 
+				{instant:"18/02/2011", exis:"Toto", 
+					critere:"le machin ", reponse:"oui", observations:4000, problemes:23}, 
+				{instant:"2011", exis:"Toto", 
+					critere:"le machin est pas bien fait", reponse:"oui", observations:40000, problemes:23}, 
+				{instant:"2011", exis:"Toto", 
+					critere:"le machin est bien", reponse:"oui", observations:4050, problemes:23}, 
+				{instant:"2011", exis:"Tata", 
+					critere:"le machin est pas bien fait", reponse:"non", observations:4006600, problemes:23}, 
+				{instant:"2011", exis:"Toto", 
+					critere:"le machin ", reponse:"oui", observations:4400, problemes:23}, 
+			]);
+			*/
 		]]>
 	</mx:Script>
+	<mx:VBox width="100%" height="100%">
+		
+		<mx:AdvancedDataGrid id="adgCrit"  width="100%" height="100%" color="0x323232" initialize="gcCrit.refresh();">
+			<mx:dataProvider>
+				<mx:GroupingCollection id="gcCrit" source="{NodeData}">
+					<mx:grouping>
+						<mx:Grouping>
+							<mx:GroupingField name="exis"/>
+							<mx:GroupingField name="instant"/>
+						</mx:Grouping>
+					</mx:grouping>
+				</mx:GroupingCollection>
+			</mx:dataProvider>        
+			
+			<mx:columns>
+				<mx:AdvancedDataGridColumn dataField="criteres" headerText="diagnostics"/>
+				<mx:AdvancedDataGridColumn dataField="reponse"/>
+				<mx:AdvancedDataGridColumn dataField="observations"/>
+				<mx:AdvancedDataGridColumn dataField="problemes"/>
+			</mx:columns>
+		</mx:AdvancedDataGrid>
+	</mx:VBox>
+	
+
 </mx:Canvas>

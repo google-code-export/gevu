@@ -49,7 +49,7 @@
 	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
-					 source="Model_DbTable_Gevu_geos"
+					 source="Models_DbTable_Gevu_geos"
 					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
 		<mx:method name="edit"	result=";" />
 		<mx:method name="remove"	result=";" />
