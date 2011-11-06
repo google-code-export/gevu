@@ -115,7 +115,7 @@ class GEVU_Diagnostique{
     		$db = $this->getDb($idBase);
             
         	$c = new Models_DbTable_Gevu_lieux($db);
-
+        	
             $res['ariane']=$c->getFullPath($idLieu);
 	        
 			$Rowset = $c->find($idLieu);
@@ -123,7 +123,18 @@ class GEVU_Diagnostique{
             $dt = $c->getDependentTables();
             foreach($dt as $t){
 				$items = $lieu->findDependentRowset($t);
-				if($items->count()) $res[$t]=$items->toArray();
+				if($items->count()){
+					//vérifie si on traite un cas particulier
+	            	if($t=="Models_DbTable_Gevu_diagnostics" || $t=="Models_DbTable_Gevu_problemes"  || $t=="Models_DbTable_Gevu_observations" ){
+	            		//récupère les informations seulement si ce n'est pas déjà fait
+	            		if(!isset($res["___diagnostics"])){
+				        	$d = new Models_DbTable_Gevu_diagnostics($db);
+				        	$res["___diagnostics"] = $d->getAllDesc($idLieu);			
+	            		}	
+	            	}else{
+						$res[$t]=$items->toArray();
+	            	}
+            	}
 			}
             
             $this->manager->save($res, $shhash);

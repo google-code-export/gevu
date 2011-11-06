@@ -12,7 +12,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$loader->registerNamespace(array('GEVU_','AUTH_'));
 
 	    //pour pouvoir charger les classe à la fois dans le serveur amf et avec l'autoloader
-		$moduleLoader->addResourceType('dbgevu', 'models/DbTable/Gevu', 'Models_DbTable_Gevu');
+		$moduleLoader->addResourceType('dbgevu', 'Models/DbTable/Gevu', 'Models_DbTable_Gevu');
 		
   		/*
 		Zend_Registry::set("db", $db);

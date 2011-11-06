@@ -41,7 +41,7 @@ class AUTH_LoginManager {
 	*
 	*/
 	public function verifyUser($user) {
-	
+		
 		$userRole='';
 		// Configure the instance with constructor parameters…
 		$authAdapter = new Zend_Auth_Adapter_DbTable();//on prend le table adapter par défaut
@@ -53,7 +53,6 @@ class AUTH_LoginManager {
 			;
 		$usr=htmlspecialchars($user->username);
 		$pwd=htmlspecialchars($user->password);
-	
 		if($usr == ''){
 			$authAdapter
 				->setIdentity('guest')
@@ -109,6 +108,7 @@ class AUTH_LoginManager {
 		// Order matters here, we go from the most	restricted to the least restricted
 		$dbRole = new Models_DbTable_Gevu_roles();
 		$rs = $dbRole->getAll();
+		
 		foreach ($rs as $r){
 			if($r['inherit']!=""){
 				$acl->addRole(new Zend_Acl_Role($r['lib'],$r['inherit']));							
@@ -145,6 +145,5 @@ class AUTH_LoginManager {
 		}
 		
 		return $userRolePrivs;
-	
 	}
 }

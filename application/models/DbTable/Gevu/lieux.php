@@ -288,16 +288,6 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      */
     public function getFullPath($idLieu)
     {
-    	/*
-        $str = "SELECT parent.lib, parent.id_lieu
-				FROM gevu_lieux node, gevu_lieux parent
-				WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.id_lieu =$idLieu
-				ORDER BY parent.lft";
-        $db = Zend_Db_Table::getDefaultAdapter();
-    	$stmt = $db->query($str);
-    	$stmt->setFetchMode(Zend_Db::FETCH_NUM);
-    	$result = $stmt->fetchAll();
-        */
     	$query = $this->select()
         	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->from(array('node' => 'gevu_lieux'))
