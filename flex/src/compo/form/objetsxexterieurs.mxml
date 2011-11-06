@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
-		  title="Objets exterieurs"
-		  initialize="valChanged = false;">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:composants="compo.*"
+		   label="Objet extérieur"
+		   width="100%" height="100%"
+		   >
 	<mx:VBox>
 
 			<mx:HBox width="100%">
@@ -33,7 +35,7 @@
 	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
-					 source="Model_DbTable_Gevu_objetsxexterieurs"
+					 source="Models_DbTable_Gevu_objetsxexterieurs"
 					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
 		<mx:method name="edit"	result=";" />
 		<mx:method name="remove"	result=";" />
@@ -76,4 +78,4 @@
 			}
 		]]>
 	</mx:Script>
-</mx:Panel>
+</mx:Canvas>

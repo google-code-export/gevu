@@ -9,7 +9,7 @@ todo :
   	width="100%" height="100%" layout="absolute" 
    	xmlns:ns2="compo.*"
    	creationComplete="login()"
-   	name="gevu_diagnostic"
+   	name="gevu_diagnostic" xmlns:form="compo.form.*"
    >
 		
 	
@@ -26,7 +26,7 @@ todo :
 		<mx:method name="removeNodeRelatedData"	result=";" />
 	</mx:RemoteObject>
 	
-	 <mx:Panel title="GEVU - Diagnostic - 0.125" id="boxGen" visible="false" width="100%" height="100%">
+	 <mx:Panel title="GEVU - Diagnostic - 0.173" id="boxGen" visible="false" width="100%" height="100%">
 	 	<mx:HBox width="100%">
 	 		<mx:Label text="Données disponibles : " />
 			<mx:ComboBox id="cbBases" labelField="lib" prompt="Choisissez une base de données" change="cbBases_changeHandler(event)" />
@@ -45,6 +45,7 @@ todo :
 				</mx:Canvas>
 				 
 		   <mx:VBox id="boxDiag" width="100%" height="100%" >
+			   <ns2:ariane id="bbAriane" width="100%" />
 			   <mx:TabNavigator id="tabDiag" width="100%" height="100%" >
 			   </mx:TabNavigator>				
 		   </mx:VBox>  

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ButtonBar xmlns:mx="http://www.adobe.com/2006/mxml"
+			  borderStyle="solid" horizontalGap="2"
+			  itemClick="itemClicked(event);" 
+			  dataProvider="{NodeData}"
+			  labelField="lib" 
+			  >
+	 
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.events.ItemClickEvent;
+			
+			[Bindable] public var NodeData:Object;
+			
+			private function itemClicked(event:ItemClickEvent):void {
+				
+			}
+						
+		]]>
+	</mx:Script>
+</mx:ButtonBar>

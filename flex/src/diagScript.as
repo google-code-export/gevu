@@ -4,7 +4,7 @@ include "grillesconfig.as";
 import com.adobe.serialization.json.JSON;
 
 import compo.*;
-import compo.form.ariane;
+import compo.ariane;
 import compo.form.batiments;
 import compo.form.diagnostics;
 import compo.form.docsxlieux;
@@ -44,7 +44,7 @@ private var idLieu:int;
 private var idBase:String 
 
 //création des références d'objet pour la création dynamique
-private var o1:compo.form.ariane;
+private var o1:compo.ariane;
 private var o2:compo.form.batiments;
 private var o3:compo.form.diagnostics;
 private var o4:compo.form.docsxlieux;
@@ -160,7 +160,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 	var instance:Object;
 	
 	//initialise les tabbox
-	boxDiag.removeAllChildren();
+	tabDiag.removeAllChildren();
 	
 	for(var item:String in obj){
 		var arr:Array = item.split("_");
@@ -168,15 +168,18 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		//vérifie si on traite un objet du modele
 		if(arr.length == 4){
 			className="compo.form."+arr[3];
-		}else{
-			className="compo.form."+item;
+			//création dynamique de l'objet
+			ClassReference = getDefinitionByName(className) as Class;			
+			instance = new ClassReference();
+			instance.NodeData = obj[item];
 		}
-		//création dynamique de l'objet
-		ClassReference = getDefinitionByName(className) as Class;			
-		instance = new ClassReference();
-		instance.NodeData = obj[item][0];
-		//ajoute l'objet au tabbox
-		boxDiag.addChild(DisplayObject(instance));	
+		//vérifie la place de l'objet
+		if(item == "ariane"){
+			bbAriane.NodeData = obj[item];
+		}else{
+			//ajoute l'objet au tabbox
+			tabDiag.addChild(DisplayObject(instance));
+		}
 	}	
 	
 }

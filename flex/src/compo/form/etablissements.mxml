@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ViewStack xmlns:mx="http://www.adobe.com/2006/mxml"
-	width="100%" height="100%" 	  
-	xmlns:compo="compo.*"
-	creationComplete="init()" 
-	>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:compo="compo.*"
+		   label="Etablissement"
+		   width="100%" height="100%"
+		   creationComplete="init()" 
+		   >
 	<mx:Script>
 		<![CDATA[
 			
@@ -28,7 +29,7 @@
 			private function init():void{
 				valChanged = false;
 				if(NodeData){
-					this.selectedChild = view;
+					vs.selectedChild = view;
 					F9.setListType(2);
 					F10.setListType(23);
 					F11.setListType(24);
@@ -76,6 +77,7 @@
 			
 		]]>
 	</mx:Script>
+	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
 					 source="Models_DbTable_Gevu_etablissements"
@@ -83,88 +85,90 @@
 		<mx:method name="edit" result="resultHandler(event)" />
 		<mx:method name="remove" result="remove_resultHandler(event)" />
 	</mx:RemoteObject>
+	<mx:ViewStack id="vs" >
+
+		<mx:Canvas id="view" width="100%" height="100%">
+			
+			<mx:VBox>
 	
-	<mx:Canvas id="view" width="100%" height="100%">
-		
-		<mx:VBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="nom" />
-				<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="ref" />
-				<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="adresse" />
-				<mx:TextInput id="F3" width="100%" data="{NodeData.adresse}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="commune" />
-				<mx:TextInput id="F4" width="100%" data="{NodeData.commune}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="pays" />
-				<mx:TextInput id="F5" width="100%" data="{NodeData.pays}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="code_postal" />
-				<mx:TextInput id="F6" width="100%" data="{NodeData.code_postal}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="contact_proprietaire" />
-				<mx:TextInput id="F7" width="100%" data="{NodeData.contact_proprietaire}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="contact_delegataire" />
-				<mx:TextInput id="F8" width="100%" data="{NodeData.contact_delegataire}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="reponse_1" />
-				<compo:KeywordsList id="F9" width="100%" selectedIndex="{F9.setKeyword(NodeData.reponse_1)}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="reponse_2" />
-				<compo:KeywordsList id="F10" width="100%" selectedIndex="{F10.setKeyword(NodeData.reponse_2)}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="reponse_3" />
-				<compo:KeywordsList id="F11" width="100%" selectedIndex="{F11.setKeyword(NodeData.reponse_3)}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="reponse_4" />
-				<mx:TextInput id="F12" width="100%" data="{NodeData.reponse_4}" change="valChanged=true;" />
-			</mx:HBox>
-
-			<mx:HBox width="100%">
-				<mx:Label text="reponse_5" />
-				<mx:TextInput id="F13" width="100%" data="{NodeData.reponse_5}" change="valChanged=true;" />
-			</mx:HBox>
-
-		</mx:VBox>
-	</mx:Canvas>
-	<mx:Canvas id="insert" width="100%" height="100%">
-		<mx:VBox>			
-			<mx:HBox width="100%">
-				<mx:Label text="Nom:" />
-				<mx:TextInput id="insNom" width="100%" />
-			</mx:HBox>
-			<mx:HBox>
-				<mx:Button label="Enregistrer" click="insertItem()" />
-			</mx:HBox>
-		</mx:VBox>
-	</mx:Canvas>	
-</mx:ViewStack>
+				<mx:HBox width="100%">
+					<mx:Label text="nom" />
+					<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="ref" />
+					<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="adresse" />
+					<mx:TextInput id="F3" width="100%" data="{NodeData.adresse}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="commune" />
+					<mx:TextInput id="F4" width="100%" data="{NodeData.commune}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="pays" />
+					<mx:TextInput id="F5" width="100%" data="{NodeData.pays}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="code_postal" />
+					<mx:TextInput id="F6" width="100%" data="{NodeData.code_postal}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="contact_proprietaire" />
+					<mx:TextInput id="F7" width="100%" data="{NodeData.contact_proprietaire}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="contact_delegataire" />
+					<mx:TextInput id="F8" width="100%" data="{NodeData.contact_delegataire}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="reponse_1" />
+					<compo:KeywordsList id="F9" width="100%" selectedIndex="{F9.setKeyword(NodeData.reponse_1)}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="reponse_2" />
+					<compo:KeywordsList id="F10" width="100%" selectedIndex="{F10.setKeyword(NodeData.reponse_2)}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="reponse_3" />
+					<compo:KeywordsList id="F11" width="100%" selectedIndex="{F11.setKeyword(NodeData.reponse_3)}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="reponse_4" />
+					<mx:TextInput id="F12" width="100%" data="{NodeData.reponse_4}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="reponse_5" />
+					<mx:TextInput id="F13" width="100%" data="{NodeData.reponse_5}" change="valChanged=true;" />
+				</mx:HBox>
+	
+			</mx:VBox>
+		</mx:Canvas>
+		<mx:Canvas id="insert" width="100%" height="100%">
+			<mx:VBox>			
+				<mx:HBox width="100%">
+					<mx:Label text="Nom:" />
+					<mx:TextInput id="insNom" width="100%" />
+				</mx:HBox>
+				<mx:HBox>
+					<mx:Button label="Enregistrer" click="insertItem()" />
+				</mx:HBox>
+			</mx:VBox>
+		</mx:Canvas>	
+	</mx:ViewStack>
+</mx:Canvas>	
 
