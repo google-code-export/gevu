@@ -14,7 +14,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	    //pour pouvoir charger les classe à la fois dans le serveur amf et avec l'autoloader
 		$moduleLoader->addResourceType('dbgevu', 'Models/DbTable/Gevu', 'Models_DbTable_Gevu');
 		
-  		/*
+		/*
 		Zend_Registry::set("db", $db);
   		
 		$registry = Zend_Registry::getInstance();
