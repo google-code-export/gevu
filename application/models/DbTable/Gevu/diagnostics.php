@@ -152,7 +152,28 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
 		$result = $this->fetchAll($query);
         return $result->toArray(); 
     }
-    
+
+    /*
+     * récupère la liste des réponses
+     * et retourne un tableau.
+     *
+    * @return array
+     */
+    public function getReponses()
+    {
+    	$query = $this->select()
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('diag' => 'gevu_diagnostics'))
+        	->joinInner(array('crit' => 'gevu_criteres'),
+            	'diag.id_critere = crit.id_critere',array('ref','handicateur_moteur','handicateur_auditif','handicateur_visuel','handicateur_cognitif','criteres'))
+        	->joinInner(array('mc' => 'gevu_motsclefs'),
+            	'diag.id_reponse = mc.id_motclef',array('reponse'=>'titre'))
+        	->joinInner(array('l' => 'gevu_lieux'),
+            	'l.id_lieu = diag.id_lieu',array('lib','id_lieu'))
+        	->order(array('diag.id_instant','l.id_lieu'));        
+		$result = $this->fetchAll($query);
+        return $result->toArray(); 
+    }    
     /*
      * Recherche une entrée Gevu_diagnostics avec la valeur spécifiée
      * et retourne cette entrée.

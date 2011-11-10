@@ -283,10 +283,11 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
-     * @param datetime $idLieu
+     * @param integer $idLieu
+     * @param string $order
      * @return array
      */
-    public function getFullPath($idLieu)
+    public function getFullPath($idLieu, $order="lft")
     {
     	$query = $this->select()
         	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
@@ -294,7 +295,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
             ->joinInner(array('parent' => 'gevu_lieux'),
             	'node.lft BETWEEN parent.lft AND parent.rgt',array('lib', 'id_lieu'))
             ->where( "node.id_lieu = ?", $idLieu)
-			->order("parent.lft");        
+			->order("parent.".$order);        
 		$result = $this->fetchAll($query);
         return $result->toArray(); 
     }
