@@ -6,12 +6,18 @@ todo :
 
 -->
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
-  	width="100%" height="100%" layout="absolute" 
-   	xmlns:ns2="compo.*"
-   	creationComplete="login()"
-   	name="gevu_diagnostic" xmlns:form="compo.form.*"
-   >
-		
+				xmlns:ns2="compo.*"
+				xmlns:form="compo.form.*"
+				width="100%" height="100%" creationComplete="login()" layout="absolute"
+				name="gevu_diagnostic" >
+	
+	<mx:Script>
+		<![CDATA[
+			
+			
+		]]>
+	</mx:Script>
+	
 	
 	<mx:Script source="diagScript.as"/>
 
@@ -21,27 +27,39 @@ todo :
 					 fault="faultHandlerService(event, 'GEVU - Diagnostic');"
 					 endpoint="{ENDPOINT_SERVICE}"
 					 >
-		<mx:method name="getNodeRelatedData"	result="displayNodeProperties( event );" />
-		<mx:method name="getXmlNode"	result="updateTreeStructure( event );" />
-		<mx:method name="removeNodeRelatedData"	result=";" />
+		<mx:method name="getNodeRelatedData"	result="displayNodeProperties(event);" />
+		<mx:method name="getXmlNode"	result="updateTreeStructure(event);" />
+		<mx:method name="findLieu"	result="displayReponse(event);" />
 	</mx:RemoteObject>
 	
-	 <mx:Panel title="GEVU - Diagnostic - 0.173" id="boxGen" visible="false" width="100%" height="100%">
+	<mx:Panel title="GEVU - Diagnostic - 0.173" id="boxGen" visible="false" width="100%" height="100%">
 	 	<mx:HBox width="100%">
-	 		<mx:Label text="Données disponibles : " />
-			<mx:ComboBox id="cbBases" labelField="lib" prompt="Choisissez une base de données" change="cbBases_changeHandler(event)" />
+	 		<mx:Label text="Diagnostic(s) disponible(s) : " />
+			<mx:ComboBox id="cbBases" labelField="lib" prompt="Choisissez un diagnostic" change="cbBases_changeHandler(event)" />
 			<mx:CheckBox visible="true" label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" />
-	 	    <mx:LinkButton label="Nettoyer la carte" click="PurgeCarte()"/>
+	 	    <mx:LinkButton visible="false" label="Nettoyer la carte" click="PurgeCarte()"/>
 	 	</mx:HBox>
 	 	<mx:HDividedBox width="100%" height="100%">
-				<mx:Canvas label="TERRITOIRES" width="30%" height="100%">
-			 		<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">
-						<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
-								 height="100%"  width="100%" 
-								 itemOpening="treeItemOpened( event );"
-								 change="treeItemClicked( event );"
-								 horizontalScrollPolicy="on" verticalScrollPolicy="on" />
-			 		</mx:Panel>
+				<mx:Canvas label="TERRITOIRES" width="30%" height="100%" id="cnvTerre" enabled="false">
+					<mx:VBox width="100%" height="100%">
+						<mx:Panel title="Trouver un territoire" width="100%" borderColor="#080808" 
+								  paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3">
+							<mx:HBox width="100%">
+								<mx:Label text="Recherche :" /><mx:TextInput id="txtFind" width="100%" />
+							</mx:HBox>
+							<mx:HBox width="100%">
+								<mx:Button id="btnFind" label="Trouver" click="btnFind_clickHandler(event)" />
+								<mx:Label id="repFind"/>
+							</mx:HBox>
+						</mx:Panel>
+				 		<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">
+							<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
+									 height="100%"  width="100%" 
+									 itemOpening="treeItemOpened( event );"
+									 change="treeItemClicked( event );"
+									 horizontalScrollPolicy="on" verticalScrollPolicy="on" />
+				 		</mx:Panel>
+					</mx:VBox>
 				</mx:Canvas>
 				 
 		   <mx:VBox id="boxDiag" width="100%" height="100%" >
