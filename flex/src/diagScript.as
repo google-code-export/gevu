@@ -23,6 +23,7 @@ import compo.form.parcelles;
 import compo.form.problemes;
 
 import flash.display.DisplayObject;
+import flash.events.MouseEvent;
 import flash.utils.getDefinitionByName;
 
 import mx.collections.ArrayCollection;
@@ -90,6 +91,7 @@ protected function cbBases_changeHandler(event:ListEvent):void
 {
 	idBase = cbBases.selectedItem.id;
 	idBase = idBase.substr(idBase.indexOf("_")+1);
+	cnvTerre.enabled = true;
 	initTreeTerre();
 }
 
@@ -145,6 +147,31 @@ private function treeItemOpened(event:TreeEvent) : void {
 	}
 }
 
+private function btnFind_clickHandler(event:MouseEvent):void
+{
+	if (txtFind.text!=""){
+		roDiagnostique.findLieu(txtFind.text, idBase);
+	}else{
+		Alert.show("Veuillez saisir une recherche", "Recherche d'un lieu");		
+	}
+	
+}
+
+private function displayReponse(event:ResultEvent) : void {
+	
+	var obj:Array = event.result as Array;
+	
+	if(obj.id.length==0){
+		repFind.text = "Pas d'identifiant";
+	}else{
+		
+	}
+	if(obj.lib.length==0){
+		repFind.text += " - Pas de libellé";
+	}else{
+		
+	}
+}
 
 private function treeItemClicked(event:ListEvent) : void {
 	idLieu = event.currentTarget.selectedItem.attribute("idLieu");
@@ -167,11 +194,15 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		var className:String;
 		//vérifie si on traite un objet du modele
 		if(arr.length == 4){
-			className="compo.form."+arr[3];
 			//création dynamique de l'objet
+			className="compo.form."+arr[3];
 			ClassReference = getDefinitionByName(className) as Class;			
 			instance = new ClassReference();
-			instance.NodeData = obj[item];
+			//passage des données
+			if(arr[3]=="diagnostics")
+				instance.NodeData = obj[item];
+			else
+				instance.NodeData = obj[item][0];				
 		}
 		//vérifie la place de l'objet
 		if(item == "ariane"){
