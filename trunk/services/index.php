@@ -4,8 +4,11 @@ require_once( "../param/ParamAppli.php" );
 
 try {
 	/*
+	$idBase = "gevu_new_alceane";
 	$d = new GEVU_Diagnostique();
-	$db = $d->getDb("gevu_new_alceane");
+	$xml = $d->getXmlNode(1,$idBase);
+	$arr = $d->getNodeRelatedData(4870,$idBase);
+	$db = $d->getDb($idBase);
 	$o = new Models_DbTable_Gevu_diagnostics($db);
 	$o->getAllDesc(13);
 	*/
@@ -31,3 +34,4 @@ $response = $server->handle();
     echo "Message: " . $e->getMessage() . "\n";
 }
 echo $response;
+
