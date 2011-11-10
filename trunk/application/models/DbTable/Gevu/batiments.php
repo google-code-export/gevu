@@ -119,54 +119,6 @@ class Models_DbTable_Gevu_batiments extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_batiments 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_batiment","champ"=>"id_batiment","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"nom","champ"=>"nom","visible"=>true),
-    	array("titre"=>"ref","champ"=>"ref","visible"=>true),
-    	array("titre"=>"adresse","champ"=>"adresse","visible"=>true),
-    	array("titre"=>"commune","champ"=>"commune","visible"=>true),
-    	array("titre"=>"pays","champ"=>"pays","visible"=>true),
-    	array("titre"=>"code_postal","champ"=>"code_postal","visible"=>true),
-    	array("titre"=>"contact_proprietaire","champ"=>"contact_proprietaire","visible"=>true),
-    	array("titre"=>"contact_delegataire","champ"=>"contact_delegataire","visible"=>true),
-    	array("titre"=>"contact_gardien","champ"=>"contact_gardien","visible"=>true),
-    	array("titre"=>"horaires_gardien","champ"=>"horaires_gardien","visible"=>true),
-    	array("titre"=>"horaires_batiment","champ"=>"horaires_batiment","visible"=>true),
-    	array("titre"=>"superficie_parcelle","champ"=>"superficie_parcelle","visible"=>true),
-    	array("titre"=>"superficie_batiment","champ"=>"superficie_batiment","visible"=>true),
-    	array("titre"=>"date_achevement","champ"=>"date_achevement","visible"=>true),
-    	array("titre"=>"date_depot_permis","champ"=>"date_depot_permis","visible"=>true),
-    	array("titre"=>"date_reha","champ"=>"date_reha","visible"=>true),
-    	array("titre"=>"reponse_1","champ"=>"reponse_1","visible"=>true),
-    	array("titre"=>"reponse_2","champ"=>"reponse_2","visible"=>true),
-    	array("titre"=>"reponse_3","champ"=>"reponse_3","visible"=>true),
-    	array("titre"=>"reponse_4","champ"=>"reponse_4","visible"=>true),
-    	array("titre"=>"reponse_5","champ"=>"reponse_5","visible"=>true),
-    	array("titre"=>"reponse_6","champ"=>"reponse_6","visible"=>true),
-    	array("titre"=>"reponse_7","champ"=>"reponse_7","visible"=>true),
-    	array("titre"=>"reponse_8","champ"=>"reponse_8","visible"=>true),
-    	array("titre"=>"reponse_9","champ"=>"reponse_9","visible"=>true),
-    	array("titre"=>"reponse_10","champ"=>"reponse_10","visible"=>true),
-    	array("titre"=>"reponse_11","champ"=>"reponse_11","visible"=>true),
-    	array("titre"=>"reponse_12","champ"=>"reponse_12","visible"=>true),
-    	array("titre"=>"reponse_13","champ"=>"reponse_13","visible"=>true),
-    	array("titre"=>"reponse_14","champ"=>"reponse_14","visible"=>true),
-    	array("titre"=>"reponse_15","champ"=>"reponse_15","visible"=>true),
-    	array("titre"=>"id_donnee","champ"=>"id_donnee","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_batiments avec la valeur spécifiée
