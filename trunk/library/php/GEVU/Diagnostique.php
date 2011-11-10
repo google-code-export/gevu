@@ -1,46 +1,58 @@
 <?php
 
-class GEVU_Diagnostique{
+class GEVU_Diagnostique extends GEVU_Site{
     
-    var $manager;
-    var $TableNames;
-    
-    function __construct(){    	
-    	
-        $frontendOptions = array(
-            'lifetime' => 1, // temps de vie du cache de 2 heures 7200
-            'automatic_serialization' => true
-        );  
-        $backendOptions = array(
-            // Répertoire où stocker les fichiers de cache
-            'cache_dir' => '../tmp/'
-        ); 
-        // créer un objet Zend_Cache_Core
-        $this->manager = Zend_Cache::factory('Core',
-                                     'File',
-                                     $frontendOptions,
-                                     $backendOptions); 
-    }
+	/**
+	* cherche un lieu à partir d'un texte
+	* renvoie les résultats 
+    * @param string $txtLieu
+    * @param string $idBase
+    * @return Array
+    */
+	public function findLieu($txtLieu, $idBase=false){
+		//connexion à la base
+    	$db = $this->getDb($idBase);
+    	//création de la table
+        $dbL = new Models_DbTable_Gevu_lieux($db);
+        $r = array();
+        //recherche par identifiant
+        $r['id'] = $dbL->findById_lieu($txtLieu);
+        //recherche par lib
+        $r['lib'] = $dbL->findByLib($txtLieu);
+        //ajoute les fils d'ariane pour chaque lieu trouvé
+        //pour compléter l'arbre des territoires
+        $nb = count($r['id']);
+        for ($i = 0; $i < $nb; $i++) {
+        	$arrL = $dbL->getFullPath($r[$i]['id_lieu'],'rgt');
+        	
+        }
+
+        return $r;
+	}
     
     
 	/**
 	 * récupère la descendance d'un noeud au format xml
     * @param int $idLieu
     * @param string $idBase
+    * @param integer $nivMax
     * @return DomDocument
     */
-	public function getXmlNode($idLieu=0, $idBase=false){
-	   $shhash = sha1("GEVU_Diagnostique-getXmlNode-$idBase-$idLieu");
-	   $xml = $this->manager->load($shhash);
+	public function getXmlNode($idLieu=0, $idBase=false, $nivMax=3){
+		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
+	   	$xml = $this->cache->load($c);
         if(!$xml){
     		$xml="";
     		//connexion à la base
     		$db = $this->getDb($idBase);
     		//création de la table
-        	$z = new Models_DbTable_Gevu_lieux($db);
-        	$r = $z->findById_lieu($idLieu);
-        	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".htmlspecialchars($r[0]['lib'])."\" niv=\"".$r[0]['niv']."\" fake=\"0\"";
+        	$dbLieu = new Models_DbTable_Gevu_lieux($db);
+        	$r = $dbLieu->findById_lieu($idLieu);
+        	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".htmlspecialchars($r[0]['lib'])."\" niv=\"".$r[0]['niv']."\" fake=\"0\" >";
+        	$xml.= $this->getXmlEnfant($idLieu, $dbLieu, $nivMax);
+	      	$xml.="</node>\n";
         	
+        	/*
         	$r = $z->findByLieu_parent($idLieu);
         	if(count($r)==0){
         		$xml.=" />\n";
@@ -71,30 +83,35 @@ class GEVU_Diagnostique{
         		}
         		$xml.="</node>\n";
     		}
-    		$this->manager->save($xml, $shhash);
+    		*/
+	    	$this->cache->save($xml, $c);
         }
         $dom = new DomDocument();
         $dom->loadXML($xml);
-    	return $dom;
+        return $dom;
     }
-    
+        
     /**
-     * retourne une connexion à une base de donnée suivant son nom
-    * @param string $idBase
-    * @return Zend_Db_Table
-    */
-    public function getDb($idBase){
-    	
- 		$db = Zend_Db_Table::getDefaultAdapter();
-    	if($idBase){
-    		//change la connexion à la base
-			$arr = $db->getConfig();
-			$arr['dbname']=$idBase;
-			$db = Zend_Db::factory('PDO_MYSQL', $arr);	
-    	}
-    	return $db;
+     * Récupération des enfants d'un lieu
+     *
+     * @param integer $idLieu
+     * @param Models_DbTable_Gevu_lieux $dbLieu
+     * @param integer $nivMax
+     * @param integer $niv
+     * @return string
+     */
+    public function getXmlEnfant($idLieu, $dbLieu, $nivMax=1, $niv=0){
+        $r = $dbLieu->findByLieu_parent($idLieu);
+		$xml ="";
+		foreach ($r as $v){
+        	$xml .="<node idLieu=\"".$v['id_lieu']."\" lib=\"".htmlspecialchars($v['lib'])."\" niv=\"".$v['niv']."\" fake=\"0\" >";
+		    if($nivMax > $niv){
+		    	$xml .= $this->getXmlEnfant($v['id_lieu'], $dbLieu, $nivMax, $niv+1);
+		    }
+		    $xml .="</node>\n";
+        }
+		return $xml;
     }
-    
     
     /**
      * Récupération des données liées à iun lieu
@@ -105,22 +122,22 @@ class GEVU_Diagnostique{
      */
     public function getNodeRelatedData($idLieu=0, $idBase=false){
     
-        $shhash = sha1("GEVU_Diagnostique-NodeRelatedData-$idLieu");
-        $res = $this->manager->load($shhash);
-        
+		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
+	   	$res = $this->cache->load($c);
+    	        
         if(!$res){
             $res = array();
             
             //connexion à la base
     		$db = $this->getDb($idBase);
             
-        	$c = new Models_DbTable_Gevu_lieux($db);
+        	$dbL = new Models_DbTable_Gevu_lieux($db);
         	
-            $res['ariane']=$c->getFullPath($idLieu);
+            $res['ariane']=$dbL->getFullPath($idLieu);
 	        
-			$Rowset = $c->find($idLieu);
+			$Rowset = $dbL->find($idLieu);
 			$lieu = $Rowset->current();
-            $dt = $c->getDependentTables();
+            $dt = $dbL->getDependentTables();
             foreach($dt as $t){
 				$items = $lieu->findDependentRowset($t);
 				if($items->count()){
@@ -137,18 +154,10 @@ class GEVU_Diagnostique{
             	}
 			}
             
-            $this->manager->save($res, $shhash);
+            $this->cache->save($res, $c);
         }
         return $res;
     }
-    
-    /**
-    * @param int $idLieu
-    */
-    function removeNodeRelatedData($idLieu){
-        $shhash = sha1("GEVU_Diagnostique-NodeRelatedData-$idLieu");
-        $res = $this->manager->remove($shhash);
-    }
-    
+        
 }
-?>
+
