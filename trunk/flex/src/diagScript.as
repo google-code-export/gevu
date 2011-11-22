@@ -164,12 +164,43 @@ private function displayReponse(event:ResultEvent) : void {
 	if(obj.id.length==0){
 		repFind.text = "Pas d'identifiant";
 	}else{
+		repFind.text += " - "+ obj.lib.length + " identifiant(s) trouvé(s)";
 		
 	}
 	if(obj.lib.length==0){
 		repFind.text += " - Pas de libellé";
 	}else{
-		
+		repFind.text = repFind.text + " - "+ obj.lib.length + " libellé(s) trouvé(s)";
+		//pour chaque lieu trouvé
+		for(var oL:Object in obj['lib']){
+			//vérifie la présence de chaque niveau du plus global au plus précis
+			var idLieu:int = -1, i:int;
+			for(var oN:Object in oL){
+				var x:XML = treeTree.dataProvider[0].descendants().(@idLieu == oN[0]['id_lieu'])[0];
+				if(x){
+					//ouvre le noeud
+					//conserve l'identifiant pour ajouter les nouveaux noeuds
+					idLieu = oN[0]['id_lieu'];
+				}else{
+					//création du noeud
+					var xN:XML = <node />;
+					xN.attribute("idLieu")=oN[0]['id_lieu'];
+					xN.attribute("lib")=oN[0]['lib'];
+					xN.attribute("niv")=oN[0]['niv'];
+					if(oL.length)
+					xN.attribute("fake")=0;
+					xN.appendChild(event.result);
+				}
+				i++;
+			}			
+			//ajout du noeud
+			var idnoeud:int;
+			idnoeud = x.node.attribute("idLieu");
+			
+			/* add the new real node */
+			treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0].appendChild(x.node.node);
+
+		}
 	}
 }
 
