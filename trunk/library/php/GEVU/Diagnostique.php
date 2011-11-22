@@ -16,21 +16,34 @@ class GEVU_Diagnostique extends GEVU_Site{
         $dbL = new Models_DbTable_Gevu_lieux($db);
         $r = array();
         //recherche par identifiant
-        $r['id'] = $dbL->findById_lieu($txtLieu);
+        $arr = $dbL->findById_lieu($txtLieu);
+        $r['id'] = $this->setResultLieu($arr,$dbL);
         //recherche par lib
-        $r['lib'] = $dbL->findByLib($txtLieu);
-        //ajoute les fils d'ariane pour chaque lieu trouvé
-        //pour compléter l'arbre des territoires
-        $nb = count($r['id']);
-        for ($i = 0; $i < $nb; $i++) {
-        	$arrL = $dbL->getFullPath($r[$i]['id_lieu'],'rgt');
-        	
-        }
-
+        $arr = $dbL->findByLib($txtLieu);
+        $r['lib'] = $this->setResultLieu($arr,$dbL);
+        
         return $r;
 	}
     
-    
+	/**
+	* formate le résultat d'une recherche de lieu 
+    * @param Array $r
+    * @param Models_DbTable_Gevu_lieux $dbLieu
+    * @return Array
+    */
+	public function setResultLieu($r, $dbLieu){
+        $result = array();
+		//pour chaque lieu trouvé
+        $nb = count($r);
+        for ($i = 0; $i < $nb; $i++) {
+        	//ajoute le fil d'ariane du lieux pour l'afficher dans l'aboressence
+        	$arrL = $dbLieu->getFullPath($r[$i]['id_lieu']);
+        	$result[] = $arrL; 
+        }
+		return $result;
+	}
+	
+	
 	/**
 	 * récupère la descendance d'un noeud au format xml
     * @param int $idLieu
@@ -48,42 +61,7 @@ class GEVU_Diagnostique extends GEVU_Site{
     		//création de la table
         	$dbLieu = new Models_DbTable_Gevu_lieux($db);
         	$r = $dbLieu->findById_lieu($idLieu);
-        	$xml.="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".htmlspecialchars($r[0]['lib'])."\" niv=\"".$r[0]['niv']."\" fake=\"0\" >";
-        	$xml.= $this->getXmlEnfant($idLieu, $dbLieu, $nivMax);
-	      	$xml.="</node>\n";
-        	
-        	/*
-        	$r = $z->findByLieu_parent($idLieu);
-        	if(count($r)==0){
-        		$xml.=" />\n";
-        	}
-        	else{
-        		$xml.=">\n";
-        		foreach ($r as $v){
-        			$xml.="<node idLieu=\"".$v['id_lieu']."\" lib=\"".htmlspecialchars($v['lib'])."\" niv=\"".$v['niv']."\" fake=\"0\"";
-        			$s = $z->findByLieu_parent($v['id_lieu']);
-        			if(count($s)==0){
-    	    			$xml.=" />\n";
-        			}else{
-        				//$xml.=">\n<node idLieu=\"-10\" fake=\"1\" />\n</node>\n";
-        				//-----------
-        				$xml.=">\n";
-        				foreach ($s as $w){
-        					$xml.="<node idLieu=\"".$w['id_lieu']."\" lib=\"".htmlspecialchars($w['lib'])."\" niv=\"".$w['niv']."\" fake=\"0\"";
-        					$t = $z->findByLieu_parent($w['id_lieu']);
-        					if(count($t)==0){
-    	    					$xml.=" />\n";
-        					}else{
-        						$xml.=">\n<node idLieu=\"-10\" lib=\"loading...\" fake=\"1\" icon=\"voieIcon\" />\n</node>\n";
-        					}
-        				}
-        				$xml.="</node>\n";
-        				//-----------
-        			}
-        		}
-        		$xml.="</node>\n";
-    		}
-    		*/
+        	$xml = $this->getXmlEnfant($idLieu, $dbLieu, $nivMax);
 	    	$this->cache->save($xml, $c);
         }
         $dom = new DomDocument();
@@ -101,15 +79,29 @@ class GEVU_Diagnostique extends GEVU_Site{
      * @return string
      */
     public function getXmlEnfant($idLieu, $dbLieu, $nivMax=1, $niv=0){
-        $r = $dbLieu->findByLieu_parent($idLieu);
-		$xml ="";
+    	    	
+    	$r = $dbLieu->findByLieu_parent($idLieu);
+		$xml ="";$xmlEnf="";
 		foreach ($r as $v){
         	$xml .="<node idLieu=\"".$v['id_lieu']."\" lib=\"".htmlspecialchars($v['lib'])."\" niv=\"".$v['niv']."\" fake=\"0\" >";
-		    if($nivMax > $niv){
-		    	$xml .= $this->getXmlEnfant($v['id_lieu'], $dbLieu, $nivMax, $niv+1);
-		    }
-		    $xml .="</node>\n";
+        	//vérifie s'il faut afficher les enfants
+        	if($nivMax > $niv){
+		    	//récupère le xml des enfants
+	    		$xml .= $this->getXmlEnfant($v['id_lieu'], $dbLieu, $nivMax, $niv+1);
+        	}else{
+    			$xml .="<node idLieu=\"-10\" lib=\"loading...\" fake=\"1\" icon=\"voieIcon\" />";
+	    	}
+		    $xml .= "</node>\n";				
         }
+        
+        //création de la racine
+    	if($niv==0){
+        	$r = $dbLieu->findById_lieu($idLieu);
+        	$xml ="<node idLieu=\"".$r[0]['id_lieu']."\" lib=\"".htmlspecialchars($r[0]['lib'])."\" niv=\"".$r[0]['niv']."\" fake=\"0\" >"
+        		.$xml
+        		."</node>\n";
+    	}
+        
 		return $xml;
     }
     
