@@ -3,11 +3,14 @@ require_once( "../param/ParamAppli.php" );
 
 
 try {
+	
 	/*
 	$idBase = "gevu_new_alceane";
 	$d = new GEVU_Diagnostique();
-	$xml = $d->getXmlNode(1,$idBase);
-	$arr = $d->getNodeRelatedData(4870,$idBase);
+	$arr = $d->calculDiagForLieu(212,$idBase);
+	$arr = $d->getNodeRelatedData(212,$idBase);
+	$d->findLieu("","antenne",$idBase);
+	$xml = $d->getXmlNode(212,$idBase);
 	$db = $d->getDb($idBase);
 	$o = new Models_DbTable_Gevu_diagnostics($db);
 	$o->getAllDesc(13);
@@ -16,12 +19,9 @@ try {
 $server = new Zend_Amf_Server();
 
 $server->addDirectory(APPLICATION_PATH);
+$server->addDirectory(dirname(__FILE__) .'/../library/php/');
 
-$server->setClass('GEVU_Diagnostique');
-
-	//pour l'authentification
-$server->setClass("AUTH_LoginManager")
-	   ->setClass("AUTH_LoginVO");	
+/*pour l'authentification*/
 $server->setClassMap('LoginVO','AUTH_LoginVO');	
 
 $server->setProduction(false);

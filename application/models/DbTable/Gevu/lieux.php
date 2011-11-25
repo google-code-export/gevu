@@ -214,8 +214,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    
-	/*
+        
+    /*
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -224,8 +224,12 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     public function findByLieu_parent($lieu_parent)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_lieux") )                           
-                    ->where( "g.lieu_parent = ?", $lieu_parent );
+			->from( array("g" => "gevu_lieux") )                           
+			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->joinLeft(array('diag' => 'gevu_diagnostics'),
+                'diag.id_lieu = g.id_lieu',array('nbDiag'=>'COUNT(diag.id_diag)'))
+			->group("id_lieu")
+            ->where( "g.lieu_parent = ?", $lieu_parent );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -322,5 +326,66 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
 
-    
+     /*
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne les reponses aux diagnostics correpsondant à la valeur demandée.
+     *
+     * @param integer $idLieu
+     * @param integer $idReponse
+     * @return array
+     */
+    public function getDiagReponse($idLieu, $idReponse="")
+    {
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('d' => 'gevu_diagnostics'),array('nbDiag'=>'COUNT(d.id_diag)'))
+            ->joinInner(array('le' => 'gevu_lieux'),
+                'le.id_lieu = d.id_lieu',array('nbControle'=>'COUNT(DISTINCT le.id_lieu)'))
+            ->joinInner(array('l' => 'gevu_lieux'),
+                'le.lft BETWEEN l.lft AND l.rgt',array('lib', 'id_lieu'))
+            
+            ->joinLeft(array('c1_0' => 'gevu_criteres'),
+                'c1_0.id_critere = d.id_critere  AND c1_0.handicateur_auditif = 0',array('auditif_0'=>'COUNT(c1_0.id_critere)'))
+            ->joinLeft(array('c2_0' => 'gevu_criteres'),
+                'c2_0.id_critere = d.id_critere  AND c2_0.handicateur_cognitif = 0',array('cognitif_0'=>'COUNT(c2_0.id_critere)'))
+            ->joinLeft(array('c3_0' => 'gevu_criteres'),
+                'c3_0.id_critere = d.id_critere  AND c3_0.handicateur_moteur = 0',array('moteur_0'=>'COUNT(c3_0.id_critere)'))
+            ->joinLeft(array('c4_0' => 'gevu_criteres'),
+                'c4_0.id_critere = d.id_critere  AND c4_0.handicateur_visuel = 0',array('visuel_0'=>'COUNT(c4_0.id_critere)'))
+
+            ->joinLeft(array('c1_1' => 'gevu_criteres'),
+                'c1_1.id_critere = d.id_critere  AND c1_1.handicateur_auditif = 1',array('auditif_1'=>'COUNT(c1_1.id_critere)'))
+            ->joinLeft(array('c2_1' => 'gevu_criteres'),
+                'c2_1.id_critere = d.id_critere  AND c2_1.handicateur_cognitif = 1',array('cognitif_1'=>'COUNT(c2_1.id_critere)'))
+            ->joinLeft(array('c3_1' => 'gevu_criteres'),
+                'c3_1.id_critere = d.id_critere  AND c3_1.handicateur_moteur = 1',array('moteur_1'=>'COUNT(c3_1.id_critere)'))
+            ->joinLeft(array('c4_1' => 'gevu_criteres'),
+                'c4_1.id_critere = d.id_critere  AND c4_1.handicateur_visuel = 1',array('visuel_1'=>'COUNT(c4_1.id_critere)'))
+
+            ->joinLeft(array('c1_2' => 'gevu_criteres'),
+                'c1_2.id_critere = d.id_critere  AND c1_2.handicateur_auditif = 2',array('auditif_2'=>'COUNT(c1_2.id_critere)'))
+            ->joinLeft(array('c2_2' => 'gevu_criteres'),
+                'c2_2.id_critere = d.id_critere  AND c2_2.handicateur_cognitif = 2',array('cognitif_2'=>'COUNT(c2_2.id_critere)'))
+            ->joinLeft(array('c3_2' => 'gevu_criteres'),
+                'c3_2.id_critere = d.id_critere  AND c3_2.handicateur_moteur = 2',array('moteur_2'=>'COUNT(c3_2.id_critere)'))
+            ->joinLeft(array('c4_2' => 'gevu_criteres'),
+                'c4_2.id_critere = d.id_critere  AND c4_2.handicateur_visuel = 2',array('visuel_2'=>'COUNT(c4_2.id_critere)'))
+            
+            ->joinLeft(array('c1_3' => 'gevu_criteres'),
+                'c1_3.id_critere = d.id_critere  AND c1_3.handicateur_auditif = 3',array('auditif_3'=>'COUNT(c1_3.id_critere)'))
+            ->joinLeft(array('c2_3' => 'gevu_criteres'),
+                'c2_3.id_critere = d.id_critere  AND c2_3.handicateur_cognitif = 3',array('cognitif_3'=>'COUNT(c2_3.id_critere)'))
+            ->joinLeft(array('c3_3' => 'gevu_criteres'),
+                'c3_3.id_critere = d.id_critere  AND c3_3.handicateur_moteur = 3',array('moteur_3'=>'COUNT(c3_3.id_critere)'))
+            ->joinLeft(array('c4_3' => 'gevu_criteres'),
+                'c4_3.id_critere = d.id_critere  AND c4_3.handicateur_visuel = 3',array('visuel_3'=>'COUNT(c4_3.id_critere)'))
+            
+            ->where( "l.id_lieu = ?", $idLieu);
+        if ($idReponse!=""){
+        	$query->where("d.id_reponse = ?", $idReponse);
+        }        
+		$result = $this->fetchAll($query);
+        return $result->toArray(); 
+    }
+        
 }
