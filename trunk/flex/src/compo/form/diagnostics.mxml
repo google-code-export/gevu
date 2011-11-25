@@ -3,57 +3,164 @@
 		   xmlns:compo="compo.*"
 		   label="Diagnostics"
 		   width="100%" height="100%"
+		    creationComplete="creationCompleteHandler(event)"
 		   >
 	<mx:Script>
 		<![CDATA[
+			import mx.charts.ChartItem;
+			import mx.charts.chartClasses.ChartBase;
+			import mx.charts.series.items.ColumnSeriesItem;
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;        
+			
+			[Bindable]
+			private var expensesAC:ArrayCollection = new ArrayCollection( [
+				{ Month: "Jan", Expenses: 1500, Amount: 450, Profit: 2000 },
+				{ Month: "Feb", Expenses: 200, Amount: 600, Profit: 1000 },
+				{ Month: "Mar", Expenses: 500, Amount: 300, Profit: 1500 },
+				{ Month: "Apr", Expenses: 1200, Amount: 900, Profit: 1800 },
+				{ Month: "May", Expenses: 575, Amount: 500, Profit: 2400 } ]);			
 			
 			[Bindable] public var NodeData:Object;
+			[Bindable] public var diagData:Array;
 			
-			/*
-			[Bindable]
-			private var dpFlatCrit:ArrayCollection = new ArrayCollection([
-				{instant:"18/02/2011", exis:"Toto", 
-					critere:"le machin est pas bien fait", reponse:"oui", observations:1, problemes:23}, 
-				{instant:"18/02/2011", exis:"Toto", 
-					critere:"le machin est bien", reponse:"non", observations:40000, problemes:23}, 
-				{instant:"18/02/2011", exis:"Tata", 
-					critere:"le machin est pas bien fait", reponse:"oui", observations:400, problemes:23}, 
-				{instant:"18/02/2011", exis:"Toto", 
-					critere:"le machin ", reponse:"oui", observations:4000, problemes:23}, 
-				{instant:"2011", exis:"Toto", 
-					critere:"le machin est pas bien fait", reponse:"oui", observations:40000, problemes:23}, 
-				{instant:"2011", exis:"Toto", 
-					critere:"le machin est bien", reponse:"oui", observations:4050, problemes:23}, 
-				{instant:"2011", exis:"Tata", 
-					critere:"le machin est pas bien fait", reponse:"non", observations:4006600, problemes:23}, 
-				{instant:"2011", exis:"Toto", 
-					critere:"le machin ", reponse:"oui", observations:4400, problemes:23}, 
-			]);
-			*/
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				//diagChart.dataProvider = NodeData;
+				var toto:String;
+				toto = "1";
+				
+			}
+			
+			protected function adgCrit_itemClickHandler(event:ListEvent):void
+			{
+				var s:Object=event.currentTarget.selectedItem;
+				if(s.id_lieu){
+					// récupère les données du diagnostic
+					roDiag.getDiagComplet(s.id_lieu,this.parentApplication.idBase);					
+				}
+				
+			}
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			protected function method1_resultHandler(event:ResultEvent):void
+			{
+				diagData = event.result as Array;
+				dgObservations.dataProvider = diagData['observations'];
+				dgProblemes.dataProvider = diagData['problemes'];
+				dgQuestions.dataProvider = diagData['questions'];
+			}
+			
+			
 		]]>
 	</mx:Script>
+	<mx:RemoteObject id="roDiag"
+		 destination="zend"
+		 source="GEVU_Diagnostique"
+		 fault="faultHandlerService(event, 'GEVU - Diagnostic');"
+		 showBusyCursor="true"
+		 >
+		<mx:method name="getDiagComplet" result="method1_resultHandler(event)" />
+	</mx:RemoteObject>
 	<mx:VBox width="100%" height="100%">
-		
-		<mx:AdvancedDataGrid id="adgCrit"  width="100%" height="100%" color="0x323232" initialize="gcCrit.refresh();">
-			<mx:dataProvider>
-				<mx:GroupingCollection id="gcCrit" source="{NodeData}">
-					<mx:grouping>
-						<mx:Grouping>
-							<mx:GroupingField name="exis"/>
-							<mx:GroupingField name="instant"/>
-						</mx:Grouping>
-					</mx:grouping>
-				</mx:GroupingCollection>
-			</mx:dataProvider>        
-			
+		<mx:HBox>
+			<mx:AdvancedDataGrid id="adgCrit"  width="100%" height="100%" color="0x323232"
+								 initialize="gcCrit.refresh();"
+								 itemClick="adgCrit_itemClickHandler(event)"
+								 >
+				<mx:dataProvider>
+					<mx:GroupingCollection id="gcCrit" source="{NodeData}">
+						<mx:grouping>
+							<mx:Grouping>
+								<mx:GroupingField name="controle"/>
+								<mx:GroupingField name="exis"/>
+								<mx:GroupingField name="instant"/>
+							</mx:Grouping>
+						</mx:grouping>
+					</mx:GroupingCollection>
+				</mx:dataProvider>        		
+				<mx:columns>
+					<mx:AdvancedDataGridColumn dataField="commentaires" headerText="Diagnostics"/>
+				</mx:columns>
+			</mx:AdvancedDataGrid>
+			<mx:ColumnChart id="diagChart" 
+							height="207" 
+							width="350" 
+							showDataTips="true" 
+							dataProvider="{NodeData}" 
+							selectionMode="multiple"
+							>
+				<mx:series>
+					<mx:ColumnSeries id="series1" 
+									 yField="nbProbleme" 
+									 displayName="Expenses" 
+									 selectable="true"
+									 /> 
+					<mx:ColumnSeries id="series2" 
+									 yField="nbReponse" 
+									 displayName="Amount" 
+									 selectable="true"
+									 /> 
+					<mx:ColumnSeries id="series3" 
+									 yField="nbObservation" 
+									 displayName="Profit" 
+									 selectable="true"
+									 /> 
+				</mx:series>            
+				<mx:horizontalAxis>
+					<mx:CategoryAxis categoryField="controle"/>
+				</mx:horizontalAxis>                        
+			</mx:ColumnChart>
+		</mx:HBox>
+		<mx:DataGrid id="dgQuestions" height="100%" width="100%">
 			<mx:columns>
-				<mx:AdvancedDataGridColumn dataField="criteres" headerText="diagnostics"/>
-				<mx:AdvancedDataGridColumn dataField="reponse"/>
-				<mx:AdvancedDataGridColumn dataField="observations"/>
-				<mx:AdvancedDataGridColumn dataField="problemes"/>
+				<mx:DataGridColumn dataField="id_diag" visible="false" />
+				<mx:DataGridColumn dataField="ref" />
+				<mx:DataGridColumn dataField="handicateur_moteur" />
+				<mx:DataGridColumn dataField="handicateur_auditif" />
+				<mx:DataGridColumn dataField="handicateur_visuel" />
+				<mx:DataGridColumn dataField="handicateur_cognitif" />
+				<mx:DataGridColumn dataField="criteres" />
 			</mx:columns>
-		</mx:AdvancedDataGrid>
+		</mx:DataGrid>
+		<mx:HBox width="100%" height="100%">
+			<mx:DataGrid id="dgProblemes" height="100%">
+				<mx:columns>
+					<mx:DataGridColumn dataField="id_probleme" visible="false" />
+					<mx:DataGridColumn dataField="num_marker" />
+					<mx:DataGridColumn dataField="mesure" />
+					<mx:DataGridColumn dataField="observations" />
+					<mx:DataGridColumn dataField="fichier" />
+					<mx:DataGridColumn dataField="doc" />
+					<mx:DataGridColumn dataField="maj" />
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:DataGrid id="dgObservations" height="100%">
+				<mx:columns>	 	 	
+					<mx:DataGridColumn dataField="id_observations" visible="false"/>
+					<mx:DataGridColumn dataField="id_reponse"/>
+					<mx:DataGridColumn dataField="num_marker"/>
+					<mx:DataGridColumn dataField="lib"/>
+					<mx:DataGridColumn dataField="maj" />
+				</mx:columns>
+			</mx:DataGrid>
+			
+		</mx:HBox>
 	</mx:VBox>
 	
 

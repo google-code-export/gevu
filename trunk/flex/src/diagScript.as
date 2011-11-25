@@ -27,8 +27,11 @@ import flash.events.MouseEvent;
 import flash.utils.getDefinitionByName;
 
 import mx.collections.ArrayCollection;
+import mx.collections.ICollectionView;
+import mx.collections.XMLListCollection;
 import mx.containers.Canvas;
 import mx.controls.Alert;
+import mx.controls.LinkButton;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
 import mx.managers.PopUpManager;
@@ -42,7 +45,9 @@ import mx.rpc.events.ResultEvent;
 private var TreeObject:XML;
 private var xmlTree:XML
 private var idLieu:int;
-private var idBase:String 
+public var idBase:String; 
+private var arrSelect:Array;
+private var objLieuFind:Array; 
 
 //création des références d'objet pour la création dynamique
 private var o1:compo.ariane;
@@ -107,7 +112,6 @@ public function initTreeTerre():void{
 	treeTree.dataProvider=xmlTree;
 	roDiagnostique.getXmlNode(1,idBase);
 	treeTree.showRoot=false;	
-	
 }
 
 public function ForceCalcul():void{
@@ -149,8 +153,12 @@ private function treeItemOpened(event:TreeEvent) : void {
 
 private function btnFind_clickHandler(event:MouseEvent):void
 {
-	if (txtFind.text!=""){
-		roDiagnostique.findLieu(txtFind.text, idBase);
+	//sauvegarde le tree
+	treeTree.dataProvider = xmlTree;
+	if (txtFind.text!="" && event.target.id == "btnFind"){
+		roDiagnostique.findLieu("",txtFind.text, idBase);
+	}else if(idFind.text!="" && event.target.id == "btnFindId"){
+		roDiagnostique.findLieu(idFind.text,"", idBase);
 	}else{
 		Alert.show("Veuillez saisir une recherche", "Recherche d'un lieu");		
 	}
@@ -159,49 +167,90 @@ private function btnFind_clickHandler(event:MouseEvent):void
 
 private function displayReponse(event:ResultEvent) : void {
 	
-	var obj:Array = event.result as Array;
+	objLieuFind = event.result as Array;
+	arrSelect = new Array;
 	
-	if(obj.id.length==0){
-		repFind.text = "Pas d'identifiant";
-	}else{
-		repFind.text += " - "+ obj.lib.length + " identifiant(s) trouvé(s)";
-		
-	}
-	if(obj.lib.length==0){
-		repFind.text += " - Pas de libellé";
-	}else{
-		repFind.text = repFind.text + " - "+ obj.lib.length + " libellé(s) trouvé(s)";
-		//pour chaque lieu trouvé
-		for(var oL:Object in obj['lib']){
-			//vérifie la présence de chaque niveau du plus global au plus précis
-			var idLieu:int = -1, i:int;
-			for(var oN:Object in oL){
-				var x:XML = treeTree.dataProvider[0].descendants().(@idLieu == oN[0]['id_lieu'])[0];
-				if(x){
-					//ouvre le noeud
-					//conserve l'identifiant pour ajouter les nouveaux noeuds
-					idLieu = oN[0]['id_lieu'];
-				}else{
-					//création du noeud
-					var xN:XML = <node />;
-					xN.attribute("idLieu")=oN[0]['id_lieu'];
-					xN.attribute("lib")=oN[0]['lib'];
-					xN.attribute("niv")=oN[0]['niv'];
-					if(oL.length)
-					xN.attribute("fake")=0;
-					xN.appendChild(event.result);
-				}
-				i++;
-			}			
-			//ajout du noeud
-			var idnoeud:int;
-			idnoeud = x.node.attribute("idLieu");
-			
-			/* add the new real node */
-			treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0].appendChild(x.node.node);
+	FindId.removeAllChildren();
+	FindLib.removeAllChildren();
 
+	if(objLieuFind.id.length!=0){
+		//repFindId.text = objLieuFind.lib.length + " identifiant(s) trouvé(s)";
+		treeSelectFind("id");
+		treeAfficheFind("id");
+	}
+	if(objLieuFind.lib.length!=0){
+		//repFindLib.text = objLieuFind.lib.length + " libellé(s) trouvé(s)";
+		treeSelectFind("lib");
+		treeAfficheFind("lib");
+	}
+}
+
+private function treeAfficheFind(type:String) : void {
+	for each(var oL:Object in objLieuFind[type]){
+		var lnk:LinkButton = new LinkButton;
+		lnk.label = oL.ariane[oL.ariane.length-1].lib;
+		lnk.data = oL.tree;
+		lnk.addEventListener(MouseEvent.CLICK, treeChargeFind);
+		if(type=="id"){
+			FindId.addChild(lnk);
+		}
+		if(type=="lib"){
+			FindLib.addChild(lnk);
 		}
 	}
+}
+
+private function treeChargeFind(event:MouseEvent):void{
+	//met à jour le tree
+	treeTree.dataProvider = event.target.data;
+	//ouvre les item
+	treeTree.openItems = event.target.data..node;
+}
+
+
+protected function btnShowAll_clickHandler(event:MouseEvent):void
+{
+	treeTree.dataProvider = xmlTree;
+	treeTree.openItems = xmlTree;
+}
+
+
+private function treeSelectFind(type:String) : void {
+	//pour chaque lieu trouvé
+	for each(var oL:Object in objLieuFind[type]){
+		//vérifie la présence de chaque niveau du plus global au plus précis
+		var idLieu:int = -1, i:int=1;
+		for each(var oN:Object in oL.ariane){
+			var x:XML = treeTree.dataProvider[0].descendants().(@idLieu == oN['id_lieu'])[0];
+			if(x){
+				//vérifie s'il faut charger les enfants du noeud
+				if(x[0].node.@fake=="1"){
+					roDiagnostique.getXmlNode(oN['id_lieu'],idBase);
+				}
+				//ouvre le noeud
+				treeTree.expandItem(x,true);
+				//garde le noeud pour le sélectionner
+				arrSelect.push(x);
+				//conserve l'identifiant pour ajouter les nouveaux noeuds
+				idLieu = oN['id_lieu'];
+			}else{
+				//création du noeud
+				roDiagnostique.getXmlNode(oN['id_lieu'],idBase);
+				var xN:XML = <node />;
+				xN.@idLieu = oN['id_lieu'];
+				xN.@lib = oN['lib'];
+				xN.@niv = oN['niv'];
+				//fake à 1 pour le chargement des données
+				xN.@fake = 1;
+				treeTree.dataProvider[0].descendants().(@idLieu == idLieu)[0].appendChild(xN.node);
+				//fake à 0 pour la selection du noeud
+				xN.@fake = 0;
+				arrSelect.push(xN.node);
+			}
+			i++;
+		}			
+	}
+	treeTree.selectedItems=arrSelect;
 }
 
 private function treeItemClicked(event:ListEvent) : void {
@@ -230,10 +279,11 @@ private function displayNodeProperties(event:ResultEvent) : void {
 			ClassReference = getDefinitionByName(className) as Class;			
 			instance = new ClassReference();
 			//passage des données
-			if(arr[3]=="diagnostics")
-				instance.NodeData = obj[item];
-			else
-				instance.NodeData = obj[item][0];				
+			if(arr[3]=="diagnostics"){
+				instance.NodeData = obj[item];	
+			}else{
+				instance.NodeData = obj[item][0];
+			}
 		}
 		//vérifie la place de l'objet
 		if(item == "ariane"){
@@ -247,6 +297,9 @@ private function displayNodeProperties(event:ResultEvent) : void {
 }
 
 private function updateTreeStructure(event:ResultEvent) : void {
+	
+	if(!event.result) return;
+	
 	/* get the id of the node */
 	var x:XML = <root></root>;
 	x.appendChild(event.result);
@@ -256,6 +309,18 @@ private function updateTreeStructure(event:ResultEvent) : void {
 	/* add the new real node */
 	treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0].appendChild(x.node.node);
 	
+	if(arrSelect){
+		//ajoute le noeud à la sélection
+		x = treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0];
+		treeTree.expandItem(x,true);
+		arrSelect.push(x);
+		treeTree.selectedItems = arrSelect;
+	}
+
 	/* delete the old fake one */
 	delete  treeTree.dataProvider[0].descendants().(@idLieu==idnoeud)[0].children()[0];
+
+	//conserve les data du tree complet
+	xmlTree = treeTree.dataProvider[0] as XML;
+	
 }
