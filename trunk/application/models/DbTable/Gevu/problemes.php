@@ -121,29 +121,6 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_problemes 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_probleme","champ"=>"id_probleme","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_critere","champ"=>"id_critere","visible"=>true),
-    	array("titre"=>"num_marker","champ"=>"num_marker","visible"=>true),
-    	array("titre"=>"mesure","champ"=>"mesure","visible"=>true),
-    	array("titre"=>"observations","champ"=>"observations","visible"=>true),
-    	array("titre"=>"fichier","champ"=>"fichier","visible"=>true),
-    	array("titre"=>"doc","champ"=>"doc","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"id_donnee","champ"=>"id_donnee","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_problemes avec la valeur spécifiée
