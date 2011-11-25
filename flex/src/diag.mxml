@@ -25,7 +25,7 @@ todo :
 					 destination="zend"
 					 source="GEVU_Diagnostique"
 					 fault="faultHandlerService(event, 'GEVU - Diagnostic');"
-					 endpoint="{ENDPOINT_SERVICE}"
+					 showBusyCursor="true"
 					 >
 		<mx:method name="getNodeRelatedData"	result="displayNodeProperties(event);" />
 		<mx:method name="getXmlNode"	result="updateTreeStructure(event);" />
@@ -45,11 +45,19 @@ todo :
 						<mx:Panel title="Trouver un territoire" width="100%" borderColor="#080808" 
 								  paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3">
 							<mx:HBox width="100%">
-								<mx:Label text="Recherche :" /><mx:TextInput id="txtFind" width="100%" />
+								<mx:Label text="Recherche un libellé :" /><mx:TextInput id="txtFind" width="100%" /><mx:Button id="btnFind" label="Trouver" click="btnFind_clickHandler(event)" />
 							</mx:HBox>
 							<mx:HBox width="100%">
-								<mx:Button id="btnFind" label="Trouver" click="btnFind_clickHandler(event)" />
-								<mx:Label id="repFind"/>
+								<mx:Label text="Recherche un identifiant :" /><mx:TextInput id="idFind" width="100%" /><mx:Button id="btnFindId" label="Trouver" click="btnFind_clickHandler(event)" />
+							</mx:HBox>
+							<mx:LinkButton id="btnShowAll" label="Afficher tous les noeuds" click="btnShowAll_clickHandler(event)" />
+							<mx:HBox width="100%">
+								<mx:VBox id="FindId" width="100%" borderStyle="solid"
+										 borderThickness="2">
+								</mx:VBox>
+								<mx:VBox id="FindLib" width="100%" borderStyle="solid"
+										 borderThickness="2">
+								</mx:VBox>
 							</mx:HBox>
 						</mx:Panel>
 				 		<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">
