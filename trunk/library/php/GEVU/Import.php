@@ -1,6 +1,98 @@
 <?php
 class GEVU_Import{
-
+	
+	var $dbCr;
+	
+	public function addScenario($file){
+		try {
+		
+		//charge le fichier de scenario
+		$xml = simplexml_load_file($file);
+		
+		//création des tables
+		//$idBase = "gevu_new_alceane";
+		$site = new GEVU_Site();
+		$db = $site->getDb($idBase);
+		$dbS = new Models_DbTable_Gevu_scenario($db);
+		$dbSc = new Models_DbTable_Gevu_scenes($db);
+		$this->dbCr = new Models_DbTable_Gevu_criteres($db);
+		
+		//on crée un scénario pour le fichier
+		$idS = $dbS->ajouter(array("lib"=>"fichier scenarisation.xml"));
+		//on boucle sur les grilles pour créer les paramètres
+		//[{"num":0,"etapes":[{"id_scene":24,"id_type_controle":"8"}]},{"num":1,"etapes":[]}]
+		$etapes = "[";
+		$i=0;
+		foreach ($xml->grille as $grille) {
+			//création des étapes
+			$etapes .= '{"num":'.$i.',"etapes":[';
+			//boucle pour créer les étapes
+			//[{"idCritNU":"-1","idCritSE":"
+			//<node idCrit=\"-1\" ref=\"critères\" isBranch=\"true\">\n  
+			//	<node id_critere=\"140\" ref=\"3_cr_ent_01 : Oui\" isBranch=\"true\" CondRep=\"2_1\">\n    
+			//		<node ref=\"3_cr_ent_02\" criteres=\"\" isBranch=\"false\"/>\n
+			//	</node>\n  
+			//	<node id_critere=\"142\" ref=\"3_cr_ent_03\" isBranch=\"false\" CondRep=\"\"/>\n
+			//</node>"}]
+			$crit = -1;
+			foreach ($grille->question as $question) {
+				if($crit == -1){
+					//récupération du type de controle
+					$crit = $this->dbCr->findByRef($question["id"]);
+					//création d'une nouvelle scène
+					$idSc = $dbSc->ajouter(array("id_scenario"=>$idS,"type"=>"DiagTypeControle_".$crit["id_type_controle"]));
+					$scene = '[{"idCritNU":"-1","idCritSE":"<node idCrit=\"-1\" ref=\"critères\" isBranch=\"true\">\n';									
+				}
+				//concaténation des paramètres
+				$scene .= $this->addSceneParam($question);
+			}
+			//mise à jour des paramètres
+			$dbSc->edit($idSc, array('params'=>$scene.'</node>"}]','xml'=>$scene.'</node>'));
+			$etapes .= '{"id_scene":'.$idSc.',"id_type_controle":"'.$crit["id_type_controle"].'"}]},';
+			$i++;
+		}
+		//on fini par une étape vide
+		$etapes .= '{"num":'.$i.',"etapes":[]}]';
+		$dbS->edit($idS, array("params"=>$etapes));
+		
+		}catch (Zend_Exception $e) {
+			// Appeler Zend_Loader::loadClass() sur une classe non-existante
+          	//entrainera la levée d'une exception dans Zend_Loader
+          	echo "Récupère exception: " . get_class($e) . "\n";
+          	echo "Message: " . $e->getMessage() . "\n";
+          	// puis tout le code nécessaire pour récupérer l'erreur
+		}		
+	}
+	public function addSceneParam($question, $crit=false){
+		
+		if(!$crit) $crit = $this->dbCr->findByRef($question["id"]);
+				
+		if($question['reponse']){
+			switch ($question['reponse']) {
+				case 1:
+					$mot="Oui";
+					break;
+				case 2:
+					$mot="Non";
+					break;
+				case 124:
+					$mot="N. A.";
+					break;
+			}
+			if($question['reponse']==1)$mot="Oui"; else $mot="non"; 
+			$scene = '<node id_critere=\"'.$crit["id_critere"].'\" ref=\"'.$crit["ref"].' : '.$mot.'\" isBranch=\"true\" CondRep=\"2_'.$question['reponse'].'\" >\n';
+		}else{
+			$scene = '<node id_critere=\"'.$crit["id_critere"].'\" ref=\"'.$crit["ref"].'\" criteres=\"\" isBranch=\"false\" >\n';			
+		}
+		if($question->count() > 1 ){
+			foreach ($question->children() as $child) {
+				$scene .= $this->addSceneParam($child);  
+			}
+		}
+		$scene .= '</node>\n';  
+		return $scene; 									
+	}
+	
 	public function addDoc($data){
 
 		try {
