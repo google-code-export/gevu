@@ -4,6 +4,7 @@ class GEVU_Site{
     
     var $cache;
 	var $idBase;
+    var $idExi;
     
     function __construct(){    	
     	

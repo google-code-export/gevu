@@ -6,25 +6,147 @@ class GEVU_Diagnostique extends GEVU_Site{
 	* calcul le diagnostic d'un lieu
 	* et renvoie les résultats 
     * @param string $idLieu
+    * @param int $idExi
     * @param string $idBase
     * @return Array
     */
-	public function calculDiagForLieu($idLieu, $idBase=false){
-		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
+	public function calculDiagForLieu($idLieu, $idInstant=-1, $idBase=false){
+		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idInstant."_".$idBase; 
 	   	$r = $this->cache->load($c);
         if(!$r){
 			$this->idBase = $idBase;
+			
 			//connexion à la base
 	    	$db = $this->getDb($idBase);
-	    	//création de la table
-	        $dbL = new Models_DbTable_Gevu_lieux($db);
+
+	    	//création des tables
+	        $dbD = new Models_DbTable_Gevu_diagnostics($db);
 	        
+	        if($idInstant==-1){
+	        	//marque les derniers diagnostics
+	        	$dbD->setLastDiagForLieu($idLieu);
+	        }
+
 	        //récupère les diags oui
-	        $r['DiagOui'] = $dbL->getDiagReponse($idLieu, 1);
+	        $r['DiagOui'] = $dbD->getDiagReponse($idLieu, $idInstant, 1);
 	        //récupère les diags non
-	        $r['DiagNon'] = $dbL->getDiagReponse($idLieu, 2);
+	        $r['DiagNon'] = $dbD->getDiagReponse($idLieu, $idInstant, 2);
 	        //récupère tous les diags
-	        $r['DiagTot'] = $dbL->getDiagReponse($idLieu);
+	        $r['DiagTot'] = $dbD->getDiagReponse($idLieu, $idInstant);
+
+	        //calcule les handicateurs
+			$r['handicateur']['auditif'] = $this->getHandicateur("auditif",$r);
+			$r['handicateur']['cognitif'] = $this->getHandicateur("cognitif",$r);
+			$r['handicateur']['moteur'] = $this->getHandicateur("moteur",$r);
+			$r['handicateur']['visuel'] = $this->getHandicateur("visuel",$r);	        
+	        
+			//calcul les stats
+			$r['stat'] = $this->getArrStat($idLieu, $r);
+			
+	        $this->cache->save($r, $c);
+        }        
+	        
+        return $r;
+	}
+	
+	/**
+	* calcul le XML pour l'affichage des stats
+	* 
+    * @param string $idLieu
+    * @param array $r
+    * @return string
+    */
+	function getXmlStat($idLieu, $r){
+		$xml = "<EtatDiag idSite='".$this->idBase."' idLieu='".$idLieu."' TauxCalc='0 sur 0' >";
+		foreach ($r['handicateur'] as $k=>$v) {
+			$xml .= "<Obstacles id='".$k."' ><niv0>".$v['applicable']."</niv0><niv1>".$r['DiagNon'][0][$k."_1"]."</niv1><niv2>".$r['DiagNon'][0][$k."_2"]."</niv2><niv3>".$r['DiagNon'][0][$k."_3"]."</niv3><handi>".$v[0]."</handi></Obstacles>";
+		}
+		$xml .= "</EtatDiag>";
+
+		return $xml;
+	}
+	
+	/**
+	* calcul un tableau pour l'affichage des stats
+	* 
+    * @param string $idLieu
+    * @param array $r
+    * @return array
+    */
+	function getArrStat($idLieu, $r){
+		$arr = array();
+		foreach ($r['handicateur'] as $k=>$v) {
+			$arr['EtatDiag'][] = array('id'=>$k,'niv0'=>$v['applicable'],'niv1'=>$r['DiagNon'][0][$k."_1"],'niv2'=>$r['DiagNon'][0][$k."_2"],'niv3'=>$r['DiagNon'][0][$k."_3"],'handi'=>$v[0]);
+		}
+		return $arr;
+	}
+	
+	/**
+	* calcul l'handicateur pour une déficience
+	* 
+    * @param string $typeDef
+    * @param array $arrDiag
+    * @return array
+    */
+	function getHandicateur($typeDef, $arrDiag){
+		
+		$HandiObst = $arrDiag['DiagNon'][0][$typeDef."_1"]
+			+($arrDiag['DiagNon'][0][$typeDef."_2"]*2)
+			+($arrDiag['DiagNon'][0][$typeDef."_3"]*3);
+			  
+		$HandiAppli = $arrDiag['DiagOui'][0][$typeDef."_1"]
+			+($arrDiag['DiagOui'][0][$typeDef."_2"])
+			+($arrDiag['DiagOui'][0][$typeDef."_3"]);
+		
+		$Handi3 = $arrDiag['DiagNon'][0][$typeDef."_3"];
+					
+		if($HandiAppli==0)
+			return array("A","obstacle"=>$HandiObst,"applicable"=>$HandiAppli,"coef"=>0);	
+		//calcul le coefficient d'handicateur
+		$handi = $HandiObst/$HandiAppli;
+		//calcule la lettre correspond au coefficient
+		//suivant l'interval et suivant la contrainte de niveau trois
+		if($handi>=0 && $handi<=0.2 && $Handi3==0)	
+			return array("A","obstacle"=>$HandiObst,"applicable"=>$HandiAppli,"coef"=>$handi);	
+		if($handi>0.2 && $handi<=0.4 && $Handi3==0)	
+			return array("B","obstacle"=>$HandiObst,"applicable"=>$HandiAppli,"coef"=>$handi);	
+		//attention on r�initialise l'interval pour afficher les cas pr�c�dent ayant un Handi 3
+		// 0.4 devient 0	
+		if($handi>=0 && $handi<=0.6)	
+			return array("C","obstacle"=>$HandiObst,"applicable"=>$HandiAppli,"coef"=>$handi);	
+		if($handi>0.6 && $handi<=0.8)	
+			return array("D","obstacle"=>$HandiObst,"applicable"=>$HandiAppli,"coef"=>$handi);	
+		if($handi>0.8)	
+			return array("E","obstacle"=>$HandiObst,"applicable"=>$HandiAppli,"coef"=>$handi);	
+	}	
+
+	/**
+	* renvoie le diagnostic d'un lieu
+    * @param string $idLieu
+    * @param int $idExi
+    * @param string $idBase
+    * @return Array
+    */
+	public function getDiagForLieu($idLieu, $idExi, $idBase=false){
+		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idExi."_".$idBase; 
+	   	$r = $this->cache->load($c);
+        if(!$r){
+			$this->idBase = $idBase;
+			$this->idExi = $idExi;
+			
+			//connexion à la base
+	    	$db = $this->getDb($idBase);
+
+	    	//création des tables
+	        $dbD = new Models_DbTable_Gevu_diagnostics($db);
+	        
+	        //récupère les campagnes pour le lieu
+	        $r = $dbD->getCampagnes($idLieu);
+	        $nb = count($r);
+	        for ($i = 0; $i < $nb; $i++) {        	
+		        //récupère les diags 
+		        $r[$i]['diag'] = $this->calculDiagForLieu($idLieu, $r[$i]["id_instant"]);
+	        }
 	        
 	        $this->cache->save($r, $c);
         }        
@@ -153,11 +275,14 @@ class GEVU_Diagnostique extends GEVU_Site{
     public function getXmlEnfant($idLieu, $dbLieu, $nivMax=1, $niv=0){
     	    	
     	$r = $dbLieu->findByLieu_parent($idLieu);
-		$xml ="";$xmlEnf="";
+		$xml ="";
 		foreach ($r as $v){
         	$xml .= $this->getXmlLieu($v);
         	//vérifie s'il faut afficher les enfants
-        	if($v['nbDiag']>0) return "";
+        	if($v['nbDiag']>0){
+				$xml = "";
+        		break;        		
+        	} 
         	if($nivMax > $niv){
 		    	//récupère le xml des enfants
 	    		$xml .= $this->getXmlEnfant($v['id_lieu'], $dbLieu, $nivMax, $niv+1);
@@ -219,16 +344,18 @@ class GEVU_Diagnostique extends GEVU_Site{
      * Récupération des données liées à iun lieu
      *
      * @param int $idLieu
+     * @param int $idExi
      * @param string $idBase
      * @return array
      */
-    public function getNodeRelatedData($idLieu=0, $idBase=false){
+    public function getNodeRelatedData($idLieu, $idExi, $idBase=false){
     
-		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
+		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idExi."_".$idBase; 
 	   	$res = $this->cache->load($c);
     	        
         if(!$res){
             $res = array();
+            $this->idExi = $idExi;
             
             //connexion à la base
     		$db = $this->getDb($idBase);
@@ -253,9 +380,9 @@ class GEVU_Diagnostique extends GEVU_Site{
 					//vérifie si on traite un cas particulier
 	            	if($t=="Models_DbTable_Gevu_diagnostics" || $t=="Models_DbTable_Gevu_problemes"  || $t=="Models_DbTable_Gevu_observations" ){
 	            		//récupère les informations seulement si ce n'est pas déjà fait
-	            		// car une même requête renvoie les infromations des 3 tables
+	            		// car une même requête renvoie les informations des 3 tables
 	            		if(!isset($res["___diagnostics"])){
-				        	$res["___diagnostics"] = $d->getCampagnes($idLieu);			
+				        	$res["___diagnostics"] = $this->getDiagForLieu($idLieu, $idExi, $idBase);			
 	            		}	
 	            	}else{
 						$res[$t]=$items->toArray();
@@ -268,12 +395,15 @@ class GEVU_Diagnostique extends GEVU_Site{
 				if($r['nbDiag']>0){
 					//récupère les informations de l'enfant
 					//$resEnf = $this->getNodeRelatedData($r['id_lieu'],$idBase);
-					$resEnf = $d->getCampagnes($r['id_lieu']);
-					if(count($res["___diagnostics"])== 0)$res["___diagnostics"]=$resEnf;
-					else $res["___diagnostics"] = array_merge($res["___diagnostics"], $resEnf);			
+					//$resEnf = $d->getCampagnes($r['id_lieu']);
+					$resEnf = $this->getDiagForLieu($r['id_lieu'], $idExi, $idBase);
+					if(count($res["___diagnostics"]["enfants"])== 0)$res["___diagnostics"]["enfants"]=$resEnf;
+					else $res["___diagnostics"]["enfants"] = array_merge($res["___diagnostics"]["enfants"], $resEnf);			
 				}
 			}
-            
+			//ajoute le dernier diagnostic pour le lieu
+	        $res["___diagnostics"]['diag'] = $this->calculDiagForLieu($idLieu,-1,$idBase);
+			
             $this->cache->save($res, $c);
         }
         return $res;
