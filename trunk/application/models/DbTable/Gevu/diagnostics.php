@@ -280,6 +280,21 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     /*
+     * Recherche des entrées Gevu_diagnostics pour un utilisateur
+     * et retourne ces entrées.
+     *
+     * @param int $idExi
+     */
+    public function findByExi($idExi)
+    {
+        $query = $this->select()
+                ->from( array("g" => "gevu_diagnostics") )                           
+        		->joinInner(array('i' => 'gevu_instant'),'i.id_instant = g.id_instant')
+                ->where( "i.id_exi = ?", $idExi);
+                    
+        return $this->fetchAll($query)->toArray(); 
+    }
+    /*
      * Recherche une entrée Gevu_diagnostics avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -308,5 +323,161 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
+    /*
+     * Recherche les instants lié aux diagnostics
+     * et retourne cette entrée.
+     *
+     */
+    public function findInstants()
+    {
+        $query = $this->select()
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('d' => 'gevu_diagnostics'),array('nbDiag'=>'COUNT(d.id_diag)'))                      
+        	->joinInner(array('i' => 'gevu_instants'),
+            	'd.id_instant = i.id_instant',array('instant'=>"DATE_FORMAT(maintenant,'%d %M %Y')",'id_instant','ici','nom','commentaires'))
+        	->joinInner(array('e' => 'gevu_exis'),
+            	'i.id_exi = e.id_exi',array('exis'=>'nom'))
+       		->group("d.id_instant");
+    	
+        return $this->fetchAll($query)->toArray(); 
+    }
+
+    /*
+     * Recherche le dernier diagnostics pour un lieu
+     * et retourne cette entrée.
+     * 
+     * @param int $idLieu
+     *
+     */
+    public function findLastDiagForLieu($idLieu)
+    {
+        $query = $this->select()
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('d' => 'gevu_diagnostics'),array('id_lieu'))                      
+        	->joinInner(array('i' => 'gevu_instants'),
+            	'd.id_instant = i.id_instant',array('lastinstant'=>"MAX(i.id_instant)"))
+            ->joinInner(array('le' => 'gevu_lieux'),
+                'le.id_lieu = d.id_lieu',array('lib'))
+            ->joinInner(array('l' => 'gevu_lieux'),
+                'le.lft BETWEEN l.lft AND l.rgt',array('lib'))
+            ->where('l.id_lieu = ? ',$idLieu)
+       		->group("d.id_lieu");
+        return $this->fetchAll($query)->toArray(); 
+    }
     
+    /*
+     * Marque les derniers diagnostics pour un lieu
+     * 
+     * @param int $idLieu
+     *
+     */
+    public function setLastDiagForLieu($idLieu)
+    {
+    	//récupère les identifiants de lieu
+    	$sql = "SELECT `l`.`id_lieu`, GROUP_CONCAT(DISTINCT `d`.`id_lieu`) ids
+			FROM `gevu_diagnostics` AS `d`
+				INNER JOIN `gevu_lieux` AS `le` ON le.id_lieu = d.id_lieu
+				INNER JOIN `gevu_lieux` AS `l` ON le.lft BETWEEN l.lft AND l.rgt 
+			WHERE (l.id_lieu = ".$idLieu.")
+			GROUP BY `l`.`id_lieu`";
+		$db = $this->getAdapter()->query($sql);
+        $arr = $db->fetchAll();
+        //vérifie la fin de la chaine
+        $ids = $arr[0]['ids'];
+        if(substr($ids,-1)==",")$ids.=-1;
+        
+       	//initialise le tag des lieux    	
+    	$where = $this->getAdapter()->quoteInto('id_lieu IN ('.$ids.')');
+    	$query = $this->update(array('last'=>0), $where);
+    	
+    	//récupère les identifiants des derniers diagnostics
+    	$sql = "SELECT GROUP_CONCAT(sd.id_diag) ids 
+			FROM gevu_diagnostics sd,
+			(
+			SELECT `d`.`id_lieu`, MAX(i.id_instant) AS `lastinstant`
+			FROM `gevu_diagnostics` AS `d`
+				INNER JOIN `gevu_instants` AS `i` ON d.id_instant = i.id_instant
+				INNER JOIN `gevu_lieux` AS `le` ON le.id_lieu = d.id_lieu
+				INNER JOIN `gevu_lieux` AS `l` ON le.lft BETWEEN l.lft AND l.rgt WHERE (l.id_lieu = ".$idLieu.") GROUP BY `d`.`id_lieu`) ssd
+			WHERE sd.id_instant = ssd.lastinstant AND sd.id_lieu = ssd.id_lieu";
+		$db = $this->getAdapter()->query($sql);
+        $arr = $db->fetchAll();
+        //vérifie la fin de la chaine
+        $ids = $arr[0]['ids'];
+        if(substr($ids,-1)==",")$ids.=-1;
+        
+       	//met à jour le tag qui indique les derniers    	
+    	$where = $this->getAdapter()->quoteInto('id_lieu IN ('.$ids.')');
+    	$query = $this->update(array('last'=>1), $where);
+        
+    }
+    
+    /*
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne les reponses aux diagnostics correspondant à la valeur demandée.
+     *
+     * @param integer $idLieu
+     * @param integer $idReponse
+     * @return array
+     */
+    public function getDiagReponse($idLieu, $idInstant, $idReponse="")
+    {
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('d' => 'gevu_diagnostics'),array('nbDiag'=>'COUNT(d.id_diag)'))
+            ->joinInner(array('le' => 'gevu_lieux'),
+                'le.id_lieu = d.id_lieu',array('nbControle'=>'COUNT(DISTINCT le.id_lieu)'))
+            ->joinInner(array('l' => 'gevu_lieux'),
+                'le.lft BETWEEN l.lft AND l.rgt',array('lib', 'id_lieu'))
+            
+            ->joinLeft(array('c1_0' => 'gevu_criteres'),
+                'c1_0.id_critere = d.id_critere  AND c1_0.handicateur_auditif = 0',array('auditif_0'=>'COUNT(c1_0.id_critere)'))
+            ->joinLeft(array('c2_0' => 'gevu_criteres'),
+                'c2_0.id_critere = d.id_critere  AND c2_0.handicateur_cognitif = 0',array('cognitif_0'=>'COUNT(c2_0.id_critere)'))
+            ->joinLeft(array('c3_0' => 'gevu_criteres'),
+                'c3_0.id_critere = d.id_critere  AND c3_0.handicateur_moteur = 0',array('moteur_0'=>'COUNT(c3_0.id_critere)'))
+            ->joinLeft(array('c4_0' => 'gevu_criteres'),
+                'c4_0.id_critere = d.id_critere  AND c4_0.handicateur_visuel = 0',array('visuel_0'=>'COUNT(c4_0.id_critere)'))
+
+            ->joinLeft(array('c1_1' => 'gevu_criteres'),
+                'c1_1.id_critere = d.id_critere  AND c1_1.handicateur_auditif = 1',array('auditif_1'=>'COUNT(c1_1.id_critere)'))
+            ->joinLeft(array('c2_1' => 'gevu_criteres'),
+                'c2_1.id_critere = d.id_critere  AND c2_1.handicateur_cognitif = 1',array('cognitif_1'=>'COUNT(c2_1.id_critere)'))
+            ->joinLeft(array('c3_1' => 'gevu_criteres'),
+                'c3_1.id_critere = d.id_critere  AND c3_1.handicateur_moteur = 1',array('moteur_1'=>'COUNT(c3_1.id_critere)'))
+            ->joinLeft(array('c4_1' => 'gevu_criteres'),
+                'c4_1.id_critere = d.id_critere  AND c4_1.handicateur_visuel = 1',array('visuel_1'=>'COUNT(c4_1.id_critere)'))
+
+            ->joinLeft(array('c1_2' => 'gevu_criteres'),
+                'c1_2.id_critere = d.id_critere  AND c1_2.handicateur_auditif = 2',array('auditif_2'=>'COUNT(c1_2.id_critere)'))
+            ->joinLeft(array('c2_2' => 'gevu_criteres'),
+                'c2_2.id_critere = d.id_critere  AND c2_2.handicateur_cognitif = 2',array('cognitif_2'=>'COUNT(c2_2.id_critere)'))
+            ->joinLeft(array('c3_2' => 'gevu_criteres'),
+                'c3_2.id_critere = d.id_critere  AND c3_2.handicateur_moteur = 2',array('moteur_2'=>'COUNT(c3_2.id_critere)'))
+            ->joinLeft(array('c4_2' => 'gevu_criteres'),
+                'c4_2.id_critere = d.id_critere  AND c4_2.handicateur_visuel = 2',array('visuel_2'=>'COUNT(c4_2.id_critere)'))
+            
+            ->joinLeft(array('c1_3' => 'gevu_criteres'),
+                'c1_3.id_critere = d.id_critere  AND c1_3.handicateur_auditif = 3',array('auditif_3'=>'COUNT(c1_3.id_critere)'))
+            ->joinLeft(array('c2_3' => 'gevu_criteres'),
+                'c2_3.id_critere = d.id_critere  AND c2_3.handicateur_cognitif = 3',array('cognitif_3'=>'COUNT(c2_3.id_critere)'))
+            ->joinLeft(array('c3_3' => 'gevu_criteres'),
+                'c3_3.id_critere = d.id_critere  AND c3_3.handicateur_moteur = 3',array('moteur_3'=>'COUNT(c3_3.id_critere)'))
+            ->joinLeft(array('c4_3' => 'gevu_criteres'),
+                'c4_3.id_critere = d.id_critere  AND c4_3.handicateur_visuel = 3',array('visuel_3'=>'COUNT(c4_3.id_critere)'))
+            
+            ->where( "l.id_lieu = ?", $idLieu);
+
+        if ($idInstant!=-1){
+            $query->where( "d.id_instant = ?", $idInstant);
+        }else{
+            $query->where( "d.last = ?", 1);
+        }        
+            
+        if ($idReponse!=""){
+        	$query->where("d.id_reponse = ?", $idReponse);
+        }        
+		$result = $this->fetchAll($query);
+        return $result->toArray(); 
+    }    
 }
