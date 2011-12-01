@@ -60,7 +60,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
-    	 	$id = $this->insert($data);
+    		$data['maj'] = new Zend_Db_Expr('NOW()');
+    		$id = $this->insert($data);
     	}
     	return $id;
     } 
