@@ -41,6 +41,8 @@ import mx.rpc.events.ResultEvent;
 [Bindable][Embed("images/voie.png")]public var voieIcon:Class;
 [Bindable] public var exi:Object;
 [Bindable] public var idExi:String = "";
+[Bindable] public var dataGeo:Object;
+[Bindable] public var dataStat:Object;
 
 private var TreeObject:XML;
 private var xmlTree:XML
@@ -256,7 +258,7 @@ private function treeSelectFind(type:String) : void {
 private function treeItemClicked(event:ListEvent) : void {
 	idLieu = event.currentTarget.selectedItem.attribute("idLieu");
 	
-	if(idLieu>0) roDiagnostique.getNodeRelatedData(idLieu, idBase);
+	if(idLieu>0) roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);
 	
 	//map.showNode(idLieu);
 }
@@ -272,25 +274,43 @@ private function displayNodeProperties(event:ResultEvent) : void {
 	for(var item:String in obj){
 		var arr:Array = item.split("_");
 		var className:String;
+		var place:int;
 		//vérifie si on traite un objet du modele
 		if(arr.length == 4){
 			//création dynamique de l'objet
 			className="compo.form."+arr[3];
 			ClassReference = getDefinitionByName(className) as Class;			
 			instance = new ClassReference();
-			//passage des données
-			if(arr[3]=="diagnostics"){
-				instance.NodeData = obj[item];	
-			}else{
-				instance.NodeData = obj[item][0];
+			//gestion des cas particuliers
+			place = -1;
+			switch (arr[3]) {
+				case "diagnostics":
+					if(obj[item].enfants){
+						instance.NodeData = obj[item];
+						place = 1;
+					}
+					this.dataStat = obj[item].diag.stat.EtatDiag 
+					stat.init();
+					break;
+				case "geos":
+					dataGeo = obj["Models_DbTable_Gevu_geos"][0];
+					carto.init();
+					break;
+				case "docsxlieux":
+					break;
+				default:
+					place = 1;
+					instance.NodeData = obj[item][0];
 			}
 		}
 		//vérifie la place de l'objet
 		if(item == "ariane"){
 			bbAriane.NodeData = obj[item];
 		}else{
-			//ajoute l'objet au tabbox
-			tabDiag.addChild(DisplayObject(instance));
+			if(place > 0){
+				//ajoute l'objet
+				tabDiag.addChild(DisplayObject(instance));				
+			}
 		}
 	}	
 	

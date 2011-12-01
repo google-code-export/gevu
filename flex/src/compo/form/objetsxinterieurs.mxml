@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
-		   width="100%" height="100%"
 		  label="Objets interieurs"
 		  xmlns:composants="compo.*"
 		  initialize="init();">
 	<mx:VBox>
-			<mx:HBox width="100%">
-				<mx:Label text="nom" />
-				<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="ref" />
-				<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="fonctions" />
-				<mx:TextInput id="F3" width="100%" data="{NodeData.fonctions}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="reponse_1" />
-				<mx:TextInput id="F4" width="100%" data="{NodeData.reponse_1}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="reponse_2" />
-				<mx:TextInput id="F5" width="100%"  data="{NodeData.reponse_2}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="id_type_objet" />
-				<composants:KeywordsList id="F10" width="100%" selectedIndex="{F10.setKeyword(NodeData.id_type_objet)}" change="valChanged=true;" />
-			</mx:HBox>
+		<mx:Label fontSize="16" fontWeight="bold" text="{this.label}"/>
+		<mx:HBox width="100%">
+			<mx:Label text="nom" />
+			<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="ref" />
+			<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="fonctions" />
+			<mx:TextInput id="F3" width="100%" data="{NodeData.fonctions}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_1" />
+			<mx:TextInput id="F4" width="100%" data="{NodeData.reponse_1}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_2" />
+			<mx:TextInput id="F5" width="100%"  data="{NodeData.reponse_2}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="id_type_objet" />
+			<composants:KeywordsList id="F10" width="100%" selectedIndex="{F10.setKeyword(NodeData.id_type_objet)}" change="valChanged=true;" />
+		</mx:HBox>
 		
 	</mx:VBox>
 	
