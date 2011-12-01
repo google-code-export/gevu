@@ -2,10 +2,9 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
 		   xmlns:composants="compo.*"
 		   label="Objet extérieur"
-		   width="100%" height="100%"
 		   >
 	<mx:VBox>
-
+		<mx:Label fontSize="16" fontWeight="bold" text="{this.label}"/>
 			<mx:HBox width="100%">
 				<mx:Label text="nom" />
 				<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />

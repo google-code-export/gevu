@@ -9,7 +9,7 @@ todo :
 				xmlns:ns2="compo.*"
 				xmlns:form="compo.form.*"
 				width="100%" height="100%" creationComplete="login()" layout="absolute"
-				name="gevu_diagnostic" >
+				name="gevu_diagnostic" xmlns:stat="compo.stat.*" >
 	
 	<mx:Script>
 		<![CDATA[
@@ -72,8 +72,17 @@ todo :
 				 
 		   <mx:VBox id="boxDiag" width="100%" height="100%" >
 			   <ns2:ariane id="bbAriane" width="100%" />
+			   <mx:HBox width="100%">
+				   <ns2:cnvCarto id="carto" rsCarto="{dataGeo}" height="300" />
+				   <stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
+			   </mx:HBox>
+			   
+			   <!--
 			   <mx:TabNavigator id="tabDiag" width="100%" height="100%" >
-			   </mx:TabNavigator>				
+			   </mx:TabNavigator>
+			   -->
+			   <mx:HBox id="tabDiag" width="100%" height="100%" >
+			   </mx:HBox>				
 		   </mx:VBox>  
 	
 		</mx:HDividedBox> 
