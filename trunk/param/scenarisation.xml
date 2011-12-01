@@ -43,7 +43,7 @@
 			<question id='3_cr_air_sta_10'/>
 		</question>
 		<question id='3_qi_air_sta_02' reponse='2' >
-			<reponse id='3_cr_air_sta_06' champ='mot_1' valeur='2' />
+			<question id='3_cr_air_sta_06' champ='mot_1' reponse='2' />
 			<question id='3_cr_air_sta_11'/>
 		</question>
 		<question id='3_cr_air_sta_02'/>
@@ -286,8 +286,8 @@
 			<question id='3_cr_esc_44'/>
 		</question>
 		<question id='3_qi_esc_01' reponse='2' >
-			<reponse id='3_cr_esc_25' champ='mot_1' valeur='2' />
-			<reponse id='3_cr_esc_34' champ='mot_1' valeur='2' />
+			<question id='3_cr_esc_25' champ='mot_1' reponse='2' />
+			<question id='3_cr_esc_34' champ='mot_1' reponse='2' />
 		</question>
 		<question id='3_cr_esc_43'/>
 	</grille>
@@ -452,8 +452,8 @@
 				<question id='3_cr_po_14'/>
 			</question>
 			<question id='3_cr_po_10' reponse='2'>
-				<question id='3_cr_po_13' champ='mot_1' valeur='2' />
-				<question id='3_cr_po_14' champ='mot_1' valeur='2' />
+				<question id='3_cr_po_13' champ='mot_1' reponse='2' />
+				<question id='3_cr_po_14' champ='mot_1' reponse='2' />
 			</question>
 		</question>
 		<question id='3_qi_po_03' reponse='2' >
@@ -462,8 +462,8 @@
 				<question id='3_cr_po_12'/>
 			</question>
 			<question id='3_cr_po_10' reponse='2'>
-				<question id='3_cr_po_11' champ='mot_1' valeur='2' />
-				<question id='3_cr_po_12' champ='mot_1' valeur='2' />
+				<question id='3_cr_po_11' champ='mot_1' reponse='2' />
+				<question id='3_cr_po_12' champ='mot_1' reponse='2' />
 			</question>
 		</question>
 		<question id='3_qi_po_04' reponse='1' >
@@ -514,7 +514,7 @@
 			<question id='3_cr_quai_ext_05'/>
 		</question>
 		<question id='3_qi_quai_ext_01' reponse='2'>
-			<question id='3_cr_quai_ext_01' champ='mot_1' valeur='2' />
+			<question id='3_cr_quai_ext_01' champ='mot_1' reponse='2' />
 		</question>
 		<question id='3_cr_quai_ext_06'/>
 		<question id='3_cr_quai_ext_07'/>
@@ -532,7 +532,7 @@
 			<question id='3_cr_quai_in_05'/>
 		</question>
 		<question id='3_qi_quai_in_01' reponse='2'>
-			<question id='3_cr_quai_in_01' champ='mot_1' valeur='2' />
+			<question id='3_cr_quai_in_01' champ='mot_1' reponse='2' />
 		</question>
 		<question id='3_cr_quai_in_06'/>
 		<question id='3_cr_quai_in_07'/>
@@ -677,11 +677,11 @@
 		<question id='3_qi_voirie_pente_01' reponse='2' >
 			<question id='3_cr_voirie_pente_02' reponse='2'>
 				<question id='3_cr_voirie_pente_03' reponse='1'>
-					<question id='3_cr_voirie_pente_02' champ='mot_1' valeur='124' />
+					<question id='3_cr_voirie_pente_02' champ='mot_1' reponse='124' />
 				</question>
 				<question id='3_cr_voirie_pente_04' reponse='1'>
-					<question id='3_cr_voirie_pente_02' champ='mot_1' valeur='124' />
-					<question id='3_cr_voirie_pente_03' champ='mot_1' valeur='124' />
+					<question id='3_cr_voirie_pente_02' champ='mot_1' reponse='124' />
+					<question id='3_cr_voirie_pente_03' champ='mot_1' reponse='124' />
 				</question>
 			</question>
 			<question id='3_cr_voirie_pente_05' reponse='1' >
@@ -743,7 +743,7 @@
 	<grille id='3_voirie_ressaut'>
 		<question id='3_cr_voirie_ressaut_01' reponse='2' >
 			<question id='3_cr_voirie_ressaut_02' reponse='1'>
-				<question id='3_cr_voirie_ressaut_01' champ='mot_1' valeur='124' />
+				<question id='3_cr_voirie_ressaut_01' champ='mot_1' reponse='124' />
 			</question>
 		</question>
 		<question id='3_cr_voirie_ressaut_03'/>
@@ -820,9 +820,9 @@
 			<question id='3_cr_voirie_esca_35'/>
 		</question>
 		<question id='3_cr_voirie_esca_10' reponse='2'>
-			<question id='3_cr_voirie_esca_37' champ='mot_1' valeur='2' />
-			<question id='3_cr_voirie_esca_38' champ='mot_1' valeur='2' />
-			<question id='3_cr_voirie_esca_10' champ='mot_1' valeur='124' />
+			<question id='3_cr_voirie_esca_37' champ='mot_1' reponse='2' />
+			<question id='3_cr_voirie_esca_38' champ='mot_1' reponse='2' />
+			<question id='3_cr_voirie_esca_10' champ='mot_1' reponse='124' />
 			<question id='3_cr_voirie_esca_12' reponse='1'>
 				<question id='3_cr_voirie_esca_13'/>
 				<question id='3_cr_voirie_esca_16'/>
@@ -830,8 +830,8 @@
 				<question id='3_cr_voirie_esca_31'/>
 				<question id='3_cr_voirie_esca_32'/>
 				<question id='3_cr_voirie_esca_33'/>
-				<question id='3_cr_voirie_esca_37' champ='mot_1' valeur='124' />
-				<question id='3_cr_voirie_esca_38' champ='mot_1' valeur='124' />
+				<question id='3_cr_voirie_esca_37' champ='mot_1' reponse='124' />
+				<question id='3_cr_voirie_esca_38' champ='mot_1' reponse='124' />
 			</question>
 		</question>
 		<question id='3_cr_voirie_esca_36'/>
@@ -845,17 +845,17 @@
 			<question id='3_cr_voirie_pieton_04'/>
 			<question id='3_cr_voirie_pieton_05' reponse='2'>
 				<question id='3_cr_voirie_pieton_06' reponse='1'>
-					<question id='3_cr_voirie_pieton_05' champ='mot_1' valeur='124' />
-					<question id='3_cr_voirie_pieton_07' champ='mot_1' valeur='124' />
+					<question id='3_cr_voirie_pieton_05' champ='mot_1' reponse='124' />
+					<question id='3_cr_voirie_pieton_07' champ='mot_1' reponse='124' />
 				</question>
 				<question id='3_cr_voirie_pieton_07' reponse='1'>
-					<question id='3_cr_voirie_pieton_05' champ='mot_1' valeur='124' />
-					<question id='3_cr_voirie_pieton_06' champ='mot_1' valeur='124' />
+					<question id='3_cr_voirie_pieton_05' champ='mot_1' reponse='124' />
+					<question id='3_cr_voirie_pieton_06' champ='mot_1' reponse='124' />
 				</question>
 			</question>
 			<question id='3_cr_voirie_pieton_08' reponse='2'>
 				<question id='3_cr_voirie_pieton_09' reponse='1' >
-					<question id='3_cr_voirie_pieton_08' champ='mot_1' valeur='124' />
+					<question id='3_cr_voirie_pieton_08' champ='mot_1' reponse='124' />
 				</question>
 			</question>
 			<question id='3_cr_voirie_pieton_10'/>
