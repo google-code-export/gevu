@@ -200,14 +200,20 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param varchar $ref
+     * return array
      */
     public function findByRef($ref)
     {
-        $query = $this->select()
+    	$query = $this->select()
                     ->from( array("g" => "gevu_criteres") )                           
-                    ->where( "g.ref = " . $ref );
+                    ->where( "g.ref = ?", $ref );
+		$rs = $this->fetchRow($query);
+		if(!$rs){
+	        return array(); 
+		}else{
+	        return $rs->toArray(); 
+		}
 
-        return $this->fetchRow($query)->toArray(); 
     }
     /*
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
