@@ -55,11 +55,12 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($data, $existe=false)
     {
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
+    		$data['maj'] = new Zend_Db_Expr('NOW()');
     	 	$id = $this->insert($data);
     	}
     	return $id;
