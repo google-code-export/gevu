@@ -8,8 +8,8 @@
 			import com.google.analytics.debug._Style;
 			
 			import compo.twPhotoListe;
+			
 			import mx.controls.Alert;
-
 			import mx.managers.PopUpManager;
 		
       	[Embed(source="../images/jpg.png")] [Bindable] private var PhotoIcon:Class;
@@ -25,13 +25,27 @@
 		public var film:Boolean;
 		public var son:Boolean;
 		public var doc:Boolean;
-		private var urlPdf:String; 
+		private var urlPdf:String;
+		private var rsDocs:Object;
 		
 		public function Init(EtatDiag:Object, Rub:String, Site:String, Ajax:String):void {	
 			idRub=Rub;
 			idSite=Site;
 			urlExeAjax=Ajax;
 			rsEtatDiag=EtatDiag;
+		}
+
+		public function initDoc(rs:Object):void {
+			rsDocs = rs;
+			imgPhoto.visible=false;
+			imgFilm.visible=false;
+			imgSon.visible=false;      			
+			imgDoc.visible=false;      			
+			
+			for each (var d:Object in rsDocs)
+			{
+				if(d.content_type == "application/octet-stream")imgPhoto.visible=true;
+			}
 		}
 			
 		public function VerifIco():Boolean{
@@ -83,18 +97,26 @@
         
 
      private function ShowListePhoto():void {
-        // Create a non-modal TitleWindow container.
-        var wPhotoListe:twPhotoListe = twPhotoListe(
-            PopUpManager.createPopUp(this, twPhotoListe, false));
-		var params:Object = new Object();
-		params.f = "GetImages";
-		params.id = idRub;
-		params.site = idSite;
-
-		trace ("ShowListePhoto:url="+urlExeAjax+"?f="+params.f+"&id="+params.id+"&site="+params.site);
-		wPhotoListe.useHttpService(urlExeAjax,params,"");
-
-        PopUpManager.centerPopUp(wPhotoListe);
+		 
+		if(rsDocs){
+			var tw:twListePhoto = twListePhoto(
+				PopUpManager.createPopUp(this, twListePhoto, false));
+			tw.dataTofs = rsDocs;
+			PopUpManager.centerPopUp(tw);			
+		}else{
+			// Create a non-modal TitleWindow container.
+			var wPhotoListe:twPhotoListe = twPhotoListe(
+				PopUpManager.createPopUp(this, twPhotoListe, false));
+			var params:Object = new Object();
+			params.f = "GetImages";
+			params.id = idRub;
+			params.site = idSite;
+			
+			trace ("ShowListePhoto:url="+urlExeAjax+"?f="+params.f+"&id="+params.id+"&site="+params.site);
+			wPhotoListe.useHttpService(urlExeAjax,params,"");
+			PopUpManager.centerPopUp(wPhotoListe);			
+		}
+		 
 
      }
 	

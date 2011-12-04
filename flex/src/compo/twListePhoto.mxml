@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" width="100%" height="100%"
+	showCloseButton="true"
+	close="PopUpManager.removePopUp(this);"
+	>
+
+
+    <mx:Script>
+        <![CDATA[		
+			//merci à http://blog.xebia.fr/2008/05/14/galerie-dimages-flex/
+	       	
+	       	import mx.managers.PopUpManager;
+						
+			[Bindable] public var dataTofs:Object;
+			
+        ]]>	
+    </mx:Script>
+	
+	<mx:Dissolve id="dissolve"
+				 duration="1000"
+				 target="{detail}" 
+				 alphaFrom="0.0" alphaTo="1.0"/>
+	
+	<mx:Panel id="pnl" title="{listTofs.selectedItem.titre}" horizontalAlign="center" height="476" borderColor="#AF7FAF">
+		<mx:HorizontalList id="listTofs"
+						   dataProvider="{dataTofs}"
+						   columnCount="4"
+						   columnWidth="160"
+						   rowCount="1"
+						   rowHeight="140"
+						   itemRenderer="compo.render.tofs"
+						   click="dissolve.play();"/>
+		<mx:HBox id="detail">
+			<mx:Image id="img" source="{listTofs.selectedItem.url}" height="400" />
+		</mx:HBox>
+		
+	</mx:Panel>
+
+	
+</mx:TitleWindow>
