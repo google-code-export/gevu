@@ -6,7 +6,6 @@ $imp = new GEVU_Import();
 //$imp->addScenario("C:/wamp/www/gevu/param/logementV3.xml");
 
 
-/*
 $imp->addDoc($_REQUEST);
 $dataDoc = array(
 	"url"=>"url","titre"=>"name","content_type"=>"text/csv"
@@ -14,7 +13,7 @@ $dataDoc = array(
     ,"tronc"=>'objName'
     );			        
 $imp->saveDoc($_REQUEST, $dataDoc);
-*/    
+
 //$imp->traiteDoc(10);
 
 ?>

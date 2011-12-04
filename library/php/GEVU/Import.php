@@ -136,6 +136,7 @@ class GEVU_Import{
 			    		
 			    		
 					$this->saveDoc($data, $dataDoc);
+					
 					if($data['objName']=='imp_csv'){
 						$this->traiteDoc($idDoc, $path);
 					}
@@ -155,16 +156,16 @@ class GEVU_Import{
 	}
     
     public function saveDoc($data, $dataDoc){
-
-		$doc = new Models_DbTable_Gevu_docs();
-		$idDoc = $doc->ajouter($dataDoc,false);
-
+    	
+    	if($dataDoc["url"]=="url")return ;
+    	
 		$ins = new Models_DbTable_Gevu_instants();
-		$nom = get_class();
-		$idIns = $ins->ajouter(array("nom"=>$nom."_addDoc","id_exi"=>$data['idExi']),false);
+		$idIns = $ins->ajouter(array("nom"=>$nom."_addDoc","id_exi"=>$data['idExi']),false,$data['idBase']);
+
+		$dataDoc["id_instant"] = $idIns;
 		
-		$exidoc = new Models_DbTable_Gevu_instantsxdocs();
-		$exidoc->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns),false);
+		$doc = new Models_DbTable_Gevu_docs();
+		$idDoc = $doc->ajouter($dataDoc,false,$data['idBase']);
 		
 		if($data['objName']=='img_solus'){
 			$doc_obj = new Models_DbTable_Gevu_docsxsolutions();
@@ -174,7 +175,11 @@ class GEVU_Import{
 			$doc_obj = new Models_DbTable_Gevu_docsxproduits();
 			$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_produit"=>$data['objId']),false);		
 		}
-		    	
+		if($data['objName']=='Models_DbTable_Gevu_problemes'){
+			$doc_obj = new Models_DbTable_Gevu_problemes();
+			$doc_obj->ajouterDoc(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_probleme"=>$data['objId']),$data['idBase']);		
+		}
+		
     }
 
     public function traiteDoc($idDoc, $creerModele=false){

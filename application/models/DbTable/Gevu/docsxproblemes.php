@@ -95,7 +95,7 @@ class Models_DbTable_Gevu_docsxproblemes extends Zend_Db_Table_Abstract
     public function edit($id, $data, $idBase="")
     {        
     	//gestion des bases multiples
-    	$this->_setupDatabaseAdapter();
+    	$this->_setupDatabaseAdapter($idBase);
     	
     	$this->update($data, 'gevu_docsxproblemes.id_doc = ' . $id);
     }
@@ -111,7 +111,7 @@ class Models_DbTable_Gevu_docsxproblemes extends Zend_Db_Table_Abstract
     public function remove($id, $idBase="")
     {
     	//gestion des bases multiples
-    	$this->_setupDatabaseAdapter();
+    	$this->_setupDatabaseAdapter($idBase);
     	
     	$this->delete('gevu_docsxproblemes.id_doc = ' . $id);
     }
@@ -123,7 +123,7 @@ class Models_DbTable_Gevu_docsxproblemes extends Zend_Db_Table_Abstract
     public function getAll($order=null, $limit=0, $from=0, $idBase="")
     {
     	//gestion des bases multiples
-    	$this->_setupDatabaseAdapter();
+    	$this->_setupDatabaseAdapter($idBase);
     	
     	$query = $this->select()
                     ->from( array("gevu_docsxproblemes" => "gevu_docsxproblemes") );
@@ -153,7 +153,7 @@ class Models_DbTable_Gevu_docsxproblemes extends Zend_Db_Table_Abstract
     public function findById_doc($id_doc, $idBase="")
     {
     	//gestion des bases multiples
-    	$this->_setupDatabaseAdapter();
+    	$this->_setupDatabaseAdapter($idBase);
 
         $query = $this->select()
                     ->from( array("g" => "gevu_docsxproblemes") )                           
@@ -169,14 +169,16 @@ class Models_DbTable_Gevu_docsxproblemes extends Zend_Db_Table_Abstract
      *
      * @return array
      */
-    public function findById_probleme($id_probleme, $idBase="")
+    public function findByIdProbleme($id_probleme, $idBase="")
     {
     	//gestion des bases multiples
-    	$this->_setupDatabaseAdapter();
+    	$this->_setupDatabaseAdapter($idBase);
 
         $query = $this->select()
-                    ->from( array("g" => "gevu_docsxproblemes") )                           
-                    ->where( "g.id_probleme = ?", $id_probleme );
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+        	->from( array("dp" => "gevu_docsxproblemes") )
+            ->joinInner(array("d" => "gevu_docs") , "dp.id_doc = d.id_doc")                           
+            ->where( "dp.id_probleme = ?", $id_probleme );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -191,7 +193,7 @@ class Models_DbTable_Gevu_docsxproblemes extends Zend_Db_Table_Abstract
     public function findById_instant($id_instant, $idBase="")
     {
     	//gestion des bases multiples
-    	$this->_setupDatabaseAdapter();
+    	$this->_setupDatabaseAdapter($idBase);
 
         $query = $this->select()
                     ->from( array("g" => "gevu_docsxproblemes") )                           
