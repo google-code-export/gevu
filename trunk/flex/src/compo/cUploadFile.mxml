@@ -64,6 +64,13 @@
 
             // Called to add file(s) for upload direct
             private function addFilesDirect():void {
+				
+				if(objName=='Models_DbTable_Gevu_problemes' && !ctlBind.idSelect){
+					Alert.show("Veuillez sélectionner un problème pour ajouter un document", "Ajout d'un document");
+					return;
+				}
+
+				
 				if(_arrUploadFiles)_arrUploadFiles=new Array();
 				
 				var filter:FileFilter;
@@ -181,6 +188,7 @@
                     sendVars.wf = wf;
                     sendVars.idExi = idExi;
                     sendVars.objName = objName;
+					sendVars.idBase = this.parentApplication.idBase;
                     //récupération de l'identifiant d'objet
                     if(objName=='img_solus'){
                     	sendVars.objId = ctlBind.idSolution;
@@ -188,6 +196,9 @@
                     if(objName=='img_produit'){
                     	sendVars.objId = ctlBind.idProduit;
                     }
+					if(objName=='Models_DbTable_Gevu_problemes'){
+						sendVars.objId = ctlBind.idSelect;
+					}
                     
                     var request:URLRequest = new URLRequest();
                     request.data = sendVars;
@@ -219,6 +230,9 @@
 		                    if(objName=='img_solus'){
 								ctlBind.ROTOF.findByIdSolution(ctlBind.idSolution);
 		                    }
+							if(objName=='Models_DbTable_Gevu_problemes'){
+								ctlBind.ro.findDocs(ctlBind.idSelect);
+							}							
 						}
 						if(wf=="impCsv"){
 		                    Alert.show("Les données sont importées.", "Succés de l'importation");
