@@ -28,6 +28,23 @@ class Models_DbTable_Gevu_instants extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_instant';
 
+    protected $_adapter;
+
+    /**
+     * initialisation de la base de donnée
+
+     * @param string $idBase
+     *
+     */
+    protected function _setupDatabaseAdapter($idBase="") 
+	{
+		if($idBase!=""){
+			$this->_adapter=$idBase;
+			$this->_db = Zend_Registry::get($this->_adapter);			
+		}else{
+			$this->_db = $this->getDefaultAdapter();
+		}
+	}
     
     /**
      * Vérifie si une entrée Gevu_instants existe.
@@ -53,20 +70,21 @@ class Models_DbTable_Gevu_instants extends Zend_Db_Table_Abstract
      *
      * @param array $data
      * @param boolean $existe
+     * @param string $idBase
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($data, $existe=false, $idBase="")
     {
-    	$id=false;
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
+
     	if(!isset($data['ici']))$data['ici']=isset($_SERVER['REMOTE_ADDR'])?$_SERVER['REMOTE_ADDR'] : -1;
 		if(!isset($data['maintenant']))$data['maintenant']= new Zend_Db_Expr('NOW()');
     	
-    	if($existe)$id = $this->existe($data);
-    	if(!$id){
-    	 	$id = $this->insert($data);
-    	}
-    	return $id;
+   	 	$id = $this->insert($data);
+
+   	 	return $id;
     } 
            
     /**

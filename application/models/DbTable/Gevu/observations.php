@@ -17,7 +17,7 @@
  */
 class Models_DbTable_Gevu_observations extends Zend_Db_Table_Abstract
 {
-    
+	
     /*
      * Nom de la table.
      */
@@ -35,6 +35,24 @@ class Models_DbTable_Gevu_observations extends Zend_Db_Table_Abstract
             'refColumns'        => 'id_lieu'
         )
     );	
+	
+    protected $_adapter;
+
+    /**
+     * initialisation de la base de donnée
+
+     * @param string $idBase
+     *
+     */
+    protected function _setupDatabaseAdapter($idBase="") 
+	{
+		if($idBase!=""){
+			$this->_adapter=$idBase;
+			$this->_db = Zend_Registry::get($this->_adapter);			
+		}else{
+			$this->_db = $this->getDefaultAdapter();
+		}
+	}
     
     /**
      * Vérifie si une entrée Gevu_observations existe.
@@ -59,17 +77,23 @@ class Models_DbTable_Gevu_observations extends Zend_Db_Table_Abstract
      * Ajoute une entrée Gevu_observations.
      *
      * @param array $data
-     * @param boolean $existe
+     * @param int $idExi
+     * @param string $idBase
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($data, $idExi=-1, $idBase="")
     {
-    	$id=false;
-    	if($existe)$id = $this->existe($data);
-    	if(!$id){
-    	 	$id = $this->insert($data);
-    	}
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
+    	    	
+		//création d'un nouvel instant
+    	$dbI = new Models_DbTable_Gevu_instants($this->getAdapter());
+    	$idI = $dbI->ajouter(array("id_exi"=>$idExi));
+    	$data['id_instant']=$idI;
+    	$data['maj']= new Zend_Db_Expr('NOW()');
+    	$id = $this->insert($data);
+
     	return $id;
     } 
            
@@ -82,9 +106,12 @@ class Models_DbTable_Gevu_observations extends Zend_Db_Table_Abstract
      *
      * @return void
      */
-    public function edit($id, $data)
+    public function edit($id, $data, $idBase="")
     {        
-        $this->update($data, 'gevu_observations.id_observations = ' . $id);
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
+    	
+    	$this->update($data, 'gevu_observations.id_observations = ' . $id);
     }
     
     /**
@@ -92,21 +119,29 @@ class Models_DbTable_Gevu_observations extends Zend_Db_Table_Abstract
      * et supprime cette entrée.
      *
      * @param integer $id
-     *
+     * @param string $idBase
+     *  
      * @return void
      */
-    public function remove($id)
+    public function remove($id, $idBase="")
     {
-        $this->delete('gevu_observations.id_observations = ' . $id);
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
+    	    	
+    	$this->delete('gevu_observations.id_observations = ' . $id);
+
     }
     
     /**
      * Récupère toutes les entrées Gevu_observations avec certains critères
      * de tri, intervalles
      */
-    public function getAll($order=null, $limit=0, $from=0)
+    public function getAll($order=null, $limit=0, $from=0, $idBase="")
     {
-        $query = $this->select()
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
+    	    	    	
+		$query = $this->select()
                     ->from( array("gevu_observations" => "gevu_observations") );
                     
         if($order != null)
@@ -121,28 +156,7 @@ class Models_DbTable_Gevu_observations extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_observations 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_observations","champ"=>"id_observations","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"id_reponse","champ"=>"id_reponse","visible"=>true),
-    	array("titre"=>"num_marker","champ"=>"num_marker","visible"=>true),
-    	array("titre"=>"lib","champ"=>"lib","visible"=>true),
-    	array("titre"=>"id_critere","champ"=>"id_critere","visible"=>true),
-    	array("titre"=>"id_donnee","champ"=>"id_donnee","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
-    
+   
     /*
      * Recherche une entrée Gevu_observations avec la valeur spécifiée
      * et retourne cette entrée.
@@ -270,5 +284,25 @@ class Models_DbTable_Gevu_observations extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
+    /**
+     * Recherche une entrée Gevu_observations avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param integer $idDiag
+     * @param string $idBase
+     * 
+     * @return array
+     */
+    public function findByIdDiag($IdDiag, $idBase="")
+    {
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
+    	
+    	$query = $this->select()
+                    ->from( array("g" => "gevu_observations") )                           
+                    ->where( "g.id_diag = ?", $IdDiag);
+
+        return $this->fetchAll($query)->toArray(); 
+    }
     
 }

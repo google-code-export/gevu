@@ -35,6 +35,24 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
             'refColumns'        => 'id_lieu'
         )
     );	
+
+    protected $_adapter;
+
+    /**
+     * initialisation de la base de donnée
+
+     * @param string $idBase
+     *
+     */
+    protected function _setupDatabaseAdapter($idBase="") 
+	{
+		if($idBase!=""){
+			$this->_adapter=$idBase;
+			$this->_db = Zend_Registry::get($this->_adapter);			
+		}else{
+			$this->_db = $this->getDefaultAdapter();
+		}
+	}
     
     /**
      * Vérifie si une entrée Gevu_problemes existe.
@@ -55,24 +73,44 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
         return $id;
     } 
         
-    /**
-     * Ajoute une entrée Gevu_problemes.
+     /**
+     * Ajoute un probleme
      *
      * @param array $data
-     * @param boolean $existe
+     * @param int $idExi
+     * @param string $idBase
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($data, $idExi=-1, $idBase="")
     {
-    	$id=false;
-    	if($existe)$id = $this->existe($data);
-    	if(!$id){
-    	 	$id = $this->insert($data);
-    	}
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
+    	    	
+		//création d'un nouvel instant
+    	$dbI = new Models_DbTable_Gevu_instants($this->getAdapter());
+    	$idI = $dbI->ajouter(array("id_exi"=>$idExi));
+    	$data['id_instant']=$idI;
+    	$data['maj']= new Zend_Db_Expr('NOW()');
+    	$id = $this->insert($data);
+
     	return $id;
     } 
-           
+
+    /**
+     * Ajoute un document à une entrée Gevu_problemes.
+     *
+     * @param array $data
+     *  
+     * @return integer
+     */
+    public function ajouterDoc($data, $idBase)
+    {
+    	$bd = new Models_DbTable_Gevu_docsxproblemes();
+   	 	$id = $bd->ajouter($data, $idBase);
+    	return $id;
+    } 
+    
     /**
      * Recherche une entrée Gevu_problemes avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
@@ -91,12 +129,14 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
      * Recherche une entrée Gevu_problemes avec la clef primaire spécifiée
      * et supprime cette entrée.
      *
-     * @param integer $id
-     *
+     * @param string $idBase
+     *  
      * @return void
      */
-    public function remove($id)
+    public function remove($id, $idBase="")
     {
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
         $this->delete('gevu_problemes.id_probleme = ' . $id);
     }
     
@@ -104,9 +144,12 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
      * Récupère toutes les entrées Gevu_problemes avec certains critères
      * de tri, intervalles
      */
-    public function getAll($order=null, $limit=0, $from=0)
+    public function getAll($order=null, $limit=0, $from=0, $idBase="")
     {
-        $query = $this->select()
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
+
+    	$query = $this->select()
                     ->from( array("gevu_problemes" => "gevu_problemes") );
                     
         if($order != null)
@@ -277,5 +320,25 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
-    
+    /**
+     * Recherche une entrée Gevu_problemes avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param integer $idDiag
+     * @param string $idBase
+     * 
+     * @return array
+     */
+    public function findByIdDiag($IdDiag, $idBase="")
+    {
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);
+    	
+    	$query = $this->select()
+                    ->from( array("g" => "gevu_problemes") )                           
+                    ->where( "g.id_diag = ?", $IdDiag);
+
+        return $this->fetchAll($query)->toArray(); 
+    }
+        
 }

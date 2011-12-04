@@ -472,11 +472,12 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
             $query->where( "d.id_instant = ?", $idInstant);
         }else{
             $query->where( "d.last = ?", 1);
-        }        
-            
+        }                    
         if ($idReponse!=""){
         	$query->where("d.id_reponse = ?", $idReponse);
-        }        
+        }
+        $query->group("l.id_lieu");
+        
 		$result = $this->fetchAll($query);
         return $result->toArray(); 
     }    
