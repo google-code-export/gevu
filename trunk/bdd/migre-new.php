@@ -1812,6 +1812,22 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant){
      * VOIR s'il faut migrer les auteurs de chaque diagnostic ???
      */
     
+    //mise à jour des id_diag pour les observations
+    $sql = "UPDATE gevu_observations o, gevu_diagnostics d
+		SET o.id_diag=d.id_diag
+		WHERE o.id_critere = d.id_critere AND o.id_instant = d.id_instant AND o.id_lieu = d.id_lieu";
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO MAJ observations : ".mysql_affected_rows()."<br />"; 
+
+    //mise à jour des id_diag pour les problèmes
+    $sql = "UPDATE gevu_problemes p, gevu_diagnostics d
+		SET p.id_diag=d.id_diag
+		WHERE p.id_critere = d.id_critere AND p.id_instant = d.id_instant AND p.id_lieu = d.id_lieu";
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO MAJ problemes : ".mysql_affected_rows()."<br />"; 
+    
 }
 
 /*

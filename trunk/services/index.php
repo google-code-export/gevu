@@ -15,6 +15,10 @@ try {
 	$db = $d->getDb($idBase);
 	$o = new Models_DbTable_Gevu_diagnostics($db);
 	$o->getAllDesc(13);
+	$o = new Models_DbTable_Gevu_observations();
+	$arr = $o->ajouter(array("num_marker"=>"2121","lib"=>"test","id_diag"=>-100),1,$idBase);
+	$o = new Models_DbTable_Gevu_problemes();
+	$arr = $o->findDocs(329,$idBase);
 	*/
 	
 $server = new Zend_Amf_Server();

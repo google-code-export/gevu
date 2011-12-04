@@ -340,5 +340,21 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
+    /**
+     * Recherche les documents associés à un problème
+     * et retourne ces entrées.
+     *
+     * @param integer $idProb
+     * @param string $idBase
+     * 
+     * @return array
+     */
+    public function findDocs($IdProb, $idBase="")
+    {
+    	$dbDocProb = new Models_DbTable_Gevu_docsxproblemes();
+    	
+    	return $dbDocProb->findByIdProbleme($IdProb, $idBase);
+
+    }
         
 }
