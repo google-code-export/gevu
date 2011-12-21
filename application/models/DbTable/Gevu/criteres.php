@@ -130,29 +130,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-        
-    
-    /**
-     * Récupère les spécifications des colonnes Gevu_criteres 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_critere","champ"=>"id_critere","visible"=>true),
-    	array("titre"=>"id_type_controle","champ"=>"id_type_controle","visible"=>true),
-    	array("titre"=>"ref","champ"=>"ref","visible"=>true),
-    	array("titre"=>"handicateur_moteur","champ"=>"handicateur_moteur","visible"=>true),
-    	array("titre"=>"handicateur_auditif","champ"=>"handicateur_auditif","visible"=>true),
-    	array("titre"=>"handicateur_visuel","champ"=>"handicateur_visuel","visible"=>true),
-    	array("titre"=>"handicateur_cognitif","champ"=>"handicateur_cognitif","visible"=>true),
-    	array("titre"=>"criteres","champ"=>"criteres","visible"=>true),
-    	array("titre"=>"affirmation","champ"=>"affirmation","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
-    
+            
     /*
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
@@ -176,8 +154,11 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
     public function findByIdTypeControle($id_type_controle)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_criteres") )                           
-                    ->where( "g.id_type_controle = " . $id_type_controle );
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from( array("c" => "gevu_criteres"))
+            ->joinInner(array('tc' => 'gevu_typesxcontroles'),
+            	'tc.id_type_controle = c.id_type_controle',array('icone','lib'))                                   
+			->where( "c.id_type_controle = " . $id_type_controle );
 
         return $this->fetchAll($query)->toArray(); 
     }

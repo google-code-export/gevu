@@ -18,6 +18,11 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
 {
     
     /*
+     * Identifiant du droit lié aux scénarios
+     */
+    protected $idDroit = 4;
+	
+	/*
      * Nom de la table.
      */
     protected $_name = 'gevu_scenario';
@@ -63,9 +68,31 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
     		$data['maj'] = new Zend_Db_Expr('NOW()');
     	 	$id = $this->insert($data);
     	}
+    	//mise à jour des droits de scénario
+    	$this->editDroits();
+    	
     	return $id;
     } 
            
+    /**
+     * Selectionne tous les scénarios pour mettre à jour les droits disponibles
+     *
+     * @return void
+     */
+    public function editDroits()
+    {
+        $query = $this->select()
+                    ->from( array("gevu_scenario" => "gevu_scenario"),array("id"=>"id_scenario","lib"));
+        $query->order("lib");
+
+        $arr = $this->fetchAll($query)->toArray();
+		$json = Zend_Json::encode($arr);
+		
+		$dbD = new Models_DbTable_Gevu_droits();
+		$dbD->edit($this->idDroit, array("params"=>$json));
+
+    }
+    
     /**
      * Recherche une entrée Gevu_scenario avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
@@ -79,6 +106,9 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
     {
     	$data['maj'] = new Zend_Db_Expr('NOW()');        
         $this->update($data, 'gevu_scenario.id_scenario = ' . $id);
+		//vérifie s'il faut faire la mise à jour des droits de scénario
+        if(isset($data['lib']))$this->editDroits();
+        
     }
     
     /**
@@ -94,6 +124,10 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
     	$dbScene = new Models_DbTable_Gevu_scenes;
     	$dbScene->removeScenario($id);
         $this->delete('gevu_scenario.id_scenario = ' . $id);
+    	
+        //mise à jour des droits de scénario
+    	$this->editDroits();
+        
         return -1;
         
     }
@@ -119,23 +153,7 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_scenario 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_scenario","champ"=>"id_scenario","visible"=>true),
-    	array("titre"=>"lib","champ"=>"lib","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-    	array("titre"=>"params","champ"=>"params","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
-    
+  
     /*
      * Recherche une entrée Gevu_scenario avec la valeur spécifiée
      * et retourne cette entrée.
@@ -150,6 +168,27 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
+    
+	 /*
+     * Recherche l'entrée Gevu_exisxdroits pour un utilisateur et un droit
+     * et retourne les paramètres de cette entrée.
+     *
+     * @param int $idExi
+     * 
+     * @return array
+     */
+    public function findByExiDroit($idExi)
+    {
+	    $dbED = new Models_DbTable_Gevu_exisxdroits();
+    	$arr = $dbED->findByExiDroit($idExi, $this->idDroit);
+
+    	$arr = Zend_Json::decode($arr[0]['params']);
+    	
+        return $arr; 
+
+    }
+    
+    
     /*
      * Recherche une entrée Gevu_scenario avec la valeur spécifiée
      * et retourne cette entrée.

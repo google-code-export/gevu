@@ -68,6 +68,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
+    		if(!isset($data['maj']))$data['maj']= new Zend_Db_Expr('NOW()');
     	 	$id = $this->insert($data);
     	}
     	return $id;
@@ -127,9 +128,14 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * et retourne ces entrées.
      *
      * @param int $idLieu
+     * @param int $last
+     * @param string $handi
+     * @param int $niv
+     * @param int $idInst
+     * 
      * @return array
      */
-    public function getAllDesc($idLieu)
+    public function getAllDesc($idLieu, $last=-1, $handi="", $niv=-1, $idInst=-1)
     {
     	$query = $this->select()
         	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
@@ -152,8 +158,19 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         	*/
         	->where( "diag.id_lieu = ?", $idLieu)
 			->group(array('id_instant','id_critere'))
-        	->order(array('id_instant','id_critere'));        
-		$result = $this->fetchAll($query);
+        	->order(array('id_instant','id_critere'));
+        
+        //vérifie si on ajoute d'autres conditions
+        //les derniers diagnostics
+        if($last)$query->where("diag.last = 1");        
+        //un niveau de handicap
+        if($niv) $nivW = " = ".$niv; else $nivW = " > 0 ";  
+        //un type de handicap
+        if($handi)$query->where("diag.handicateur_".$handi.$nivW);
+        //les derniers diagnostics
+        if($idInst)$query->where("diag.id_instant = ?", $idInst);        
+        
+        $result = $this->fetchAll($query);
         return $result->toArray(); 
     }
 
@@ -214,6 +231,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param int $id_diag
+     * 
+     * @return array
      */
     public function findById_diag($id_diag)
     {
@@ -228,6 +247,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param int $id_critere
+     * 
+     * @return array
      */
     public function findById_critere($id_critere)
     {
@@ -242,6 +263,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param int $id_reponse
+     * 
+     * @return array
      */
     public function findById_reponse($id_reponse)
     {
@@ -256,6 +279,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param int $id_instant
+     * 
+     * @return array
      */
     public function findById_instant($id_instant)
     {
@@ -270,6 +295,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param int $id_lieu
+     * 
+     * @return array
      */
     public function findById_lieu($id_lieu)
     {
@@ -284,6 +311,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * et retourne ces entrées.
      *
      * @param int $idExi
+     * 
+     * @return array
      */
     public function findByExi($idExi)
     {
@@ -299,6 +328,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param int $id_donnee
+     * 
+     * @return array
      */
     public function findById_donnee($id_donnee)
     {
@@ -313,6 +344,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param datetime $maj
+     * 
+     * @return array
      */
     public function findByMaj($maj)
     {
@@ -327,6 +360,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * Recherche les instants lié aux diagnostics
      * et retourne cette entrée.
      *
+     * 
+     * @return array
      */
     public function findInstants()
     {
@@ -348,6 +383,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * 
      * @param int $idLieu
      *
+     * 
+     * @return array
      */
     public function findLastDiagForLieu($idLieu)
     {
@@ -370,6 +407,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * 
      * @param int $idLieu
      *
+     * 
+     * @return array
      */
     public function setLastDiagForLieu($idLieu)
     {
@@ -418,9 +457,10 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      *
      * @param integer $idLieu
      * @param integer $idReponse
+     * 
      * @return array
      */
-    public function getDiagReponse($idLieu, $idInstant, $idReponse="")
+    public function getDiagReponse($idLieu, $idInstant=-1, $idReponse="")
     {
         $query = $this->select()
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
@@ -481,4 +521,46 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
 		$result = $this->fetchAll($query);
         return $result->toArray(); 
     }    
+    
+    /*
+     * Recherche la liste des diagnostics pour un lieu et des contraintes supplémentaires
+     *
+     * @param int $idLieu
+     * @param int $last
+     * @param string $handi
+     * @param int $niv
+     * 
+     * @return array
+     */
+    public function getDiagliste($idLieu, $last=-1, $handi="", $niv=-1)
+    {
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('diag' => 'gevu_diagnostics'))
+            ->joinInner(array('le' => 'gevu_lieux'),
+                'le.id_lieu = diag.id_lieu',array("dLieu"=>'id_lieu', 'lib'))
+            ->joinInner(array('l' => 'gevu_lieux'),
+                'le.lft BETWEEN l.lft AND l.rgt',array('lib', 'id_lieu'))
+            ->joinInner(array('crit' => 'gevu_criteres'),
+            	'diag.id_critere = crit.id_critere',array('ref','handicateur_moteur','handicateur_auditif','handicateur_visuel','handicateur_cognitif','affirmation'))
+        	->joinInner(array('tc' => 'gevu_typesxcontroles'),
+            	'tc.id_type_controle = crit.id_type_controle',array('controle'=>'lib','icone'))
+        	->joinInner(array('inst' => 'gevu_instants'),
+            	'diag.id_instant = inst.id_instant',array('instant'=>"DATE_FORMAT(maintenant,'%W %d %M %Y')",'nom'))
+        	->joinInner(array('exi' => 'gevu_exis'),
+            	'inst.id_exi = exi.id_exi',array('exis'=>'nom'))
+        	->where( "l.id_lieu = ?", $idLieu)
+        	->order(array('diag.id_lieu'));
+        
+        //vérifie si on ajoute d'autres conditions
+        //les derniers diagnostics
+        if($last)$query->where("diag.last = 1");        
+        //un niveau de handicap
+        if($niv) $nivW = " = ".$niv; else $nivW = " > 0 ";  
+        //un type de handicap
+        if($handi)$query->where("crit.handicateur_".$handi.$nivW);
+
+        $result = $this->fetchAll($query);
+        return $result->toArray(); 
+    }        
 }
