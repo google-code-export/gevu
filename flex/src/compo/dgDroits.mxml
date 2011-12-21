@@ -233,6 +233,10 @@ private function DroitHandler(e:Object):void
 					<mx:VBox name="pd3vb" >
 					</mx:VBox>						
 				</mx:Canvas>			
+				<mx:Canvas id="pd4" name="pd4" width="100%" height="100%">
+					<mx:VBox name="pd4vb" >
+					</mx:VBox>						
+				</mx:Canvas>			
 			</mx:ViewStack>
 			<mx:Button label="Enregistrer" click="editParams()" />
 		</mx:VBox>	

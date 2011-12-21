@@ -75,7 +75,7 @@
 				
 				var filter:FileFilter;
 				if(typeFic=="images"){
-					filter = new FileFilter("Images (*.jpg, *.jpeg, *.gif, *.png)", "*.jpg; *.jpeg; *.gif; *.png");					
+					filter = new FileFilter("Images (*.jpg, *.jpeg, *.png)", "*.jpg; *.jpeg; *.png");					
 				}
 				if(typeFic=="csv"){
 					filter = new FileFilter("Fichier CSV (*.txt, *.rtf, *.csv)", "*.txt; *.rtf; *.csv");					

@@ -4,6 +4,13 @@
 	clipContent="false"
 	>
 	<mx:Script><![CDATA[
+		import compo.twDiagListe;
+		
+		import mx.controls.Alert;
+		import mx.managers.PopUpManager;
+		import mx.rpc.events.FaultEvent;
+		import mx.rpc.events.ResultEvent;
+
 		[Embed(source="/images/A.png")] [Bindable] private var AIcon:Class;
 		[Embed(source="/images/B.png")] [Bindable] private var BIcon:Class;
 		[Embed(source="/images/C.png")] [Bindable] private var CIcon:Class;
@@ -39,6 +46,7 @@
 			};
 
 		[Bindable]	public var rsEtatDiag:Object;
+		[Bindable]	public var idLieu:int;
 		
 		public function init():void {
 			TraiteEtatDiag();
@@ -66,44 +74,39 @@
 			
 		private function chartEtatDiagChange(event:Event):void {
 			var allSeries:Array = event.currentTarget.series;
-			var idDoc:String = "";
 			var strHandi:String = "";
 			var niv:String = "";
 			var titreSelect:String = "";
-			//construction de l'identifiant du doc
-			//cf. library/php/ExeAjax.php?f=GetEtatDiagListe&id=5610&idDoc=0_audio
-			/*
+			//construction de la requête
 			for (var i:int=0; i<allSeries.length; i++) {
-				chartTrace.text += "\n" + allSeries[i].id + 
-					" Selected Items: " + allSeries[i].selectedIndices;
 				//le type de handicap
 				switch (allSeries[i].selectedIndices[0]) {
 					case 0:
-						strHandi = "_moteur";
+						strHandi = "auditif";
 						break;
 					case 1:
-						strHandi = "_audio";
+						strHandi = "cognitif";
 						break;
 					case 2:
-						strHandi = "_cog";
+						strHandi = "moteur";
 						break;
 					case 3:
-						strHandi = "_visu";
+						strHandi = "visuel";
 						break;
 				}				    
 				//le niveau seulemet si on a récupéré  l'indice
 				if(strHandi!="" && niv==""){
 					switch (allSeries[i].id) {
-						case "_gevu_ColumnSeries1":
+						case "_cnvStatDiag_ColumnSeries1":
 							niv = "0";
 							break;
-						case "_gevu_ColumnSeries2":
+						case "_cnvStatDiag_ColumnSeries2":
 							niv = "1";
 							break;
-						case "_gevu_ColumnSeries3":
+						case "_cnvStatDiag_ColumnSeries3":
 							niv = "2";
 							break;
-						case "_gevu_ColumnSeries4":
+						case "_cnvStatDiag_ColumnSeries4":
 							niv = "3";
 							break;
 					}
@@ -111,13 +114,20 @@
 					titreSelect = allSeries[i].legendData[0].label;	
 				}
 			}
+			var vn:Array = new Array();
+			vn["niv"] = niv;
+			vn["handi"] = strHandi;
+			vn["idLieu"] = this.idLieu;
 			
-			idDoc = niv+strHandi; 
-			//exécute la requête
-			ShowListeDiag(idSite.text, idRub.text, idDoc, titreSelect);
-			*/
+			//affiche la liste des diag dans une fenêtre
+			var twDL:twDiagListe = twDiagListe(
+				PopUpManager.createPopUp(this, twDiagListe));
+			twDL.params = vn;
+			PopUpManager.centerPopUp(twDL);
+
 		}
 
+		
 	]]></mx:Script>
 	<!-- Define custom colors for use as fills. -->
 	<mx:SolidColor id="sc0" color="green" alpha=".8"/>
@@ -189,14 +199,6 @@
 			<mx:Image id="imgAlphaCog" source="{CIcon}" width="60" />
 			<mx:Image id="imgAlphaVisu" source="{DIcon}" width="60" />		
 		</mx:HBox>
-		<mx:Legend visible="false"  height="0" >
-			<mx:HBox>
-				<mx:LegendItem label="valides" fill="{sc0}" stroke="{s0}" />			
-				<mx:LegendItem label="niveau 1" fill="{sc1}" stroke="{s1}" />
-				<mx:LegendItem label="niveau 2" fill="{sc2}" stroke="{s2}" />
-				<mx:LegendItem label="niveau 3" fontWeight="bold" fill="{sc3}" stroke="{s3}" />
-			</mx:HBox>
-		</mx:Legend>
 	</mx:VBox>
 	
 

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:ButtonBar xmlns:mx="http://www.adobe.com/2006/mxml"
-			  borderStyle="solid" horizontalGap="2"
-			  itemClick="itemClicked(event);" 
-			  dataProvider="{NodeData}"
-			  labelField="lib" 
-			  >
-	 
+<mx:LinkBar  xmlns:mx="http://www.adobe.com/2006/mxml"
+			  dataProvider="{NodeData}" fontSize="8" borderStyle="solid"
+			  itemClick="itemClicked(event);" labelField="lib"> 
 	<mx:Script>
 		<![CDATA[
 			
@@ -14,9 +10,10 @@
 			[Bindable] public var NodeData:Object;
 			
 			private function itemClicked(event:ItemClickEvent):void {
-				
+				var item:Object = event.item;
+				this.parentApplication.roDiagnostique.getNodeRelatedData(item["id_lieu"],this.parentApplication.idExi, this.parentApplication.idBase);
 			}
 						
 		]]>
 	</mx:Script>
-</mx:ButtonBar>
+</mx:LinkBar >
