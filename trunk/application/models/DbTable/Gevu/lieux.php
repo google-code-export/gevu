@@ -81,6 +81,38 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
+    		//gestion des hiérarchies gauche droite
+    		//http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
+    		//vérifie si le parent à des enfants
+    		$arr = $this->findByLieu_parent($data["lieu_parent"]);
+    		if(count($arr)>0){
+    			//met à jour les niveaux pour les lieux
+    			$sql = 'UPDATE gevu_lieux SET rgt = rgt + 2 WHERE rgt >'.$arr[0]['rgt'];
+    			$stmt = $this->_db->query($sql);
+    			$stmt->execute();
+    			$sql = 'UPDATE gevu_lieux SET lft = lft + 2 WHERE lft >'.$arr[0]['rgt'];
+    			$stmt = $this->_db->query($sql);
+    			$stmt->execute();
+    			//
+    			$data['lft'] = $arr[0]['rgt']+1;
+    			$data['rgt'] = $arr[0]['rgt']+2;
+    			$data['niv'] = $arr[0]['niv'];
+    		}else{
+    			//récupère les informations du parent
+    			$arr = $this->findById_lieu($data["id_parent"]);
+    			//met à jour les niveaux pour les lieux
+    			$sql = 'UPDATE gevu_lieux SET rgt = rgt + 2 WHERE rgt >'.$arr[0]['lft'];
+    			$stmt = $this->_db->query($sql);
+    			$stmt->execute();
+    			$sql = 'UPDATE gevu_lieux SET lft = lft + 2 WHERE lft >'.$arr[0]['lft'];
+    			$stmt = $this->_db->query($sql);
+    			$stmt->execute();
+    			//
+    			$data['lft'] = $arr[0]['lft']+1;
+    			$data['rgt'] = $arr[0]['lft']+2;
+    			$data['niv'] = $arr[0]['niv']+1;
+    		}    		
+    		    		
     	 	$id = $this->insert($data);
     	}
     	return $id;
@@ -326,5 +358,41 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
 
+     /*
+     * Recherche une entrée Gevu_lieux correspondant à l'enfant d'un lieu pour un type de controle
+     * création de ce lieu s'il n'exite pas  
+     * et retourne cette entrée.
+     *
+     * @param integer $idLieu
+     * @param integer $idTypeControle
+     * @param integer $idInst
+     * 
+     * @return array
+     */
+    public function getEnfantForTypeControle($idLieu, $idTypeControle, $idInst)
+    {
+    	//on recherche l'enfant pour le type de controle
+    	$query = $this->select()
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+    		->from(array('l' => 'gevu_lieux'),array("id_lieu"=>"DISTINCT(l.id_lieu)"))
+            ->joinInner(array('d' => 'gevu_diagnostics'),'d.id_lieu = l.id_lieu',array("nbDiag"=>"COUNT(d.id_diag)"))
+            ->joinInner(array('c' => 'gevu_criteres'),'c.id_critere = d.id_critere and c.id_type_controle = '.$idTypeControle,array("nbCtl"=>"COUNT(c.id_critere)"))
+            ->where( "l.lieu_parent = ?", $idLieu);          
+        $result = $this->fetchAll($query)->toArray();
         
+        //s'il n'existe pas on le crée
+        if(!$result[0]['id_lieu']){
+        	//récupération du libelle
+        	$dbC = new Models_DbTable_Gevu_criteres();
+	        $result = $dbC->findByIdTypeControle($idTypeControle);
+        	
+        	//création de l'enfant s'il n'existe pas
+        	$result = $this->ajouter(array("lib"=>$result[0]["lib"], "id_instant"=>$idInst, "lieu_parent"=>$idLieu));
+        }else{
+        	$result = $result[0]["id_lieu"];
+        }
+        return $result; 
+        
+    }
+    
 }

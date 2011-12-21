@@ -160,6 +160,26 @@ class Models_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    
+
+	 /*
+     * Recherche l'entrée Gevu_exisxdroits pour un utilisateur et un droit
+     * et retourne cette entrée.
+     *
+     * @param int $idExi
+     * @param int $idDroit
+     * 
+     * @return array
+     */
+    public function findByExiDroit($idExi, $idDroit)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_exisxdroits") )                           
+                    ->where( "g.id_exi = ?", $idExi)
+                    ->where( "g.id_droit = ?", $idDroit);
+                    
+        return $this->fetchAll($query)->toArray(); 
+
+    }
+        
     
 }

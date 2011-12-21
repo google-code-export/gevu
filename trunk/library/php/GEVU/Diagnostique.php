@@ -318,9 +318,11 @@ class GEVU_Diagnostique extends GEVU_Site{
      *
      * @param int $idLieu
      * @param string $idBase
+     * @param string $idInst
+     * 
      * @return array
      */
-    public function getDiagComplet($idLieu=0, $idBase=false){
+    public function getDiagComplet($idLieu=0, $idBase=false, $idInst=-1){
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
 	   	$rs = $this->cache->load($c);
         if(!$rs){           
@@ -331,7 +333,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         	$p = new Models_DbTable_Gevu_problemes($db);
         	$o = new Models_DbTable_Gevu_observations($db);
         	
-        	$rs['questions'] = $d->getAllDesc($idLieu);
+        	$rs['questions'] = $d->getAllDesc($idLieu,-1, "", -1, $idInst);
         	$rs['problemes'] = $p->findById_lieu($idLieu);
         	$rs['observations'] = $o->findById_lieu($idLieu);
 
@@ -339,7 +341,44 @@ class GEVU_Diagnostique extends GEVU_Site{
         }
         return $rs;
     }
-    
+
+    /**
+     * Récupération de la liste des diagnostics
+     *
+     * @param array $params
+     * @param string $idBase
+     * @return array
+     */
+    public function getDiagListe($params, $idBase=false){
+		$c = str_replace("::", "_", __METHOD__)."_".$idBase."_".$params['idLieu']."_".$params['handi']."_".$params['niv']; 
+	   	$rs = $this->cache->load($c);
+        if(!$rs){           
+            //connexion à la base
+    		$db = $this->getDb($idBase);            
+			//création des tables 
+        	$dbD = new Models_DbTable_Gevu_diagnostics($db);
+
+	        //récupère les campagnes pour le lieu
+	        $rs = $dbD->getDiagliste($params['idLieu'], 1, $params['handi'], $params['niv']);
+	        $nb = count($rs);
+	        $oLieu = -1;
+	        for ($i = 0; $i < $nb; $i++) {
+	        	//vérifie si on traite un nouveau lieu
+	        	if($oLieu != $rs[$i]['dLieu']){
+	        		$oLieu = $rs[$i]['dLieu'];
+	        		//ajoute le fil d'ariane du lieu
+	        		$r[$oLieu]['ariane'] = $this->findLieu($oLieu,"",$idBase);
+	        	}        	
+		        //ajoute la réponse au diagnostic
+        		$r[$oLieu][] = $rs[$i];
+	        }
+        	
+
+        	$this->cache->save($r, $c);
+        }
+        return $r;
+    }
+        
     /**
      * Récupération des données liées à iun lieu
      *
@@ -408,6 +447,82 @@ class GEVU_Diagnostique extends GEVU_Site{
         }
         return $res;
     }
+
+    /**
+     * Récupération d'un scenario complet
+     *
+     * @param int $idScenario
+     * 
+     * @return array
+     */
+    public function getScenarioComplet($idScenario){
+		$c = str_replace("::", "_", __METHOD__)."_".$idScenario; 
+	   	$rs = $this->cache->load($c);
+        if(!$rs){           
+
+        	//création des tables 
+        	$dbScena = new Models_DbTable_Gevu_scenario();        	
+        	$dbScene = new Models_DbTable_Gevu_scenes();
+        	$dbCrit = new Models_DbTable_Gevu_criteres();
+        	
+        	//récupération des informations de scenario
+        	$arrScena = $dbScena->findById_scenario($idScenario);
+        	$psScena = Zend_Json::decode($arrScena[0]['params']);
+        	foreach ($psScena as $pEtapes) {
+        		foreach ($pEtapes['etapes'] as $pScene) {
+	        		if(!isset($rs["criteres"][$pScene['id_type_controle']])){
+		        		$rsCrit = $dbCrit->findByIdTypeControle($pScene['id_type_controle']);	        		
+	        			$rs["criteres"]["idTypeControle".$pScene['id_type_controle']] = $rsCrit;
+	        		}
+	        		$rsScene = $dbScene->findByIdScene($pScene['id_scene']);
+	        		$rsScene['id_type_controle']=$pScene['id_type_controle'];
+	        		$rs["etapes"][$pEtapes['num']] = $rsScene;
+        		}
+        	}
+        	
+        	$this->cache->save($rs, $c);
+        }
+
+        return $rs;
+    }
+
+    /**
+     * Enregistre les choix de diagnostic
+     *
+     * @param int $idExi
+     * @param int $idLieu
+     * @param string $comment
+     * @param array $params
+     * @param int $idBase
+     * 
+     * @return int
+     */
+    public function setChoix($idExi, $idLieu, $comment, $params, $idBase){
+		
+    	//création de la connexion
+    	$db = $this->getDb($idBase);
+    	
+		//création des tables 
+        $dbInst = new Models_DbTable_Gevu_instants();        	
+        $dbDiag = new Models_DbTable_Gevu_diagnostics($db);
+        $dbLieu = new Models_DbTable_Gevu_lieux($db);
+
+        //création de l'instant
+        $idInst = $dbInst->ajouter(array('id_exi'=>$idExi,'commentaires'=>$comment,'nom'=>'setChoix'),false,$idBase);
         
+        //enregsitre les choix
+        $oTypeControle = -1;
+       	foreach ($params as $p) {
+       		if($oTypeControle != $p['id_type_controle']){
+	       		//récupère le lieu enfant correspondant au type de controle
+	       		$idLieuControle = $dbLieu->getEnfantForTypeControle($idLieu, $p['id_type_controle'], $idInst);
+	       		$oTypeControle = $p['id_type_controle'];       			
+       		}
+       		//ajoute le diagnostique
+       		$dbDiag->ajouter(array('id_critere'=>$p['id_critere'],'id_reponse'=>$p['id_reponse'],'id_instant'=>$idInst,'id_lieu'=>$idLieuControle),false);
+       	}
+        return true;
+    }
+    
 }
 
