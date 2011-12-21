@@ -15,14 +15,13 @@
 			[Bindable] public var bDoDrag:Boolean=true;
 			
 			public function init():void{
+				if(!dt)return;
 				if(dt.icone!=""){
 					imgSrc="images/"+dt.icone;
 				}else{
 					imgSrc="images/interrogation.gif";
-					var txt:Text = new Text();
-					txt.text = dt.lib;
-					this.addChild(txt);
 				}
+				txt.text = dt.lib;
 				lbl = dt.lib;					
 			}
 			public function DoDrag(event:MouseEvent):void{
@@ -33,4 +32,5 @@
 		]]>
 	</mx:Script>
 	<mx:Image source="{imgSrc}" toolTip="{lbl}" />
+	<mx:Text id="txt" text="" />
 </mx:VBox>

@@ -11,7 +11,7 @@
 		import mx.charts.series.*;
 		import mx.charts.renderers.*;
 		import mx.charts.events.*;
-		import boost.charts.*
+		import boost.charts.*;
 
         [Bindable] 	public var urlSrv:String;
         [Bindable] 	public var urlBase:String;

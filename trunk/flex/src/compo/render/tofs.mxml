@@ -1,8 +1,17 @@
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 		 horizontalAlign="center"
-		 verticalAlign="middle">
+		 verticalAlign="middle">	
 	
-	<mx:Image source="{data.url}" height="120" />
+	<mx:Script>
+		<![CDATA[
+			protected function getVignette(url:String):String
+			{
+				return url.replace("prob_","vig_prob_");
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Image source="{getVignette(data.url)}" />
 	<mx:Label text="{data.titre}" />
 	
 </mx:VBox>

@@ -12,10 +12,10 @@
 			import mx.controls.Alert;
 			import mx.managers.PopUpManager;
 		
-      	[Embed(source="../images/jpg.png")] [Bindable] private var PhotoIcon:Class;
-      	[Embed(source="../images/mpg.png")] [Bindable] private var FilmIcon:Class;
-      	[Embed(source="../images/mp3.png")] [Bindable] private var SonIcon:Class;
-		[Embed(source="../images/pdf.png")] [Bindable] private var PdfIcon:Class;
+      	[Embed(source="/images/jpg.png")] [Bindable] private var PhotoIcon:Class;
+      	[Embed(source="/images/mpg.png")] [Bindable] private var FilmIcon:Class;
+      	[Embed(source="/images/mp3.png")] [Bindable] private var SonIcon:Class;
+		[Embed(source="/images/pdf.png")] [Bindable] private var PdfIcon:Class;
 
 		public var idRub:String;
 		public var idSite:String;

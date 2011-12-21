@@ -290,6 +290,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 						place = 1;
 					}
 					this.dataStat = obj[item].diag.stat.EtatDiag 
+					stat.idLieu = this.idLieu;
 					stat.init();
 					break;
 				case "geos":
