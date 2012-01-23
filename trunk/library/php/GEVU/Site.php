@@ -5,10 +5,28 @@ class GEVU_Site{
     var $cache;
 	var $idBase;
     var $idExi;
+	var $dbD;
+	var $dbL;
+	var $dbP;
+	var $dbO;
+    var $dbScena;
+    var $dbScene;
+    var $dbC;
+    var $dbI;
+    var $dbG;
+    var $db;
     
-    function __construct(){    	
+	/**
+	* constructeur de la class
+	*
+    * @param string $idBase
+    * 
+    */
+	function __construct($idBase=false){    	
     	
-        $frontendOptions = array(
+        $this->getDb($idBase);
+        
+		$frontendOptions = array(
             'lifetime' => 86400, // temps de vie du cache en seconde
             'automatic_serialization' => true,
         	'caching' => false //active ou desactive le cache
@@ -34,7 +52,7 @@ class GEVU_Site{
     /**
      * retourne une connexion à une base de donnée suivant son nom
     * @param string $idBase
-    * @return Zend_Db_Table
+    * @return Zend_Db_Adapter_Abstract
     */
     public function getDb($idBase){
     	
@@ -45,6 +63,7 @@ class GEVU_Site{
 			$arr['dbname']=$idBase;
 			$db = Zend_Db::factory('PDO_MYSQL', $arr);	
     	}
+    	$this->db = $db;
     	return $db;
     }
 

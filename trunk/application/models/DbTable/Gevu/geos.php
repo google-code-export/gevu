@@ -35,6 +35,22 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
             'refColumns'        => 'id_lieu'
         )
     );	
+
+    /**
+     * initialisation de la base de donnée
+
+     * @param string $idBase
+     *
+     */
+    private function setupDBA($idBase="") 
+	{
+		if($idBase!=""){
+			$this->_adapter=$idBase;
+			$this->_db = Zend_Registry::get($this->_adapter);			
+		}else{
+			$this->_db = $this->getDefaultAdapter();
+		}
+	}
     
     /**
      * Vérifie si une entrée Gevu_geos existe.
@@ -60,11 +76,12 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      *
      * @param array $data
      * @param boolean $existe
+     * @param string $idBase
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
-    {
+    public function ajouter($data, $existe=true, $idBase=false)
+    {   	
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
@@ -79,12 +96,14 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      *
      * @param integer $id
      * @param array $data
+     * @param string $idBase
      *
      * @return void
      */
-    public function edit($id, $data)
-    {        
-        $this->update($data, 'gevu_geos.id_geo = ' . $id);
+    public function edit($id, $data, $idBase)
+    {
+    	$this->setupDBA($idBase);        
+    	$this->update($data, 'gevu_geos.id_geo = ' . $id);
     }
     
     /**
@@ -121,30 +140,6 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_geos 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_geo","champ"=>"id_geo","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"lat","champ"=>"lat","visible"=>true),
-    	array("titre"=>"lng","champ"=>"lng","visible"=>true),
-    	array("titre"=>"zoom_min","champ"=>"zoom_min","visible"=>true),
-    	array("titre"=>"zoom_max","champ"=>"zoom_max","visible"=>true),
-    	array("titre"=>"adresse","champ"=>"adresse","visible"=>true),
-    	array("titre"=>"kml","champ"=>"kml","visible"=>true),
-    	array("titre"=>"id_type_carte","champ"=>"id_type_carte","visible"=>true),
-    	array("titre"=>"id_donnee","champ"=>"id_donnee","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_geos avec la valeur spécifiée

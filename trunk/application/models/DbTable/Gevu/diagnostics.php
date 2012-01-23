@@ -425,9 +425,11 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         $ids = $arr[0]['ids'];
         if(substr($ids,-1)==",")$ids.=-1;
         
-       	//initialise le tag des lieux    	
-    	$where = $this->getAdapter()->quoteInto('id_lieu IN ('.$ids.')');
-    	$query = $this->update(array('last'=>0), $where);
+       	//initialise le tag des lieux
+       	if($ids){
+	    	$where = $this->getAdapter()->quoteInto('id_lieu IN ('.$ids.')');
+	    	$query = $this->update(array('last'=>0), $where);       		
+       	}    	
     	
     	//récupère les identifiants des derniers diagnostics
     	$sql = "SELECT GROUP_CONCAT(sd.id_diag) ids 
@@ -446,8 +448,10 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         if(substr($ids,-1)==",")$ids.=-1;
         
        	//met à jour le tag qui indique les derniers    	
-    	$where = $this->getAdapter()->quoteInto('id_lieu IN ('.$ids.')');
-    	$query = $this->update(array('last'=>1), $where);
+       	if($ids){
+	        $where = $this->getAdapter()->quoteInto('id_lieu IN ('.$ids.')');
+	    	$query = $this->update(array('last'=>1), $where);       		
+       	}
         
     }
     

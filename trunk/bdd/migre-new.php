@@ -1147,7 +1147,7 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant){
     
     //GEOGRAPHIE
     $sql = "INSERT INTO $dbN.gevu_geos
-    (id_lieu, id_instant, lat, lng, zoom_min, zoom_max, adresse, id_type_carte, kml, id_donnee, maj)
+    (id_lieu, id_instant, lat, lng, zoom_min, zoom_max, adresse, type_carte, kml, id_donnee, maj)
     SELECT l.id_lieu
                     , $idInstant
                     , fdc1.valeur
@@ -1181,6 +1181,24 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant){
     $result = mysql_query($sql);
     if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
     echo "$dbO GEOGRAPHIE : ".mysql_affected_rows()."<br />";        
+    //met à jour les type de carte
+    $sql = "UPDATE $dbN.gevu_geos SET type_carte='TERRAIN' WHERE type_carte = '0'";
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO MAJ geos 0 : ".mysql_affected_rows()."<br />"; 
+    $sql = "UPDATE $dbN.gevu_geos SET type_carte='ROADMAP' WHERE type_carte = '3'";
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO MAJ geos 3 : ".mysql_affected_rows()."<br />"; 
+    $sql = "UPDATE $dbN.gevu_geos SET type_carte='SATELLITE' WHERE type_carte = '4'";
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO MAJ geos 4 : ".mysql_affected_rows()."<br />"; 
+    $sql = "UPDATE $dbN.gevu_geos SET type_carte='HYBRID' WHERE type_carte = '5'";
+    $result = mysql_query($sql);
+    if (!$result) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
+    echo "$dbO MAJ geos 5 : ".mysql_affected_rows()."<br />"; 
+    
     
     //GEORSS
     $sql = "INSERT INTO $dbN.gevu_georss

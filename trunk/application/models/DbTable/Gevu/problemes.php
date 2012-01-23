@@ -40,6 +40,7 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
 
     /**
      * initialisation de la base de donnée
+     * ATTENTION CETTE VERSION POSE DES PROBLEME AVEC findDependentRowset
 
      * @param string $idBase
      *
