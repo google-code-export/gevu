@@ -125,11 +125,11 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      * @param integer $id
      * @param array $data
      *
-     * @return void
+     * @return integer
      */
     public function edit($id, $data)
     {        
-        $this->update($data, 'gevu_lieux.id_lieu = ' . $id);
+        return $this->update($data, 'gevu_lieux.id_lieu = ' . $id);
     }
     
     /**
@@ -374,10 +374,11 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     	//on recherche l'enfant pour le type de controle
     	$query = $this->select()
         	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
-    		->from(array('l' => 'gevu_lieux'),array("id_lieu"=>"DISTINCT(l.id_lieu)"))
+    		->from(array('l' => 'gevu_lieux'),array("id_lieu"))
             ->joinInner(array('d' => 'gevu_diagnostics'),'d.id_lieu = l.id_lieu',array("nbDiag"=>"COUNT(d.id_diag)"))
             ->joinInner(array('c' => 'gevu_criteres'),'c.id_critere = d.id_critere and c.id_type_controle = '.$idTypeControle,array("nbCtl"=>"COUNT(c.id_critere)"))
-            ->where( "l.lieu_parent = ?", $idLieu);          
+            ->where( "l.lieu_parent = ?", $idLieu)
+            ->group("l.id_lieu");          
         $result = $this->fetchAll($query)->toArray();
         
         //s'il n'existe pas on le crée

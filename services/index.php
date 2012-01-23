@@ -8,11 +8,14 @@ try {
 	$idBase = "gevu_new_alceane";
 	$idExi = 1;
 	$d = new GEVU_Diagnostique();
+	$arr = $d->getNodeRelatedData(5,$idExi,$idBase);
+	$d->editLieux(2, array("lib"=>"tetst"), $idBase);
+	$d->findLieu(881,"",$idBase);
+	$arr = $d->getNodeRelatedData(881,$idExi,$idBase);
 	$d->setChoix($idExi, 212, "il pleut encore", array(array("id_critere"=>40,"id_reponse"=>1, "id_type_controle"=>2),array("id_critere"=>27,"id_reponse"=>1, "id_type_controle"=>2)), $idBase);
 	$d->getDiagComplet(218,$idBase,48);
 	$d->getScenarioComplet(9);
 	$arr = $d->getDiagListe(array("idLieu"=>1,"handi"=>"moteur","niv"=>2),$idBase);
-	$arr = $d->getNodeRelatedData(212,$idExi,$idBase);
 	$arr = $d->calculDiagForLieu(1,-1,$idBase);
 	$d->findLieu(212,"",$idBase);
 	$xml = $d->getXmlNode(212,$idBase);

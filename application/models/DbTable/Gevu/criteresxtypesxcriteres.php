@@ -93,7 +93,8 @@ class Models_DbTable_Gevu_criteresxtypesxcriteres extends Zend_Db_Table_Abstract
      */
     public function remove($idCrit, $idType)
     {
-        $this->delete('gevu_criteresxtypesxcriteres.id_type_critere = ' . $idType.' AND gevu_criteresxtypesxcriteres.id_critere ='.$idCrit );
+        $this->delete('gevu_criteresxtypesxcriteres.id_type_critere = ' . $idType.' 
+        	AND gevu_criteresxtypesxcriteres.id_critere ='.$idCrit );
     }
     
     /**

@@ -3,6 +3,18 @@
 class GEVU_Diagnostique extends GEVU_Site{
     	
 	/**
+	* constructeur de la class
+	*
+    * @param string $idBase
+    * 
+    */
+	public function __construct($idBase=false)
+    {
+    	parent::__construct($idBase);
+		
+    }
+	
+	/**
 	* calcul le diagnostic d'un lieu
 	* et renvoie les résultats 
     * @param string $idLieu
@@ -14,25 +26,22 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idInstant."_".$idBase; 
 	   	$r = $this->cache->load($c);
         if(!$r){
-			$this->idBase = $idBase;
 			
-			//connexion à la base
-	    	$db = $this->getDb($idBase);
-
-	    	//création des tables
-	        $dbD = new Models_DbTable_Gevu_diagnostics($db);
+			//initialise les gestionnaires de base de données
+			$this->getDb($idBase);
+        	if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
 	        
 	        if($idInstant==-1){
 	        	//marque les derniers diagnostics
-	        	$dbD->setLastDiagForLieu($idLieu);
+	        	$this->dbD->setLastDiagForLieu($idLieu);
 	        }
 
 	        //récupère les diags oui
-	        $r['DiagOui'] = $dbD->getDiagReponse($idLieu, $idInstant, 1);
+	        $r['DiagOui'] = $this->dbD->getDiagReponse($idLieu, $idInstant, 1);
 	        //récupère les diags non
-	        $r['DiagNon'] = $dbD->getDiagReponse($idLieu, $idInstant, 2);
+	        $r['DiagNon'] = $this->dbD->getDiagReponse($idLieu, $idInstant, 2);
 	        //récupère tous les diags
-	        $r['DiagTot'] = $dbD->getDiagReponse($idLieu, $idInstant);
+	        $r['DiagTot'] = $this->dbD->getDiagReponse($idLieu, $idInstant);
 
 	        //calcule les handicateurs
 			$r['handicateur']['auditif'] = $this->getHandicateur("auditif",$r);
@@ -131,17 +140,14 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idExi."_".$idBase; 
 	   	$r = $this->cache->load($c);
         if(!$r){
-			$this->idBase = $idBase;
 			$this->idExi = $idExi;
 			
-			//connexion à la base
-	    	$db = $this->getDb($idBase);
-
-	    	//création des tables
-	        $dbD = new Models_DbTable_Gevu_diagnostics($db);
-	        
+			//initialise les gestionnaires de base de données
+			$this->getDb($idBase);
+        	if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
+				        
 	        //récupère les campagnes pour le lieu
-	        $r = $dbD->getCampagnes($idLieu);
+	        $r = $this->dbD->getCampagnes($idLieu);
 	        $nb = count($r);
 	        for ($i = 0; $i < $nb; $i++) {        	
 		        //récupère les diags 
@@ -165,22 +171,21 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
 	   	$r = $this->cache->load($c);
         if(!$r){
-			$this->idBase = $idBase;
-			//connexion à la base
-	    	$db = $this->getDb($idBase);
-	    	//création de la table
-	        $dbL = new Models_DbTable_Gevu_lieux($db);
-	        $r = array();
+			//initialise les gestionnaires de base de données
+			$this->getDb($idBase);
+        	if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+
+        	$r = array();
 	        if($idLieu){
 		        //recherche par identifiant
-		        $arr = $dbL->findById_lieu($idLieu);
-		        $r['id'] = $this->setResultLieu($arr,$dbL);
+		        $arr = $this->dbL->findById_lieu($idLieu);
+		        $r['id'] = $this->setResultLieu($arr);
 		        $r['lib'] = "";
 	        }
 	        if($txtLieu){
 		        //recherche par lib
-		        $arr = $dbL->findByLib($txtLieu);
-		        $r['lib'] = $this->setResultLieu($arr,$dbL);
+		        $arr = $this->dbL->findByLib($txtLieu);
+		        $r['lib'] = $this->setResultLieu($arr);
 				$r['id'] = ""; 
 	        }
 	    	$this->cache->save($r, $c);
@@ -191,16 +196,16 @@ class GEVU_Diagnostique extends GEVU_Site{
 	/**
 	* formate le résultat d'une recherche de lieu 
     * @param Array $r
-    * @param Models_DbTable_Gevu_lieux $dbLieu
+    * 
     * @return Array
     */
-	public function setResultLieu($r, $dbLieu){
+	public function setResultLieu($r){
         $result = array();
 		//pour chaque lieu trouvé
         $nb = count($r);
         for ($i = 0; $i < $nb; $i++) {
         	//ajoute le fil d'ariane du lieux pour afficher les résultats
-        	$arrL = $dbLieu->getFullPath($r[$i]['id_lieu']);
+        	$arrL = $this->dbL->getFullPath($r[$i]['id_lieu']);
         	//création du xml pour afficher dans l'arboressence
 			$dom = false;
 			$j = 1;
@@ -245,12 +250,12 @@ class GEVU_Diagnostique extends GEVU_Site{
 	   	$xml = $this->cache->load($c);
         if(!$xml){
     		$xml="";
-    		//connexion à la base
-    		$db = $this->getDb($idBase);
-    		//création de la table
-        	$dbLieu = new Models_DbTable_Gevu_lieux($db);
-        	$r = $dbLieu->findById_lieu($idLieu);
-        	$xml = $this->getXmlEnfant($idLieu, $dbLieu, $nivMax);
+			//initialise les gestionnaires de base de données
+			$this->getDb($idBase);
+        	if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+			
+        	$r = $this->dbL->findById_lieu($idLieu);
+        	$xml = $this->getXmlEnfant($idLieu, $nivMax);
 	    	$this->cache->save($xml, $c);
         }
         if($xml!=""){
@@ -267,14 +272,13 @@ class GEVU_Diagnostique extends GEVU_Site{
      * Récupération des enfants d'un lieu
      *
      * @param integer $idLieu
-     * @param Models_DbTable_Gevu_lieux $dbLieu
      * @param integer $nivMax
      * @param integer $niv
      * @return string
      */
-    public function getXmlEnfant($idLieu, $dbLieu, $nivMax=1, $niv=0){
+    public function getXmlEnfant($idLieu, $nivMax=1, $niv=0){
     	    	
-    	$r = $dbLieu->findByLieu_parent($idLieu);
+    	$r = $this->dbL->findByLieu_parent($idLieu);
 		$xml ="";
 		foreach ($r as $v){
         	$xml .= $this->getXmlLieu($v);
@@ -285,7 +289,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         	} 
         	if($nivMax > $niv){
 		    	//récupère le xml des enfants
-	    		$xml .= $this->getXmlEnfant($v['id_lieu'], $dbLieu, $nivMax, $niv+1);
+	    		$xml .= $this->getXmlEnfant($v['id_lieu'], $nivMax, $niv+1);
         	}else{
     			$xml .="<node idLieu=\"-10\" lib=\"loading...\" fake=\"1\" icon=\"voieIcon\" />";
 	    	}
@@ -294,7 +298,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         
         //création de la racine
     	if($niv==0){
-        	$r = $dbLieu->findById_lieu($idLieu);
+        	$r = $this->dbL->findById_lieu($idLieu);
         	$xml = $this->getXmlLieu($r[0])
         		.$xml
         		."</node>\n";
@@ -326,16 +330,15 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
 	   	$rs = $this->cache->load($c);
         if(!$rs){           
-            //connexion à la base
-    		$db = $this->getDb($idBase);            
-			//création des tables 
-        	$d = new Models_DbTable_Gevu_diagnostics($db);
-        	$p = new Models_DbTable_Gevu_problemes($db);
-        	$o = new Models_DbTable_Gevu_observations($db);
-        	
-        	$rs['questions'] = $d->getAllDesc($idLieu,-1, "", -1, $idInst);
-        	$rs['problemes'] = $p->findById_lieu($idLieu);
-        	$rs['observations'] = $o->findById_lieu($idLieu);
+			//initialise les gestionnaires de base de données
+			$this->getDb($idBase);
+        	if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
+        	if(!$this->dbP)$this->dbP = new Models_DbTable_Gevu_problemes($this->db);
+        	if(!$this->dbO)$this->dbO = new Models_DbTable_Gevu_observations($this->db);
+        	        	
+        	$rs['questions'] = $this->dbD->getAllDesc($idLieu,-1, "", -1, $idInst);
+        	$rs['problemes'] = $this->dbP->findById_lieu($idLieu);
+        	$rs['observations'] = $this->dbO->findById_lieu($idLieu);
 
         	$this->cache->save($rs, $c);
         }
@@ -353,13 +356,12 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$c = str_replace("::", "_", __METHOD__)."_".$idBase."_".$params['idLieu']."_".$params['handi']."_".$params['niv']; 
 	   	$rs = $this->cache->load($c);
         if(!$rs){           
-            //connexion à la base
-    		$db = $this->getDb($idBase);            
-			//création des tables 
-        	$dbD = new Models_DbTable_Gevu_diagnostics($db);
+			//initialise les gestionnaires de base de données
+			$this->getDb($idBase);
+        	if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
 
 	        //récupère les campagnes pour le lieu
-	        $rs = $dbD->getDiagliste($params['idLieu'], 1, $params['handi'], $params['niv']);
+	        $rs = $this->dbD->getDiagliste($params['idLieu'], 1, $params['handi'], $params['niv']);
 	        $nb = count($rs);
 	        $oLieu = -1;
 	        for ($i = 0; $i < $nb; $i++) {
@@ -396,23 +398,19 @@ class GEVU_Diagnostique extends GEVU_Site{
             $res = array();
             $this->idExi = $idExi;
             
-            //connexion à la base
-    		$db = $this->getDb($idBase);
-            
-    		//création de la table lieux
-        	$dbL = new Models_DbTable_Gevu_lieux($db);
-			//création de la table diagnostics
-        	$d = new Models_DbTable_Gevu_diagnostics($db);
-        	
+			//initialise les gestionnaires de base de données
+			$this->getDb($idBase);
+        	if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+                    	
         	//création du fil d'ariane
-            $res['ariane']=$dbL->getFullPath($idLieu);
+            $res['ariane']=$this->dbL->getFullPath($idLieu);
 	        
             //récupération des données courantes
-			$Rowset = $dbL->find($idLieu);
+			$Rowset = $this->dbL->find($idLieu);
 			$lieu = $Rowset->current();
 			
 			//récupération des données lieés
-            $dt = $dbL->getDependentTables();
+            $dt = $this->dbL->getDependentTables();
             foreach($dt as $t){
 				$items = $lieu->findDependentRowset($t);
 				if($items->count()){
@@ -429,12 +427,10 @@ class GEVU_Diagnostique extends GEVU_Site{
             	}
 			}
 			//vérifie si les enfants ont des diagnostics
-			$rs = $dbL->findByLieu_parent($idLieu);
+			$rs = $this->dbL->findByLieu_parent($idLieu);
 			foreach ($rs as $r){
 				if($r['nbDiag']>0){
 					//récupère les informations de l'enfant
-					//$resEnf = $this->getNodeRelatedData($r['id_lieu'],$idBase);
-					//$resEnf = $d->getCampagnes($r['id_lieu']);
 					$resEnf = $this->getDiagForLieu($r['id_lieu'], $idExi, $idBase);
 					if(count($res["___diagnostics"]["enfants"])== 0)$res["___diagnostics"]["enfants"]=$resEnf;
 					else $res["___diagnostics"]["enfants"] = array_merge($res["___diagnostics"]["enfants"], $resEnf);			
@@ -460,21 +456,21 @@ class GEVU_Diagnostique extends GEVU_Site{
 	   	$rs = $this->cache->load($c);
         if(!$rs){           
 
-        	//création des tables 
-        	$dbScena = new Models_DbTable_Gevu_scenario();        	
-        	$dbScene = new Models_DbTable_Gevu_scenes();
-        	$dbCrit = new Models_DbTable_Gevu_criteres();
+			//initialise les gestionnaires de base de données
+        	if(!$this->dbScena)$this->dbScena = new Models_DbTable_Gevu_scenario($this->db);
+        	if(!$this->dbScene)$this->dbScene = new Models_DbTable_Gevu_scenes($this->db);
+        	if(!$this->dbC)$this->dbC = new Models_DbTable_Gevu_criteres($this->db);
         	
         	//récupération des informations de scenario
-        	$arrScena = $dbScena->findById_scenario($idScenario);
+        	$arrScena = $this->dbScena->findById_scenario($idScenario);
         	$psScena = Zend_Json::decode($arrScena[0]['params']);
         	foreach ($psScena as $pEtapes) {
         		foreach ($pEtapes['etapes'] as $pScene) {
 	        		if(!isset($rs["criteres"][$pScene['id_type_controle']])){
-		        		$rsCrit = $dbCrit->findByIdTypeControle($pScene['id_type_controle']);	        		
+		        		$rsCrit = $this->dbC->findByIdTypeControle($pScene['id_type_controle']);	        		
 	        			$rs["criteres"]["idTypeControle".$pScene['id_type_controle']] = $rsCrit;
 	        		}
-	        		$rsScene = $dbScene->findByIdScene($pScene['id_scene']);
+	        		$rsScene = $this->dbScene->findByIdScene($pScene['id_scene']);
 	        		$rsScene['id_type_controle']=$pScene['id_type_controle'];
 	        		$rs["etapes"][$pEtapes['num']] = $rsScene;
         		}
@@ -499,29 +495,63 @@ class GEVU_Diagnostique extends GEVU_Site{
      */
     public function setChoix($idExi, $idLieu, $comment, $params, $idBase){
 		
-    	//création de la connexion
-    	$db = $this->getDb($idBase);
-    	
-		//création des tables 
-        $dbInst = new Models_DbTable_Gevu_instants();        	
-        $dbDiag = new Models_DbTable_Gevu_diagnostics($db);
-        $dbLieu = new Models_DbTable_Gevu_lieux($db);
-
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+    	if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+        if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
+        if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+    	    	
         //création de l'instant
-        $idInst = $dbInst->ajouter(array('id_exi'=>$idExi,'commentaires'=>$comment,'nom'=>'setChoix'),false,$idBase);
+        $idInst = $this->dbI->ajouter(array('id_exi'=>$idExi,'commentaires'=>$comment,'nom'=>'setChoix'),false,$idBase);
         
         //enregsitre les choix
         $oTypeControle = -1;
        	foreach ($params as $p) {
        		if($oTypeControle != $p['id_type_controle']){
 	       		//récupère le lieu enfant correspondant au type de controle
-	       		$idLieuControle = $dbLieu->getEnfantForTypeControle($idLieu, $p['id_type_controle'], $idInst);
+	       		$idLieuControle = $this->dbL->getEnfantForTypeControle($idLieu, $p['id_type_controle'], $idInst);
 	       		$oTypeControle = $p['id_type_controle'];       			
        		}
        		//ajoute le diagnostique
-       		$dbDiag->ajouter(array('id_critere'=>$p['id_critere'],'id_reponse'=>$p['id_reponse'],'id_instant'=>$idInst,'id_lieu'=>$idLieuControle),false);
+       		$this->dbD->ajouter(array('id_critere'=>$p['id_critere'],'id_reponse'=>$p['id_reponse'],'id_instant'=>$idInst,'id_lieu'=>$idLieuControle),false);
        	}
         return true;
+    }
+
+    /**
+     * Enregistre la modification de lieu
+     *
+     * @param int $idLieu
+     * @param array $data
+     * @param int $idBase
+     * 
+     * @return integer
+     */
+    public function editLieu($idLieu, $data, $idBase){
+		
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+    	    	
+        return $this->dbL->edit($idLieu, $data);
+    }
+
+    /**
+     * Enregistre la modification de geo
+     *
+     * @param int $idLieu
+     * @param array $data
+     * @param int $idBase
+     * 
+     * @return integer
+     */
+    public function editGeo($idLieu, $data, $idBase){
+		
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        if(!$this->dbG)$this->dbG = new Models_DbTable_Gevu_geos($this->db);
+    	    	
+        return $this->dbG->edit($idLieu, $data);
     }
     
 }
