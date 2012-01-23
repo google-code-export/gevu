@@ -86,6 +86,7 @@ public function login():void
 public function init():void
 {
 	boxGen.visible = true;
+	cartoIF.visible = true;
 
 	//construction de la listes des bases disponibles
 	var dataBases:Array = JSON.decode(this.exi.droit_3);
@@ -152,6 +153,21 @@ private function treeItemOpened(event:TreeEvent) : void {
 		roDiagnostique.getXmlNode(i, idBase);
 	}
 }
+
+protected function treeTree_itemEditEndHandler(event:ListEvent):void
+{
+	var i:int = event.itemRenderer.data.attribute("idLieu");
+	var arr:Array = new Array();
+	arr["lib"]= event.currentTarget.itemEditorInstance.text;
+	roDiagnostique.editLieu(i,arr,idBase);	
+}
+
+protected function lieuxEdit_resultHandler(event:ResultEvent):void
+{
+	// TODO Auto-generated method stub
+	var mess:String = event.result as String;
+}
+
 
 private function btnFind_clickHandler(event:MouseEvent):void
 {
@@ -295,7 +311,8 @@ private function displayNodeProperties(event:ResultEvent) : void {
 					break;
 				case "geos":
 					dataGeo = obj["Models_DbTable_Gevu_geos"][0];
-					carto.init();
+					carto.init();			
+					cartoIF.callChangeGeo();
 					break;
 				case "docsxlieux":
 					break;
@@ -306,6 +323,9 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		}
 		//vérifie la place de l'objet
 		if(item == "ariane"){
+			//on ajoute un élément pour la création d'un nouveau lieu
+			var o:Object  = {id_lieu:-1, lib:"-> AJOUTER"};
+			obj[item][obj[item].length] = o;
 			bbAriane.NodeData = obj[item];
 		}else{
 			if(place > 0){
@@ -315,6 +335,10 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		}
 	}	
 	
+}
+
+public function ajouterLieu():void{
+	Alert.show("Voilà le nouveau lieu");
 }
 
 private function updateTreeStructure(event:ResultEvent) : void {

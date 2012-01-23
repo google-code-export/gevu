@@ -17,6 +17,7 @@
       <libraryPathEntry kind="3" linkType="1" path="libs/map_flex_1_20.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="libs/xpath-as3-1.0.0.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="libs/zip.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="libs/flex-iframe-1.4.6.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
