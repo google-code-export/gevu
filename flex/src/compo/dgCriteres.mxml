@@ -240,29 +240,29 @@ private function deleteDeficiClickHandler(event:CloseEvent):void
     }
 }
 
-private function TypeCriHandler(e:Object):void
-{
-	vsTypeCri.selectedChild = viewTypeCri;
-    ROCC.findByIdCritere(idCritere);
-}
+		
+		private function deleteTypeCri():void {
+		    
+		    if (this.dgTypeCri.selectedItem)
+		    {
+		        Alert.show("Confirmez-vous la suppression de ce type de critère pour ce critère ?",
+		        "Confirmation Suppression", 3, this, deleteTypeCriClickHandler);
+		    }
+		    
+		}
+		private function deleteTypeCriClickHandler(event:CloseEvent):void
+		{
+		    if (event.detail == Alert.YES) 
+		    {
+				ROCC.remove(idCritere, dgTypeCri.selectedItem['id_type_critere']);
+		    }
+		}
 
-private function deleteTypeCri():void {
-    
-    if (this.dgTypeCri.selectedItem)
-    {
-        Alert.show("Confirmez-vous la suppression de ce type de critère pour ce critère ?",
-        "Confirmation Suppression", 3, this, deleteTypeCriClickHandler);
-    }
-    
-}
-private function deleteTypeCriClickHandler(event:CloseEvent):void
-{
-    if (event.detail == Alert.YES) 
-    {
-		ROCC.remove(idCritere, dgTypeCri.selectedItem['id_type_critere']);
-    }
-}
-
+		private function TypeCriHandler(e:Object):void
+		{
+			vsTypeCri.selectedChild = viewTypeCri;
+			ROCC.findByIdCritere(idCritere);
+		}
 
         ]]>
     </mx:Script>
@@ -427,12 +427,16 @@ private function deleteTypeCriClickHandler(event:CloseEvent):void
 					</mx:Panel>
 				</mx:HBox>						
 				<mx:HBox width="100%" height="100%" >
+					
+					
 					<mx:Panel title="Types de critère" width="100%" height="100%" layout="absolute">
 						<mx:ViewStack id="vsTypeCri" width="100%" height="100%">
 							<mx:VBox id="viewTypeCri" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 								<mx:HBox>
-									<mx:LinkButton click="vsTypeCri.selectedChild = insertTypeCri;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un type de critère au critère" />
-									<mx:LinkButton click="deleteTypeCri()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un type de critère du critère" />							
+									<mx:LinkButton click="vsTypeCri.selectedChild = insertTypeCri;" icon="@Embed('images/AddRecord.png')"
+												   toolTip="Ajouter un type de critère au critère" />
+									<mx:LinkButton click="deleteTypeCri()" icon="@Embed('images/DeleteRecord.png')" 
+												   toolTip="Supprimer un type de critère du critère" />							
 								</mx:HBox>							
 								<mx:DataGrid width="100%" height="100%" id="dgTypeCri">
 									<mx:columns>
@@ -443,7 +447,8 @@ private function deleteTypeCriClickHandler(event:CloseEvent):void
 							</mx:VBox>
 							<mx:VBox id="insertTypeCri" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 								<mx:Label text="Choisissez un type de critere:"/> 
-				            	<ns2:cbGroupeMot titre="un type de critère" keyName="id_type_critere" id="cbTypeCri" objName="Models_DbTable_Gevu_typesxcriteres" endPoint="{RO.endpoint}" />
+				            	<ns2:cbGroupeMot titre="un type de critère" keyName="id_type_critere" id="cbTypeCri" 
+												 objName="Models_DbTable_Gevu_typesxcriteres" endPoint="{RO.endpoint}" />
 								<mx:HBox>
 									<mx:Button label="Enregistrer" click="ROCC.ajouter(idCritere,cbTypeCri.cb.selectedItem['id_type_critere']);" />
 									<mx:Button label="Annuler" click="vsTypeCri.selectedChild = viewTypeCri;" />				
@@ -451,6 +456,9 @@ private function deleteTypeCriClickHandler(event:CloseEvent):void
 							</mx:VBox>
 						</mx:ViewStack>											
 					</mx:Panel>
+					
+					
+					
 				</mx:HBox>						
 			</mx:VBox>		
 		</mx:HBox>

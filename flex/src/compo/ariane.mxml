@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:LinkBar  xmlns:mx="http://www.adobe.com/2006/mxml"
 			  dataProvider="{NodeData}" fontSize="8" borderStyle="solid"
-			  itemClick="itemClicked(event);" labelField="lib"> 
+			  itemClick="itemClicked(event);" labelField="lib"
+			  > 
 	<mx:Script>
 		<![CDATA[
-			
+			import mx.controls.LinkButton;
+			import mx.events.FlexEvent;
 			import mx.events.ItemClickEvent;
+			import mx.utils.object_proxy;
 			
 			[Bindable] public var NodeData:Object;
 			
 			private function itemClicked(event:ItemClickEvent):void {
 				var item:Object = event.item;
-				this.parentApplication.roDiagnostique.getNodeRelatedData(item["id_lieu"],this.parentApplication.idExi, this.parentApplication.idBase);
+				//vérifie s'il faut ajouter un élément
+				if(item["id_lieu"]==-1){
+					this.parentApplication.ajouterLieu();
+				}else{
+					this.parentApplication.roDiagnostique.getNodeRelatedData(item["id_lieu"],this.parentApplication.idExi, this.parentApplication.idBase);					
+				}
 			}
-						
+
 		]]>
 	</mx:Script>
 </mx:LinkBar >
