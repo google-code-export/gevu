@@ -99,7 +99,7 @@ class GEVU_Import{
 			$prefix = "";
 			if($data['objName']=="model_rapport"){
 				$rep = SEP_PATH.'data'.SEP_PATH.'rapports'.SEP_PATH.'models';
-			}elseif($data['objName']=='Models_DbTable_Gevu_problemes'){
+			}elseif($data['objName']=='Models_DbTable_Gevu_docsxproblemes'){
 				$rep = SEP_PATH.'data'.SEP_PATH.'problemes'.SEP_PATH.$data['idBase'];
 				//vérifie s'il faut créer le répertoire existe
 				if (!is_dir(ROOT_PATH.$rep)) {
@@ -107,6 +107,14 @@ class GEVU_Import{
                 }
                 //initialisation du préfixe
                 $prefix = "prob_".$data['objId']."_";
+			}elseif($data['objName']=='Models_DbTable_Gevu_docsxlieux'){
+				$rep = SEP_PATH.'data'.SEP_PATH.'lieux'.SEP_PATH.$data['idBase'];
+				//vérifie s'il faut créer le répertoire existe
+				if (!is_dir(ROOT_PATH.$rep)) {
+                    mkdir(ROOT_PATH.$rep);  
+                }
+                //initialisation du préfixe
+                $prefix = "lieux_".$data['objId']."_";
 			}else{
 				$rep = SEP_PATH.'data'.SEP_PATH.'upload';    
 			}
@@ -169,13 +177,15 @@ class GEVU_Import{
     	
     	if($dataDoc["url"]=="url")return ;
     	
-		$ins = new Models_DbTable_Gevu_instants();
-		$idIns = $ins->ajouter(array("nom"=>$nom."_addDoc","id_exi"=>$data['idExi']),false,$data['idBase']);
+    	$site = new GEVU_Site($data['idBase']);
+    	
+		$ins = new Models_DbTable_Gevu_instants($site->db);
+		$idIns = $ins->ajouter(array("nom"=>$nom."_addDoc","id_exi"=>$data['idExi']));
 
 		$dataDoc["id_instant"] = $idIns;
 		
-		$doc = new Models_DbTable_Gevu_docs();
-		$idDoc = $doc->ajouter($dataDoc,false,$data['idBase']);
+		$doc = new Models_DbTable_Gevu_docs($site->db);
+		$idDoc = $doc->ajouter($dataDoc,false);
 		
 		if($data['objName']=='img_solus'){
 			$doc_obj = new Models_DbTable_Gevu_docsxsolutions();
@@ -185,17 +195,22 @@ class GEVU_Import{
 			$doc_obj = new Models_DbTable_Gevu_docsxproduits();
 			$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_produit"=>$data['objId']),false);		
 		}
-		if($data['objName']=='Models_DbTable_Gevu_problemes'){
+		if($data['objName']=='Models_DbTable_Gevu_docsxproblemes' || $data['objName']=='Models_DbTable_Gevu_docsxlieux' ){
 			//redimensionne l'image pour la vignette
 			$this->fctredimimage(120,120,'',"vig_".$data['new_name'],$data['rep'],$data['new_name']);
 			//redimensionne l'image pour l'affichage web
 			$this->fctredimimage(400,400,'','',$data['rep'],$data['new_name']);
 			//ajoute une signature
 			$this->fcttexteimage("GEVU", '', '',$data['rep'], $data['new_name'], 'HG');
-			$doc_obj = new Models_DbTable_Gevu_problemes();
-			$doc_obj->ajouterDoc(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_probleme"=>$data['objId']),$data['idBase']);		
-		}
-		
+			if($data['objName']=='Models_DbTable_Gevu_docsxproblemes'){
+				$doc_obj = new Models_DbTable_Gevu_docsxproblemes($site->db);
+				$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_probleme"=>$data['objId']));		
+			}
+			if($data['objName']=='Models_DbTable_Gevu_docsxlieux'){
+				$doc_obj = new Models_DbTable_Gevu_docsxlieux($site->db);
+				$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_lieu"=>$data['objId']));
+			}		
+		}		
     }
 
     public function traiteDoc($idDoc, $creerModele=false){

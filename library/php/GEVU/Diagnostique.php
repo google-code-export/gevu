@@ -15,6 +15,201 @@ class GEVU_Diagnostique extends GEVU_Site{
     }
 	
 	/**
+	* ajoute un contrôle pour le lieu 
+    * @param int $idLieu
+    * @param string $Obj
+    * @param int $idExi
+    * @param string $idBase
+    * 
+    */
+	public function ajoutCtlLieu($idLieu, $Obj, $idExi, $idBase=false){
+			
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+		
+		//création d'un nouvel instant
+		$c = str_replace("::", "_", __METHOD__); 
+		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+		
+		//création de l'objet passé en paramètre
+		$db = new $Obj($this->db);
+		//ajout du nouveau contrôle
+		$db->ajouter(array("id_instant"=>$idInst, "id_lieu"=>$idLieu), false);
+			
+	}
+	
+    /**
+	* récupère les controles autorisés pour le lieu 
+    * @param string $idLieu
+    * @param string $idScenar
+    * @param string $idBase
+    * 
+    * @return Array
+    */
+	public function getLieuCtl($idLieu, $idScenar, $idBase=false){
+			
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        if(!$this->dbScena)$this->dbScena = new Models_DbTable_Gevu_scenario($this->db);
+        if(!$this->dbScene)$this->dbScene = new Models_DbTable_Gevu_scenes($this->db);
+        if(!$this->dbTypCtl)$this->dbTypCtl = new Models_DbTable_Gevu_typesxcontroles($this->db);
+        if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+        
+        //récupère les paramètres du scénario
+      	$arrScenar = $this->dbScena->findById_scenario($idScenar);
+        $params = json_decode($arrScenar[0]["params"]);
+
+        //récupération des données du lieu courant
+		$r = $this->dbL->find($idLieu);
+		$rLieu = $r->current();
+		
+        //recherche les contrôles possibles
+        $arrCtl = "";
+        //on boucle sur les scènes
+        foreach ($params as $p){
+			//on boucle sur les étapes de la scène
+        	foreach ($p->etapes as $e){
+        		//récupère les informations du contrôle
+		        $rTypeCtrl = $this->dbTypCtl->findById_type_controle($e->id_type_controle);
+        		//sort s'il n'y a pas d'objet lié
+        		if($rTypeCtrl["zend_obj"]=="")continue;
+	        	//vérifie si le lieu à le controle
+	        	$items = $this->verifIsControle($rTypeCtrl, $rLieu);
+				if($items && $items->count()){
+					//si le lieu à déjà le contrôle on ne peut pas en ajouter
+					return "";
+				}
+				//récupère le parent qui possède ce type de controle
+				$arrLieuxParents = $this->dbL->getParentForTypeControle($idLieu, $rTypeCtrl["zend_obj"]);				
+
+				if($arrLieuxParents){
+					//on récupère le détail de la scène
+	        		$arrScene = $this->dbScene->findByIdScene($e->id_scene);
+	        		$jsScene = json_decode($arrScene[0]["paramsCtrl"]);	        		
+		        	$xmlScene = simplexml_load_string($jsScene[0]->idCritSE);
+					//calcul le nombre de niveau entre le lieu et son parent
+					$niv = $rLieu["niv"]-$arrLieuxParents[0]["niv"];
+					//création de la requête Xpath
+					$path = "/node";
+					for ($i = 0; $i < $niv; $i++) {
+						$path .= "/node";
+					} 
+	        		$result = $xmlScene->xpath($path);
+					foreach ($result as $node) {
+			        	//vérifie si le lieu à le controle
+		        		$rTypeCtrl1 = $this->dbTypCtl->findById_type_controle($node["idCtrl"]);						
+			        	$items1 = $this->verifIsControle($rTypeCtrl1, $rLieu);
+			        	if($items1 && $items1->count()){
+							//si le lieu à déjà le contrôle on ne peut pas en ajouter
+			        		return "";
+			        	}else{
+							$arrCtl[] = $rTypeCtrl1;										
+			        		return $arrCtl;										
+						}		        	
+					}					
+				}else{
+					//si on ne trouve aucun controle on peut ajouter le contrôle
+			        $arrType = $this->dbTypCtl->findById_type_controle($e->id_type_controle);
+					$arrCtl[] = $arrType;										
+				}
+        	}
+		}
+		return $arrCtl;
+	}
+
+	/**
+	* vérifie si un lieu possède le controle dans une hiérarchie et renvoie les informations
+	*  
+    * @param xml $xmlCtrl
+    * @param Zend_Db_Table_Rowset $rLieu
+    * @param boolean $bEnf
+    * 
+    * @return array
+    */
+	function verifTreeIsControle($xmlCtrl, $rLieu, $bEnf=true){
+		$arr = "";
+		foreach ($xmlCtrl as $ctrl) {
+			//vérifie si le lieu à le controle
+	        $is = $this->verifIsControle($ctrl["idCtrl"], $rLieu);
+	 		//dans le cas d'un enfant
+	 		if($bEnf){
+	 			//on ajoute le ctrl s'il n'existe pas
+	        	if($is->count()==0)return $ctrl;
+	 			//on renvoie vide s'il existe
+	        	if($is->count()==1)return "OK";
+	 		} 
+	 		//dans le cas d'un parent
+	 		if(!$bEnf){
+		 		//on ajoute le ctrl enfant s'il existe
+		        if($is->count()==1 && $ctrl->count()){
+					return $ctrl->node[0];		        	
+		        }
+	 		}
+			//on continue d'explorer la hierarchie des controles
+			if($ctrl->count()){
+				$arr = $this->verifTreeIsControle($ctrl, $rLieu);
+				//on sort si on a trouvé un contrôle à ajouter
+				if($arr!="")return $arr;	
+			}        	
+        }
+        return $arr;
+	}
+	
+	/**
+	* vérifie si un lieu possède le controle et renvoie les informations
+	*  
+    * @param array $arrType
+    * @param Zend_Db_Table_Rowset $rLieu
+    * 
+    * @return array
+    */
+	function verifIsControle($arrType, $rLieu){
+		$items = "";
+	    //si le contrôle est associé à une table
+        if($arrType["zend_obj"]){
+	    	//récupère l'objet en rapport avec le lieu
+        	$items = $rLieu->findDependentRowset($arrType["zend_obj"]);
+        }
+        return $items;
+	}
+		    
+    
+	/**
+	* récupère les documents en rapport avec un lieu
+	* et renvoie les résultats 
+    * @param string $idLieu
+    * @param string $idBase
+    * 
+    * @return Array
+    */
+	public function getLieuDocs($idLieu, $idBase=false){
+			
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        if(!$this->dbLDoc)$this->dbLDoc = new Models_DbTable_Gevu_docsxlieux($this->db);
+        return $this->dbLDoc->findByIdLieu($idLieu);
+        
+	}
+
+	/**
+	* supprime le documents
+	*  
+    * @param string $idDoc
+    * @param string $idBase
+    * 
+    * @return void
+    */
+	public function deleteDoc($idDoc, $idBase=false){
+			
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        if(!$this->dbDoc)$this->dbDoc = new Models_DbTable_Gevu_docs($this->db);
+        $this->dbDoc->remove($idDoc, $this->db);
+        
+	}	
+
+	/**
 	* calcul le diagnostic d'un lieu
 	* et renvoie les résultats 
     * @param string $idLieu
@@ -213,7 +408,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         	foreach ($arrL as $L){
         		if(!$dom){
 					$dom = new DomDocument();
-					$dom->loadXML($this->getXmlLieu($L)."</node>");        			
+					$dom->loadXML($this->getXmlLieu($L, true));        			
 					$foo = $dom->documentElement;
         		}else{
 					$d = new DomDocument();
@@ -221,7 +416,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 					if($j == $nbA){
 						$d = $this->getXmlNode($L['id_lieu'],$this->idBase);
 					}else{
-						$d->loadXML($this->getXmlLieu($L)."</node>");
+						$d->loadXML($this->getXmlLieu($L, true));
 					}
 					if($d){
 						$mNewNode = $dom->importNode($d->documentElement, true);
@@ -311,10 +506,13 @@ class GEVU_Diagnostique extends GEVU_Site{
      * Récupération du format xml d'un lieu
      *
      * @param array $rLieu
+     * @param boolean $end
      * @return string
      */
-    public function getXmlLieu($rLieu){
-        return "<node idLieu=\"".$rLieu['id_lieu']."\" lib=\"".htmlspecialchars($rLieu['lib'])."\" niv=\"".$rLieu['niv']."\" fake=\"0\" >";
+    public function getXmlLieu($rLieu, $end=false){
+    	$xml = "<node idLieu=\"".$rLieu['id_lieu']."\" lib=\"".htmlspecialchars($rLieu['lib'])."\" niv=\"".$rLieu['niv']."\" fake=\"0\" >";
+    	if($end)$xml .= "</node>";
+    	return $xml;
     }
 
     /**
@@ -420,7 +618,10 @@ class GEVU_Diagnostique extends GEVU_Site{
 	            		// car une même requête renvoie les informations des 3 tables
 	            		if(!isset($res["___diagnostics"])){
 				        	$res["___diagnostics"] = $this->getDiagForLieu($idLieu, $idExi, $idBase);			
-	            		}	
+	            		}
+	            	}elseif($t=="Models_DbTable_Gevu_docsxlieux"){
+						$dbT = new $t($this->db);
+	            		$res[$t]= $dbT->findByIdLieu($idLieu);
 	            	}else{
 						$res[$t]=$items->toArray();
 	            	}
@@ -489,7 +690,7 @@ class GEVU_Diagnostique extends GEVU_Site{
      * @param int $idLieu
      * @param string $comment
      * @param array $params
-     * @param int $idBase
+     * @param string $idBase
      * 
      * @return int
      */
@@ -523,7 +724,7 @@ class GEVU_Diagnostique extends GEVU_Site{
      *
      * @param int $idLieu
      * @param array $data
-     * @param int $idBase
+     * @param string $idBase
      * 
      * @return integer
      */
@@ -537,21 +738,72 @@ class GEVU_Diagnostique extends GEVU_Site{
     }
 
     /**
-     * Enregistre la modification de geo
+     * Ajoute un lieu 
      *
-     * @param int $idLieu
-     * @param array $data
-     * @param int $idBase
+     * @param int $idLieuParent
+     * @param int $idExi
+     * @param string $idBase
      * 
      * @return integer
      */
-    public function editGeo($idLieu, $data, $idBase){
+    public function ajoutLieu($idLieuParent, $idExi, $idBase=false){
 		
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
-        if(!$this->dbG)$this->dbG = new Models_DbTable_Gevu_geos($this->db);
-    	    	
-        return $this->dbG->edit($idLieu, $data);
+        if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		if(!$this->dbG)$this->dbG = new Models_DbTable_Gevu_geos($this->db);
+		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+		
+		//création d'un nouvel instant
+		$c = str_replace("::", "_", __METHOD__); 
+		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+		
+		//ajoute un lieu au parent
+		$arrLieu = $this->dbL->ajouter(array("lieu_parent"=>$idLieuParent,"lib"=>"Nouveau lieu", "id_instant"=>$idInst), false, true);
+		
+		//récupère les coordonnées géographique du parent
+		$geos = $this->dbG->findById_lieu($idLieuParent);
+		//ajoute les coordonnées géographique au nouveau lieu
+		$geos[0]["id_lieu"] = $arrLieu["id_lieu"];
+		unset($geos[0]["id_geo"]);
+		unset($geos[0]["id_donnee"]);
+		$geos[0]["id_instant"] = $idInst;
+		$this->dbG->ajouter($geos[0],false);
+
+		//on récupère les informations du lieu
+		$xml = $this->getXmlLieu($arrLieu,true);
+		
+        return $xml;
+    }
+
+    
+    /**
+     * supprime un lieu et tous ces composants
+     *
+     * @param int $idLieu
+     * @param int $idExi
+     * @param string $idBase
+     * 
+     * @return array
+     */
+    public function deleteLieu($idLieu, $idExi, $idBase=false){
+		    	
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+		
+		//création d'un nouvel instant
+		$c = str_replace("::", "_", __METHOD__); 
+		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+        
+        //récupère les infos du lieu
+        $lieu = $this->dbL->findById_lieu($idLieu);
+		$this->dbL->remove($idLieu, $this->db);
+		
+		//retourne les informations du parent
+		return $idInst;		
+		
     }
     
 }
