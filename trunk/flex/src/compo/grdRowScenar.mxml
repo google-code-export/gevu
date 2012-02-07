@@ -13,7 +13,7 @@
 						
 			public function init():void{
 			}
-						
+									
 		]]>
 	</mx:Script>
 	<ns2:grdItemScenar id="grdISvide" colorBG="{colorBG}" />

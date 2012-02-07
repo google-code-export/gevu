@@ -30,8 +30,8 @@
 						   rowHeight="160"
 						   itemRenderer="compo.render.tofs"
 						   click="dissolve.play();"/>
-		<mx:HBox id="detail" horizontalAlign="center" verticalAlign="middle" >
-			<mx:Image id="img" source="{listTofs.selectedItem.url}" width="400" height="400" />
+		<mx:HBox id="detail" width="100%" height="100%" >
+			<mx:Image id="img" horizontalAlign="center" verticalAlign="middle" source="{listTofs.selectedItem.url}" width="400" height="400" />
 		</mx:HBox>
 	
 </mx:TitleWindow>

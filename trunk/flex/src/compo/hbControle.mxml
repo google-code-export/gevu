@@ -4,6 +4,7 @@
 	  verticalAlign="middle"
 	  horizontalAlign="center"
 	  mouseDown="DoDrag(event)"
+	  click="vbox1_clickHandler(event)"
 	>
 	<mx:Script>
 		<![CDATA[
@@ -13,6 +14,7 @@
 			[Bindable] public var lbl:String;
 			[Bindable] public var idTypeControle:int;
 			[Bindable] public var bDoDrag:Boolean=true;
+			public var fncClick:Function;
 			
 			public function init():void{
 				if(!dt)return;
@@ -29,6 +31,12 @@
 					parentApplication.dgScen.beginDragAndDrop(event);
 				}
 			}
+			
+			protected function vbox1_clickHandler(event:MouseEvent):void
+			{
+				if(fncClick){fncClick(dt);}
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:Image source="{imgSrc}" toolTip="{lbl}" />

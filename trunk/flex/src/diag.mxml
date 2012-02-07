@@ -17,6 +17,7 @@ todo :
 			
 			
 			
+			
 		]]>
 	</mx:Script>
 	
@@ -30,23 +31,42 @@ todo :
 					 showBusyCursor="true"
 					 >
 		<mx:method name="getNodeRelatedData"	result="displayNodeProperties(event);" />
-		<mx:method name="getXmlNode"	result="updateTreeStructure(event);" />
-		<mx:method name="findLieu"	result="displayReponse(event);" />
-		<mx:method name="editLieu"	result="lieuxEdit_resultHandler(event);" />
+		<mx:method name="getXmlNode"			result="updateTreeStructure(event);" />
+		<mx:method name="findLieu"				result="displayReponse(event);" />
+		<mx:method name="editLieu"				result="lieuxEdit_resultHandler(event);" />
+		<mx:method name="ajoutLieu"				result="lieuxAjout_resultHandler(event);" />
+		<mx:method name="deleteLieu" />
+		<mx:method name="getLieuDocs"	 		result="getDocs_resultHandler(event)" />
+		<mx:method name="deleteDoc"				result="roDiagnostique.getLieuDocs(idLieu, idBase);" />
+		<mx:method name="getLieuCtl"			result="fillCtlListe(event);" />
+		<mx:method name="ajoutCtlLieu"			result="roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);" />
+		
 	</mx:RemoteObject>
-	
-	<mx:Panel title="GEVU - Diagnostic - 0.201" id="boxGen" visible="false" width="100%" height="100%">
-	 	<mx:HBox width="100%">
-	 		<mx:Label text="Diagnostic(s) disponible(s) : " />
-			<mx:ComboBox id="cbBases" labelField="lib" prompt="Choisissez un diagnostic" change="cbBases_changeHandler(event)" />
-			<mx:CheckBox visible="true" label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" />
+		
+	<mx:VBox id="boxGen" visible="false" width="100%" height="100%" backgroundColor="white" >
+		<mx:HBox width="100%">
+			<mx:Image source="@Embed('images/logo.png')" />
+			<mx:VBox horizontalAlign="left" >
+				<mx:Label fontSize="16" text="Saisie des diagnostics"/>		
+				<mx:Label text="V 0.201" />
+			</mx:VBox>
+			<mx:VBox horizontalAlign="left">
+				<mx:Label text="Diagnostic(s) disponible(s) : " />
+				<mx:ComboBox id="cbBases" labelField="lib" prompt="Choisissez un diagnostic" change="cbBases_changeHandler(event)" />
+			</mx:VBox>
+			<mx:VBox horizontalAlign="left">
+				<mx:Label text="Scenario(s) disponible(s) : "  />
+				<mx:ComboBox id="cbScenar" labelField="lib" prompt="Choisissez un scenario" change="cbScenar_changeHandler(event)" />				
+			</mx:VBox>
+			<mx:CheckBox visible="false" label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" />
 	 	    <mx:LinkButton visible="false" label="Nettoyer la carte" click="PurgeCarte()"/>
 	 	</mx:HBox>
 	 	<mx:HDividedBox width="100%" height="100%">
 				<mx:Canvas label="TERRITOIRES" width="30%" height="100%" id="cnvTerre" enabled="false">
 					<mx:VBox width="100%" height="100%">
-						<mx:Panel title="Trouver un territoire" width="100%" borderColor="#080808" 
-								  paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3">
+						<mx:Panel width="100%" borderColor="#080808" cornerRadius="0"
+								  paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3"
+								  title="Trouver un territoire">
 							<mx:HBox width="100%">
 								<mx:Label text="Recherche un libellé :" /><mx:TextInput id="txtFind" width="100%" /><mx:Button id="btnFind" label="Trouver" click="btnFind_clickHandler(event)" />
 							</mx:HBox>
@@ -63,7 +83,11 @@ todo :
 								</mx:VBox>
 							</mx:HBox>
 						</mx:Panel>
-				 		<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">
+				 		<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808" cornerRadius="0">
+							<mx:HBox>
+								<mx:LinkButton click="ajouterLieu()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un lieu" />
+								<mx:LinkButton click="deleteLieu()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un lieu" />															
+							</mx:HBox>
 							<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
 									 height="100%"  width="100%" 
 									 itemOpening="treeItemOpened( event );"
@@ -76,24 +100,37 @@ todo :
 					</mx:VBox>
 				</mx:Canvas>
 				 
-		   <mx:VBox id="boxDiag" width="100%" height="100%" >
-			   <ns2:ariane id="bbAriane" width="100%" />
-			   <form:geos id="geo" width="100%" NodeData="{dataGeo}" />
-			   <ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" height="300" />
+		   <mx:VBox id="boxDiag" visible="false" width="100%" height="100%" >
 			   <mx:HBox width="100%">
-				   <ns2:cnvCarto id="carto" rsCarto="{dataGeo}" height="300" />
+				   <ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" height="300" />
 				   <stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
+				   <mx:Image id="imgLieux" verticalAlign="top" horizontalAlign="left" source="" width="100%" height="100%" />
+			   </mx:HBox>
+			   <ns2:ariane id="bbAriane" width="100%"  />
+			   <mx:HBox id="detailLieu" width="100%" height="100%" >
+				   <mx:VBox width="100%" height="100%" >
+					   <ns2:hbIcoMultimedia id="docs"  />
+					   <form:geos id="geo"  width="100%" NodeData="{dataGeo}" />
+					   <mx:HBox width="100%" height="100%" >
+						   <mx:VBox id="ctrlDispo">
+							   <mx:Label text="Contrôle(s) disponible(s)" />
+							   <mx:VBox id="vboxCtl" height="200" horizontalAlign="center" >
+							   </mx:VBox>							   
+						   </mx:VBox>
+						   <mx:HBox id="tabDiag" width="100%" height="100%" >
+							   
+						   </mx:HBox>						   
+					   </mx:HBox>
+				   </mx:VBox>
 			   </mx:HBox>
 			   
 			   <!--
 			   <mx:TabNavigator id="tabDiag" width="100%" height="100%" >
 			   </mx:TabNavigator>
 			   -->
-			   <mx:HBox id="tabDiag" width="100%" height="100%" >
-			   </mx:HBox>				
 		   </mx:VBox>  
 	
 		</mx:HDividedBox> 
-	 </mx:Panel>
+	 </mx:VBox>
 
 </mx:Application>
