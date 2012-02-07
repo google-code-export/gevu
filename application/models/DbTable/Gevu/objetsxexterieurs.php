@@ -99,7 +99,20 @@ class Models_DbTable_Gevu_objetsxexterieurs extends Zend_Db_Table_Abstract
     {
         $this->delete('gevu_objetsxexterieurs.id_objet_ext = ' . $id);
     }
-    
+
+        /**
+     * Recherche les entrées de Gevu_batiments avec la clef de lieu
+     * et supprime ces entrées.
+     *
+     * @param integer $idLieu
+     *
+     * @return void
+     */
+    public function removeLieu($idLieu)
+    {
+        $this->delete('id_lieu = ' . $idLieu);
+    }
+        
     /**
      * Récupère toutes les entrées Gevu_objetsxexterieurs avec certains critères
      * de tri, intervalles

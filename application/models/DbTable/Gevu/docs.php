@@ -28,23 +28,12 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_doc';
 
-    protected $_adapter;
-
-    /**
-     * initialisation de la base de donnée
-
-     * @param string $idBase
-     *
-     */
-    protected function _setupDatabaseAdapter($idBase="") 
-	{
-		if($idBase!=""){
-			$this->_adapter=$idBase;
-			$this->_db = Zend_Registry::get($this->_adapter);			
-		}else{
-			$this->_db = $this->getDefaultAdapter();
-		}
-	}
+    protected $_dependentTables = array(
+       "Models_DbTable_Gevu_docsxlieux"
+       ,"Models_DbTable_Gevu_docsxproblemes"
+       ,"Models_DbTable_Gevu_docsxproduits"
+       ,"Models_DbTable_Gevu_docsxsolutions"
+       );
     
     /**
      * Vérifie si une entrée Gevu_docs existe.
@@ -74,11 +63,8 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=false, $idBase="")
+    public function ajouter($data, $existe=false)
     {
-    	//gestion des bases multiples
-    	$this->_setupDatabaseAdapter($idBase);
-
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
@@ -107,13 +93,23 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
      * et supprime cette entrée.
      *
      * @param integer $id
+     * @param Zend_Db_Adapter_Abstract $db
      *
      * @return void
      */
-    public function remove($id)
+    public function remove($id, $db)
     {
         $infos = $this->findByIdDoc($id);     
+        
+        //suppression des lignes des tables liées
+        foreach($this->_dependentTables as $t){
+        	$dbT = new $t($db);
+        	$dbT->remove($id);
+        }
+        
         $this->delete('gevu_docs.id_doc = ' . $id);
+        
+        //suprime le fichier
         unlink($infos['path_source']);
         
     }
@@ -144,25 +140,7 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_docs 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_doc","champ"=>"id_doc","visible"=>true),
-    	array("titre"=>"url","champ"=>"url","visible"=>true),
-    	array("titre"=>"titre","champ"=>"titre","visible"=>true),
-    	array("titre"=>"branche","champ"=>"branche","visible"=>true),
-    	array("titre"=>"tronc","champ"=>"tronc","visible"=>true),
-    	array("titre"=>"content_type","champ"=>"content_type","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
-    
+ 
     /*
      * Recherche une entrée Gevu_docs avec la valeur spécifiée
      * et retourne cette entrée.
@@ -173,7 +151,7 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
                     ->from( array("g" => "gevu_docs") )                           
-                    ->where( "g.id_doc = " . $id_doc );
+                    ->where( "g.id_doc = ?", $id_doc );
 
         return $this->fetchRow($query)->toArray(); 
     }

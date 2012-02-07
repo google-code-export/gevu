@@ -54,7 +54,21 @@ class Models_DbTable_Gevu_parcelles extends Zend_Db_Table_Abstract
 	    if($rows->count()>0)$id=$rows[0]->id_parcelle; else $id=false;
         return $id;
     } 
+    
+    /**
+     * Recherche les entrées de Gevu_batiments avec la clef de lieu
+     * et supprime ces entrées.
+     *
+     * @param integer $idLieu
+     *
+     * @return void
+     */
+    public function removeLieu($idLieu)
+    {
+        $this->delete('id_lieu = ' . $idLieu);
+    }
         
+    
     /**
      * Ajoute une entrée Gevu_parcelles.
      *
