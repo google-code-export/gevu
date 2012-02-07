@@ -4,14 +4,9 @@
 	
 	<mx:Script>
 		<![CDATA[
-			protected function getVignette(url:String):String
-			{
-				return url.replace("prob_","vig_prob_");
-			}
 		]]>
 	</mx:Script>
 	
-	<mx:Image source="{getVignette(data.url)}" />
-	<mx:Label text="{data.titre}" />
+	<mx:Image source="{data.vignette}" toolTip="{data.titre}" />
 	
 </mx:VBox>

@@ -4,47 +4,54 @@
 		  label="Géographie"
 		  width="100%" 
 		  >
-
-	<mx:HBox width="100%">
-		<mx:Label text="adresse" />
-		<mx:TextInput id="F01" data="{NodeData.adresse}"/>
-
-		<mx:Label text="lat."/>
-		<mx:NumericStepper id="F02" 
-						   stepSize="0.000001"
-						   data="{NodeData.lat}" />
-
-		<mx:Label text="long." />
-		<mx:NumericStepper id="F03" 
-						   stepSize="0.000001"
-						   data="{NodeData.lng}" />
-
-		<mx:Label text="zoom min." />
-		<mx:NumericStepper id="F04" 
-						   minimum="0" maximum="16"
-						   data="{NodeData.zoom_min}" />
-
-		<mx:Label text="zoom max." />
-		<mx:NumericStepper id="F05" 
-						   minimum="0" maximum="16"
-						   data="{NodeData.zoom_max}" />
-
-		<mx:Label text="fond carto." />
-		<mx:ComboBox id="cbTypeCarte" selectedIndex="{getIndex(NodeData.type_carte)}" >
-			<mx:ArrayCollection>
-				<mx:Object label="terrain" data="TERRAIN"/>
-				<mx:Object label="hybride" data="HYBRID"/>
-				<mx:Object label="routier" data="ROADMAP"/>
-				<mx:Object label="satellite" data="SATELLITE"/>
-			</mx:ArrayCollection>
-		</mx:ComboBox>
+	<mx:VBox>
 		
-		<mx:Label text="kml" />
-		<mx:TextInput id="F06" data="{NodeData.kml}" />
-
-		<mx:Button id="save" label="enregistrer" click="saveModifications();"/>
-
-	</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="adresse" />
+			<mx:TextInput id="F01" data="{NodeData.adresse}" width="100%" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+	
+			<mx:Label text="lat."/>
+			<mx:NumericStepper id="F02" 
+							   minimum="-90" maximum="90"
+							   stepSize="0.000001"
+							   data="{NodeData.lat}" enabled="{Modif}" />
+	
+			<mx:Label text="long." />
+			<mx:NumericStepper id="F03" 
+							   minimum="-180" maximum="180"
+							   stepSize="0.000001"
+							   data="{NodeData.lng}" enabled="{Modif}" />
+			<!--
+			<mx:Label text="zoom min." />
+			<mx:NumericStepper id="F04" 
+							   minimum="0" maximum="20"
+							   data="{NodeData.zoom_min}" enabled="{Modif}" />
+			-->
+			<mx:Label text="zoom max." />
+			<mx:NumericStepper id="F05" enabled="false" 
+							   minimum="0" maximum="30"
+							   data="{NodeData.zoom_max}"  />
+	
+			<mx:Label text="fond carto." />
+			<mx:ComboBox id="cbTypeCarte" selectedIndex="{getIndex(NodeData.type_carte)}" enabled="{Modif}" >
+				<mx:ArrayCollection>
+					<mx:Object label="terrain" data="terrain"/>
+					<mx:Object label="hybride" data="hybrid"/>
+					<mx:Object label="routier" data="roadmap"/>
+					<mx:Object label="satellite" data="satellite"/>
+				</mx:ArrayCollection>
+			</mx:ComboBox>
+			
+			<!--
+			<mx:Label text="kml" />
+			<mx:TextInput id="F06" data="{NodeData.kml}" editable="{Modif}" />
+			-->
+			<mx:Button id="save" label="enregistrer" click="saveModifications();"/>
+	
+		</mx:HBox>
+	</mx:VBox>
 	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend" showBusyCursor="true"
@@ -63,6 +70,19 @@
 			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] public var NodeData:Object;
+			[Bindable] public var Modif:Boolean=false;
+			
+			public function init():void{
+				this.visible = true;
+				F01.data = NodeData["adresse"];
+				F02.data = NodeData["lat"];
+				F03.data = NodeData["lng"];
+				//F04.data;
+				F05.data = NodeData["zoom_max"];
+				//F06.data = NodeData["kml"];
+				setMapType(NodeData["type_carte"]);
+
+			}
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -80,9 +100,9 @@
 				arr["adresse"]=F01.data;
 				arr["lat"]=F02.data;
 				arr["lng"]=F03.data;
-				arr["zoom_min"]=F04.data;
+				arr["zoom_min"]=0;//F04.data;
 				arr["zoom_max"]=F05.data;
-				arr["kml"]=F06.data;
+				//arr["kml"]=F06.data;
 				arr["type_carte"]=cbTypeCarte.selectedItem["data"];
 				
 				roModifBase.edit(NodeData.id_geo, arr, this.parentApplication.idBase);
@@ -105,6 +125,11 @@
 				}
 				return 0;
 			}			
+			
+			public function setMapType(label:String):void{
+				cbTypeCarte.selectedIndex = getIndex(label);				
+			}
+
 			
 		]]>
 	</mx:Script>

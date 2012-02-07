@@ -80,8 +80,8 @@
 			{
 				selectDiag = event.currentTarget.selectedItem;
 				if(selectDiag){
-					formObs.idDiag = selectDiag.id_diag;
-					formObs.init();
+					//formObs.idDiag = selectDiag.id_diag;
+					//formObs.init();
 					formProbs.idDiag = selectDiag.id_diag;
 					formProbs.init();
 				}
@@ -361,7 +361,7 @@
 		</mx:ViewStack>
 		<mx:HBox width="100%" height="100%">
 				<form:problemes id="formProbs" />
-				<form:observations id="formObs" />
+				<!--<form:observations id="formObs" />-->
 		</mx:HBox>
 	</mx:VBox>
 	<!-- 

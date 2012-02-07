@@ -76,7 +76,11 @@
 				if (event.detail == Alert.YES) 
 				{
 					ROScenes.remove(idScene);
-					parent.removeChild(DisplayObject(this));
+					if(parent.numChildren==2){
+						parent.parent.removeChild(DisplayObject(parent));
+					}else{
+						parent.removeChild(DisplayObject(this));
+					}
 				}
 			}
 

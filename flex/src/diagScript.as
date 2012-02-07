@@ -24,6 +24,7 @@ import compo.form.problemes;
 
 import flash.display.DisplayObject;
 import flash.events.MouseEvent;
+import flash.external.*;
 import flash.utils.getDefinitionByName;
 
 import mx.collections.ArrayCollection;
@@ -32,11 +33,13 @@ import mx.collections.XMLListCollection;
 import mx.containers.Canvas;
 import mx.controls.Alert;
 import mx.controls.LinkButton;
+import mx.events.CloseEvent;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
 import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
+
 
 [Bindable][Embed("images/voie.png")]public var voieIcon:Class;
 [Bindable] public var exi:Object;
@@ -46,8 +49,10 @@ import mx.rpc.events.ResultEvent;
 
 private var TreeObject:XML;
 private var xmlTree:XML
-private var idLieu:int;
-public var idBase:String; 
+public var idLieu:int;
+private var libLieu:String;
+public var idBase:String;
+public var idScenar:String;
 private var arrSelect:Array;
 private var objLieuFind:Array; 
 
@@ -87,20 +92,35 @@ public function init():void
 {
 	boxGen.visible = true;
 	cartoIF.visible = true;
-
+	
+	ExternalInterface.addCallback("modifLieu",modifLieu);
+	
 	//construction de la listes des bases disponibles
 	var dataBases:Array = JSON.decode(this.exi.droit_3);
 	cbBases.dataProvider = dataBases;
+	var dataScenar:Array = JSON.decode(this.exi.droit_4);
+	cbScenar.dataProvider = dataScenar;
 	//roDiagnostique.getTablesNames();
-
 }
 
 protected function cbBases_changeHandler(event:ListEvent):void
 {
 	idBase = cbBases.selectedItem.id;
 	idBase = idBase.substr(idBase.indexOf("_")+1);
-	cnvTerre.enabled = true;
-	initTreeTerre();
+	if(idScenar){
+		cnvTerre.enabled = true;
+		initTreeTerre();
+	}
+}
+
+protected function cbScenar_changeHandler(event:ListEvent):void
+{
+	var si:String = cbScenar.selectedItem.id;
+	idScenar = si.split("_")[1];
+	if(idBase){
+		cnvTerre.enabled = true;
+		initTreeTerre();
+	}
 }
 
 
@@ -146,6 +166,34 @@ private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 	Alert.show(str, "FaultHandlerService"+os);
 }
 
+private function fillCtlListe(e:Object):void
+{
+	vboxCtl.removeAllChildren();
+	ctrlDispo.visible = false;
+	ctrlDispo.width = 0;		
+	
+	if(!e || e.result.length==0)return;
+	var arrCtl:Array = e.result;
+	
+	for each (var c:Object in arrCtl){
+		var hbCtl:hbControle = new hbControle();
+		hbCtl.dt = c;
+		hbCtl.fncClick = hbCtl_clickHandler;
+		hbCtl.bDoDrag = false;
+		vboxCtl.addChild(hbCtl);
+		ctrlDispo.visible = true;
+		ctrlDispo.width = 200;		
+	}	
+
+}
+
+protected function hbCtl_clickHandler(dt:Object):void
+{
+	//ajoute un nouveau contrôle au lieu
+	roDiagnostique.ajoutCtlLieu(idLieu, dt["zend_obj"], idExi, idBase);
+}
+
+
 private function treeItemOpened(event:TreeEvent) : void {
 	if (event.item.node.attribute("fake")==1)
 	{
@@ -167,7 +215,6 @@ protected function lieuxEdit_resultHandler(event:ResultEvent):void
 	// TODO Auto-generated method stub
 	var mess:String = event.result as String;
 }
-
 
 private function btnFind_clickHandler(event:MouseEvent):void
 {
@@ -237,7 +284,7 @@ private function treeSelectFind(type:String) : void {
 	//pour chaque lieu trouvé
 	for each(var oL:Object in objLieuFind[type]){
 		//vérifie la présence de chaque niveau du plus global au plus précis
-		var idLieu:int = -1, i:int=1;
+		var id:int = -1, i:int=1;
 		for each(var oN:Object in oL.ariane){
 			var x:XML = treeTree.dataProvider[0].descendants().(@idLieu == oN['id_lieu'])[0];
 			if(x){
@@ -250,7 +297,7 @@ private function treeSelectFind(type:String) : void {
 				//garde le noeud pour le sélectionner
 				arrSelect.push(x);
 				//conserve l'identifiant pour ajouter les nouveaux noeuds
-				idLieu = oN['id_lieu'];
+				id = oN['id_lieu'];
 			}else{
 				//création du noeud
 				roDiagnostique.getXmlNode(oN['id_lieu'],idBase);
@@ -260,7 +307,7 @@ private function treeSelectFind(type:String) : void {
 				xN.@niv = oN['niv'];
 				//fake à 1 pour le chargement des données
 				xN.@fake = 1;
-				treeTree.dataProvider[0].descendants().(@idLieu == idLieu)[0].appendChild(xN.node);
+				treeTree.dataProvider[0].descendants().(@idLieu == id)[0].appendChild(xN.node);
 				//fake à 0 pour la selection du noeud
 				xN.@fake = 0;
 				arrSelect.push(xN.node);
@@ -273,7 +320,8 @@ private function treeSelectFind(type:String) : void {
 
 private function treeItemClicked(event:ListEvent) : void {
 	idLieu = event.currentTarget.selectedItem.attribute("idLieu");
-	
+	libLieu = event.currentTarget.selectedItem.attribute("lib");
+	if(libLieu=="univers")return;
 	if(idLieu>0) roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);
 	
 	//map.showNode(idLieu);
@@ -283,10 +331,11 @@ private function displayNodeProperties(event:ResultEvent) : void {
 	var obj:Object = event.result;
 	var ClassReference:Class;
 	var instance:Object;
+	var docsxlieux:Object;
 	
 	//initialise les tabbox
 	tabDiag.removeAllChildren();
-	
+	var aDiag:Boolean=false;	
 	for(var item:String in obj){
 		var arr:Array = item.split("_");
 		var className:String;
@@ -303,7 +352,8 @@ private function displayNodeProperties(event:ResultEvent) : void {
 				case "diagnostics":
 					if(obj[item].enfants){
 						instance.NodeData = obj[item];
-						place = 1;
+						place = 2;
+						aDiag = true;
 					}
 					this.dataStat = obj[item].diag.stat.EtatDiag 
 					stat.idLieu = this.idLieu;
@@ -311,10 +361,16 @@ private function displayNodeProperties(event:ResultEvent) : void {
 					break;
 				case "geos":
 					dataGeo = obj["Models_DbTable_Gevu_geos"][0];
-					carto.init();			
+					//ajoute le nom et l'identifiant
+					dataGeo["idLieu"] = this.idLieu;
+					dataGeo["lib"] = this.libLieu;
 					cartoIF.callChangeGeo();
+					geo.NodeData = dataGeo;
+					geo.init();
 					break;
 				case "docsxlieux":
+					//stocke la réponse pour éviter de supprimer le kml en ajoutant la géographie
+					docsxlieux = obj[item];
 					break;
 				default:
 					place = 1;
@@ -324,8 +380,9 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		//vérifie la place de l'objet
 		if(item == "ariane"){
 			//on ajoute un élément pour la création d'un nouveau lieu
-			var o:Object  = {id_lieu:-1, lib:"-> AJOUTER"};
-			obj[item][obj[item].length] = o;
+			//pour qu'un bouton ajouter apparaise dans le fil d'ariane
+			//var o:Object  = {id_lieu:-1, lib:"-> AJOUTER"};
+			//obj[item][obj[item].length] = o;
 			bbAriane.NodeData = obj[item];
 		}else{
 			if(place > 0){
@@ -333,13 +390,79 @@ private function displayNodeProperties(event:ResultEvent) : void {
 				tabDiag.addChild(DisplayObject(instance));				
 			}
 		}
-	}	
+	}
+	//s'il n'y a pas de diagnostics
+	if(aDiag){
+		ctrlDispo.visible = false;
+		ctrlDispo.width = 0;				
+	}else{
+		//ajoute les controles disponibles
+		roDiagnostique.getLieuCtl(idLieu, idScenar, idBase);
+	}
 	
+	docs.initDoc(docsxlieux);
+	imgLieux.source = "";
+	boxDiag.visible = true;
 }
 
 public function ajouterLieu():void{
-	Alert.show("Voilà le nouveau lieu");
+	roDiagnostique.ajoutLieu(idLieu, idExi, idBase);
 }
+
+protected function lieuxAjout_resultHandler(event:ResultEvent):void
+{
+	arrSelect = new Array;
+	var x:XML = <root></root>;
+	x.appendChild(event.result);
+	var objTree:XMLList = treeTree.dataProvider[0].descendants().(@idLieu == this.idLieu);
+	objTree[0].appendChild(x.node);
+	//ouvre le noeud parent
+	treeTree.expandItem(objTree[0],true);
+}
+
+private function deleteLieu():void {
+	
+	if (idLieu)
+	{
+		Alert.show("ATTENTION cette action va suprimmer le lieu et tous ces composants !\n" +
+			"Confirmez-vous la suppression ?",
+			"Confirmation Suppression", 3, this, deleteLieuClickHandler);
+	}else{
+		Alert.show("Veuillez sélectionner un lieu à supprimer","Supprimer le lieu");		
+	}
+	
+}
+private function deleteLieuClickHandler(event:CloseEvent):void
+{
+	if (event.detail == Alert.YES) 
+	{
+		roDiagnostique.deleteLieu(idLieu, idExi, idBase);
+		var objTree:XMLList = treeTree.dataProvider[0].descendants().(@idLieu == idLieu);
+		delete objTree[0];
+	}
+}
+
+
+public function modifLieu(params:String):void{
+	var objParams:Object = JSON.decode(params);
+	geo.F01.text = objParams[0].adresse;
+	var latlng:String = objParams[0].LatLng;
+	latlng = latlng.substring(1,latlng.length-1);
+	var arrlatlng:Array = latlng.split(",");
+	geo.F01.text = objParams[0].adresse;
+	geo.F02.value = Number(arrlatlng[0]);
+	geo.F03.value = Number(arrlatlng[1]);
+	//geo.F04.value = Number(objParams[0].zoom);
+	geo.F05.value = Number(objParams[0].zoom);
+	geo.setMapType(objParams[0].mapType);
+}
+
+protected function getDocs_resultHandler(event:ResultEvent):void
+{
+	var obj:Object = event.result;
+	docs.initDoc(obj);	
+}
+
 
 private function updateTreeStructure(event:ResultEvent) : void {
 	
@@ -351,21 +474,24 @@ private function updateTreeStructure(event:ResultEvent) : void {
 	var idnoeud:int;
 	idnoeud = x.node.attribute("idLieu");
 	
-	/* add the new real node */
-	treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0].appendChild(x.node.node);
+	//vérifie si le noeud existe
+	var objTree:XMLList = treeTree.dataProvider[0].descendants().(@idLieu == idnoeud);
+	if(objTree.length()){
+		/* add the new real node */
+		objTree[0].appendChild(x.node.node);
+		
+		if(arrSelect){
+			//ajoute le noeud à la sélection
+			x = treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0];
+			treeTree.expandItem(x,true);
+			arrSelect.push(x);
+			treeTree.selectedItems = arrSelect;
+		}
 	
-	if(arrSelect){
-		//ajoute le noeud à la sélection
-		x = treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0];
-		treeTree.expandItem(x,true);
-		arrSelect.push(x);
-		treeTree.selectedItems = arrSelect;
-	}
-
-	/* delete the old fake one */
-	delete  treeTree.dataProvider[0].descendants().(@idLieu==idnoeud)[0].children()[0];
-
-	//conserve les data du tree complet
-	xmlTree = treeTree.dataProvider[0] as XML;
+		/* delete the old fake one */
+		delete  treeTree.dataProvider[0].descendants().(@idLieu==idnoeud)[0].children()[0];
 	
+		//conserve les data du tree complet
+		xmlTree = treeTree.dataProvider[0] as XML;
+	}	
 }

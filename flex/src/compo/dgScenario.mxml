@@ -356,8 +356,12 @@
 					<mx:Button label="Enregistrer" click="updateItem()" toolTip="Enregistre les modification du scénario" />
 					<mx:Button label="Tester" click="testerScenario()" toolTip="Tester le scénario" />
 				</mx:HBox>
-				<mx:Grid id="grdScen" borderColor="#45A4CB" borderStyle="solid" borderThickness="4">
-				</mx:Grid>				
+				<mx:Image source="@Embed('images/legSceneHaut.png')" />
+				<mx:HBox>
+					<mx:Image source="@Embed('images/legSceneBas.png')" />
+					<mx:Grid id="grdScen" borderColor="#45A4CB" borderStyle="solid" borderThickness="4">
+					</mx:Grid>									
+				</mx:HBox>
 			</mx:VBox>
 		</mx:HBox>
 	</mx:Canvas>

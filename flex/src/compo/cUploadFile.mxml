@@ -69,8 +69,11 @@
 					Alert.show("Veuillez sélectionner un problème pour ajouter un document", "Ajout d'un document");
 					return;
 				}
-
-				
+				if(objName=='Models_DbTable_Gevu_docsxlieux' && !ctlBind.idLieu){
+					Alert.show("Veuillez sélectionner un lieu pour ajouter un document", "Ajout d'un document");
+					return;
+				}
+								
 				if(_arrUploadFiles)_arrUploadFiles=new Array();
 				
 				var filter:FileFilter;
@@ -82,6 +85,9 @@
 				}
 				if(typeFic=="models"){
 					filter = new FileFilter("Fichier ODT (*.odt)", "*.odt");					
+				}
+				if(typeFic=="all"){
+					filter = new FileFilter("All (*.*)", "*.*");					
 				}
 				var Types:Array = new Array(filter);
 				
@@ -196,9 +202,13 @@
                     if(objName=='img_produit'){
                     	sendVars.objId = ctlBind.idProduit;
                     }
-					if(objName=='Models_DbTable_Gevu_problemes'){
+					if(objName=='Models_DbTable_Gevu_docsxproblemes'){
 						sendVars.objId = ctlBind.idSelect;
 					}
+					if(objName=='Models_DbTable_Gevu_docsxlieux'){
+						sendVars.objId = ctlBind.idLieu;
+					}
+					
                     
                     var request:URLRequest = new URLRequest();
                     request.data = sendVars;
@@ -223,15 +233,18 @@
 					//gestion de la réponse au upload
 					if(result.error==0){
 						if(wf=="auton"){
-		                    Alert.show("La photo est mise à jour.", "Succés du téléchargement");
+		                    Alert.show("Le document est mise à jour.", "Succés du téléchargement");
                             if(objName=='img_produit'){
  			                   	ctlBind.ROTOF.findByIdProduit(ctlBind.idProduit);
             		        }
 		                    if(objName=='img_solus'){
 								ctlBind.ROTOF.findByIdSolution(ctlBind.idSolution);
 		                    }
-							if(objName=='Models_DbTable_Gevu_problemes'){
-								ctlBind.ro.findDocs(ctlBind.idSelect);
+							if(objName=='Models_DbTable_Gevu_docsxproblemes'){
+								ctlBind.ro.findDocs(ctlBind.idSelect, ctlBind.idBase);
+							}
+							if(objName=='Models_DbTable_Gevu_docsxlieux'){
+								ctlBind.roDiagnostique.getLieuDocs(ctlBind.idLieu, ctlBind.idBase);
 							}							
 						}
 						if(wf=="impCsv"){
