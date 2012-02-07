@@ -14,6 +14,9 @@ class GEVU_Site{
     var $dbC;
     var $dbI;
     var $dbG;
+    var $dbLDoc;
+    var $dbDoc;
+    var $dbTypCtl;
     var $db;
     
 	/**
