@@ -89,7 +89,21 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     	}
     	return $id;
     } 
-           
+    
+    /**
+     * Recherche les entrées de Gevu_batiments avec la clef de lieu
+     * et supprime ces entrées.
+     *
+     * @param integer $idLieu
+     *
+     * @return void
+     */
+    public function removeLieu($idLieu)
+    {
+        $this->delete('id_lieu = ' . $idLieu);
+    }
+        
+    
     /**
      * Recherche une entrée Gevu_geos avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.

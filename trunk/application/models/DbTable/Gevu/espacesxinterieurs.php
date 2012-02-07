@@ -37,6 +37,20 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
     );	
     
     /**
+     * Recherche les entrées de Gevu_batiments avec la clef de lieu
+     * et supprime ces entrées.
+     *
+     * @param integer $idLieu
+     *
+     * @return void
+     */
+    public function removeLieu($idLieu)
+    {
+        $this->delete('id_lieu = ' . $idLieu);
+    }
+        
+    
+    /**
      * Vérifie si une entrée Gevu_espacesxinterieurs existe.
      *
      * @param array $data

@@ -27,24 +27,6 @@ class Models_DbTable_Gevu_instants extends Zend_Db_Table_Abstract
      * Clef primaire de la table.
      */
     protected $_primary = 'id_instant';
-
-    protected $_adapter;
-
-    /**
-     * initialisation de la base de donnée
-
-     * @param string $idBase
-     *
-     */
-    protected function _setupDatabaseAdapter($idBase="") 
-	{
-		if($idBase!=""){
-			$this->_adapter=$idBase;
-			$this->_db = Zend_Registry::get($this->_adapter);			
-		}else{
-			$this->_db = $this->getDefaultAdapter();
-		}
-	}
     
     /**
      * Vérifie si une entrée Gevu_instants existe.
@@ -74,10 +56,8 @@ class Models_DbTable_Gevu_instants extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=false, $idBase="")
+    public function ajouter($data, $existe=false)
     {
-    	//gestion des bases multiples
-    	$this->_setupDatabaseAdapter($idBase);
 
     	if(!isset($data['ici']))$data['ici']=isset($_SERVER['REMOTE_ADDR'])?$_SERVER['REMOTE_ADDR'] : -1;
 		if(!isset($data['maintenant']))$data['maintenant']= new Zend_Db_Expr('NOW()');
@@ -135,23 +115,6 @@ class Models_DbTable_Gevu_instants extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_instants 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"maintenant","champ"=>"maintenant","visible"=>true),
-    	array("titre"=>"ici","champ"=>"ici","visible"=>true),
-    	array("titre"=>"id_exi","champ"=>"id_exi","visible"=>true),
-    	array("titre"=>"nom","champ"=>"nom","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_instants avec la valeur spécifiée

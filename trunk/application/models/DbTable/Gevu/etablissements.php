@@ -37,6 +37,23 @@ class Models_DbTable_Gevu_etablissements extends Zend_Db_Table_Abstract
     );	
     
     /**
+     * retourn le nom de la table.
+     *
+     * @return string
+     */
+    public function getN($data)
+    {
+		$select = $this->select();
+		$select->from($this, array('id_etablissement'));
+		foreach($data as $k=>$v){
+			$select->where($k.' = ?', $v);
+		}
+	    $rows = $this->fetchAll($select);        
+	    if($rows->count()>0)$id=$rows[0]->id_etablissement; else $id=false;
+        return $id;
+    } 
+        
+    /**
      * Vérifie si une entrée Gevu_etablissements existe.
      *
      * @param array $data
@@ -86,7 +103,20 @@ class Models_DbTable_Gevu_etablissements extends Zend_Db_Table_Abstract
     {        
         $this->update($data, 'gevu_etablissements.id_etablissement = ' . $id);
     }
-    
+
+    /**
+     * Recherche les entrées de Gevu_batiments avec la clef de lieu
+     * et supprime ces entrées.
+     *
+     * @param integer $idLieu
+     *
+     * @return void
+     */
+    public function removeLieu($idLieu)
+    {
+        $this->delete('id_lieu = ' . $idLieu);
+    }
+            
     /**
      * Recherche une entrée Gevu_etablissements avec la clef primaire spécifiée
      * et supprime cette entrée.
@@ -121,36 +151,6 @@ class Models_DbTable_Gevu_etablissements extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_etablissements 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_etablissement","champ"=>"id_etablissement","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"nom","champ"=>"nom","visible"=>true),
-    	array("titre"=>"ref","champ"=>"ref","visible"=>true),
-    	array("titre"=>"adresse","champ"=>"adresse","visible"=>true),
-    	array("titre"=>"commune","champ"=>"commune","visible"=>true),
-    	array("titre"=>"pays","champ"=>"pays","visible"=>true),
-    	array("titre"=>"code_postal","champ"=>"code_postal","visible"=>true),
-    	array("titre"=>"contact_proprietaire","champ"=>"contact_proprietaire","visible"=>true),
-    	array("titre"=>"contact_delegataire","champ"=>"contact_delegataire","visible"=>true),
-    	array("titre"=>"reponse_1","champ"=>"reponse_1","visible"=>true),
-    	array("titre"=>"reponse_2","champ"=>"reponse_2","visible"=>true),
-    	array("titre"=>"reponse_3","champ"=>"reponse_3","visible"=>true),
-    	array("titre"=>"reponse_4","champ"=>"reponse_4","visible"=>true),
-    	array("titre"=>"reponse_5","champ"=>"reponse_5","visible"=>true),
-    	array("titre"=>"id_donnee","champ"=>"id_donnee","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_etablissements avec la valeur spécifiée

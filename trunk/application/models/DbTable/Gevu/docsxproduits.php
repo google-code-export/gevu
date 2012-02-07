@@ -90,9 +90,7 @@ class Models_DbTable_Gevu_docsxproduits extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
-        $this->delete('gevu_docsxsolutions.id_doc = ' . $id);
-        $dbDocs = new Models_DbTable_Gevu_docs();
-        $dbDocs->remove($id);
+        $this->delete('gevu_docsxproduits.id_doc = ' . $id);
     }
     
     /**

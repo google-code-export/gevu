@@ -56,6 +56,20 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
 	}
     
     /**
+     * Recherche les entrées de Gevu_batiments avec la clef de lieu
+     * et supprime ces entrées.
+     *
+     * @param integer $idLieu
+     *
+     * @return void
+     */
+    public function removeLieu($idLieu)
+    {
+        $this->delete('id_lieu = ' . $idLieu);
+    }
+        
+	
+    /**
      * Vérifie si une entrée Gevu_problemes existe.
      *
      * @param array $data
@@ -95,20 +109,6 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
     	$data['maj']= new Zend_Db_Expr('NOW()');
     	$id = $this->insert($data);
 
-    	return $id;
-    } 
-
-    /**
-     * Ajoute un document à une entrée Gevu_problemes.
-     *
-     * @param array $data
-     *  
-     * @return integer
-     */
-    public function ajouterDoc($data, $idBase)
-    {
-    	$bd = new Models_DbTable_Gevu_docsxproblemes();
-   	 	$id = $bd->ajouter($data, $idBase);
     	return $id;
     } 
     
@@ -352,7 +352,9 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
      */
     public function findDocs($IdProb, $idBase="")
     {
-    	$dbDocProb = new Models_DbTable_Gevu_docsxproblemes();
+    	//gestion des bases multiples
+    	$this->_setupDatabaseAdapter($idBase);    	
+    	$dbDocProb = new Models_DbTable_Gevu_docsxproblemes($this->_db);
     	
     	return $dbDocProb->findByIdProbleme($IdProb, $idBase);
 

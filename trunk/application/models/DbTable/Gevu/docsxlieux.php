@@ -34,21 +34,67 @@ class Models_DbTable_Gevu_docsxlieux extends Zend_Db_Table_Abstract
             'refTableClass'     => 'Models_DbTable_Gevu_lieux',
             'refColumns'        => 'id_lieu'
         )
-    );	
+    );	    
     
+    /**
+     * Recherche les entrées de Gevu_batiments avec la clef de lieu
+     * et supprime ces entrées.
+     *
+     * @param integer $idLieu
+     *
+     * @return void
+     */
+    public function removeLieu($idLieu)
+    {
+        $this->delete('id_lieu = ' . $idLieu);
+    }
+        
+    /**
+     * supprime une entrée
+     *
+     * @param integer $id
+     *
+     * @return void
+     */
+    public function remove($id)
+    {
+        $this->delete('id_doc = ' . $id);
+    }
     
     /*
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
-     * @param int $id_lieu
+     * @param int $idLieu
+     * 
+     * return array
      */
-    public function findById_lieu($id_lieu)
+    public function findByIdLieu($idLieu)
     {
-        $query = $this->select()
-                    ->from( array("g" => "gevu_docsxlieux") )                           
-                    ->where( "g.id_lieu = ?", $id_lieu );
-
+    	$query = $this->select()
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from( array("dl" => "gevu_docsxlieux") )                           
+        	->joinInner(array('d' => 'gevu_docs'),
+            	'd.id_doc = dl.id_doc',array('titre','content_type','url'))
+        	->where( "dl.id_lieu = ?", $idLieu)
+        	->group("d.id_doc");
+                    
+                    
         return $this->fetchAll($query)->toArray(); 
     }
+    
+    /**
+     * Ajoute un document à une entrée gevu_docsxlieux.
+     *
+     * @param array $data
+     *  
+     * @return integer
+     */
+    public function ajouter($data)
+    {
+   	 	$id = $this->insert($data);
+
+    	return $id;
+    } 
+    
 }

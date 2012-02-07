@@ -91,8 +91,6 @@ class Models_DbTable_Gevu_docsxsolutions extends Zend_Db_Table_Abstract
     public function remove($id)
     {
         $this->delete('gevu_docsxsolutions.id_doc = ' . $id);
-        $dbDocs = new Models_DbTable_Gevu_docs();
-        $dbDocs->remove($id);
     }
     
     /**

@@ -115,19 +115,6 @@ class Models_DbTable_Gevu_typesxcontroles extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
 
-    /**
-     * Récupère les spécifications des colonnes Gevu_typesxcontroles 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_type_controle","champ"=>"id_type_controle","visible"=>true),
-    	array("titre"=>"lib","champ"=>"lib","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_typesxcontroles avec la valeur spécifiée
@@ -143,6 +130,23 @@ class Models_DbTable_Gevu_typesxcontroles extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
+    
+    /**
+     * Recherche une entrée Gevu_typesxcontroles avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param int $idLieu
+     * @param int $id_type_controle
+     */
+    public function findParentById_type_controle($idLieu, $id_type_controle)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_typesxcontroles") )                           
+                    ->where( "g.id_type_controle = " . $id_type_controle );
+
+        return $this->fetchRow($query)->toArray(); 
+    }
+    
     /*
      * Recherche une entrée Gevu_typesxcontroles avec la valeur spécifiée
      * et retourne cette entrée.
@@ -152,8 +156,8 @@ class Models_DbTable_Gevu_typesxcontroles extends Zend_Db_Table_Abstract
     public function findByLib($lib)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_typesxcontroles") )                           
-                    ->where( "g.lib = " . $lib );
+			->from( array("g" => "gevu_typesxcontroles") )                           
+            ->where( "g.lib = " . $lib );
         return $this->fetchRow($query)->toArray(); 
     }  
     

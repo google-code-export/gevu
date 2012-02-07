@@ -28,8 +28,10 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_lieu';
 
-	protected $_dependentTables = array(
+    protected $_dependentTables = array(
        "Models_DbTable_Gevu_batiments"
+       ,"Models_DbTable_Gevu_georss"
+       ,"Models_DbTable_Gevu_geos"
        ,"Models_DbTable_Gevu_diagnostics"
        ,"Models_DbTable_Gevu_diagnosticsxvoirie"
        ,"Models_DbTable_Gevu_docsxlieux"
@@ -37,8 +39,6 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
        ,"Models_DbTable_Gevu_espacesxexterieurs"
        ,"Models_DbTable_Gevu_espacesxinterieurs"
        ,"Models_DbTable_Gevu_etablissements"
-       ,"Models_DbTable_Gevu_georss"
-       ,"Models_DbTable_Gevu_geos"
        ,"Models_DbTable_Gevu_niveaux"
        ,"Models_DbTable_Gevu_objetsxexterieurs"
        ,"Models_DbTable_Gevu_objetsxinterieurs"
@@ -48,7 +48,26 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
        ,"Models_DbTable_Gevu_problemes"
        );
     
-    
+	protected $LibTablesLiees = array(
+       "Models_DbTable_Gevu_batiments"=>"bâtiments"
+       ,"Models_DbTable_Gevu_diagnostics"=>"diagnostics"
+       ,"Models_DbTable_Gevu_diagnosticsxvoirie"=>"diagnostics de voirie"
+       ,"Models_DbTable_Gevu_docsxlieux"=>"documents"
+       ,"Models_DbTable_Gevu_espaces"=>"expaces"
+       ,"Models_DbTable_Gevu_espacesxexterieurs"=>"espaces extérieurs"
+       ,"Models_DbTable_Gevu_espacesxinterieurs"=>"espaces intérieurs"
+       ,"Models_DbTable_Gevu_etablissements"=>"&tablissements"
+       ,"Models_DbTable_Gevu_georss"=>"géo rss"
+       ,"Models_DbTable_Gevu_geos"=>"données géographiques"
+       ,"Models_DbTable_Gevu_niveaux"=>"niveaux"
+       ,"Models_DbTable_Gevu_objetsxexterieurs"=>"objets extérieurs"
+       ,"Models_DbTable_Gevu_objetsxinterieurs"=>"objets intérieurs"
+       ,"Models_DbTable_Gevu_objetsxvoiries"=>"objets de voiries"
+       ,"Models_DbTable_Gevu_observations"=>"observations"
+       ,"Models_DbTable_Gevu_parcelles"=>"parcelles"
+       ,"Models_DbTable_Gevu_problemes"=>"problèmes"
+       );
+       
     /**
      * Vérifie si une entrée Gevu_lieux existe.
      *
@@ -76,7 +95,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($data, $existe=true, $rData=false)
     {
     	$id=false;
     	if($existe)$id = $this->existe($data);
@@ -89,33 +108,30 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     			//met à jour les niveaux pour les lieux
     			$sql = 'UPDATE gevu_lieux SET rgt = rgt + 2 WHERE rgt >'.$arr[0]['rgt'];
     			$stmt = $this->_db->query($sql);
-    			$stmt->execute();
     			$sql = 'UPDATE gevu_lieux SET lft = lft + 2 WHERE lft >'.$arr[0]['rgt'];
     			$stmt = $this->_db->query($sql);
-    			$stmt->execute();
     			//
     			$data['lft'] = $arr[0]['rgt']+1;
     			$data['rgt'] = $arr[0]['rgt']+2;
-    			$data['niv'] = $arr[0]['niv'];
     		}else{
     			//récupère les informations du parent
-    			$arr = $this->findById_lieu($data["id_parent"]);
+    			$arr = $this->findById_lieu($data["lieu_parent"]);
     			//met à jour les niveaux pour les lieux
     			$sql = 'UPDATE gevu_lieux SET rgt = rgt + 2 WHERE rgt >'.$arr[0]['lft'];
     			$stmt = $this->_db->query($sql);
-    			$stmt->execute();
     			$sql = 'UPDATE gevu_lieux SET lft = lft + 2 WHERE lft >'.$arr[0]['lft'];
     			$stmt = $this->_db->query($sql);
-    			$stmt->execute();
     			//
     			$data['lft'] = $arr[0]['lft']+1;
     			$data['rgt'] = $arr[0]['lft']+2;
-    			$data['niv'] = $arr[0]['niv']+1;
     		}    		
-    		    		
-    	 	$id = $this->insert($data);
+    		$data['niv'] = $arr[0]['niv']+1;
+    	 	$data["id_lieu"] = $this->insert($data);
     	}
-    	return $id;
+    	if($rData)
+	    	return $data;
+    	else
+	    	return $data["id_lieu"];
     } 
            
     /**
@@ -137,11 +153,24 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      * et supprime cette entrée.
      *
      * @param integer $id
+     * @param Zend_Db_Adapter_Abstract $db
      *
      * @return void
      */
-    public function remove($id)
+    public function remove($id, $db)
     {
+        //récupération les tables liées
+        foreach($this->_dependentTables as $t){
+        	$dbT = new $t($db);
+        	$dbT->removeLieu($id);
+        }
+    	
+        $arrEnfant = $this->getFullChild($id);
+        foreach ($arrEnfant as $enf){
+        	if($enf["id_lieu"]!=$id){
+	        	$this->remove($enf["id_lieu"], $db);
+        	}
+        }
         $this->delete('gevu_lieux.id_lieu = ' . $id);
     }
     
@@ -339,7 +368,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
      /*
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
-     * et retourne cette entrée.
+     * et retourne la liste de tous ses parents
      *
      * @param integer $idLieu
      * @param string $order
@@ -349,15 +378,36 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
-            ->from(array('node' => 'gevu_lieux'))
+            ->from(array('node' => 'gevu_lieux'),array("parLib"=>"lib"))
             ->joinInner(array('parent' => 'gevu_lieux'),
-                'node.lft BETWEEN parent.lft AND parent.rgt',array('lib', 'id_lieu'))
+                'node.lft BETWEEN parent.lft AND parent.rgt',array('lib', 'id_lieu', 'niv'))
             ->where( "node.id_lieu = ?", $idLieu)
                         ->order("parent.".$order);        
                 $result = $this->fetchAll($query);
         return $result->toArray(); 
     }
 
+     /*
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne la liste de tous ses enfants
+     *
+     * @param integer $idLieu
+     * @param string $order
+     * @return array
+     */
+    public function getFullChild($idLieu, $order="lft")
+    {
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('node' => 'gevu_lieux'))
+            ->joinInner(array('enfants' => 'gevu_lieux'),
+                'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu'))
+            ->where( "node.id_lieu = ?", $idLieu)
+           	->order("enfants.".$order);        
+                $result = $this->fetchAll($query);
+        return $result->toArray(); 
+    }
+    
      /*
      * Recherche une entrée Gevu_lieux correspondant à l'enfant d'un lieu pour un type de controle
      * création de ce lieu s'il n'exite pas  
@@ -393,6 +443,33 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         	$result = $result[0]["id_lieu"];
         }
         return $result; 
+        
+    }
+
+     /*
+     * Recherche une entrée Gevu_lieux correspondant au parent d'un lieu pour un type de controle
+     * et retourne cette entrée.
+     *
+     * @param integer $idLieu
+     * @param string $TypeControle
+     * 
+     * @return array
+     */
+    public function getParentForTypeControle($idLieu, $TypeControle)
+    {
+    	//récupère les infos de la table liée
+		$dbObj = new $TypeControle;
+		$info = $dbObj->info();
+    	
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('node' => 'gevu_lieux'))
+            ->joinInner(array('parent' => 'gevu_lieux'),
+                'node.lft BETWEEN parent.lft AND parent.rgt')
+            ->joinInner(array('t' => $info["name"]),'t.id_lieu = parent.id_lieu')
+            ->where( "node.id_lieu = ?", $idLieu);        
+        $result = $this->fetchAll($query);
+        return $result->toArray(); 
         
     }
     
