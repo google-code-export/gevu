@@ -334,7 +334,7 @@
 					</mx:columns>
 				</mx:DataGrid>
 				<mx:Accordion id="accCtlScene" >
-					<mx:Canvas  id="cnvCrtl" label="Contrôles diponibles">
+					<mx:Canvas  id="cnvCrtl" label="Contrôles disponibles">
 						<mx:VBox id="vboxCtl"  height="400" width="200" horizontalAlign="center">
 						</mx:VBox>
 					</mx:Canvas>

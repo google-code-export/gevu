@@ -97,7 +97,7 @@
 					}else if(ext=="ods"){
 						d.vignette = OdsIcon;
 						dataIcons.addItem(d);							
-					}else if(ext=="ptt"){
+					}else if(ext=="ppt" || ext=="ptt"){
 						d.vignette = PttIcon;
 						dataIcons.addItem(d);							
 					}else if(ext=="odg" || ext=="odp"){
@@ -119,6 +119,24 @@
 						d.vignette = PhotoIcon;
 						dataIcons.addItem(d);							
 					}
+				}				
+				if(d.content_type == "application/x-zip"){
+					if(ext=="ptx"){
+						d.vignette = PttIcon;
+						dataIcons.addItem(d);							
+					}
+					if(ext=="lsx"){
+						d.vignette = XlsIcon;
+						dataIcons.addItem(d);							
+					}
+				}
+				if(d.content_type == "application/pdf"){
+					d.vignette = PdfIcon;
+					dataIcons.addItem(d);							
+				}
+				if(d.content_type == "image/png" || d.content_type == "image/jpeg"){
+					d.vignette = PhotoIcon;
+					dataIcons.addItem(d);							
 				}
 				if(d.content_type == "application/vnd.google-earth.kml+xml kml"){
 					d.vignette = KmlIcon;
