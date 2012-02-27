@@ -48,7 +48,7 @@ todo :
 			<mx:Image source="@Embed('images/logo.png')" />
 			<mx:VBox horizontalAlign="left" >
 				<mx:Label fontSize="16" text="Saisie des diagnostics"/>		
-				<mx:Label text="V 0.201" />
+				<mx:Label text="V 0.207" />
 			</mx:VBox>
 			<mx:VBox horizontalAlign="left">
 				<mx:Label text="Diagnostic(s) disponible(s) : " />
