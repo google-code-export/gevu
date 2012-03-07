@@ -61,19 +61,19 @@
 		<mx:ViewStack id="viewstack1" width="100%" height="100%">
 			
 			<mx:Canvas label="Erreurs" width="100%" height="100%">		
-				<mx:ApplicationControlBar backgroundColor="{colorErr}" borderColor="{colorErr}" width="100%" height="100%" >
+				<mx:ApplicationControlBar width="100%" height="100%" >
 					<mx:VBox id="acbErr" width="100%"  height="100%" />
 				</mx:ApplicationControlBar>
 			</mx:Canvas>
 		
 			<mx:Canvas label="Nouveaux mots clefs" width="100%" height="100%">		
-				<mx:ApplicationControlBar creationComplete="InitNewMot()" backgroundColor="{colorMot}" borderColor="{colorMot}" width="100%"  height="100%" >
+				<mx:ApplicationControlBar creationComplete="InitNewMot()" width="100%"  height="100%" >
 					<mx:VBox id="acbMot" width="100%"  height="100%" />
 				</mx:ApplicationControlBar>		
 			</mx:Canvas>
 		
 			<mx:Canvas label="Nouvelles données" width="100%" height="100%">		
-				<mx:ApplicationControlBar creationComplete="InitNewDon()" backgroundColor="{colorDon}" borderColor="{colorDon}" width="100%"  height="100%" >
+				<mx:ApplicationControlBar creationComplete="InitNewDon()" width="100%"  height="100%" >
 					<mx:VBox id="acbDon" width="100%"  height="100%" />
 				</mx:ApplicationControlBar>
 			</mx:Canvas>

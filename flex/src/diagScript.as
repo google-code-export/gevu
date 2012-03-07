@@ -92,7 +92,8 @@ public function init():void
 {
 	boxGen.visible = true;
 	cartoIF.visible = true;
-	
+	//added by ala atrash
+	if(ExternalInterface.available)
 	ExternalInterface.addCallback("modifLieu",modifLieu);
 	
 	//construction de la listes des bases disponibles

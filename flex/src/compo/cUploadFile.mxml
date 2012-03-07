@@ -51,7 +51,8 @@
             private var twResult:twResultImport;
             
             private function initApp():void {
-                Security.allowDomain("*");
+                /* comment added by ala atrash 
+				  Security.allowDomain("*");*/
                 _arrUploadFiles = new Array();
             }            
             

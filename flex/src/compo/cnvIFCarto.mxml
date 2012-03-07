@@ -5,25 +5,39 @@
 		  width="100%" height="100%">
 	<mx:Script><![CDATA[
 		import flash.external.*;
+		import flash.html.HTMLLoader;
 		
 		import mx.controls.Alert;
 		
-		[Bindable]	public var rsCarto:Object;
 		
-		public function callChangeGeo():void {		
-			cartoIFrame.callIFrameFunction('addMarker', [rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib], handleChangeGeo);
+		
+		[Bindable]
+		
+		public var rsCarto:Object;
+		public var loader:HTMLLoader= new HTMLLoader();
+		
+		
+		
+		
+		public function callChangeGeo():void {
+	    
+		//this.html.htmlLoader.window.addMarker(rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib);
+		this.html.htmlLoader.window.setGeoParam();
 		}
-
+        
 		public function callChargeKml(url:String):void {
-			cartoIFrame.callIFrameFunction('addKml', [url], handleChangeGeo);	
+			
+			this.html.htmlLoader.window.addKml([url], handleChangeGeo);	
 		}
 		public function callFunction(name:String, params):void {
-			cartoIFrame.callIFrameFunction(name, [params], handleChangeGeo);	
+			/**if(ExternalInterface.available)
+			ExternalInterface.call(name, [params], handleChangeGeo);	*/
 		}
 		
 		/**
 		 * Handle the JavaScript method result.
 		 */
+		
 		private function handleChangeGeo(result : Object):void
 		{
 			trace("The method returned '" + result + "'.");
@@ -31,12 +45,17 @@
 		
 	]]></mx:Script>
 
-	<flexiframe:IFrame id="cartoIFrame"
+<!--	<flexiframe:IFrame id="cartoIFrame"
 					   width="100%" height="100%"
 					   source="carto.html"
-					    visible="{this.visible}"
-						overlayDetection="true"
-					   />			   
+					   visible="{this.visible}"
+					   overlayDetection="true"
+					   /> -->
+	
+	<mx:HTML id="html"
+			 width="100%" height="100%"
+			 location="http://localhost/gevu/flex/bin-debug/carto.html"/> 
+		
 
 	
 </mx:Canvas>
