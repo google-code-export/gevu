@@ -13,10 +13,10 @@ set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\ZendFramework-1.
 set_include_path(get_include_path().PATH_SEPARATOR.ROOT_PATH."\library\php");
 //set_include_path(get_include_path().PATH_SEPARATOR.ROOT_PATH."\application\models\DbTable\Gevu");
 
-// *ZAMFBROWSER IMPLEMENTATION*
+/*ZAMFBROWSER IMPLEMENTATION*
 set_include_path(get_include_path().PATH_SEPARATOR."C:\wamp\www\ZamfBrowser\browser");
 require_once( "ZendAmfServiceBrowser.php" );
-
+*/
 
 // Define path to application directory
 defined('APPLICATION_PATH')

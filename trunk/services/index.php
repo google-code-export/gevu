@@ -9,7 +9,6 @@ try {
 	$idExi = 1;
 	$d = new GEVU_Diagnostique();
 	$arr = $d->getLieuCtl(112, "12", $idBase);
-
 	$d->deleteDoc(240, $idBase);
 	$d->deleteLieu(6, $idBase);	
 	$d->ajoutLieu(1, $idExi, $idBase);
