@@ -21,8 +21,8 @@
 		
 		public function callChangeGeo():void {
 	    
-		//this.html.htmlLoader.window.addMarker(rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib);
-		this.html.htmlLoader.window.setGeoParam();
+		this.html.htmlLoader.window.addMarker(rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib);
+		//this.html.htmlLoader.window.setGeoParam();
 		}
         
 		public function callChargeKml(url:String):void {
