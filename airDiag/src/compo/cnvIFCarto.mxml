@@ -21,7 +21,7 @@
 		
 		public function callChangeGeo():void {
 	    
-		this.html.htmlLoader.window.addMarker(rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib);
+		this.html.htmlLoader.window.addMarker([rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib]);
 		//this.html.htmlLoader.window.setGeoParam();
 		}
         
@@ -54,7 +54,7 @@
 	
 	<mx:HTML id="html"
 			 width="100%" height="100%"
-			 location="http://localhost/gevu/flex/bin-debug/carto.html"/> 
+			 location="http://www.gevu.org/Aircarto.html"/> 
 		
 
 	
