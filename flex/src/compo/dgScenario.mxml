@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns2="compo.*"
+	width="100%" height="100%" creationComplete="init()"
+	>
+	<mx:Script>
+        <![CDATA[
+			import com.adobe.serialization.json.JSON;
+			
+			import compo.*;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IViewCursor;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import mx.containers.Canvas;
+			import mx.containers.Form;
+			import mx.containers.FormItem;
+			import mx.containers.TitleWindow;
+			import mx.controls.Alert;
+			import mx.controls.CheckBox;
+			import mx.controls.ComboBox;
+			import mx.controls.DataGrid;
+			import mx.controls.Image;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.controls.listClasses.IDropInListItemRenderer;
+			import mx.core.DragSource;
+			import mx.events.ChildExistenceChangedEvent;
+			import mx.events.CloseEvent;
+			import mx.events.DataGridEvent;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.CursorManager;
+			import mx.managers.DragManager;
+			import mx.managers.PopUpManager;
+			import mx.rpc.AsyncToken;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.http.HTTPService;
+			import mx.utils.ObjectUtil;
+			import mx.utils.object_proxy;			
+			
+			
+			/**
+			 * paramétrage de l'objet
+			 */
+			[Bindable] public var idExi:String;
+			[Bindable] public var bInit:Boolean=true;
+			[Bindable] public var bInsert:Boolean=true;
+			[Bindable] public var twAR:twAjoutRef;
+			[Bindable] public var arrCrit:Array;
+			[Bindable] public var arrCtl:Array;
+			
+			[Bindable] public var idExiContact:int;	
+			private var idScen:int;	
+			private var dtScen:Object;	
+			private var params:String;	
+			private var bModif:Boolean=false;	
+			
+						
+			public function init():void 
+			{
+			    //chargement des données
+				ROS.getAll();
+				ROCtl.getAll();
+			}
+			
+			private function selectItem(event:Event):void {
+
+				if(bModif){
+					Alert.show("Voulez-vous enregistrer vos modifications ?",
+						"Confirmation modification", 3, this, modifHandler);					
+				}
+				var item:Object=event.currentTarget.selectedItem;
+				if(item){
+					dtScen = item;
+					idScen = item.id_scenario;
+					UpdLib.text = item.lib;
+					//réinitiale le tableau des scènes
+					grdScen.removeAllChildren();
+					if(item.params!=""){
+						//ajoute les scènes
+						showParam(item);
+					}else{
+						var scn:grdRowScenar = new grdRowScenar();
+						scn.dtScen = this.dtScen;
+						grdScen.addChild(scn);	
+					}
+				}
+			}
+			
+			private function showParam(item:Object):void
+			{
+				var scenes:Object = JSON.decode(item.params);
+				for each (var scn:Object in scenes){
+					var r:grdRowScenar = new grdRowScenar();
+					r.dtScen = this.dtScen;
+					//change la couleur de la colonne vide
+					r.colorBG = 0xF5D03A;
+					for each (var etp:Object in scn.etapes){
+						//ajoute une item
+						var c:grdItemScenar = new grdItemScenar();
+						c.dtCrit = getDtCtl(etp.id_type_controle);
+						c.dtScen = this.dtScen;
+						c.idScene = etp.id_scene;
+						c.bInit = true;
+						r.addChild(c);	
+					}
+					//ajoute la ligne à la grille
+					grdScen.addChild(r);
+				}
+			}
+			
+			private function getDtCtl(idCtl:int):Object
+			{
+				for each (var ctl:Object in this.arrCtl){
+					if(ctl.id_type_controle==idCtl)return ctl;
+				}
+				return null;				
+			}
+
+			public function updateItem():void
+			{
+				//création du tableau de valeur
+				var vn:Array = new Array();
+				vn["lib"] = UpdLib.text;
+				//récupèration des scènes
+				var scenes:Array = grdScen.getChildren();
+				var vScenes:Array = new Array();
+				var i:int = 0;
+				for each (var scn:grdRowScenar in scenes){
+					//récupèration des étapes
+					var etapes:Array = scn.getChildren();
+					var vEtapes:Array = new Array();
+					for each (var etp:grdItemScenar in etapes){
+						//ajoute l'enfant s'il possède un critère
+						if(etp.dtCrit)	vEtapes.push({"id_type_controle":etp.dtCrit.id_type_controle,"id_scene":etp.idScene});
+					}
+					vScenes.push({"num":i,"etapes":vEtapes});
+					i++;
+				}
+				vn["params"] = JSON.encode(vScenes);
+				//enregistrement des modifications
+				ROS.edit(idScen,vn);	
+			}
+								
+			private function fillCritListe(e:Object):void
+			{
+				if(!e || e.result.length==0)return;
+				arrCrit = e.result as Array;
+			}
+
+			private function fillCtlListe(e:Object):void
+			{
+				if(!e || e.result.length==0)return;
+				arrCtl = e.result;
+				for each (var c:Object in arrCtl){
+					var hbCtl:hbControle = new hbControle();
+					hbCtl.dt = c;
+					vboxCtl.addChild(hbCtl);
+				}	
+			}
+						
+			private function insertItem():void {
+				
+				if(bModif){
+					Alert.show("Voulez-vous enregistrer vos modifications ?",
+						"Confirmation modification", 3, this, modifHandler);					
+				}
+				
+				//création du tableau de param
+				var pArr:Array = new Array;
+				pArr["lib"]=taLib.text;
+				ROS.ajouter(pArr);
+				
+			}
+			private function modifHandler(event:CloseEvent):void
+			{
+				if (event.detail == Alert.YES) 
+				{
+					updateItem();
+				}
+				bModif = false;
+			}
+						
+			
+			private function fillGridHandler(e:Object, dg:DataGrid):void
+			{
+				if(!e)return;
+			    dg.dataProvider = e.result as Array;
+				bModif = false;
+			}
+			
+			public function faultHandlerService(fault:FaultEvent):void
+			{				
+				Alert.show(fault.fault.faultString, "FaultHandlerService");
+			}
+			
+			
+			private function deleteScen():void {
+				
+				if (this.dgScen.selectedItem)
+				{
+					Alert.show("Confirmez-vous la suppression de ce scenario ?",
+						"Confirmation Suppression", 3, this, deleteScenClickHandler);
+				}
+				
+			}
+			private function deleteScenClickHandler(event:CloseEvent):void
+			{
+				if (event.detail == Alert.YES) 
+				{
+					ROS.remove(idScen);
+					grdScen.removeAllChildren();
+				}
+			}
+			private function ScenHandler(e:Object):void
+			{
+				selectedChild = view;
+				ROS.getAll();
+			}
+						
+			public function beginDragAndDrop(event:MouseEvent):void{
+
+				var src:hbControle = hbControle(event.currentTarget);
+				var dragSource:DragSource = new DragSource;
+				DragManager.showFeedback(DragManager.COPY);
+				DragManager.doDrag(src, dragSource, event);
+			}
+			
+			public function dragEnterHandler(event:DragEvent):void{
+				var dst:Object=event.currentTarget;
+				var src:Object=event.dragInitiator;
+				if (matches(src, dst)){
+					DragManager.acceptDragDrop(Canvas(dst));
+				}
+			}
+			
+			public function dragDropHandler(event:DragEvent):void{
+				var d:Object = event.currentTarget;
+				var s:Object = event.dragInitiator;
+				if (matches(s, d)){
+					var dst:Canvas = Canvas(d);
+					//récupère le controle
+					var src:hbControle = hbControle(s);
+					//ajoute une colonne
+					var gISsrc:grdItemScenar = grdItemScenar(dst.parent.parent.parent);
+					var gIS:grdItemScenar = new grdItemScenar();
+					var gRSsrc:grdRowScenar = grdRowScenar(gISsrc.parent);
+					gRSsrc.addChild(gIS);
+					//vérifie s'il faut ajouter une ligne
+					if(gRSsrc.getChildren().length<=2){
+						//ajoute une ligne
+						var gRS:grdRowScenar = new grdRowScenar();
+						gRS.dtScen = this.dtScen;
+						grdScen.addChild(gRS);						
+					}
+					//ajoute le controle
+					gISsrc.dtScen = this.dtScen;
+					gISsrc.dtCrit = src.dt; 
+					gISsrc.chargeCtl();
+					//enregistre la modification
+					bModif = true;
+				}
+			}
+			
+			private function matches(src:Object, dst:Object):Boolean{
+				//on vérifie que la destination est bonne
+				if(dst.className != "Canvas" || src.className != "hbControle" || dst.numChildren>0  || src.parent.parent == dst.parent.parent)return false
+				else return true;
+			}
+									
+			protected function UpdLib_changeHandler(event:Event):void
+			{
+				//enregistre la modification
+				bModif = true;
+			}
+			
+			
+			protected function insItem_clickHandler(event:MouseEvent):void
+			{
+				if(bModif){
+					Alert.show("Voulez-vous enregistrer vos modifications ?",
+						"Confirmation modification", 3, this, modifHandler);					
+				}
+				selectedChild = insert;				
+			}
+			
+			protected function remove_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				ScenHandler(event);
+			}
+			
+			private function testerScenario():void
+			{
+				// TODO créer uen fenêtre de saisie du scénario
+			}
+			
+		]]>
+    </mx:Script>
+    
+	<mx:RemoteObject id="ROS"
+					 source="Models_DbTable_Gevu_scenario" destination="zend" 
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="getAll"  result="fillGridHandler(event,dgScen)"/>  	
+		<mx:method name="remove"  result="remove_resultHandler(event)"/>  	
+		<mx:method name="ajouter"  result="ScenHandler(event)"/>  	
+		<mx:method name="edit"  result="ScenHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROCtl"
+					 source="Models_DbTable_Gevu_typesxcontroles" destination="zend" 
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="getAll"  result="fillCtlListe(event)"/>  	
+	</mx:RemoteObject>
+	
+	
+	<mx:Canvas id="view" width="100%" height="100%">
+		<mx:HBox width="100%" height="100%" paddingBottom="6" paddingLeft="6"
+				 paddingRight="6" paddingTop="6">
+			<mx:VBox height="100%">
+				<mx:HBox>
+					<mx:LinkButton id="insItem" click="insItem_clickHandler(event)"  icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un scénario" />
+					<mx:LinkButton click="deleteScen()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un scénario" />
+				</mx:HBox>
+				<mx:DataGrid id="dgScen" click="selectItem(event);" height="100%" width="100%" >
+					<mx:columns>
+						<mx:DataGridColumn headerText="Nom" dataField="lib"/>
+						<mx:DataGridColumn headerText="Id Scen" dataField="id_scenario" visible="false"/>
+						<mx:DataGridColumn headerText="Params" dataField="params" visible="false"/>
+					</mx:columns>
+				</mx:DataGrid>
+				<mx:Accordion id="accCtlScene" >
+					<mx:Canvas  id="cnvCrtl" label="Contrôles disponibles">
+						<mx:VBox id="vboxCtl"  height="400" width="200" horizontalAlign="center">
+						</mx:VBox>
+					</mx:Canvas>
+				</mx:Accordion> 
+			</mx:VBox>	
+			<mx:VRule height="100%"/>
+			<mx:VBox height="100%" width="100%">
+				<mx:Label fontSize="18" fontWeight="bold" text="Scènes copiées" />
+				<mx:Grid borderColor="#E37D2A" borderStyle="solid" borderThickness="4"
+						 themeColor="#FFA200">
+					<mx:GridRow id="grSceneCopie" name="grSceneCopie">
+						
+					</mx:GridRow> 
+				</mx:Grid>				
+				<mx:Label fontSize="18" fontWeight="bold" text="Scenario" />
+				<mx:HBox>
+					<mx:Label  fontSize="12" fontWeight="bold" text="Nom:" />
+					<mx:TextInput id="UpdLib" change="UpdLib_changeHandler(event)" />
+					<mx:Button label="Enregistrer" click="updateItem()" toolTip="Enregistre les modification du scénario" />
+					<mx:Button label="Tester" click="testerScenario()" toolTip="Tester le scénario" />
+				</mx:HBox>
+				<mx:Image source="@Embed('images/legSceneHaut.png')" />
+				<mx:HBox>
+					<mx:Image source="@Embed('images/legSceneBas.png')" />
+					<mx:Grid id="grdScen" borderColor="#45A4CB" borderStyle="solid" borderThickness="4">
+					</mx:Grid>									
+				</mx:HBox>
+			</mx:VBox>
+		</mx:HBox>
+	</mx:Canvas>
+	<mx:Canvas id="insert" width="100%" height="100%">
+		<mx:VBox>			
+			<mx:Form width="100%" height="100%" id="insertForm">			                    		
+				<mx:FormItem label="Nom:" id="lib" >
+					<mx:TextArea id="taLib"  width="100%" height="60" />
+				</mx:FormItem>
+			</mx:Form>		
+			<mx:HBox>
+				<mx:Button label="Enregistrer" click="insertItem()" />
+				<mx:Button label="Annuler" click="this.selectedChild = view;" />				
+			</mx:HBox>
+		
+		</mx:VBox>
+	</mx:Canvas>
+	 
+</mx:ViewStack>

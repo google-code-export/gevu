@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:composants="compo.*"
+		   label="Bâtiment"
+		   width="100%" height="100%"
+		   >
+
+	<mx:VBox initialize="init();">
+		<mx:HBox width="100%">
+			<mx:Label text="nom" />
+			<mx:TextInput id="F01" width="100%" text="{NodeData.nom}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="ref" />
+			<mx:TextInput id="F02" width="100%" text="{NodeData.ref}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="adresse" />
+			<mx:TextInput id="F03" width="100%" text="{NodeData.adresse}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="commune" />
+			<mx:TextInput id="F04" width="100%" text="{NodeData.commune}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="pays" />
+			<mx:TextInput id="F05" width="100%" text="{NodeData.pays}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="code_postal" />
+			<mx:TextInput id="F06" width="100%" text="{NodeData.code_postal}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="contact_proprietaire" />
+			<mx:TextInput id="F07" width="100%" text="{NodeData.contact_proprietaire}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="contact_delegataire" />
+			<mx:TextInput id="F08" width="100%" text="{NodeData.contact_delegataire}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="contact_gardien" />
+			<mx:TextInput id="F09" width="100%" text="{NodeData.contact_gardien}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="horaires_gardien" />
+			<mx:TextInput id="F10" width="100%" text="{NodeData.horaires_gardien}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="horaires_batiment" />
+			<mx:TextInput id="F11" width="100%" text="{NodeData.horaires_batiment}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="superficie_parcelle"/>
+			<mx:NumericStepper id="F12" width="100%" stepSize="1" data="{NodeData.superficie_parcelle}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="superficie_batiment" />
+			<mx:NumericStepper id="F13" width="100%"  stepSize="1" data="{NodeData.superficie_batiment}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="date_achevement" />
+			<mx:TextInput id="F14" width="100%" data="{NodeData.date_achevement}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="date_depot_permis" />
+			<mx:TextInput id="F15" width="100%" data="{NodeData.date_depot_permis}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="date_reha" />
+			<mx:TextInput id="F16" width="100%" data="{NodeData.date_reha}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_1" />
+			<composants:KeywordsList id="F17" width="100%" selectedIndex="{F17.setKeyword(NodeData.reponse_1)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_2" />
+			<composants:KeywordsList id="F18" width="100%" selectedIndex="{F18.setKeyword(NodeData.reponse_2)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_3" />
+			<composants:KeywordsList id="F19" width="100%" selectedIndex="{F19.setKeyword(NodeData.reponse_3)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_4" />
+			<composants:KeywordsList id="F20" width="100%" selectedIndex="{F20.setKeyword(NodeData.reponse_4)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_5" />
+			<composants:KeywordsList id="F21" width="100%" selectedIndex="{F21.setKeyword(NodeData.reponse_5)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_6" />
+			<composants:KeywordsList id="F22" width="100%" selectedIndex="{F22.setKeyword(NodeData.reponse_6)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_7" />
+			<composants:KeywordsList id="F23" width="100%" selectedIndex="{F23.setKeyword(NodeData.reponse_7)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_8" />
+			<composants:KeywordsList id="F24" width="100%" selectedIndex="{F24.setKeyword(NodeData.reponse_8)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_9" />
+			<composants:KeywordsList id="F25" width="100%" selectedIndex="{F25.setKeyword(NodeData.reponse_9)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_10" />
+			<composants:KeywordsList id="F26" width="100%" selectedIndex="{F26.setKeyword(NodeData.reponse_10)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_11" />
+			<composants:KeywordsList id="F27" width="100%" selectedIndex="{F27.setKeyword(NodeData.reponse_11)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_12" />
+			<composants:KeywordsList id="F28" width="100%" selectedIndex="{F28.setKeyword(NodeData.reponse_12)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_13" />
+			<composants:KeywordsList id="F29" width="100%" selectedIndex="{F29.setKeyword(NodeData.reponse_13)}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_14" />
+			<composants:KeywordsList id="F30" width="100%" selectedIndex="{F30.setKeyword(NodeData.reponse_14)}" change="valChanged=true;" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="reponse_15" />
+			<composants:KeywordsList id="F31" width="100%" selectedIndex="{F31.setKeyword(NodeData.reponse_15)}" change="valChanged=true;" />
+		</mx:HBox>
+		
+	</mx:VBox>
+	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					 source="Models_DbTable_Gevu_batiments"
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="edit"	result=";" />
+		<mx:method name="remove"	result=";" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var NodeData:Object;
+			public var valChanged:Boolean;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+
+			private function init():void{
+				valChanged = false;
+				
+				F17.setListType(2);
+				F18.setListType(2);
+				F19.setListType(2);
+				F20.setListType(2);
+				F21.setListType(31);
+				F22.setListType(2);
+				F23.setListType(2);
+				F24.setListType(2);
+				F25.setListType(2);
+				F26.setListType(2);
+				F27.setListType(2);
+				F28.setListType(26);
+				F29.setListType(2);
+				F30.setListType(2);
+				F31.setListType(2);
+			}
+			
+			public function saveModifications() : void {
+				var arr:Array = new Array();
+				arr["nom"]=F01.text;
+				arr["ref"]=F02.text;
+				arr["adresse"]=F03.text;
+				arr["commune"]=F04.text;
+				arr["pays"]=F05.text;
+				arr["code_postal"]=F06.text;
+				arr["contact_proprietaire"]=F07.text;
+				arr["contact_delegataire"]=F08.text;
+				arr["contact_gardien"]=F09.text;
+				arr["horaires_gardien"]=F10.text;
+				arr["horaires_batiment"]=F11.text;
+				arr["superficie_parcelle"]=F12.value;
+				arr["superficie_batiment"]=F13.value;
+				arr["date_achevement"]=F14.text;
+				arr["date_depot_permis"]=F15.text;
+				arr["date_reha"]=F16.text;
+				arr["reponse_1"]=F17.acualId;
+				arr["reponse_2"]=F18.acualId;
+				arr["reponse_3"]=F19.acualId;
+				arr["reponse_4"]=F20.acualId;
+				arr["reponse_5"]=F21.acualId;
+				arr["reponse_6"]=F22.acualId;
+				arr["reponse_7"]=F23.acualId;
+				arr["reponse_8"]=F24.acualId;
+				arr["reponse_9"]=F25.acualId;
+				arr["reponse_10"]=F26.acualId;
+				arr["reponse_11"]=F27.acualId;
+				arr["reponse_12"]=F28.acualId;
+				arr["reponse_13"]=F29.acualId;
+				arr["reponse_14"]=F30.acualId;
+				arr["reponse_15"]=F31.acualId;
+				roModifBase.edit(NodeData.id_batiment, arr);
+				
+				valChanged = false;
+			}
+			
+			public function deleteData():void{
+				roModifBase.remove(NodeData.id_batiment);
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>

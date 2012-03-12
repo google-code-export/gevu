@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" >
+	<mx:Script>
+        <![CDATA[
+        	import mx.controls.Alert;
+        	import mx.events.CloseEvent;
+        	import mx.managers.CursorManager;
+        	import mx.managers.PopUpManager;
+        	import mx.rpc.events.FaultEvent;
+        	import mx.rpc.events.ResultEvent;
+
+	/**
+	 * paramétrage de l'objet
+	 */
+	[Bindable] public var endPoint:String;
+	[Bindable] public var objName:String;
+	[Bindable] public var objMethode:String="getAll";
+	[Bindable] public var objParam:String;
+	[Bindable] public var objSource:String="";
+	[Bindable] public var doSource:Object;
+	[Bindable] public var keyName:String;
+	[Bindable] public var labelName:String="lib";
+	[Bindable] public var titre:String="un mot clef";
+	[Bindable] public var bAjout:Boolean=true;
+	[Bindable] public var bRemove:Boolean=false;
+	[Bindable] public var annonce:String;
+
+	[Bindable] private var dpValue:Array;
+	
+	public var result:String="";
+
+	public function init():void
+	{
+		annonce="Choisissez "+titre;
+		if(objMethode!="getAll"){
+			if(objMethode=="findByTronc"){
+			    ROS.findByTronc(objParam);
+			}			
+			if(objMethode=="findByIdLieu"){
+				if(!objParam)return;
+			    ROS.findByIdLieu(objParam);					
+			}			
+			if(objMethode=="getAllNomPrenom"){
+				ROS.getAllNomPrenom();					
+			}			
+			if(objMethode=="getListe"){
+				ROS.getListe();					
+			}			
+			if(objMethode=="getAllByType"){
+				ROS.getAllByType(objParam);					
+			}			
+		}else{
+		    //chargement des données
+		    ROS.getAll();
+		}
+	}
+
+	public function getIndex(label:String):int
+	{
+		var i:int
+	    for each(var row:Object in cb.dataProvider){
+	    	if(row[labelName]==label){
+	    		return i;
+	    	}
+	    	i++;
+	    }
+   		return -1;
+	}
+
+	private function fillHandler(e:Object):void
+	{
+		if(!e)return;
+		dpValue = e.result as Array;
+    	cb.dataProvider = dpValue;
+    	cb.labelField = labelName;
+
+	}
+	
+	public function AjoutMot():void{
+		
+		//construction de la fenêtre d'édition
+		if(objSource==""){
+			var twAMC:twAjoutMotClef= twAjoutMotClef(
+	            PopUpManager.createPopUp(this, twAjoutMotClef, true));
+			twAMC.endPoint=this.endPoint;
+			twAMC.objName=this.objName;
+			twAMC.titre = "Ajouter "+titre;
+			twAMC.objSource = this;
+			if(objName=="Models_DbTable_Gevu_rapports"){
+				var p:Array=new Array();
+				p['id_lieu']=this.objParam;
+				twAMC.objParam = p;	
+			}					
+	        PopUpManager.centerPopUp(twAMC);
+		}else{
+			var twAR:twAjoutRef= twAjoutRef(
+	            PopUpManager.createPopUp(this, twAjoutRef, true));
+			twAR.objRef=objSource;
+			twAR.titre = "Ajouter "+titre;
+			twAR.objSource = this;
+			twAR.endPoint = this.endPoint;
+			twAR.bInsert = true;					
+	        PopUpManager.centerPopUp(twAR);
+			
+		}        
+	}
+
+	public function faultHandlerService(fault:FaultEvent):void
+	{
+		Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+	}
+
+    public function onChange():void 
+    {
+        result = cb.selectedItem[keyName];
+    }
+
+	private function removeItem():void {
+	    
+	    if (cb.selectedItem)
+	    {
+	        Alert.show("Confirmez-vous la suppression "+titre+" ?",
+	        "Confirmation Suppression", 3, this, removeItemHandler);
+	    }
+	   
+	}
+	
+	private function removeItemHandler(event:CloseEvent):void
+	{
+	    if (event.detail == Alert.YES) 
+	    {
+			ROS.remove(cb.selectedItem[keyName]);
+	    }
+	}
+	
+	private function changeItem():void
+	{
+		if(objName=="Models_DbTable_Gevu_rapports"){
+			this.parentApplication.ShowSelection(cb.selectedItem["selection"])
+		}
+		if(objName=="Models_DbTable_Gevu_motsclefs"){
+			doSource.setCondRep(cb.selectedItem)
+		}
+	}
+
+        ]]>
+    </mx:Script>
+	<mx:RemoteObject id="ROS"
+	    	source="{objName}" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
+	 	<mx:method name="findByTronc"  result="fillHandler(event)" />
+	 	<mx:method name="findByIdLieu"  result="fillHandler(event)" />
+		<mx:method name="getAllNomPrenom"  result="fillHandler(event)" />
+		<mx:method name="getListe"  result="fillHandler(event)" />
+	 	<mx:method name="remove"  result="init()" />
+		<mx:method name="getAllByType"   result="fillHandler(event)"  />
+		
+	</mx:RemoteObject>
+ 
+<mx:ComboBox id="cb" change="changeItem()" prompt="{annonce}" />
+<mx:LinkButton visible="{bRemove}" click="removeItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="{'Supprimer '+titre}" />
+<mx:LinkButton visible="{bAjout}" id="btnAddNew" click="AjoutMot()" icon="@Embed('images/AddRecord.png')" toolTip="{'Ajouter '+titre}" />
+    
+</mx:HBox>

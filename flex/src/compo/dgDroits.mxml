@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns2="compo.*"
+	width="100%" height="100%">
+	<mx:Script>
+        <![CDATA[
+import com.adobe.serialization.json.JSON;
+
+import compo.*;
+
+import mx.collections.ArrayCollection;
+import mx.collections.IViewCursor;
+import mx.collections.Sort;
+import mx.collections.SortField;
+import mx.containers.Form;
+import mx.containers.FormItem;
+import mx.containers.TitleWindow;
+import mx.controls.Alert;
+import mx.controls.CheckBox;
+import mx.controls.ComboBox;
+import mx.controls.DataGrid;
+import mx.controls.dataGridClasses.DataGridColumn;
+import mx.controls.listClasses.IDropInListItemRenderer;
+import mx.events.CloseEvent;
+import mx.events.DataGridEvent;
+import mx.events.FlexEvent;
+import mx.managers.CursorManager;
+import mx.managers.PopUpManager;
+import mx.rpc.AsyncToken;
+import mx.rpc.events.FaultEvent;
+import mx.rpc.events.ResultEvent;
+import mx.rpc.http.HTTPService;
+
+/**
+ * paramétrage de l'objet
+ */
+[Bindable] public var endPoint:String;
+[Bindable] public var idExi:String;
+[Bindable] public var bInit:Boolean=true;
+[Bindable] public var bInsert:Boolean=true;
+[Bindable] public var twAR:twAjoutRef;
+
+[Bindable] public var idExiContact:int;	
+private var idDroit:int;	
+private var params:String;	
+
+
+public function Init(id:int):void 
+{
+    //chargement des données
+    if(id){
+		this.visible = true;
+		selectedChild = view;
+		vsParamDroit.selectedChild = pdVide;
+		dgDroit.dataProvider = new Array;
+		idExiContact = id;
+		ROED.findByIdExi(idExiContact);
+	}
+        
+}
+
+
+private function selectItem(event:Event):void {
+	var item:Object=event.currentTarget.selectedItem;
+	if(item){
+		idDroit = item.id_droit;		
+		params = item.params;
+		//affiche la bonne vue
+		var cs:Canvas = Canvas(vsParamDroit.getChildByName("pd"+idDroit));
+		vsParamDroit.selectedChild = cs;
+		var vb:VBox = VBox(cs.getChildByName("pd"+idDroit+"vb"));
+		if(vb==null){
+			//récupère les paramètres totaux du droit sélectionné
+			ROD.findByIdDroit(idDroit);
+		}else{
+			viewParams(vb);
+		}
+	}
+}
+private function viewParams(ihm:VBox):void
+{
+	if(!params)return;
+	var psEnr:Array = JSON.decode(params);
+	//décoche la sélection
+	decocheParams(ihm.getChildren());
+	//affiche la sélection
+	for each (var pe:Object in psEnr){
+		if(pe.id!=null){
+			var ctl:CheckBox = CheckBox(ihm.getChildByName(pe.id))
+			if(ctl) ctl.selected = true;
+		}
+	}
+	
+}
+
+private function fillDroitHandler(e:Object):void
+{
+	
+	if(!e || e.result.length==0)return;
+	var psRot:Object = JSON.decode(e.result[0]["params"]);
+	if(psRot){
+		//construction de l'interface de saisie
+		var cs:Canvas = Canvas(vsParamDroit.getChildByName("pd"+idDroit));
+		var vb:VBox = VBox(cs.getChildAt(0));
+
+		//création des chek box
+		for each (var p:Object in psRot){
+			var cb:CheckBox = new CheckBox();
+			cb.label = p.lib;
+			cb.name = idDroit+"_"+p.id;
+			vb.addChild(cb);
+		}
+		viewParams(vb);
+		
+	}
+	
+
+}
+			
+private function decocheParams(ctls:Array):void{
+	//décoche les paramètres
+	for each (var c:Object in ctls){
+		if(c.className=="CheckBox")c.selected = false;
+	}	
+}
+
+private function editParams():void{
+	
+	var cs:Canvas = Canvas(vsParamDroit.getChildByName("pd"+idDroit));
+	var vb:VBox = VBox(cs.getChildAt(0));
+	var ctlParams:Array = vb.getChildren();	
+	var pArr:Array = new Array;
+	
+	//récupération des données sélectionnnées
+	for each(var ctl:Object in ctlParams){		
+		//vérifie le type pour récupérer les modifs
+		if(ctl.className=="CheckBox" && ctl.selected){
+			pArr.push({"id":ctl.name,"lib":ctl.label});
+		}
+	}	
+
+	var pjs:String = JSON.encode(pArr);
+	var vn:Array = new Array();
+	vn["params"] = pjs;
+	trace(pjs);
+	ROED.edit(idExiContact, idDroit, vn);
+	
+}			
+
+private function fillGridHandler(e:Object, dg:DataGrid):void
+{
+	if(!e)return;
+    dg.dataProvider = e.result as Array;
+}
+
+public function faultHandlerService(fault:FaultEvent):void
+{
+	
+	Alert.show(fault.fault.faultString, "FaultHandlerService");
+}
+
+
+private function deleteDroit():void {
+	
+	if (this.dgDroit.selectedItem)
+	{
+		Alert.show("Confirmez-vous la suppression du droit pour ce compte ?",
+			"Confirmation Suppression", 3, this, deleteDroitClickHandler);
+	}
+	
+}
+private function deleteDroitClickHandler(event:CloseEvent):void
+{
+	if (event.detail == Alert.YES) 
+	{
+		ROED.remove(idExiContact, dgDroit.selectedItem['id_droit']);
+	}
+}
+private function DroitHandler(e:Object):void
+{
+	selectedChild = view;
+	ROED.findByIdExi(idExiContact);
+}
+						
+						
+
+        ]]>
+    </mx:Script>
+    
+	<mx:RemoteObject id="ROED"
+					 source="Models_DbTable_Gevu_exisxdroits" destination="zend" 
+					 endpoint="{endPoint}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="findByIdExi"  result="fillGridHandler(event,dgDroit)"/>  	
+		<mx:method name="remove"  result="DroitHandler(event)"/>  	
+		<mx:method name="ajouter"  result="DroitHandler(event)"/>  	
+		<mx:method name="edit"  result="DroitHandler(event)"/>  	
+	</mx:RemoteObject>
+	<mx:RemoteObject id="ROD"
+					 source="Models_DbTable_Gevu_droits" destination="zend" 
+					 endpoint="{endPoint}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="findByIdDroit"  result="fillDroitHandler(event)"/>  	
+	</mx:RemoteObject>
+	
+	<mx:Canvas id="view" width="100%" height="100%">
+		<mx:VBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+			<mx:HBox>
+				<mx:LinkButton click="selectedChild = insert;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un droit pour ce contact" />
+				<mx:LinkButton click="deleteDroit()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un droit pour ce contact" />							
+			</mx:HBox>							
+			<mx:DataGrid id="dgDroit" width="100%" click="selectItem(event);" >
+				<mx:columns>
+					<mx:DataGridColumn headerText="Type de droit" dataField="lib" />
+					<mx:DataGridColumn headerText="Id Droit" dataField="id_droit" visible="false"/>
+					<mx:DataGridColumn headerText="Params" dataField="params" visible="true"/>
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:ViewStack id="vsParamDroit" width="100%" height="100%">
+				<mx:Canvas id="pdVide" width="100%" height="100%">
+				</mx:Canvas>			
+				<mx:Canvas id="pd1" name="pd1" width="100%" height="100%">
+					<mx:VBox name="pd1vb" >
+					</mx:VBox>						
+				</mx:Canvas>			
+				<mx:Canvas id="pd2" name="pd2" width="100%" height="100%">
+					<mx:VBox name="pd2vb" >
+					</mx:VBox>						
+				</mx:Canvas>			
+				<mx:Canvas id="pd3" name="pd3" width="100%" height="100%">
+					<mx:VBox name="pd3vb" >
+					</mx:VBox>						
+				</mx:Canvas>			
+				<mx:Canvas id="pd4" name="pd4" width="100%" height="100%">
+					<mx:VBox name="pd4vb" >
+					</mx:VBox>						
+				</mx:Canvas>			
+			</mx:ViewStack>
+			<mx:Button label="Enregistrer" click="editParams()" />
+		</mx:VBox>	
+	</mx:Canvas>
+	<mx:Canvas id="insert" width="100%" height="100%">
+		<mx:VBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+			<mx:Label text="Choisissez un droit :"/> 
+			<ns2:cbGroupeMot titre="un droit" keyName="id_droit" id="cbDroit" objName="Models_DbTable_Gevu_droits" endPoint="{endPoint}" bAjout="false" />
+			<mx:HBox>
+				<mx:Button label="Enregistrer" click="ROED.ajouter(idExiContact,cbDroit.cb.selectedItem['id_droit']);" />
+				<mx:Button label="Annuler" click="selectedChild = view;" />				
+			</mx:HBox>							
+		</mx:VBox>
+	</mx:Canvas>
+	 
+</mx:ViewStack>
