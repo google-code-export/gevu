@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		  xmlns:composants="compo.*"
+		  label="Ariane"
+		  width="100%" height="100%"
+		  >
+
+	<mx:VBox>
+				<mx:Label text="adresse" />
+
+	</mx:VBox>
+	
+	
+	<mx:Script>
+		<![CDATA[
+		
+			
+			[Bindable] public var NodeData:Object;
+						
+	
+		]]>
+	</mx:Script>
+</mx:Canvas>

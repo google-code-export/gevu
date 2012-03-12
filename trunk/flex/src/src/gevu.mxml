@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Licensed under the Apache License, Version 2.0:
+    http://www.apache.org/licenses/LICENSE-2.0
+todo :
+
+-->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+  	width="100%" height="100%" layout="absolute" 
+   	xmlns:ns2="compo.*"
+   	 creationComplete="init()"
+   	 name="gevu_alceane"
+   >
+
+	<mx:Script source="gevu.as"/>
+	
+	<mx:WipeLeft id="myWL"/>
+
+  <mx:HTTPService id="srvEtatDiag" url="{urlExeAjax}"
+  	result="rhEtatDiag(event);" showBusyCursor="true" />
+  <mx:HTTPService id="srvExeCarto" url="{urlExeCarto}"
+  	result="readXmlCarto(event);" showBusyCursor="true" />
+  <mx:HTTPService id="srvFC" showBusyCursor="true" /> 
+
+ 	<!-- Define custom colors for use as fills. -->
+    <mx:SolidColor id="sc0" color="green" alpha=".8"/>
+    <mx:SolidColor id="sc1" color="yellow" alpha=".8"/>
+    <mx:SolidColor id="sc2" color="#ffa200" alpha=".6"/>
+    <mx:SolidColor id="sc3" color="red" alpha=".6"/>
+
+    <!-- Define custom Strokes for the columns. -->
+    <mx:Stroke id="s0" color="green" weight="2"/>
+    <mx:Stroke id="s1" color="yellow" weight="2"/>
+    <mx:Stroke id="s2" color="#ffa200" weight="2"/>
+    <mx:Stroke id="s3" color="red" weight="2"/>
+ 
+  
+ <mx:Panel title="GEVU Global EValuation Urbaine " id="boxGen" visible="false" width="100%" height="100%">
+ 	<mx:HBox width="100%">
+ 		<mx:Label text="V 0.125" />
+		<mx:CheckBox visible="true" label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" />
+ 	    <mx:LinkButton label="Nettoyer la carte" click="PurgeCarte()"/>
+ 	    <mx:VBox horizontalAlign="right" width="100%" >
+	 	    <mx:Label id="EtatLieuTitre" fontSize="16" text="Veuillez sélectionner un élément" />			    	
+ 	    </mx:VBox>
+ 	</mx:HBox>
+ 	<mx:HDividedBox width="100%" height="100%">
+		<mx:Accordion id="boxTree" minWidth="200" width="25%" height="100%">
+			<mx:Canvas label="ELEMENTS DE DIAGNOSTIC" width="100%" height="100%">
+		 		<mx:Panel title="Choisissez les éléments à afficher" width="100%" height="100%" borderColor="#080202">
+			   		<ns2:treeEtatLieux id="treeEtatLieux" width="100%" height="100%" >
+			   		</ns2:treeEtatLieux>
+				</mx:Panel>
+			</mx:Canvas>
+			<mx:Canvas label="TERRITOIRES" width="100%" height="100%">
+		 		<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">
+				   <mx:Tree id="treeTerre" width="100%" height="100%"
+				          labelField="@titreRub"
+				          dataProvider="{rsTerre}"
+				          change="changeEvtTreeTerre(event);" 
+				          >
+				   </mx:Tree>		 			
+		 		</mx:Panel>
+			</mx:Canvas>
+			<mx:Canvas id="parcAlceane" label="PARC ALCEANE" width="100%" height="100%">
+		 		<mx:Panel title="Choisissez un élément" width="100%" height="100%" borderColor="#080808">
+				   <mx:Tree id="treeAlceane" width="100%" height="100%"
+				          labelField="@titreRub"
+				          dataProvider="{rsParc}"
+				          change="changeEvtTreeTerre(event);" 
+				          >
+				   </mx:Tree>		 			
+		 		</mx:Panel>
+			</mx:Canvas>
+		</mx:Accordion>
+			
+	   <mx:UIComponent id="mapHolder"
+	      initialize="onHolderCreated(event);"
+	      resize="onHolderResized(event)"
+	      width="50%" height="100%"/>
+ 
+	   <mx:VBox id="boxEtatLieux" width="340" height="100%" >
+	 		<mx:Canvas id="pEtatLieu" width="100%" height="100%" borderColor="#443838">
+	
+			    <mx:Accordion id="accEtatLieu"  width="100%" height="100%" >
+			    	<mx:VBox label="Diagnostic" >
+					    <mx:Label id="TauxCalc" />
+					    <mx:HBox paddingLeft="70" >
+							<mx:Image id="imgMoteur" source="{MoteurIcon}" width="60" />
+							<mx:Image id="imgAudio" source="{AudioIcon}" width="60" />
+							<mx:Image id="imgCog" source="{CogIcon}" width="60" />
+							<mx:Image id="imgVisu" source="{VisuIcon}" width="60" />
+						</mx:HBox>
+						
+					    <mx:ColumnChart id="chart" 
+					        dataProvider="{rsEtatDiag.EtatDiag.Obstacles}" 
+					        type="stacked"
+					        showDataTips="true" 
+							change="chartEtatDiagChange(event)"
+							selectionMode="multiple"
+							width="320" height="200"
+					    >
+					        <mx:horizontalAxis>
+					            <mx:CategoryAxis id="h1" categoryField="id" />
+					        </mx:horizontalAxis>
+					        <mx:series>
+					           <mx:ColumnSeries 
+					                xField="id" 
+					                yField="niv0" 
+					                displayName="Critères valides"
+									fill="{sc0}"
+					                stroke="{s0}"
+					                selectable="true"
+					           />
+					           <mx:ColumnSeries 
+					                xField="id" 
+					                yField="niv1" 
+					                displayName="Obstacles niveau 1"
+									fill="{sc1}"
+					                stroke="{s1}"
+					           />
+					           <mx:ColumnSeries 
+					                xField="id" 
+					                yField="niv2" 
+					                displayName="Obstacles niveau 2"
+									fill="{sc2}"
+					                stroke="{s2}"
+					           />
+					           <mx:ColumnSeries 
+					                xField="id" 
+					                yField="niv3" 
+					                displayName="Obstacles niveau 3"
+									fill="{sc3}"
+					                stroke="{s3}"
+					           />
+					        </mx:series>
+					    </mx:ColumnChart>
+					    <mx:HBox paddingLeft="54" >
+							<mx:Image id="imgAlphaMoteur" source="{AIcon}" width="60" />
+							<mx:Image id="imgAlphaAudio" source="{BIcon}" width="60" />
+							<mx:Image id="imgAlphaCog" source="{CIcon}" width="60" />
+							<mx:Image id="imgAlphaVisu" source="{DIcon}" width="60" />		
+						</mx:HBox>
+					     <mx:Legend>
+						    <mx:HBox>
+								<mx:Label text="Critères valides : " fontWeight="bold" />
+						        <mx:LegendItem label="" fontWeight="bold" fill="{sc0}" stroke="{s0}" />			
+							</mx:HBox>
+						    <mx:HBox>
+								<mx:Label text="Obstacles niveau 1 : " fontWeight="bold" />
+						        <mx:LegendItem label="" fontWeight="bold" fill="{sc1}" stroke="{s1}" />
+							</mx:HBox>
+						    <mx:HBox>
+								<mx:Label text="Obstacles niveau 2 : " fontWeight="bold" />
+						        <mx:LegendItem label="" fontWeight="bold" fill="{sc2}" stroke="{s2}" />
+							</mx:HBox>
+						    <mx:HBox>
+								<mx:Label text="Obstacles niveau 3 : " fontWeight="bold" />
+						        <mx:LegendItem label="" fontWeight="bold" fill="{sc3}" stroke="{s3}" />
+							</mx:HBox>
+					     </mx:Legend>
+			    	</mx:VBox>
+	
+	
+			    </mx:Accordion>
+			
+			</mx:Canvas>			
+			
+	   </mx:VBox>  
+
+	</mx:HDividedBox> 
+ </mx:Panel>
+		    <mx:HBox height="0" width="0" id="ClefsApp">
+			    <mx:Label id="idRub" visible="false" text="" fontSize="10" fontWeight="bold"/>
+			    <mx:Label id="idSite" visible="false" text="" fontSize="10" fontWeight="bold"/>    	
+				<mx:TextArea id="chartTrace" visible="true" />
+			</mx:HBox>
+
+</mx:Application>

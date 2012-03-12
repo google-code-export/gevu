@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas label="Cartographie" xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
+		   visible="false" 
+		  width="100%" height="100%">
+	<mx:Script><![CDATA[
+		import flash.external.*;
+		
+		import mx.controls.Alert;
+		
+		[Bindable]	public var rsCarto:Object;
+		
+		public function callChangeGeo():void {		
+			cartoIFrame.callIFrameFunction('addMarker', [rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib], handleChangeGeo);
+		}
+
+		public function callChargeKml(url:String):void {
+			cartoIFrame.callIFrameFunction('addKml', [url], handleChangeGeo);	
+		}
+		public function callFunction(name:String, params):void {
+			cartoIFrame.callIFrameFunction(name, [params], handleChangeGeo);	
+		}
+		
+		/**
+		 * Handle the JavaScript method result.
+		 */
+		private function handleChangeGeo(result : Object):void
+		{
+			trace("The method returned '" + result + "'.");
+		}
+		
+	]]></mx:Script>
+
+	<flexiframe:IFrame id="cartoIFrame"
+					   width="100%" height="100%"
+					   source="carto.html"
+					    visible="{this.visible}"
+						overlayDetection="true"
+					   />			   
+
+	
+</mx:Canvas>
