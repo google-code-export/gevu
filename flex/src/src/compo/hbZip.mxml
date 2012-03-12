@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="loadZipFile()"
+	width="100%" height="100%">
+
+	<mx:Script>
+		<![CDATA[
+		
+			import flash.events.Event;
+			import flash.events.ErrorEvent;
+			import flash.events.IOErrorEvent;
+			import flash.events.SecurityErrorEvent;
+			import flash.events.ProgressEvent;
+			import flash.net.URLRequest;
+			import flash.net.URLStream;
+
+			import nochump.util.zip.ZipFile;
+			import nochump.util.zip.ZipEntry;
+			import flash.utils.ByteArray;			
+
+			
+			public var file:String;
+			public var callback:Function;
+			
+			public function loadZipFile():void {
+				currentState = "loading";
+				var urlStream:URLStream = new URLStream();
+				loadProgress.source = urlStream;
+				urlStream.addEventListener(Event.COMPLETE, completeHandler);
+				urlStream.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+				urlStream.addEventListener(SecurityErrorEvent.SECURITY_ERROR, errorHandler);
+				urlStream.load(new URLRequest(file));
+			}
+			
+			private function completeHandler(event:Event):void {
+				var data:URLStream = URLStream(event.target);
+				var zipFile:ZipFile = new ZipFile(data);
+				var s:String = "";
+				
+				for(var i:int = 0; i < zipFile.entries.length; i++) {
+				    var entry:ZipEntry = zipFile.entries[i];
+				    trace(entry.name);
+				    // extract the entry's data from the zip
+				    var ba:ByteArray = zipFile.getInput(entry);			    
+				    ba.position = 0;
+				    while (ba.bytesAvailable > 0) {
+				    	s += ba.readUTFBytes(1);
+				    }
+				}		
+				
+				callback(s);	
+			}
+			
+			private function errorHandler(event:ErrorEvent):void {
+				currentState = "error";
+				errorLabel.text = event.text;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:states>
+		<mx:State name="loading">
+			<mx:AddChild relativeTo="{this}" position="lastChild">
+				<mx:ProgressBar id="loadProgress" width="100%" />
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="error">
+			<mx:AddChild relativeTo="{this}" position="lastChild">
+				<mx:Label id="errorLabel" />
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+
+</mx:HBox>
