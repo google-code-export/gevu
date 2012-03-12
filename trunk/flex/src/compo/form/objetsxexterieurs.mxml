@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:composants="compo.*"
+		   label="Objet extérieur"
+		   >
+	<mx:VBox>
+		<mx:Label fontSize="16" fontWeight="bold" text="{this.label}"/>
+			<mx:HBox width="100%">
+				<mx:Label text="nom" />
+				<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
+			</mx:HBox>
+
+			<mx:HBox width="100%">
+				<mx:Label text="ref" />
+				<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
+			</mx:HBox>
+
+			<mx:HBox width="100%">
+				<mx:Label text="fonctions" />
+				<mx:TextInput id="F3" width="100%" data="{NodeData.fonctions}" change="valChanged=true;" />
+			</mx:HBox>
+
+			<mx:HBox width="100%">
+				<mx:Label text="id_type_objet" />
+				<mx:TextInput id="F8" width="100%" data="{NodeData.id_type_objet}" change="valChanged=true;" />
+			</mx:HBox>
+
+			<mx:HBox width="100%">
+				<mx:Label text="id_type_objet_ext" />
+				<mx:TextInput id="F9" width="100%" data="{NodeData.id_type_objet_ext}" change="valChanged=true;" />
+			</mx:HBox>
+
+	</mx:VBox>
+	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					 source="Models_DbTable_Gevu_objetsxexterieurs"
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="edit"	result=";" />
+		<mx:method name="remove"	result=";" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var NodeData:Object;
+			public var valChanged:Boolean;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			public function saveModifications() : void {
+				var arr:Array = new Array();
+				arr["nom"]=F1.text;
+				arr["ref"]=F2.text;
+				arr["fonctions"]=F3.text;
+				arr["id_type_objet"]=F8.text;
+				arr["id_type_objet_ext"]=F9.text;
+				roModifBase.edit(NodeData.id_objet_ext, arr);
+				valChanged = false;
+			}
+			
+			public function deleteData():void{
+				roModifBase.remove(NodeData.id_objet_ext);
+			}
+		]]>
+	</mx:Script>
+</mx:Canvas>

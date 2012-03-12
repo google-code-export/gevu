@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%"
+	title="Authentification"
+	close="PopUpManager.removePopUp(this);"  
+	xmlns:ns2="compo.*" 
+	>
+	<mx:Script>
+        <![CDATA[
+	       	import com.adobe.serialization.json.JSON;
+	       	
+	       	import mx.controls.Alert;
+	       	import mx.core.Application;
+	       	import mx.managers.CursorManager;
+	       	import mx.managers.PopUpManager;
+	       	import mx.rpc.AsyncToken;
+	       	import mx.rpc.events.FaultEvent;
+	       	import mx.rpc.events.ResultEvent;
+	       	import mx.rpc.http.HTTPService;
+
+
+			[Bindable] public var colorTheme:uint= 0xCCB5A3;
+			[Bindable] public var endPoint:String;
+			[Bindable] public var callback:Function;
+			
+			private function VerifMdp():void{
+				
+				var p:Object=new Object;
+				p['username']=log.text;
+				p['password']=mdp.text;
+				LoginService.verifyUser(p);				
+			}
+
+			public function faultHandlerService(fault:FaultEvent):void
+			{
+				Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+			}
+			 
+			public function resultHandlerService(result:ResultEvent):void
+			{
+				
+				if(result.result == "FAILURE_CREDENTIAL_INVALID") {
+					Alert.show("Ce n'est pas le bon mot de passe", 'Vérification mot de passe', mx.controls.Alert.OK);
+					return;
+				}
+				if(result.result.idExi==null){
+					Alert.show("Ce login n'est pas dans la base.\nVous ne pouvez pas être connecté comme invité.", 'Vérification authentification', mx.controls.Alert.OK);
+				}else{
+					var arrApp:Array = JSON.decode(result.result.droit_2);
+					if(isAuthApp(arrApp,"2_"+this.parentApplication.name)){
+						this.parentApplication.exi = result.result;
+						this.parentApplication.idExi = result.result.idExi;
+						this.parentApplication.boxGen.visible = true;
+						this.callback();
+						PopUpManager.removePopUp(this);
+					}else{
+						Alert.show("Vous n'êtes pas autorisé à utiliser cette application.", 'Vérification authentification', mx.controls.Alert.OK);
+					}
+				}
+			}      
+			private function isAuthApp(arr:Array, appName:String):Boolean {
+				for each(var app:Object in arr){
+					if(app.id == appName) return true;
+				}
+				return false;
+			}
+        ]]>
+    </mx:Script>
+	<mx:RemoteObject
+		id="LoginService"
+		destination="zend"
+	   	endpoint="{endPoint}"
+	   	fault="faultHandlerService(event)"
+		source="AUTH_LoginManager" showBusyCursor="true">
+		<mx:method name="verifyUser"   result="resultHandlerService(event)" />
+	</mx:RemoteObject>
+
+	<mx:VBox paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >		
+		<mx:HBox>
+			<mx:Label text="Login : " />
+			<mx:TextInput id="log" />
+		</mx:HBox>
+		<mx:HBox>
+			<mx:Label text="Mot de passe : " />
+			<mx:TextInput id="mdp" displayAsPassword="true" />
+		</mx:HBox>
+		<mx:Button label="Valider" click="VerifMdp()" />
+	</mx:VBox>
+</mx:TitleWindow>

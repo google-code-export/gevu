@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Tree xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" showRoot="true" 
+	dataProvider="{ac}" dataDescriptor="{new CustomTreeDataDescriptor()}"
+	iconFunction="TreeIconFunction" 
+	click="changeEvt(event);"
+	creationComplete="initCollections()" >
+	<mx:Script>
+        <![CDATA[
+      import gevu.CustomTreeDataDescriptor;
+      import gevu.CustomTreeItemRenderer;
+           
+      import mx.collections.*;
+      import mx.controls.treeClasses.*;
+
+         [Bindable]
+         [Embed(source="../images/batimentP.png")] 
+         public var iconBatiment:Class; 
+         [Bindable]
+         [Embed(source="../images/eclairageP.jpg")] 
+         public var iconEclairage:Class; 
+         [Bindable]
+         [Embed(source="../images/escaliermecaP.jpg")] 
+         public var iconEscaliermeca:Class; 
+         [Bindable]
+         [Embed(source="../images/escalierP.jpg")] 
+         public var iconEscalier:Class; 
+         [Bindable]
+         [Embed(source="../images/etablissementP.png")] 
+         public var iconEtablissement:Class; 
+         [Bindable]
+         [Embed(source="../images/niveauP.png")] 
+         public var iconNiveau:Class; 
+         [Bindable]
+         [Embed(source="../images/objetP.png")] 
+         public var iconObjet:Class;
+         [Bindable]
+         [Embed(source="../images/objet_voie.png")] 
+         public var iconObjetVoie:Class; 
+         [Bindable]
+         [Embed(source="../images/parkingP.jpg")] 
+         public var iconParking:Class; 
+         [Bindable]
+         [Embed(source="../images/porteP.jpg")] 
+         public var iconPorte:Class; 
+         [Bindable]
+         [Embed(source="../images/espace_exterieurP.png")] 
+         public var iconEspaceExt:Class; 
+         [Bindable]
+         [Embed(source="../images/espace_interieurP.png")] 
+         public var iconEspaceInt:Class; 
+         [Bindable]
+         [Embed(source="../images/parcelle_exterieureP.png")] 
+         public var iconParcelleExt:Class; 
+         [Bindable]
+         [Embed(source="../images/voirieP.png")] 
+         public var iconVoirie:Class; 
+         [Bindable]
+         [Embed(source="../images/voie.png")] 
+         public var iconVoie:Class; 
+         [Bindable]
+         [Embed(source="../images/segment.png")] 
+         public var iconSegment:Class; 
+         [Bindable]
+         [Embed(source="../images/chaine_de_deplacementP.png")] 
+         public var iconChaine:Class; 
+         [Bindable]
+         [Embed(source="../images/axe_de_transportP.png")] 
+         public var iconAxe:Class; 
+         
+      [Bindable] public var categories:Object = 
+        { 
+          "grille_1": {
+    	    "id": "1",
+	          "titre": "Geolocalisation",
+              "color": 0x3366F,
+	          "icon": iconObjet,
+              "markers": []},
+         "grille_66": {
+        	"id": "66",
+        	"titre": "Territoire",
+            "color": 0x990000,
+            "icon": iconObjet,
+            "markers": []}, 
+          "grille_55": {
+    	    "id": "55",
+	          "titre": "Etablissement",
+              "color": 0x3366F,
+	          "icon": iconEtablissement,
+              "markers": []},
+          "grille_61": {
+        	"id": "61",
+	          "titre": "Espace extérieur",
+              "color": 0x009933,
+	          "icon": iconEspaceExt,
+              "markers": []},
+          "grille_53": {
+        	"id": "53",
+	          "titre": "Bâtiment",
+              "color": 0x669933,
+	          "icon": iconBatiment,
+              "markers": []},
+          "grille_58": {
+        	"id": "58",
+	          "titre": "Parcelle extérieur",
+              "color": 0x00CCFF,
+	          "icon": iconParcelleExt,
+              "markers": []},
+          "grille_35": {
+        	"id": "35",
+	          "titre": "Niveau",
+              "color": 0x9b2121,
+	          "icon": iconNiveau,
+              "markers": []},
+          "grille_57": {
+        	"id": "57",
+	          "titre": "Espace intérieur",
+              "color": 0x0ba42f,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "grille_63": {
+        	"id": "63",
+	          "titre": "Objet intérieur",
+              "color": 0xf78907,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_64": {
+        	"id": "64",
+	          "titre": "Objet extérieur",
+              "color": 0x9b0f7c,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_60": {
+        	"id": "60",
+	          "titre": "Signalement problème",
+              "color": 0x080202,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_59": {
+        	"id": "59",
+	          "titre": "Diagnostic",
+              "color": 0x080202,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_54-mot_37": {
+        	"id": "54-mot_37",
+	          "titre": "Porte",
+              "color": 0x080202,
+	          "icon": iconPorte,
+              "markers": []},
+          "grille_54-mot_39": {
+        	"id": "54-mot_39",
+	          "titre": "Parking",
+              "color": 0x080202,
+	          "icon": iconParking,
+              "markers": []},
+          "grille_54-mot_43": {
+        	"id": "54-mot_43",
+	          "titre": "Eclairage",
+              "color": 0x080202,
+	          "icon": iconEclairage,
+              "markers": []},
+          "grille_54-mot_26": {
+        	"id": "54-mot_26",
+	          "titre": "Escalier",
+              "color": 0x080202,
+	          "icon": iconEclairage,
+              "markers": []},
+          "grille_54-mot_149": {
+        	"id": "54-mot_149",
+	          "titre": "Escalier mécanique",
+              "color": 0x080202,
+	          "icon": iconEscaliermeca,
+              "markers": []},
+          "grille_71": {
+        	"id": "71",
+	          "titre": "Chaine de déplacement",
+              "color": 0x080202,
+	          "icon": iconChaine,
+              "markers": []},
+          "grille_72": {
+        	"id": "72",
+	          "titre": "Axe de transport",
+              "color": 0x080202,
+	          "icon": iconAxe,
+              "markers": []},
+          "grille_62": {
+        	"id": "62",
+	          "titre": "Voirie",
+              "color": 0xFF33FF,
+	          "icon": iconVoirie,
+              "markers": []},
+          "grille_69": {
+        	"id": "69",
+	          "titre": "Elément de Voirie",
+              "color": 0x2a09f7,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_79": {
+        	"id": "79",
+	          "titre": "Objet de Voirie",
+              "color": 0x2a09f7,
+	          "icon": iconObjetVoie,
+              "markers": []},
+          "grille_80": {
+        	"id": "80",
+	          "titre": "Segment",
+              "color": 0x080202,
+	          "icon": iconSegment,
+              "markers": []},
+          "grille_78": {
+        	"id": "78",
+	          "titre": "Voie",
+              "color": 0x080202,
+	          "icon": iconVoie,
+              "markers": []}              
+		};
+    
+            /* Variables used to construct the ArrayCollection data provider
+               First top-level node and its children. */
+            public var nestArrayEtab:Array = [
+                {label:"Bâtiment", cat:categories["grille_53"], children: [
+                    {label:"Niveau", cat:categories["grille_35"], children:     [
+                        {label:"Objet", cat:categories["grille_63"], data:"child data"}
+                        ,{label:"Espace intérieur", cat:categories["grille_57"], data:"child data"}
+                    ]}
+                ]}
+                ,{label:"Parcelle", cat:categories["grille_58"], children: [
+	                {label:"Espace extérieur", cat:categories["grille_61"], data:"child data"}
+                    ,{label:"Objet", cat:categories["grille_64"], data:"child data"}
+                ]}
+            ]; 
+            /* Second top-level node and its children.*/ 
+            public var nestArrayVoirie:Array = [
+                {label:"Voie", cat:categories["grille_78"], children: [
+	                {label:"Segment", cat:categories["grille_80"], data:"child data"}
+                    ,{label:"Objet de voie", cat:categories["grille_79"], data:"child data"}
+                ]}
+            ];
+            
+            public var nestArrayLigne:Array = [
+                {label:"Element de ligne", cat:categories["grille_71"], data:"child data"}
+            ];
+
+
+            public var nestArrayAxe:Array = [
+                {label:"Element d'axe", cat:categories["grille_72"], data:"child data"}
+            ];
+
+            
+            /* Variable for the tree array. */
+            public var treeArray:Array
+            /* Variables for the three Array collections that correspond to the 
+               top-level nodes. */
+            public var colEtab:ArrayCollection;
+            public var colVoirie:ArrayCollection;
+            public var colLigne:ArrayCollection;
+            public var colAxe:ArrayCollection;
+            
+            /* Variable for the ArrayCollection used as the Tree data provider. */
+            [Bindable]
+            public var ac:ArrayCollection;
+            
+            /* Build the ac ArrayCollection from its parts. */
+            public function initCollections():void{
+            	
+                /* Wrap each top-level node in an ArrayCollection. */
+                colEtab = new ArrayCollection(nestArrayEtab);
+                colVoirie = new ArrayCollection(nestArrayVoirie);
+                colLigne = new ArrayCollection(nestArrayLigne);
+                colAxe = new ArrayCollection(nestArrayAxe);
+
+                /* Put the three top-level node
+                   ArrayCollections in the treeArray. */
+                treeArray = [
+                    {label:"Etablissement",cat:categories["grille_55"], children: colEtab}
+                    ,{label:"Voirie",cat:categories["grille_62"], children: colVoirie}
+                    ,{label:"Chaine de déplacement",cat:categories["grille_71"], children: colLigne}
+                    ,{label:"Axe de transport",cat:categories["grille_72"], children: colAxe}
+                ]; 
+                //pas pour picardie,{label:"Ligne de transport", cat:categories["grille_72"], children: colLigneTrans}
+
+                /* Wrap the treeArray in an ArrayCollection. */
+                ac = new ArrayCollection(treeArray);
+            }
+
+
+         // Determine icon based on artist. Pavement gets a special icon. 
+         private function TreeIconFunction(item:Object):Class{
+            /*
+            var ico:Class;
+            switch (item.icon) {
+			    case "escalier":
+	               ico = iconSymbol2;
+			        break;
+			    case "espace":
+		            ico = iconSymbol1;       
+			        break;
+			    default:
+		            ico = iconSymbol1;       
+			        break;
+			}
+			*/
+			//ouvre l'item			
+			this.expandItem(item, true);
+			//change le style
+			//item.setStyle("color", item.cat.color);
+			return item.cat.icon;
+         }	
+
+         private function changeEvt(event:Event):void {
+         	if(!event.currentTarget.selectedItem)return;
+            var theData:Object=event.currentTarget.selectedItem.cat;
+            if (theData) {
+               trace(" Data: " + theData.titre);
+               //vérifie le type d'action a effectuer
+               if(this.parentApplication.id=="grilles"){
+	               this.parentApplication.initApp(theData.id);           	               	
+               }
+               if(this.parentApplication.id=="gevu"){
+	               this.parentApplication.createMarkerGrille(theData.id);           	
+               }
+            }
+         }
+
+        ]]>
+	</mx:Script>
+	
+
+</mx:Tree>	

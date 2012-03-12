@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Tree xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" showRoot="true" 
+	dataProvider="{ac}" dataDescriptor="{new CustomTreeDataDescriptor()}"
+	iconFunction="TreeIconFunction" 
+	click="changeEvt(event);"
+	creationComplete="initCollections()" >
+	<mx:Script>
+        <![CDATA[
+      import gevu.CustomTreeDataDescriptor;
+      import gevu.CustomTreeItemRenderer;
+           
+      import mx.collections.*;
+      import mx.controls.treeClasses.*;
+
+          [Bindable]
+         [Embed(source="../images/batimentP.png")] 
+         public var iconBatiment:Class; 
+         [Bindable]
+         [Embed(source="../images/eclairageP.jpg")] 
+         public var iconEclairage:Class; 
+         [Bindable]
+         [Embed(source="../images/escaliermecaP.jpg")] 
+         public var iconEscaliermeca:Class; 
+         [Bindable]
+         [Embed(source="../images/escalierP.jpg")] 
+         public var iconEscalier:Class; 
+         [Bindable]
+         [Embed(source="../images/etablissementP.png")] 
+         public var iconEtablissement:Class; 
+         [Bindable]
+         [Embed(source="../images/niveauP.png")] 
+         public var iconNiveau:Class; 
+         [Bindable]
+         [Embed(source="../images/objetP.png")] 
+         public var iconObjet:Class; 
+         [Bindable]
+         [Embed(source="../images/parkingP.jpg")] 
+         public var iconParking:Class; 
+         [Bindable]
+         [Embed(source="../images/porteP.jpg")] 
+         public var iconPorte:Class; 
+         [Bindable]
+         [Embed(source="../images/espace_exterieurP.png")] 
+         public var iconEspaceExt:Class; 
+         [Bindable]
+         [Embed(source="../images/espace_interieurP.png")] 
+         public var iconEspaceInt:Class; 
+         [Bindable]
+         [Embed(source="../images/parcelle_exterieureP.png")] 
+         public var iconParcelleExt:Class; 
+         [Bindable]
+         [Embed(source="../images/voirieP.png")] 
+         public var iconVoirie:Class; 
+         [Bindable]
+         [Embed(source="../images/chaine_de_deplacementP.png")] 
+         public var iconChaine:Class; 
+         [Bindable]
+         [Embed(source="../images/axe_de_transportP.png")] 
+         public var iconAxe:Class; 
+         [Bindable]
+         [Embed(source="../images/check_no.png")] 
+         public var iconProbleme:Class; 
+         
+      [Bindable] public var categories:Object = 
+        { 
+         "probleme": {
+    	    "id": "-1",
+			"table": "probleme",
+          	"titre": "Probleme",
+            "color": 0x3366F,
+	        "icon": iconProbleme,
+            "markers": []},
+         "grille_1": {
+    	    "id": "1",
+			"table": "grille",
+          	"titre": "Geolocalisation",
+            "color": 0x3366F,
+	        "icon": iconObjet,
+            "markers": []},
+         "grille_66": {
+        	"id": "66",
+			"table": "grille",
+        	"titre": "Territoire",
+            "color": 0x990000,
+            "icon": iconObjet,
+            "markers": []}, 
+          "grille_55": {
+    	    "id": "55",
+			"table": "grille",
+	          "titre": "Etablissement",
+              "color": 0x3366F,
+	          "icon": iconEtablissement,
+              "markers": []},
+          "grille_62": {
+			"table": "grille",
+        	"id": "62",
+	          "titre": "Voirie",
+              "color": 0xFF33FF,
+	          "icon": iconVoirie,
+              "markers": []},
+          "grille_61": {
+			"table": "grille",
+        	"id": "61",
+	          "titre": "Espace extérieur",
+              "color": 0x009933,
+	          "icon": iconEspaceExt,
+              "markers": []},
+          "grille_53": {
+        	"id": "53",
+			"table": "grille",
+	          "titre": "Bâtiment",
+              "color": 0x669933,
+	          "icon": iconBatiment,
+              "markers": []},
+          "grille_58": {
+        	"id": "58",
+			"table": "grille",
+	          "titre": "Parcelle extérieur",
+              "color": 0x00CCFF,
+	          "icon": iconParcelleExt,
+              "markers": []},
+          "grille_35": {
+        	"id": "35",
+			"table": "grille",
+	          "titre": "Niveau",
+              "color": 0x9b2121,
+	          "icon": iconNiveau,
+              "markers": []},
+          "grille_57": {
+			"table": "grille",
+        	"id": "57",
+	          "titre": "Espace intérieur",
+              "color": 0x0ba42f,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "grille_63": {
+        	"id": "63",
+			"table": "grille",
+	          "titre": "Objet intérieur",
+              "color": 0xf78907,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_64": {
+        	"id": "64",
+			"table": "grille",
+	          "titre": "Objet extérieur",
+              "color": 0x9b0f7c,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_69": {
+        	"id": "69",
+			"table": "grille",
+	          "titre": "Elément de voirie",
+              "color": 0x2a09f7,
+	          "icon": iconVoirie,
+              "markers": []},
+          "grille_60": {
+        	"id": "60",
+			"table": "grille",
+	          "titre": "Signalement problème",
+              "color": 0x080202,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_59": {
+        	"id": "59",
+			"table": "grille",
+	          "titre": "Diagnostic",
+              "color": 0x080202,
+	          "icon": iconObjet,
+              "markers": []},
+          "grille_71": {
+        	"id": "71",
+			"table": "grille",
+	          "titre": "Chaine de déplacement",
+              "color": 0x080202,
+	          "icon": iconChaine,
+              "markers": []},
+          "grille_72": {
+        	"id": "72",
+			"table": "grille",
+	          "titre": "Axe de transport",
+              "color": 0x080202,
+	          "icon": iconAxe,
+              "markers": []},
+
+
+          "mot_no": {
+        	"id": "-1",
+			"table": "mots",
+	          "titre": "Aucun",
+              "color": 0x080202,
+	          "icon": iconProbleme,
+              "markers": []},
+          "mot_35": {
+        	"id": "35",
+			"table": "mots",
+	          "titre": "Accueil",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_36": {
+        	"id": "36",
+			"table": "mots",
+	          "titre": "Escalier",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_37": {
+        	"id": "37",
+			"table": "mots",
+	          "titre": "Porte",
+              "color": 0x080202,
+	          "icon": iconPorte,
+              "markers": []},
+          "mot_39": {
+        	"id": "39",
+			"table": "mots",
+	          "titre": "Parking",
+              "color": 0x080202,
+	          "icon": iconParking,
+              "markers": []},
+          "mot_41": {
+        	"id": "41",
+			"table": "mots",
+	          "titre": "Cheminement extérieur",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_42": {
+        	"id": "42",
+			"table": "mots",
+	          "titre": "Commandes",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_43": {
+        	"id": "43",
+			"table": "mots",
+	          "titre": "Eclairage",
+              "color": 0x080202,
+	          "icon": iconEclairage,
+              "markers": []},
+          "mot_44": {
+        	"id": "44",
+			"table": "mots",
+	          "titre": "ERP Assis",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_45": {
+        	"id": "45",
+			"table": "mots",
+	          "titre": "Entrée",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_46": {
+        	"id": "46",
+			"table": "mots",
+	          "titre": "Pentes ressauts",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_47": {
+        	"id": "47",
+			"table": "mots",
+	          "titre": "Place GIC",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_48": {
+        	"id": "48",
+			"table": "mots",
+	          "titre": "Sanitaire",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_49": {
+        	"id": "49",
+			"table": "mots",
+	          "titre": "Signalétique",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_50": {
+        	"id": "50",
+			"table": "mots",
+	          "titre": "Sols Murs Plafonds",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_51": {
+        	"id": "51",
+			"table": "mots",
+	          "titre": "Sortie",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_52": {
+        	"id": "52",
+			"table": "mots",
+	          "titre": "WC",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_53": {
+        	"id": "53",
+			"table": "mots",
+	          "titre": "Face des portes",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_117": {
+        	"id": "117",
+			"table": "mots",
+	          "titre": "Sols extérieur",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_119": {
+        	"id": "119",
+			"table": "mots",
+	          "titre": "Voirie",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_125": {
+        	"id": "125",
+			"table": "mots",
+	          "titre": "Cabine Ascenseur",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_126": {
+        	"id": "126",
+			"table": "mots",
+	          "titre": "Palier ascenseur",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_129": {
+        	"id": "129",
+			"table": "mots",
+	          "titre": "Voirie bus",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_130": {
+        	"id": "130",
+			"table": "mots",
+	          "titre": "Voirie cheminement",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_131": {
+        	"id": "131",
+			"table": "mots",
+	          "titre": "Voirie équipement",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_132": {
+        	"id": "132",
+			"table": "mots",
+	          "titre": "Voirie escalier",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_133": {
+        	"id": "133",
+			"table": "mots",
+	          "titre": "Voirie passage piétons",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_134": {
+        	"id": "134",
+			"table": "mots",
+	          "titre": "Voirie place GIC",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_135": {
+        	"id": "135",
+			"table": "mots",
+	          "titre": "Voirie signalétique",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_145": {
+			"table": "mots",
+        	"id": "145",
+	          "titre": "Voirie Douche",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_147": {
+        	"id": "147",
+			"table": "mots",
+	          "titre": "Quai intérieur",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_148": {
+        	"id": "148",
+			"table": "mots",
+	          "titre": "Quai extérieur",
+              "color": 0x080202,
+	          "icon": iconEspaceInt,
+              "markers": []},
+          "mot_149": {
+        	"id": "149",
+			"table": "mots",
+	          "titre": "Escalier mécanique",
+              "color": 0x080202,
+	          "icon": iconEscaliermeca,
+              "markers": []},
+          "mot_179": {
+        	"id": "179",
+			"table": "mots",
+	          "titre": "Equipement",
+              "color": 0x080202,
+	          "icon": iconEscaliermeca,
+              "markers": []},
+          "mot_180": {
+        	"id": "180",
+			"table": "mots",
+	          "titre": "Porte de secours",
+              "color": 0x080202,
+	          "icon": iconPorte,
+              "markers": []},
+          "mot_215": {
+        	"id": "215",
+			"table": "mots",
+	          "titre": "Pentes",
+              "color": 0x080202,
+	          "icon": iconVoirie,
+              "markers": []},
+          "mot_216": {
+        	"id": "216",
+			"table": "mots",
+	          "titre": "Ressauts",
+              "color": 0x080202,
+	          "icon": iconVoirie,
+              "markers": []}
+		};
+    
+            /* Variables used to construct the ArrayCollection data provider
+               First top-level node and its children. */
+            public var nestArrayEtab:Array = [
+                {label:"Cabine d'ascenceur", cat:categories["mot_125"], data:"child data"}
+                ,{label:"Espace intérieur", cat:categories["grille_57"], children: [
+                    {label:"Commandes", cat:categories["mot_42"], data:"child data"}
+                    ,{label:"Eclairage", cat:categories["mot_43"], data:"child data"}
+                    ,{label:"Equipement et mobilier", cat:categories["mot_179"], data:"child data"} 
+                    ,{label:"Pentes et ressauts", cat:categories["mot_46"], data:"child data"}
+                    ,{label:"Signalétique", cat:categories["mot_49"], data:"child data"}
+                    ,{label:"Sols, murs et plafonds", cat:categories["mot_50"], data:"child data"}
+                ]}
+                ,{label:"Espace intérieur spécifiques", cat:categories["grille_57"], children: [
+                    {label:"Accueil", cat:categories["mot_35"], data:"child data"}
+                    ,{label:"Aire de stationnement", cat:categories["mot_39"], data:"child data"}
+                    ,{label:"Douche", cat:categories["mot_145"], data:"child data"}
+                    ,{label:"Entrée", cat:categories["mot_45"], data:"child data"}
+                    ,{label:"Espace assis", cat:categories["mot_44"], data:"child data"}
+                    ,{label:"Place GIG/GIC", cat:categories["mot_47"], data:"child data"}
+                    ,{label:"Quai de gare", cat:categories["mot_147"], data:"child data"}
+                    ,{label:"Sanitaire", cat:categories["mot_48"], data:"child data"}
+                    ,{label:"Sortie", cat:categories["mot_51"], data:"child data"}
+                    ,{label:"WC", cat:categories["mot_52"], data:"child data"}
+                ]}
+                ,{label:"Objet intérieur", cat:categories["grille_57"], children: [
+                    {label:"Escalier", cat:categories["mot_37"], data:"child data"}
+                    ,{label:"Escalier mécanique", cat:categories["mot_149"], data:"child data"}
+                    ,{label:"Face de Porte", cat:categories["mot_53"], data:"child data"}
+                    ,{label:"Palier d'ascenseur", cat:categories["mot_126"], data:"child data"}
+                    ,{label:"Porte", cat:categories["mot_37"], data:"child data"}
+                    ,{label:"Porte de secours", cat:categories["mot_180"], data:"child data"}
+                ]}
+                ,{label:"Espace extérieur", cat:categories["grille_61"], children: [
+	                {label:"Cheminement", cat:categories["mot_41"], data:"child data"}
+                    ,{label:"Sols extérieurs", cat:categories["mot_117"], data:"child data"}
+                ]}
+                ,{label:"Espace extérieur spécifique", cat:categories["grille_61"], children: [
+	                {label:"Aire de stationnement", cat:categories["mot_39"], data:"child data"}
+                    ,{label:"Pentes et ressauts", cat:categories["mot_46"], data:"child data"}
+                    ,{label:"Place GIG/GIC", cat:categories["mot_47"], data:"child data"}
+                    ,{label:"Quai de gare", cat:categories["mot_147"], data:"child data"}
+                ]}
+                ,{label:"Objet extérieur", cat:categories["grille_64"], children: [
+	                {label:"Commandes", cat:categories["mot_42"], data:"child data"}
+                    ,{label:"Escalier", cat:categories["mot_37"], data:"child data"}
+                    ,{label:"Escalier mécanique", cat:categories["mot_149"], data:"child data"}
+                    ,{label:"Face de Porte", cat:categories["mot_53"], data:"child data"}
+                    ,{label:"Palier d'ascenseur", cat:categories["mot_126"], data:"child data"}
+                    ,{label:"Porte", cat:categories["mot_37"], data:"child data"}
+                ]}
+            ]; 
+            /* Second top-level node and its children.*/ 
+            public var nestArrayVoirie:Array = [
+                {label:"Elément de voirie", cat:categories["grille_69"], children: [
+	                {label:"Escalier", cat:categories["mot_132"], data:"child data"}
+                    ,{label:"Passage piétons", cat:categories["mot_133"], data:"child data"}
+                    ,{label:"Equipement et mobilier", cat:categories["mot_131"], data:"child data"}
+                    ,{label:"Signalétique", cat:categories["mot_135"], data:"child data"}
+                    ,{label:"Arrêt de bus", cat:categories["mot_129"], data:"child data"}
+                    ,{label:"Stationnement réservé", cat:categories["mot_134"], data:"child data"}
+                    ,{label:"Cheminement", cat:categories["mot_130"], data:"child data"}
+                    ,{label:"Pente", cat:categories["mot_215"], data:"child data"}
+                    ,{label:"Ressaut", cat:categories["mot_216"], data:"child data"}
+                ]}
+            ];
+            /* third top-level node and its children.*/ 
+            public var nestArrayProb:Array = [
+                {label:"Aucun type", cat:categories["mot_no"], data:"child data"}
+            ];
+            
+            
+            /* Variable for the tree array. */
+            public var treeArray:Array
+            /* Variables for the three Array collections that correspond to the 
+               top-level nodes. */
+            public var colEtab:ArrayCollection;
+            public var colVoirie:ArrayCollection;
+            public var colProb:ArrayCollection;
+            
+            /* Variable for the ArrayCollection used as the Tree data provider. */
+            [Bindable]
+            public var ac:ArrayCollection;
+            
+            /* Build the ac ArrayCollection from its parts. */
+            public function initCollections():void{
+            	
+                /* Wrap each top-level node in an ArrayCollection. */
+                colEtab = new ArrayCollection(nestArrayEtab);
+                colVoirie = new ArrayCollection(nestArrayVoirie);
+                colProb = new ArrayCollection(nestArrayProb);
+
+                /* Put the three top-level node
+                   ArrayCollections in the treeArray. */
+                treeArray = [
+                    {label:"Etablissement",cat:categories["grille_55"], children: colEtab}
+                    ,{label:"Voirie",cat:categories["grille_62"], children: colVoirie}
+					,{label:"Probleme",cat:categories["probleme"], children: colProb}
+                ]; 
+                //pas pour picardie,{label:"Ligne de transport", cat:categories["grille_72"], children: colLigneTrans}
+
+                /* Wrap the treeArray in an ArrayCollection. */
+                ac = new ArrayCollection(treeArray);
+            }
+
+
+         // Determine icon based on artist. Pavement gets a special icon. 
+         private function TreeIconFunction(item:Object):Class{
+            /*
+            var ico:Class;
+            switch (item.icon) {
+			    case "escalier":
+	               ico = iconSymbol2;
+			        break;
+			    case "espace":
+		            ico = iconSymbol1;       
+			        break;
+			    default:
+		            ico = iconSymbol1;       
+			        break;
+			}
+			*/
+			//ouvre l'item			
+			this.expandItem(item, true);
+			//change le style
+			//item.setStyle("color", item.cat.color);
+			return item.cat.icon;
+         }	
+
+         private function changeEvt(event:Event):void {
+         	if(!event.currentTarget.selectedItem)return;
+            var theData:Object=event.currentTarget.selectedItem.cat;
+            if (theData) {
+               trace(" Data: " + theData.titre);
+               //vérifie le type d'action a effectuer
+               if(this.parentApplication.id=="grilles"){
+	               //this.parentApplication.initApp(theData);           	               	
+               }
+               if(this.parentApplication.id=="onadaflex"){
+	               this.parentApplication.createMarkerGrille(theData.id);           	
+               }
+            }
+         }
+
+        ]]>
+	</mx:Script>
+	
+
+</mx:Tree>	

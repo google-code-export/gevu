@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:GridItem xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+ 	creationComplete="init()"
+ 	borderColor="#1F5377" borderStyle="solid" borderThickness="1" horizontalAlign="center" verticalAlign="middle"
+ 	paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2"
+ 	dragDrop="dragDropHandler(event)"
+  	dragEnter="dragEnterHandler(event)"
+	mouseDown="dragStartHandler(event)"	
+ >
+	<mx:Script>
+		<![CDATA[
+			import mx.containers.GridRow;
+			import mx.controls.Alert;
+			import mx.core.DragSource;
+			import mx.events.CloseEvent;
+			import mx.events.DragEvent;
+			import mx.managers.DragManager;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var colorBG:uint= 0xF5D03A;
+			[Bindable] public var dtCrit:Object;
+			[Bindable] public var dtScen:Object;
+			[Bindable] public var bInit:Boolean=false;
+			[Bindable] public var bCopie:Boolean=false;
+			[Bindable] public var bShowCopie:Boolean=true;
+			[Bindable] public var idScene:int;
+			
+			public function init():void{
+				if(bInit){
+					chargeCtl();
+				}
+			}
+			
+			public function chargeCtl():void{
+				//création du controle
+				var ctlDst:hbControle = new hbControle();
+				ctlDst.dt = dtCrit;
+				ctlDst.bDoDrag = false;
+				cnv.addChild(ctlDst);
+				//met la source au bon format
+				cnv.percentHeight = 100;
+				cnv.percentWidth = 100;				
+				//change le fond 
+				cnv.setStyle("backgroundColor","white");
+				//affiche l'image de fermeture
+				img.visible = true;
+				if(!idScene){
+					//enregistre la scene
+					var vn:Array = new Array;
+					vn["id_scenario"]= grdRowScenar(this.parent).dtScen.id_scenario;
+					vn["type"]="DiagTypeControle_"+dtCrit.id_type_controle;
+					ROScenes.ajouter(vn);
+				}
+				if(bCopie){
+					//duplique la scene
+					var vnC:Array = new Array;
+					vnC["id_scenario"]=grdRowScenar(this.parent).dtScen.id_scenario;
+					vnC["id_scene"]=idScene;
+					ROScenes.copier(vnC);
+				}
+			}
+						
+			protected function deleteItem(event:MouseEvent):void
+			{
+				if(this.parent.name == "grSceneCopie"){
+					parent.removeChild(DisplayObject(this));
+				}else{
+					Alert.show("Confirmez-vous la suppression de cet élément ?",
+						"Confirmation Suppression", 3, this, deleteScenClickHandler);					
+				}
+			}
+			private function deleteScenClickHandler(event:CloseEvent):void
+			{
+				if (event.detail == Alert.YES) 
+				{
+					ROScenes.remove(idScene);
+					if(parent.numChildren==2){
+						parent.parent.removeChild(DisplayObject(parent));
+					}else{
+						parent.removeChild(DisplayObject(this));
+					}
+				}
+			}
+
+			protected function copieItem(event:MouseEvent):void
+			{
+				var dgScn:dgScenario = dgScenario(this.parentApplication.dgScen);
+				//vérifie si la scène est déjà copiée
+				var arrScene:Array = dgScn.grSceneCopie.getChildren();
+				for each (var scn:grdItemScenar in arrScene){
+					if(scn.idScene == this.idScene){
+						Alert.show("Cette scène est déjà copiée !", "Copier une scène");
+						return;
+					}
+				}
+				var c:grdItemScenar = new grdItemScenar();
+				c.dtCrit = this.dtCrit;
+				c.dtScen = this.dtScen;
+				c.idScene = this.idScene;
+				c.bInit = true;
+				c.bShowCopie = false;
+				dgScn.grSceneCopie.addChild(c);
+			}
+						
+			protected function voirCritere(event:MouseEvent):void
+			{
+				var tw:twFormControle = twFormControle(PopUpManager.createPopUp(this, twFormControle)); 
+				tw.dtCrit = this.dtCrit;
+				tw.dtScen = this.dtScen;
+				tw.idScene = idScene;
+				tw.compoScene = this;
+				PopUpManager.centerPopUp(tw);
+				
+			}
+			
+			protected function dragDropHandler(event:DragEvent):void
+			{
+				var dst:Object=event.currentTarget;
+				var src:Object=event.dragInitiator;
+				if(matches(src, dst)==1)//déplace une item
+					this.parent.setChildIndex(DisplayObject(src),this.parent.getChildIndex(DisplayObject(dst)));
+				if(matches(src, dst)==2){//ajoute une item					
+					var c:grdItemScenar = new grdItemScenar();
+					c.dtCrit = grdItemScenar(src).dtCrit;
+					c.idScene = grdItemScenar(src).idScene;
+					c.bInit = true;
+					c.bCopie = true;
+					this.parent.addChildAt(c,this.parent.numChildren-1);
+				}
+				
+			}
+			
+			protected function dragEnterHandler(event:DragEvent):void
+			{
+				var dst:Object=event.currentTarget;
+				var src:Object=event.dragInitiator;
+				if(matches(src, dst)>0)
+					DragManager.acceptDragDrop(grdItemScenar(dst));
+				
+			}
+			
+			protected function dragStartHandler(event:MouseEvent):void
+			{
+				var src:Object=event.currentTarget;
+				if(src.className != "grdItemScenar")return
+				var dragSource:DragSource = new DragSource;
+				DragManager.doDrag(grdItemScenar(src), dragSource, event);
+			}
+			private function matches(src:Object, dst:Object):int{
+				if(dst.className != "grdItemScenar" || src.className != "grdItemScenar")return -1 
+				//bouge une scène dans une ligne de scénario
+				if(src.parent == dst.parent){
+					if(grdItemScenar(src).cnv.getStyle("backgroundColor") != grdItemScenar(dst).cnv.getStyle("backgroundColor"))return -1
+					else{
+						DragManager.showFeedback(DragManager.MOVE);
+						return 1;
+					}
+				}
+				//copie une scene entre deux lignes de scénario
+				if(src.parent.parent == dst.parent.parent){
+					if(grdItemScenar(src).cnv.getStyle("backgroundColor") != grdItemScenar(dst).cnv.getStyle("backgroundColor")){
+						DragManager.showFeedback(DragManager.COPY);
+						return 2;
+					}					
+				}
+				//copie une scène copiée dans une ligne de scénario
+				if(src.parent.id == "grSceneCopie"){
+					DragManager.showFeedback(DragManager.COPY);
+					return 2;
+				}				
+				return -1;
+			}			
+			protected function fillScene(event:ResultEvent):void
+			{
+				idScene = int(event.result);
+				if(this.parent!=null){
+					this.dtScen = grdRowScenar(this.parent).dtScen;
+				}
+				parentApplication.dgScen.updateItem();
+			}
+			public function faultHandlerService(fault:FaultEvent):void
+			{				
+				Alert.show(fault.fault.faultString, "FaultHandlerService");
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="ROScenes"
+					 source="Models_DbTable_Gevu_scenes" destination="zend" 
+					 endpoint="{parentApplication.ENDPOINT_SERVICE}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="ajouter"  result="fillScene(event)"/>  	
+		<mx:method name="copier"  result="fillScene(event)"/>  	
+		<mx:method name="remove" result="fillScene(event)"/>  	
+	</mx:RemoteObject>
+
+		<mx:VBox horizontalAlign="center" >			
+			<mx:HBox id="img" visible="false" verticalAlign="middle" >
+				<mx:Image mouseDown="deleteItem(event)" toolTip="Supprimer l'élément"  source="images/DeleteRecord.png" />
+				<mx:Image mouseDown="voirCritere(event)" toolTip="Voir le(s) formulaire(s)"  source="images/eye.gif" width="18" height="18" />
+				<mx:Image mouseDown="copieItem(event)" visible="{bShowCopie}" toolTip="Copier l'élément"  source="images/AddRecord.png" />
+			</mx:HBox>
+			<mx:HBox>
+				<mx:Label text="{idScene}" />				
+				<mx:Canvas id="cnv" width="50" height="50" backgroundColor="{colorBG}" 
+						   dragDrop="parentApplication.dgScen.dragDropHandler(event)"
+						   dragEnter="parentApplication.dgScen.dragEnterHandler(event)" 
+						   >
+				</mx:Canvas>
+			</mx:HBox>
+		</mx:VBox>
+</mx:GridItem>

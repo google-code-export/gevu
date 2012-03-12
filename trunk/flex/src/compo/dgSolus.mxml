@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack width="100%" height="100%" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:ns2="compo.*"
+	creationComplete="Init()"
+	minHeight="200"
+	>
+
+	<mx:Script source="../http.as"/>
+
+	<mx:Script>
+        <![CDATA[
+import mx.containers.TitleWindow;
+import mx.events.FlexEvent;
+import mx.controls.ComboBox;
+import mx.containers.Form;
+import mx.containers.FormItem;
+
+import mx.collections.ArrayCollection;
+import mx.collections.IViewCursor;
+import mx.collections.Sort;
+import mx.collections.SortField;
+
+import mx.controls.Alert;
+import mx.controls.DataGrid;
+import mx.controls.dataGridClasses.DataGridColumn;
+import mx.controls.listClasses.IDropInListItemRenderer;
+import mx.controls.CheckBox;
+
+import mx.events.CloseEvent;
+import mx.events.DataGridEvent;
+
+import mx.managers.CursorManager;
+
+import mx.rpc.AsyncToken;
+import mx.rpc.events.FaultEvent;
+import mx.rpc.events.ResultEvent;
+import mx.rpc.http.HTTPService;
+
+import mx.managers.PopUpManager;
+
+import compo.*;
+
+/**
+ * paramétrage de l'objet
+ */
+[Bindable] public var endPoint:String;
+[Bindable] public var idExi:String;
+
+
+/**
+ * the array collection holds the rows that we use in the grid
+ */
+[Bindable]public var dataArr:ArrayCollection = new ArrayCollection();
+public var cursor:IViewCursor;
+
+            
+//variable pour la mise à jour des diifférente view
+public var idSolution:int;
+private var idCout:int;	
+private var idTof:int;	
+
+private function selectSolution(event:Event):void {
+	var item:Object=event.currentTarget.selectedItem;
+	if(item){
+		detailSolus.visible=true;
+		idSolution = item.id_solution;
+		UpdLib.text=item.lib;
+		UpdRef.text = item.ref;
+		var i:int=UpdType.getIndex(item.LibTypeSolution);
+		UpdType.cb.selectedIndex=i;
+		ROSM.findByIdSolution(idSolution);
+		ROSC.findByIdSolution(idSolution);
+		ROSP.findByIdSolution(idSolution);
+		ROC.findByIdSolution(idSolution);
+		ROTOF.findByIdSolution(idSolution);
+	}
+
+}
+
+
+/**
+ * Executes when the mxml is completed loaded. 
+ * - Construction des colonnes.
+ * - Initialize the Rest Gateway.
+ */
+public function Init():void 
+{
+    //chargement des données
+    ROS.getAll();
+        
+}
+
+
+private function updateItem():void
+{
+	//création du tableau de valeur
+	var vn:Array = new Array();
+	vn["lib"] = this.UpdLib.text;
+	vn["ref"] = this.UpdRef.text;
+	vn["id_type_solution"] = this.UpdType.cb.selectedItem['id_type_solution'];
+	ROS.edit(idSolution,vn);	
+}
+
+
+private function insertItem():void {
+
+	//création du tableau de param
+	var pArr:Array = new Array;
+	var val:String="";
+    var frmC:Array = insertSolus.getChildren();
+	//boucle sur chaque composant du modèle
+    for each(var ctl:Object in frmC){
+    	//récupère l'identifiant de la valeur
+    	var ctlId:String=ctl.id;
+		//récupère le contrôle d'édition
+		var ctlVal:Object=ctl.getChildAt(0);
+		//vérifie le type pour récupérer les modifs
+    	if(ctlVal.className=="cbGroupeMot"){
+    		val=ctlVal.cb.selectedItem[ctl.id];
+    	}
+    	if(ctlVal.className=="TextInput" || ctlVal.className=="TextArea"){
+    		val=ctlVal.text;
+    	}
+    	//vérifie si le champ est obligatoire
+    	if(!VerifChampOblig(val, ctlVal))return;
+    	//incrémente le tableau
+		pArr[ctlId]=val;
+   	}
+   	
+	ROS.ajouter(pArr);
+	
+}
+
+private function VerifChampOblig(val:String, ctlVal:Object):Boolean{
+	
+	if(val!="")return true;
+
+
+	var verif:Boolean=true;
+	
+	if(ctlVal.id=="ref"){
+		Alert.show("La référence est obligatoire.");
+		return false;
+	}
+	if(ctlVal.id=="lib"){
+		Alert.show("Le libellé est obligatoire.");
+		return false;
+	}
+	if(ctlVal.id=="id_type_solution"){
+		Alert.show("Le type de solution est obligatoire.");
+		return false;
+	}
+	
+	return verif;
+}
+
+
+/**
+ * Result handler for the insert call.
+ * Alert the error if it exists
+ * if the call went through ok, return to the list, and refresh the data
+ */
+private function insertItemHandler(e:Object):void
+{
+    goToView();
+    ROS.getAll();
+}
+
+private function MetierSolusHandler(e:Object):void
+{
+	vsMetierSolus.selectedChild = viewMetierSolus;
+    ROSM.findByIdSolution(idSolution);
+}
+
+private function CritereSolusHandler(e:Object):void
+{
+	vsCritereSolus.selectedChild = viewCritereSolus;
+    ROSC.findByIdSolution(idSolution);
+}
+
+private function ProHandler(e:Object):void
+{
+	vsProd.selectedChild = viewProd;
+    ROSP.findByIdSolution(idSolution);
+}
+
+/**
+ * Click handler for the "delete" button in the list
+ * confirms the action and launches the deleteClickHandler function
+ */
+private function deleteItem():void {
+    
+    if (dataGrid.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression de cette solution ?",
+        "Confirmation Suppression", 3, this, deleteClickHandler);
+    }
+    
+}
+
+/**
+ * Event handler function for the Confirm dialog raises when the 
+ * Delete button is pressed.
+ * If the pressed button was Yes, then the product is deleted.
+ * @param object event
+ * @return nothing
+ */ 
+private function deleteClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		ROS.remove(idSolution);
+    }
+}
+
+private function deleteMetierSolus():void {
+    
+    if (this.dgMetiers.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression du metier pour cette solution ?",
+        "Confirmation Suppression", 3, this, deleteMetierSolusClickHandler);
+    }
+    
+}
+private function deleteMetierSolusClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		ROSM.remove(idSolution, dgMetiers.selectedItem['id_metier']);
+    }
+}
+
+private function deleteCritereSolus():void {
+    
+    if (this.dgCritere.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression du critère pour cette solution ?",
+        "Confirmation Suppression", 3, this, deleteCritereSolusClickHandler);
+    }
+    
+}
+private function deleteCritereSolusClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		ROSC.remove(idSolution, dgCritere.selectedItem['id_critere']);
+    }
+}
+
+private function deleteProd():void {
+    
+    if (this.dgProd.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression du produit pour cette solution ?",
+        "Confirmation Suppression", 3, this, deleteProdClickHandler);
+    }
+    
+}
+private function deleteProdClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		ROSP.remove(idSolution, dgProd.selectedItem['id_produit']);
+    }
+}
+
+
+public function goToInsert():void
+{
+	this.selectedChild = insert;
+}
+
+
+/**
+ * Load the "View" canvas.
+ */
+public function goToView():void
+{
+    this.selectedChild = view;
+}
+
+private function fillGridHandler(e:Object, dg:DataGrid):void
+{
+	if(!e)return;
+    dg.dataProvider = e.result as Array;
+}
+
+public function faultHandlerService(fault:FaultEvent):void
+{
+	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+}
+ 
+public function resultHandlerService(result:ResultEvent):void
+{
+	ROS.getAll();
+}      
+private function CoutHandler(e:Object):void
+{
+	var item:Object=e.result[0];	
+	if(item){
+		idCout = item.id_cout;
+		this.UpdCunite.text = item.unite;
+		this.UpdCmetre_lineaire.text = item.metre_lineaire;
+		this.UpdCmetre_carre.text = item.metre_carre;
+		this.UpdCachat.text = item.achat;
+		this.UpdCpose.text = item.pose;
+
+	}
+}
+private function updateCout():void
+{
+
+	var vn:Array = new Array();
+	vn["unite"] = this.UpdCunite.text;
+	vn["metre_lineaire"] = this.UpdCmetre_lineaire.text;
+	vn["metre_carre"] = this.UpdCmetre_carre.text;
+	vn["achat"] = UpdCachat.text;
+	vn["pose"] = this.UpdCpose.text;
+	ROC.edit(idCout,vn);	
+	
+}
+
+private function TofHandler(e:Object):void
+{
+	if(!e)return;
+    tlTof.dataProvider = e.result as Array;
+}
+
+
+private function showPhoto(event:Event):void{
+	
+	idTof = event.currentTarget.selectedItem.id_doc;
+
+}
+
+private function removePhoto():void {
+    
+    if (idTof)
+    {
+        Alert.show("Confirmez-vous la suppression de la photo ?",
+        "Confirmation Suppression", 3, this, deleteTofClickHandler);
+    }
+    
+}
+private function deleteTofClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+			ROTOF.remove(idTof);
+    }
+}
+
+private function TofRemoveHandler(e:Object):void
+{
+    ROTOF.findByIdSolution(idSolution);
+}
+
+        ]]>
+    </mx:Script>
+    
+	<mx:RemoteObject id="ROS"
+	    	source="Models_DbTable_Gevu_solutions" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="getAll"  result="fillGridHandler(event,dataGrid)"/>  	
+	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="ajouter"  result="insertItemHandler(event)"/>  	
+	 	<mx:method name="csv"  result="resultHandlerService(event)"/>  	
+	</mx:RemoteObject>
+	
+	<mx:RemoteObject id="ROSM"
+	    	source="Models_DbTable_Gevu_solutionsxmetiers" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdSolution"  result="fillGridHandler(event,dgMetiers)"/>  	
+	 	<mx:method name="remove"  result="MetierSolusHandler(event)"/>  	
+	 	<mx:method name="ajouter"  result="MetierSolusHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROSC"
+	    	source="Models_DbTable_Gevu_solutionsxcriteres" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdSolution"  result="fillGridHandler(event,dgCritere)"/>  	
+	 	<mx:method name="remove"  result="CritereSolusHandler(event)"/>  	
+	 	<mx:method name="ajouter"  result="CritereSolusHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROSP"
+	    	source="Models_DbTable_Gevu_solutionsxproduits" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdSolution"  result="fillGridHandler(event,dgProd)"/>  	
+	 	<mx:method name="remove"  result="ProHandler(event)"/>  	
+	 	<mx:method name="ajouter"  result="ProHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROC"
+	    	source="Models_DbTable_Gevu_couts" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdSolution"  result="CoutHandler(event)"/>  	
+	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROTOF"
+	    	source="Models_DbTable_Gevu_docsxsolutions" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdSolution"  result="TofHandler(event)"/>  	
+	 	<mx:method name="remove"  result="TofRemoveHandler(event)"/>  	
+	</mx:RemoteObject>
+	
+	<mx:Canvas id="view" width="100%" height="100%">
+		<mx:VBox width="100%" height="100%">
+			<mx:VBox width="100%" height="100%" >		
+				<mx:HBox id="AddDelete" >		
+					<mx:LinkButton id="btnAddNew" click="goToInsert()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une solution" />
+					<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une solution" />
+				</mx:HBox>
+				<mx:VBox id="fiche" width="100%" >
+					<mx:HRule/>				
+				</mx:VBox>
+				<mx:DataGrid 
+					id="dataGrid"
+					editable="false"
+					resizableColumns="true" 
+					click="selectSolution(event);"
+					textAlign="left"
+					width="100%" height="100%"
+					 minHeight="100"
+					>			
+					<mx:columns>
+						<mx:DataGridColumn visible="false" headerText="id_solution" dataField="id_solution" />
+						<mx:DataGridColumn width="100" headerText="Référence" dataField="ref" />   					
+	   					<mx:DataGridColumn width="100" headerText="Type de solution"  dataField="LibTypeSolution" />
+						<mx:DataGridColumn headerText="libellé" dataField="lib" />									
+					</mx:columns>
+				</mx:DataGrid>
+			</mx:VBox>
+			<mx:HBox width="100%" height="100%" visible="false" id="detailSolus" >		
+
+				<mx:VBox fontSize="16" width="64%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+					<mx:HBox >
+						<mx:VBox>
+							<mx:Label text="Référence:" />
+			            	<mx:TextInput id="UpdRef" />							
+						</mx:VBox>
+						<mx:VBox>
+							<mx:Label text="Type de solution:"/>
+			            	<ns2:cbGroupeMot id="UpdType" titre="un type de solution" keyName="id_type_solution"  objName="Models_DbTable_Gevu_typesxsolutions" endPoint="{ROS.endpoint}" />						
+						</mx:VBox>
+					</mx:HBox>			
+					<mx:Label text="libellé de la solution:" />
+	            	<mx:TextArea id="UpdLib" width="100%" height="100" />
+					<mx:Button label="Enregistrer" click="updateItem()" />
+						<mx:VBox fontSize="16" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+							<mx:Label text="Les coûts sont en € HT"  fontWeight="bold" fontSize="18"/>
+							<mx:HBox >
+								<mx:VBox width="160" >
+									<mx:Label text="Unitaire:" />
+					            	<mx:TextInput id="UpdCunite" />							
+								</mx:VBox>
+								<mx:VBox width="160" >
+									<mx:Label text="A l'achat:" />
+					            	<mx:TextInput id="UpdCachat" />							
+								</mx:VBox>
+								<mx:VBox width="160" >
+									<mx:Label text="A la pose:" />
+					            	<mx:TextInput id="UpdCpose" />							
+								</mx:VBox>
+								<mx:VBox width="160" >
+									<mx:Label text="Mètre linéaire:" />
+					            	<mx:TextInput id="UpdCmetre_lineaire" />							
+								</mx:VBox>
+								<mx:VBox width="160" >
+									<mx:Label text="Mètre carré:" />
+					            	<mx:TextInput id="UpdCmetre_carre" />							
+								</mx:VBox>
+							</mx:HBox>			
+							<mx:Button label="Enregistrer" click="updateCout()" />
+						</mx:VBox>					
+				</mx:VBox>				
+				<mx:VBox width="36%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+					<mx:VBox width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+						<mx:HBox>
+							<mx:Label text="Illustrations réglementaires" fontWeight="bold" fontSize="18" />
+							<ns2:cUploadFile id="ufIma" iconBtn="@Embed('images/AddRecord.png')" idExi="{idExi}" objName="img_solus"  ttBtn="Ajouter une illustration" ctlBind="{this}" wf="auton" typeFic="images" />				
+							<mx:LinkButton id="btnDeleteIllu" click="removePhoto()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une illustration" />							
+						</mx:HBox>
+						<mx:TileList id="tlTof"
+							width="100%" height="80"
+							itemClick="showPhoto(event)">
+							<mx:itemRenderer>
+								<mx:Component>
+					                <mx:VBox width="74" height="74"
+					                    paddingRight="5" paddingLeft="5"
+					                    horizontalAlign="center">
+					                    <mx:Image 
+					                        height="64" width="64"
+					                        source="{data.url}"/>
+					                </mx:VBox>
+					            </mx:Component>
+							</mx:itemRenderer>
+							
+						</mx:TileList>							
+					</mx:VBox>
+					<mx:HBox width="100%" height="100%" >
+						<mx:VBox width="100%" height="100%" >
+							<mx:ViewStack id="vsProd" width="100%" height="100%">
+								<mx:VBox id="viewProd" width="100%" height="100%" >
+									<mx:HBox>
+										<mx:Label text="Produits" fontWeight="bold" fontSize="18" />
+										<mx:LinkButton click="vsProd.selectedChild = insertProd;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un produit à la solution" />
+										<mx:LinkButton click="deleteProd()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un produit de la solution " />							
+									</mx:HBox>							
+									<mx:DataGrid width="100%" height="100%" id="dgProd">
+										<mx:columns>
+											<mx:DataGridColumn headerText="Référence" dataField="ref" />
+											<mx:DataGridColumn headerText="Id Produit" dataField="id_produit" visible="false"/>
+											<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
+										</mx:columns>
+									</mx:DataGrid>					
+								</mx:VBox>
+								<mx:VBox id="insertProd" width="100%" height="100%" paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2"  >
+							    	<mx:Label text="Choisissez un produit :" fontWeight="bold" fontSize="18" />
+					            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un produit" keyName="id_produit" id="cbProduit" objName="Models_DbTable_Gevu_produits" endPoint="{ROS.endpoint}" />
+									<mx:HBox>
+										<mx:Button label="Enregistrer" click="ROSP.ajouter(idSolution, cbProduit.cb.selectedItem['id_produit']);" />
+										<mx:Button label="Annuler" click="vsProd.selectedChild = viewProd;" />				
+									</mx:HBox>							
+								</mx:VBox>								
+							</mx:ViewStack>
+							<mx:ViewStack id="vsMetierSolus" width="100%" height="100%">
+								<mx:VBox id="viewMetierSolus" width="100%" height="100%" >
+									<mx:HBox>
+										<mx:Label text="Métiers" fontWeight="bold" fontSize="18" />
+										<mx:LinkButton id="btnAddNewMetierSolus" click="vsMetierSolus.selectedChild = insertMetierSolus;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un métier à la solution" />
+										<mx:LinkButton id="btnDeleteMetierSolus" click="deleteMetierSolus()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un métier de la solution " />							
+									</mx:HBox>							
+									<mx:DataGrid width="100%" height="100%" id="dgMetiers">
+										<mx:columns>
+											<mx:DataGridColumn headerText="Metiers" dataField="lib" />
+											<mx:DataGridColumn headerText="Id Metier" dataField="id_metier" visible="false"/>
+											<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
+										</mx:columns>
+									</mx:DataGrid>					
+								</mx:VBox>
+								<mx:VBox id="insertMetierSolus" width="100%" height="100%">
+									<mx:Label text="Choisissez un métier :" fontWeight="bold" fontSize="18" /> 
+					            	<ns2:cbGroupeMot titre="un métier" keyName="id_metier" id="cbMetier" objName="Models_DbTable_Gevu_metiers" endPoint="{ROS.endpoint}" />
+									<mx:HBox>
+										<mx:Button label="Enregistrer" click="ROSM.ajouter(idSolution, cbMetier.cb.selectedItem['id_metier']);" />
+										<mx:Button label="Annuler" click="vsMetierSolus.selectedChild = viewMetierSolus;" />				
+									</mx:HBox>							
+								</mx:VBox>
+							</mx:ViewStack>											
+						</mx:VBox>
+						<mx:ViewStack id="vsCritereSolus" width="100%" height="100%"  >
+							<mx:VBox id="viewCritereSolus" width="100%" height="100%" >
+								<mx:HBox>
+									<mx:Label text="Critères" fontWeight="bold" fontSize="18" />
+									<mx:LinkButton id="btnAddNewCritereSolus" click="vsCritereSolus.selectedChild = insertCritereSolus;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un critère à la solution" />
+									<mx:LinkButton id="btnDeleteCritereSolus" click="deleteCritereSolus()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un critère de la solution " />							
+								</mx:HBox>							
+								<mx:DataGrid width="100%" height="100%" id="dgCritere">
+									<mx:columns>
+										<mx:DataGridColumn headerText="Référence" dataField="ref" />
+										<mx:DataGridColumn headerText="Id critère" dataField="id_critere" visible="false"/>
+										<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
+									</mx:columns>
+								</mx:DataGrid>					
+							</mx:VBox>
+							<mx:VBox id="insertCritereSolus" width="100%" height="100%"  >
+						    	<mx:Label text="Choisissez un critère :" fontWeight="bold" fontSize="18" />
+				            	<ns2:cbGroupeMot labelName="ref" bAjout="false" titre="un critère" keyName="id_critere" id="cbCritere" objName="Models_DbTable_Gevu_criteres" endPoint="{ROS.endpoint}" />
+								<mx:HBox>
+									<mx:Button label="Enregistrer" click="ROSC.ajouter(idSolution, cbCritere.cb.selectedItem['id_critere']);" />
+									<mx:Button label="Annuler" click="vsCritereSolus.selectedChild = viewCritereSolus;" />				
+								</mx:HBox>							
+							</mx:VBox>								
+						</mx:ViewStack>
+					</mx:HBox>						
+				</mx:VBox>		
+			</mx:HBox>
+		</mx:VBox>
+
+	</mx:Canvas>
+	<mx:Canvas id="insert" width="100%" height="100%" >
+		<mx:VBox>			
+			<mx:Form width="100%" height="100%" id="insertSolus">			                    		
+	            <mx:FormItem label="Référence:" id="ref" >
+	            	<mx:TextInput id="refSolus" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Libellé:" id="lib" >
+	            	<mx:TextArea id="libSolus"  width="400" height="100" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Type de solution:" id="id_type_solution" >
+	            	<ns2:cbGroupeMot titre="un type de solution" keyName="id_type_solution"  objName="Models_DbTable_Gevu_typesxsolutions" endPoint="{ROS.endpoint}" />
+	            </mx:FormItem>
+			</mx:Form>
+			<mx:HBox>
+				<mx:Button label="Enregistrer" click="insertItem()" />
+				<mx:Button label="Annuler" click="goToView()" />				
+			</mx:HBox>
+		</mx:VBox>
+	</mx:Canvas>
+</mx:ViewStack>

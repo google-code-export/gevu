@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas label="Cartographie" xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="100%" height="100%">
+	<mx:Script><![CDATA[
+		import com.google.maps.InfoWindowOptions;
+		import com.google.maps.LatLng;
+		import com.google.maps.Map;
+		import com.google.maps.MapEvent;
+		import com.google.maps.MapMouseEvent;
+		import com.google.maps.MapType;
+		import com.google.maps.controls.MapTypeControl;
+		import com.google.maps.controls.PositionControl;
+		import com.google.maps.controls.ZoomControl;
+		import com.google.maps.interfaces.IMapType;
+		import com.google.maps.overlays.Marker;
+		import com.google.maps.overlays.MarkerOptions;
+		import com.google.maps.styles.FillStyle;
+		import com.google.maps.styles.StrokeStyle;
+	
+		private var map:Map;
+		private var mapKey:String = "ABQIAAAAU9-q_ELxIQ-YboalQWRCjRQz39mjOVnM1cIqThEYinQ2UMSLChQ5GzeL0LKmVf54ALsifsQIHmMHMQ";
+
+		[Bindable]	public var rsCarto:Object;
+		
+		public function init():void {
+			PurgeCarte();
+			var ltlg:LatLng = new LatLng(rsCarto.lat, rsCarto.lng); 
+			map.setCenter(ltlg, rsCarto.zoom_min,MapType.HYBRID_MAP_TYPE);
+			map.addOverlay(createMarker(ltlg, "", rsCarto.adresse, ""));
+			
+        }
+
+		public function onHolderCreated(event:Event):void {
+			map = new Map();
+			map.key = mapKey;
+			map.addControl(new ZoomControl());
+			map.addControl(new PositionControl());
+			map.addControl(new MapTypeControl());
+			map.addEventListener(MapEvent.MAP_READY, onMapReady);
+			map.sensor = "true";
+			mapHolder.addChild(map);	
+		}
+
+		
+		public function onHolderResized(event:Event):void {
+			map.setSize(new Point(mapHolder.width, mapHolder.height));
+		}
+		
+		private function onMapReady(event:Event):void {
+			map.enableScrollWheelZoom();
+			map.enableContinuousZoom();
+			if(rsCarto){
+				init();
+			}
+		}
+
+		
+		public function createMarker(latlng:LatLng, name:String, address:String, type:String): Marker {
+			
+			//inspiration de http://www.tricedesigns.com/portfolio/googletemps/srcview/
+			var markerOptions:MarkerOptions = new MarkerOptions({
+				strokeStyle: new StrokeStyle({color: 0x000000}),
+				radius: 12,
+				hasShadow: true
+			})
+			//markerOptions = new MarkerOptions({icon: new treeEtatLieux.categories[type].icon, iconOffset: new Point(-16, -32)});
+			
+			var marker:Marker = new Marker(latlng, markerOptions);
+			var html:String = "<b>" + name + "</b> <br/>" + address;
+			marker.addEventListener(MapMouseEvent.CLICK, function(e:MapMouseEvent):void {
+				marker.openInfoWindow(new InfoWindowOptions({contentHTML:html}));
+				//showStat(markerXml);
+			});
+			return marker;
+		} 		
+		private function PurgeCarte():void{
+			//vide la carte
+			map.clearOverlays();
+		}
+		
+	]]></mx:Script>
+
+	<mx:UIComponent id="mapHolder"
+					initialize="onHolderCreated(event);"
+					resize="onHolderResized(event)"
+					width="100%" height="100%"/>				
+
+	
+</mx:Canvas>

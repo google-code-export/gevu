@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application  
+  xmlns:mx="http://www.adobe.com/2006/mxml"
+  xmlns:boost="boost.charts.*"
+  width="800" height="600" creationComplete="init();"
+   backgroundColor="white"
+  >
+     
+	
+	<mx:Script>
+		<![CDATA[
+			import compo.cnvStat;
+		
+		
+    private function init():void {
+
+				var accStat:cnvStat = new cnvStat();
+				accStat.urlSrv = "http://localhost/gevu/library/php/ExeAjax.php";
+				accStat.idArt = "28817";
+				accStat.idGrille = "87";
+				accStat.idSite = "alceane"; 
+		       	charts.addChild(accStat);   	
+
+      chart.addAxis('A');
+      chart.addAxis('B');
+      chart.addAxis('C');
+      chart.addAxis('D');
+      chart.addAxis('E');
+      chart.addSeries('Homme', {A: 3, B: 4, C: 5, D: 1, E: 4});
+      chart.addSeries('Femme', {A: 4, B: 2, C: 4, D: 5, E: 3});
+    }
+			
+		]]>
+	</mx:Script>
+  <mx:HBox id="charts" width="100%" height="100%" >
+	  <boost:RadarChart id="chart" width="100%" height="100%" />
+  	
+  </mx:HBox>  
+</mx:Application>
