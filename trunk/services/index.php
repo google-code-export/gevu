@@ -5,13 +5,27 @@ require_once( "../param/ParamAppli.php" );
 try {
 	
 	/*
+	$o = new Models_DbTable_Gevu_espacesxinterieurs();
+	$arr = $o->setTypeControle(13, 22063, 71);
+	
+	
 	$idBase = "gevu_new_alceane";
 	$idExi = 1;
 	$d = new GEVU_Diagnostique();
-	$arr = $d->getLieuCtl(112, "12", $idBase);
+	$d->ajoutLieu(22045, $idExi, $idBase);
+	$arr = $d->getLieuCtl(22048, "13", $idBase);
+	$o=new Models_DbTable_Gevu_niveaux();
+	$o->edit(6085, array('reponse_1'=>"2"));
+	
+	$o = new Models_DbTable_Gevu_contactsxantennes();
+	$o->ajouterContact(array("idCtc"=>6,"idLien"=>1));
+	$o = new Models_DbTable_Gevu_batiments();
+	$o->getContact(array("id"=>2244,"type"=>"contact_proprietaire"));
+	
 	$d->deleteDoc(240, $idBase);
-	$d->deleteLieu(6, $idBase);	
-	$d->ajoutLieu(1, $idExi, $idBase);
+	//$d->deleteLieu(22046, $idExi, $idBase);
+	
+	/*	
 	$arr = $d->getNodeRelatedData(5,$idExi,$idBase);
 	$d->editLieux(2, array("lib"=>"tetst"), $idBase);
 	$d->findLieu(881,"",$idBase);
