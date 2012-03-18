@@ -326,16 +326,16 @@
 					<mx:LinkButton id="insItem" click="insItem_clickHandler(event)"  icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un scénario" />
 					<mx:LinkButton click="deleteScen()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un scénario" />
 				</mx:HBox>
-				<mx:DataGrid id="dgScen" click="selectItem(event);" height="100%" width="100%" >
+				<mx:DataGrid id="dgScen" click="selectItem(event);" height="300" width="100%" >
 					<mx:columns>
 						<mx:DataGridColumn headerText="Nom" dataField="lib"/>
 						<mx:DataGridColumn headerText="Id Scen" dataField="id_scenario" visible="false"/>
 						<mx:DataGridColumn headerText="Params" dataField="params" visible="false"/>
 					</mx:columns>
 				</mx:DataGrid>
-				<mx:Accordion id="accCtlScene" >
-					<mx:Canvas  id="cnvCrtl" label="Contrôles disponibles">
-						<mx:VBox id="vboxCtl"  height="400" width="200" horizontalAlign="center">
+				<mx:Accordion id="accCtlScene" height="100%" >
+					<mx:Canvas  id="cnvCrtl" height="100%" label="Contrôles disponibles">
+						<mx:VBox id="vboxCtl"  height="100%" width="200" horizontalAlign="center">
 						</mx:VBox>
 					</mx:Canvas>
 				</mx:Accordion> 
@@ -356,9 +356,9 @@
 					<mx:Button label="Enregistrer" click="updateItem()" toolTip="Enregistre les modification du scénario" />
 					<mx:Button label="Tester" click="testerScenario()" toolTip="Tester le scénario" />
 				</mx:HBox>
-				<mx:Image source="@Embed('images/legSceneHaut.png')" />
-				<mx:HBox>
-					<mx:Image source="@Embed('images/legSceneBas.png')" />
+				<!-- <mx:Image source="@Embed('images/legSceneHaut.png')" /> -->
+				<mx:HBox height="600" width="100%">
+					<!-- <mx:Image source="@Embed('images/legSceneBas.png')" /> -->
 					<mx:Grid id="grdScen" borderColor="#45A4CB" borderStyle="solid" borderThickness="4">
 					</mx:Grid>									
 				</mx:HBox>

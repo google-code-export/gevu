@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" creationComplete="cocheVals()" >
+	<mx:Script>
+		<![CDATA[			
+			[Bindable] public var lblQ:String;
+			[Bindable] public var Q:String;
+			[Bindable] public var val:String;
+			[Bindable] public var fnct:Function;
+			private function changeModif(val:String):void{
+				fnct(Q, val);
+			}
+			private function cocheVals():void{
+				//basé sur les mot-clef de type 2
+				//1 	Oui, 2 	Non, 124 	N. A., 141 	Sous réserve
+				if(val && val!="0"){
+					var rbNom:String = "reponse_"+val;
+					var rb:RadioButton = this[rbNom];
+					rb.selected = true;
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Label text="{lblQ}" />
+	<mx:RadioButton groupName="reponse" id="reponse_1" label="oui" color="0x323232" change="changeModif('1')" /> 
+	<mx:RadioButton groupName="reponse" id="reponse_2" label="non" color="0x323232" change="changeModif('2')" />
+	<mx:RadioButton groupName="reponse" id="reponse_124" label="n. a." color="0x323232" change="changeModif('124')" />
+	<mx:RadioButton groupName="reponse" id="reponse_141" label="sous réserve" color="0x323232" change="changeModif('141')" />
+	
+</mx:HBox>
