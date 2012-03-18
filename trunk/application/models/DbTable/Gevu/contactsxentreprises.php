@@ -114,20 +114,6 @@ class Models_DbTable_Gevu_contactsxentreprises extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_contactsxentreprises 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_contact","champ"=>"id_contact","visible"=>true),
-    	array("titre"=>"id_entreprise","champ"=>"id_entreprise","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_contactsxentreprises avec la valeur spécifiée

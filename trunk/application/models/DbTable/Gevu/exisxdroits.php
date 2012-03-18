@@ -84,13 +84,14 @@ class Models_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
      * Recherche une entrée Gevu_exisxdroits avec la clef primaire spécifiée
      * et supprime cette entrée.
      *
-     * @param integer $id
+     * @param integer $idExi
+     * @param integer $idDroit
      *
      * @return void
      */
-    public function remove($id)
+    public function remove($idExi, $idDroit)
     {
-        $this->delete('gevu_exisxdroits.id_exi = ' . $id);
+        $this->delete('gevu_exisxdroits.id_exi = ' . $id.' AND gevu_exisxdroits.id_droit ='.$idDroit);
     }
     
     /**
