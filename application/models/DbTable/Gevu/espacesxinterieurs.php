@@ -135,29 +135,8 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_espacesxinterieurs 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_espace_int","champ"=>"id_espace_int","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"nom","champ"=>"nom","visible"=>true),
-    	array("titre"=>"ref","champ"=>"ref","visible"=>true),
-    	array("titre"=>"fonction","champ"=>"fonction","visible"=>true),
-    	array("titre"=>"id_type_specifique_int","champ"=>"id_type_specifique_int","visible"=>true),
-    	array("titre"=>"id_donnee","champ"=>"id_donnee","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
-    /*
+    /**
      * Recherche une entrée Gevu_espacesxinterieurs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -171,7 +150,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espacesxinterieurs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -185,7 +164,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espacesxinterieurs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -199,7 +178,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espacesxinterieurs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -213,7 +192,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espacesxinterieurs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -227,7 +206,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espacesxinterieurs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -241,7 +220,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espacesxinterieurs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -255,7 +234,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espacesxinterieurs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -269,7 +248,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espacesxinterieurs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -284,5 +263,46 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
+    /**
+     * Recherche les type de controle autorisés
+     * et retourne ces entrées.
+     *
+     * @param int $idScenar
+     * @param int $idLieu
+     * 
+     */
+    public function getTypeControle($idScenar, $idLieu)
+    {
+    	$diag = new GEVU_Diagnostique();
+    	$arrCtl = $diag->getLieuCtl($idLieu, $idScenar, false, "/node");
+        return $arrCtl; 
+    }
+
+    /**
+     * Création des diagnostiques
+     *
+     * @param int $idExi
+     * @param int $idScenar
+     * @param int $idLieu
+     * @param int $idTypeCtrl
+     * 
+     */
+    public function ajoutDiag($idExi, $idScenar, $idLieu, $idTypeCtrl)
+    {
+    	$diag = new GEVU_Diagnostique();
+    	//récupère la liste des contrôles à effectuer
+    	$arrCtl = $diag->getLieuCtl($idLieu, $idScenar, false, "/node[@idCtrl='".$idTypeCtrl."']/node");
+    	$arrResult = array();
+    	foreach ($arrCtl as $ctl) {
+    		//création d'un lieu pour chaque type de controles
+			$xmlLieu = $diag->ajoutLieu($idLieu, $idExi, false, $ctl["lib"]);
+    		//création des diagnostics pour chaque lieu
+    		
+			$xmlLieu = $diag->ajoutLieu($idLieu, $idExi, false, $ctl["lib"]);
+			$arrResult[] = $xmlLieu;    		
+    	}
+    	
+        return $arrResult; 
+    }
     
 }

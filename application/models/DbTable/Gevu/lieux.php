@@ -46,28 +46,13 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
        ,"Models_DbTable_Gevu_observations"
        ,"Models_DbTable_Gevu_parcelles"
        ,"Models_DbTable_Gevu_problemes"
+       ,"Models_DbTable_Gevu_antennes"
+       ,"Models_DbTable_Gevu_groupes"
+       ,"Models_DbTable_Gevu_logements"
+       ,"Models_DbTable_Gevu_locaux"
+       ,"Models_DbTable_Gevu_partiescommunes"
        );
-    
-	protected $LibTablesLiees = array(
-       "Models_DbTable_Gevu_batiments"=>"bâtiments"
-       ,"Models_DbTable_Gevu_diagnostics"=>"diagnostics"
-       ,"Models_DbTable_Gevu_diagnosticsxvoirie"=>"diagnostics de voirie"
-       ,"Models_DbTable_Gevu_docsxlieux"=>"documents"
-       ,"Models_DbTable_Gevu_espaces"=>"expaces"
-       ,"Models_DbTable_Gevu_espacesxexterieurs"=>"espaces extérieurs"
-       ,"Models_DbTable_Gevu_espacesxinterieurs"=>"espaces intérieurs"
-       ,"Models_DbTable_Gevu_etablissements"=>"&tablissements"
-       ,"Models_DbTable_Gevu_georss"=>"géo rss"
-       ,"Models_DbTable_Gevu_geos"=>"données géographiques"
-       ,"Models_DbTable_Gevu_niveaux"=>"niveaux"
-       ,"Models_DbTable_Gevu_objetsxexterieurs"=>"objets extérieurs"
-       ,"Models_DbTable_Gevu_objetsxinterieurs"=>"objets intérieurs"
-       ,"Models_DbTable_Gevu_objetsxvoiries"=>"objets de voiries"
-       ,"Models_DbTable_Gevu_observations"=>"observations"
-       ,"Models_DbTable_Gevu_parcelles"=>"parcelles"
-       ,"Models_DbTable_Gevu_problemes"=>"problèmes"
-       );
-       
+           
     /**
      * Vérifie si une entrée Gevu_lieux existe.
      *
@@ -100,6 +85,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
+    		//récupère les information du parent
+    		$arrP = $this->findById_lieu($data["lieu_parent"]);
     		//gestion des hiérarchies gauche droite
     		//http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
     		//vérifie si le parent à des enfants
@@ -125,7 +112,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     			$data['lft'] = $arr[0]['lft']+1;
     			$data['rgt'] = $arr[0]['lft']+2;
     		}    		
-    		$data['niv'] = $arr[0]['niv']+1;
+    		$data['niv'] = $arrP[0]['niv']+1;
     	 	$data["id_lieu"] = $this->insert($data);
     	}
     	if($rData)
@@ -153,22 +140,15 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      * et supprime cette entrée.
      *
      * @param integer $id
-     * @param Zend_Db_Adapter_Abstract $db
      *
      * @return void
      */
-    public function remove($id, $db)
-    {
-        //récupération les tables liées
-        foreach($this->_dependentTables as $t){
-        	$dbT = new $t($db);
-        	$dbT->removeLieu($id);
-        }
-    	
+    public function remove($id)
+    {    	
         $arrEnfant = $this->getFullChild($id);
         foreach ($arrEnfant as $enf){
         	if($enf["id_lieu"]!=$id){
-	        	$this->remove($enf["id_lieu"], $db);
+	        	$this->remove($enf["id_lieu"]);
         	}
         }
         $this->delete('gevu_lieux.id_lieu = ' . $id);
