@@ -5,6 +5,7 @@
 	  horizontalAlign="center"
 	  mouseDown="DoDrag(event)"
 	  click="vbox1_clickHandler(event)"
+	  height="100%" 
 	>
 	<mx:Script>
 		<![CDATA[

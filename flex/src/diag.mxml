@@ -112,9 +112,9 @@ todo :
 					   <ns2:hbIcoMultimedia id="docs"  />
 					   <form:geos id="geo"  width="100%" NodeData="{dataGeo}" />
 					   <mx:HBox width="100%" height="100%" >
-						   <mx:VBox id="ctrlDispo">
+						   <mx:VBox id="ctrlDispo" height="100%" >
 							   <mx:Label text="Contrôle(s) disponible(s)" />
-							   <mx:VBox id="vboxCtl" height="200" horizontalAlign="center" >
+							   <mx:VBox id="vboxCtl" height="100%" horizontalAlign="center" >
 							   </mx:VBox>							   
 						   </mx:VBox>
 						   <mx:HBox id="tabDiag" width="100%" height="100%" >

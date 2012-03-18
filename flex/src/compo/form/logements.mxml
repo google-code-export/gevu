@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		   title="Logement"
+		   width="100%" height="100%"
+		   xmlns:compo="compo.*" 
+		   initialize="init();" >
+	<mx:VBox>
+
+		<mx:HBox width="100%">
+			<mx:Label text="Identifiant du logement :" />
+			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
+			<mx:Label text="N° de porte :" />
+			<mx:TextInput id="F3" width="100%" text="{NodeData.num_porte}" change="editModif('num_porte', F3.text)" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="Type de logement : " />
+			<mx:RadioButton groupName="type" id="reponse_T1" label="T1" color="0x323232" change="editModif('type', RadioButton(event.target).label)" /> 
+			<mx:RadioButton groupName="type" id="reponse_T2" label="T2" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
+			<mx:RadioButton groupName="type" id="reponse_T3" label="T3" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
+			<mx:RadioButton groupName="type" id="reponse_T4" label="T4" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
+			<mx:RadioButton groupName="type" id="reponse_T5" label="T5" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
+			<mx:RadioButton groupName="type" id="reponse_T6" label="T6" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
+			<mx:RadioButton groupName="type" id="reponse_T7" label="T7" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
+			<mx:RadioButton groupName="type" id="reponse_T8" label="T8" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
+			<mx:RadioButton groupName="type" id="reponse_T9" label="T9" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
+			<mx:RadioButton groupName="type" id="reponse_T10" label="T10" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
+		</mx:HBox>
+		<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+		
+	</mx:VBox>
+	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					 showBusyCursor="true"
+					 source="Models_DbTable_Gevu_logements"
+					 fault="faultHandlerService(event, this.title);">
+		<mx:method name="edit"	result=";" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			private function init():void{
+			}
+
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
+
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				isChange = false;
+				roModifBase.edit(NodeData.id_logement, modifData);
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Panel>

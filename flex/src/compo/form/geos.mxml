@@ -7,7 +7,7 @@
 	<mx:VBox>
 		
 		<mx:HBox width="100%">
-			<mx:Label text="adresse" />
+			<mx:Label text="{NodeData.id_lieu}" /><mx:Label text="adresse" />
 			<mx:TextInput id="F01" data="{NodeData.adresse}" width="100%" />
 		</mx:HBox>
 		<mx:HBox width="100%">
@@ -97,7 +97,7 @@
 			
 			public function saveModifications() : void {
 				var arr:Array = new Array();
-				arr["adresse"]=F01.data;
+				arr["adresse"]=F01.text;
 				arr["lat"]=F02.data;
 				arr["lng"]=F03.data;
 				arr["zoom_min"]=0;//F04.data;

@@ -5,6 +5,7 @@ import com.adobe.serialization.json.JSON;
 
 import compo.*;
 import compo.ariane;
+import compo.form.antennes;
 import compo.form.batiments;
 import compo.form.diagnostics;
 import compo.form.docsxlieux;
@@ -14,12 +15,16 @@ import compo.form.espacesxinterieurs;
 import compo.form.etablissements;
 import compo.form.georss;
 import compo.form.geos;
+import compo.form.groupes;
+import compo.form.locaux;
+import compo.form.logements;
 import compo.form.niveaux;
 import compo.form.objetsxexterieurs;
 import compo.form.objetsxinterieurs;
 import compo.form.objetsxvoiries;
 import compo.form.observations;
 import compo.form.parcelles;
+import compo.form.partiescommunes;
 import compo.form.problemes;
 
 import flash.display.DisplayObject;
@@ -74,7 +79,11 @@ private var o14:compo.form.objetsxvoiries;
 private var o15:compo.form.observations;
 private var o16:compo.form.parcelles;
 private var o17:compo.form.problemes;
-
+private var o18:compo.form.antennes;
+private var o19:compo.form.groupes;
+private var o20:compo.form.logements;
+private var o21:compo.form.partiescommunes;
+private var o22:compo.form.locaux;
 
 public function login():void
 {
