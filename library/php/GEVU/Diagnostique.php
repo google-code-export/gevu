@@ -44,10 +44,11 @@ class GEVU_Diagnostique extends GEVU_Site{
     * @param string $idLieu
     * @param string $idScenar
     * @param string $idBase
+    * @param string $forTypeControle
     * 
     * @return Array
     */
-	public function getLieuCtl($idLieu, $idScenar, $idBase=false){
+	public function getLieuCtl($idLieu, $idScenar, $idBase=false, $forTypeControle=false){
 			
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
@@ -92,20 +93,39 @@ class GEVU_Diagnostique extends GEVU_Site{
 					$niv = $rLieu["niv"]-$arrLieuxParents[0]["niv"];
 					//création de la requête Xpath
 					$path = "/node";
-					for ($i = 0; $i < $niv; $i++) {
+					for ($i = 0; $i < $niv; $i++) {						
 						$path .= "/node";
+						//vérifie si un des parents à déjà le contrôle
+	        			$result = $xmlScene->xpath($path);
+						foreach ($result as $node) {
+		        			$rTC = $this->dbTypCtl->findById_type_controle($node["idCtrl"]);
+        					if($rTC["zend_obj"]!=""){
+			        			$arrLP = $this->dbL->getParentForTypeControle($idLieu, $rTC["zend_obj"]);				        						
+								if($arrLP){
+									//ajoute une condition dans la requête XML
+									$path .= "[@idCtrl=".$node["idCtrl"]."]";
+								}
+        					};
+						}						
+					}
+					/*on ajoute un niveau 
+					 *dans le cas d'une liste de type de contrôle possible
+					 *cf. Models_DbTable_Gevu_espacesxinterieurs.getTypeControle
+					*/
+					if($forTypeControle){
+						$path .= $forTypeControle;
 					} 
 	        		$result = $xmlScene->xpath($path);
 					foreach ($result as $node) {
 			        	//vérifie si le lieu à le controle
 		        		$rTypeCtrl1 = $this->dbTypCtl->findById_type_controle($node["idCtrl"]);						
 			        	$items1 = $this->verifIsControle($rTypeCtrl1, $rLieu);
+						/*si le lieu à déjà le contrôle on ne peut pas en ajouter
+						 */
 			        	if($items1 && $items1->count()){
-							//si le lieu à déjà le contrôle on ne peut pas en ajouter
 			        		return "";
 			        	}else{
 							$arrCtl[] = $rTypeCtrl1;										
-			        		return $arrCtl;										
 						}		        	
 					}					
 				}else{
@@ -117,7 +137,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		}
 		return $arrCtl;
 	}
-
+	
 	/**
 	* vérifie si un lieu possède le controle dans une hiérarchie et renvoie les informations
 	*  
@@ -746,7 +766,7 @@ class GEVU_Diagnostique extends GEVU_Site{
      * 
      * @return integer
      */
-    public function ajoutLieu($idLieuParent, $idExi, $idBase=false){
+    public function ajoutLieu($idLieuParent, $idExi, $idBase=false, $lib="Nouveau lieu"){
 		
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
@@ -759,7 +779,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
 		
 		//ajoute un lieu au parent
-		$arrLieu = $this->dbL->ajouter(array("lieu_parent"=>$idLieuParent,"lib"=>"Nouveau lieu", "id_instant"=>$idInst), false, true);
+		$arrLieu = $this->dbL->ajouter(array("lieu_parent"=>$idLieuParent,"lib"=>$lib, "id_instant"=>$idInst), false, true);
 		
 		//récupère les coordonnées géographique du parent
 		$geos = $this->dbG->findById_lieu($idLieuParent);
@@ -775,7 +795,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		
         return $xml;
     }
-
+    
     
     /**
      * supprime un lieu et tous ces composants
