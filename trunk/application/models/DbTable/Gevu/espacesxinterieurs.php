@@ -295,12 +295,12 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
     	$arrResult = array();
     	foreach ($arrCtl as $ctl) {
     		//création d'un lieu pour chaque type de controles
-			$xmlLieu = $diag->ajoutLieu($idLieu, $idExi, false, $ctl["lib"]);
-    		//création des diagnostics pour chaque lieu
-    		
-			$xmlLieu = $diag->ajoutLieu($idLieu, $idExi, false, $ctl["lib"]);
-			$arrResult[] = $xmlLieu;    		
+    		//ou récupération du lieu existant : $existe = true 
+			$idNewLieu = $diag->ajoutLieu($idLieu, $idExi, false, $ctl["lib"],true,false);			    		
     	}
+    	
+		//récupère le diagnostic du lieu
+		$arrResult[] = $diag->calculDiagForLieu($idLieu);    		
     	
         return $arrResult; 
     }

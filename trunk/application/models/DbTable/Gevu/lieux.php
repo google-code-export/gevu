@@ -114,6 +114,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     		}    		
     		$data['niv'] = $arrP[0]['niv']+1;
     	 	$data["id_lieu"] = $this->insert($data);
+    	}else{
+	    	$data["id_lieu"] = $id;   		
     	}
     	if($rData)
 	    	return $data;
