@@ -669,10 +669,12 @@ class GEVU_Diagnostique extends GEVU_Site{
      * Récupération d'un scenario complet
      *
      * @param int $idScenario
+     * @param int $idLieu
+     * @param int $idTypeCtrl
      * 
      * @return array
      */
-    public function getScenarioComplet($idScenario){
+    public function getScenarioComplet($idScenario, $idLieu, $idTypeCtrl){
 		$c = str_replace("::", "_", __METHOD__)."_".$idScenario; 
 	   	$rs = $this->cache->load($c);
         if(!$rs){           
@@ -681,19 +683,26 @@ class GEVU_Diagnostique extends GEVU_Site{
         	if(!$this->dbScena)$this->dbScena = new Models_DbTable_Gevu_scenario($this->db);
         	if(!$this->dbScene)$this->dbScene = new Models_DbTable_Gevu_scenes($this->db);
         	if(!$this->dbC)$this->dbC = new Models_DbTable_Gevu_criteres($this->db);
+
+        	//récupère la définition du scénario pour le lieu
+    		$arrCtl = $this->getLieuCtl($idLieu, $idScenario, false, "/node[@idCtrl='".$idTypeCtrl."']/node");
+        	
         	
         	//récupération des informations de scenario
         	$arrScena = $this->dbScena->findById_scenario($idScenario);
         	$psScena = Zend_Json::decode($arrScena[0]['params']);
         	foreach ($psScena as $pEtapes) {
         		foreach ($pEtapes['etapes'] as $pScene) {
-	        		if(!isset($rs["criteres"][$pScene['id_type_controle']])){
-		        		$rsCrit = $this->dbC->findByIdTypeControle($pScene['id_type_controle']);	        		
-	        			$rs["criteres"]["idTypeControle".$pScene['id_type_controle']] = $rsCrit;
+	        		$ctl = $this->getControleInScenario($arrCtl, $pScene);
+	        		if($ctl){
+	        			if(!isset($rs["criteres"][$pScene['id_type_controle']])){
+	        				$rsCrit = $this->dbC->findByIdTypeControle($pScene['id_type_controle']);
+		        			$rs["criteres"]["idTypeControle".$pScene['id_type_controle']] = $rsCrit;
+		        		}
+		        		$rsScene = $this->dbScene->findByIdScene($pScene['id_scene']);
+		        		$rsScene['id_type_controle']=$pScene['id_type_controle'];
+		        		$rs["etapes"][$pEtapes['num']] = $rsScene;
 	        		}
-	        		$rsScene = $this->dbScene->findByIdScene($pScene['id_scene']);
-	        		$rsScene['id_type_controle']=$pScene['id_type_controle'];
-	        		$rs["etapes"][$pEtapes['num']] = $rsScene;
         		}
         	}
         	
@@ -703,6 +712,23 @@ class GEVU_Diagnostique extends GEVU_Site{
         return $rs;
     }
 
+    /**
+     * Récupère le controle s'il est dans le scénario
+     *
+     * @param array $arrCtl
+     * @param object $scene
+     * 
+     * @return array/boolean
+     */
+    public function getControleInScenario($arrCtl, $scene){
+        foreach ($arrCtl as $ctl) {
+        	if($scene['id_type_controle']==$ctl['id_type_controle']){
+        		return $ctl;
+        	}
+        }
+        return false;
+    }
+    
     /**
      * Enregistre les choix de diagnostic
      *
@@ -766,7 +792,7 @@ class GEVU_Diagnostique extends GEVU_Site{
      * 
      * @return integer
      */
-    public function ajoutLieu($idLieuParent, $idExi, $idBase=false, $lib="Nouveau lieu"){
+    public function ajoutLieu($idLieuParent, $idExi, $idBase=false, $lib="Nouveau lieu", $existe=false, $rtnXml=true){
 		
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
@@ -774,12 +800,17 @@ class GEVU_Diagnostique extends GEVU_Site{
 		if(!$this->dbG)$this->dbG = new Models_DbTable_Gevu_geos($this->db);
 		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
 		
-		//création d'un nouvel instant
-		$c = str_replace("::", "_", __METHOD__); 
-		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+		//création d'un nouvel instant si ajout forcer
+		if(!$existe){
+			$c = str_replace("::", "_", __METHOD__); 
+			$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+			$data["id_instant"]= $idInst;
+		}
+		$data["lieu_parent"]= $idLieuParent;
+		$data["lib"]= $lib;
 		
 		//ajoute un lieu au parent
-		$arrLieu = $this->dbL->ajouter(array("lieu_parent"=>$idLieuParent,"lib"=>$lib, "id_instant"=>$idInst), false, true);
+		$arrLieu = $this->dbL->ajouter($data, $existe, true);
 		
 		//récupère les coordonnées géographique du parent
 		$geos = $this->dbG->findById_lieu($idLieuParent);
@@ -787,13 +818,18 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$geos[0]["id_lieu"] = $arrLieu["id_lieu"];
 		unset($geos[0]["id_geo"]);
 		unset($geos[0]["id_donnee"]);
-		$geos[0]["id_instant"] = $idInst;
-		$this->dbG->ajouter($geos[0],false);
+		if($idInst)$geos[0]["id_instant"] = $idInst;
+		$this->dbG->ajouter($geos[0], $existe);
 
-		//on récupère les informations du lieu
-		$xml = $this->getXmlLieu($arrLieu,true);
+		if($rtnXml){
+			//on récupère les informations du lieu
+			$xml = $this->getXmlLieu($arrLieu,true);
+			return $xml;	
+		}else{
+			return $arrLieu["id_lieu"];
+		}
 		
-        return $xml;
+        
     }
     
     
