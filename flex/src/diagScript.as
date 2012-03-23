@@ -361,6 +361,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 				case "diagnostics":
 					if(obj[item].enfants){
 						instance.NodeData = obj[item];
+						instance.idLieu = this.idLieu;
 						place = 2;
 						aDiag = true;
 					}

@@ -2,6 +2,7 @@
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
 		  xmlns:compo="compo.*"
 		  title="Espace intérieur"
+		  name="EspaInt"
 		  xmlns:composants="compo.*"
 		  creationComplete="panel1_creationCompleteHandler(event)"
 		   >
@@ -17,6 +18,7 @@
 			[Bindable] public var NodeData:Object;
 			[Bindable] public var isChange:Boolean=false;
 			[Bindable] public var modifData:Array = new Array;
+			[Bindable] public var idTypeCtrl:int;
 			
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
@@ -37,7 +39,7 @@
 			
 			protected function cbType_changeHandler(event:ListEvent):void
 			{
-				var idTypeCtrl:String = cbType.selectedItem["id_type_controle"];
+				idTypeCtrl = cbType.selectedItem["id_type_controle"] as int;
 				modifData["id_type_specifique_int"]=idTypeCtrl;
 				isChange = true;
 			}
@@ -55,6 +57,7 @@
 						if(row["id_type_controle"]==NodeData.id_type_specifique_int){
 							cbType.selectedItem=row;
 							cbType.enabled = false;
+							idTypeCtrl = NodeData.id_type_specifique_int;
 						}
 					}
 				}
@@ -68,8 +71,29 @@
 			
 			protected function method2_resultHandler(event:ResultEvent):void
 			{
-				// TODO Auto-generated method stub
+				//on vérifie si le parent a déjà un composant diagnostic
+				var td:HBox = this.parentApplication.tabDiag;
+				var df:diagnostics = td.getChildByName("formDiag") as diagnostics;
+				if(df){
+					df.vs.selectedChild = df.ajout;
+				}else{
+					df = new diagnostics();
+					df.NodeData = event.result;
+					df.idLieu = NodeData.id_lieu;
+					df.bAjout = true;
+					df.idTypeCtlParent = cbType.selectedItem["id_type_controle"];
+					td.addChild(df);
+				}
 				
+			}
+			
+			protected function ajoutDiag_clickHandler(event:MouseEvent):void
+			{
+				if(!cbType.selectedItem){
+					Alert.show("Veuillez sélectionner un type d'espace", "Ajout de diagnostics");
+					return;
+				}
+				ro.ajoutDiag(this.parentApplication.idExi, this.parentApplication.idScenar, NodeData.id_lieu, cbType.selectedItem["id_type_controle"])
 			}
 			
 		]]>
@@ -88,7 +112,10 @@
 			<mx:Label text="Type d'espace : " />
 			<mx:ComboBox id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez un type d'espace" change="cbType_changeHandler(event)" />				
 		</mx:HBox>
-		<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+		<mx:HBox width="100%" >
+			<mx:Button id="saveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+			<mx:Button id="ajoutDiag" label="Ajouter des diagnostics" click="ajoutDiag_clickHandler(event)"/>			
+		</mx:HBox>
 	</mx:VBox>
 	
 	<mx:RemoteObject id="ro"
@@ -97,7 +124,7 @@
 					 fault="faultHandlerService(event,this.title);">
 		<mx:method name="edit"	result=";" />
 		<mx:method name="getTypeControle" result="method1_resultHandler(event)" />
-		<mx:method name="setTypeControle" result="method2_resultHandler(event)" />
+		<mx:method name="ajoutDiag" result="method2_resultHandler(event)" />
 	</mx:RemoteObject>
 	
 </mx:Panel>
