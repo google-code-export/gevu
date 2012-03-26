@@ -36,22 +36,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
         )
     );	
 
-    /**
-     * initialisation de la base de donnée
 
-     * @param string $idBase
-     *
-     */
-    private function setupDBA($idBase="") 
-	{
-		if($idBase!=""){
-			$this->_adapter=$idBase;
-			$this->_db = Zend_Registry::get($this->_adapter);			
-		}else{
-			$this->_db = $this->getDefaultAdapter();
-		}
-	}
-    
     /**
      * Vérifie si une entrée Gevu_geos existe.
      *
@@ -76,11 +61,10 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      *
      * @param array $data
      * @param boolean $existe
-     * @param string $idBase
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true, $idBase=false)
+    public function ajouter($data, $existe=true)
     {   	
     	$id=false;
     	if($existe)$id = $this->existe($data);
@@ -110,13 +94,11 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      *
      * @param integer $id
      * @param array $data
-     * @param string $idBase
      *
      * @return void
      */
-    public function edit($id, $data, $idBase)
+    public function edit($id, $data)
     {
-    	$this->setupDBA($idBase);        
     	$this->update($data, 'gevu_geos.id_geo = ' . $id);
     }
     
