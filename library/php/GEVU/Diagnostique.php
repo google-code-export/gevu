@@ -123,7 +123,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 						/*si le lieu à déjà le contrôle on ne peut pas en ajouter
 						 */
 			        	if($items1 && $items1->count()){
-			        		return "";
+			        		return array();
 			        	}else{
 							$arrCtl[] = $rTypeCtrl1;										
 						}		        	
@@ -194,7 +194,21 @@ class GEVU_Diagnostique extends GEVU_Site{
         return $items;
 	}
 		    
-    
+	/**
+	* vérifie si un scène possède le controle et renvoie les informations
+	*  
+    * @param int $sceneTypeCtrl
+    * @param array $arrTypeCtrl
+    * 
+    * @return boolean
+    */
+	function verifIsControleInScene($sceneTypeCtrl, $arrTypeCtrl){
+		foreach ($arrTypeCtrl as $typeCtrl) {
+			if($typeCtrl["id_type_controle"]==$sceneTypeCtrl) return true;
+		}
+		return false;		
+	}
+	
 	/**
 	* récupère les documents en rapport avec un lieu
 	* et renvoie les résultats 
@@ -684,25 +698,24 @@ class GEVU_Diagnostique extends GEVU_Site{
         	if(!$this->dbScene)$this->dbScene = new Models_DbTable_Gevu_scenes($this->db);
         	if(!$this->dbC)$this->dbC = new Models_DbTable_Gevu_criteres($this->db);
 
-        	//récupère la définition du scénario pour le lieu
-    		$arrCtl = $this->getLieuCtl($idLieu, $idScenario, false, "/node[@idCtrl='".$idTypeCtrl."']/node");
-        	
+	    	//récupère la liste des contrôles à effectuer
+	    	$arrCtl = $this->getLieuCtl($idLieu, $idScenario, false, "/node[@idCtrl='".$idTypeCtrl."']/node");
         	
         	//récupération des informations de scenario
         	$arrScena = $this->dbScena->findById_scenario($idScenario);
         	$psScena = Zend_Json::decode($arrScena[0]['params']);
         	foreach ($psScena as $pEtapes) {
         		foreach ($pEtapes['etapes'] as $pScene) {
-	        		$ctl = $this->getControleInScenario($arrCtl, $pScene);
-	        		if($ctl){
-	        			if(!isset($rs["criteres"][$pScene['id_type_controle']])){
-	        				$rsCrit = $this->dbC->findByIdTypeControle($pScene['id_type_controle']);
+        			//vérifie si la scène doit être prise en compte
+        			if($this->verifIsControleInScene($pScene['id_type_controle'], $arrCtl)){
+		        		if(!isset($rs["criteres"][$pScene['id_type_controle']])){
+			        		$rsCrit = $this->dbC->findByIdTypeControle($pScene['id_type_controle']);	        		
 		        			$rs["criteres"]["idTypeControle".$pScene['id_type_controle']] = $rsCrit;
 		        		}
 		        		$rsScene = $this->dbScene->findByIdScene($pScene['id_scene']);
 		        		$rsScene['id_type_controle']=$pScene['id_type_controle'];
-		        		$rs["etapes"][$pEtapes['num']] = $rsScene;
-	        		}
+		        		$rs["etapes"][$pEtapes['num']] = $rsScene;	
+        			}
         		}
         	}
         	
@@ -711,24 +724,9 @@ class GEVU_Diagnostique extends GEVU_Site{
 
         return $rs;
     }
-
-    /**
-     * Récupère le controle s'il est dans le scénario
-     *
-     * @param array $arrCtl
-     * @param object $scene
-     * 
-     * @return array/boolean
-     */
-    public function getControleInScenario($arrCtl, $scene){
-        foreach ($arrCtl as $ctl) {
-        	if($scene['id_type_controle']==$ctl['id_type_controle']){
-        		return $ctl;
-        	}
-        }
-        return false;
-    }
     
+    
+
     /**
      * Enregistre les choix de diagnostic
      *
