@@ -136,31 +136,6 @@ class Models_DbTable_Gevu_parcelles extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
 
-    /**
-     * Récupère les spécifications des colonnes Gevu_parcelles 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_parcelle","champ"=>"id_parcelle","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"nom","champ"=>"nom","visible"=>true),
-    	array("titre"=>"ref","champ"=>"ref","visible"=>true),
-    	array("titre"=>"adresse","champ"=>"adresse","visible"=>true),
-    	array("titre"=>"commune","champ"=>"commune","visible"=>true),
-    	array("titre"=>"pays","champ"=>"pays","visible"=>true),
-    	array("titre"=>"code_postal","champ"=>"code_postal","visible"=>true),
-    	array("titre"=>"contact_proprietaire","champ"=>"contact_proprietaire","visible"=>true),
-    	array("titre"=>"reponse_1","champ"=>"reponse_1","visible"=>true),
-    	array("titre"=>"reponse_2","champ"=>"reponse_2","visible"=>true),
-    	array("titre"=>"id_donnee","champ"=>"id_donnee","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_parcelles avec la valeur spécifiée
@@ -359,5 +334,48 @@ class Models_DbTable_Gevu_parcelles extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
+    /**
+     * Recherche un contacts avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param array $params
+     * 
+	 * @return array
+     */
+    public function getContact($params)
+    {
+        $query = $this->select()
+			->from( array("b" => "gevu_parcelles"), array($params["type"]))                           
+			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->joinInner(array('c' => 'gevu_contacts'),
+                'b.'.$params["type"].' = c.id_contact',array('id_contact','nom','prenom','fixe','mobile','fax','mail'))
+    		->where( "b.id_parcelle = ?", $params["id"]);
+
+        return $this->fetchAll($query)->toArray();
+    }
+
+    /**
+     * Ajoute un contacts avec la valeur spécifiée
+     *
+     * @param array $params
+     *  
+     */
+    public function ajouterContact($params)
+    {
+    	$data = array($params['type']=>$params['idCtc']);
+		$this->update($data, 'gevu_parcelles.id_parcelle = ' . $params['idLien']);
+    } 
+
+    /**
+     * Supprime un contact avec la valeur spécifiée
+     *
+     * @param array $params
+     */
+    public function removeContact($params)
+    {
+    	$data = array($params['type']=>-1);
+		$this->update($data, 'gevu_parcelles.id_parcelle = ' . $params['idLien']);
+    }
+        
     
 }
