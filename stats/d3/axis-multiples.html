@@ -1,118 +1,925 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script type="text/javascript" src="../js/d3.v2.js"></script>
-    <style type="text/css">
+<!-- saved from url=(0081)http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#63 -->
+<html class=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ 
+ <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+ 
+ <meta name="ROBOTS" content="NOARCHIVE">
+ 
+ <link rel="icon" type="image/vnd.microsoft.icon" href="http://www.gstatic.com/codesite/ph/images/phosting.ico">
+ 
+ 
+ <script src="./axis-multiples_files/cb=gapi.loaded0" async=""></script><script type="text/javascript" async="" src="./axis-multiples_files/plusone.js" gapi_processed="true"></script><script type="text/javascript">
+ 
+ 
+ 
+ 
+ var codesite_token = "fn-lG1JTLwqDWkhhctQK9l9nKcw:1333717965063";
+ 
+ 
+ var CS_env = {"profileUrl":["/u/100644688384743178095/"],"token":"fn-lG1JTLwqDWkhhctQK9l9nKcw:1333717965063","assetHostPath":"http://www.gstatic.com/codesite/ph","domainName":null,"assetVersionPath":"http://www.gstatic.com/codesite/ph/12840779776727019478","projectHomeUrl":"/p/gevu","relativeBaseUrl":"","projectName":"gevu","loggedInUserEmail":"ClLaRiiNeTTe@gmail.com"};
+ var _gaq = _gaq || [];
+ _gaq.push(
+ ['siteTracker._setAccount', 'UA-18071-1'],
+ ['siteTracker._trackPageview']);
+ 
+ _gaq.push(
+ ['projectTracker._setAccount', 'UA-3573757-9'],
+ ['projectTracker._trackPageview']);
+ 
+ 
+ </script>
+ 
+ 
+ <title>axis-multiples.html - gevu - Global EValuation Urbaine - Google Project Hosting</title>
+ <link type="text/css" rel="stylesheet" href="./axis-multiples_files/core.css">
+ 
+ <link type="text/css" rel="stylesheet" href="./axis-multiples_files/ph_detail.css">
+ 
+ 
+ <link type="text/css" rel="stylesheet" href="./axis-multiples_files/d_sb.css">
+ 
+ 
+ 
+<!--[if IE]>
+ <link type="text/css" rel="stylesheet" href="http://www.gstatic.com/codesite/ph/12840779776727019478/css/d_ie.css" >
+<![endif]-->
+ <style type="text/css">
+ .menuIcon.off { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -42px }
+ .menuIcon.on { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 -28px }
+ .menuIcon.down { background: no-repeat url(http://www.gstatic.com/codesite/ph/images/dropdown_sprite.gif) 0 0; }
+ 
+ 
+ 
+  tr.inline_comment {
+ background: #fff;
+ vertical-align: top;
+ }
+ div.draft, div.published {
+ padding: .3em;
+ border: 1px solid #999; 
+ margin-bottom: .1em;
+ font-family: arial, sans-serif;
+ max-width: 60em;
+ }
+ div.draft {
+ background: #ffa;
+ } 
+ div.published {
+ background: #e5ecf9;
+ }
+ div.published .body, div.draft .body {
+ padding: .5em .1em .1em .1em;
+ max-width: 60em;
+ white-space: pre-wrap;
+ white-space: -moz-pre-wrap;
+ white-space: -pre-wrap;
+ white-space: -o-pre-wrap;
+ word-wrap: break-word;
+ font-size: 1em;
+ }
+ div.draft .actions {
+ margin-left: 1em;
+ font-size: 90%;
+ }
+ div.draft form {
+ padding: .5em .5em .5em 0;
+ }
+ div.draft textarea, div.published textarea {
+ width: 95%;
+ height: 10em;
+ font-family: arial, sans-serif;
+ margin-bottom: .5em;
+ }
 
-body {
-  font: 10px sans-serif;
-  margin: 0;
+ 
+ .nocursor, .nocursor td, .cursor_hidden, .cursor_hidden td {
+ background-color: white;
+ height: 2px;
+ }
+ .cursor, .cursor td {
+ background-color: darkblue;
+ height: 2px;
+ display: '';
+ }
+ 
+ 
+.list {
+ border: 1px solid white;
+ border-bottom: 0;
 }
 
-path.line {
-  fill: none;
-  stroke: #666;
-  stroke-width: 1.5px;
-}
+ 
+ </style>
+<script type="text/javascript" async="" src="./axis-multiples_files/ga.js"></script><link type="text/css" rel="stylesheet" charset="UTF-8" href="./axis-multiples_files/translateelement.css"><script type="text/javascript" charset="UTF-8" src="./axis-multiples_files/main.js"></script><script type="text/javascript" charset="UTF-8" src="./axis-multiples_files/element_main.js"></script></head>
+<body class="t4">
+<script type="text/javascript">
+ (function() {
+ var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+ })();
+</script>
+<script type="text/javascript">
+ window.___gcfg = {lang: 'en'};
+ (function() 
+ {var po = document.createElement("script");
+ po.type = "text/javascript"; po.async = true;po.src = "https://apis.google.com/js/plusone.js";
+ var s = document.getElementsByTagName("script")[0];
+ s.parentNode.insertBefore(po, s);
+ })();
+</script>
+<div class="headbg">
 
-path.area {
-  fill: #e7e7e7;
-}
+ <div id="gaia">
+ 
 
-.axis path, .axis line {
-  fill: none;
-  stroke: #fff;
-  shape-rendering: crispEdges;
-}
+ <span>
+ 
+ 
+ <b>ClLaRiiNeTTe@gmail.com</b>
+ 
+ 
+ | <a href="http://code.google.com/u/100644688384743178095/" id="projects-dropdown" onclick="return false;"><u>My favorites</u> <small>â–¼</small></a>
+ | <a href="http://code.google.com/u/100644688384743178095/" onclick="_CS_click(&#39;/gb/ph/profile&#39;);" title="Profile, Updates, and Settings"><u>Profile</u></a>
+ | <a href="https://www.google.com/accounts/Logout?continue=http%3A%2F%2Fcode.google.com%2Fp%2Fgevu%2Fsource%2Fbrowse%2Ftrunk%2Fstats%2Fd3%2Faxis-multiples.html" onclick="_CS_click(&#39;/gb/ph/signout&#39;);"><u>Sign out</u></a>
+ 
+ </span>
 
-    </style>
-  </head>
-  <body>
-  
-  On fait ces différents axes de l’année de construction par rapport aux différents diagnostics (Plomb et amiante, Performances énergétiques, Electricité).
-  
-    <script type="text/javascript">
+ </div>
 
-var m = [20, 20, 20, 20],
-    w = 960 - m[1] - m[3],
-    h = 140 - m[0] - m[2],
-    parse = d3.time.format("%b %Y").parse;
+ <div class="gbh" style="left: 0pt;"></div>
+ <div class="gbh" style="right: 0pt;"></div>
+ 
+ 
+ <div style="height: 1px"></div>
+<!--[if lte IE 7]>
+<div style="text-align:center;">
+Your version of Internet Explorer is not supported. Try a browser that
+contributes to open source, such as <a href="http://www.firefox.com">Firefox</a>,
+<a href="http://www.google.com/chrome">Google Chrome</a>, or
+<a href="http://code.google.com/chrome/chromeframe/">Google Chrome Frame</a>.
+</div>
+<![endif]-->
 
-// Scales. Note the inverted domain for the y-scale: bigger is up!
-var x = d3.time.scale().range([0, w]),
-    y = d3.scale.linear().range([h, 0]);
 
-// X-axis.
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .tickSize(-h);
 
-// An area generator, for the light fill.
-var area = d3.svg.area()
-    .interpolate("monotone")
-    .x(function(d) { return x(d.date); })
-    .y0(h)
-    .y1(function(d) { return y(d.price); });
+ <table style="padding:0px; margin: 0px 0px 10px 0px; width:100%" cellpadding="0" cellspacing="0" itemscope="" itemtype="http://schema.org/CreativeWork">
+ <tbody><tr style="height: 58px;">
+ 
+ <td id="plogo">
+ <link itemprop="url" href="http://code.google.com/p/gevu">
+ <a href="http://code.google.com/p/gevu/">
+ 
+ <img src="./axis-multiples_files/defaultlogo.png" alt="Logo" itemprop="image">
+ 
+ </a>
+ </td>
+ 
+ <td style="padding-left: 0.5em">
+ 
+ <div id="pname">
+ <a href="http://code.google.com/p/gevu/"><span itemprop="name">gevu</span></a>
+ </div>
+ 
+ <div id="psum">
+ <a id="project_summary_link" href="http://code.google.com/p/gevu/"><span itemprop="description">Global EValuation Urbaine</span></a>
+ 
+ </div>
+ 
+ 
+ </td>
+ <td style="white-space:nowrap;text-align:right; vertical-align:bottom;">
+ 
+ <form action="http://code.google.com/hosting/search">
+ <input size="30" name="q" value="" type="text">
+ 
+ <input type="submit" name="projectsearch" value="Search projects">
+ </form>
+ 
+ </td></tr>
+ </tbody></table>
 
-// A line generator, for the dark stroke.
-var line = d3.svg.line()
-    .interpolate("monotone")
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.price); });
+</div>
 
-d3.csv("../data/stocks.csv", function(data) {
+ 
+<div id="mt" class="gtb"> 
+ <a href="http://code.google.com/p/gevu/" class="tab ">Project&nbsp;Home</a>
+ 
+ 
+ 
+ 
+ <a href="http://code.google.com/p/gevu/downloads/list" class="tab ">Downloads</a>
+ 
+ 
+ 
+ 
+ 
+ <a href="http://code.google.com/p/gevu/w/list" class="tab ">Wiki</a>
+ 
+ 
+ 
+ 
+ 
+ <a href="http://code.google.com/p/gevu/issues/list" class="tab ">Issues</a>
+ 
+ 
+ 
+ 
+ 
+ <a href="http://code.google.com/p/gevu/source/checkout" class="tab active">Source</a>
+ 
+ 
+ 
+ 
+ 
+ <div class="gtbc"></div>
+</div>
+<table cellspacing="0" cellpadding="0" width="100%" align="center" border="0" class="st">
+ <tbody><tr>
+ 
+ 
+ 
+ 
+ 
+ 
+ <td class="subt">
+ <div class="st2">
+ <div class="isf">
+ 
+ 
 
-  // Nest values by symbol.
-  var symbols = d3.nest()
-      .key(function(d) { return d.symbol; })
-      .entries(data);
 
-  // Parse dates and numbers. We assume values are sorted by date.
-  // Also compute the maximum price per symbol, needed for the y-domain.
-  symbols.forEach(function(s) {
-    s.values.forEach(function(d) { d.date = parse(d.date); d.price = +d.price; });
-    s.maxPrice = d3.max(s.values, function(d) { return d.price; });
-  });
+ <span class="inst1"><a href="http://code.google.com/p/gevu/source/checkout">Checkout</a></span> &nbsp;
+ <span class="inst2"><a href="http://code.google.com/p/gevu/source/browse/">Browse</a></span> &nbsp;
+ <span class="inst3"><a href="http://code.google.com/p/gevu/source/list">Changes</a></span> &nbsp;
+ 
+ &nbsp;
+ 
+ <form action="http://code.google.com/p/gevu/source/search" method="get" style="display:inline" onsubmit="document.getElementById(&#39;codesearchq&#39;).value = document.getElementById(&#39;origq&#39;).value">
+ <input type="hidden" name="q" id="codesearchq" value="">
+ <input type="text" maxlength="2048" size="38" id="origq" name="origq" value="" title="Google Code Search" style="font-size:92%">&nbsp;<input type="submit" value="Search Trunk" name="btnG" style="font-size:92%">
+ 
+ 
+ 
+ 
+ <a href="http://code.google.com/p/gevu/issues/entry?show=review&former=sourcelist">Request code review</a>
+ 
+ 
+ 
+ </form>
+ </div>
+</div>
 
-  // Compute the minimum and maximum date across symbols.
-  x.domain([
-    d3.min(symbols, function(d) { return d.values[0].date; }),
-    d3.max(symbols, function(d) { return d.values[d.values.length - 1].date; })
-  ]);
+ </td>
+ 
+ 
+ 
+ <td align="right" valign="top" class="bevel-right"></td>
+ </tr>
+</tbody></table>
 
-  // Add an SVG element for each symbol, with the desired dimensions and margin.
-  var svg = d3.select("body").selectAll("svg")
-      .data(symbols)
-    .enter().append("svg")
-      .attr("width", w + m[1] + m[3])
-      .attr("height", h + m[0] + m[2])
-    .append("g")
-      .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-  // Add the area path elements. Note: the y-domain is set per element.
-  svg.append("path")
-      .attr("class", "area")
-      .attr("d", function(d) { y.domain([0, d.maxPrice]); return area(d.values); });
+<script type="text/javascript">
+ var cancelBubble = false;
+ function _go(url) { document.location = url; }
+</script>
+<div id="maincol">
 
-  // Add the x-axis.
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + h + ")")
-      .call(xAxis);
+ 
+<!-- IE -->
 
-  // Add the line path elements. Note: the y-domain is set per element.
-  svg.append("path")
-      .attr("class", "line")
-      .attr("d", function(d) { y.domain([0, d.maxPrice]); return line(d.values); });
 
-  // Add a small label for the symbol name.
-  svg.append("text")
-      .attr("x", w - 6)
-      .attr("y", h - 6)
-      .attr("text-anchor", "end")
-      .text(function(d) { return d.key; });
-});
 
-    </script>
-  </body>
-</html>
+
+<div class="expand">
+<div id="colcontrol">
+<style type="text/css">
+ #file_flipper { white-space: nowrap; padding-right: 2em; }
+ #file_flipper.hidden { display: none; }
+ #file_flipper .pagelink { color: #0000CC; text-decoration: underline; }
+ #file_flipper #visiblefiles { padding-left: 0.5em; padding-right: 0.5em; }
+</style>
+<table id="nav_and_rev" class="list" cellpadding="0" cellspacing="0" width="100%">
+ <tbody><tr>
+ 
+ <td nowrap="nowrap" class="src_crumbs src_nav" width="33%">
+ <strong class="src_nav">Source path:&nbsp;</strong>
+ <span id="crumb_root">
+ 
+ <a href="http://code.google.com/p/gevu/source/browse/">svn</a>/&nbsp;</span>
+ <span id="crumb_links" class="ifClosed"><a href="http://code.google.com/p/gevu/source/browse/trunk/">trunk</a><span class="sp">/&nbsp;</span><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/">stats</a><span class="sp">/&nbsp;</span><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/">d3</a><span class="sp">/&nbsp;</span>axis-multiples.html</span>
+ 
+ 
+
+ </td>
+ 
+ 
+ <td nowrap="nowrap" width="33%" align="center">
+ <a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html?edit=1"><img src="./axis-multiples_files/pencil-y14.png" class="edit_icon">Edit file</a>
+ </td>
+ 
+ 
+ <td nowrap="nowrap" width="33%" align="right">
+ <table cellpadding="0" cellspacing="0" style="font-size: 100%"><tbody><tr>
+ 
+ 
+ <td class="flipper">
+ <ul class="leftside">
+ 
+ <li><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html?r=245" title="Previous">â€¹r245</a></li>
+ 
+ </ul>
+ </td>
+ 
+ <td class="flipper"><b>r253</b></td>
+ 
+ </tr></tbody></table>
+ </td> 
+ </tr>
+</tbody></table>
+
+<div class="fc">
+ 
+ 
+ 
+<style type="text/css">
+.undermouse span {
+ background-image: url(http://www.gstatic.com/codesite/ph/images/comments.gif); }
+</style>
+<table class="opened" id="review_comment_area" onmouseout="gutterOut()"><tbody><tr>
+<td id="nums">
+<pre><table width="100%"><tbody><tr class="nocursor"><td></td></tr></tbody></table></pre>
+<pre><table width="100%" id="nums_table_0"><tbody><tr id="gr_svn253_1" onmouseover="gutterOver(1)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,1);">&nbsp;</span></td><td id="1"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#1">1</a></td></tr><tr id="gr_svn253_2" onmouseover="gutterOver(2)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,2);">&nbsp;</span></td><td id="2"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#2">2</a></td></tr><tr id="gr_svn253_3" onmouseover="gutterOver(3)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,3);">&nbsp;</span></td><td id="3"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#3">3</a></td></tr><tr id="gr_svn253_4" onmouseover="gutterOver(4)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,4);">&nbsp;</span></td><td id="4"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#4">4</a></td></tr><tr id="gr_svn253_5" onmouseover="gutterOver(5)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,5);">&nbsp;</span></td><td id="5"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#5">5</a></td></tr><tr id="gr_svn253_6" onmouseover="gutterOver(6)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,6);">&nbsp;</span></td><td id="6"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#6">6</a></td></tr><tr id="gr_svn253_7" onmouseover="gutterOver(7)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,7);">&nbsp;</span></td><td id="7"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#7">7</a></td></tr><tr id="gr_svn253_8" onmouseover="gutterOver(8)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,8);">&nbsp;</span></td><td id="8"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#8">8</a></td></tr><tr id="gr_svn253_9" onmouseover="gutterOver(9)" class="undermouse"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,9);">&nbsp;</span></td><td id="9"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#9">9</a></td></tr><tr id="gr_svn253_10" onmouseover="gutterOver(10)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,10);">&nbsp;</span></td><td id="10"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#10">10</a></td></tr><tr id="gr_svn253_11" onmouseover="gutterOver(11)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,11);">&nbsp;</span></td><td id="11"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#11">11</a></td></tr><tr id="gr_svn253_12" onmouseover="gutterOver(12)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,12);">&nbsp;</span></td><td id="12"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#12">12</a></td></tr><tr id="gr_svn253_13" onmouseover="gutterOver(13)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,13);">&nbsp;</span></td><td id="13"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#13">13</a></td></tr><tr id="gr_svn253_14" onmouseover="gutterOver(14)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,14);">&nbsp;</span></td><td id="14"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#14">14</a></td></tr><tr id="gr_svn253_15" onmouseover="gutterOver(15)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,15);">&nbsp;</span></td><td id="15"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#15">15</a></td></tr><tr id="gr_svn253_16" onmouseover="gutterOver(16)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,16);">&nbsp;</span></td><td id="16"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#16">16</a></td></tr><tr id="gr_svn253_17" onmouseover="gutterOver(17)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,17);">&nbsp;</span></td><td id="17"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#17">17</a></td></tr><tr id="gr_svn253_18" onmouseover="gutterOver(18)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,18);">&nbsp;</span></td><td id="18"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#18">18</a></td></tr><tr id="gr_svn253_19" onmouseover="gutterOver(19)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,19);">&nbsp;</span></td><td id="19"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#19">19</a></td></tr><tr id="gr_svn253_20" onmouseover="gutterOver(20)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,20);">&nbsp;</span></td><td id="20"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#20">20</a></td></tr><tr id="gr_svn253_21" onmouseover="gutterOver(21)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,21);">&nbsp;</span></td><td id="21"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#21">21</a></td></tr><tr id="gr_svn253_22" onmouseover="gutterOver(22)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,22);">&nbsp;</span></td><td id="22"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#22">22</a></td></tr><tr id="gr_svn253_23" onmouseover="gutterOver(23)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,23);">&nbsp;</span></td><td id="23"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#23">23</a></td></tr><tr id="gr_svn253_24" onmouseover="gutterOver(24)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,24);">&nbsp;</span></td><td id="24"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#24">24</a></td></tr><tr id="gr_svn253_25" onmouseover="gutterOver(25)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,25);">&nbsp;</span></td><td id="25"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#25">25</a></td></tr><tr id="gr_svn253_26" onmouseover="gutterOver(26)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,26);">&nbsp;</span></td><td id="26"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#26">26</a></td></tr><tr id="gr_svn253_27" onmouseover="gutterOver(27)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,27);">&nbsp;</span></td><td id="27"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#27">27</a></td></tr><tr id="gr_svn253_28" onmouseover="gutterOver(28)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,28);">&nbsp;</span></td><td id="28"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#28">28</a></td></tr><tr id="gr_svn253_29" onmouseover="gutterOver(29)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,29);">&nbsp;</span></td><td id="29"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#29">29</a></td></tr><tr id="gr_svn253_30" onmouseover="gutterOver(30)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,30);">&nbsp;</span></td><td id="30"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#30">30</a></td></tr><tr id="gr_svn253_31" onmouseover="gutterOver(31)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,31);">&nbsp;</span></td><td id="31"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#31">31</a></td></tr><tr id="gr_svn253_32" onmouseover="gutterOver(32)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,32);">&nbsp;</span></td><td id="32"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#32">32</a></td></tr><tr id="gr_svn253_33" onmouseover="gutterOver(33)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,33);">&nbsp;</span></td><td id="33"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#33">33</a></td></tr><tr id="gr_svn253_34" onmouseover="gutterOver(34)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,34);">&nbsp;</span></td><td id="34"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#34">34</a></td></tr><tr id="gr_svn253_35" onmouseover="gutterOver(35)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,35);">&nbsp;</span></td><td id="35"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#35">35</a></td></tr><tr id="gr_svn253_36" onmouseover="gutterOver(36)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,36);">&nbsp;</span></td><td id="36"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#36">36</a></td></tr><tr id="gr_svn253_37" onmouseover="gutterOver(37)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,37);">&nbsp;</span></td><td id="37"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#37">37</a></td></tr><tr id="gr_svn253_38" onmouseover="gutterOver(38)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,38);">&nbsp;</span></td><td id="38"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#38">38</a></td></tr><tr id="gr_svn253_39" onmouseover="gutterOver(39)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,39);">&nbsp;</span></td><td id="39"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#39">39</a></td></tr><tr id="gr_svn253_40" onmouseover="gutterOver(40)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,40);">&nbsp;</span></td><td id="40"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#40">40</a></td></tr><tr id="gr_svn253_41" onmouseover="gutterOver(41)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,41);">&nbsp;</span></td><td id="41"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#41">41</a></td></tr><tr id="gr_svn253_42" onmouseover="gutterOver(42)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,42);">&nbsp;</span></td><td id="42"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#42">42</a></td></tr><tr id="gr_svn253_43" onmouseover="gutterOver(43)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,43);">&nbsp;</span></td><td id="43"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#43">43</a></td></tr><tr id="gr_svn253_44" onmouseover="gutterOver(44)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,44);">&nbsp;</span></td><td id="44"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#44">44</a></td></tr><tr id="gr_svn253_45" onmouseover="gutterOver(45)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,45);">&nbsp;</span></td><td id="45"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#45">45</a></td></tr><tr id="gr_svn253_46" onmouseover="gutterOver(46)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,46);">&nbsp;</span></td><td id="46"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#46">46</a></td></tr><tr id="gr_svn253_47" onmouseover="gutterOver(47)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,47);">&nbsp;</span></td><td id="47"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#47">47</a></td></tr><tr id="gr_svn253_48" onmouseover="gutterOver(48)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,48);">&nbsp;</span></td><td id="48"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#48">48</a></td></tr><tr id="gr_svn253_49" onmouseover="gutterOver(49)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,49);">&nbsp;</span></td><td id="49"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#49">49</a></td></tr><tr id="gr_svn253_50" onmouseover="gutterOver(50)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,50);">&nbsp;</span></td><td id="50"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#50">50</a></td></tr><tr id="gr_svn253_51" onmouseover="gutterOver(51)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,51);">&nbsp;</span></td><td id="51"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#51">51</a></td></tr><tr id="gr_svn253_52" onmouseover="gutterOver(52)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,52);">&nbsp;</span></td><td id="52"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#52">52</a></td></tr><tr id="gr_svn253_53" onmouseover="gutterOver(53)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,53);">&nbsp;</span></td><td id="53"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#53">53</a></td></tr><tr id="gr_svn253_54" onmouseover="gutterOver(54)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,54);">&nbsp;</span></td><td id="54"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#54">54</a></td></tr><tr id="gr_svn253_55" onmouseover="gutterOver(55)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,55);">&nbsp;</span></td><td id="55"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#55">55</a></td></tr><tr id="gr_svn253_56" onmouseover="gutterOver(56)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,56);">&nbsp;</span></td><td id="56"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#56">56</a></td></tr><tr id="gr_svn253_57" onmouseover="gutterOver(57)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,57);">&nbsp;</span></td><td id="57"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#57">57</a></td></tr><tr id="gr_svn253_58" onmouseover="gutterOver(58)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,58);">&nbsp;</span></td><td id="58"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#58">58</a></td></tr><tr id="gr_svn253_59" onmouseover="gutterOver(59)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,59);">&nbsp;</span></td><td id="59"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#59">59</a></td></tr><tr id="gr_svn253_60" onmouseover="gutterOver(60)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,60);">&nbsp;</span></td><td id="60"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#60">60</a></td></tr><tr id="gr_svn253_61" onmouseover="gutterOver(61)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,61);">&nbsp;</span></td><td id="61"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#61">61</a></td></tr><tr id="gr_svn253_62" onmouseover="gutterOver(62)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,62);">&nbsp;</span></td><td id="62"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#62">62</a></td></tr><tr id="gr_svn253_63" onmouseover="gutterOver(63)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,63);">&nbsp;</span></td><td id="63"><a href="./axis-multiples_files/axis-multiples.html">63</a></td></tr><tr id="gr_svn253_64" onmouseover="gutterOver(64)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,64);">&nbsp;</span></td><td id="64"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#64">64</a></td></tr><tr id="gr_svn253_65" onmouseover="gutterOver(65)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,65);">&nbsp;</span></td><td id="65"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#65">65</a></td></tr><tr id="gr_svn253_66" onmouseover="gutterOver(66)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,66);">&nbsp;</span></td><td id="66"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#66">66</a></td></tr><tr id="gr_svn253_67" onmouseover="gutterOver(67)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,67);">&nbsp;</span></td><td id="67"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#67">67</a></td></tr><tr id="gr_svn253_68" onmouseover="gutterOver(68)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,68);">&nbsp;</span></td><td id="68"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#68">68</a></td></tr><tr id="gr_svn253_69" onmouseover="gutterOver(69)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,69);">&nbsp;</span></td><td id="69"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#69">69</a></td></tr><tr id="gr_svn253_70" onmouseover="gutterOver(70)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,70);">&nbsp;</span></td><td id="70"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#70">70</a></td></tr><tr id="gr_svn253_71" onmouseover="gutterOver(71)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,71);">&nbsp;</span></td><td id="71"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#71">71</a></td></tr><tr id="gr_svn253_72" onmouseover="gutterOver(72)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,72);">&nbsp;</span></td><td id="72"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#72">72</a></td></tr><tr id="gr_svn253_73" onmouseover="gutterOver(73)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,73);">&nbsp;</span></td><td id="73"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#73">73</a></td></tr><tr id="gr_svn253_74" onmouseover="gutterOver(74)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,74);">&nbsp;</span></td><td id="74"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#74">74</a></td></tr><tr id="gr_svn253_75" onmouseover="gutterOver(75)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,75);">&nbsp;</span></td><td id="75"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#75">75</a></td></tr><tr id="gr_svn253_76" onmouseover="gutterOver(76)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,76);">&nbsp;</span></td><td id="76"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#76">76</a></td></tr><tr id="gr_svn253_77" onmouseover="gutterOver(77)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,77);">&nbsp;</span></td><td id="77"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#77">77</a></td></tr><tr id="gr_svn253_78" onmouseover="gutterOver(78)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,78);">&nbsp;</span></td><td id="78"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#78">78</a></td></tr><tr id="gr_svn253_79" onmouseover="gutterOver(79)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,79);">&nbsp;</span></td><td id="79"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#79">79</a></td></tr><tr id="gr_svn253_80" onmouseover="gutterOver(80)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,80);">&nbsp;</span></td><td id="80"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#80">80</a></td></tr><tr id="gr_svn253_81" onmouseover="gutterOver(81)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,81);">&nbsp;</span></td><td id="81"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#81">81</a></td></tr><tr id="gr_svn253_82" onmouseover="gutterOver(82)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,82);">&nbsp;</span></td><td id="82"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#82">82</a></td></tr><tr id="gr_svn253_83" onmouseover="gutterOver(83)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,83);">&nbsp;</span></td><td id="83"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#83">83</a></td></tr><tr id="gr_svn253_84" onmouseover="gutterOver(84)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,84);">&nbsp;</span></td><td id="84"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#84">84</a></td></tr><tr id="gr_svn253_85" onmouseover="gutterOver(85)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,85);">&nbsp;</span></td><td id="85"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#85">85</a></td></tr><tr id="gr_svn253_86" onmouseover="gutterOver(86)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,86);">&nbsp;</span></td><td id="86"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#86">86</a></td></tr><tr id="gr_svn253_87" onmouseover="gutterOver(87)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,87);">&nbsp;</span></td><td id="87"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#87">87</a></td></tr><tr id="gr_svn253_88" onmouseover="gutterOver(88)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,88);">&nbsp;</span></td><td id="88"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#88">88</a></td></tr><tr id="gr_svn253_89" onmouseover="gutterOver(89)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,89);">&nbsp;</span></td><td id="89"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#89">89</a></td></tr><tr id="gr_svn253_90" onmouseover="gutterOver(90)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,90);">&nbsp;</span></td><td id="90"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#90">90</a></td></tr><tr id="gr_svn253_91" onmouseover="gutterOver(91)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,91);">&nbsp;</span></td><td id="91"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#91">91</a></td></tr><tr id="gr_svn253_92" onmouseover="gutterOver(92)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,92);">&nbsp;</span></td><td id="92"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#92">92</a></td></tr><tr id="gr_svn253_93" onmouseover="gutterOver(93)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,93);">&nbsp;</span></td><td id="93"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#93">93</a></td></tr><tr id="gr_svn253_94" onmouseover="gutterOver(94)" class=""><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,94);">&nbsp;</span></td><td id="94"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#94">94</a></td></tr><tr id="gr_svn253_95" onmouseover="gutterOver(95)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,95);">&nbsp;</span></td><td id="95"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#95">95</a></td></tr><tr id="gr_svn253_96" onmouseover="gutterOver(96)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,96);">&nbsp;</span></td><td id="96"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#96">96</a></td></tr><tr id="gr_svn253_97" onmouseover="gutterOver(97)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,97);">&nbsp;</span></td><td id="97"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#97">97</a></td></tr><tr id="gr_svn253_98" onmouseover="gutterOver(98)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,98);">&nbsp;</span></td><td id="98"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#98">98</a></td></tr><tr id="gr_svn253_99" onmouseover="gutterOver(99)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,99);">&nbsp;</span></td><td id="99"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#99">99</a></td></tr><tr id="gr_svn253_100" onmouseover="gutterOver(100)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,100);">&nbsp;</span></td><td id="100"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#100">100</a></td></tr><tr id="gr_svn253_101" onmouseover="gutterOver(101)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,101);">&nbsp;</span></td><td id="101"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#101">101</a></td></tr><tr id="gr_svn253_102" onmouseover="gutterOver(102)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,102);">&nbsp;</span></td><td id="102"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#102">102</a></td></tr><tr id="gr_svn253_103" onmouseover="gutterOver(103)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,103);">&nbsp;</span></td><td id="103"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#103">103</a></td></tr><tr id="gr_svn253_104" onmouseover="gutterOver(104)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,104);">&nbsp;</span></td><td id="104"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#104">104</a></td></tr><tr id="gr_svn253_105" onmouseover="gutterOver(105)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,105);">&nbsp;</span></td><td id="105"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#105">105</a></td></tr><tr id="gr_svn253_106" onmouseover="gutterOver(106)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,106);">&nbsp;</span></td><td id="106"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#106">106</a></td></tr><tr id="gr_svn253_107" onmouseover="gutterOver(107)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,107);">&nbsp;</span></td><td id="107"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#107">107</a></td></tr><tr id="gr_svn253_108" onmouseover="gutterOver(108)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,108);">&nbsp;</span></td><td id="108"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#108">108</a></td></tr><tr id="gr_svn253_109" onmouseover="gutterOver(109)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,109);">&nbsp;</span></td><td id="109"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#109">109</a></td></tr><tr id="gr_svn253_110" onmouseover="gutterOver(110)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,110);">&nbsp;</span></td><td id="110"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#110">110</a></td></tr><tr id="gr_svn253_111" onmouseover="gutterOver(111)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,111);">&nbsp;</span></td><td id="111"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#111">111</a></td></tr><tr id="gr_svn253_112" onmouseover="gutterOver(112)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,112);">&nbsp;</span></td><td id="112"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#112">112</a></td></tr><tr id="gr_svn253_113" onmouseover="gutterOver(113)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,113);">&nbsp;</span></td><td id="113"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#113">113</a></td></tr><tr id="gr_svn253_114" onmouseover="gutterOver(114)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,114);">&nbsp;</span></td><td id="114"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#114">114</a></td></tr><tr id="gr_svn253_115" onmouseover="gutterOver(115)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,115);">&nbsp;</span></td><td id="115"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#115">115</a></td></tr><tr id="gr_svn253_116" onmouseover="gutterOver(116)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,116);">&nbsp;</span></td><td id="116"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#116">116</a></td></tr><tr id="gr_svn253_117" onmouseover="gutterOver(117)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,117);">&nbsp;</span></td><td id="117"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#117">117</a></td></tr><tr id="gr_svn253_118" onmouseover="gutterOver(118)"><td><span title="Add comment" onclick="codereviews.startEdit(&#39;svn253&#39;,118);">&nbsp;</span></td><td id="118"><a href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#118">118</a></td></tr></tbody></table></pre>
+<pre><table width="100%"><tbody><tr class="nocursor"><td></td></tr></tbody></table></pre>
+</td>
+<td id="lines">
+<pre><table width="100%"><tbody><tr class="cursor_stop cursor_hidden"><td></td></tr></tbody></table></pre>
+<pre class="prettyprint lang-html"><table id="src_table_0"><tbody><tr id="sl_svn253_1" onmouseover="gutterOver(1)"><td class="source"><span class="dec">&lt;!DOCTYPE html&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_2" onmouseover="gutterOver(2)"><td class="source"><span class="tag">&lt;html&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_3" onmouseover="gutterOver(3)"><td class="source"><span class="pln">&nbsp; </span><span class="tag">&lt;head&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_4" onmouseover="gutterOver(4)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="tag">&lt;script</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"text/javascript"</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">"../js/d3.v2.js"</span><span class="tag">&gt;&lt;/script&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_5" onmouseover="gutterOver(5)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="tag">&lt;style</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"text/css"</span><span class="tag">&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_6" onmouseover="gutterOver(6)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_7" onmouseover="gutterOver(7)"><td class="source"><span class="pln">body </span><span class="pun">{</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_8" onmouseover="gutterOver(8)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">font</span><span class="pun">:</span><span class="pln"> </span><span class="lit">10px</span><span class="pln"> sans-serif</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_9" onmouseover="gutterOver(9)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">margin</span><span class="pun">:</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_10" onmouseover="gutterOver(10)"><td class="source"><span class="pun">}</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_11" onmouseover="gutterOver(11)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_12" onmouseover="gutterOver(12)"><td class="source"><span class="pln">path</span><span class="pun">.</span><span class="pln">line </span><span class="pun">{</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_13" onmouseover="gutterOver(13)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">fill</span><span class="pun">:</span><span class="pln"> none</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_14" onmouseover="gutterOver(14)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">stroke</span><span class="pun">:</span><span class="pln"> </span><span class="lit">#666</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_15" onmouseover="gutterOver(15)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">stroke-width</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1.5px</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_16" onmouseover="gutterOver(16)"><td class="source"><span class="pun">}</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_17" onmouseover="gutterOver(17)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_18" onmouseover="gutterOver(18)"><td class="source"><span class="pln">path</span><span class="pun">.</span><span class="pln">area </span><span class="pun">{</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_19" onmouseover="gutterOver(19)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">fill</span><span class="pun">:</span><span class="pln"> </span><span class="lit">#e7e7e7</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_20" onmouseover="gutterOver(20)"><td class="source"><span class="pun">}</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_21" onmouseover="gutterOver(21)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_22" onmouseover="gutterOver(22)"><td class="source"><span class="pun">.</span><span class="pln">axis path</span><span class="pun">,</span><span class="pln"> </span><span class="pun">.</span><span class="pln">axis line </span><span class="pun">{</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_23" onmouseover="gutterOver(23)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">fill</span><span class="pun">:</span><span class="pln"> none</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_24" onmouseover="gutterOver(24)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">stroke</span><span class="pun">:</span><span class="pln"> </span><span class="lit">#fff</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_25" onmouseover="gutterOver(25)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">shape-rendering</span><span class="pun">:</span><span class="pln"> crispEdges</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_26" onmouseover="gutterOver(26)"><td class="source"><span class="pun">}</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_27" onmouseover="gutterOver(27)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_28" onmouseover="gutterOver(28)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="tag">&lt;/style&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_29" onmouseover="gutterOver(29)"><td class="source"><span class="pln">&nbsp; </span><span class="tag">&lt;/head&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_30" onmouseover="gutterOver(30)"><td class="source"><span class="pln">&nbsp; </span><span class="tag">&lt;body&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_31" onmouseover="gutterOver(31)"><td class="source"><span class="pln">&nbsp; <br></span></td></tr><tr id="sl_svn253_32" onmouseover="gutterOver(32)"><td class="source"><span class="pln">&nbsp; On fait ces diffÃ©rents axes de lÂ’annÃ©e de construction par rapport aux diffÃ©rents diagnostics (Plomb et amiante, Performances Ã©nergÃ©tiques, ElectricitÃ©).<br></span></td></tr><tr id="sl_svn253_33" onmouseover="gutterOver(33)"><td class="source"><span class="pln">&nbsp; <br></span></td></tr><tr id="sl_svn253_34" onmouseover="gutterOver(34)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="tag">&lt;script</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"text/javascript"</span><span class="tag">&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_35" onmouseover="gutterOver(35)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_36" onmouseover="gutterOver(36)"><td class="source"><span class="kwd">var</span><span class="pln"> m </span><span class="pun">=</span><span class="pln"> </span><span class="pun">[</span><span class="lit">20</span><span class="pun">,</span><span class="pln"> </span><span class="lit">20</span><span class="pun">,</span><span class="pln"> </span><span class="lit">20</span><span class="pun">,</span><span class="pln"> </span><span class="lit">20</span><span class="pun">],</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_37" onmouseover="gutterOver(37)"><td class="source"><span class="pln">&nbsp; &nbsp; w </span><span class="pun">=</span><span class="pln"> </span><span class="lit">960</span><span class="pln"> </span><span class="pun">-</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> </span><span class="pun">-</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">3</span><span class="pun">],</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_38" onmouseover="gutterOver(38)"><td class="source"><span class="pln">&nbsp; &nbsp; h </span><span class="pun">=</span><span class="pln"> </span><span class="lit">140</span><span class="pln"> </span><span class="pun">-</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]</span><span class="pln"> </span><span class="pun">-</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">2</span><span class="pun">],</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_39" onmouseover="gutterOver(39)"><td class="source"><span class="pln">&nbsp; &nbsp; parse </span><span class="pun">=</span><span class="pln"> d3</span><span class="pun">.</span><span class="pln">time</span><span class="pun">.</span><span class="pln">format</span><span class="pun">(</span><span class="str">"%b %Y"</span><span class="pun">).</span><span class="pln">parse</span><span class="pun">;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_40" onmouseover="gutterOver(40)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_41" onmouseover="gutterOver(41)"><td class="source"><span class="com">// Scales. Note the inverted domain for the y-scale: bigger is up!</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_42" onmouseover="gutterOver(42)"><td class="source"><span class="kwd">var</span><span class="pln"> x </span><span class="pun">=</span><span class="pln"> d3</span><span class="pun">.</span><span class="pln">time</span><span class="pun">.</span><span class="pln">scale</span><span class="pun">().</span><span class="pln">range</span><span class="pun">([</span><span class="lit">0</span><span class="pun">,</span><span class="pln"> w</span><span class="pun">]),</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_43" onmouseover="gutterOver(43)"><td class="source"><span class="pln">&nbsp; &nbsp; y </span><span class="pun">=</span><span class="pln"> d3</span><span class="pun">.</span><span class="pln">scale</span><span class="pun">.</span><span class="pln">linear</span><span class="pun">().</span><span class="pln">range</span><span class="pun">([</span><span class="pln">h</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">]);</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_44" onmouseover="gutterOver(44)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_45" onmouseover="gutterOver(45)"><td class="source"><span class="com">// X-axis.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_46" onmouseover="gutterOver(46)"><td class="source"><span class="kwd">var</span><span class="pln"> xAxis </span><span class="pun">=</span><span class="pln"> d3</span><span class="pun">.</span><span class="pln">svg</span><span class="pun">.</span><span class="pln">axis</span><span class="pun">()</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_47" onmouseover="gutterOver(47)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">scale</span><span class="pun">(</span><span class="pln">x</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_48" onmouseover="gutterOver(48)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">tickSize</span><span class="pun">(-</span><span class="pln">h</span><span class="pun">);</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_49" onmouseover="gutterOver(49)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_50" onmouseover="gutterOver(50)"><td class="source"><span class="com">// An area generator, for the light fill.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_51" onmouseover="gutterOver(51)"><td class="source"><span class="kwd">var</span><span class="pln"> area </span><span class="pun">=</span><span class="pln"> d3</span><span class="pun">.</span><span class="pln">svg</span><span class="pun">.</span><span class="pln">area</span><span class="pun">()</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_52" onmouseover="gutterOver(52)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">interpolate</span><span class="pun">(</span><span class="str">"monotone"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_53" onmouseover="gutterOver(53)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">x</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> x</span><span class="pun">(</span><span class="pln">d</span><span class="pun">.</span><span class="pln">date</span><span class="pun">);</span><span class="pln"> </span><span class="pun">})</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_54" onmouseover="gutterOver(54)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">y0</span><span class="pun">(</span><span class="pln">h</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_55" onmouseover="gutterOver(55)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">y1</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> y</span><span class="pun">(</span><span class="pln">d</span><span class="pun">.</span><span class="pln">price</span><span class="pun">);</span><span class="pln"> </span><span class="pun">});</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_56" onmouseover="gutterOver(56)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_57" onmouseover="gutterOver(57)"><td class="source"><span class="com">// A line generator, for the dark stroke.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_58" onmouseover="gutterOver(58)"><td class="source"><span class="kwd">var</span><span class="pln"> line </span><span class="pun">=</span><span class="pln"> d3</span><span class="pun">.</span><span class="pln">svg</span><span class="pun">.</span><span class="pln">line</span><span class="pun">()</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_59" onmouseover="gutterOver(59)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">interpolate</span><span class="pun">(</span><span class="str">"monotone"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_60" onmouseover="gutterOver(60)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">x</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> x</span><span class="pun">(</span><span class="pln">d</span><span class="pun">.</span><span class="pln">date</span><span class="pun">);</span><span class="pln"> </span><span class="pun">})</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_61" onmouseover="gutterOver(61)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">y</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> y</span><span class="pun">(</span><span class="pln">d</span><span class="pun">.</span><span class="pln">price</span><span class="pun">);</span><span class="pln"> </span><span class="pun">});</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_62" onmouseover="gutterOver(62)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_63" onmouseover="gutterOver(63)"><td class="source"><span class="pln">d3</span><span class="pun">.</span><span class="pln">csv</span><span class="pun">(</span><span class="str">"../data/stocks.csv"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">data</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_64" onmouseover="gutterOver(64)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_65" onmouseover="gutterOver(65)"><td class="source"><span class="pln">&nbsp; </span><span class="com">// Nest values by symbol.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_66" onmouseover="gutterOver(66)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">var</span><span class="pln"> symbols </span><span class="pun">=</span><span class="pln"> d3</span><span class="pun">.</span><span class="pln">nest</span><span class="pun">()</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_67" onmouseover="gutterOver(67)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">key</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> d</span><span class="pun">.</span><span class="pln">symbol</span><span class="pun">;</span><span class="pln"> </span><span class="pun">})</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_68" onmouseover="gutterOver(68)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">entries</span><span class="pun">(</span><span class="pln">data</span><span class="pun">);</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_69" onmouseover="gutterOver(69)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_70" onmouseover="gutterOver(70)"><td class="source"><span class="pln">&nbsp; </span><span class="com">// Parse dates and numbers. We assume values are sorted by date.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_71" onmouseover="gutterOver(71)"><td class="source"><span class="pln">&nbsp; </span><span class="com">// Also compute the maximum price per symbol, needed for the y-domain.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_72" onmouseover="gutterOver(72)"><td class="source"><span class="pln">&nbsp; symbols</span><span class="pun">.</span><span class="pln">forEach</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">s</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_73" onmouseover="gutterOver(73)"><td class="source"><span class="pln">&nbsp; &nbsp; s</span><span class="pun">.</span><span class="pln">values</span><span class="pun">.</span><span class="pln">forEach</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> d</span><span class="pun">.</span><span class="pln">date </span><span class="pun">=</span><span class="pln"> parse</span><span class="pun">(</span><span class="pln">d</span><span class="pun">.</span><span class="pln">date</span><span class="pun">);</span><span class="pln"> d</span><span class="pun">.</span><span class="pln">price </span><span class="pun">=</span><span class="pln"> </span><span class="pun">+</span><span class="pln">d</span><span class="pun">.</span><span class="pln">price</span><span class="pun">;</span><span class="pln"> </span><span class="pun">});</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_74" onmouseover="gutterOver(74)"><td class="source"><span class="pln">&nbsp; &nbsp; s</span><span class="pun">.</span><span class="pln">maxPrice </span><span class="pun">=</span><span class="pln"> d3</span><span class="pun">.</span><span class="pln">max</span><span class="pun">(</span><span class="pln">s</span><span class="pun">.</span><span class="pln">values</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> d</span><span class="pun">.</span><span class="pln">price</span><span class="pun">;</span><span class="pln"> </span><span class="pun">});</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_75" onmouseover="gutterOver(75)"><td class="source"><span class="pln">&nbsp; </span><span class="pun">});</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_76" onmouseover="gutterOver(76)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_77" onmouseover="gutterOver(77)"><td class="source"><span class="pln">&nbsp; </span><span class="com">// Compute the minimum and maximum date across symbols.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_78" onmouseover="gutterOver(78)"><td class="source"><span class="pln">&nbsp; x</span><span class="pun">.</span><span class="pln">domain</span><span class="pun">([</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_79" onmouseover="gutterOver(79)"><td class="source"><span class="pln">&nbsp; &nbsp; d3</span><span class="pun">.</span><span class="pln">min</span><span class="pun">(</span><span class="pln">symbols</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> d</span><span class="pun">.</span><span class="pln">values</span><span class="pun">[</span><span class="lit">0</span><span class="pun">].</span><span class="pln">date</span><span class="pun">;</span><span class="pln"> </span><span class="pun">}),</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_80" onmouseover="gutterOver(80)"><td class="source"><span class="pln">&nbsp; &nbsp; d3</span><span class="pun">.</span><span class="pln">max</span><span class="pun">(</span><span class="pln">symbols</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> d</span><span class="pun">.</span><span class="pln">values</span><span class="pun">[</span><span class="pln">d</span><span class="pun">.</span><span class="pln">values</span><span class="pun">.</span><span class="pln">length </span><span class="pun">-</span><span class="pln"> </span><span class="lit">1</span><span class="pun">].</span><span class="pln">date</span><span class="pun">;</span><span class="pln"> </span><span class="pun">})</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_81" onmouseover="gutterOver(81)"><td class="source"><span class="pln">&nbsp; </span><span class="pun">]);</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_82" onmouseover="gutterOver(82)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_83" onmouseover="gutterOver(83)"><td class="source"><span class="pln">&nbsp; </span><span class="com">// Add an SVG element for each symbol, with the desired dimensions and margin.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_84" onmouseover="gutterOver(84)"><td class="source"><span class="pln">&nbsp; </span><span class="kwd">var</span><span class="pln"> svg </span><span class="pun">=</span><span class="pln"> d3</span><span class="pun">.</span><span class="pln">select</span><span class="pun">(</span><span class="str">"body"</span><span class="pun">).</span><span class="pln">selectAll</span><span class="pun">(</span><span class="str">"svg"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_85" onmouseover="gutterOver(85)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">data</span><span class="pun">(</span><span class="pln">symbols</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_86" onmouseover="gutterOver(86)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">enter</span><span class="pun">().</span><span class="pln">append</span><span class="pun">(</span><span class="str">"svg"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_87" onmouseover="gutterOver(87)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"width"</span><span class="pun">,</span><span class="pln"> w </span><span class="pun">+</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">1</span><span class="pun">]</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">3</span><span class="pun">])</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_88" onmouseover="gutterOver(88)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"height"</span><span class="pun">,</span><span class="pln"> h </span><span class="pun">+</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">2</span><span class="pun">])</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_89" onmouseover="gutterOver(89)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">append</span><span class="pun">(</span><span class="str">"g"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_90" onmouseover="gutterOver(90)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"transform"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"translate("</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">3</span><span class="pun">]</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> </span><span class="str">","</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> m</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> </span><span class="str">")"</span><span class="pun">);</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_91" onmouseover="gutterOver(91)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_92" onmouseover="gutterOver(92)"><td class="source"><span class="pln">&nbsp; </span><span class="com">// Add the area path elements. Note: the y-domain is set per element.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_93" onmouseover="gutterOver(93)"><td class="source"><span class="pln">&nbsp; svg</span><span class="pun">.</span><span class="pln">append</span><span class="pun">(</span><span class="str">"path"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_94" onmouseover="gutterOver(94)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"class"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"area"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_95" onmouseover="gutterOver(95)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"d"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> y</span><span class="pun">.</span><span class="pln">domain</span><span class="pun">([</span><span class="lit">0</span><span class="pun">,</span><span class="pln"> d</span><span class="pun">.</span><span class="pln">maxPrice</span><span class="pun">]);</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> area</span><span class="pun">(</span><span class="pln">d</span><span class="pun">.</span><span class="pln">values</span><span class="pun">);</span><span class="pln"> </span><span class="pun">});</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_96" onmouseover="gutterOver(96)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_97" onmouseover="gutterOver(97)"><td class="source"><span class="pln">&nbsp; </span><span class="com">// Add the x-axis.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_98" onmouseover="gutterOver(98)"><td class="source"><span class="pln">&nbsp; svg</span><span class="pun">.</span><span class="pln">append</span><span class="pun">(</span><span class="str">"g"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_99" onmouseover="gutterOver(99)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"class"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"x axis"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_100" onmouseover="gutterOver(100)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"transform"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"translate(0,"</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> h </span><span class="pun">+</span><span class="pln"> </span><span class="str">")"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_101" onmouseover="gutterOver(101)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">call</span><span class="pun">(</span><span class="pln">xAxis</span><span class="pun">);</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_102" onmouseover="gutterOver(102)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_103" onmouseover="gutterOver(103)"><td class="source"><span class="pln">&nbsp; </span><span class="com">// Add the line path elements. Note: the y-domain is set per element.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_104" onmouseover="gutterOver(104)"><td class="source"><span class="pln">&nbsp; svg</span><span class="pun">.</span><span class="pln">append</span><span class="pun">(</span><span class="str">"path"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_105" onmouseover="gutterOver(105)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"class"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"line"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_106" onmouseover="gutterOver(106)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"d"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> y</span><span class="pun">.</span><span class="pln">domain</span><span class="pun">([</span><span class="lit">0</span><span class="pun">,</span><span class="pln"> d</span><span class="pun">.</span><span class="pln">maxPrice</span><span class="pun">]);</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> line</span><span class="pun">(</span><span class="pln">d</span><span class="pun">.</span><span class="pln">values</span><span class="pun">);</span><span class="pln"> </span><span class="pun">});</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_107" onmouseover="gutterOver(107)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_108" onmouseover="gutterOver(108)"><td class="source"><span class="pln">&nbsp; </span><span class="com">// Add a small label for the symbol name.</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_109" onmouseover="gutterOver(109)"><td class="source"><span class="pln">&nbsp; svg</span><span class="pun">.</span><span class="pln">append</span><span class="pun">(</span><span class="str">"text"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_110" onmouseover="gutterOver(110)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"x"</span><span class="pun">,</span><span class="pln"> w </span><span class="pun">-</span><span class="pln"> </span><span class="lit">6</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_111" onmouseover="gutterOver(111)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"y"</span><span class="pun">,</span><span class="pln"> h </span><span class="pun">-</span><span class="pln"> </span><span class="lit">6</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_112" onmouseover="gutterOver(112)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">attr</span><span class="pun">(</span><span class="str">"text-anchor"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"end"</span><span class="pun">)</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_113" onmouseover="gutterOver(113)"><td class="source"><span class="pln">&nbsp; &nbsp; &nbsp; </span><span class="pun">.</span><span class="pln">text</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">d</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> d</span><span class="pun">.</span><span class="pln">key</span><span class="pun">;</span><span class="pln"> </span><span class="pun">});</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_114" onmouseover="gutterOver(114)"><td class="source"><span class="pun">});</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_115" onmouseover="gutterOver(115)"><td class="source"><span class="pln"><br></span></td></tr><tr id="sl_svn253_116" onmouseover="gutterOver(116)"><td class="source"><span class="pln">&nbsp; &nbsp; </span><span class="tag">&lt;/script&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_117" onmouseover="gutterOver(117)"><td class="source"><span class="pln">&nbsp; </span><span class="tag">&lt;/body&gt;</span><span class="pln"><br></span></td></tr><tr id="sl_svn253_118" onmouseover="gutterOver(118)"><td class="source"><span class="tag">&lt;/html&gt;</span><span class="pln"><br></span></td></tr></tbody></table></pre>
+<pre><table width="100%"><tbody><tr class="cursor_stop cursor_hidden"><td></td></tr></tbody></table></pre>
+</td>
+</tr></tbody></table>
+
+ 
+<script type="text/javascript">
+ var lineNumUnderMouse = -1;
+ 
+ function gutterOver(num) {
+ gutterOut();
+ var newTR = document.getElementById('gr_svn253_' + num);
+ if (newTR) {
+ newTR.className = 'undermouse';
+ }
+ lineNumUnderMouse = num;
+ }
+ function gutterOut() {
+ if (lineNumUnderMouse != -1) {
+ var oldTR = document.getElementById(
+ 'gr_svn253_' + lineNumUnderMouse);
+ if (oldTR) {
+ oldTR.className = '';
+ }
+ lineNumUnderMouse = -1;
+ }
+ }
+ var numsGenState = {table_base_id: 'nums_table_'};
+ var srcGenState = {table_base_id: 'src_table_'};
+ var alignerRunning = false;
+ var startOver = false;
+ function setLineNumberHeights() {
+ if (alignerRunning) {
+ startOver = true;
+ return;
+ }
+ numsGenState.chunk_id = 0;
+ numsGenState.table = document.getElementById('nums_table_0');
+ numsGenState.row_num = 0;
+ if (!numsGenState.table) {
+ return; // Silently exit if no file is present.
+ }
+ srcGenState.chunk_id = 0;
+ srcGenState.table = document.getElementById('src_table_0');
+ srcGenState.row_num = 0;
+ alignerRunning = true;
+ continueToSetLineNumberHeights();
+ }
+ function rowGenerator(genState) {
+ if (genState.row_num < genState.table.rows.length) {
+ var currentRow = genState.table.rows[genState.row_num];
+ genState.row_num++;
+ return currentRow;
+ }
+ var newTable = document.getElementById(
+ genState.table_base_id + (genState.chunk_id + 1));
+ if (newTable) {
+ genState.chunk_id++;
+ genState.row_num = 0;
+ genState.table = newTable;
+ return genState.table.rows[0];
+ }
+ return null;
+ }
+ var MAX_ROWS_PER_PASS = 1000;
+ function continueToSetLineNumberHeights() {
+ var rowsInThisPass = 0;
+ var numRow = 1;
+ var srcRow = 1;
+ while (numRow && srcRow && rowsInThisPass < MAX_ROWS_PER_PASS) {
+ numRow = rowGenerator(numsGenState);
+ srcRow = rowGenerator(srcGenState);
+ rowsInThisPass++;
+ if (numRow && srcRow) {
+ if (numRow.offsetHeight != srcRow.offsetHeight) {
+ numRow.firstChild.style.height = srcRow.offsetHeight + 'px';
+ }
+ }
+ }
+ if (rowsInThisPass >= MAX_ROWS_PER_PASS) {
+ setTimeout(continueToSetLineNumberHeights, 10);
+ } else {
+ alignerRunning = false;
+ if (startOver) {
+ startOver = false;
+ setTimeout(setLineNumberHeights, 500);
+ }
+ }
+ }
+ function initLineNumberHeights() {
+ // Do 2 complete passes, because there can be races
+ // between this code and prettify.
+ startOver = true;
+ setTimeout(setLineNumberHeights, 250);
+ window.onresize = setLineNumberHeights;
+ }
+ initLineNumberHeights();
+</script>
+
+ 
+ 
+ <div id="log">
+ <div style="text-align:right">
+ <a class="ifCollapse" href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#" onclick="_toggleMeta(this); return false">Show details</a>
+ <a class="ifExpand" href="http://code.google.com/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html#" onclick="_toggleMeta(this); return false">Hide details</a>
+ </div>
+ <div class="ifExpand">
+ 
+ 
+ <div class="pmeta_bubble_bg" style="border:1px solid white">
+ <div class="round4"></div>
+ <div class="round2"></div>
+ <div class="round1"></div>
+ <div class="box-inner">
+ <div id="changelog">
+ <p>Change log</p>
+ <div>
+ <a href="http://code.google.com/p/gevu/source/detail?spec=svn253&r=250">r250</a>
+ by ClLaRiiNeTTe@gmail.com
+ on Today (3 hours ago)
+ &nbsp; <a href="http://code.google.com/p/gevu/source/diff?spec=svn253&r=250&format=side&path=/trunk/stats/d3/axis-multiples.html&old_path=/trunk/stats/d3/axis-multiples.html&old=245">Diff</a>
+ </div>
+ <pre>[No log message]</pre>
+ </div>
+ 
+ 
+ 
+ 
+ 
+ 
+ <script type="text/javascript">
+ var detail_url = '/p/gevu/source/detail?r=250&spec=svn253';
+ var publish_url = '/p/gevu/source/detail?r=250&spec=svn253#publish';
+ // describe the paths of this revision in javascript.
+ var changed_paths = [];
+ var changed_urls = [];
+ 
+ changed_paths.push('/trunk/stats/d3/area.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/area.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/axis-multiples.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ var selected_path = '/trunk/stats/d3/axis-multiples.html';
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/brush.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/brush.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/crimea/crimea-stacked-bar.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/crimea/crimea-stacked-bar.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/kde/kde.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/kde/kde.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/marker.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/marker.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/parallel/parallel.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/parallel/parallel.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/pie.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/pie.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/population/population.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/population/population.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/qq/qq.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/qq/qq.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/splom/splom.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/splom/splom.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/stack/stack.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/stack/stack.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/symbol-map.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/symbol-map.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/tree/tree-dynamic.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/tree/tree-dynamic.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/tree/tree-interactive.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/tree/tree-interactive.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/tree/tree-radial.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/tree/tree-radial.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/tree/tree.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/tree/tree.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/zoom-pan.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/zoom-pan.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ changed_paths.push('/trunk/stats/d3/zoom/zoom.html');
+ changed_urls.push('/p/gevu/source/browse/trunk/stats/d3/zoom/zoom.html?r\x3d250\x26spec\x3dsvn253');
+ 
+ 
+ function getCurrentPageIndex() {
+ for (var i = 0; i < changed_paths.length; i++) {
+ if (selected_path == changed_paths[i]) {
+ return i;
+ }
+ }
+ }
+ function getNextPage() {
+ var i = getCurrentPageIndex();
+ if (i < changed_paths.length - 1) {
+ return changed_urls[i + 1];
+ }
+ return null;
+ }
+ function getPreviousPage() {
+ var i = getCurrentPageIndex();
+ if (i > 0) {
+ return changed_urls[i - 1];
+ }
+ return null;
+ }
+ function gotoNextPage() {
+ var page = getNextPage();
+ if (!page) {
+ page = detail_url;
+ }
+ window.location = page;
+ }
+ function gotoPreviousPage() {
+ var page = getPreviousPage();
+ if (!page) {
+ page = detail_url;
+ }
+ window.location = page;
+ }
+ function gotoDetailPage() {
+ window.location = detail_url;
+ }
+ function gotoPublishPage() {
+ window.location = publish_url;
+ }
+</script>
+
+ 
+ <style type="text/css">
+ #review_nav {
+ border-top: 3px solid white;
+ padding-top: 6px;
+ margin-top: 1em;
+ }
+ #review_nav td {
+ vertical-align: middle;
+ }
+ #review_nav select {
+ margin: .5em 0;
+ }
+ </style>
+ <div id="review_nav">
+ <table><tbody><tr><td>Go to:&nbsp;</td><td>
+ <select name="files_in_rev" onchange="window.location=this.value">
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/area.html?r=250&amp;spec=svn253">/trunk/stats/d3/area.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/axis-multiples.html?r=250&amp;spec=svn253" selected="selected">/trunk/stats/d3/axis-multiples.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/brush.html?r=250&amp;spec=svn253">/trunk/stats/d3/brush.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/crimea/crimea-stacked-bar.html?r=250&amp;spec=svn253">...3/crimea/crimea-stacked-bar.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/kde/kde.html?r=250&amp;spec=svn253">/trunk/stats/d3/kde/kde.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/marker.html?r=250&amp;spec=svn253">/trunk/stats/d3/marker.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/parallel/parallel.html?r=250&amp;spec=svn253">.../stats/d3/parallel/parallel.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/pie.html?r=250&amp;spec=svn253">/trunk/stats/d3/pie.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/population/population.html?r=250&amp;spec=svn253">...ts/d3/population/population.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/qq/qq.html?r=250&amp;spec=svn253">/trunk/stats/d3/qq/qq.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/splom/splom.html?r=250&amp;spec=svn253">/trunk/stats/d3/splom/splom.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/stack/stack.html?r=250&amp;spec=svn253">/trunk/stats/d3/stack/stack.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/symbol-map.html?r=250&amp;spec=svn253">/trunk/stats/d3/symbol-map.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/tree/tree-dynamic.html?r=250&amp;spec=svn253">.../stats/d3/tree/tree-dynamic.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/tree/tree-interactive.html?r=250&amp;spec=svn253">...ts/d3/tree/tree-interactive.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/tree/tree-radial.html?r=250&amp;spec=svn253">...k/stats/d3/tree/tree-radial.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/tree/tree.html?r=250&amp;spec=svn253">/trunk/stats/d3/tree/tree.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/zoom-pan.html?r=250&amp;spec=svn253">/trunk/stats/d3/zoom-pan.html</option>
+ 
+ <option value="/p/gevu/source/browse/trunk/stats/d3/zoom/zoom.html?r=250&amp;spec=svn253">/trunk/stats/d3/zoom/zoom.html</option>
+ 
+ </select>
+ </td></tr></tbody></table>
+ 
+ 
+ <div id="review_instr" class="closed">
+ <a class="ifOpened" href="http://code.google.com/p/gevu/source/detail?r=250&spec=svn253#publish">Publish your comments</a>
+ <div class="ifClosed">Double click a line to add a comment</div>
+ </div>
+ 
+ </div>
+ 
+ 
+ </div>
+ <div class="round1"></div>
+ <div class="round2"></div>
+ <div class="round4"></div>
+ </div>
+ <div class="pmeta_bubble_bg" style="border:1px solid white">
+ <div class="round4"></div>
+ <div class="round2"></div>
+ <div class="round1"></div>
+ <div class="box-inner">
+ <div id="older_bubble">
+ <p>Older revisions</p>
+ 
+ 
+ <div class="closed" style="margin-bottom:3px;">
+ <img class="ifClosed" onclick="_toggleHidden(this)" src="./axis-multiples_files/plus.gif">
+ <img class="ifOpened" onclick="_toggleHidden(this)" src="./axis-multiples_files/minus.gif">
+ <a href="http://code.google.com/p/gevu/source/detail?spec=svn253&r=245">r245</a>
+ by ClLaRiiNeTTe@gmail.com
+ on Today (4 hours ago)
+ &nbsp; <a href="http://code.google.com/p/gevu/source/diff?spec=svn253&r=245&format=side&path=/trunk/stats/d3/axis-multiples.html&old_path=/trunk/stats/d3/axis-multiples.html&old=">Diff</a>
+ <br>
+ <pre class="ifOpened">[No log message]</pre>
+ </div>
+ 
+ 
+ <a href="http://code.google.com/p/gevu/source/list?path=/trunk/stats/d3/axis-multiples.html&start=250">All revisions of this file</a>
+ </div>
+ </div>
+ <div class="round1"></div>
+ <div class="round2"></div>
+ <div class="round4"></div>
+ </div>
+ 
+ <div class="pmeta_bubble_bg" style="border:1px solid white">
+ <div class="round4"></div>
+ <div class="round2"></div>
+ <div class="round1"></div>
+ <div class="box-inner">
+ <div id="fileinfo_bubble">
+ <p>File info</p>
+ 
+ <div>Size: 3159 bytes,
+ 118 lines</div>
+ 
+ <div><a href="http://gevu.googlecode.com/svn/trunk/stats/d3/axis-multiples.html">View raw file</a></div>
+ </div>
+ 
+ </div>
+ <div class="round1"></div>
+ <div class="round2"></div>
+ <div class="round4"></div>
+ </div>
+ </div>
+ </div>
+
+
+</div>
+
+</div>
+</div>
+
+<script src="./axis-multiples_files/prettify.js"></script>
+<script type="text/javascript">prettyPrint();</script>
+
+
+<script src="./axis-multiples_files/source_file_scripts.js"></script>
+
+ <script type="text/javascript" src="./axis-multiples_files/kibbles-1.3.3.comp.js"></script>
+ <script type="text/javascript">
+ var lastStop = null;
+ var initialized = false;
+ 
+ function updateCursor(next, prev) {
+ if (prev && prev.element) {
+ prev.element.className = 'cursor_stop cursor_hidden';
+ }
+ if (next && next.element) {
+ next.element.className = 'cursor_stop cursor';
+ lastStop = next.index;
+ }
+ }
+ 
+ function pubRevealed(data) {
+ updateCursorForCell(data.cellId, 'cursor_stop cursor_hidden');
+ if (initialized) {
+ reloadCursors();
+ }
+ }
+ 
+ function draftRevealed(data) {
+ updateCursorForCell(data.cellId, 'cursor_stop cursor_hidden');
+ if (initialized) {
+ reloadCursors();
+ }
+ }
+ 
+ function draftDestroyed(data) {
+ updateCursorForCell(data.cellId, 'nocursor');
+ if (initialized) {
+ reloadCursors();
+ }
+ }
+ function reloadCursors() {
+ kibbles.skipper.reset();
+ loadCursors();
+ if (lastStop != null) {
+ kibbles.skipper.setCurrentStop(lastStop);
+ }
+ }
+ // possibly the simplest way to insert any newly added comments
+ // is to update the class of the corresponding cursor row,
+ // then refresh the entire list of rows.
+ function updateCursorForCell(cellId, className) {
+ var cell = document.getElementById(cellId);
+ // we have to go two rows back to find the cursor location
+ var row = getPreviousElement(cell.parentNode);
+ row.className = className;
+ }
+ // returns the previous element, ignores text nodes.
+ function getPreviousElement(e) {
+ var element = e.previousSibling;
+ if (element.nodeType == 3) {
+ element = element.previousSibling;
+ }
+ if (element && element.tagName) {
+ return element;
+ }
+ }
+ function loadCursors() {
+ // register our elements with skipper
+ var elements = CR_getElements('*', 'cursor_stop');
+ var len = elements.length;
+ for (var i = 0; i < len; i++) {
+ var element = elements[i]; 
+ element.className = 'cursor_stop cursor_hidden';
+ kibbles.skipper.append(element);
+ }
+ }
+ function toggleComments() {
+ CR_toggleCommentDisplay();
+ reloadCursors();
+ }
+ function keysOnLoadHandler() {
+ // setup skipper
+ kibbles.skipper.addStopListener(
+ kibbles.skipper.LISTENER_TYPE.PRE, updateCursor);
+ // Set the 'offset' option to return the middle of the client area
+ // an option can be a static value, or a callback
+ kibbles.skipper.setOption('padding_top', 50);
+ // Set the 'offset' option to return the middle of the client area
+ // an option can be a static value, or a callback
+ kibbles.skipper.setOption('padding_bottom', 100);
+ // Register our keys
+ kibbles.skipper.addFwdKey("n");
+ kibbles.skipper.addRevKey("p");
+ kibbles.keys.addKeyPressListener(
+ 'u', function() { window.location = detail_url; });
+ kibbles.keys.addKeyPressListener(
+ 'r', function() { window.location = detail_url + '#publish'; });
+ 
+ kibbles.keys.addKeyPressListener('j', gotoNextPage);
+ kibbles.keys.addKeyPressListener('k', gotoPreviousPage);
+ 
+ 
+ kibbles.keys.addKeyPressListener('h', toggleComments);
+ 
+ }
+ </script>
+<script src="./axis-multiples_files/code_review_scripts.js"></script>
+<script type="text/javascript">
+ function showPublishInstructions() {
+ var element = document.getElementById('review_instr');
+ if (element) {
+ element.className = 'opened';
+ }
+ }
+ var codereviews;
+ function revsOnLoadHandler() {
+ // register our source container with the commenting code
+ var paths = {'svn253': '/trunk/stats/d3/axis-multiples.html'}
+ codereviews = CR_controller.setup(
+ {"profileUrl":["/u/100644688384743178095/"],"token":"fn-lG1JTLwqDWkhhctQK9l9nKcw:1333717965063","assetHostPath":"http://www.gstatic.com/codesite/ph","domainName":null,"assetVersionPath":"http://www.gstatic.com/codesite/ph/12840779776727019478","projectHomeUrl":"/p/gevu","relativeBaseUrl":"","projectName":"gevu","loggedInUserEmail":"ClLaRiiNeTTe@gmail.com"}, '', 'svn253', paths,
+ CR_BrowseIntegrationFactory);
+ 
+ // register our source container with the commenting code
+ // in this case we're registering the container and the revison
+ // associated with the contianer which may be the primary revision
+ // or may be a previous revision against which the primary revision
+ // of the file is being compared.
+ codereviews.registerSourceContainer(document.getElementById('lines'), 'svn253');
+ 
+ codereviews.registerActivityListener(CR_ActivityType.REVEAL_DRAFT_PLATE, showPublishInstructions);
+ 
+ codereviews.registerActivityListener(CR_ActivityType.REVEAL_PUB_PLATE, pubRevealed);
+ codereviews.registerActivityListener(CR_ActivityType.REVEAL_DRAFT_PLATE, draftRevealed);
+ codereviews.registerActivityListener(CR_ActivityType.DISCARD_DRAFT_COMMENT, draftDestroyed);
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ var initialized = true;
+ reloadCursors();
+ }
+ window.onload = function() {keysOnLoadHandler(); revsOnLoadHandler();};
+
+</script>
+<script type="text/javascript" src="./axis-multiples_files/dit_scripts.js"></script>
+
+ 
+ 
+ 
+ <script type="text/javascript" src="./axis-multiples_files/ph_core.js"></script>
+ 
+ 
+ 
+ 
+ <script type="text/javascript" src="./axis-multiples_files/codesite_product_dictionary_ph.pack.04102009.js"></script>
+</div> 
+<div id="footer" dir="ltr">
+ <div class="text">
+ Â©2011 Google -
+ <a href="http://code.google.com/projecthosting/terms.html">Terms</a> -
+ <a href="http://www.google.com/privacy.html">Privacy</a> -
+ <a href="http://code.google.com/p/support/">Project Hosting Help</a>
+ </div>
+</div>
+ <div class="hostedBy" style="margin-top: -20px;">
+ <span style="vertical-align: top;">Powered by <a href="http://code.google.com/projecthosting/">Google Project Hosting</a></span>
+ </div>
+ 
+ 
+
+
+ 
+ 
+
+
+<div id="goog-gt-tt" class="skiptranslate"><div style="overflow:hidden"><div class="logo"><img src="./axis-multiples_files/mini_google.png"></div><a class="close-button" href="javascript:void(0)" title="Close"><img src="./axis-multiples_files/cleardot.gif" width="15" height="15" style="background-image:url(http://translate.googleapis.com/translate_static/img/te_ctrl3.gif); background-position:-28px 0px"></a></div><div class="top"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="title left">Original Text:</div></div><div class="middle"><div class="original-text"></div></div><div class="bottom"><div class="activity-links"><span class="activity-link">Show alternative translations</span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none; "></div></div><div class="menuDiv instance0" id="menuDiv-projects-dropdown" style="position: absolute; display: none; top: 19px; left: 1151px; "><b class="categoryTitle projects" style="display: block; ">Projects</b><div class="menuCategory projects first"><a class="menuItem" style="display: block; " href="http://code.google.com/p/gevu/">gevu</a></div><div class="menuCategory controls"><hr class="menuSeparator"><a class="menuItem" style="display: block; " href="http://code.google.com/more/">Find developer products...</a><a class="menuItem" style="display: block; " href="http://code.google.com/hosting/">Find open source projects...</a></div></div></body></html>
