@@ -4,6 +4,7 @@
 		  title="Espace intérieur"
 		  name="EspaInt"
 		  xmlns:composants="compo.*"
+		  width="100%" height="100%"
 		  creationComplete="panel1_creationCompleteHandler(event)"
 		   >
 	
@@ -18,7 +19,7 @@
 			[Bindable] public var NodeData:Object;
 			[Bindable] public var isChange:Boolean=false;
 			[Bindable] public var modifData:Array = new Array;
-			[Bindable] public var idTypeCtrl:int;
+			[Bindable] public var idTypeCtrl:String;
 			
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
@@ -39,7 +40,7 @@
 			
 			protected function cbType_changeHandler(event:ListEvent):void
 			{
-				idTypeCtrl = cbType.selectedItem["id_type_controle"] as int;
+				idTypeCtrl = cbType.selectedItem["id_type_controle"];
 				modifData["id_type_specifique_int"]=idTypeCtrl;
 				isChange = true;
 			}
@@ -96,24 +97,29 @@
 				ro.ajoutDiag(this.parentApplication.idExi, this.parentApplication.idScenar, NodeData.id_lieu, cbType.selectedItem["id_type_controle"])
 			}
 			
+			protected function method3_resultHandler(event:ResultEvent):void
+			{
+				isChange = false;
+			}
+			
 		]]>
 	</mx:Script>
 	
-	<mx:VBox height="100%">
+	<mx:VBox height="100%" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6" >
 		<mx:HBox width="100%" >
 			<mx:Label text="ref" />
-			<mx:TextInput id="F2" width="100%"  data="{NodeData.ref}" change="editModif('ref', F2.text)" />
+			<mx:TextInput id="F2" width="100%"  text="{NodeData.ref}" change="editModif('ref', F2.text)" />
 		</mx:HBox>
 		<mx:HBox width="100%" >
 			<mx:Label text="fonction" />
-			<mx:TextInput id="F3" width="100%" data="{NodeData.fonction}" change="editModif('fonction', F3.text)" />
+			<mx:TextInput id="F3" width="100%" text="{NodeData.fonction}" change="editModif('fonction', F3.text)" />
 		</mx:HBox>
 		<mx:HBox width="100%" id="lblType" >
 			<mx:Label text="Type d'espace : " />
-			<mx:ComboBox id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez un type d'espace" change="cbType_changeHandler(event)" />				
+			<mx:ComboBox id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez" change="cbType_changeHandler(event)" />				
 		</mx:HBox>
 		<mx:HBox width="100%" >
-			<mx:Button id="saveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+			<mx:Button id="saveModif" label="Enregistrer" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
 			<mx:Button id="ajoutDiag" label="Ajouter des diagnostics" click="ajoutDiag_clickHandler(event)"/>			
 		</mx:HBox>
 	</mx:VBox>
@@ -122,7 +128,7 @@
 					 destination="zend"
 					 source="Models_DbTable_Gevu_espacesxinterieurs"
 					 fault="faultHandlerService(event,this.title);">
-		<mx:method name="edit"	result=";" />
+		<mx:method name="edit" result="method3_resultHandler(event)" />
 		<mx:method name="getTypeControle" result="method1_resultHandler(event)" />
 		<mx:method name="ajoutDiag" result="method2_resultHandler(event)" />
 	</mx:RemoteObject>

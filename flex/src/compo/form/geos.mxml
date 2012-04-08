@@ -4,7 +4,7 @@
 		  label="Géographie"
 		  width="100%" 
 		  >
-	<mx:VBox>
+	<mx:VBox >
 		
 		<mx:HBox width="100%">
 			<mx:Label text="{NodeData.id_lieu}" /><mx:Label text="adresse" />
@@ -105,7 +105,7 @@
 				//arr["kml"]=F06.data;
 				arr["type_carte"]=cbTypeCarte.selectedItem["data"];
 				
-				roModifBase.edit(NodeData.id_geo, arr, this.parentApplication.idBase);
+				roModifBase.edit(NodeData.id_geo, arr);
 			}			
 	
 			protected function edit_resultHandler(event:ResultEvent):void

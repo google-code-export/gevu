@@ -1,54 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
-		  label="Objets interieurs"
-		  xmlns:composants="compo.*"
-		  initialize="init();">
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		  xmlns:compo="compo.*"
+		  title="Objet interieur"
+		  width="100%" height="100%"
+		   creationComplete="init();">
 	<mx:VBox>
-		<mx:Label fontSize="16" fontWeight="bold" text="{this.label}"/>
-		<mx:HBox width="100%">
-			<mx:Label text="nom" />
-			<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
-		</mx:HBox>
 		<mx:HBox width="100%">
 			<mx:Label text="ref" />
-			<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
-		</mx:HBox>
-		<mx:HBox width="100%">
+			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
 			<mx:Label text="fonctions" />
-			<mx:TextInput id="F3" width="100%" data="{NodeData.fonctions}" change="valChanged=true;" />
+			<mx:TextInput id="F3" width="100%" text="{NodeData.fonctions}" change="editModif('fonctions', F3.text)" />
 		</mx:HBox>
 		<mx:HBox width="100%">
-			<mx:Label text="reponse_1" />
-			<mx:TextInput id="F4" width="100%" data="{NodeData.reponse_1}" change="valChanged=true;" />
+			<mx:Label text="Type d'objet" />
+			<mx:ComboBox id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez" change="cbType_changeHandler(event)" />				
+		</mx:HBox>
+		<!--
+		<mx:HBox width="100%">
+			<mx:Label text="La porte est ..." />
+			<mx:RadioButton groupName="reponse" id="F4_1" label="une porte principale" color="0x323232" click="editModif('reponse_2', F4_1.label)" /> 
+			<mx:RadioButton groupName="reponse" id="F4_2" label="une porte desservant uniquement une pièce de moins..." color="0x323232" click="editModif('reponse_2', F4_2.label)" /> 
 		</mx:HBox>
 		<mx:HBox width="100%">
-			<mx:Label text="reponse_2" />
-			<mx:TextInput id="F5" width="100%"  data="{NodeData.reponse_2}" change="valChanged=true;" />
+			<mx:Label text="L'escalier dessert le niveau ..." />
+			<mx:NumericStepper id="F5" width="100%" stepSize="1" value="{NodeData.reponse_2}" change="editModif('reponse_2', F5.value)" minimum="-6" maximum="10" />
 		</mx:HBox>
-		<mx:HBox width="100%">
-			<mx:Label text="id_type_objet" />
-			<composants:KeywordsList id="F10" width="100%" selectedIndex="{F10.setKeyword(NodeData.id_type_objet)}" change="valChanged=true;" />
+		-->
+		<mx:HBox width="100%" >
+			<mx:Button id="saveModif" label="Enregistrer" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+			<mx:Button id="ajoutDiag" label="Ajouter des diagnostics" click="ajoutDiag_clickHandler(event)"/>			
 		</mx:HBox>
 		
 	</mx:VBox>
 	
-	<mx:RemoteObject id="roModifBase"
+	<mx:RemoteObject id="ro"
 					 destination="zend"
 					 source="Models_DbTable_Gevu_objetsxinterieurs"
-					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
-		<mx:method name="edit"	result=";" />
-		<mx:method name="remove"	result=";" />
+					 fault="faultHandlerService(event, this.title);">
+		<mx:method name="edit" result="method1_resultHandler(event)" />
+		<mx:method name="getTypeControle" result="method2_resultHandler(event)" />
+		<mx:method name="ajoutDiag" result="method3_resultHandler(event)" />
 	</mx:RemoteObject>
 	
 	<mx:Script>
 		<![CDATA[
-			
 			import mx.controls.Alert;
+			import mx.events.ListEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] public var NodeData:Object;
-			public var valChanged:Boolean;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			[Bindable] public var idTypeCtrl:String;
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -61,26 +65,74 @@
 				Alert.show(str, "FaultHandlerService"+os);
 			}
 			
-			public function saveModifications() : void {
-				var arr:Array = new Array();
-				arr["nom"]=F1.text;
-				arr["ref"]=F2.text;
-				arr["fonctions"]=F3.text;
-				arr["reponse_1"]=F4.text;
-				arr["reponse_2"]=F5.text;
-				arr["id_type_objet"]=F10.acualId;
-				roModifBase.edit(NodeData.id_objet_int, arr);
-				valChanged = false;
+			protected function cbType_changeHandler(event:ListEvent):void
+			{
+				idTypeCtrl = cbType.selectedItem["id_type_controle"];
+				modifData["id_type_objet"]=idTypeCtrl;
+				isChange = true;
 			}
 			
 			private function init():void{
-				valChanged = false;
-				F10.setListType(51);
+				ro.getTypeControle(this.parentApplication.idScenar, NodeData.id_lieu);
+				
+			}
+
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				ro.edit(NodeData.id_objet_int, modifData);				
 			}
 			
-			public function deleteData():void{
-				roModifBase.remove(NodeData.id_objet_int);
+			protected function method1_resultHandler(event:ResultEvent):void
+			{
+				isChange = false;
 			}
+			
+			protected function method2_resultHandler(event:ResultEvent):void
+			{
+				cbType.dataProvider = event.result as Array;
+				if(!NodeData.id_type_objet || NodeData.id_type_objet!="0"){
+					for each(var row:Object in cbType.dataProvider){
+						if(row["id_type_controle"]==NodeData.id_type_objet){
+							cbType.selectedItem=row;
+							cbType.enabled = false;
+							idTypeCtrl = NodeData.id_type_objet;
+						}
+					}
+				}
+				
+			}
+
+			protected function ajoutDiag_clickHandler(event:MouseEvent):void
+			{
+				if(!cbType.selectedItem){
+					Alert.show("Veuillez sélectionner un type d'espace", "Ajout de diagnostics");
+					return;
+				}
+				ro.ajoutDiag(this.parentApplication.idExi, this.parentApplication.idScenar, NodeData.id_lieu, cbType.selectedItem["id_type_controle"])
+			}
+			
+			protected function method3_resultHandler(event:ResultEvent):void
+			{
+				//on vérifie si le parent a déjà un composant diagnostic
+				var td:HBox = this.parentApplication.tabDiag;
+				var df:diagnostics = td.getChildByName("formDiag") as diagnostics;
+				if(df){
+					df.vs.selectedChild = df.ajout;
+				}else{
+					df = new diagnostics();
+					df.NodeData = event.result;
+					df.idLieu = NodeData.id_lieu;
+					df.bAjout = true;
+					df.idTypeCtlParent = cbType.selectedItem["id_type_controle"];
+					td.addChild(df);
+				}
+				
+			}
+			
 		]]>
 	</mx:Script>
-</mx:Canvas>
+</mx:Panel>
