@@ -1,54 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
 		   xmlns:composants="compo.*"
-		   label="Parcelle"
+		   title="Parcelle"
 		   width="100%" height="100%"
+		   creationComplete="init()" xmlns:form="compo.form.*"
 	>
-	<mx:VBox initialize="init();">
-			<mx:HBox width="100%">
-				<mx:Label text="nom" />
-				<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="ref" />
-				<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="adresse" />
-				<mx:TextInput id="F3" width="100%" data="{NodeData.adresse}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="commune" />
-				<mx:TextInput id="F4" width="100%" data="{NodeData.commune}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="pays" />
-				<mx:TextInput id="F5" width="100%" data="{NodeData.pays}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="code_postal" />
-				<mx:TextInput id="F6" width="100%" data="{NodeData.code_postal}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="contact_proprietaire" />
-				<mx:TextInput id="F7" width="100%" data="{NodeData.contact_proprietaire}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="reponse_1" />
-				<composants:KeywordsList id="F8" width="100%" selectedIndex="{F8.setKeyword(NodeData.reponse_1)}" change="valChanged=true;" />
-			</mx:HBox>
-			<mx:HBox width="100%">
-				<mx:Label text="reponse_2" />
-				<composants:KeywordsList id="F9" width="100%" selectedIndex="{F9.setKeyword(NodeData.reponse_2)}" change="valChanged=true;" />
-			</mx:HBox>
+	<mx:VBox >
+		<mx:HBox width="100%">
+			<mx:Label text="identifiant" />
+			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="Référence cadastre : " />
+			<mx:TextInput id="F21" width="100%" text="{NodeData.ref_cadastre}" change="editModif('ref_cadastre', F21.text)" />
+		</mx:HBox>
+		<form:contacts title="Contact propriétaire" id="ctcPro" unique="true" objLien="Models_DbTable_Gevu_parcelles" />		 
+		<mx:VBox>
+			<mx:Label text="Superficie de la parcelle extérieure (m²) :"/>
+			<mx:NumericStepper id="F3" width="100%" stepSize="1" value="{NodeData.superficie}" change="editModif('superficie', F3.value)" />
+		</mx:VBox>
+		<form:repType2 lblQ="La parcelle extérieure est-elle cloturée ?" Q="cloture" val="{NodeData.cloture}" fnct="{this.editModif}" />
+		<mx:Button id="saveModif" label="Enregistrer" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+		
 	</mx:VBox>
 	
-	<mx:RemoteObject id="roModifBase"
+	<mx:RemoteObject id="ro"
 					 destination="zend"
 					 source="Models_DbTable_Gevu_parcelles"
-					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
-		<mx:method name="edit"	result=";" />
-		<mx:method name="remove"	result=";" />
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event, this.title);">
+		<mx:method name="edit" result="method1_resultHandler(event)" />
 	</mx:RemoteObject>
 	<mx:Script>
 		<![CDATA[
@@ -58,7 +39,9 @@
 			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] public var NodeData:Object;
-			public var valChanged:Boolean;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			[Bindable] public var idTypeCtrl:String;
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -70,32 +53,37 @@
 					os = " - "+os;
 				Alert.show(str, "FaultHandlerService"+os);
 			}
+
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
 			
 			private function init():void{
-				valChanged = false;
-				F8.setListType(2);
-				F9.setListType(2);
+				ctcPro.paramsLien = GetParamContact("contact_proprietaire");
+				ctcPro.Init();
 			}
 			
-			public function saveModifications() : void {
-				var arr:Array = new Array();
-				arr["nom"]=F1.text;
-				arr["ref"]=F2.text;
-				arr["adresse"]=F3.text;
-				arr["commune"]=F4.text;
-				arr["pays"]=F5.text;
-				arr["code_postal"]=F6.text;
-				arr["contact_proprietaire"]=F7.text;
-				arr["reponse_1"]=F8.acualId;
-				arr["reponse_2"]=F9.acualId;
+			private function GetParamContact(type:String):Array
+			{
+				var arrParams:Array = new Array();
+				arrParams["id"]=NodeData.id_parcelle;
+				arrParams["type"]=type;
 				
-				roModifBase.edit(NodeData.id_parcelle, arr);
-				valChanged = false;
+				return arrParams;
+			}	
+			
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				ro.edit(NodeData.id_parcelle, modifData);				
 			}
 			
-			public function deleteData():void{
-				roModifBase.remove(NodeData.id_parcelle);
+			protected function method1_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
 			}
+			
 		]]>
 	</mx:Script>
-</mx:Canvas>
+</mx:Panel>

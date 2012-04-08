@@ -34,7 +34,7 @@
 			[Bindable] public var selectDiag:Object;			
 			[Bindable] public var bAjout:Boolean=false;			
 			[Bindable] public var idLieu:int;
-			[Bindable] public var idTypeCtlParent:int;
+			[Bindable] public var idTypeCtlParent:String;
 
 			private var numEtape:int;
 			private var numQuestion:int;
@@ -47,11 +47,13 @@
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
-				roScena.findByExiDroit(this.parentApplication.idExi);
+				//roScena.findByExiDroit(this.parentApplication.idExi);
 				roMC.getAllByType(2);
 				if(bAjout){
 					vs.selectedChild = ajout;
+					roDiag.getScenarioComplet(this.parentApplication.idScenar, idLieu, idTypeCtlParent);
 				}
+				
 			}
 			
 			protected function adgCrit_itemClickHandler(event:ListEvent):void
@@ -90,6 +92,7 @@
 					//formObs.init();
 					formProbs.idDiag = selectDiag.id_diag;
 					formProbs.init();
+					formProbs.txtCrit.text = selectDiag.criteres+" : "+selectDiag.reponse;
 				}
 			}
 			private function sortDiag(item:*, index:int, array:Array):Boolean
@@ -101,25 +104,15 @@
 
 			}
 			//TODO : assistant saisie d'un scénario : http://www.seaflexandsun.com/demo/carrousel/srcview/index.html
-			
-			protected function cbScenario_changeHandler(event:ListEvent):void
-			{
-				if(!idTypeCtlParent){
-						//récupère l'identifiant de contrôle du parent
-						var obj:espacesxinterieurs = this.parent.getChildByName("EspaInt") as espacesxinterieurs;
-						if(obj)idTypeCtlParent = obj.idTypeCtrl;
-				}
-				var item:Object = cbScenario.selectedItem;
-				var arr:Array = item["id"].toString().split("_");
-				roDiag.getScenarioComplet(arr[1], idLieu, idTypeCtlParent);
-			}
-			
+						
 			protected function method2_resultHandler(event:ResultEvent):void
 			{
 				scrDescData = event.result as Array;
-				lblEtapeTot.text = scrDescData["etapes"].length;
-				//ATTENTION les étapes démarre à 0 = indice du tableau et les questions à 1 = xpath pour le xml
-				getQuestion(0,1);
+				if(scrDescData){
+					lblEtapeTot.text = scrDescData["etapes"].length;
+					//ATTENTION les étapes démarre à 0 = indice du tableau et les questions à 1 = xpath pour le xml
+					getQuestion(0,1);					
+				}
 				
 			}
 			private function getQuestion(Etape:int, Question:int):void
@@ -173,26 +166,31 @@
 				myQuery = new XPathQuery(xp);
 				nodeQuestion = myQuery.exec(xlmScene)[0];
 				//affiche la question
-				idCritere = nodeQuestion.@["id_critere"];
-				lblQuestion.text = getCritText(idTypeControle, idCritere);
-				
+				if(nodeQuestion){
+					idCritere = nodeQuestion.@["id_critere"];
+					//lblQuestion.text = getCritText(idTypeControle, idCritere);
+					ckReponse.lblQ = getCritText(idTypeControle, idCritere);
+				}
+				ckReponse.decocheVals();
+
 			}
-			
-			protected function cbReponse_closeHandler(event:DropdownEvent):void
+
+
+			protected function chkReponse(nom:String, val:Object):void
 			{
 				if(!nodeQuestion)return;
-				var item:Object = cbReponse.selectedItem;
+
 				//stocke la réponse
 				var vn:Array = new Array();
 				vn["id_critere"] = idCritere;
-				vn["id_reponse"] = item.id_motclef;	
+				vn["id_reponse"] = val;	
 				vn["id_type_controle"] = idTypeControle;	
 				choixData.push(vn);
 				//vérifie s'il faut afficher une question particulière
 				var cd:String = String(nodeQuestion.@["CondRep"]);
 				if(cd!=""){
 					var arrConRep:Array = String(nodeQuestion.@["CondRep"]).split("_");
-					if(arrConRep[0]==item.type && arrConRep[1]==item.id_motclef){
+					if(arrConRep[1]==val){
 						nodeXpath+="/node";
 						totQestionInter = nodeQuestion.children().length();
 						numQestionInter = 1;
@@ -207,8 +205,7 @@
 					else
 						getQuestion(numEtape,numQuestion+1);									
 				}
-			}
-			
+			}			
 			private function getCritText(idTypeControle:String, idCrit:String):String
 			{
 				for each (var cri:Object in scrDescData["criteres"]["idTypeControle"+idTypeControle]){
@@ -281,6 +278,18 @@
 				
 				
 			}
+			/*
+			protected function cbScenario_changeHandler(event:ListEvent):void
+			{
+				var item:Object = cbScenario.selectedItem;
+				var arr:Array = item["id"].toString().split("_");
+				roDiag.getScenarioComplet(arr[1], idLieu, idTypeCtlParent);
+			}			
+			*/			
+			protected function ajout_creationCompleteHandler(event:FlexEvent):void
+			{
+				roDiag.getScenarioComplet(this.parentApplication.idScenar, idLieu, idTypeCtlParent);
+			}
 			
 		]]>
 	</mx:Script>
@@ -305,7 +314,7 @@
 	<mx:RemoteObject id="roMC"
 					 source="Models_DbTable_Gevu_motsclefs" destination="zend" 
 					 showBusyCursor="true"
-					 fault="faultHandlerService(event)">
+					 fault="faultHandlerService(event, 'GEVU - Diagnostic - Mot-clef')">
 		<mx:method name="getAllByType" result="roMC_resultHandler(event)"/>  	
 	</mx:RemoteObject>
 		
@@ -314,7 +323,7 @@
 			<mx:LinkButton click="{vs.selectedChild = lecture;}" icon="@Embed('images/eye.gif')" height="18" width="18" toolTip="Voir les diagnostics" />			
 			<mx:LinkButton id="btnAjout" click="{vs.selectedChild = ajout;}" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un diagnostic" />			
 		</mx:HBox>
-		<mx:ViewStack id="vs" width="100%" height="100%">			
+		<mx:ViewStack id="vs" width="100%" height="100%" >			
 			<mx:HBox id="lecture" width="100%" height="100%">
 				<mx:AdvancedDataGrid id="adgCrit"  width="100%" height="100%" color="0x323232"
 									 initialize="gcCrit.refresh();"
@@ -346,23 +355,26 @@
 					</mx:columns>
 				</mx:DataGrid>
 			</mx:HBox>
-			<mx:VBox id="ajout" width="100%" height="100%">
+			<mx:VBox id="ajout" width="100%" height="100%" creationComplete="ajout_creationCompleteHandler(event)" >
 				<mx:HBox verticalAlign="middle">
-					<mx:ComboBox id="cbScenario" change="cbScenario_changeHandler(event)" dataProvider="{scenarData}" labelField="lib"  prompt="Selectionner un scenario" />				
+					<!--
+					<mx:ComboBox id="cbScenario" change="cbScenario_changeHandler(event)" dataProvider="{scenarData}" labelField="lib"  prompt="Selectionner un scenario" />					
+					-->
 					<mx:Label text="Etapes : " />
 					<mx:Button styleName="leftArrowButton" id="btnPrevEtape" click="btnPrevEtape_clickHandler(event)" toolTip="Passe à l'étape précédente" enabled="{int(lblEtapeNum.text) > 1}" />
 					<mx:Label id="lblEtapeNum" text="0" /><mx:Label text=" sur " /><mx:Label id="lblEtapeTot" text="0" />
 					<mx:Button styleName="rightArrowButton" id="btnNextEtape" click="btnNextEtape_clickHandler(event)" toolTip="Passe à l'étape suivante" enabled="{lblEtapeNum.text != lblEtapeTot.text}" />
+				<!--
 				</mx:HBox>
 				<mx:HBox verticalAlign="middle">
+				-->
 					<compo:hbControle id="hbCtl" />
 					<mx:Label text="Questions : " />
 					<mx:Button styleName="leftArrowButton" id="btnPrevQuestion" click="btnPrevQuest_clickHandler(event)" toolTip="Passe à la question précédente" enabled="{int(lblQuestionNum.text) > 1}" />
 					<mx:Label id="lblQuestionNum" text="0" /><mx:Label id="lblQuestionInter" text="" /><mx:Label text=" sur " /><mx:Label id="lblQuestionTot" text="0" /><mx:Label id="lblQuestionAll" text="0" />
 					<mx:Button styleName="rightArrowButton" id="btnNextQuestion" click="btnNextQuestion_clickHandler(event)" toolTip="Passe à la question suivante" enabled="{lblQuestionNum.text != lblQuestionTot.text}" />
 				</mx:HBox>
-				<mx:Label id="lblQuestion" fontFamily="Times New Roman" fontSize="18" text=""/>						
-				<mx:ComboBox id="cbReponse" dataProvider="{reponseData}" labelField="titre" close="cbReponse_closeHandler(event)"  prompt="Choisissez une réponse" />
+				<form:repType2 id="ckReponse" lblQ="" Q="reponse_1" fnct="{this.chkReponse}" />
 				<mx:HBox width="100%">
 					<mx:Button id="btnSaveChoix" label="enregistrer" click="btnSaveChoix_clickHandler(event)" toolTip="Enregistre les réponses" />
 					<mx:Label text="Commentaires :" />
@@ -370,10 +382,7 @@
 				</mx:HBox>
 			</mx:VBox>
 		</mx:ViewStack>
-		<mx:HBox width="100%" height="100%">
-				<form:problemes id="formProbs" />
-				<!--<form:observations id="formObs" />-->
-		</mx:HBox>
+		<form:problemes id="formProbs" />
 	</mx:VBox>
 	<!-- 
 	<mx:ColumnChart id="diagChart" 

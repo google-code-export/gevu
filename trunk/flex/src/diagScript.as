@@ -344,7 +344,13 @@ private function displayNodeProperties(event:ResultEvent) : void {
 	
 	//initialise les tabbox
 	tabDiag.removeAllChildren();
+	if(rowHaut.numChildren==2){
+		rowHaut.removeChildAt(1);				
+	}
+	//pour cacher l'ajout de nouveaux controle
 	var aDiag:Boolean=false;	
+	//pour le type de controle parent d'un diag
+	var typeCtrlParent:String ="";	
 	for(var item:String in obj){
 		var arr:Array = item.split("_");
 		var className:String;
@@ -360,9 +366,12 @@ private function displayNodeProperties(event:ResultEvent) : void {
 			switch (arr[3]) {
 				case "diagnostics":
 					if(obj[item].enfants){
+						//récupère le type de contrôle
+						typeCtrlParent = getTypeControle(obj);
+						place = 2;
 						instance.NodeData = obj[item];
 						instance.idLieu = this.idLieu;
-						place = 2;
+						instance.idTypeCtlParent = typeCtrlParent;
 						aDiag = true;
 					}
 					this.dataStat = obj[item].diag.stat.EtatDiag 
@@ -375,12 +384,33 @@ private function displayNodeProperties(event:ResultEvent) : void {
 					dataGeo["idLieu"] = this.idLieu;
 					dataGeo["lib"] = this.libLieu;
 					cartoIF.callChangeGeo();
+					instance = 
 					geo.NodeData = dataGeo;
 					geo.init();
 					break;
 				case "docsxlieux":
 					//stocke la réponse pour éviter de supprimer le kml en ajoutant la géographie
 					docsxlieux = obj[item];
+					break;
+				case "espacesxinterieurs":
+					//place = -1;
+					instance.NodeData = obj[item][0];
+					rowHaut.addChild(DisplayObject(instance));				
+					break;
+				case "objetsxinterieurs":
+					//place = -1;
+					instance.NodeData = obj[item][0];
+					rowHaut.addChild(DisplayObject(instance));				
+					break;
+				case "espacesxexterieurs":
+					//place = -1;
+					instance.NodeData = obj[item][0];
+					rowHaut.addChild(DisplayObject(instance));				
+					break;
+				case "objetsxexterieurs":
+					//place = -1;
+					instance.NodeData = obj[item][0];
+					rowHaut.addChild(DisplayObject(instance));				
 					break;
 				default:
 					place = 1;
@@ -409,10 +439,22 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		//ajoute les controles disponibles
 		roDiagnostique.getLieuCtl(idLieu, idScenar, idBase);
 	}
-	
+	//ajoute les documents
 	docs.initDoc(docsxlieux);
 	imgLieux.source = "";
 	boxDiag.visible = true;
+}
+
+private function getTypeControle(obj:Object):String{
+	
+	//recherche le type de controle
+	var typeCtrl:String;
+	if(obj["Models_DbTable_Gevu_espacesxinterieurs"]) typeCtrl= obj["Models_DbTable_Gevu_espacesxinterieurs"][0]["id_type_specifique_int"];
+	if(obj["Models_DbTable_Gevu_objetsxinterieurs"]) typeCtrl= obj["Models_DbTable_Gevu_objetsxinterieurs"][0]["id_type_objet"];
+	if(obj["Models_DbTable_Gevu_espacesxexterieurs"]) typeCtrl= obj["Models_DbTable_Gevu_espacesxexterieurs"][0]["id_type_specifique_ext"];
+	if(obj["Models_DbTable_Gevu_objetsxexterieurs"]) typeCtrl= obj["Models_DbTable_Gevu_objetsxexterieurs"][0]["id_type_objet_ext"];
+	
+	return typeCtrl;
 }
 
 public function ajouterLieu():void{

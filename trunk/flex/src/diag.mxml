@@ -62,7 +62,7 @@ todo :
 	 	    <mx:LinkButton visible="false" label="Nettoyer la carte" click="PurgeCarte()"/>
 	 	</mx:HBox>
 	 	<mx:HDividedBox width="100%" height="100%">
-				<mx:Canvas label="TERRITOIRES" width="30%" height="100%" id="cnvTerre" enabled="false">
+				<mx:Canvas label="TERRITOIRES" width="300" height="100%" id="cnvTerre" enabled="false">
 					<mx:VBox width="100%" height="100%">
 						<mx:Panel width="100%" borderColor="#080808" cornerRadius="0"
 								  paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3"
@@ -99,18 +99,22 @@ todo :
 				 		</mx:Panel>
 					</mx:VBox>
 				</mx:Canvas>
+		   <mx:VBox id="boxCartoStat" visible="false" width="0" height="100%" >
+			   <ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" width="0" />			   
+			   <stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
+		   </mx:VBox>
 				 
-		   <mx:VBox id="boxDiag" visible="false" width="100%" height="100%" >
-			   <mx:HBox width="100%">
-				   <ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" height="300" />
-				   <stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
-				   <mx:Image id="imgLieux" verticalAlign="top" horizontalAlign="left" source="" width="100%" height="100%" />
-			   </mx:HBox>
+			<mx:VBox id="boxDiag" visible="false" width="100%" height="100%" >
+				<mx:Image id="imgLieux" verticalAlign="top" horizontalAlign="left" source="" width="100%" />
 			   <ns2:ariane id="bbAriane" width="100%"  />
 			   <mx:HBox id="detailLieu" width="100%" height="100%" >
 				   <mx:VBox width="100%" height="100%" >
-					   <ns2:hbIcoMultimedia id="docs"  />
-					   <form:geos id="geo"  width="100%" NodeData="{dataGeo}" />
+					   <mx:HBox id="rowHaut" width="100%" >
+						   <mx:VBox >
+							   <ns2:hbIcoMultimedia id="docs"  />
+							   <form:geos id="geo"  width="100%" NodeData="{dataGeo}" />
+						   </mx:VBox>							   
+					   </mx:HBox>						   
 					   <mx:HBox width="100%" height="100%" >
 						   <mx:VBox id="ctrlDispo" height="100%" >
 							   <mx:Label text="Contrôle(s) disponible(s)" />

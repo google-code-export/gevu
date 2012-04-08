@@ -60,6 +60,11 @@
 			}
 			
 			private function init():void{
+				if(NodeData.type && NodeData.type!="0"){
+					var rbNom:String = "reponse_"+NodeData.type;
+					var rb:RadioButton = this[rbNom];
+					rb.selected = true;
+				}
 			}
 
 			public function editModif(nom:String, val:Object) : void {

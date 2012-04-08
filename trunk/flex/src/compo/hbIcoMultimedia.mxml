@@ -44,6 +44,7 @@
 		private var rsFilms:ArrayCollection = new ArrayCollection();
 		private var rsSons:ArrayCollection = new ArrayCollection();
 		[Bindable] public var dataIcons:ArrayCollection = new ArrayCollection();
+		[Bindable] public var nbColo:int = 10;
 	
 		
 		public function Init(EtatDiag:Object, Rub:String, Site:String, Ajax:String):void {	
@@ -291,5 +292,5 @@
 			<mx:LinkButton click="deleteLieu()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un document" />															
 		</mx:VBox>
 		<mx:HorizontalList id="listTypeDocs" itemRenderer="compo.render.tofs" dataProvider="{dataIcons}" width="100%"   
-			rowHeight="86" columnWidth="60" rowCount="1" columnCount="10" itemClick="listTypeDocs_clickHandler(event);" />
+			rowHeight="86" columnWidth="60" rowCount="1" columnCount="{nbColo}" itemClick="listTypeDocs_clickHandler(event);" />
 </mx:HBox>
