@@ -71,7 +71,65 @@ class Models_DbTable_Gevu_antennes extends Zend_Db_Table_Abstract
     	}
     	return $id;
     } 
-           
+
+    /**
+     * Récupère ou Ajoute une entrée Gevu_antenne avec le lieu associé.
+     *
+     * @param string $ref
+     * @param int $idInst
+     * @param int $idLieuParent
+     * @param string $lib
+     *  
+     * @return integer
+     */
+    public function getByRef($ref, $idInst, $idLieuParent, $lib="")
+    {    	
+		//vérification de l'existence de l'antenne
+	    $arr = $this->findByRef($ref);
+	    if(count($arr)==0){
+	    	if($lib=="")$lib="Antenne - ".$ref;
+			$diag = new GEVU_Diagnostique();
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
+		    $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "ref"=> $ref));
+		    $arr = $this->findByRef($ref);
+	    }
+    	return $arr[0];
+    } 
+
+    /**
+     * Renvoie les stats pour le type de logement.
+     *  
+     * @return array
+     */
+    public function getStatType()
+    {
+		$sql = "
+			select a.ref, l.lib
+			  , count(DISTINCT b.id_batiment) 'nb batiment'
+			  , count(DISTINCT lgt.id_logement) 'nb logement'
+			  , count(DISTINCT lc.id_local) 'nb loc. act.'
+			  , count(DISTINCT lc1.id_local) 'nb loc. velo'
+			  , count(DISTINCT lc2.id_local) 'nb commerce'
+			  , count(DISTINCT lc3.id_local) 'nb bat. admi.'
+			  , count(DISTINCT lc4.id_local) 'nb foyer'
+			  , count(DISTINCT lc5.id_local) 'nb residence'
+			FROM gevu_antennes a
+			inner join gevu_lieux l on l.id_lieu = a.id_lieu
+			inner join gevu_lieux le on le.lft BETWEEN l.lft AND l.rgt
+			left join gevu_batiments b on b.id_lieu = le.id_lieu
+			left join gevu_logements lgt on lgt.id_lieu = le.id_lieu 
+			left join gevu_locaux lc on lc.id_lieu = le.id_lieu and lc.activite = 68
+			left join gevu_locaux lc1 on lc1.id_lieu = le.id_lieu and lc1.activite = 74
+			left join gevu_locaux lc2 on lc2.id_lieu = le.id_lieu and lc2.activite = 86
+			left join gevu_locaux lc3 on lc3.id_lieu = le.id_lieu and lc3.activite = 88
+			left join gevu_locaux lc4 on lc4.id_lieu = le.id_lieu and lc4.activite = 90
+			left join gevu_locaux lc5 on lc5.id_lieu = le.id_lieu and lc5.activite = 92
+			group by a.ref
+			";    	
+		$query = $this->_db->query($sql);        
+        return $query->fetchAll();
+    }     
+        
     /**
      * Recherche une entrée Gevu_antenne avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
@@ -221,5 +279,21 @@ class Models_DbTable_Gevu_antennes extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
+    	/**
+     * Recherche une entrée Gevu_antenne avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param varchar $ref
+     *
+     * @return array
+     */
+    public function findByRef($ref)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_antennes") )                           
+                    ->where( "g.ref = ?", $ref);
+
+        return $this->fetchAll($query)->toArray(); 
+    }
     
 }

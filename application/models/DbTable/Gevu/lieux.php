@@ -51,6 +51,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
        ,"Models_DbTable_Gevu_logements"
        ,"Models_DbTable_Gevu_locaux"
        ,"Models_DbTable_Gevu_partiescommunes"
+       ,"Models_DbTable_Gevu_stats"
        );
            
     /**
