@@ -1,7 +1,18 @@
 <?php
-class GEVU_Import{
+class GEVU_Import extends GEVU_Site{
+    	
+	/**
+	* constructeur de la class
+	*
+    * @param string $idBase
+    * 
+    */
+	public function __construct($idBase=false)
+    {
+    	parent::__construct($idBase);
+		
+    }
 	
-	var $dbCr;
 	
 	public function addScenario($file){
 		try {
@@ -353,6 +364,213 @@ class GEVU_Import{
     	    
     }
 
+    /**
+     * importation d'un fichier de logement 
+     *
+     * @param int $idDoc = l'identifiant du document qui contient les données
+     * @param int $idLieuParent = l'identifiant du lieu (la ville) où les éléments seront crées
+     * @param int $idExi = l'identifiant de l'existence exécutant l'importation
+     * 
+     */
+    public function traiteImportLogement($idDoc, $idLieuParent, $idExi){
+		
+    	//création des models
+    	$this->dbDoc = new Models_DbTable_Gevu_docs();
+		$this->dbObjExt = new Models_DbTable_Gevu_objetsxexterieurs();
+		$this->dbLieu = new Models_DbTable_Gevu_lieux();
+		$this->dbI = new Models_DbTable_Gevu_instants();
+		$this->dbAnt = new Models_DbTable_Gevu_antennes();
+		$this->dbGrp = new Models_DbTable_Gevu_groupes();
+		$this->dbBat = new Models_DbTable_Gevu_batiments();
+		$this->dbSta = new Models_DbTable_Gevu_stats();
+		$this->dbNiv = new Models_DbTable_Gevu_niveaux();
+		$this->dbLoc = new Models_DbTable_Gevu_locaux();
+		$this->dbEspInt = new Models_DbTable_Gevu_espacesxinterieurs();
+		$this->dbPtc = new Models_DbTable_Gevu_partiescommunes();
+		$this->dbPcl = new Models_DbTable_Gevu_parcelles();
+		$this->dbEspExt = new Models_DbTable_Gevu_espacesxexterieurs();
+		$this->dbLog = new Models_DbTable_Gevu_logements();
+		
+		$diag = new GEVU_Diagnostique();
+		
+    	//création de l'instant
+		$c = str_replace("::", "_", __METHOD__); 
+		$this->idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
+		
+		$docInfos = $this->dbDoc->findByIdDoc($idDoc);    		
+    	
+    	//chargement du fichier
+		$chaines = file($docInfos['path_source']);
+
+		//pour optimiser la récupération des informations
+		$arrAnt = array("ref"=>-1);
+		$arrGrp = array("ref"=>-1);    			
+    	$arrBat = array("ref"=>-1);
+    	$arrNiv = array("ref"=>-1);
+		$arrPtc = array("ref"=>-1);
+		$arrPcl = array("ref"=>-1);
+		$arrLoc = array("ref"=>-1);
+		
+		// parcourt toute les lignes du fichier
+		foreach ($chaines as $x => $chaine) {
+			$chaine = trim($chaine); 
+			$arr = explode(";", $chaine);
+			$err = "";
+			$nbCol = count($arr);
+			if($nbCol!="50") $err .= "Le nombre de colonne de la ligne $x n'est pas bon : $nbCol";
+			//on ne traite pas la première ligne
+			if($err==""){
+				
+   				//récupère l'antenne
+    			if($arrAnt["ref"]!=$arr[1]) $arrAnt = $this->dbAnt->getByRef($arr[1], $this->idInst, $idLieuParent);
+   				//récupère le groupe
+    			if($arrGrp["ref"]!=$arr[2]) $arrGrp = $this->dbGrp->getByRef($arr[2], $this->idInst, $arrAnt["id_lieu"]);    			
+    			//récupère le bâtiment
+		    	if($arrBat["ref"]!=$arr[3]) $arrBat = $this->dbBat->getByRef($arr[3], $this->idInst, $arrGrp["id_lieu"]);
+
+		    	//on traite les lignes suivant le type de module
+			    switch ($arr[0]) {
+				    case 'ANTENNE TV':
+			    		//recherche la référence
+				    	$arrObj = $this->dbObjExt->getByRef($arr[5], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[5],array("id_type_objet_ext"=>85));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'BATIMENT ADMINISTRATIF':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    	
+				    	//récupère le local
+				    	$arrObj = $this->dbLoc->getByRef($arr[5], $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[5], array("activite"=>88));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'CAVE':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    				    		
+			    		//récupère la partie commune
+			    		$ref = $arrBat["id_lieu"]."_".$arr[7]."_".$arr[6];
+			    		if($arrPtc["ref"]!=$ref) $arrPtc = $this->dbPtc->getByRef($ref, $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[7]." - ".$arr[6]);				    	
+			    		//recherche la référence
+				    	$arrObj = $this->dbEspInt->getByRef($arr[5], $this->idInst, $arrPtc["id_lieu"], $arr[0]." - ".$arr[5],array("id_type_specifique_int"=>75));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'COMMERCE':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    	
+				    	//recherche la référence
+				    	$arrObj = $this->dbLoc->getByRef($arr[5], $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[5], array("activite"=>86));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'DIVERS':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    	
+				    	//recherche la référence
+				    	$arrObj = $this->dbLoc->getByRef($arr[5], $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[5]);
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+				    	break;
+				    case 'ESPACE PUBLICITAIRE':
+			    		//recherche la référence
+				    	$arrObj = $this->dbObjExt->getByRef($arr[5], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[5],array("id_type_objet_ext"=>89));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'FOYER':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    	
+				    	//recherche la référence
+				    	$arrObj = $this->dbLoc->getByRef($arr[5], $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[5], array("activite"=>90));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+						break;
+				    case 'GARAGE':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    				    		
+			    		//récupère la partie commune
+			    		$ref = $arrBat["id_lieu"]."_".$arr[7]."_".$arr[6];
+			    		if($arrPtc["ref"]!=$ref) $arrPtc = $this->dbPtc->getByRef($ref, $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[7]." - ".$arr[6]);				    	
+			    		//recherche la référence
+				    	$arrObj = $this->dbEspInt->getByRef($arr[5], $this->idInst, $arrPtc["id_lieu"], $arr[0]." - ".$arr[5],array("id_type_specifique_int"=>91));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'JARDIN':
+			    		//récupère la parcelle
+			    		if($arrPcl["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrPcl = $this->dbPtc->getByRef($arrGrp["id_lieu"]."_".$arr[7], $this->idInst, $arrGrp["id_lieu"]);				    				    		
+			    		//recherche la référence
+				    	$arrObj = $this->dbEspExt->getByRef($arr[5], $this->idInst, $arrPcl["id_lieu"], $arr[0]." - ".$arr[5],array("id_type_specifique_ext"=>81));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'LOCAL':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    	
+				    	//recherche la référence
+				    	$arrObj = $this->dbLoc->getByRef($arr[5], $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[5], array("activite"=>68));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'LOCAL PROFESSIONNEL':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    	
+				    	//recherche la référence
+				    	$arrObj = $this->dbLoc->getByRef($arr[5], $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[5], array("activite"=>68));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+						break;
+				    case 'LOCAL VELO':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    	
+				    	//recherche la référence
+				    	$arrObj = $this->dbLoc->getByRef($arr[5], $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[5], array("activite"=>74));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'LOGEMENT':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    	
+			    		//recherche la référence
+				    	$arrObj = $this->dbLog->getByRef($arr[5], $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[5]);
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'PARKING':
+			    		//récupère la parcelle
+			    		if($arrPcl["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrPcl = $this->dbPtc->getByRef($arrGrp["id_lieu"]."_".$arr[7], $this->idInst, $arrGrp["id_lieu"]);				    				    		
+			    		//recherche la référence
+				    	$arrObj = $this->dbEspExt->getByRef($arr[5], $this->idInst, $arrPcl["id_lieu"], $arr[0]." - ".$arr[5],array("id_type_specifique_ext"=>48));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+				    case 'RESIDENCE':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    	
+				    	//recherche la référence
+				    	$arrObj = $this->dbLoc->getByRef($arr[5], $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[5], array("activite"=>92));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+						break;
+					break;
+				    case 'SECHOIR ou 2ème CAVE':
+			    		//récupère le niveau
+			    		if($arrNiv["ref"]!=$arrBat["id_lieu"]."_".$arr[7]) $arrNiv = $this->dbNiv->getByRef($arrBat["id_lieu"]."_".$arr[7], $this->idInst, $arrBat["id_lieu"], $arr[0]." - ".$arr[7], array("reponse_3"=>$arr[47]));				    				    		
+			    		//récupère la partie commune
+			    		$ref = $arrBat["id_lieu"]."_".$arr[7]."_".$arr[6];
+			    		if($arrPtc["ref"]!=$ref) $arrPtc = $this->dbPtc->getByRef($ref, $this->idInst, $arrNiv["id_lieu"], $arr[0]." - ".$arr[7]." - ".$arr[6]);				    	
+			    		//recherche la référence
+				    	$arrObj = $this->dbEspInt->getByRef($arr[5], $this->idInst, $arrPtc["id_lieu"], $arr[0]." - ".$arr[5],array("id_type_specifique_int"=>93));
+			    		//ajoute la stat
+			    		$this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    		
+					break;
+			    }				
+			}
+			if($err!="")return "Le fichier n'est pas bien formaté.\n".$err;
+    	}
+    	    
+    }    
+    
 /** merci à http://j-reaux.developpez.com/tutoriel/php/fonctions-redimensionner-image/
 // 	---------------------------------------------------------------
 // fonction de REDIMENSIONNEMENT physique "PROPORTIONNEL" et Enregistrement

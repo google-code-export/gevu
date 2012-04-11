@@ -790,7 +790,7 @@ class GEVU_Diagnostique extends GEVU_Site{
      * 
      * @return integer
      */
-    public function ajoutLieu($idLieuParent, $idExi, $idBase=false, $lib="Nouveau lieu", $existe=false, $rtnXml=true){
+    public function ajoutLieu($idLieuParent, $idExi=-1, $idBase=false, $lib="Nouveau lieu", $existe=false, $rtnXml=true){
 		
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
@@ -801,9 +801,9 @@ class GEVU_Diagnostique extends GEVU_Site{
 		//création d'un nouvel instant si ajout forcer
 		if(!$existe){
 			$c = str_replace("::", "_", __METHOD__); 
-			$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
-			$data["id_instant"]= $idInst;
+			$this->idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
 		}
+		$data["id_instant"]= $this->idInst;
 		$data["lieu_parent"]= $idLieuParent;
 		$data["lib"]= $lib;
 		
