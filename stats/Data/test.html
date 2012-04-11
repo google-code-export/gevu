@@ -21,9 +21,14 @@
     r = 100,                            //radius
     color = d3.scale.category20c();     //builtin range of colors
 
-    data = [{"label":"one", "value":20}, 
-            {"label":"two", "value":50}, 
-            {"label":"three", "value":30}];
+    data = [{"label":"Nombre logement", "value":2458}, 
+            {"label":"Nombre batiments", "value":158}, 
+            {"label":"Nombre local activite", "value":11}
+			{"label":"Nombre local velo", "value":11}
+			{"label":"Nombre commerce", "value":0}
+			{"label":"Nombre batiments administratif", "value":1}
+			{"label":"Nombre foyer", "value":0}
+			{"label":"Nombre residence", "value":2}	];
     
     var vis = d3.select("body")
         .append("svg:svg")              //create the SVG element inside the <body>
