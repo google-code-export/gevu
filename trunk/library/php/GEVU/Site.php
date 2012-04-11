@@ -5,17 +5,31 @@ class GEVU_Site{
     var $cache;
 	var $idBase;
     var $idExi;
-	var $dbD;
-	var $dbL;
+    var $idInst;
+    var $dbAnt;
+    var $dbBat;
+    var $dbC;
+    var $dbD;
+    var $dbDoc;
+    var $dbEspInt;
+    var $dbEspExt;
+    var $dbG;
+    var $dbGrp;
+    var $dbI;
+    var $dbL;
+    var $dbLieu;
+    var $dbLDoc;
+    var $dbLoc;
+    var $dbLog;
+    var $dbNiv;
+    var $dbO;
+    var $dbObjExt;
 	var $dbP;
-	var $dbO;
+	var $dbPtc;
+	var $dbPcl;
     var $dbScena;
     var $dbScene;
-    var $dbC;
-    var $dbI;
-    var $dbG;
-    var $dbLDoc;
-    var $dbDoc;
+    var $dbSta;
     var $dbTypCtl;
     var $db;
     
@@ -28,6 +42,8 @@ class GEVU_Site{
 	function __construct($idBase=false){    	
     	
         $this->getDb($idBase);
+        
+        $this->idInst = -1;
         
 		$frontendOptions = array(
             'lifetime' => 86400, // temps de vie du cache en seconde
