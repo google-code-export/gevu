@@ -5,13 +5,22 @@ require_once( "../param/ParamAppli.php" );
 try {
 	
 	/*
-	$o = new Models_DbTable_Gevu_espacesxinterieurs();
-	$arr = $o->setTypeControle(13, 22063, 71);
+	$db = new Models_DbTable_Gevu_antennes();
+	$arr = $db->getStatType();
 	
+	$s = new Models_DbTable_Gevu_scenario();
+	$arr = $s->findByExiDroit("1");
+
+	$d = new GEVU_Diagnostique();
+	$arr = $d->getScenarioComplet(10, 9, 71);
 	
 	$idBase = "gevu_new_alceane";
 	$idExi = 1;
-	$d = new GEVU_Diagnostique();
+
+	$o = new Models_DbTable_Gevu_espacesxinterieurs();
+	$arr = $o->ajoutDiag(1, 10, 9, 71);
+	
+	
 	$d->ajoutLieu(22045, $idExi, $idBase);
 	$arr = $d->getLieuCtl(22048, "13", $idBase);
 	$o=new Models_DbTable_Gevu_niveaux();

@@ -1,20 +1,16 @@
 <?php
-require_once( "../param/ParamAppli.php" );
+try {
+	require_once( "../param/ParamAppli.php" );
 
-$imp = new GEVU_Import();
-//$imp->addScenario("C:/wamp/www/gevu/param/scenarisation.xml");
-//$imp->addScenario("C:/wamp/www/gevu/param/logementV3.xml");
+	$imp = new GEVU_Import();
+	//$imp->addScenario("C:/wamp/www/gevu/param/scenarisation.xml");
+	//$imp->addScenario("C:/wamp/www/gevu/param/logementV3.xml");
+	
+	//echo $imp->traiteImportLogement(2, 139, 1);
+	
+	$imp->addDoc($_REQUEST);
 
-
-$imp->addDoc($_REQUEST);
-/*
-$dataDoc = array(
-	"url"=>"url","titre"=>"name","content_type"=>"text/csv"
-    ,"path_source"=>"path_source"
-    ,"tronc"=>'objName'
-    );			        
-$imp->saveDoc($_REQUEST, $dataDoc);
-*/
-//$imp->traiteDoc(10);
-
-?>
+}catch (Zend_Exception $e) {
+	echo "Récupère exception: " . get_class($e) . "\n";
+    echo "Message: " . $e->getMessage() . "\n";
+}
