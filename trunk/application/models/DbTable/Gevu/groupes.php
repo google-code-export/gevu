@@ -71,7 +71,32 @@ class Models_DbTable_Gevu_groupes extends Zend_Db_Table_Abstract
     	}
     	return $id;
     } 
-           
+
+    /**
+     * Récupère ou Ajoute une entrée Gevu_groupe avec le lieu associé.
+     *
+     * @param string $ref
+     * @param int $idInst
+     * @param int $idLieuParent
+     * @param string $lib
+     *  
+     * @return integer
+     */
+    public function getByRef($ref, $idInst, $idLieuParent, $lib="")
+    {    	
+		//vérification de l'existence de l'antenne
+	    $arr = $this->findByRef($ref);
+	    if(count($arr)==0){
+	    	if($lib=="")$lib="Groupe - ".$ref;
+			$diag = new GEVU_Diagnostique();
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
+		    $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "ref"=> $ref));
+		    $arr = $this->findByRef($ref);
+	    }
+    	return $arr[0];
+    } 
+    
+    
     /**
      * Recherche une entrée Gevu_groupe avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
@@ -216,5 +241,21 @@ class Models_DbTable_Gevu_groupes extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
+    	/**
+     * Recherche une entrée gevu_groupes avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param string $ref
+     *
+     * @return array
+     */
+    public function findByRef($ref)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_groupes") )                           
+                    ->where( "g.ref = ?", $ref);
+
+        return $this->fetchAll($query)->toArray(); 
+    }
     
 }

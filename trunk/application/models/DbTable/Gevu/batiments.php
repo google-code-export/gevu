@@ -70,7 +70,32 @@ class Models_DbTable_Gevu_batiments extends Zend_Db_Table_Abstract
     	}
     	return $id;
     } 
-           
+
+    /**
+     * Récupère ou Ajoute une entrée Gevu_groupe avec le lieu associé.
+     *
+     * @param string $ref
+     * @param int $idInst
+     * @param int $idLieuParent
+     * @param string $lib
+     *  
+     * @return integer
+     */
+    public function getByRef($ref, $idInst, $idLieuParent, $lib="")
+    {    	
+		//vérification de l'existence de l'antenne
+	    $arr = $this->findByRef($ref);
+	    if(count($arr)==0){
+	    	if($lib=="")$lib="".$ref;
+			$diag = new GEVU_Diagnostique();
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
+		    $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "ref"=> $ref));
+		    $arr = $this->findByRef($ref);
+	    }
+    	return $arr[0];
+    } 
+    
+    
     /**
      * Recherche une entrée Gevu_batiments avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.

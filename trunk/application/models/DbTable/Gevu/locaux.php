@@ -73,7 +73,35 @@ class Models_DbTable_Gevu_locaux extends Zend_Db_Table_Abstract
     	}
     	return $id;
     } 
-           
+
+    /**
+     * Récupère ou Ajoute une entrée avec le lieu associé.
+     *
+     * @param string $ref
+     * @param int $idInst
+     * @param int $idLieuParent
+     * @param string $lib
+     * @param array $data
+     *  
+     * @return integer
+     */
+    public function getByRef($ref, $idInst, $idLieuParent, $lib="", $data=false)
+    {    	
+		//vérification de l'existence de l'antenne
+	    $arr = $this->findByRef($ref);
+	    if(count($arr)==0){
+	    	if($lib=="")$lib="Local - ".$ref;
+			$diag = new GEVU_Diagnostique();
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
+	    	$data["id_lieu"] = $idLieu;
+	    	$data["id_instant"] = $idInst;
+	    	$data["ref"] = $ref;
+	    	$this->ajouter($data);
+	    	$arr = $this->findByRef($ref);
+	    }
+    	return $arr[0];
+    } 
+    
     /**
      * Recherche une entrée Gevu_locaux avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
