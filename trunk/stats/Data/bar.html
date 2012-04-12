@@ -68,27 +68,27 @@ d3.csv("data.csv", function(data) {
   data.sort(function(a, b) { return b.nbbatiment - a.nbbatiment; });
 
   // Set the scale domain.
-  x.domain([0, d3.max(data, function(d) { return d.value; })]);
-  y.domain(data.map(function(d) { return d.name; }));
+  x.domain([0, d3.max(data, function(d) { return d.nbbatiment; })]);
+  y.domain(data.map(function(d) { return d.ref; }));
 
   var bar = svg.selectAll("g.bar")
       .data(data)
     .enter().append("g")
       .attr("class", "bar")
-      .attr("transform", function(d) { return "translate(0," + y(d.name) + ")"; });
+      .attr("transform", function(d) { return "translate(0," + y(d.ref) + ")"; });
 
   bar.append("rect")
-      .attr("width", function(d) { return x(d.value); })
+      .attr("width", function(d) { return x(d.nbbatiment); })
       .attr("height", y.rangeBand());
 
   bar.append("text")
       .attr("class", "value")
-      .attr("x", function(d) { return x(d.value); })
+      .attr("x", function(d) { return x(d.nbbatiment); })
       .attr("y", y.rangeBand() / 2)
       .attr("dx", -3)
       .attr("dy", ".35em")
       .attr("text-anchor", "end")
-      .text(function(d) { return format(d.value); });
+      .text(function(d) { return format(d.nbbatiment); });
 
   svg.append("g")
       .attr("class", "x axis")
