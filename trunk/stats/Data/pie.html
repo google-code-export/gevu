@@ -23,15 +23,12 @@ $camembert = array (
 "Nombre de foyers" = 0,
 "Nombre de résidences" = 2
 );
-?>
-*/
-
- var camembert = new Array(158,2458,11,11,0,1,0,2);
-alert(camembert); 
+?>*/
 
 
-      /*      var chart;
-            var legend;
+/* var camembert = new Array(158,2458,11,11,0,1,0,2);
+alert(camembert);*/
+
 
             var chartData = [{
                 nom: "Nombre batiment",
@@ -59,7 +56,7 @@ alert(camembert);
                 nombre: 2
             }];
 			
-		*/	
+		
 	
 /*	d3.ready(function () {
                 // PIE CHART
@@ -75,7 +72,7 @@ alert(camembert);
 var w = 500,
     h = 500,
     r = Math.min(w, h) / 2,
-    data = d3.range(8).map(camembert),
+    data = d3.range(8).map(var(chartData)),
     color = d3.scale.category20(),
     donut = d3.layout.pie(),
     arc = d3.svg.arc().innerRadius(r * .6).outerRadius(r);
