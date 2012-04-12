@@ -62,8 +62,10 @@ var svg = d3.select("body").append("svg")
 d3.csv("data.csv", function(data) {
 
   // Parse numbers, and sort by value.
-  data.forEach(function(d) { d.value = +d.value; });
-  data.sort(function(a, b) { return b.value - a.value; });
+  data.forEach(function(d) { 
+	  d.nbbatiment = +d.nbbatiment; 
+	  });
+  data.sort(function(a, b) { return b.nbbatiment - a.nbbatiment; });
 
   // Set the scale domain.
   x.domain([0, d3.max(data, function(d) { return d.value; })]);
