@@ -28,7 +28,8 @@ var w = 500,
 		 		  data.forEach(function(d) {
 		 			  rows.push(d["nb bat. admi."]);
 		 		  });
-		 		  
+				  //boucle pr récupérer différentes valeurs + légende (antenne bl)
+		 		  //diviser pr cke antenne 1er arc = antenne et dedans ttes valeurs.
 		 		  var vis = d3.select("body")
 		 		  .append("svg")
 		 		    .data([rows])
