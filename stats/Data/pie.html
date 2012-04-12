@@ -22,10 +22,11 @@ var w = 500,
 	
 	d3.json("antenne.js", function(data) {
 
+				
 				 var rows = new Array();
 		 		  // Convert strings to numbers.
 		 		  data.forEach(function(d) {
-		 			  rows.push(d.value);
+		 			  rows.push(d["nb bat. admi."]);
 		 		  });
 		 		  
 		 		  var vis = d3.select("body")
