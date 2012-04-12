@@ -11,102 +11,52 @@ body {
     </style>
   </head>
   <body>
-       <script type="text/javascript">
-/*<?php
-$camembert = array (
-"Nombre de batiments" = 158,
-"Nombre de logements" = 2458,
-"Nombre de locals d'activit?" = 11,
-"Nombre de locals v?lo" = 11,
-"Nombre de commerces" = 0,
-"Nombre de batiments administratifs" = 1,
-"Nombre de foyers" = 0,
-"Nombre de r?sidences" = 2
-);
-?>*/
-
-
-/* var camembert = new Array(158,2458,11,11,0,1,0,2);
-alert(camembert);*/
-
-
-            var dataBat = [{
-                nom: "Nombre batiment",
-                value: 158
-            }, {
-                nom: "Nombre logement",
-                value: 2458
-            }, {
-                nom: "Nombre local activite",
-                value: 11
-            }, {
-                nom: "Nombre local vélo",
-                value: 11
-            }, {
-                nom: "Nombre commerce",
-                value: 0
-            }, {
-                nom: "Nombre batiment administratif",
-                value: 1
-            }, {
-                nom: "Nombre foyer",
-                value: 0
-            }, {
-                nom: "Nombre résidence",
-                value: 2
-            }];
-
-/*	d3.ready(function () {
-                // PIE CHART
-                chart = new d3.AmPieChart();
-                chart.dataProvider = chartData;
-                chart.titleField = "nom";
-                chart.valueField = "nombre";
-                chart.outlineColor = "#FFFFFF";
-                chart.outlineAlpha = 0.8;
-                chart.outlineThickness = 2;
-	}; */
-	
+       <script type="text/javascript">	
 var w = 500,
     h = 500,
     r = Math.min(w, h) / 2,
-
     color = d3.scale.category20(),
     donut = d3.layout.pie(),
     arc = d3.svg.arc().innerRadius(r * .6).outerRadius(r);
 
-  //construction du tableau des mots
- data = new Array();
-  for(var i=0; i < dataBat.length; i++){
-  	data.push(dataBat[i].value);
-  }
 	
-var vis = d3.select("body")
-  .append("svg")
-    .data([data])
-    .attr("width", w)
-    .attr("height", h);
+	d3.json("antenne.js", function(data) {
 
-var arcs = vis.selectAll("g.arc")
-    .data(donut)
-  .enter().append("g")
-    .attr("class", "arc")
-    .attr("transform", "translate(" + r + "," + r + ")");
+				 var rows = new Array();
+		 		  // Convert strings to numbers.
+		 		  data.forEach(function(d) {
+		 			  rows.push(d.value);
+		 		  });
+		 		  
+		 		  var vis = d3.select("body")
+		 		  .append("svg")
+		 		    .data([rows])
+		 		    .attr("width", w)
+		 		    .attr("height", h);
 
-arcs.append("path")
-    .attr("fill", function(d, i) {
-    	return color(i); 
-    	})
-    .attr("d", arc);
+		 		var arcs = vis.selectAll("g.arc")
+		 		    .data(donut)
+		 		  .enter().append("g")
+		 		    .attr("class", "arc")
+		 		    .attr("transform", "translate(" + r + "," + r + ")");
 
-arcs.append("text")
-    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-    .attr("dy", ".35em")
-    .attr("text-anchor", "middle")
-    .attr("display", function(d) { 
-    	return d.value > .15 ? null : "none"; 
-    	})
-    .text(function(d, i) { return d.value.toFixed(2); });
+		 		arcs.append("path")
+		 		    .attr("fill", function(d, i) {
+		 		    	return color(i); 
+		 		    	})
+		 		    .attr("d", arc);
+
+		 		arcs.append("text")
+		 		    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+		 		    .attr("dy", ".35em")
+		 		    .attr("text-anchor", "top")
+		 		    .attr("display", function(d) { 
+		 		    	return d.value > .15 ? null : "none"; 
+		 		    	})
+		 		    .text(function(d, i) { return d.value.toFixed(2); });	
+	    	
+	});
+	
 
     </script>
   </body>
