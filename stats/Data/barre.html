@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <title>Bar Chart du nombre de batiments selon l'antenne</title>
@@ -6,11 +6,11 @@
     <style type="text/css">
 
 body {
-  font: 10px sans-serif;
+  font: 14px sans-serif;
 }
 
 .bar rect {
-  fill: steelblue;
+  fill: #00CCCC;
 }
 
 .bar text.value {
@@ -18,7 +18,7 @@ body {
 }
 
 .axis {
-  shape-rendering: crispEdges;
+  shape-rendering: geometricPrecision;
 }
 
 .axis path {
@@ -27,17 +27,20 @@ body {
 
 .x.axis line {
   stroke: #fff;
-  stroke-opacity: .8;
+  stroke-opacity: .15;
 }
 
 .y.axis path {
-  stroke: black;
+  stroke: blue;
 }
 
     </style>
   </head>
   <body>
-
+  <br>
+  <br>
+	<caption> <b> Nombre de batiments en fonction des Antennes </b> </caption>
+<br>
   
     <script type="text/javascript">
 
@@ -82,7 +85,7 @@ d3.csv("data.csv", function(data) {
       .attr("height", y.rangeBand());
 
   bar.append("text")
-      .attr("class", "value")
+      .attr("class", "nbbatiment")
       .attr("x", function(d) { return x(d.nbbatiment); })
       .attr("y", y.rangeBand() / 2)
       .attr("dx", -3)
