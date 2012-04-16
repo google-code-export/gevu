@@ -45,40 +45,28 @@ text.shadow {
   </head>
   <body>
   
-  On met Echelle du bâtiment au milieu, et on le relit chacune des branches à Données générales, Accessibilité, Enjeux PSP, Rénovation – travaux, Diagnostics, Plans des réseaux, Prestataires, Carnet d’identité Immopep.
-  
     <script type="text/javascript">
 
 // http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
 var links = [
-  {source: "Echelle du bâtiment", target: "Données générales", type: "licensing"},
-  {source: "Echelle du bâtiment", target: "Accessibilité", type: "Licensing"},
-  {source: "Echelle du bâtiment", target: "Enjeux PSP", type: "Licensing"},
-  {source: "Motorola", target: "Apple", type: "suit"},
-  {source: "Nokia", target: "Apple", type: "resolved"},
-  {source: "HTC", target: "Apple", type: "suit"},
-  {source: "Kodak", target: "Apple", type: "suit"},
-  {source: "Microsoft", target: "Barnes & Noble", type: "suit"},
-  {source: "Microsoft", target: "Foxconn", type: "suit"},
-  {source: "Oracle", target: "Google", type: "suit"},
-  {source: "Apple", target: "HTC", type: "suit"},
-  {source: "Microsoft", target: "Inventec", type: "suit"},
-  {source: "Samsung", target: "Kodak", type: "resolved"},
-  {source: "LG", target: "Kodak", type: "resolved"},
-  {source: "RIM", target: "Kodak", type: "suit"},
-  {source: "Sony", target: "LG", type: "suit"},
-  {source: "Kodak", target: "LG", type: "resolved"},
-  {source: "Apple", target: "Nokia", type: "resolved"},
-  {source: "Qualcomm", target: "Nokia", type: "resolved"},
-  {source: "Apple", target: "Motorola", type: "suit"},
-  {source: "Microsoft", target: "Motorola", type: "suit"},
-  {source: "Motorola", target: "Microsoft", type: "suit"},
-  {source: "Huawei", target: "ZTE", type: "suit"},
-  {source: "Ericsson", target: "ZTE", type: "suit"},
-  {source: "Kodak", target: "Samsung", type: "resolved"},
-  {source: "Apple", target: "Samsung", type: "suit"},
-  {source: "Kodak", target: "RIM", type: "suit"},
-  {source: "Nokia", target: "Qualcomm", type: "suit"}
+  {source: "Echelle de visualisation", target: "bâtiment", type: "licensing"},
+  {source: "Echelle de visualisation", target: "patrimoine", type: "licensing"},
+  {source: "Echelle de visualisation", target: "antenne", type: "licensing"},
+  {source: "Echelle de visualisation", target: "groupe", type: "licensing"},
+  {source: "Echelle de visualisation", target: "logement", type: "licensing"},
+  {source: "bâtiment", target: "Données générales", type: "resolved"},
+  {source: "bâtiment", target: "Accessibilité", type: "suit"},
+  {source: "bâtiment", target: "Enjeux PSP", type: "Licensing"},
+  {source: "bâtiment", target: "Rénovation - Travaux", type: "resolved"},
+  {source: "bâtiment", target: "Diagnostics", type: "resolved"},   
+  {source: "bâtiment", target: "Plan des réseaux", type: "resolved"}, 
+  {source: "bâtiment", target: "Prestataires", type: "resolved"}, 
+  {source: "bâtiment", target: "Carnet d'identité immopep", type: "resolved"}, 
+//  {source: "logement", target: "Diagnostics", type: "licensing"},
+//  {source: "logement", target: "Localisation", type: "licensing"},
+//  {source: "logement", target: "Type logement", type: "licensing"},
+//  {source: "logement", target: "Carnet identité immopep", type: "licensing"},
+  
 ];
 
 var nodes = {};
@@ -89,14 +77,14 @@ links.forEach(function(link) {
   link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
 });
 
-var w = 960,
-    h = 500;
+var w = 1000,
+    h = 650;
 
 var force = d3.layout.force()
     .nodes(d3.values(nodes))
     .links(links)
     .size([w, h])
-    .linkDistance(60)
+    .linkDistance(90)
     .charge(-300)
     .on("tick", tick)
     .start();
