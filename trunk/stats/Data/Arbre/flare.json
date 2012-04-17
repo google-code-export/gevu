@@ -1,101 +1,101 @@
-{
+Ôªø{
 "name": "Antennes",
  "children": [
   {
    "name": "Antenne - BL",
    "children": [
-      {"name": "Nombre de b‚timents = 158"},
+      {"name": "Nombre de b√¢timents = 158"},
       {"name": "Nombre de logements = 2458"},
-      {"name": "Nombre de locaux d'activit&eacute = 11"},
-      {"name": "Nombre de locaux ‡ vÈlos = 11"},
+      {"name": "Nombre de locaux d'activit√© = 11"},
+      {"name": "Nombre de locaux √† v√©los = 11"},
 	  {"name": "Nombre de commerces = 0"},
-	  {"name": "Nombre de b‚timents administratifs = 1"},
+	  {"name": "Nombre de b√¢timents administratifs = 1"},
 	  {"name": "Nombre de foyers = 0"},
-	  {"name": "Nombre de rÈsidences = 11"}
+	  {"name": "Nombre de r√©sidences = 11"}
      ]
     },
 
   {
 	"name": "Antenne - CA",
    "children": [
-      {"name": "Nombre de b‚timents = 201"},
+      {"name": "Nombre de b√¢timents = 201"},
       {"name": "Nombre de logements = 3273"},
-      {"name": "Nombre de locaux d'activitÈ = 17"},
-      {"name": "Nombre de locaux ‡ vÈlos = 15"},
+      {"name": "Nombre de locaux d'activit√© = 17"},
+      {"name": "Nombre de locaux √† v√©los = 15"},
 	  {"name": "Nombre de commerces = 0"},
-	  {"name": "Nombre de b‚timents administratifs = 1"},
+	  {"name": "Nombre de b√¢timents administratifs = 1"},
 	  {"name": "Nombre de foyers = 1"},
-	  {"name": "Nombre de rÈsidences = 1"}
+	  {"name": "Nombre de r√©sidences = 1"}
      ]
     },
 	
   {
 	"name": "Antenne - CV",
    "children": [
-      {"name": "Nombre de b‚timents = 185"},
+      {"name": "Nombre de b√¢timents = 185"},
       {"name": "Nombre de logements = 3433"},
-      {"name": "Nombre de locaux d'activitÈ = 14"},
-      {"name": "Nombre de locaux ‡ vÈlos = 0"},
+      {"name": "Nombre de locaux d'activit√© = 14"},
+      {"name": "Nombre de locaux √† v√©los = 0"},
 	  {"name": "Nombre de commerces = 11"},
-	  {"name": "Nombre de b‚timents administratifs = 1"},
+	  {"name": "Nombre de b√¢timents administratifs = 1"},
 	  {"name": "Nombre de foyers = 2"},
-	  {"name": "Nombre de rÈsidences = 6"}
+	  {"name": "Nombre de r√©sidences = 6"}
      ]
     },
 	
   {
 	"name": "Antenne",
    "children": [
-      {"name": "Nombre de b‚timents = 1"},
+      {"name": "Nombre de b√¢timents = 1"},
       {"name": "Nombre de logements = 1"},
-      {"name": "Nombre de locaux d'activitÈ = 0"},
-      {"name": "Nombre de locaux ‡ vÈlos = 0"},
+      {"name": "Nombre de locaux d'activit√© = 0"},
+      {"name": "Nombre de locaux √† v√©los = 0"},
 	  {"name": "Nombre de commerces = 0"},
-	  {"name": "Nombre de b‚timents administratifs = 0"},
+	  {"name": "Nombre de b√¢timents administratifs = 0"},
 	  {"name": "Nombre de foyers = 0"},
-	  {"name": "Nombre de rÈsidences = 0"}
+	  {"name": "Nombre de r√©sidences = 0"}
      ]
     },
 	
    {
 	"name": "Antenne - MR",
    "children": [
-      {"name": "Nombre de b‚timents = 172"},
+      {"name": "Nombre de b√¢timents = 172"},
       {"name": "Nombre de logements = 2477"},
-      {"name": "Nombre de locaux d'activitÈ = 40"},
-      {"name": "Nombre de locaux ‡ vÈlos = 0"},
+      {"name": "Nombre de locaux d'activit√© = 40"},
+      {"name": "Nombre de locaux √† v√©los = 0"},
 	  {"name": "Nombre de commerces = 3"},
-	  {"name": "Nombre de b‚timents administratifs = 2"},
+	  {"name": "Nombre de b√¢timents administratifs = 2"},
 	  {"name": "Nombre de foyers = 1"},
-	  {"name": "Nombre de rÈsidences = 1"}
+	  {"name": "Nombre de r√©sidences = 1"}
      ]
     },
 	
     {
 	"name": "Antenne - QS",
    "children": [
-      {"name": "Nombre de b‚timents = 237"},
+      {"name": "Nombre de b√¢timents = 237"},
       {"name": "Nombre de logements = 3074"},
-      {"name": "Nombre de locaux d'activitÈ = 34"},
-      {"name": "Nombre de locaux ‡ vÈlos = 4"},
+      {"name": "Nombre de locaux d'activit√© = 34"},
+      {"name": "Nombre de locaux √† v√©los = 4"},
 	  {"name": "Nombre de commerces = 14"},
-	  {"name": "Nombre de b‚timents administratifs = 20"},
+	  {"name": "Nombre de b√¢timents administratifs = 20"},
 	  {"name": "Nombre de foyers = 2"},
-	  {"name": "Nombre de rÈsidences = 4"}
+	  {"name": "Nombre de r√©sidences = 4"}
      ]
     },
 	
 	{
 	"name": "Antenne - QS",
    "children": [
-      {"name": "Nombre de b‚timents = 1"},
+      {"name": "Nombre de b√¢timents = 1"},
       {"name": "Nombre de logements = 0"},
-      {"name": "Nombre de locaux d'activitÈ = 0"},
-      {"name": "Nombre de locaux ‡ vÈlos = 0"},
+      {"name": "Nombre de locaux d'activit√© = 0"},
+      {"name": "Nombre de locaux √† v√©los = 0"},
 	  {"name": "Nombre de commerces = 0"},
-	  {"name": "Nombre de b‚timents administratifs = 0"},
+	  {"name": "Nombre de b√¢timents administratifs = 0"},
 	  {"name": "Nombre de foyers = 0"},
-	  {"name": "Nombre de rÈsidences = 0"}
+	  {"name": "Nombre de r√©sidences = 0"}
      ]
   }
  ]
