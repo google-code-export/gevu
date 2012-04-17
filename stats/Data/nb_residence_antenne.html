@@ -11,6 +11,19 @@ body {
     </style>
   </head>
   <body>
+  <u>Nombre de résidences pour chaque antenne</u> <br>
+  <br>
+  <font color="orange"> Antenne CV </font><br>
+  <font color="#66FF99"> Antenne QS </font><br>
+  <font color="blue"> Antenne BL </font><br>
+  <font color="#66CCFF"> Antenne MR </font><br>
+  <font color="green"> Antenne CA </font><br><br>
+
+  
+  
+  
+  
+  
        <script type="text/javascript">	
 var w = 500,
     h = 500,
@@ -18,7 +31,6 @@ var w = 500,
     color = d3.scale.category20(),
     donut = d3.layout.pie(),
     arc = d3.svg.arc().innerRadius(r * .6).outerRadius(r);
-
 	
 	d3.json("antenne.js", function(data) {
 
