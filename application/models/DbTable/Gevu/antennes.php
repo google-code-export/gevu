@@ -126,6 +126,17 @@ class Models_DbTable_Gevu_antennes extends Zend_Db_Table_Abstract
 			left join gevu_locaux lc5 on lc5.id_lieu = le.id_lieu and lc5.activite = 92
 			group by a.ref
 			";    	
+
+		$sql = "
+			SELECT a.ref, l.lib
+				, s.type, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l on l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le on le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_stats s on s.id_lieu = le.id_lieu
+			GROUP BY a.ref, s.type
+			";    	
+		
 		$query = $this->_db->query($sql);        
         return $query->fetchAll();
     }     
