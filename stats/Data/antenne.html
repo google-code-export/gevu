@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <title>Pie Multiples with Nesting</title>
 	<link rel="stylesheet" href="../lib/colorbrewer/colorbrewer.css" />
+    <script type="text/javascript" src="libtype.js"></script>
     <script type="text/javascript" src="../js/d3.v2.js"></script>
     <script type="text/javascript" src="../lib/colorbrewer/colorbrewer.js"></script>
     <style type="text/css">
@@ -54,7 +55,7 @@ d3.json("antenne1.js", function(data) {
   // Nest the flight data by originating airport. Our data has the counts per
   // airport and carrier, but we want to group counts by aiport.
   var antennes = d3.nest()
-      .key(function(d) { return d.ref; })
+      .key(function(d) { return d.lib; })
       .entries(data);
 
   // Insert an svg element (with margin) for each airport in our dataset. A
@@ -90,7 +91,9 @@ d3.json("antenne1.js", function(data) {
       .attr("d", arc)
       .style("fill", function(d) { return z(d.data.type); })
     .append("svg:title")
-      .text(function(d) { return d.data.type + ": " + d.data.nb; });
+      .text(function(d) { 
+    	  return libtype[d.data.type] + " : " + d.data.nb; 
+    	  });
 
   // Add a label to the larger arcs, translated to the arc centroid and rotated.
   g.filter(function(d) { return d.endAngle - d.startAngle > .2; }).append("svg:text")
