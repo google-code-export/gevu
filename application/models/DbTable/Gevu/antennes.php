@@ -98,10 +98,12 @@ class Models_DbTable_Gevu_antennes extends Zend_Db_Table_Abstract
 
     /**
      * Renvoie les stats pour le type de logement.
+     * 
+     * @param string $type
      *  
      * @return array
      */
-    public function getStatType()
+    public function getStatType($type="")
     {
 		$sql = "
 			select a.ref, l.lib
@@ -136,6 +138,47 @@ class Models_DbTable_Gevu_antennes extends Zend_Db_Table_Abstract
 				INNER JOIN gevu_stats s on s.id_lieu = le.id_lieu
 			GROUP BY a.ref, s.type
 			";    	
+
+		if($type=="vac_log") $sql = "
+			SELECT a.ref, l.lib
+				, s.OCCUPATION, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l ON l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le ON le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_logements lgt ON lgt.id_lieu = le.id_lieu 
+				INNER JOIN gevu_stats s ON s.id_lieu = lgt.id_lieu 
+			GROUP BY a.ref, s.OCCUPATION
+			";    	
+		if($type=="vac_com") $sql = "
+			SELECT a.ref, l.lib
+				, s.OCCUPATION, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l ON l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le ON le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_locaux lc on lc.id_lieu = le.id_lieu and lc.activite = 86
+				INNER JOIN gevu_stats s ON s.id_lieu = lc.id_lieu 
+			GROUP BY a.ref, s.OCCUPATION
+			";    	
+		if($type=="vac_gar") $sql = "
+			SELECT a.ref, l.lib
+				, s.OCCUPATION, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l ON l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le ON le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_espacesxinterieurs ei on ei.id_lieu = le.id_lieu and ei.id_type_specifique_int = 91
+				INNER JOIN gevu_stats s ON s.id_lieu = ei.id_lieu 
+			GROUP BY a.ref, s.OCCUPATION
+			";    	
+		if($type=="garage") $sql = "
+			SELECT a.ref, l.lib
+				, s.type, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l ON l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le ON le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_stats s ON s.id_lieu = le.id_lieu AND s.type IN('GA','GP','TO') 
+			GROUP BY a.ref, s.type
+			";    	
+		
 		
 		$query = $this->_db->query($sql);        
         return $query->fetchAll();
