@@ -4,73 +4,135 @@
   {
    "name": "Antenne - BL",
    "children": [
-      {"name": "Nombre de bâtiments = 158", "size":158},
-      {"name": "Nombre de logements = 2458", "size":2458},
-      {"name": "Nombre de locaux d'activité = 11", "size":11},
-      {"name": "Nombre de locaux à vélos = 11", "size":11},
-	  {"name": "Nombre de commerces = 0", "size":0},
-	  {"name": "Nombre de bâtiments administratifs = 1", "size":1},
-	  {"name": "Nombre de foyers = 0", "size":0},
-	  {"name": "Nombre de résidences = 2", "size":2}
+      {"name": "D4", "size":10},
+      {"name": "DI", "size":6},
+      {"name": "FO", "size":2},
+      {"name": "GA", "size":505},
+	  {"name": "GP", "size":86},
+	  {"name": "LO", "size":11},
+	  {"name": "LV", "size":22},
+	  {"name": "P2", "size":11},
+	  {"name": "P3", "size":26},
+      {"name": "P4", "size":70},
+      {"name": "P5", "size":61},
+      {"name": "P6", "size":31},
+	  {"name": "P7", "size":3},
+	  {"name": "T1", "size":63},
+	  {"name": "T2", "size":381},
+	  {"name": "T3", "size":817},
+	  {"name": "T4", "size":711},
+	  {"name": "T5", "size":232},
+	  {"name": "T6", "size":43},
+	  {"name": "T0", "size":3}
      ]
     },
-
+	
+	
   {
 	"name": "Antenne - CA",
    "children": [
-      {"name": "Nombre de bâtiments = 201", "size":201},
-      {"name": "Nombre de logements = 3273", "size":3273},
-      {"name": "Nombre de locaux d'activité = 17", "size":17},
-      {"name": "Nombre de locaux à vélos = 15", "size":15},
-	  {"name": "Nombre de commerces = 0", "size":0},
-	  {"name": "Nombre de bâtiments administratifs = 1", "size":1},
-	  {"name": "Nombre de foyers = 1", "size":1},
-	  {"name": "Nombre de résidences = 1", "size":1}
-     ]
+      {"name": "D4", "size":2},
+      {"name": "DI", "size":17},
+      {"name": "FO", "size":2},
+      {"name": "GA", "size":629},
+	  {"name": "GP", "size":17},
+	  {"name": "LO", "size":17},
+	  {"name": "LV", "size":27},
+	  {"name": "P2", "size":2},
+	  {"name": "P3", "size":104},
+      {"name": "P4", "size":140},
+      {"name": "P5", "size":23},
+      {"name": "P6", "size":1},
+	  {"name": "P7", "size":1},
+	  {"name": "T1", "size":33},
+	  {"name": "T2", "size":288},
+	  {"name": "T3", "size":1178},
+	  {"name": "T4", "size":1146},
+	  {"name": "T5", "size":279},
+	  {"name": "T6", "size":26}
+	  ]
     },
 	
-  {
+	  {
 	"name": "Antenne - CV",
    "children": [
-      {"name": "Nombre de bâtiments = 185", "size":185},
-      {"name": "Nombre de logements = 3433", "size":3433},
-      {"name": "Nombre de locaux d'activité = 14", "size":14},
-      {"name": "Nombre de locaux à vélos = 0", "size":0},
-	  {"name": "Nombre de commerces = 11", "size":11},
-	  {"name": "Nombre de bâtiments administratifs = 1", "size":1},
-	  {"name": "Nombre de foyers = 2", "size":2},
-	  {"name": "Nombre de résidences = 6", "size":6}
+      {"name": "CA", "size":83},
+      {"name": "D3", "size":1},
+      {"name": "DI", "size":13},
+      {"name": "FO", "size":7},
+      {"name": "GA", "size":379},
+	  {"name": "GP", "size":136},
+	  {"name": "LO", "size":28},
+	  {"name": "P3", "size":3},
+      {"name": "P4", "size":19},
+      {"name": "P5", "size":1},
+	  {"name": "T1", "size":169},
+	  {"name": "T2", "size":652},
+	  {"name": "T3", "size":1586},
+	  {"name": "T4", "size":785},
+	  {"name": "T5", "size":195},
+	  {"name": "T6", "size":22},
+	  {"name": "T0", "size":26}
      ]
-    },
-	
-	
-   {
+	 },
+	 
+	 	    {
 	"name": "Antenne - MR",
    "children": [
-      {"name": "Nombre de bâtiments = 172", "size":172},
-      {"name": "Nombre de logements = 2477", "size":2477},
-      {"name": "Nombre de locaux d'activité = 40", "size":40},
-      {"name": "Nombre de locaux à vélos = 0", "size":0},
-	  {"name": "Nombre de commerces = 3", "size":3},
-	  {"name": "Nombre de bâtiments administratifs = 2", "size":2},
-	  {"name": "Nombre de foyers = 1", "size":1},
-	  {"name": "Nombre de résidences = 1", "size":1}
+      {"name": "D2", "size":1},
+      {"name": "D3", "size":20},
+      {"name": "D4", "size":34},
+      {"name": "D5", "size":22},
+      {"name": "D6", "size":6},
+	  {"name": "D7", "size":4},
+	  {"name": "DI", "size":6},
+	  {"name": "FO", "size":2},
+      {"name": "GA", "size":393},
+      {"name": "LO", "size":45},
+	  {"name": "P3", "size":25},
+	  {"name": "P4", "size":79},
+	  {"name": "P5", "size":45},
+	  {"name": "P6", "size":2},
+	  {"name": "T1", "size":110},
+	  {"name": "T2", "size":356},
+	  {"name": "T3", "size":824},
+	  {"name": "T4", "size":677},
+	  {"name": "T5", "size":227},
+	  {"name": "T6", "size":42},
+	  {"name": "T7", "size":2}
      ]
     },
 	
     {
 	"name": "Antenne - QS",
    "children": [
-      {"name": "Nombre de bâtiments = 237", "size":237},
-      {"name": "Nombre de logements = 3074", "size":3074},
-      {"name": "Nombre de locaux d'activité = 34", "size":34},
-      {"name": "Nombre de locaux à vélos = 4", "size":4},
-	  {"name": "Nombre de commerces = 14", "size":14},
-	  {"name": "Nombre de bâtiments administratifs = 20", "size":20},
-	  {"name": "Nombre de foyers = 2", "size":2},
-	  {"name": "Nombre de résidences = 4", "size":4}
-     ]
-    }
+     {"name": "CA", "size":16},
+      {"name": "D3", "size":33},
+      {"name": "D4", "size":7},
+      {"name": "D5", "size":3},
+      {"name": "DI", "size":6},
+	  {"name": "FO", "size":6},
+	  {"name": "GA", "size":857},
+	  {"name": "GP", "size":52},
+      {"name": "LO", "size":48},
+      {"name": "LV", "size":9},
+	  {"name": "P2", "size":11},
+	  {"name": "P3", "size":22},
+	  {"name": "P4", "size":34},
+	  {"name": "P5", "size":3},
+	  {"name": "P8", "size":1},
+	  {"name": "T1", "size":164},
+	  {"name": "T2", "size":561},
+	  {"name": "T3", "size":1027},
+	  {"name": "T4", "size":865},
+	  {"name": "T5", "size":285},
+	  {"name": "T6", "size":55},
+	  {"name": "T7", "size":1},
+	  {"name": "T8", "size":2},
+	  {"name": "T0", "size":33}
+	  ]
+	 }
 	]
 	}
-	
+
+
