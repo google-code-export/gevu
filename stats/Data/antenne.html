@@ -25,19 +25,17 @@ var w = 500,
 	d3.json("antenne.js", function(data) {
 
 				
-				 var rows = new Array();
-		 		// data.forEach(function(d) {
-					data.forEach(d["lib"]){
-					//rows.push((d["lib"]) {
+				var rows = new Array();
+		 		data.forEach(function(d) {
 		 			rows.push(d["nb bat. admi."])
-					 rows.push(d["nb batiment"])
+					rows.push(d["nb batiment"])
 					rows.push(d["nb logement"])
 					rows.push(d["nb loc. act."])
 					rows.push(d["nb loc. velo"])
 					rows.push(d["nb commerce"])
 					rows.push(d["nb foyer"])
 					rows.push(d["nb residence"])
-		 		};
+		 		});
 
 		 		  var vis = d3.select("body")
 		 		  .append("svg")
