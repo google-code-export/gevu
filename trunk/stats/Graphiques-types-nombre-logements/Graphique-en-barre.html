@@ -27,7 +27,7 @@ rect.background {
   <body>
     <script type="text/javascript">
 
-var m = [20, 20, 20, 120], // top right bottom left
+var m = [70, 70, 0, 250], // top right bottom left
     w = 960 - m[1] - m[3], // width
     h = 500 - m[0] - m[2], // height
     x = d3.scale.linear().range([0, w]),
@@ -63,7 +63,7 @@ svg.append("g")
   .append("line")
     .attr("y1", "100%");
 
-d3.json("../Graphiques/arbre/flare.json", function(root) {
+d3.json("../Graphiques-types-nombre-logements/arbre/flare.json", function(root) {
   hierarchy.nodes(root);
   x.domain([0, root.value]).nice();
   down(root, 0);
