@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Pie Chart</title>
+    <script type="text/javascript" src="../d3.v2.js"></script>
+    <style type="text/css">
+
+body {
+  font: 20px sans-serif;
+}
+
+    </style>
+  </head>
+  <body>
+  
+      <u>Nombre de commerces pour chaque antenne</u> <br>
+    <br>
+	  <font color="#66FF99"> Antenne QS </font><br>
+  <font color="orange"> Antenne CV </font><br>
+  <font color="green"> Antenne MR </font><br>
+
+  
+       <script type="text/javascript">	
+var w = 500,
+    h = 500,
+    r = Math.min(w, h) / 2,
+    color = d3.scale.category20(),
+    donut = d3.layout.pie(),
+    arc = d3.svg.arc().innerRadius(r * .6).outerRadius(r);
+
+	
+	d3.json("antenne.js", function(data) {
+
+				
+				 var rows = new Array();
+		 		  // Convert strings to numbers.
+		 		  data.forEach(function(d) {
+					//	data.forEach(d["lib"]) {
+		 			// rows.push(d["nb bat. admi."])
+					// rows.push(d["nb batiment"])
+					// rows.push(d["nb logement"])
+					// rows.push(d["nb loc. act."])
+					// rows.push(d["nb loc. velo"])
+					rows.push(d["nb commerce"]);
+					
+		 		 //}
+				 });
+				  //boucle pr récupérer différentes valeurs + légende (antenne bl)
+		 		  //diviser pr cke antenne 1er arc = antenne et dedans ttes valeurs.
+		 		  var vis = d3.select("body")
+		 		  .append("svg")
+		 		    .data([rows])
+		 		    .attr("width", w)
+		 		    .attr("height", h);
+
+		 		var arcs = vis.selectAll("g.arc")
+		 		    .data(donut)
+		 		  .enter().append("g")
+		 		    .attr("class", "arc")
+		 		    .attr("transform", "translate(" + r + "," + r + ")");
+
+		 		arcs.append("path")
+		 		    .attr("fill", function(d, i) {
+		 		    	return color(i); 
+		 		    	})
+		 		    .attr("d", arc);
+
+		 		arcs.append("text")
+		 		    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+		 		    .attr("dy", ".35em")
+		 		    .attr("text-anchor", "top")
+		 		    .attr("display", function(d) { 
+		 		    	return d.value > .15 ? null : "none"; 
+		 		    	})
+		 		    .text(function(d, i) { return d.value.toFixed(2); });	
+	    	
+	});
+	
+
+    </script>
+  </body>
+</html>
