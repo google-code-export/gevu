@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Bar Chart du nombre de locals vélo selon l'antenne</title>
-    <script type="text/javascript" src="../d3.v2.js"></script>
+    <script type="text/javascript" src="../Data/d3.v2.js"></script>
     <style type="text/css">
 
 body {
@@ -62,7 +62,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-d3.csv("data3.csv", function(data) {
+d3.csv("../Data/data3.csv", function(data) {
 
   // Parse numbers, and sort by value.
   data.forEach(function(d) { 
