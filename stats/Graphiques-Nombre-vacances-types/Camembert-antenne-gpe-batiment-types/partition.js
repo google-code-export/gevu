@@ -3,6 +3,9 @@ var w = 960,
     r = Math.min(w, h) / 2,
     color = d3.scale.category20c();
 
+		var types = d3.nest()
+      .key(function(d) { return "Alcéane"; })
+	
 var vis = d3.select("#chart").append("svg")
     .attr("width", w)
     .attr("height", h)
