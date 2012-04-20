@@ -3,9 +3,8 @@ var w = 960,
     r = Math.min(w, h) / 2,
     color = d3.scale.category20c();
 
-		var types = d3.nest()
-      .key(function(d) { return "Alcéane"; })
-	
+	  
+	  
 var vis = d3.select("#chart").append("svg")
     .attr("width", w)
     .attr("height", h)
@@ -33,6 +32,8 @@ d3.json("../Camembert-antenne-gpe-batiment-types/donnees.json", function(json) {
       .style("stroke", "#fff")
       .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
       .each(stash);
+	  
+
 
   d3.select("#size").on("click", function() {
     path
