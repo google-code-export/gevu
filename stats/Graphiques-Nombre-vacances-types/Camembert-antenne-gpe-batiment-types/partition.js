@@ -27,7 +27,7 @@ d3.json("../Camembert-antenne-gpe-batiment-types/donnees.json", function(json) {
   var path = vis.data([json]).selectAll("path")
       .data(partition.nodes)
     .enter().append("path")
-      .attr("display", function(d) { return d.depth ? null : "none"; }) // hide inner ring
+      .attr("display", function(d) { return d.depth ? null : "blue"; }) // hide inner ring
       .attr("d", arc)
       .attr("fill-rule", "evenodd")
       .style("stroke", "#fff")
