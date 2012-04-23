@@ -1,6 +1,5 @@
 ﻿{
 "name": "Alcéane",
- var donnees = [
 "children": [
    {
 	"name": "Antenne - BL",
@@ -163,6 +162,5 @@
    
 	]
     }
-]
 
 	

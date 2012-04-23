@@ -18,53 +18,17 @@
       </button><p>
     </div>
     <script type="text/javascript" src="partition.js"></script>
-	<script type="text/javascript"> 
-	 var m = 10,
-      r = 100,
-      z = d3.scale.category20b();
-	  
-	    var pie = d3.layout.pie()
-      .value(function(d) { 
-    	  return +d.size; 
-    	  })
-      .sort(function(a, b) { return b.size - a.size; });
-	
-	  var donnees = d3.nest()
-      .key(function(d) { return d.name; })
-      .entries(donnees);
-	
-	  var svg = d3.select("body").selectAll("div")
-      .donnees(donnees)
-    .enter().append("div")
-      .style("display", "inline-block")
-      .style("width", (r + m) * 2 + "px")
-      .style("height", (r + m) * 2 + "px")
-    .append("svg:svg")
-      .attr("width", (r + m) * 2)
-      .attr("height", (r + m) * 2)
-    .append("svg:g")
-      .attr("transform", "translate(" + (r + m) + "," + (r + m) + ")");
-	  
-	    svg.append("svg:text")
-      .attr("dy", ".35em")
-      .attr("text-anchor", "middle")
-      .text(function(d) { return d.key; });
-	
-	  var g = svg.selectAll("g")
-      .data(function(d) { 
-    	  return pie(d.size); 
-    	  })
-    .enter().append("svg:g");
-	
-	  g.append("svg:path")
+	<script type="text/javascript">     	
+d3.json("donnees.json", function(donnees) {
+  g.append("svg:path")
       .attr("d", arc)
-      .style("fill", function(d) { return z(d.donnees.name); })
-      .style("fill", function(d) { return z(d.donnees.size); })	  
+      .style("fill", function(d) { return (d.donnees.name); })
     .append("svg:title")
       .text(function(d) { 
-    	  return name[d.donnees.name] + " : " + d.donnees.size; 
+    	  return donnees[d.donnees.name] + " : " + d.donnees.size; 
     	  });
 
+});
 	</script>
   </body>
 </html>
