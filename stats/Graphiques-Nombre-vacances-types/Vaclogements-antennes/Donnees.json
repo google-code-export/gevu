@@ -1,0 +1,174 @@
+﻿{
+"name": "Alcéane",
+ "children": [
+  {
+   "name": "Antenne - BL",
+   "children": [
+   	{
+		"name": "Nombre total de logements",
+		"children": [
+			{"name": "Nombre total = 2458", "size":2458}
+		]
+		
+			{
+		"name": "Types et nombres de logements",
+		"children": [		
+			{"name": "Quatres pièces duplex = 10", "size":10},
+			{"name": "Divers = 6", "size":6},
+			{"name": "Foyers = 2", "size":2},
+			{"name": "Garages = 505", "size":505},
+			{"name": "Parking couverts = 86", "size":86},
+			{"name": "Locaux = 11", "size":11},
+			{"name": "Locaux à vélos = 22", "size":22},
+			{"name": "Pavillons 2 pièces = 11", "size":11},
+			{"name": "Pavillons 3 pièces = 26", "size":26},
+			{"name": "Pavillons 4 pièces = 70", "size":70},
+			{"name": "Pavillons 5 pièces = 61", "size":61},
+			{"name": "Pavillons 6 pièces = 31", "size":31},
+			{"name": "Pavillons 7 pièces = 3", "size":3},
+			{"name": "Studio = 63", "size":63},
+			{"name": "Deux pièces = 381", "size":381},
+			{"name": "Trois pièces = 817", "size":817},
+			{"name": "Quatre pièces = 711", "size":711},
+			{"name": "Cinq pièces = 232", "size":232},
+			{"name": "Six pièces = 43", "size":43},
+			{"name": "Parkings extérieurs = 3", "size":3}
+		]
+		}
+
+	]
+   },	
+	{
+	"name": "Antenne - CA",
+   "children": [
+		{
+		"name": "Types et nombres de logements",
+		"children": [
+			{"name": "Quatre pièces duplex = 2", "size":2},
+			{"name": "Divers = 17", "size":17},
+			{"name": "Foyers = 2", "size":2},
+			{"name": "Garages = 629", "size":629},
+			{"name": "Parkings couverts = 17", "size":17},
+			{"name": "Locaux = 17", "size":17},
+			{"name": "Locaux à vélos = 27", "size":27},
+			{"name": "Pavillons 2 pièces = 2", "size":2},
+			{"name": "Pavillons 3 pièces = 104", "size":104},
+			{"name": "Pavillons 4 pièces = 140", "size":140},
+			{"name": "Pavillons 5 pièces = 23", "size":23},
+			{"name": "Pavillons 6 pièces = 1", "size":1},
+			{"name": "Pavillons 7 pièces = 1", "size":1},
+			{"name": "Studio = 33", "size":33},
+			{"name": "Deux pièces = 288", "size":288},
+			{"name": "Trois pièces = 1178", "size":1178},
+			{"name": "Quatre pièces = 1146", "size":1146},
+			{"name": "Cinq pièces = 279", "size":279},
+			{"name": "Six pièces = 26", "size":26}
+		]
+		}
+	]
+   },
+    {
+	"name": "Antenne - CV",
+   "children": [
+		{
+		"name": "Types et nombres de logements",
+		"children": [
+			{"name": "Caves = 83", "size":83},
+			{"name": "Trois pièces duplex = 1", "size":1},
+			{"name": "Divers = 13", "size":13},
+			{"name": "Foyers = 7", "size":7},
+			{"name": "Garages = 379", "size":379},
+			{"name": "Parkings couverts = 136", "size":136},
+			{"name": "Locaux = 28", "size":28},
+			{"name": "Pavillons 3 pièces = 3", "size":3},
+			{"name": "Pavillons 4 pièces = 19", "size":19},
+			{"name": "Pavillons 5 pièces = 1", "size":1},
+			{"name": "Studio = 169", "size":169},
+			{"name": "Deux pièces = 652", "size":652},
+			{"name": "Trois pièces = 1586", "size":1586},
+			{"name": "Quatre pièces = 785", "size":785},
+			{"name": "Cinq pièces = 195", "size":195},
+			{"name": "Six pièces = 22", "size":22},
+			{"name": "Parkings extérieurs = 26", "size":26}
+			]
+		}
+	]
+   },
+	{
+	"name": "Antenne - MR",
+   "children": [
+	{
+		"name": "Types et nombres de logements",
+		"children": [
+			{"name": "Deux pièces duplex = 1", "size":1},
+			{"name": "Trois pièces duplex = 20", "size":20},
+			{"name": "Quatre pièces duplex = 34", "size":34},
+			{"name": "Cinq pièces duplex = 22", "size":22},
+			{"name": "Six pièces duplex = 6", "size":6},
+			{"name": "Sept pièces duplex = 4", "size":4},
+			{"name": "Divers = 6", "size":6},
+			{"name": "Foyers = 2", "size":2},
+			{"name": "Garages = 393", "size":393},
+			{"name": "Locaux = 45", "size":45},
+			{"name": "Pavillons 3 pièces = 25", "size":25},
+			{"name": "Pavillons 4 pièces = 79", "size":79},
+			{"name": "Pavillons 5 pièces = 45", "size":45},
+			{"name": "Pavillons 6 pièces = 2", "size":2},
+			{"name": "Studio = 110", "size":110},
+			{"name": "Deux pièces = 356", "size":356},
+			{"name": "Trois pièces = 824", "size":824},
+			{"name": "Quatre pièces = 677", "size":677},
+			{"name": "Cinq pièces = 227", "size":227},
+			{"name": "Six pièces = 42", "size":42},
+			{"name": "Sept pièces = 2", "size":2}
+     ]
+    }
+	]
+   },
+    {
+	"name": "Antenne - QS",
+   "children": [
+		{
+		"name": "Types et nombres de logements",
+		"children": [
+			{"name": "Caves = 16", "size":16},
+			{"name": "Trois pièces duplex = 33", "size":33},
+			{"name": "Quatre pièces duplex = 7", "size":7},
+			{"name": "Cinq pièces duplex  = 3", "size":3},
+			{"name": "Divers = 6", "size":6},
+			{"name": "Foyers = 6", "size":6},
+			{"name": "Garages = 857", "size":857},
+			{"name": "Parkings couverts = 52", "size":52},
+			{"name": "Locaux = 48", "size":48},
+			{"name": "Locaux à vélos = 9", "size":9},
+			{"name": "Pavillons 2 pièces = 11", "size":11},
+			{"name": "Pavillons 3 pièces = 22", "size":22},
+			{"name": "Pavillons 4 pièces = 34", "size":34},
+			{"name": "Pavillons 5 pièces = 3", "size":3},
+			{"name": "Pavillons 8 pièces = 1", "size":1},
+			{"name": "Studio = 164", "size":164},
+			{"name": "Deux pièces = 561", "size":561},
+			{"name": "Trois pièces = 1027", "size":1027},
+			{"name": "Quatre pièces = 865", "size":865},
+			{"name": "Cinq pièces = 285", "size":285},
+			{"name": "Six pièces = 55", "size":55},
+			{"name": "Sept pièces = 1", "size":1},
+			{"name": "Huit pièces = 2", "size":2},
+			{"name": "Parkings extérieurs = 33", "size":33}
+	  ]
+	 }
+
+	]
+	}
+   
+   
+   
+   
+   
+   
+   
+	]
+    }
+
+
+	
