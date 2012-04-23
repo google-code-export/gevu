@@ -1,0 +1,76 @@
+﻿{
+"name": "Alcéane",
+ "children": [
+   {
+	"name": "Antenne - BL",
+   "children": [
+		{
+		"name": "Nombres de stationnements",
+		"children": [
+			{"name": "Garages = 505", "size":505},
+			{"name": "Parkings couverts = 86", "size":86},
+			{"name": "Parkings extérieurs = 3", "size":3}
+		]
+   }
+	]
+   },
+     {
+	"name": "Antenne - CA",
+   "children": [
+		{
+		"name": "Nombres de stationnements",
+		"children": [
+			{"name": "Garages = 629", "size":629}
+		]
+   }
+	]
+   },
+  {
+	"name": "Antenne - CV",
+   "children": [
+		{
+		"name": "Nombres de stationnements",
+		"children": [
+			{"name": "Parkings couverts = 136", "size":136},
+			{"name": "Parkings extérieurs = 26", "size":26}
+		]
+   }
+	]
+   },
+	{
+	"name": "Antenne - MR",
+   "children": [
+   	{
+		"name": "Nombres de stationnements",
+		"children": [
+			{"name": "Garages = 393", "size":393}	
+		]
+   }	
+	]
+   },
+    {
+	"name": "Antenne - QS",
+   "children": [
+   	{
+		"name": "Nombres de stationnements",
+		"children": [
+			{"name": "Garages = 857", "size":857},
+			{"name": "Parkings couverts = 52", "size":52},
+			{"name": "Parkings extérieurs = 33", "size":33}			
+		]
+   }	
+
+	]
+	}
+   
+   
+   
+   
+   
+   
+   
+	]
+    }
+
+
+	
