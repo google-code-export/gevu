@@ -16,8 +16,8 @@ var partition = d3.layout.partition() //fct qui permet de calculer les donnees p
     .size([2 * Math.PI, r * r])
     .value(function(d) { return 1; });
 
-var arc = d3.svg.arc()
-    .startAngle(function(d) { return d.x; })
+var arc = d3.svg.arc() //créer arc qui utilise modèle de d3.
+    .startAngle(function(d) { return d.x; }) //d.x---> résultat du json par la partition.nodes
     .endAngle(function(d) { return d.x + d.dx; })
     .innerRadius(function(d) { return Math.sqrt(d.y); })
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
@@ -29,8 +29,8 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
       .attr("display", function(d) { return d.depth ? null : "blue"; }) // ds () nb attribut, valeur attribut. d=id; d.depth=profndeur du noeud pr l'id. {}=if si d.depth=null sinn bleu
       .attr("d", arc) //.attr=attribut. Dis à d3 comment il doit construire le code du path qu'il doit faire
       .attr("fill-rule", "evenodd")
-      .style("stroke", "#fff")
-      .style("fill", function(d) { return color((d.children ? d : d.parent).name); }) //si d.children renvoit trop alors d, sinon d.parent
+      .style("stroke", "#fff") //sroke=contour de la forme
+      .style("fill", function(d) { return color((d.children ? d : d.parent).name); }) //si d.children renvoit trop alors d, sinon d.parent. fill ds spécification du svg = remplissage.
       .each(stash);
 	  
 
