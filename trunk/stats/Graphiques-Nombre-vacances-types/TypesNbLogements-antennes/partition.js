@@ -23,14 +23,14 @@ var arc = d3.svg.arc()
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
 d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
-  var path = vis.data([json]).selectAll("path") //créer visualisation, ajoute des donnees, créer pr chaque élement path
+  var path = vis.data([json]).selectAll("path") //créer visualisation, ajoute des donnees, créer pr chaque élement path(ligne)
       .data(partition.nodes) //ajoute nouvelle data (fonction qui permet de transformer les donnees en un modèle de donnees partition qui n'est pas trier)
-    .enter().append("path")
-      .attr("display", function(d) { return d.depth ? null : "blue"; }) // hide inner ring
-      .attr("d", arc)
+    .enter().append("path") //pr chaque valeur de data, on ajoute un path.
+      .attr("display", function(d) { return d.depth ? null : "blue"; }) // ds () nb attribut, valeur attribut. d=id; d.depth=profndeur du noeud pr l'id. {}=if si d.depth=null sinn bleu
+      .attr("d", arc) //.attr=attribut. Dis à d3 comment il doit construire le code du path qu'il doit faire
       .attr("fill-rule", "evenodd")
       .style("stroke", "#fff")
-      .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
+      .style("fill", function(d) { return color((d.children ? d : d.parent).name); }) //si d.children renvoit trop alors d, sinon d.parent
       .each(stash);
 	  
 
