@@ -11,29 +11,33 @@ var vis = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
 
-var partition = d3.layout.partition() //fct qui permet de calculer les donnees par rapport à un tableau
+var partition = d3.layout.partition() //fct qui permet de calculer les donnees par rapport ï¿½ un tableau
     .sort(null)
     .size([2 * Math.PI, r * r])
     .value(function(d) { return 1; });
 
-var arc = d3.svg.arc() //créer arc qui utilise modèle de d3.
-    .startAngle(function(d) { return d.x; }) //d.x---> résultat du json par la partition.nodes
+var arc = d3.svg.arc() //crï¿½er arc qui utilise modï¿½le de d3.
+    .startAngle(function(d) { return d.x; }) //d.x---> rï¿½sultat du json par la partition.nodes
     .endAngle(function(d) { return d.x + d.dx; })
     .innerRadius(function(d) { return Math.sqrt(d.y); })
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
 d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
-  var path = vis.data([json]).selectAll("path") //créer visualisation, ajoute des donnees, créer pr chaque élement path(ligne)
-      .data(partition.nodes) //ajoute nouvelle data (fonction qui permet de transformer les donnees en un modèle de donnees partition qui n'est pas trier)
+  var path = vis.data([json]).selectAll("path") //crï¿½er visualisation, ajoute des donnees, crï¿½er pr chaque ï¿½lement path(ligne)
+      .data(partition.nodes) //ajoute nouvelle data (fonction qui permet de transformer les donnees en un modï¿½le de donnees partition qui n'est pas trier)
     .enter().append("path") //pr chaque valeur de data, on ajoute un path.
       .attr("display", function(d) { return d.depth ? null : "blue"; }) // ds () nb attribut, valeur attribut. d=id; d.depth=profndeur du noeud pr l'id. {}=if si d.depth=null sinn bleu
-      .attr("d", arc) //.attr=attribut. Dis à d3 comment il doit construire le code du path qu'il doit faire
+      .attr("d", arc) //.attr=attribut. Dis ï¿½ d3 comment il doit construire le code du path qu'il doit faire
       .attr("fill-rule", "evenodd")
       .style("stroke", "#fff") //sroke=contour de la forme
-      .style("fill", function(d) { return color((d.children ? d : d.parent).name); }) //si d.children renvoit trop alors d, sinon d.parent. fill ds spécification du svg = remplissage.
+      .style("fill", function(d) { return color((d.children ? d : d.parent).name); }) //si d.children renvoit trop alors d, sinon d.parent. fill ds spï¿½cification du svg = remplissage.
       .each(stash);
 	  
 
+  var titre = path.append("svg:title")
+  .text(function(d) { 
+  	return d.name + " : " + d.value; 
+  });
 
   d3.select("#size").on("click", function() {
     path
@@ -41,7 +45,11 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
-
+    
+    titre.text(function(d) { 
+    	return d.name + " : " + d.size; 
+    });
+    
     d3.select("#size").classed("active", true);
     d3.select("#count").classed("active", false);
   });
