@@ -11,7 +11,7 @@ var vis = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
 
-var partition = d3.layout.partition()
+var partition = d3.layout.partition() //fct qui permet de calculer les donnees par rapport à un tableau
     .sort(null)
     .size([2 * Math.PI, r * r])
     .value(function(d) { return 1; });
@@ -23,8 +23,8 @@ var arc = d3.svg.arc()
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
 d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
-  var path = vis.data([json]).selectAll("path")
-      .data(partition.nodes)
+  var path = vis.data([json]).selectAll("path") //créer visualisation, ajoute des donnees, créer pr chaque élement path
+      .data(partition.nodes) //ajoute nouvelle data (fonction qui permet de transformer les donnees en un modèle de donnees partition qui n'est pas trier)
     .enter().append("path")
       .attr("display", function(d) { return d.depth ? null : "blue"; }) // hide inner ring
       .attr("d", arc)
