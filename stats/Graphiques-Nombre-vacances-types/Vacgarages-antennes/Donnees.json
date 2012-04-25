@@ -7,8 +7,8 @@
 		{
 		"name": "Vacances des garages",
 		"children": [
-			{"name": "OCCUPE = 420", "size":420},
-			{"name": "VACANT = 173", "size":173}
+			{"name": "OCCUPE", "size":420},
+			{"name": "VACANT", "size":173}
 		]
    }
 	]
@@ -19,8 +19,8 @@
 		{
 		"name": "Vacances des garages",
 		"children": [
-			{"name": "OCCUPE = 575", "size":575},
-			{"name": "VACANT = 66", "size":66}
+			{"name": "OCCUPE", "size":575},
+			{"name": "VACANT", "size":66}
 		]
    }
 	]
@@ -31,8 +31,8 @@
 		{
 		"name": "Vacances des garages",
 		"children": [
-			{"name": "OCCUPE = 401", "size":401},
-			{"name": "VACANT = 98", "size":98}
+			{"name": "OCCUPE", "size":401},
+			{"name": "VACANT", "size":98}
 		]
    }
 	]
@@ -43,8 +43,8 @@
    	{
 		"name": "Vacances des garages",
 		"children": [
-			{"name": "OCCUPE = 314", "size":314},
-			{"name": "VACANT = 79", "size":79}	
+			{"name": "OCCUPE", "size":314},
+			{"name": "VACANT", "size":79}	
 		]
    }	
 	]
@@ -55,8 +55,8 @@
    	{
 		"name": "Vacances des garages",
 		"children": [
-			{"name": "OCCUPE = 758", "size":758},
-			{"name": "VACANT = 162", "size":162}
+			{"name": "OCCUPE", "size":758},
+			{"name": "VACANT", "size":162}
 		]
    }	
 
