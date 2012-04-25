@@ -40,10 +40,14 @@ d3.json("../Camembert-antenne-gpe-batiment-types/donnees.json", function(json) {
 
   d3.select("#size").on("click", function() {
     path
-        .data(partition.value(function(d) { return d.value; }))
+        .data(partition.value(function(d) { return d.size; }))
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
+		
+				    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
 
     d3.select("#size").classed("active", true);
     d3.select("#count").classed("active", false);
@@ -51,10 +55,14 @@ d3.json("../Camembert-antenne-gpe-batiment-types/donnees.json", function(json) {
 
   d3.select("#count").on("click", function() {
     path
-        .data(partition.value(function(d) { return d.value; }))
+        .data(partition.value(function(d) { return 1; }))
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
+		
+				    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
 
     d3.select("#size").classed("active", false);
     d3.select("#count").classed("active", true);
