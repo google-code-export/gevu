@@ -58,10 +58,14 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
 
   d3.select("#Commerces").on("click", function() {
     path
-        .data(partition.value(function(d) { return d.value; }))
+        .data(partition.value(function(d) { return 1; }))
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
+		
+		    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
 
     d3.select("#Pavillons").classed("active", false);
     d3.select("#Commerces").classed("active", true);
@@ -71,10 +75,14 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
   
     d3.select("#Logements").on("click", function() {
     path
-        .data(partition.value(function(d) { return d.value; }))
+        .data(partition.value(function(d) { return 1; }))
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
+		
+		    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
 
     d3.select("#Pavillons").classed("active", false);
     d3.select("#Commerces").classed("active", false);
@@ -84,10 +92,14 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
   
       d3.select("#Associations").on("click", function() {
     path
-        .data(partition.value(function(d) { return d.value; }))
+        .data(partition.value(function(d) { return 1; }))
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
+		
+		    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
 
     d3.select("#Pavillons").classed("active", false);
     d3.select("#Commerces").classed("active", false);
