@@ -4,7 +4,7 @@ var w = 960,
    // color = d3.scale.category20c();
 		  z = d3.scale.ordinal()
 		.domain(name)
-	  	.range(colorbrewer.Reds[7]);
+	  	.range(colorbrewer.Reds[8]);
 
 	  
 	  
@@ -71,6 +71,7 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
     	return d.name + " : " + d.value; 
     });
     
+    d3.select("#Catégories").classed("active", false);		
     d3.select("#Pavillons").classed("active", true);
     d3.select("#Commerces").classed("active", false);
 	d3.select("#Logements").classed("active", false);
@@ -88,6 +89,7 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
     	return d.name + " : " + d.value; 
     });
 
+    d3.select("#Catégories").classed("active", false);		
     d3.select("#Pavillons").classed("active", false);
     d3.select("#Commerces").classed("active", true);
 	d3.select("#Logements").classed("active", false);
@@ -105,6 +107,7 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
     	return d.name + " : " + d.value; 
     });
 
+    d3.select("#Catégories").classed("active", false);		
     d3.select("#Pavillons").classed("active", false);
     d3.select("#Commerces").classed("active", false);
 	d3.select("#Logements").classed("active", true);
@@ -122,6 +125,7 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
     	return d.name + " : " + d.value; 
     });
 
+    d3.select("#Catégories").classed("active", false);		
     d3.select("#Pavillons").classed("active", false);
     d3.select("#Commerces").classed("active", false);
 	d3.select("#Logements").classed("active", false);
