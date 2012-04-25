@@ -7,8 +7,8 @@
    	{
 		"name": "Vacances des logements",
 		"children": [
-			{"name": "OCCUPE = 2037", "size":2037},
-			{"name": "VACANT = 421", "size":421}
+			{"name": "OCCUPE", "size":2037},
+			{"name": "VACANT", "size":421}
 		]
    }
    ]
@@ -19,8 +19,8 @@
 		{
 		"name": "Vacances des logements",
 		"children": [
-			{"name": "OCCUPE = 3143", "size":3143},
-			{"name": "VACANT = 130", "size":130}
+			{"name": "OCCUPE", "size":3143},
+			{"name": "VACANT", "size":130}
 		]
    }	
 	]
@@ -31,8 +31,8 @@
 		{
 		"name": "Vacances des logements",
 		"children": [
-			{"name": "OCCUPE = 3366", "size":3366},
-			{"name": "VACANT = 67", "size":67}
+			{"name": "OCCUPE", "size":3366},
+			{"name": "VACANT", "size":67}
 		]
    }
 	]
@@ -43,8 +43,8 @@
    	{
 		"name": "Vacances des logements",
 		"children": [
-			{"name": "OCCUPE = 2332", "size":2332},
-			{"name": "VACANT = 145", "size":145}
+			{"name": "OCCUPE", "size":2332},
+			{"name": "VACANT", "size":145}
 		]
    }	
 	]
@@ -55,8 +55,8 @@
    	{
 		"name": "Vacances des logements",
 		"children": [
-			{"name": "OCCUPE = 3005", "size":3005},
-			{"name": "VACANT = 69", "size":69}
+			{"name": "OCCUPE", "size":3005},
+			{"name": "VACANT", "size":69}
 		]
    }	
 
