@@ -7,9 +7,9 @@
 		{
 		"name": "Nombres de stationnements",
 		"children": [
-			{"name": "Garages = 505", "size":505},
-			{"name": "Parkings couverts = 86", "size":86},
-			{"name": "Parkings extérieurs = 3", "size":3}
+			{"name": "Garages", "size":505},
+			{"name": "Parkings couverts", "size":86},
+			{"name": "Parkings extérieurs", "size":3}
 		]
    }
 	]
@@ -20,7 +20,7 @@
 		{
 		"name": "Nombres de stationnements",
 		"children": [
-			{"name": "Garages = 629", "size":629}
+			{"name": "Garages", "size":629}
 		]
    }
 	]
@@ -31,8 +31,8 @@
 		{
 		"name": "Nombres de stationnements",
 		"children": [
-			{"name": "Parkings couverts = 136", "size":136},
-			{"name": "Parkings extérieurs = 26", "size":26}
+			{"name": "Parkings couverts", "size":136},
+			{"name": "Parkings extérieurs", "size":26}
 		]
    }
 	]
@@ -43,7 +43,7 @@
    	{
 		"name": "Nombres de stationnements",
 		"children": [
-			{"name": "Garages = 393", "size":393}	
+			{"name": "Garages", "size":393}	
 		]
    }	
 	]
@@ -54,9 +54,9 @@
    	{
 		"name": "Nombres de stationnements",
 		"children": [
-			{"name": "Garages = 857", "size":857},
-			{"name": "Parkings couverts = 52", "size":52},
-			{"name": "Parkings extérieurs = 33", "size":33}			
+			{"name": "Garages", "size":857},
+			{"name": "Parkings couverts", "size":52},
+			{"name": "Parkings extérieurs", "size":33}			
 		]
    }	
 
