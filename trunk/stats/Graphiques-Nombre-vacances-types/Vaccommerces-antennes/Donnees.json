@@ -7,8 +7,8 @@
 		{
 		"name": "Vacances des commerces",
 		"children": [
-			{"name": "OCCUPE = 9", "size":9},
-			{"name": "VACANT = 2", "size":2}
+			{"name": "OCCUPE", "size":9},
+			{"name": "VACANT", "size":2}
 		]
    }
 	]
@@ -19,7 +19,7 @@
    	{
 		"name": "Vacances des commerces",
 		"children": [
-			{"name": "OCCUPE = 3", "size":3}
+			{"name": "OCCUPE", "size":3}
 		]
    }	
 	]
@@ -30,8 +30,8 @@
    	{
 		"name": "Vacances des commerces",
 		"children": [
-			{"name": "OCCUPE = 12", "size":12},
-			{"name": "VACANT = 2", "size":2}
+			{"name": "OCCUPE", "size":12},
+			{"name": "VACANT", "size":2}
 		]
    }	
 
