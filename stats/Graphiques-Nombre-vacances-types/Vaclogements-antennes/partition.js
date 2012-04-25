@@ -34,6 +34,10 @@ d3.json("../Vaclogements-antennes/donnees.json", function(json) {
       .each(stash);
 	  
 
+  var titre = path.append("svg:title")
+  .text(function(d) { 
+  	return d.name + " : " + d.value; 
+  });
 
   d3.select("#size").on("click", function() {
     path
@@ -41,6 +45,10 @@ d3.json("../Vaclogements-antennes/donnees.json", function(json) {
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
+		
+				    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
 
     d3.select("#size").classed("active", true);
     d3.select("#count").classed("active", false);
@@ -52,6 +60,10 @@ d3.json("../Vaclogements-antennes/donnees.json", function(json) {
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
+		
+				    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
 
     d3.select("#size").classed("active", false);
     d3.select("#count").classed("active", true);
