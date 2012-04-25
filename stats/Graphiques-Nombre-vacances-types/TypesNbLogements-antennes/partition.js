@@ -1,7 +1,10 @@
 var w = 960,
     h = 700,
     r = Math.min(w, h) / 2,
-    color = d3.scale.category20c();
+   // color = d3.scale.category20c();
+		  z = d3.scale.ordinal()
+		.domain(name)
+	  	.range(colorbrewer.Reds[7]);
 
 	  
 	  
@@ -30,13 +33,31 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
       .attr("d", arc) //.attr=attribut. Dis � d3 comment il doit construire le code du path qu'il doit faire
       .attr("fill-rule", "evenodd")
       .style("stroke", "#fff") //sroke=contour de la forme
-      .style("fill", function(d) { return color((d.children ? d : d.parent).name); }) //si d.children renvoit trop alors d, sinon d.parent. fill ds sp�cification du svg = remplissage.
+      .style("fill", function(d) { return z((d.children ? d : d.parent).name); }) //si d.children renvoit trop alors d, sinon d.parent. fill ds sp�cification du svg = remplissage.
       .each(stash);
 	  
 
   var titre = path.append("svg:title")
   .text(function(d) { 
   	return d.name + " : " + d.value; 
+  });
+
+  d3.select("#Catégories").on("click", function() {
+    path
+        .data(partition.value(function(d) { return 1; }))
+      .transition()
+        .duration(1500)
+        .attrTween("d", arcTween);
+    
+    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
+    
+    d3.select("#Catégories").classed("active", true);	
+    d3.select("#Pavillons").classed("active", false);
+    d3.select("#Commerces").classed("active", false);
+	d3.select("#Logements").classed("active", false);
+	d3.select("#Associations").classed("active", false);
   });
 
   d3.select("#Pavillons").on("click", function() {
