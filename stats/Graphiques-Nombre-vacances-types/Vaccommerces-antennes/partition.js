@@ -33,6 +33,10 @@ d3.json("../Vaccommerces-antennes/donnees.json", function(json) {
       .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
       .each(stash);
 	  
+	    var titre = path.append("svg:title")
+  .text(function(d) { 
+  	return d.name + " : " + d.value; 
+  });
 
 
   d3.select("#size").on("click", function() {
@@ -41,6 +45,10 @@ d3.json("../Vaccommerces-antennes/donnees.json", function(json) {
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
+		
+				    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
 
     d3.select("#size").classed("active", true);
     d3.select("#count").classed("active", false);
@@ -52,6 +60,10 @@ d3.json("../Vaccommerces-antennes/donnees.json", function(json) {
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
+		
+				    titre.text(function(d) { 
+    	return d.name + " : " + d.value; 
+    });
 
     d3.select("#size").classed("active", false);
     d3.select("#count").classed("active", true);
