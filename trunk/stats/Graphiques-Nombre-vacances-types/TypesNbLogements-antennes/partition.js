@@ -39,7 +39,7 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
   	return d.name + " : " + d.value; 
   });
 
-  d3.select("#size").on("click", function() {
+  d3.select("#Pavillons").on("click", function() {
     path
         .data(partition.value(function(d) { return d.size; }))
       .transition()
@@ -47,23 +47,54 @@ d3.json("../TypesNbLogements-antennes/donnees.json", function(json) {
         .attrTween("d", arcTween);
     
     titre.text(function(d) { 
-    	return d.name + " : " + d.size; 
+    	return d.name + " : " + d.value; 
     });
     
-    d3.select("#size").classed("active", true);
-    d3.select("#count").classed("active", false);
+    d3.select("#Pavillons").classed("active", true);
+    d3.select("#Commerces").classed("active", false);
+	d3.select("#Logements").classed("active", false);
+	d3.select("#Associations").classed("active", false);
   });
 
-  d3.select("#count").on("click", function() {
+  d3.select("#Commerces").on("click", function() {
     path
-        .data(partition.value(function(d) { return 1; }))
+        .data(partition.value(function(d) { return d.value; }))
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
 
-    d3.select("#size").classed("active", false);
-    d3.select("#count").classed("active", true);
+    d3.select("#Pavillons").classed("active", false);
+    d3.select("#Commerces").classed("active", true);
+	d3.select("#Logements").classed("active", false);
+	d3.select("#Associations").classed("active", false);
   });
+  
+    d3.select("#Logements").on("click", function() {
+    path
+        .data(partition.value(function(d) { return d.value; }))
+      .transition()
+        .duration(1500)
+        .attrTween("d", arcTween);
+
+    d3.select("#Pavillons").classed("active", false);
+    d3.select("#Commerces").classed("active", false);
+	d3.select("#Logements").classed("active", true);
+	d3.select("#Associations").classed("active", false);
+  });
+  
+      d3.select("#Associations").on("click", function() {
+    path
+        .data(partition.value(function(d) { return d.value; }))
+      .transition()
+        .duration(1500)
+        .attrTween("d", arcTween);
+
+    d3.select("#Pavillons").classed("active", false);
+    d3.select("#Commerces").classed("active", false);
+	d3.select("#Logements").classed("active", false);
+	d3.select("#Associations").classed("active", true);
+  });
+  
 });
 
 // Stash the old values for transition.
