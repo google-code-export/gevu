@@ -1,5 +1,5 @@
 var w = 960,
-    h = 700,
+    h = 600,
     r = Math.min(w, h) / 2,
    // color = d3.scale.category20c();
 		  z = d3.scale.ordinal()
