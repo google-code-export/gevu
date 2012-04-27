@@ -47,59 +47,94 @@ class GEVU_Statistique extends GEVU_Site{
 
 	/**
 	 * calcule la hiérarchie des types de logement
+    * @param string $typeLog
 	 * 
-    * @return string
+    * @return array
     */
-	public function getArbreTypeLog(){
-	   $c = str_replace("::", "_", __METHOD__); 
-	   $s = $this->cache->load($c);
-       if(!$s){
+	public function getArbreTypeLog($typeLog=""){
+	   $c = str_replace("::", "_", __METHOD__).$typeLog; 
+	   $rs = $this->cache->load($c);
+       if(!$rs){
 
+       		$wTypelog = "";
+			if($typeLog!="")$wTypelog = " AND s.Categorie_Module ='".$typeLog."'";
+       	
         	//récupère la hiérarchie des antennes - groupe - batiments
-    		$sql = "SELECT la.lib libA, la.id_lieu idA, lg.lib libG, lg.id_lieu idG, lb.lib libB, lb.id_lieu idB, COUNT(s.id_lieu) nbStat, m.titre 
+    		$sql = "SELECT a.ref, la.lib libA, la.id_lieu idA, lg.lib libG, lg.id_lieu idG, lb.lib libB, lb.id_lieu idB, COUNT(s.id_lieu) nbStat, m.titre 
 				FROM gevu_antennes a
 				    INNER JOIN gevu_lieux la on la.id_lieu = a.id_lieu
 					INNER JOIN gevu_lieux lg on lg.lieu_parent = la.id_lieu
 					INNER JOIN gevu_lieux lb on lb.lieu_parent = lg.id_lieu
 					INNER JOIN gevu_lieux le on le.lft BETWEEN lb.lft AND lb.rgt
-					LEFT JOIN gevu_stats s on s.id_lieu = le.id_lieu
+					LEFT JOIN gevu_stats s on s.id_lieu = le.id_lieu ".$wTypelog."
 				    LEFT JOIN gevu_motsclefs m on m.code = s.Categorie_Module 
 				GROUP BY la.id_lieu, lg.id_lieu, lb.id_lieu, m.id_motclef
 				HAVING nbStat > 0";
-       	
+       		
 	        $db = Zend_Db_Table::getDefaultAdapter();
 	    	$stmt = $db->query($sql);
 	    	$arr = $stmt->fetchAll();
 
-	    	$idA = -1; $idG = -1; $idB = -1;
+	    	$idA = -1; $idG = -1; $idB = -1; $minNb = 1; $maxNb = 1; $nbTot;
 	        $rs = array("name"=>"Alcéane","children"=>array());
 	        foreach ($arr as $r) {
 	        	if($idA != $r['idA']){
 	        		if($idA != -1){
+	        			//$strType = implode('-', array_keys($types));
+	        			//$rsA["types"] = $strType;
+	        			//$types = array();
+	        			if($rsB)$rsG['children'][] = $rsB;
+	        			$rsB = false;
+	        			if($rsG)$rsA['children'][] = $rsG;
+	        			$rsG = false;
+	        			//met à jour le min/max
+	        			$rsA['max'] = $maxNb;
+	        			$rsA['min'] = $minNb;
 	        			$rs['children'][] = $rsA; 
 	        		} 
-	        		$rsA = array("name"=>$r['libA'],"children"=>array());
+	        		$minNb = $r['nbStat']; $maxNb = $r['nbStat'];
+	        		$rsA = array("ref"=>$r['ref'],"name"=>$r['libA'],"nb"=>1,"children"=>array());
 	        		$idA = $r['idA'];
 	        	}
 	        	if($idG != $r['idG']){
 	        		if($idG != -1){
-	        			$idB = $r['idB'];
-	        			$rsA['children'][] = $rsG;
+	        			if($rsB)$rsG['children'][] = $rsB;
+	        			$rsB = false;
+	        			if($rsG)$rsA['children'][] = $rsG;
 	        		} 
-	        		$rsG = array("name"=>$r['libG'],"children"=>array());
+	        		$rsG = array("ref"=>$r['ref'],"name"=>$r['libG'],"nb"=>1,"children"=>array());
 	        		$idG = $r['idG'];
 	        	}
 	        	if($idB != $r['idB']){
 	        		if($idB != -1){
-	        			$rsG['children'][] = $rsB;
+	        			if($rsB)$rsG['children'][] = $rsB;
 	        		} 
-	        		$rsB = array("name"=>$r['libB'],"children"=>array());
+	        		$rsB = array("ref"=>$r['ref'],"name"=>$r['libB'],"nb"=>1,"children"=>array());
 	        		$idB = $r['idB'];
 	        	}
-	        	$rsL = array("name"=>$r['titre'],"size"=>$r['nbStat']);
+	        	$rsA['nb'] = $rsA['nb']+$r['nbStat'];
+	        	$rsG['nb'] = $rsG['nb']+$r['nbStat'];
+	        	$rsB['nb'] = $rsB['nb']+$r['nbStat'];
+	        	$rsL = array("ref"=>$r['ref'],"name"=>$r['titre'],"nb"=>$r['nbStat']);
+	        	//enregistre le min/max
+	        	if($maxNb<$r['nbStat'])$maxNb=$r['nbStat'];
+	        	if($minNb>$r['nbStat'])$minNb=$r['nbStat'];
+	        	//$types[$r['titre']] = "-";
 	        	$rsB['children'][] = $rsL;
+	        	//enregistre le nombre total
+	        	$nbTot += $r['nbStat'];
 	        }
-    		$this->cache->save($rs, $c);
+			//$strType = implode('-', array_keys($types));
+	        //$rsA["types"] = $strType;
+			$rsG['children'][] = $rsB;
+        	$rsA['children'][] = $rsG;
+        	//met à jour le min/max
+	        $rsA['max'] = $maxNb;
+	        $rsA['min'] = $minNb;
+        	$rs['children'][] = $rsA; 
+        	$rs['nb'] = $nbTot; 
+        	
+	        $this->cache->save($rs, $c);
         }
         
         return $rs;
