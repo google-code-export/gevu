@@ -40,26 +40,31 @@ class GEVU_Site{
     * 
     */
 	function __construct($idBase=false){    	
-    	
-        $this->getDb($idBase);
-        
-        $this->idInst = -1;
-        
-		$frontendOptions = array(
-            'lifetime' => 86400, // temps de vie du cache en seconde
-            'automatic_serialization' => true,
-        	'caching' => false //active ou desactive le cache
-        );  
-        $backendOptions = array(
-            // Répertoire où stocker les fichiers de cache
-            'cache_dir' => '../tmp/'
-        ); 
-        // créer un objet Zend_Cache_Core
-        $this->cache = Zend_Cache::factory('Core',
-                                     'File',
-                                     $frontendOptions,
-                                     $backendOptions); 
-    }
+		
+		try {			
+		    $this->getDb($idBase);
+	        
+	        $this->idInst = -1;
+	        
+			$frontendOptions = array(
+	            'lifetime' => 86400, // temps de vie du cache en seconde
+	            'automatic_serialization' => true,
+	        	'caching' => false //active ou desactive le cache
+	        );  
+	        $backendOptions = array(
+	            // Répertoire où stocker les fichiers de cache
+	            'cache_dir' => '../tmp/'
+	        ); 
+	        // créer un objet Zend_Cache_Core
+	        $this->cache = Zend_Cache::factory('Core',
+	                                     'File',
+	                                     $frontendOptions,
+	                                     $backendOptions); 
+		}catch (Zend_Exception $e) {
+	          echo "Récupère exception: " . get_class($e) . "\n";
+	          echo "Message: " . $e->getMessage() . "\n";
+		}
+	}
 
     /**
     * @param string $c
