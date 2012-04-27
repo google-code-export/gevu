@@ -44,7 +44,7 @@ svg {
   
   <u><font color="red" size="10px"> Les diff&eacuterentes donn&eacutees selon les antennes</font></u><br><br>
 
-    <script type="text/javascript" src="../../d3.v2.js"></script>
+    <script type="text/javascript" src="../js/d3.v2.js"></script>
     <script type="text/javascript">
 
 var m = [30, 10, 10, 10],
@@ -65,7 +65,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-d3.csv("fichier.csv", function(fichier) {
+d3.csv("../Data/fichier1.csv", function(fichier) {
 
   // Extract the list of dimensions and create a scale for each.
   x.domain(dimensions = d3.keys(fichier[0]).filter(function(d) {
