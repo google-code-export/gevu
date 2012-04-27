@@ -139,6 +139,54 @@ class Models_DbTable_Gevu_antennes extends Zend_Db_Table_Abstract
 			GROUP BY a.ref, s.type
 			";    	
 
+		if($type=="financement") $sql = "
+			SELECT a.ref, l.lib
+				, s.Type_Financement, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l on l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le on le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_stats s on s.id_lieu = le.id_lieu
+			GROUP BY a.ref, Type_Financement
+					";    	
+		if($type=="age") $sql = "
+			SELECT a.ref, l.lib
+				, s.Annee_Construction, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l on l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le on le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_stats s on s.id_lieu = le.id_lieu
+			GROUP BY a.ref, Annee_Construction
+					";    	
+		if($type=="copro") $sql = "
+			SELECT a.ref, l.lib
+				, s.Copropriete, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l on l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le on le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_stats s on s.id_lieu = le.id_lieu
+			GROUP BY a.ref, Copropriete
+					";    	
+				
+		if($type=="col_log") $sql = "
+			SELECT a.ref, l.lib
+				, s.Logement_Individuel, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l ON l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le ON le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_logements lgt ON lgt.id_lieu = le.id_lieu 
+				INNER JOIN gevu_stats s ON s.id_lieu = lgt.id_lieu 
+			GROUP BY a.ref, s.Logement_Individuel
+			";    	
+		if($type=="zus_log") $sql = "
+			SELECT a.ref, l.lib
+				, s.Indicateur_Zus, COUNT(DISTINCT s.id_stat) 'nb'
+			FROM gevu_antennes a
+				INNER JOIN gevu_lieux l ON l.id_lieu = a.id_lieu
+				INNER JOIN gevu_lieux le ON le.lft BETWEEN l.lft AND l.rgt
+				INNER JOIN gevu_logements lgt ON lgt.id_lieu = le.id_lieu 
+				INNER JOIN gevu_stats s ON s.id_lieu = lgt.id_lieu 
+			GROUP BY a.ref, s.Indicateur_Zus
+			";    	
 		if($type=="vac_log") $sql = "
 			SELECT a.ref, l.lib
 				, s.OCCUPATION, COUNT(DISTINCT s.id_stat) 'nb'
@@ -171,12 +219,12 @@ class Models_DbTable_Gevu_antennes extends Zend_Db_Table_Abstract
 			";    	
 		if($type=="garage") $sql = "
 			SELECT a.ref, l.lib
-				, s.type, COUNT(DISTINCT s.id_stat) 'nb'
+				, s.type_logement, COUNT(DISTINCT s.id_stat) 'nb'
 			FROM gevu_antennes a
 				INNER JOIN gevu_lieux l ON l.id_lieu = a.id_lieu
 				INNER JOIN gevu_lieux le ON le.lft BETWEEN l.lft AND l.rgt
-				INNER JOIN gevu_stats s ON s.id_lieu = le.id_lieu AND s.type IN('GA','GP','TO') 
-			GROUP BY a.ref, s.type
+				INNER JOIN gevu_stats s ON s.id_lieu = le.id_lieu AND s.type_logement IN('GA','GP','TO') 
+			GROUP BY a.ref, s.type_logement
 			";    	
 		
 		

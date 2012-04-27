@@ -85,7 +85,7 @@ class Models_DbTable_Gevu_stats extends Zend_Db_Table_Abstract
      */
     public function ajouterByImport($arr, $idLieu, $idInst)
     {
-    	
+    	/*	
     	return $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "LKLO"=>$arr[5], "TYPE"=>$arr[6], "ETAGE"=>$arr[7], "SURRE"=>$arr[8], "SURAP"=>$arr[9], "LOYER"=>$arr[10]
     			, "SLS"=>$arr[11], "CHARGES"=>$arr[12], "OCCUPATION"=>$arr[13], "MOTIF_VACANCE"=>$arr[14], "CDECL"=>$arr[15], "CDSCL"=>$arr[16], "AGE1"=>$arr[17], "AGE2"=>$arr[18]
     			, "NBENF1"=>$arr[19], "NBENF2"=>$arr[20], "NBENF3"=>$arr[21], "AUTPERS"=>$arr[22], "REIMP1"=>$arr[22], "REIMP2"=>$arr[23], "REIMPAUT"=>$arr[24], "CATMEN"=>$arr[25]
@@ -93,6 +93,18 @@ class Models_DbTable_Gevu_stats extends Zend_Db_Table_Abstract
     			, "EMPLOYEUR2"=>$arr[34], "SITFAM1"=>$arr[35], "SITFAM2"=>$arr[36], "RESERVAT"=>$arr[37], "ISOLE"=>$arr[38], "STAB"=>$arr[39], "FRAGI"=>$arr[40], "ETUDI"=>$arr[41]
     			, "RMI"=>$arr[42], "API"=>$arr[43], "AAH"=>$arr[44], "FNS"=>$arr[45], "ASCENSEUR"=>$arr[46], "MODCHAUF"=>$arr[47], "RESAN"=>$arr[48]
     			));
+    	*/
+    	return $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "Tranche"=>$arr[3], "Code_Escalier"=>$arr[6], "Indicateur_Zus"=>$arr[12], "Code_Logement"=>$arr[13]
+    		, "Categorie_Module"=>$arr[14], "Logement_Individuel"=>$arr[16], "Type_Logement"=>$arr[17], "Nombre_pieces"=>$arr[19], "Etage"=>$arr[20], "Surface_Reelle"=>$arr[21], "Surface_Appliquee"=>$arr[22]
+    		, "Type_financement"=>$arr[23], "Annee_Construction"=>$arr[24], "Contrat"=>$arr[25], "Type_Reception_TV"=>$arr[26], "Occupation"=>$arr[27], "Motif_Vacance"=>$arr[28], "Copropriete"=>$arr[30]
+    		, "DPE_Date"=>$arr[31], "DPE_consommation_reelle"=>$arr[32], "DPE_Categorie_Consommation"=>$arr[33], "DPE_emissions_GES"=>$arr[34], "DPE_Categorie_Emissions_GES"=>$arr[35]
+    		, "CREP_Date"=>$arr[36], "CREP_presence_Plomb"=>$arr[37], "CREP_Seuil_Plomb_depasse"=>$arr[38]
+    		, "DTA_Date"=>$arr[39], "DTA_Presence_Amiante"=>$arr[40], "DTA_Presence_Amiante_Degradee"=>$arr[41], "DTA_Mesure_Conservatoire"=>$arr[42], "DTA_Date_Travaux"=>$arr[43]
+    		, "Gardien"=>$arr[44], "Peupl_CSP"=>$arr[45], "Peupl_AHH"=>$arr[46], "Peupl_Famille_mono_parentale"=>$arr[47], "Peupl_Famille_Nombreuse"=>$arr[48], "Peupl_Celibataire"=>$arr[49]
+    		, "Peupl_Foyer_0_2Enf"=>$arr[50], "Peupl_Nb_Occupants"=>$arr[51], "Peupl_Age_Signataire_1"=>$arr[52], "Peupl_Age_Signataire_2"=>$arr[53], "Peupl_nb_enfants"=>$arr[54]
+    		, "Peupl_nb_enfants_0_10_ans"=>$arr[55], "Peupl_nb_enfants_11_17_ans"=>$arr[56], "Peupl_nb_enfants_sup18_ans"=>$arr[57], "Peupl_Provenance"=>$arr[58], "Peupl_Anciennete"=>$arr[59], "Peupl_Surpeuplement"=>$arr[60]
+    		));    		
+    		
     } 
     
     
