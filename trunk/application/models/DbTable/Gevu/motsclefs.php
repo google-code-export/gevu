@@ -51,7 +51,7 @@ class Models_DbTable_Gevu_motsclefs extends Zend_Db_Table_Abstract
      *
      * @param int $type
      */
-public function getAllByType($type)
+	public function getAllByType($type)
     {
         $query = $this->select()
                     ->from( array("g" => "gevu_motsclefs") )                           
@@ -59,4 +59,5 @@ public function getAllByType($type)
 
         return $this->fetchAll($query)->toArray(); 
     }
+    
 }
