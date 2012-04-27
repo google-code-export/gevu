@@ -1,0 +1,1 @@
+[{"ref":"CV","lib":"Antenne - CV","OCCUPATION":"OCCUPE","nb":"9"},{"ref":"CV","lib":"Antenne - CV","OCCUPATION":"VACANT","nb":"2"},{"ref":"MR","lib":"Antenne - MR","OCCUPATION":"OCCUPE","nb":"3"},{"ref":"QS","lib":"Antenne - QS","OCCUPATION":"OCCUPE","nb":"12"},{"ref":"QS","lib":"Antenne - QS","OCCUPATION":"VACANT","nb":"2"}]
