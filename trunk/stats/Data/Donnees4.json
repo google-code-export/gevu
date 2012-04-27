@@ -1,0 +1,51 @@
+﻿{
+"name": "Alcéane",
+ "children": [
+  {
+	"name": "Antenne - CV",
+   "children": [
+		{
+		"name": "Vacances des commerces",
+		"children": [
+			{"name": "OCCUPE", "size":9},
+			{"name": "VACANT", "size":2}
+		]
+   }
+	]
+   },
+	{
+	"name": "Antenne - MR",
+   "children": [
+   	{
+		"name": "Vacances des commerces",
+		"children": [
+			{"name": "OCCUPE", "size":3}
+		]
+   }	
+	]
+   },
+    {
+	"name": "Antenne - QS",
+   "children": [
+   	{
+		"name": "Vacances des commerces",
+		"children": [
+			{"name": "OCCUPE", "size":12},
+			{"name": "VACANT", "size":2}
+		]
+   }	
+
+	]
+	}
+   
+   
+   
+   
+   
+   
+   
+	]
+    }
+
+
+	

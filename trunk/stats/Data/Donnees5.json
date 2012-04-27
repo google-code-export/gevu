@@ -1,0 +1,166 @@
+﻿{
+"name": "Alcéane",
+"children": [
+   {
+	"name": "Antenne - BL",
+   "children": [
+		{
+		"name": "Types et nombre de logements",
+		"children": [
+			{"name": "Quatres pièces duplex", "size":10},
+			{"name": "Divers", "size":6},
+			{"name": "Foyers", "size":2},
+			{"name": "Garages", "size":505},
+			{"name": "Parking couverts", "size":86},
+			{"name": "Locaux", "size":11},
+			{"name": "Locaux à vélos", "size":22},
+			{"name": "Pavillons 2 pièces", "size":11},
+			{"name": "Pavillons 3 pièces", "size":26},
+			{"name": "Pavillons 4 pièces", "size":70},
+			{"name": "Pavillons 5 pièces", "size":61},
+			{"name": "Pavillons 6 pièces", "size":31},
+			{"name": "Pavillons 7 pièces", "size":3},
+			{"name": "Studio", "size":63},
+			{"name": "Deux pièces", "size":381},
+			{"name": "Trois pièces", "size":817},
+			{"name": "Quatre pièces", "size":711},
+			{"name": "Cinq pièces", "size":232},
+			{"name": "Six pièces", "size":43},
+			{"name": "Parkings extérieurs", "size":3}
+		]
+   }
+	]
+   },
+     {
+	"name": "Antenne - CA",
+   "children": [
+		{
+		"name": "Types et nombre de logements",
+		"children": [
+			{"name": "Quatre pièces duplex", "size":2},
+			{"name": "Divers", "size":17},
+			{"name": "Foyers", "size":2},
+			{"name": "Garages", "size":629},
+			{"name": "Parkings couverts", "size":17},
+			{"name": "Locaux", "size":17},
+			{"name": "Locaux à vélos", "size":27},
+			{"name": "Pavillons 2 pièces", "size":2},
+			{"name": "Pavillons 3 pièces", "size":104},
+			{"name": "Pavillons 4 pièces", "size":140},
+			{"name": "Pavillons 5 pièces", "size":23},
+			{"name": "Pavillons 6 pièces", "size":1},
+			{"name": "Pavillons 7 pièces", "size":1},
+			{"name": "Studio", "size":33},
+			{"name": "Deux pièces", "size":288},
+			{"name": "Trois pièces", "size":1178},
+			{"name": "Quatre pièces", "size":1146},
+			{"name": "Cinq pièces", "size":279},
+			{"name": "Six pièces", "size":26}
+		]
+   }
+	]
+   },
+  {
+	"name": "Antenne - CV",
+   "children": [
+		{
+		"name": "Types et nombre de logements",
+		"children": [
+			{"name": "Caves", "size":83},
+			{"name": "Trois pièces duplex", "size":1},
+			{"name": "Divers", "size":13},
+			{"name": "Foyers", "size":7},
+			{"name": "Garages", "size":379},
+			{"name": "Parkings couverts", "size":136},
+			{"name": "Locaux", "size":28},
+			{"name": "Pavillons 3 pièces", "size":3},
+			{"name": "Pavillons 4 pièces", "size":19},
+			{"name": "Pavillons 5 pièces", "size":1},
+			{"name": "Studio", "size":169},
+			{"name": "Deux pièces", "size":652},
+			{"name": "Trois pièces", "size":1586},
+			{"name": "Quatre pièces", "size":785},
+			{"name": "Cinq pièces", "size":195},
+			{"name": "Six pièces", "size":22},
+			{"name": "Parkings extérieurs", "size":26}
+		]
+   }
+	]
+   },
+	{
+	"name": "Antenne - MR",
+   "children": [
+   	{
+		"name": "Types et nombre de logements",
+		"children": [
+			{"name": "Deux pièces duplex", "size":1},
+			{"name": "Trois pièces duplex", "size":20},
+			{"name": "Quatre pièces duplex", "size":34},
+			{"name": "Cinq pièces duplex", "size":22},
+			{"name": "Six pièces duplex", "size":6},
+			{"name": "Sept pièces duplex", "size":4},
+			{"name": "Divers", "size":6},
+			{"name": "Foyers", "size":2},
+			{"name": "Garages", "size":393},
+			{"name": "Locaux", "size":45},
+			{"name": "Pavillons 3 pièces", "size":25},
+			{"name": "Pavillons 4 pièces", "size":79},
+			{"name": "Pavillons 5 pièces", "size":45},
+			{"name": "Pavillons 6 pièces", "size":2},
+			{"name": "Studio", "size":110},
+			{"name": "Deux pièces", "size":356},
+			{"name": "Trois pièces", "size":824},
+			{"name": "Quatre pièces", "size":677},
+			{"name": "Cinq pièces", "size":227},
+			{"name": "Six pièces", "size":42},
+			{"name": "Sept pièces", "size":2}
+		]
+   }	
+	]
+   },
+    {
+	"name": "Antenne - QS",
+   "children": [
+   	{
+		"name": "Types et nombre de logements",
+		"children": [
+			{"name": "Caves", "size":16},
+			{"name": "Trois pièces duplex", "size":33},
+			{"name": "Quatre pièces duplex", "size":7},
+			{"name": "Cinq pièces duplex", "size":3},
+			{"name": "Divers", "size":6},
+			{"name": "Foyers", "size":6},
+			{"name": "Garages", "size":857},
+			{"name": "Parkings couverts", "size":52},
+			{"name": "Locaux", "size":48},
+			{"name": "Locaux à vélos", "size":9},
+			{"name": "Pavillons 2 pièces", "size":11},
+			{"name": "Pavillons 3 pièces", "size":22},
+			{"name": "Pavillons 4 pièces", "size":34},
+			{"name": "Pavillons 5 pièces", "size":3},
+			{"name": "Pavillons 8 pièces", "size":1},
+			{"name": "Studio", "size":164},
+			{"name": "Deux pièces", "size":561},
+			{"name": "Trois pièces", "size":1027},
+			{"name": "Quatre pièces", "size":865},
+			{"name": "Cinq pièces", "size":285},
+			{"name": "Six pièces", "size":55},
+			{"name": "Sept pièces", "size":1},
+			{"name": "Huit pièces", "size":2},
+			{"name": "Parkings extérieurs", "size":33}		
+		]
+   }	
+
+	]
+	}
+   
+   
+   
+   
+   
+   
+   
+	]
+    }
+
+	
