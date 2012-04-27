@@ -101,6 +101,20 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     {
     	$this->update($data, 'gevu_geos.id_geo = ' . $id);
     }
+
+    /**
+     * Recherche une entrée Gevu_geos avec la clef l'identifiant de lieu
+     * et modifie cette entrée avec les nouvelles données.
+     *
+     * @param integer $id
+     * @param array $data
+     *
+     * @return void
+     */
+    public function editByLieu($id, $data)
+    {
+    	$this->update($data, 'gevu_geos.id_lieu = ' . $id);
+    }
     
     /**
      * Recherche une entrée Gevu_geos avec la clef primaire spécifiée
