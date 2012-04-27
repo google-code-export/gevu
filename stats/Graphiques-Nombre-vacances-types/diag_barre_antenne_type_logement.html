@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Hierarchical Bar Chart</title>
-    <script type="text/javascript" src="../Data/d3.v2.js"></script>
+    <script type="text/javascript" src="../js/d3.v2.js"></script>
     <style type="text/css">
 
 text {
@@ -63,7 +63,7 @@ svg.append("g")
   .append("line")
     .attr("y1", "100%");
 
-d3.json("../Graphiques-Nombre-vacances-types/Camembert-antenne-typeslogements/flare.json", function(root) {
+d3.json("../Data/flare.json", function(root) {
   hierarchy.nodes(root);
   x.domain([0, root.value]).nice();
   down(root, 0);
