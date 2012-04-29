@@ -252,7 +252,7 @@ class GEVU_Diagnostique extends GEVU_Site{
     * @return Array
     */
 	public function calculDiagForLieu($idLieu, $idInstant=-1, $idBase=false){
-		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idInstant."_".$idBase; 
+		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".md5($idInstant)."_".$idBase; 
 	   	$r = $this->cache->load($c);
         if(!$r){
 			
@@ -476,7 +476,7 @@ class GEVU_Diagnostique extends GEVU_Site{
     */
 	public function getXmlNode($idLieu=0, $idBase=false, $nivMax=3){
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
-	   	$xml = $this->cache->load($c);
+	   	$xml = false;//$this->cache->load($c);
         if(!$xml){
     		$xml="";
 			//initialise les gestionnaires de base de données

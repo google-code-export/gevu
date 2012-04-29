@@ -39,7 +39,7 @@ class GEVU_Site{
     * @param string $idBase
     * 
     */
-	function __construct($idBase=false){    	
+	function __construct($idBase=false, $cache = false){    	
 		
 		try {			
 		    $this->getDb($idBase);
@@ -49,7 +49,7 @@ class GEVU_Site{
 			$frontendOptions = array(
 	            'lifetime' => 86400, // temps de vie du cache en seconde
 	            'automatic_serialization' => true,
-	        	'caching' => true //active ou desactive le cache
+	        	'caching' => $cache //active ou desactive le cache
 	        );  
 	        $backendOptions = array(
 	            // Répertoire où stocker les fichiers de cache
