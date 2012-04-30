@@ -36,7 +36,7 @@ var arc = d3.svg.arc() //cr�er arc qui utilise mod�le de d3.
 
 function getTypeLog(typeLog){
 	
-	d3.json("../stat/antenne?type=ArbreTypeLog&typeLog="+typeLog, function(json) {
+	d3.json("../antenne?type=ArbreTypeLog&typeLog="+typeLog, function(json) {
 		//suprime l'ancien graphique
 		if(path)path.remove();
 		
