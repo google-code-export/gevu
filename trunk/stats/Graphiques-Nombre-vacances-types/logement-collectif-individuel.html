@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
@@ -21,16 +20,16 @@ svg {
   </head>
   <body>
   
-  <u><big>Types de logements ZUS pour chaque antennes</big></u><br><br>
+  <u><big>Nombre de logements collectifs individuels pour chaque antennes</big></u><br><br>
   
     <script type="text/javascript">
 // merci à http://bl.ocks.org/1305337
 
 // Load data asynchronously.
-d3.json("../js/logement-zus.js", function(data) {
+d3.json("../js/logement-collectif-individuel.js", function(data) {
 
-	var types = d3.nest()
-      .key(function(d) { return d.Indicateur_Zus; })
+	var logementsindividuels = d3.nest()
+      .key(function(d) { return d.Logement_Individuel; })
       .entries(data);
 
   // Define the margin, radius, and color scale. Colors are assigned lazily, so
@@ -39,7 +38,7 @@ d3.json("../js/logement-zus.js", function(data) {
       r = 100,
       //z = d3.scale.category20b();
 	  z = d3.scale.ordinal()
-		.domain(types)
+		.domain(logementsindividuels)
 	  	.range(colorbrewer.Greens[9]);
 	  
   // Define a pie layout: the pie angle encodes the count of flights. Since our
@@ -92,10 +91,10 @@ d3.json("../js/logement-zus.js", function(data) {
   // Add a colored arc path, with a mouseover title showing the count.
   g.append("svg:path")
       .attr("d", arc)
-      .style("fill", function(d) { return z(d.data.Indicateur_Zus); })
+      .style("fill", function(d) { return z(d.data.Logement_Individuel); })
     .append("svg:title")
       .text(function(d) { 
-    	  return [d.data.Indicateur_Zus] + " : " + d.data.nb; 
+    	  return [d.data.Logement_Individuel] + " : " + d.data.nb; 
     	  });
 
   // Add a label to the larger arcs, translated to the arc centroid and rotated.
@@ -103,7 +102,7 @@ d3.json("../js/logement-zus.js", function(data) {
       .attr("dy", ".35em")
       .attr("text-anchor", "middle")
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
-      .text(function(d) { return d.data.Indicateur_Zus; });
+      .text(function(d) { return d.data.Logement_Individuel; });
 
   // Computes the label angle of an arc, converting from radians to degrees.
   function angle(d) {
