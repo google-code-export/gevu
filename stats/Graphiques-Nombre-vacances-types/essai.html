@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html>
+﻿<html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <title>Types de logements pour chaque antennes</title>
@@ -42,7 +41,7 @@ svg {
   </head>
   <body>
   
-  <u><font color="red" size="10px"> Types de logements pour chaque antennes</font></u><br><br>
+  <u><font color="red" size="10px"> Caractéristiques des logements en fonction des sortes de logements</font></u><br><br>
 
     <script type="text/javascript" src="../js/d3.v2.js"></script>
     <script type="text/javascript">
@@ -65,11 +64,11 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-d3.json("../Data/gevu_stats.json", function(fichier) {
+d3.csv("../Data/essai1.csv", function(fichier) {
 
   // Extract the list of dimensions and create a scale for each.
   x.domain(dimensions = d3.keys(fichier[0]).filter(function(d) {
-    return d != "Type_logement" && (y[d] = d3.scale.linear()
+    return d != "Type_Logement" && (y[d] = d3.scale.linear()
         .domain(d3.extent(fichier, function(p) { return +p[d]; }))
         .range([h, 0]));
   }));
