@@ -1,136 +1,116 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <title>Types de logements pour chaque antennes</title>
+    <title>Données logements</title>
     <style type="text/css">
+html {
+  margin: 0;
+}
+body { 
+  font-family: sans-serif;
+  font-size: 12px;
+  background: #f9f9f9;
+  color: #777;
+  margin: 30px 0 0 0;
+  overflow: hidden;
+}
+
+body.dark {
+  background: #090909;
+  color: #ccc;
+}
 
 svg {
   font: 10px sans-serif;
 }
 
-.background path {
-  fill: none;
-  stroke: #ccc;
-  stroke-opacity: .4;
-  shape-rendering: crispEdges;
+canvas, svg {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.foreground path {
-  fill: none;
-  stroke: red;
-  stroke-opacity: .9;
+#chart {
+  position: relative;
 }
 
 .brush .extent {
-  fill-opacity: .3;
-  stroke: #fff;
-  shape-rendering: crispEdges;
+  fill: rgba(0,0,0,0.12);
+  stroke: rgba(255,255,255,0.6);
+  shape-rendering: crisp-edges;
+}
+
+.dark .brush .extent {
+  fill: rgba(255,255,255,0.12);
+  stroke: rgba(0,0,0,0.5);
 }
 
 .axis line, .axis path {
   fill: none;
-  stroke: #000;
+  stroke: #222;
   shape-rendering: crispEdges;
 }
 
 .axis text {
-  text-shadow: 0 3px 1 #fff;
+  fill: #222;
+  text-shadow: 1px 1px 1px #fff, -1px -1px 1px #fff;
 }
 
+.axis text.label {
+  fill: #444;
+  font-size: 14px;
+}
+
+.dark .axis text {
+  fill: #f2f2f2;
+  text-shadow: 0 1px 0 #000, 1px 0 0 #000;
+}
+
+.dark .axis text.label {
+  fill: #ddd;
+}
+
+.axis g,
+.axis path {
+  display: none;
+}
+
+#food-list {
+  position: absolute;
+  left: 220px;
+  width: 740px;
+  overflow-x: hidden;
+}
+#food-list span {
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  margin: 2px 4px;
+}
     </style>
   </head>
   <body>
-  
-  <u><font color="red" size="10px">CaractÃ©ristiques des logements</font></u><br><br>
-
-    <script type="text/javascript" src="../js/d3.v2.js"></script>
-    <script type="text/javascript">
-
-var m = [30, 10, 10, 10],
-    w = 960 - m[1] - m[3],
-    h = 500 - m[0] - m[2];
-
-var x = d3.scale.ordinal().rangePoints([0, w], 1),
-    y = {};
-
-var line = d3.svg.line(),
-    axis = d3.svg.axis().orient("left"),
-    background,
-    foreground;
-
-var svg = d3.select("body").append("svg")
-    .attr("width", w + m[1] + m[3])
-    .attr("height", h + m[0] + m[2])
-  .append("g")
-    .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
-
-d3.json("../Data/gevu_stats.json", function(fichier) {
-
-  // Extract the list of dimensions and create a scale for each.
-  x.domain(dimensions = d3.keys(fichier[0]).filter(function(d) {
-    return d != "Type_Logement" && (y[d] = d3.scale.linear()
-        .domain(d3.extent(fichier, function(p) { return +p[d]; }))
-        .range([h, 0]));
-  }));
-
-  // Add grey background lines for context.
-  background = svg.append("g")
-      .attr("class", "background")
-    .selectAll("path")
-      .data(fichier)
-    .enter().append("path")
-      .attr("d", path);
-
-  // Add blue foreground lines for focus.
-  foreground = svg.append("g")
-      .attr("class", "foreground")
-    .selectAll("path")
-      .data(fichier)
-    .enter().append("path")
-      .attr("d", path);
-
-  // Add a group element for each dimension.
-  var g = svg.selectAll(".dimension")
-      .data(dimensions)
-    .enter().append("g")
-      .attr("class", "dimension")
-      .attr("transform", function(d) { return "translate(" + x(d) + ")"; });
-
-  // Add an axis and title.
-  g.append("g")
-      .attr("class", "axis")
-      .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
-    .append("text")
-      .attr("text-anchor", "middle")
-      .attr("y", -9)
-      .text(String);
-
-  // Add and store a brush for each axis.
-  g.append("g")
-      .attr("class", "brush")
-      .each(function(d) { d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brush", brush)); })
-    .selectAll("rect")
-      .attr("x", -8)
-      .attr("width", 16);
-});
-
-// Returns the path for a given data point.
-function path(d) {
-  return line(dimensions.map(function(p) { return [x(p), y[p](d[p])]; }));
-}
-
-// Handles a brush event, toggling the display of foreground lines.
-function brush() {
-  var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
-      extents = actives.map(function(p) { return y[p].brush.extent(); });
-  foreground.style("display", function(d) {
-    return actives.every(function(p, i) {
-      return extents[i][0] <= d[p] && d[p] <= extents[i][1];
-    }) ? null : "none";
-  });
-}
-
-    </script>
+  <div id="wrap">
+    <div id="chart">
+      <canvas id="foreground"></canvas>
+      <svg></svg>
+    </div>
+    <pre id="food-list"></pre>
+    <p>
+    Rendered: <strong id="rendered-count"></strong><br/>
+    Selected: <strong id="selected-count"></strong><br/>
+    Opacity: <strong id="opacity"></strong><br/>
+    <button id="hide-ticks">Hide Ticks</button>
+    <button id="show-ticks">Show Ticks</button><br/>
+    <button id="dark-theme">Dark</button>
+    <button id="light-theme">Light</button>
+    </p>
+    <p>
+Caractéristiques pour chaque logements                                       
+    </p>
+  </div>
   </body>
+  <script src="../js/d3.v2.js"></script>
+  <script src="../js/parallel.js"></script>
 </html>
