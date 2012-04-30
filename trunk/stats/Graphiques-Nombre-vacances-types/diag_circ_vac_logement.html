@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <title>Pie Multiples with Nesting</title>
 	<link rel="stylesheet" href="../css/colorbrewer.css" />
-    <script type="text/javascript" src="../Data/occupation.js"></script>
+    <script type="text/javascript" src="../js/occupation.js"></script>
     <script type="text/javascript" src="../js/d3.v2.js"></script>
     <script type="text/javascript" src="../js/colorbrewer.js"></script>
     <style type="text/css">
@@ -27,7 +27,7 @@ svg {
 // merci à http://bl.ocks.org/1305337
 
 // Load data asynchronously.
-d3.json("../Data/vac_logements.js", function(data) {
+d3.json("../js/vac_logements.js", function(data) {
 
 	var types = d3.nest()
       .key(function(d) { return d.type; })
