@@ -45,7 +45,7 @@ var visLeg = d3.select("#legende").append("svg")
 		.attr("transform", "translate(" + wL + "," + hL + ")");
 
 		
-var wL = 30, hL = 20;		
+/*var wR = 30, hR = 20;		
 var visRec = d3.select("#rectangle").append("svg")
 	.attr("width", wL)
 	.attr("height", hL)
@@ -53,7 +53,7 @@ var visRec = d3.select("#rectangle").append("svg")
 	.attr("preserveAspectRatio", "xMidYMid meet")
 	.append("g")
 		.attr("id","gLeg")
-		.attr("transform", "translate(" + wL + "," + hL + ")");
+		.attr("transform", "translate(" + wL + "," + hL + ")");*/
 
 		
 		
@@ -161,6 +161,66 @@ function getLegende(){
 			});
 		
 	}
+	
+/*	function getRectangle(){
+			var dataCircle = {"id":"0","name":"Alc\u00e9ane","children":[{"id":"1","name":"Antenne","nb":1,"children":[{"id":"2","name":"Groupe","nb":1,"children":[{"id":"3","name":"Batiment","nb":1,"children":[{"id":"4","name":"Type logement","nb":"1"}]}]}],"max":"1","min":"1"}],"nb":5};
+			
+			//construction des Ã©chelles de couleurs
+			var arrA = json.children;
+			z = [];
+			for(var i=0; i < arrA.length; i++){
+				if(arrA[i].ref=="BL")z["BL"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cBL);
+				if(arrA[i].ref=="CA")z["CA"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cCA);
+				if(arrA[i].ref=="CV")z["CV"]=d3.scale.linear().domain([arrA[i].min, arrA[i].nb]).range(cCV);
+				if(arrA[i].ref=="MR")z["MR"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cMR);
+				if(arrA[i].ref=="QS")z["QS"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cQS);
+				visRec.append("text")
+			       .attr("class", "txtLeg")
+			       .attr("font-size", "20")
+			       .attr("x", "300")
+			       .attr("y", 100*i)
+			       .text(arrA[i].name);
+				
+			}		
+			
+			var pathRec = visRec.data([dataCircle]).selectAll("path") 
+			      .data(partition.nodes) 
+			    .enter().append("path") 
+			      .attr("display", function(d) { return d.depth ? null : "blue"; }) 
+			      .attr("d", arc)
+			      .attr("id", function(d) { return d.id; })
+			      .attr("fill-rule", "evenodd")
+			      .style("stroke", "#fff") 
+			      .style("fill", "#CCCCCC")
+			      .each(stash)
+			      ;
+
+			
+			visRec.data([dataCircle]).selectAll("svg:g").append("svg:g")
+		    .attr("fill", "navy")
+		    .append("text")
+		       .attr("class", "txtRec")
+		       .attr("font-size", "20")
+		       .append("textPath")
+		         .attr("xlink:href", function(d) { 
+					  	return "#" + d.id; 
+				  })
+		         .text(function(d) { 
+					  	return d.name + " : " + d.value; 
+				  });
+			
+			  titre = pathLeg.append("svg:title")
+			  .text(function(d) { 
+			  	return d.name + " : " + d.value; 
+			  });
+
+			};
+
+			*/
+	
+	
+	
+	
 
 // Stash the old values for transition.
 function stash(d) {
