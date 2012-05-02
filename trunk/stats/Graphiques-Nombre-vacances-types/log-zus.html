@@ -27,7 +27,7 @@ svg {
 // merci à http://bl.ocks.org/1305337
 
 // Load data asynchronously.
-d3.json("../js/logement-zus.js", function(data) {
+d3.json("http://www.gevu.org/public/stat/antenne?type=zus_log", function(data) {
 
 	var types = d3.nest()
       .key(function(d) { return d.Indicateur_Zus; })
