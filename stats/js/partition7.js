@@ -34,6 +34,17 @@ var arc = d3.svg.arc() //crï¿½er arc qui utilise modï¿½le de d3.
     .innerRadius(function(d) { return Math.sqrt(d.y); })
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
+var wL = 300, hL = 300;
+var visLeg = d3.select("#legende").append("svg")
+	.attr("width", wL)
+	.attr("height", hL)
+	.attr("viewBox", "0 0 800 800")
+	.attr("preserveAspectRatio", "xMidYMid meet")
+	.append("g")
+		.attr("id","gLeg")
+		.attr("transform", "translate(" + wL + "," + hL + ")");
+
+
 function getTypeLog(typeLog){
 	
 d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog&typeLog="+typeLog, function(json) {
@@ -77,6 +88,60 @@ d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog&typeLog="+typ
 		});
 	
 }
+
+
+function getLegende(){
+	
+	d3.json("../data/legende.js", function(json) {
+		
+			var dataCircle = {"id":"0","name":"Alc\u00e9ane","children":[{"id":"1","name":"Antenne","nb":1,"children":[{"id":"2","name":"Groupe","nb":1,"children":[{"id":"3","name":"Batiment","nb":1,"children":[{"id":"4","name":"Type logement","nb":"1"}]}]}],"max":"1","min":"1"}],"nb":5};
+
+		
+			//construction des Ã©chelles de couleurs
+			var arrA = json.children;
+			z = [];
+			for(var i=0; i < arrA.length; i++){
+				if(arrA[i].ref=="BL")z["BL"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cBL);
+				if(arrA[i].ref=="CA")z["CA"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cCA);
+				if(arrA[i].ref=="CV")z["CV"]=d3.scale.linear().domain([arrA[i].min, arrA[i].nb]).range(cCV);
+				if(arrA[i].ref=="MR")z["MR"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cMR);
+				if(arrA[i].ref=="QS")z["QS"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cQS);
+			}		
+			
+			var pathLeg = visLeg.data([dataCircle]).selectAll("path") 
+			      .data(partition.nodes) 
+			    .enter().append("path") 
+			      .attr("display", function(d) { return d.depth ? null : "blue"; }) 
+			      .attr("d", arc)
+			      .attr("id", function(d) { return d.id; })
+			      .attr("fill-rule", "evenodd")
+			      .style("stroke", "#fff") 
+			      .style("fill", "#6e7b78")
+			      .each(stash)
+			      ;
+
+			
+			visLeg.data([dataCircle]).selectAll("svg:g").append("svg:g")
+		    .attr("fill", "navy")
+		    .append("text")
+		       .attr("class", "txtLeg")
+		       .attr("font-size", "20")
+		       .append("textPath")
+		         .attr("xlink:href", function(d) { 
+					  	return "#" + d.id; 
+				  })
+		         .text(function(d) { 
+					  	return d.name + " : " + d.value; 
+				  });
+			
+			  titre = pathLeg.append("svg:title")
+			  .text(function(d) { 
+			  	return d.name + " : " + d.value; 
+			  });
+
+			});
+		
+	}
 
 // Stash the old values for transition.
 function stash(d) {
