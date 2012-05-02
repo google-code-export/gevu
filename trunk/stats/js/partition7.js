@@ -44,7 +44,19 @@ var visLeg = d3.select("#legende").append("svg")
 		.attr("id","gLeg")
 		.attr("transform", "translate(" + wL + "," + hL + ")");
 
+		
+var wL = 30, hL = 20;		
+var visRec = d3.select("#rectangle").append("svg")
+	.attr("width", wL)
+	.attr("height", hL)
+	.attr("viewBox", "0 0 30 15")
+	.attr("preserveAspectRatio", "xMidYMid meet")
+	.append("g")
+		.attr("id","gLeg")
+		.attr("transform", "translate(" + wL + "," + hL + ")");
 
+		
+		
 function getTypeLog(typeLog){
 	
 d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog&typeLog="+typeLog, function(json) {
