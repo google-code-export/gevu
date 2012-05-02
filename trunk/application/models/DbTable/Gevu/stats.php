@@ -189,7 +189,26 @@ class Models_DbTable_Gevu_stats extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
+    
     	/**
+     * Recherche une entrée Gevu_stats avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param string $Code_Logement
+     *
+     * @return array
+     */
+    public function findIdLieuByCode_Logement($Code_Logement)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_stats"), array("id_lieu") )                           
+                    ->where( "g.Code_Logement = '".$Code_Logement."'");
+
+        return $this->fetchAll($query)->toArray(); 
+    }
+    
+    
+    /**
      * Recherche une entrée Gevu_stats avec la valeur spécifiée
      * et retourne cette entrée.
      *

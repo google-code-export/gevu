@@ -113,8 +113,25 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      */
     public function editByLieu($id, $data)
     {
+    	if(!isset($data['maj']))$data['maj']=new Zend_Db_Expr('NOW()');
     	$this->update($data, 'gevu_geos.id_lieu = ' . $id);
     }
+    
+    /**
+     * Recherche une entrée Gevu_geos avec la clef l'identifiant de lieu
+     * et modifie cette entrée avec les nouvelles données.
+     *
+     * @param string $ids
+     * @param array $data
+     *
+     * @return void
+     */
+    public function editByIdsLieux($ids, $data)
+    {
+    	if(!isset($data['maj']))$data['maj']=new Zend_Db_Expr('NOW()');
+    	$this->update($data, 'gevu_geos.id_lieu IN('.$ids.')');
+    }
+    
     
     /**
      * Recherche une entrée Gevu_geos avec la clef primaire spécifiée
@@ -149,6 +166,35 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
         }
 
         return $this->fetchAll($query)->toArray();
+    }
+
+    
+    	/**
+     * Recherche une entrée Gevu_stats avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param string $adresse
+     * @param string $codepostal
+     * @param string $ville
+     * @param string $pays
+     *
+     * @return array
+     */
+    public function findIdsLieuxByAdresse($adresse, $codepostal, $ville, $pays)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_geos"), array("ids"=>"GROUP_CONCAT(id_lieu)") )                           
+                    ->where( 'g.adresse LIKE "%'.$adresse.'"')
+                    ->where( "g.codepostal = ?", $codepostal)
+					->where( "g.ville = ?", $ville)
+                    ->where( "g.pays = ?", $pays)
+                    ->where( "g.lat = 0")
+                    ->group("g.adresse")
+                    ->group("g.codepostal")
+                    ->group("g.ville")
+                    ->group("g.pays");
+                                        
+        return $this->fetchAll($query)->toArray(); 
     }
     
     /*
