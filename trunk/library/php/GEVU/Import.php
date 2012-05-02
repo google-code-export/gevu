@@ -402,7 +402,7 @@ class GEVU_Import extends GEVU_Site{
     	
     	//chargement du fichier
 		$chaines = file($docInfos['path_source']);
-
+		
 		//pour optimiser la récupération des informations
 		$arrAnt = array("ref"=>-1);
 		$arrGrp = array("ref"=>-1);    			
@@ -574,7 +574,7 @@ class GEVU_Import extends GEVU_Site{
 					break;
 			    }
 			    //mise à jour de l'adresse
-			    $this->dbG->editByLieu($arrObj['id_lieu'],array("adresse"=>$arr[7]." ".$arr[9]." ".$arr[10]." ".$arr[11]));
+			    $this->dbG->editByLieu($arrObj['id_lieu'],array("adresse"=>$arr[7]." ".$arr[9], "codepostal"=>$arr[10], "ville"=>$arr[11], "pays"=>"France"));
 			    
 			    				
 			}
@@ -582,6 +582,48 @@ class GEVU_Import extends GEVU_Site{
     	}
     	    
     }    
+
+
+    /**
+     * importation d'un fichier pour ajouter des adresses
+     *
+     * @param string $path = adresse du fichier
+     * 
+     */
+    function importGeos($path, $findBy="Code_Logement"){
+		
+    	$chaines = file($path);
+
+    	$inArr = array("40 RUE EDMOND CASAUX","63 RUE DES HETRES","65 AVENUE PAUL VERLAINE","65 RUE D'IENA","8 AVENUE VLADIMIR KOMAROV");
+    	
+		$this->dbSta = new Models_DbTable_Gevu_stats();
+		$this->dbG = new Models_DbTable_Gevu_geos();
+    	
+		// parcourt toute les lignes du fichier
+		foreach ($chaines as $x => $chaine) {
+			$chaine = trim($chaine); 
+			$arr = explode(";", $chaine);
+			if($x > 0){
+				$var = array_search($arr[0], $inArr);
+				if (in_array($arr[0], $inArr)) {
+									//récupère l'identifiant de lieu
+					if($findBy=="Code_Logement"){
+						$rs = $this->dbSta->findIdLieuByCode_Logement($arr[13]);
+					    //mise à jour de l'adresse
+					    $this->dbG->editByLieu($rs[0]['id_lieu'],array("adresse"=>$arr[7]." ".$arr[9], "codepostal"=>$arr[10], "ville"=>$arr[11], "pays"=>"France"));
+					}
+					if($findBy=="adresse"){
+						$rs = $this->dbG->findIdsLieuxByAdresse($arr[0], $arr[1], $arr[2], $arr[3]);
+					    //mise à jour de l'adresse
+					    if(count($rs)>0){
+						    $this->dbG->editByIdsLieux($rs[0]['ids'],array("lat"=>$arr[4], "lng"=>$arr[5]));
+					    }
+					}
+				}
+				
+			}
+		}
+	}    
     
 /** merci à http://j-reaux.developpez.com/tutoriel/php/fonctions-redimensionner-image/
 // 	---------------------------------------------------------------
