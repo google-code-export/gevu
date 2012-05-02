@@ -7,11 +7,12 @@ var w = 960,
 //merci à
 //http://www.colorhexa.com 
 //http://vis.stanford.edu/color-names/analyzer/ number-6
-var cBL = ["#ccdef0", "#1e4164"];
-var cCA = ["#c9e1c4", "#2a4724"];
-var cCV = ["#f5d5ad", "#5e390b"];
-var cMR = ["#f1c4c5", "#621819"];
-var cQS = ["#dcc1df", "#412343"];
+var colors = [];
+colors['BL'] = ["#ccdef0", "#1e4164"];
+colors['CA'] = ["#c9e1c4", "#2a4724"];
+colors['CV'] = ["#f5d5ad", "#5e390b"];
+colors['MR'] = ["#f1c4c5", "#621819"];
+colors['QS'] = ["#dcc1df", "#412343"];
 
 	  
 var vis = d3.select("#chart").append("svg")
@@ -35,8 +36,9 @@ var arc = d3.svg.arc() //cr�er arc qui utilise mod�le de d3.
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
 function getTypeLog(typeLog){
+		
 	
-	d3.json("../stat/antenne?type=ArbreTypeLog&typeLog="+typeLog, function(json) {
+	d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog&typeLog="+typeLog, function(json) {
 		//suprime l'ancien graphique
 		if(path)path.remove();
 		
@@ -44,11 +46,7 @@ function getTypeLog(typeLog){
 		var arrA = json.children;
 		z = [];
 		for(var i=0; i < arrA.length; i++){
-			if(arrA[i].ref=="BL")z["BL"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cBL);
-			if(arrA[i].ref=="CA")z["CA"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cCA);
-			if(arrA[i].ref=="CV")z["CV"]=d3.scale.linear().domain([arrA[i].min, arrA[i].nb]).range(cCV);
-			if(arrA[i].ref=="MR")z["MR"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cMR);
-			if(arrA[i].ref=="QS")z["QS"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cQS);
+			z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(colors[arrA[i].ref]);
 		}		
 		
 		path = vis.data([json]).selectAll("path") //cr�er visualisation, ajoute des donnees, cr�er pr chaque �lement path(ligne)
