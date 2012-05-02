@@ -124,6 +124,8 @@ function getLegende(){
 			       .attr("x", "300")
 			       .attr("y", 100*i)
 			       .text(arrA[i].name);
+				   
+				   //.write(arrA[i].name);
 				
 			}		
 			
