@@ -11,6 +11,10 @@
 			<mx:TextInput id="F01" data="{NodeData.adresse}" width="100%" />
 		</mx:HBox>
 		<mx:HBox width="100%">
+			<mx:Label text="kml" />
+			<mx:TextInput id="F06" data="{NodeData.kml}" editable="true" maxWidth="700" />
+		</mx:HBox>
+		<mx:HBox width="100%">
 	
 			<mx:Label text="lat."/>
 			<mx:NumericStepper id="F02" 
@@ -42,15 +46,10 @@
 					<mx:Object label="routier" data="roadmap"/>
 					<mx:Object label="satellite" data="satellite"/>
 				</mx:ArrayCollection>
-			</mx:ComboBox>
-			
-			<!--
-			<mx:Label text="kml" />
-			<mx:TextInput id="F06" data="{NodeData.kml}" editable="{Modif}" />
-			-->
+			</mx:ComboBox>	
 			<mx:Button id="save" label="enregistrer" click="saveModifications();"/>
-	
 		</mx:HBox>
+		
 	</mx:VBox>
 	
 	<mx:RemoteObject id="roModifBase"
@@ -79,7 +78,7 @@
 				F03.data = NodeData["lng"];
 				//F04.data;
 				F05.data = NodeData["zoom_max"];
-				//F06.data = NodeData["kml"];
+				F06.data = NodeData["kml"];
 				setMapType(NodeData["type_carte"]);
 
 			}
@@ -102,7 +101,7 @@
 				arr["lng"]=F03.data;
 				arr["zoom_min"]=0;//F04.data;
 				arr["zoom_max"]=F05.data;
-				//arr["kml"]=F06.data;
+				arr["kml"]=F06.text;
 				arr["type_carte"]=cbTypeCarte.selectedItem["data"];
 				
 				roModifBase.edit(NodeData.id_geo, arr);

@@ -99,8 +99,8 @@ todo :
 				 		</mx:Panel>
 					</mx:VBox>
 				</mx:Canvas>
-		   <mx:VBox id="boxCartoStat" visible="false" width="0" height="100%" >
-			   <ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" width="0" />			   
+		   <mx:VBox id="boxCartoStat" visible="false" width="300" height="100%" >
+			   <ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" />			   
 			   <stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
 		   </mx:VBox>
 				 
@@ -112,7 +112,7 @@ todo :
 					   <mx:HBox id="rowHaut" width="100%" >
 						   <mx:VBox >
 							   <ns2:hbIcoMultimedia id="docs"  />
-							   <form:geos id="geo"  width="100%" NodeData="{dataGeo}" />
+							   <form:geos id="geo"  width="800" NodeData="{dataGeo}" />
 						   </mx:VBox>							   
 					   </mx:HBox>						   
 					   <mx:HBox width="100%" height="100%" >
