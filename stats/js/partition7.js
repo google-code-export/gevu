@@ -123,7 +123,7 @@ function getLegende(){
 			      .attr("id", function(d) { return d.id; })
 			      .attr("fill-rule", "evenodd")
 			      .style("stroke", "#fff") 
-			      .style("fill", "#6e7b78")
+			      .style("fill", "#CCCCCC")
 			      .each(stash)
 			      ;
 
