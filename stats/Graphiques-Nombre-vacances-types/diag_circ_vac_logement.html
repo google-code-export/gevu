@@ -27,7 +27,7 @@ svg {
 // merci à http://bl.ocks.org/1305337
 
 // Load data asynchronously.
-d3.json("../js/vac_logements.js", function(data) {
+d3.json("http://www.gevu.org/public/stat/antenne?type=vac_log", function(data) {
 
 	var types = d3.nest()
       .key(function(d) { return d.type; })
