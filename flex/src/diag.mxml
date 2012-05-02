@@ -48,7 +48,7 @@ todo :
 			<mx:Image source="@Embed('images/logo.png')" />
 			<mx:VBox horizontalAlign="left" >
 				<mx:Label fontSize="16" text="Saisie des diagnostics"/>		
-				<mx:Label text="V 0.207" />
+				<mx:Label text="V 0.308" />
 			</mx:VBox>
 			<mx:VBox horizontalAlign="left">
 				<mx:Label text="Diagnostic(s) disponible(s) : " />
@@ -62,7 +62,7 @@ todo :
 	 	    <mx:LinkButton visible="false" label="Nettoyer la carte" click="PurgeCarte()"/>
 	 	</mx:HBox>
 	 	<mx:HDividedBox width="100%" height="100%">
-				<mx:Canvas label="TERRITOIRES" width="300" height="100%" id="cnvTerre" enabled="false">
+				<mx:Canvas label="TERRITOIRES" width="400" height="100%" id="cnvTerre" enabled="false">
 					<mx:VBox width="100%" height="100%">
 						<mx:Panel width="100%" borderColor="#080808" cornerRadius="0"
 								  paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3"
