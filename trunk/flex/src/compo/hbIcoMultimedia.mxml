@@ -69,7 +69,12 @@
 					ext = ext.substring(ext.length-3);
 					if(ext=="doc" || ext=="ocx"){
 						d.vignette = DocIcon;
-						dataIcons.addItem(d);							
+						dataIcons.addItem(d);
+					}else if(ext=="kml" || ext=="kmz"){						
+						d.vignette = KmlIcon;
+						dataIcons.addItem(d);
+						this.parentApplication.cartoIF.callChargeKml(d.url);
+						kml = true;
 					}else if(ext=="pdf"){
 						d.vignette = PdfIcon;
 						dataIcons.addItem(d);							
