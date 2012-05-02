@@ -106,6 +106,13 @@ function getLegende(){
 				if(arrA[i].ref=="CV")z["CV"]=d3.scale.linear().domain([arrA[i].min, arrA[i].nb]).range(cCV);
 				if(arrA[i].ref=="MR")z["MR"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cMR);
 				if(arrA[i].ref=="QS")z["QS"]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(cQS);
+				visLeg.append("text")
+			       .attr("class", "txtLeg")
+			       .attr("font-size", "20")
+			       .attr("x", "300")
+			       .attr("y", 100*i)
+			       .text(arrA[i].name);
+				
 			}		
 			
 			var pathLeg = visLeg.data([dataCircle]).selectAll("path") 
