@@ -35,6 +35,16 @@ var arc = d3.svg.arc() //cr�er arc qui utilise mod�le de d3.
     .innerRadius(function(d) { return Math.sqrt(d.y); })
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
+var wL = 300, hL = 300;
+var visLeg = d3.select("#legende").append("svg")
+	.attr("width", wL)
+	.attr("height", hL)
+	.attr("viewBox", "0 0 800 800")
+	.attr("preserveAspectRatio", "xMidYMid meet")
+	.append("g")
+		.attr("id","gLeg")
+		.attr("transform", "translate(" + wL + "," + hL + ")");
+
 function getTypeLog(typeLog){
 		
 	
@@ -76,6 +86,59 @@ function getTypeLog(typeLog){
 	
 }
 
+
+function getLegende(){
+	
+	var dataCircle = {"id":"0","name":"Alc\u00e9ane","children":[{"id":"1","name":"Antenne","nb":1,"children":[{"id":"2","name":"Groupe","nb":1,"children":[{"id":"3","name":"Batiment","nb":1,"children":[{"id":"4","name":"Type logement","nb":"1"}]}]}],"max":"1","min":"1"}],"nb":1};
+	var dataTexte = [{"id":"0","name":"Alc\u00e9ane"},{"id":"1","name":"Antennes"},{"id":"2","name":"Groupes"},{"id":"3","name":"Bâtiments"},{"id":"4","name":"Type logement"}];
+	var dataAntenne = [{"id":"1","ref":"BL","name":"Antenne - BL"},{"id":"2","ref":"CA","name":"Antenne - CA"},{"id":"3","ref":"CV","name":"Antenne - CV"},{"id":"4","ref":"MR","name":"Antenne - MR"},{"id":"5","ref":"QS","name":"Antenne - QS"}];
+			
+	var antenneLeg = visLeg.selectAll("text").data(dataAntenne).enter()
+	.append("text")
+	   .attr("transform", "translate(0,-300)")
+       .attr("class", "txtLeg")
+       .attr("font-size", "30")
+       .attr("font-weight", "bold")
+       .attr("fill", function(d) { 
+    	   return colors[d.ref][1]; 
+    	   })
+       .attr("x", "320")
+       .attr("y", function(d) { 
+    	   return 100*d.id; 
+	   })
+       .text(function(d) { 
+    	   return d.name; 
+	   });
+	
+	var pathLeg = visLeg.data([dataCircle]).selectAll("path") 
+	      .data(partition.nodes) 
+	    .enter().append("path") 
+	      .attr("display", function(d) { return d.depth ? null : "blue"; }) 
+	      .attr("d", arc)
+	      .attr("id", function(d) { return d.id; })
+	      .attr("fill-rule", "evenodd")
+	      .style("stroke", "#fff") 
+	      .style("fill", "#CCCCCC")
+	      .each(stash)
+	      ;
+
+	var textLeg = visLeg.selectAll("g").data(dataTexte).enter().append("svg:g")
+	    .attr("fill", "navy")
+	    .attr("transform", "rotate(164)")
+	    .append("text")
+	    	.attr("transform", "translate(0,-30)")
+	    	.attr("class", "txtLeg")
+	    	.attr("font-size", "30")
+	    	.append("textPath")
+	         	.attr("xlink:href", function(d) { 
+				  	return "#" + d.id; 
+	         	})
+			  	.text(function(d) { 
+				  	return d.name; 
+			  	});
+			
+}
+	
 // Stash the old values for transition.
 function stash(d) {
   d.x0 = d.x;
