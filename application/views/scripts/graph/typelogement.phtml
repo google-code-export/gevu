@@ -37,9 +37,17 @@
 	?>
 	<p/>
     </div>
-    <div id="chart" />
+    <table>
+    	<tr>
+    		<td><div id="chart" ></div></td>
+    		<td><div id="legende" ></div></td>
+    	</tr>
+    </table>
     <script type="text/javascript" src="../js/partition.js"></script>
-    <script type="text/javascript" ><?php echo $script; ?>
+    <script type="text/javascript" >
+	getLegende();
+    
+	<?php echo $script; ?>
     	
     </script>
     
