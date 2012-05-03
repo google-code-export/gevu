@@ -101,6 +101,7 @@ function getTypeLog(typeLog){
 	    .append("text")
 	    	.attr("class", "txtLeg")
 	    	.attr("font-size", "10")
+	    	.style("fill", "white")
 	    	.append("textPath")
 	         	.attr("xlink:href", function(d, i) { 
 				  	return "#" + "path-" + i; 
