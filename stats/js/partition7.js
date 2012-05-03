@@ -44,7 +44,7 @@ var wL = 300, hL = 300;
 var visLeg = d3.select("#legende").append("svg")
 	.attr("width", wL)
 	.attr("height", hL)
-	.attr("viewBox", "0 0 800 800")
+	.attr("viewBox", "0 0 800 900")
 	.attr("preserveAspectRatio", "xMidYMid meet")
 	.append("g")
 		.attr("id","gLeg")
@@ -148,8 +148,14 @@ function getLegende(){
 			
 	var dataCircle = {"id":"0","name":"Alc\u00e9ane","children":[{"id":"1","name":"Antenne","nb":1,"children":[{"id":"2","name":"Groupe","nb":1,"children":[{"id":"3","name":"Batiment","nb":1,"children":[{"id":"4","name":"Type logement","nb":"1"}]}]}],"max":"1","min":"1"}],"nb":1};
 	var dataTexte = [{"id":"0","name":"Alc\u00e9ane"},{"id":"1","name":"Antennes"},{"id":"2","name":"Groupes"},{"id":"3","name":"Bâtiments"},{"id":"4","name":"Type logement"}];
-	var dataAntenne = [{"id":"1","ref":"BL","name":"Antenne - BL"},{"id":"2","ref":"CA","name":"Antenne - CA"},{"id":"3","ref":"CV","name":"Antenne - CV"},{"id":"4","ref":"MR","name":"Antenne - MR"},{"id":"5","ref":"QS","name":"Antenne - QS"}];
-			
+	var dataCarre = [1,33,66,100];
+	var dataAntenne = [{"id":"1","ref":"BL","name":"Antenne - BL","value":dataCarre},{"id":"2","ref":"CA","name":"Antenne - CA","value":dataCarre},{"id":"3","ref":"CV","name":"Antenne - CV","value":dataCarre},{"id":"4","ref":"MR","name":"Antenne - MR","value":dataCarre},{"id":"5","ref":"QS","name":"Antenne - QS","value":dataCarre}];
+	
+	z = [];
+	for(var i=0; i < dataAntenne.length; i++){
+		z[dataAntenne[i].ref]=d3.scale.log().domain([1, 100]).range(colors[dataAntenne[i].ref]);
+	}		
+	
 	var antenneLeg = visLeg.selectAll("text").data(dataAntenne).enter()
 	.append("text")
 	   .attr("transform", "translate(0,-300)")
@@ -166,6 +172,31 @@ function getLegende(){
        .text(function(d) { 
     	   return d.name; 
 	   });
+
+	var wh = 30, ec=10; 
+	var carreLeg = visLeg.selectAll(".carrLeg").data(dataAntenne).enter()
+		.append("g")
+			.attr("class","carrLeg")
+			.attr("transform", function(d,i) { 
+				return "translate(0,"+100*i+")"; 
+			   })
+			.attr("id", function(d) { 
+		    	   return d.ref; 
+			   })
+			.selectAll("rect").data(dataCarre).enter()
+			.append("rect")	
+		       .attr("width", wh)
+		       .attr("height", wh+30)
+		       .attr("fill", function(d) {
+		    	   var ref = d3.select(this);
+		    	   ref = ref[0][0].parentNode.id;
+		    	   return z[ref](d); 
+		    	   })
+		       .attr("y", "60")
+		       .attr("x", function(d, i) { 
+		    	   return (wh+ec)*i; 
+			   })
+			  .attr("transform", "translate(320,-250)");
 	
 	var pathLeg = visLeg.data([dataCircle]).selectAll("path") 
 	      .data(partition.nodes) 
@@ -179,8 +210,8 @@ function getLegende(){
 	      .each(stash)
 	      ;
 
-	var textLeg = visLeg.selectAll("g").data(dataTexte).enter().append("svg:g")
-	    .attr("fill", "navy")
+	var textLeg = visLeg.selectAll(".textLeg").data(dataTexte).enter().append("svg:g")
+	    .attr("class", "textLeg")
 	    .attr("transform", "rotate(164)")
 	    .append("text")
 	    	.attr("transform", "translate(0,-30)")
