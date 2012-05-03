@@ -67,10 +67,15 @@ d3.csv("../data/caracteristiques_logements.csv", function(raw) {
   // Extract the list of dimensions and create a scale for each.
   xscale.domain(dimensions = d3.keys(data[0]).filter(function(d) {
     var scale = (yscale[d] = d3.scale.linear()
+		/*.ticks(5)
+		.tickSize(scale * w) */
         .domain(d3.extent(data, function(p) { return +p[d]; })));
+		
     if (d == "Vmag") return scale.range([0, h]);
     return scale.range([h, 0]);
   }));
+
+
 
   n_dimensions = dimensions.length;
 
