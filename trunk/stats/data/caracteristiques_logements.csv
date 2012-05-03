@@ -1,4 +1,4 @@
-Type_Logement, Nombre_pieces, Etage, Surface_Reelle, Annee_Construction, DPE_consommation_reelle
+Logement, Nombre pieces, Etage, Surface Reelle, Date construction, Consommation reelle
 CA,0,00,0,,
 D2,2,02,66,1977,209
 D3,3,00,70,2011,
