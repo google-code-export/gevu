@@ -1,4 +1,4 @@
-Logement, Nombre pieces, Etage, Surface Reelle, Date construction, Consommation reelle
+Logement, Nombre_pieces, Etage, Surface_Reelle, Date_Construction, Consommation_Reelle
 CA,0,00,0,,
 D2,2,02,66,1977,209
 D3,3,00,70,2011,
