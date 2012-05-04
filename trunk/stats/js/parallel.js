@@ -64,6 +64,7 @@ d3.csv("../data/caracteristiques_logements.csv", function(raw) {
     return d;
   });
 
+
   // Extract the list of dimensions and create a scale for each.
   xscale.domain(dimensions = d3.keys(data[0]).filter(function(d) {
     var scale = (yscale[d] = d3.scale.linear()
