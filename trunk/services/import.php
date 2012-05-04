@@ -6,7 +6,7 @@ try {
 	//$imp->addScenario("C:/wamp/www/gevu/param/scenarisation.xml");
 	//$imp->addScenario("C:/wamp/www/gevu/param/logementV3.xml");
 	
-	//echo $imp->traiteImportLogement(2, 139, 1);
+	//echo $imp->traiteImportLogement(2, 2, 1);
 	
 	$imp->addDoc($_REQUEST);
 
