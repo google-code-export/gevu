@@ -18,7 +18,21 @@ var m = [160, 50, 10, 20],
 
 var xscale = d3.scale.ordinal().rangePoints([0, w], 1),
     yscale = {};
-	yticks = {"Logement":1,"Nombre_pieces":2,"Etage": d3.scale.linear(100),"Surface_Reelle":10,"Date_Construction":(d3.time.year, 300),"Consommation_Reelle":200};
+	yticks = {"Logement":1,"Nombre_pieces":2,"Etage": 3 ,"Surface_Reelle":200,"Date_Construction":(d3.time.year, 300),"Consommation_Reelle":200};
+	
+	//linear.invert(y) --> Retourne la valeur dans le domaine d'entrée x pour la valeur correspondante dans la plage de sortie y .
+	//linear.domain([numbers]) --> Si le nombre est spécifié, établit domaine d'entrée de l'échelle dans le tableau spécifié de chiffres
+	//linear.range([values]) --> Si les valeurs est spécifiée, définit la plage de sortie de l'échelle à l'ensemble des valeurs spécifiées.	
+	// linear.rangeRound(values) --> Définit la plage de sortie de l'échelle dans le tableau spécifié de valeurs, tout en établissant interpolateur l'échelle de d3.interpolateRound .
+	//linear.interpolate([factory]) --> Si l'usine est spécifié, définit interpolateur sortie de la balance à l'aide du spécifiées en usine .
+	//linear.clamp([boolean]) --> Si booléen est spécifié, active ou désactive serrage en conséquence. 
+	//linear.nice() --> Étend le domaine de sorte qu'il commence et se termine sur Nice valeurs arrondies. 
+	// linear.ticks(count) --> Retours d'environ compter des valeurs représentatives de domaine d'entrée de l'échelle
+	// linear.tickFormat(count) --> Retourne un format de numéro de fonction appropriée pour afficher une valeur ticks.
+	//linear.copy() --> Retourne une copie exacte de cette échelle linéaire.
+	
+	
+	
 	
 var data,
     line = d3.svg.line(),
