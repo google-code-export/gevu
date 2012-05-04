@@ -18,6 +18,7 @@ var m = [160, 50, 10, 20],
 
 var xscale = d3.scale.ordinal().rangePoints([0, w], 1),
     yscale = {};
+	yticks = {"Logement":1,"Nombre_pieces":2,"Etage":1,"Surface_Reelle":10,"Date_Construction":(d3.time.year, 5),"Consommation_Reelle":10};
 
 var data,
     line = d3.svg.line(),
@@ -67,10 +68,7 @@ d3.csv("../data/caracteristiques_logements.csv", function(raw) {
 
   // Extract the list of dimensions and create a scale for each.
   xscale.domain(dimensions = d3.keys(data[0]).filter(function(d) {
-    var scale = (yscale[d] = d3.scale.linear()
-		/*.ticks(5)
-		.tickSize(scale * w) */
-        .domain(d3.extent(data, function(p) { return +p[d]; })));
+    var scale = (yscale[d] = d3.scale.linear().domain(d3.extent(data, function(p) { return +p[d]; })));
 		
     if (d == "Vmag") return scale.range([0, h]);
     return scale.range([h, 0]);
@@ -93,7 +91,7 @@ d3.csv("../data/caracteristiques_logements.csv", function(raw) {
   // Add an axis and title.
   g.append("svg:g")
       .attr("class", "axis")
-      .each(function(d) { d3.select(this).call(axis.scale(yscale[d])); })
+      .each(function(d) { d3.select(this).call(axis.scale(yscale[d]).ticks(yticks[d])); })
     .append("svg:text")
       .attr("text-anchor", "left")
       .attr("y", -8)
@@ -160,7 +158,7 @@ d3.csv("../data/caracteristiques_logements.csv", function(raw) {
             d3.select(self)
               .transition()
               .duration(700)
-              .call(axis.scale(yscale[d]));
+              .call(axis.scale(yscale[d]).ticks(yticks[d]));
           }, 50*i);
         });
 
