@@ -26,7 +26,7 @@ svg {
 // merci à http://bl.ocks.org/1305337
 
 // Load data asynchronously.
-d3.json("../js/logement-collectif-individuel.js", function(data) {
+d3.json("http://www.gevu.org/public/stat/antenne?type=col_log", function(data) {
 
 	var logementsindividuels = d3.nest()
       .key(function(d) { return d.Logement_Individuel; })
