@@ -2,6 +2,7 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark">
 	
+	<fx:Script source="diagScript.as"/>
 	<fx:Script>
 		<![CDATA[
 			protected function button1_clickHandler(event:MouseEvent):void
@@ -14,8 +15,28 @@
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:RemoteObject id="roDiagnostique"
+						destination="zend"
+						source="GEVU_Diagnostique"
+						fault="faultHandlerService(event, 'GEVU - Diagnostic');"
+						showBusyCursor="true"
+						>
+			<s:method name="getNodeRelatedData"	result="displayNodeProperties(event);" />
+			<s:method name="getXmlNode"			result="updateTreeStructure(event);" />
+			<s:method name="findLieu"				result="displayReponse(event);" />
+			<s:method name="editLieu"				result="lieuxEdit_resultHandler(event);" />
+			<s:method name="ajoutLieu"				result="lieuxAjout_resultHandler(event);" />
+			<s:method name="deleteLieu" />
+			<s:method name="getLieuDocs"	 		result="getDocs_resultHandler(event)" />
+			<s:method name="deleteDoc"				result="roDiagnostique.getLieuDocs(idLieu, idBase);" />
+			<s:method name="getLieuCtl"			result="fillCtlListe(event);" />
+			<s:method name="ajoutCtlLieu"			result="roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);" />
+			
+			
+		</s:RemoteObject>
 	</fx:Declarations>
 	<s:Label id="lbl" x="210" y="219"/>
 	<s:Button x="129" y="208" label="clic" click="button1_clickHandler(event)"/>
+		
 	
 </s:Application>

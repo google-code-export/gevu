@@ -11,31 +11,31 @@
   <body>
 <legend align="center"><big><u>Antennes - données générales - Typologie logement</u></big></Legend><br><br>
     <div>
-	<?php
-		$i=0;
-		$arrTL = $this->typesLog;
-		$script = "";
-		foreach($this->typesLog as $tl){
-			//$class = "active last";
-			//if($i=="0")$class = "first";
-			$class = "first";
-			echo "<button id='".$tl["code"]."' class='".$class."'>".$tl["titre"]."</button>";
-			$script .= '
-				d3.select("#'.$tl["code"].'").on("click", function() {
-		   			getTypeLog("'.$tl["code"].'");
-				';
-			foreach($arrTL as $TL){
-				if($tl["code"]==$TL["code"]) $script .= 'd3.select("#'.$tl["code"].'").classed("active", true);
+		<?php
+			$i=0;
+			$arrTL = $this->typesLog;
+			$script = "";
+			foreach($this->typesLog as $tl){
+				//$class = "active last";
+				//if($i=="0")$class = "first";
+				$class = "first";
+				echo "<button id='".$tl["code"]."' class='".$class."'>".$tl["titre"]."</button>";
+				$script .= '
+					d3.select("#'.$tl["code"].'").on("click", function() {
+			   			getTypeLog("'.$tl["code"].'");
 					';
-				else $script .= 'd3.select("#'.$TL["code"].'").classed("active", false);
-					';
-			}	
-		    $script .= ' });
-		    	';
-			$i ++; 
-		}
-	?>
-	<p/>
+				foreach($arrTL as $TL){
+					if($tl["code"]==$TL["code"]) $script .= 'd3.select("#'.$tl["code"].'").classed("active", true);
+						';
+					else $script .= 'd3.select("#'.$TL["code"].'").classed("active", false);
+						';
+				}	
+			    $script .= ' });
+			    	';
+				$i ++; 
+			}
+		?>
+		<p/>
     </div>
     <table>
     	<tr>

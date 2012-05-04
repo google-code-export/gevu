@@ -155,6 +155,10 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         	}
         }
         $this->delete('gevu_lieux.id_lieu = ' . $id);
+        
+        /** TODO
+         * supprimer les données des tables parentes.
+         */
     }
     
     /**
