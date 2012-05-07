@@ -1,0 +1,313 @@
+﻿<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>GEVU : Antennes - données générale - Typologie logement</title>
+	<link rel="stylesheet" href="../css/colorbrewer.css" />
+    <script type="text/javascript" src="../js/d3.v2.js"></script>
+    <script type="text/javascript" src="../js/colorbrewer.js"></script>
+    <link type="text/css" rel="stylesheet" href="../css/button.css"/>
+  </head>
+  <body>
+<legend align="center"><big><u><b>Antennes - données générales - Typologie logement</b></u></big></Legend><br><br>
+    <div>
+	<button id='T' class='first'>ANTENNE TV</button><button id='A' class='first'>BATIMENT ADMINISTRATIF</button><button id='V' class='first'>CAVE</button><button id='C' class='first'>COMMERCE</button><button id='D' class='first'>DIVERS</button><button id='F' class='first'>FOYER</button><button id='G' class='first'>GARAGE</button><button id='J' class='first'>JARDIN</button><button id='O' class='first'>LOCAL</button><button id='M' class='first'>LOCAL PROFESSIONNEL</button><button id='W' class='first'>LOCAL VELO</button><button id='L' class='first'>LOGEMENT</button><button id='P' class='first'>PARKING</button><button id='R' class='first'>RESIDENCE</button><button id='S' class='first'>SECHOIR ou 2ème CAVE</button>	<p/>
+    </div>
+    <table>
+    	<tr>
+    		<td><div id="chart" ></div></td>
+    		<td><div id="legende" ></div></td>
+    	</tr>
+    </table>
+    
+    <script type="text/javascript" src="../js/partition7.js"></script>
+    <script type="text/javascript" >
+    			getLegende();
+				d3.select("#T").on("click", function() {
+		   			getTypeLog("T");
+				d3.select("#T").classed("active", true);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#A").on("click", function() {
+		   			getTypeLog("A");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", true);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#V").on("click", function() {
+		   			getTypeLog("V");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", true);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#C").on("click", function() {
+		   			getTypeLog("C");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", true);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#D").on("click", function() {
+		   			getTypeLog("D");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", true);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#F").on("click", function() {
+		   			getTypeLog("F");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", true);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#G").on("click", function() {
+		   			getTypeLog("G");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", true);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#J").on("click", function() {
+		   			getTypeLog("J");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", true);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#O").on("click", function() {
+		   			getTypeLog("O");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", true);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#M").on("click", function() {
+		   			getTypeLog("M");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", true);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#W").on("click", function() {
+		   			getTypeLog("W");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", true);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#L").on("click", function() {
+		   			getTypeLog("L");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", true);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#P").on("click", function() {
+		   			getTypeLog("P");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", true);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#R").on("click", function() {
+		   			getTypeLog("R");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", true);
+					d3.select("#S").classed("active", false);
+					 });
+		    	
+				d3.select("#S").on("click", function() {
+		   			getTypeLog("S");
+				d3.select("#T").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#V").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					d3.select("#F").classed("active", false);
+					d3.select("#G").classed("active", false);
+					d3.select("#J").classed("active", false);
+					d3.select("#O").classed("active", false);
+					d3.select("#M").classed("active", false);
+					d3.select("#W").classed("active", false);
+					d3.select("#L").classed("active", false);
+					d3.select("#P").classed("active", false);
+					d3.select("#R").classed("active", false);
+					d3.select("#S").classed("active", true);
+					 });
+		    	    	
+    </script>
+    
+  </body>
+</html>
