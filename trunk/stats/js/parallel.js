@@ -18,7 +18,9 @@ var m = [160, 50, 10, 20],
 
 var xscale = d3.scale.ordinal().rangePoints([0, w], 1),
     yscale = {};
-	yticks = {"Logement":1,"Nombre_pieces":2,"Etage": 3 ,"Surface_Reelle":200,"Date_Construction":(d3.time.year, 300),"Consommation_Reelle":200};
+	yticks = {"Logement":1,"Nombre_pieces":2,"Etage": (d3.time.scale(0, 3, 1)) ,"Surface_Reelle":200,"Date_Construction": d3.time.years(0, 2000, [200]) , "Consommation_Reelle":200};
+	
+	//D'après https://github.com/mbostock/d3/wiki/Time-Formatting
 	
 	//linear.invert(y) --> Retourne la valeur dans le domaine d'entrée x pour la valeur correspondante dans la plage de sortie y .
 	//linear.domain([numbers]) --> Si le nombre est spécifié, établit domaine d'entrée de l'échelle dans le tableau spécifié de chiffres
@@ -30,9 +32,9 @@ var xscale = d3.scale.ordinal().rangePoints([0, w], 1),
 	// linear.ticks(count) --> Retours d'environ compter des valeurs représentatives de domaine d'entrée de l'échelle
 	// linear.tickFormat(count) --> Retourne un format de numéro de fonction appropriée pour afficher une valeur ticks.
 	//linear.copy() --> Retourne une copie exacte de cette échelle linéaire.
-	
-	
-	
+	//(d3.time.year, 300)
+	// (d3.time.format (Y%))
+	//(d3.scale.domain([0,2000]))
 	
 var data,
     line = d3.svg.line(),
