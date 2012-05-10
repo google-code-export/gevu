@@ -9,7 +9,7 @@ text {
 }
 
 rect.background {
-  fill: #E3F795;
+  fill: #F4AB7A;
 }
 
 .axis {
@@ -31,7 +31,7 @@ var m = [70, 70, 0, 250], // top right bottom left
     h = 500 - m[0] - m[2], // height
     x = d3.scale.linear().range([0, w]),
     y = 20, // bar height
-    z = d3.scale.ordinal().range(["#09EED0", "#ccc"]), // bar color
+    z = d3.scale.ordinal().range(["#F86300", "#ccc"]), // bar color
     duration = 750,
     delay = 25;
 
@@ -62,7 +62,7 @@ svg.append("g")
   .append("line")
     .attr("y1", "100%");
 
-d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog", function(root) {
+d3.json("../data/donnees.json", function(root) {
   hierarchy.nodes(root);
   x.domain([0, root.value]).nice();
   down(root, 0);
