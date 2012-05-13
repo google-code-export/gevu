@@ -48,7 +48,7 @@ todo :
 			<mx:Image source="@Embed('images/logo.png')" />
 			<mx:VBox horizontalAlign="left" >
 				<mx:Label fontSize="16" text="Saisie des diagnostics"/>		
-				<mx:Label text="V 0.502" />
+				<mx:Label text="V 0.571" />
 			</mx:VBox>
 			<mx:VBox horizontalAlign="left">
 				<mx:Label text="Diagnostic(s) disponible(s) : " />
@@ -99,9 +99,9 @@ todo :
 				 		</mx:Panel>
 					</mx:VBox>
 				</mx:Canvas>			
-				<mx:Canvas width="100%" height="100%" id="tnData" >			
+				<mx:HBox width="100%" height="100%" id="tnData" >			
 					<mx:TabNavigator id="tnDiag" width="100%" height="100%" change="tnDiagChange()">
-						<mx:Canvas width="100%" height="100%" label="Données">
+						<mx:HBox width="100%" height="100%" label="Informations générales">
 							<mx:VBox id="boxDiag" visible="false" width="100%" height="100%" >
 								<mx:Image id="imgLieux" verticalAlign="top" horizontalAlign="left" source="" width="100%" />
 								<ns2:ariane id="bbAriane" width="100%"  />
@@ -124,18 +124,18 @@ todo :
 										</mx:HBox>
 									</mx:VBox>
 								</mx:HBox>
-							</mx:VBox>  						
-						</mx:Canvas>
-						<mx:VBox id="tbCarto" width="100%" height="100%" label="Cartographie">
-							<form:geos id="geo"  NodeData="{dataGeo}" />
-							<ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" />
-						</mx:VBox>
+							</mx:VBox>
+						</mx:HBox>
 						<mx:Canvas width="100%" height="100%" label="Statistiques">
 							<stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
 						</mx:Canvas>
 					</mx:TabNavigator>
+					<mx:VBox id="tbCarto" width="100%" height="100%" label="Cartographie" >
+						<form:geos id="geo"  NodeData="{dataGeo}" />
+						<ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" visible="false" />
+					</mx:VBox>
 					
-				</mx:Canvas>
+				</mx:HBox>
 		</mx:HDividedBox> 
 	 </mx:VBox>
 

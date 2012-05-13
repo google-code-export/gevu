@@ -102,12 +102,15 @@ public function login():void
 public function init():void
 {
 	boxGen.visible = true;
+	cartoIF.visible = true;
 		
 	//construction de la listes des bases disponibles
 	var dataBases:Array = JSON.decode(this.exi.droit_3);
 	cbBases.dataProvider = dataBases;
 	var dataScenar:Array = JSON.decode(this.exi.droit_4);
 	cbScenar.dataProvider = dataScenar;
+	ExternalInterface.addCallback("modifLieu",modifLieu);	
+
 	//roDiagnostique.getTablesNames();
 }
 
@@ -381,6 +384,9 @@ private function displayNodeProperties(event:ResultEvent) : void {
 					//ajoute le nom et l'identifiant
 					dataGeo["idLieu"] = this.idLieu;
 					dataGeo["lib"] = this.libLieu;
+					geo.NodeData = dataGeo;
+					geo.init();
+					cartoIF.callChangeGeo();					
 					break;
 				case "docsxlieux":
 					//stocke la réponse pour éviter de supprimer le kml en ajoutant la géographie
@@ -545,12 +551,14 @@ private function updateTreeStructure(event:ResultEvent) : void {
 protected function tnDiagChange():void
 {
 	var id:int = tnDiag.selectedIndex;
+	/*
 	if(id==1 && dataGeo){
 		geo.NodeData = dataGeo;
 		geo.init();
 		ExternalInterface.addCallback("modifLieu",modifLieu);	
 		cartoIF.callChangeGeo();
 	}
+	*/
 	if(id==2){
 		stat.idLieu = this.idLieu;
 		stat.init();
