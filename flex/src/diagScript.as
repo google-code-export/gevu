@@ -100,9 +100,11 @@ public function login():void
 public function init():void
 {
 	boxGen.visible = true;
-	cartoIF.visible = true;
 	
-	ExternalInterface.addCallback("modifLieu",modifLieu);
+	/**TODO: charger uniquement quand l'onglet est afficher
+	*cartoIF.visible = true; 
+	*ExternalInterface.addCallback("modifLieu",modifLieu);
+	*/
 	
 	//construction de la listes des bases disponibles
 	var dataBases:Array = JSON.decode(this.exi.droit_3);
@@ -375,15 +377,15 @@ private function displayNodeProperties(event:ResultEvent) : void {
 						aDiag = true;
 					}
 					this.dataStat = obj[item].diag.stat.EtatDiag 
-					stat.idLieu = this.idLieu;
-					stat.init();
+					//stat.idLieu = this.idLieu;
+					//stat.init();
 					break;
 				case "geos":
 					dataGeo = obj["Models_DbTable_Gevu_geos"][0];
 					//ajoute le nom et l'identifiant
 					dataGeo["idLieu"] = this.idLieu;
 					dataGeo["lib"] = this.libLieu;
-					cartoIF.callChangeGeo();
+					//cartoIF.callChangeGeo();
 					instance = 
 					geo.NodeData = dataGeo;
 					geo.init();
