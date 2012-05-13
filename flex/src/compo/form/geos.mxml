@@ -2,55 +2,65 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
 		  xmlns:composants="compo.*"
 		  label="Géographie"
-		  width="100%" 
+		  width="100%"
+		  height="100"
 		  >
-	<mx:VBox >
+	<mx:HBox width="100%" height="100%" >
+		<mx:VBox width="100%" >
+			
+			<mx:HBox width="100%">
+				<mx:Label text="{NodeData.id_lieu}" /><mx:Label text="adresse" />
+				<mx:TextInput id="F01" data="{NodeData.adresse}" width="100%" />
+			</mx:HBox>
+			<mx:HBox width="100%">
 		
-		<mx:HBox width="100%">
-			<mx:Label text="{NodeData.id_lieu}" /><mx:Label text="adresse" />
-			<mx:TextInput id="F01" data="{NodeData.adresse}" width="100%" />
-		</mx:HBox>
-		<mx:HBox width="100%">
-			<mx:Label text="kml" />
-			<mx:TextInput id="F06" data="{NodeData.kml}" editable="true" maxWidth="700" />
-		</mx:HBox>
-		<mx:HBox width="100%">
-	
-			<mx:Label text="lat."/>
-			<mx:NumericStepper id="F02" 
-							   minimum="-90" maximum="90"
-							   stepSize="0.000001"
-							   data="{NodeData.lat}" enabled="{Modif}" />
-	
-			<mx:Label text="long." />
-			<mx:NumericStepper id="F03" 
-							   minimum="-180" maximum="180"
-							   stepSize="0.000001"
-							   data="{NodeData.lng}" enabled="{Modif}" />
-			<!--
-			<mx:Label text="zoom min." />
-			<mx:NumericStepper id="F04" 
-							   minimum="0" maximum="20"
-							   data="{NodeData.zoom_min}" enabled="{Modif}" />
-			-->
-			<mx:Label text="zoom max." />
-			<mx:NumericStepper id="F05" enabled="false" 
-							   minimum="0" maximum="30"
-							   data="{NodeData.zoom_max}"  />
-	
-			<mx:Label text="fond carto." />
-			<mx:ComboBox id="cbTypeCarte" selectedIndex="{getIndex(NodeData.type_carte)}" enabled="{Modif}" >
-				<mx:ArrayCollection>
-					<mx:Object label="terrain" data="terrain"/>
-					<mx:Object label="hybride" data="hybrid"/>
-					<mx:Object label="routier" data="roadmap"/>
-					<mx:Object label="satellite" data="satellite"/>
-				</mx:ArrayCollection>
-			</mx:ComboBox>	
-			<mx:Button id="save" label="enregistrer" click="saveModifications();"/>
-		</mx:HBox>
+				<mx:Label text="lat."/>
+				<mx:NumericStepper id="F02" 
+								   minimum="-90" maximum="90"
+								   stepSize="0.000001"
+								   data="{NodeData.lat}" enabled="{Modif}" />
 		
-	</mx:VBox>
+				<mx:Label text="long." />
+				<mx:NumericStepper id="F03" 
+								   minimum="-180" maximum="180"
+								   stepSize="0.000001"
+								   data="{NodeData.lng}" enabled="{Modif}" />
+				<!--
+				<mx:Label text="zoom min." />
+				<mx:NumericStepper id="F04" 
+								   minimum="0" maximum="20"
+								   data="{NodeData.zoom_min}" enabled="{Modif}" />
+				-->
+				<mx:Label text="zoom max." />
+				<mx:NumericStepper id="F05" enabled="false" 
+								   minimum="0" maximum="30"
+								   data="{NodeData.zoom_max}"  />
+			</mx:HBox>
+			<mx:HBox>
+				<mx:Label text="fond carto." />
+				<mx:ComboBox id="cbTypeCarte" selectedIndex="{getIndex(NodeData.type_carte)}" enabled="{Modif}" >
+					<mx:ArrayCollection>
+						<mx:Object label="terrain" data="terrain"/>
+						<mx:Object label="hybride" data="hybrid"/>
+						<mx:Object label="routier" data="roadmap"/>
+						<mx:Object label="satellite" data="satellite"/>
+					</mx:ArrayCollection>
+				</mx:ComboBox>	
+				<mx:Label text="couches" />
+				<mx:ComboBox selectedIndex="{getIndex(NodeData.type_carte)}" enabled="{Modif}" >
+					<mx:ArrayCollection>
+						<mx:Object label="terrain" data="terrain"/>
+						<mx:Object label="hybride" data="hybrid"/>
+						<mx:Object label="routier" data="roadmap"/>
+						<mx:Object label="satellite" data="satellite"/>
+					</mx:ArrayCollection>
+				</mx:ComboBox>	
+				<mx:Button id="save" label="enregistrer" click="saveModifications();"/>
+			</mx:HBox>
+		</mx:VBox>
+		<mx:Label text="kml" />
+		<mx:TextArea id="F06" data="{NodeData.kml}" editable="true" height="100%" width="100%" />
+	</mx:HBox>
 	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend" showBusyCursor="true"

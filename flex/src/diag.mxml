@@ -100,7 +100,7 @@ todo :
 					</mx:VBox>
 				</mx:Canvas>			
 				<mx:Canvas width="100%" height="100%" id="tnData" >			
-					<mx:TabNavigator width="100%" height="100%">
+					<mx:TabNavigator id="tnDiag" width="100%" height="100%" change="tnDiagChange()">
 						<mx:Canvas width="100%" height="100%" label="Données">
 							<mx:VBox id="boxDiag" visible="false" width="100%" height="100%" >
 								<mx:Image id="imgLieux" verticalAlign="top" horizontalAlign="left" source="" width="100%" />
@@ -110,7 +110,6 @@ todo :
 										<mx:HBox id="rowHaut" width="100%" >
 											<mx:VBox >
 												<ns2:hbIcoMultimedia id="docs"  />
-												<form:geos id="geo"  width="800" NodeData="{dataGeo}" />
 											</mx:VBox>							   
 										</mx:HBox>						   
 										<mx:HBox width="100%" height="100%" >
@@ -127,9 +126,10 @@ todo :
 								</mx:HBox>
 							</mx:VBox>  						
 						</mx:Canvas>
-						<mx:Canvas id="tbCarto" width="100%" height="100%" label="Cartographie">
-							<ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" />			   
-						</mx:Canvas>
+						<mx:VBox id="tbCarto" width="100%" height="100%" label="Cartographie">
+							<form:geos id="geo"  NodeData="{dataGeo}" />
+							<ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" />
+						</mx:VBox>
 						<mx:Canvas width="100%" height="100%" label="Statistiques">
 							<stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
 						</mx:Canvas>
