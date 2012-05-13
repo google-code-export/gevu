@@ -41,9 +41,11 @@ import mx.controls.LinkButton;
 import mx.events.CloseEvent;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
+import mx.events.IndexChangedEvent;
 import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
+
 
 
 [Bindable][Embed("images/voie.png")]public var voieIcon:Class;
@@ -100,12 +102,7 @@ public function login():void
 public function init():void
 {
 	boxGen.visible = true;
-	
-	/**TODO: charger uniquement quand l'onglet est afficher
-	*cartoIF.visible = true; 
-	*ExternalInterface.addCallback("modifLieu",modifLieu);
-	*/
-	
+		
 	//construction de la listes des bases disponibles
 	var dataBases:Array = JSON.decode(this.exi.droit_3);
 	cbBases.dataProvider = dataBases;
@@ -345,6 +342,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 	var docsxlieux:Object;
 	
 	//initialise les tabbox
+	tnDiag.selectedIndex = 0;
 	tabDiag.removeAllChildren();
 	if(rowHaut.numChildren==2){
 		rowHaut.removeChildAt(1);				
@@ -377,18 +375,12 @@ private function displayNodeProperties(event:ResultEvent) : void {
 						aDiag = true;
 					}
 					this.dataStat = obj[item].diag.stat.EtatDiag 
-					//stat.idLieu = this.idLieu;
-					//stat.init();
 					break;
 				case "geos":
 					dataGeo = obj["Models_DbTable_Gevu_geos"][0];
 					//ajoute le nom et l'identifiant
 					dataGeo["idLieu"] = this.idLieu;
 					dataGeo["lib"] = this.libLieu;
-					//cartoIF.callChangeGeo();
-					instance = 
-					geo.NodeData = dataGeo;
-					geo.init();
 					break;
 				case "docsxlieux":
 					//stocke la réponse pour éviter de supprimer le kml en ajoutant la géographie
@@ -549,3 +541,19 @@ private function updateTreeStructure(event:ResultEvent) : void {
 		xmlTree = treeTree.dataProvider[0] as XML;
 	}	
 }
+
+protected function tnDiagChange():void
+{
+	var id:int = tnDiag.selectedIndex;
+	if(id==1 && dataGeo){
+		geo.NodeData = dataGeo;
+		geo.init();
+		ExternalInterface.addCallback("modifLieu",modifLieu);	
+		cartoIF.callChangeGeo();
+	}
+	if(id==2){
+		stat.idLieu = this.idLieu;
+		stat.init();
+	}
+}
+

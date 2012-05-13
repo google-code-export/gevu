@@ -97,7 +97,7 @@
 					}else if(ext=="odt"){
 						d.vignette = OdtIcon;
 						dataIcons.addItem(d);							
-					}else if(ext=="xls" || ext=="lsx"){
+					}else if(ext=="xls" || ext=="lsx" || ext=="csv"){
 						d.vignette = XlsIcon;
 						dataIcons.addItem(d);							
 					}else if(ext=="ods"){
