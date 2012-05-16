@@ -1,3 +1,9 @@
+<?php
+	if($this->json){
+		echo json_encode($this->stats);
+		return ;
+	}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,11 +11,15 @@
 	<title>GEVU : statistiques disponibles</title>
 </head>
 <body>
-<h1>GEVU</h1>
-<h2>Statistiques disponibles</h2>
+<h1>Statistiques disponibles</h1>
 <?php
+	$niv = "";
 	foreach($this->stats as $s){
-		echo "<a href='".$s[1]."'>".$s[0]."</a><br/>"; 
+		if($niv!=$s[0]){
+			echo "<h2>".$s[0]."</h2>";
+			$niv=$s[0];
+		}
+		echo "<a href='".$s[2]."'><h3>".$s[1]."</h3></a>"; 
 	}
 ?>
 </body>
