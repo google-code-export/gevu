@@ -559,7 +559,7 @@ protected function tnDiagChange():void
 		cartoIF.callChangeGeo();
 	}
 	*/
-	if(id==2){
+	if(id==1){
 		stat.idLieu = this.idLieu;
 		stat.init();
 	}
