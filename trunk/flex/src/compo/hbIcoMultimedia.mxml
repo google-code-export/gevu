@@ -66,14 +66,12 @@
 				ext = ext.substring(ext.length-3);
 				var img:Image = new Image;
 				var obj:Object = new Object;
+				kml = false;
 				if(d.content_type == "application/octet-stream"){
 					if(ext=="doc" || ext=="ocx"){
 						d.vignette = DocIcon;
 						dataIcons.addItem(d);
 					}else if(ext=="kml" || ext=="kmz"){						
-						d.vignette = KmlIcon;
-						dataIcons.addItem(d);
-						this.parentApplication.cartoIF.callChargeKml(d.url);
 						kml = true;
 					}else if(ext=="pdf"){
 						d.vignette = PdfIcon;
@@ -136,9 +134,6 @@
 						dataIcons.addItem(d);							
 					}
 					if(ext=="kml" || ext=="kmz"){						
-						d.vignette = KmlIcon;
-						dataIcons.addItem(d);
-						this.parentApplication.cartoIF.callChargeKml(d.url);
 						kml = true;
 					}
 				}
@@ -151,16 +146,15 @@
 					dataIcons.addItem(d);							
 				}
 				if(d.content_type == "application/vnd.google-earth.kml+xml kml"){
-					d.vignette = KmlIcon;
-					dataIcons.addItem(d);
-					this.parentApplication.cartoIF.callChargeKml(d.url);
 					kml = true;
 				}
 				if(d.content_type == "text/xml" && ext=="kml"){
+					kml = true;
+				}
+				if(kml){
 					d.vignette = KmlIcon;
 					dataIcons.addItem(d);
-					this.parentApplication.cartoIF.callChargeKml(d.url);
-					kml = true;
+					this.parentApplication.cartoIF.callChargeKml([d.url, d.titre, d.id_doc]);					
 				}
 			}
 		}
