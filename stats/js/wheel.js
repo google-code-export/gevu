@@ -8,12 +8,10 @@ var w = 840,
 
 var div = d3.select("#vis");
 
-div.select("img").remove();
-
-var vis = div.append("svg")
+var vis = div.append("svg:svg")
     .attr("width", w + p * 2)
     .attr("height", h + p * 2)
-  .append("g")
+  .append("svg:g")
     .attr("transform", "translate(" + (r + p) + "," + (r + p) + ")");
 
 div.append("p")
@@ -30,8 +28,8 @@ var arc = d3.svg.arc()
     .innerRadius(function(d) { return Math.max(0, d.y ? y(d.y) : d.y); })
     .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
 
-d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog", function(json) {
-  var nodes = partition.nodes({children: json});
+d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog&typeLog=L", function(json) {
+  var nodes = partition.nodes({children: [json]});
 
   var path = vis.selectAll("path").data(nodes);
   path.enter().append("path")
@@ -45,7 +43,7 @@ d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog", function(js
   var textEnter = text.enter().append("text")
       .style("opacity", 1)
       .style("fill", function(d) {
-        return brightness(d3.rgb(colour(d))) < 125 ? "#eee" : "#000";
+    	  return brightness(d3.rgb(colour(d))) < 125 ? "#eee" : "#000";
       })
       .attr("text-anchor", function(d) {
         return x(d.x + d.dx / 2) > Math.PI ? "end" : "start";
