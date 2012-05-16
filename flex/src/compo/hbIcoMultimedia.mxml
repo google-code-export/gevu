@@ -44,7 +44,7 @@
 		private var rsFilms:ArrayCollection = new ArrayCollection();
 		private var rsSons:ArrayCollection = new ArrayCollection();
 		[Bindable] public var dataIcons:ArrayCollection = new ArrayCollection();
-		[Bindable] public var nbColo:int = 10;
+		[Bindable] public var nbColo:int = 6;
 	
 		
 		public function Init(EtatDiag:Object, Rub:String, Site:String, Ajax:String):void {	
@@ -151,6 +151,12 @@
 					dataIcons.addItem(d);							
 				}
 				if(d.content_type == "application/vnd.google-earth.kml+xml kml"){
+					d.vignette = KmlIcon;
+					dataIcons.addItem(d);
+					this.parentApplication.cartoIF.callChargeKml(d.url);
+					kml = true;
+				}
+				if(d.content_type == "text/xml" && ext=="kml"){
 					d.vignette = KmlIcon;
 					dataIcons.addItem(d);
 					this.parentApplication.cartoIF.callChargeKml(d.url);
