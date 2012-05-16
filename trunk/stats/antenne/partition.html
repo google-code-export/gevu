@@ -1,16 +1,16 @@
-
+﻿
 <!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <link type="text/css" rel="stylesheet" href="../css/style.css"/>
+    <link type="text/css" rel="stylesheet" href="../css/style-alceane.css"/>
     <script type="text/javascript" src="../js/d3.v2.js"></script>
     <style type="text/css">
 
 .chart {
   display: block;
   margin: auto;
-  margin-top: 60px;
+  margin-top: 20px;
   font-size: 11px;
 }
 
@@ -34,12 +34,12 @@ text {
   <body>
     <script type="text/javascript">
 
-var w = 1120,
-    h = 600,
+var w = 1150,
+    h = 620,
     x = d3.scale.linear().range([0, w]),
     y = d3.scale.linear().range([0, h]);
 
-var vis = d3.select("#body").append("div")
+var vis = d3.select("body").append("div")
     .attr("class", "chart")
     .style("width", w + "px")
     .style("height", h + "px")
@@ -50,7 +50,7 @@ var vis = d3.select("#body").append("div")
 var partition = d3.layout.partition()
     .value(function(d) { return d.size; });
 
-d3.json("../data/donnees1.json", function(root) {
+d3.json("../data/Donnees5.json", function(root) {
   var g = vis.selectAll("g")
       .data(partition.nodes(root))
     .enter().append("svg:g")
