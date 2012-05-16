@@ -10,6 +10,7 @@ var geocoder = new google.maps.Geocoder();
 var map;
 var markersArray = [];
 var kmlArray = [];
+var polyArray = [];
 var mt = new Array(google.maps.MapTypeId.HYBRID,google.maps.MapTypeId.ROADMAP,google.maps.MapTypeId.SATELLITE,google.maps.MapTypeId.TERRAIN);
 var lstKML = d3.select('#listeKML');
 
@@ -39,14 +40,7 @@ function deleteOverlays() {
       markersArray[i].setMap(null);
     }
     markersArray.length = 0;
-  }
-  if (kmlArray) {
-    for (i in kmlArray) {
-    	kmlArray[i].setMap(null);
-    }
-    kmlArray.length = 0;
-  }
-	  
+  }	  
 }
 
 //Removes the overlays from the map, but keeps them in the array
@@ -105,20 +99,43 @@ function initialize() {
 
 document.addKml = function(params){
 	
-	var kmlLayer = new google.maps.KmlLayer(params[0]);
-	kmlLayer.setMap(map);
-	kmlArray.push(kmlLayer);
-	var ckKml = lstKML.append("input")
-		.attr("type", "checkbox")
-		.attr("id", "ckKml_"+kmlArray.length)
-		.attr("checked", "true");
-	
+	if(!kmlArray[params[2]]){
+		var kmlLayer = new google.maps.KmlLayer(params[0]);
+		kmlLayer.setMap(map);
+		kmlArray[params[2]] = kmlLayer;
+		addCouche(params[2], "ckKml_"+params[2], params[1]);
+	}	
+}
+
+function addCouche(id, idElem, texte){
+
+	d3.select('#listeCouche')
+		.append("span")
+		.text(texte)
+		.append("input")
+			.attr("type", "checkbox")
+			.attr("id", idElem)
+			.attr("checked","checked")
+			.attr("onclick","showCouche("+id+",'"+idElem+"')");	
+}
+
+function showCouche(id, idElem){
+
+	var chk = document.getElementById(idElem);
+	var arrIdElem = idElem.split("_");
+	if(chk.checked){
+		if(arrIdElem[0]=="ckKml")kmlArray[id].setMap(map); 
+		if(arrIdElem[0]=="ckPoly")polyArray[id].setMap(map); 
+	}else{
+		if(arrIdElem[0]=="ckKml")kmlArray[id].setMap(null); 
+		if(arrIdElem[0]=="ckPoly")polyArray[id].setMap(null); 
+	}	  		
 	
 }
 
 document.addMarker = function(params){
 
-	//deleteOverlays();
+	deleteOverlays();
 	
 	var latLng = new google.maps.LatLng(params[0], params[1]);
 
@@ -137,7 +154,8 @@ document.addMarker = function(params){
 	
 	//on ajoute le kml
 	if(params[4]!=""){
-		var polyLayer = addPolygone(params[4]);
+		polyArray[params[5]] = addPolygone(params[4]);
+		addCouche(params[5], "ckPoly_"+params[5], params[6]);
 	}
 	  
 	google.maps.event.addListener(marker, 'dragend', function() {
@@ -218,7 +236,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
   }
   </style>
   
-  <div id="listeKML"></div>
+  <div style="overflow:auto;" >Couches :
+	  <div id="listeCouche"></div>
+  </div>
   <div id="mapCanvas"></div>
 </body>
 </html>

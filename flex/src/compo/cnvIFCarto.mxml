@@ -14,8 +14,8 @@
 			cartoIFrame.callIFrameFunction('addMarker', [rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib], handleChangeGeo);
 		}
 
-		public function callChargeKml(url:String):void {
-			cartoIFrame.callIFrameFunction('addKml', [url], handleChangeGeo);	
+		public function callChargeKml(params:Array):void {
+			cartoIFrame.callIFrameFunction('addKml', params, handleChangeGeo);	
 		}
 		public function callFunction(name:String, params):void {
 			cartoIFrame.callIFrameFunction(name, [params], handleChangeGeo);	
