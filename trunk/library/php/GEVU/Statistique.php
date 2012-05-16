@@ -3,6 +3,19 @@
 class GEVU_Statistique extends GEVU_Site{
         
 	/**
+	* constructeur de la class
+	*
+    * @param string $idBase
+    * @param boolean $cache
+    * 
+    */
+	public function __construct($idBase=false, $cache=true)
+    {
+    	parent::__construct($idBase, $cache);
+		
+    }
+	
+	/**
 	 * récupère la liste des réponses d'une base
     * @param string $idBase
     * @return string
