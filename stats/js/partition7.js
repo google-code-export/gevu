@@ -1,12 +1,12 @@
-﻿var w = 600,
-    h = 400,
+﻿var w = 500,
+    h = 380,
     r = Math.min(w, h) / 2,
 	z,
 	path, titre;
 var x = d3.scale.linear().range([0, 2 * Math.PI]),
 	y = d3.scale.pow().exponent(1.3).domain([0, 1]).range([0, r]),
 	p = 5,
-	duration = 1000;
+	duration = 900;
 var text;
 
 //merci Ã 
