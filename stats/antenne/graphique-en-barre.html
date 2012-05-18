@@ -63,7 +63,7 @@ svg.append("g")
   .append("line")
     .attr("y1", "100%");
 
-d3.json("../Data/flare1.json", function(root) {
+d3.json("../data/flare1.json", function(root) {
   hierarchy.nodes(root);
   x.domain([0, root.value]).nice();
   down(root, 0);
