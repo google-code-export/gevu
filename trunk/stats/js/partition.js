@@ -1,9 +1,8 @@
 var w = 800,
     h = 450,
     r = Math.min(w, h) / 2,
-    color = d3.scale.category20c();
-
-	  
+    color = d3.scale.category20b();
+  
 	  
 var vis = d3.select("#chart").append("svg")
     .attr("width", w)
@@ -32,6 +31,10 @@ d3.json(urlJson, function(json) {
       .style("stroke", "#fff")
       .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
       .each(stash);
+	  
+	  
+/*if d.name = "OCCUPE" then color = red;
+if d.name = "VACANT" then color = green; */	
 	  
   var titre = path.append("svg:title")
   .text(function(d) { 
