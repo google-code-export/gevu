@@ -1,15 +1,14 @@
 var w = 800,
     h = 450,
     r = Math.min(w, h) / 2,
-	z;
- //   color = d3.scale.category20b();
+   color = d3.scale.category20b();
   
-var colors = [];
+/* var colors = [];
 colors['BL'] = ["#ccdef0", "#1e4164"];
 colors['CA'] = ["#c9e1c4", "#2a4724"];
 colors['CV'] = ["#f5d5ad", "#5e390b"];
 colors['MR'] = ["#f1c4c5", "#621819"];
-colors['QS'] = ["#dcc1df", "#412343"];	
+colors['QS'] = ["#dcc1df", "#412343"];	*/
 	
 var vis = d3.select("#chart").append("svg")
     .attr("width", w)
@@ -36,12 +35,13 @@ d3.json(urlJson, function(json) {
       .attr("d", arc)
       .attr("fill-rule", "evenodd")
       .style("stroke", "#fff")
-      .style("fill", function(d) {
-	    if(d.name == "OCCUPE") return "red";
+      .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
+      .each(stash);
+/*	    if(d.name == "OCCUPE") return "red";
     	  if(d.name == "VACANT") return "green";    	  
     	  return color(d.name); 
-    	  })
-      .each(stash);
+    	  }) 
+      .each(stash); */
 	  
 		    /*	  var i = (d.children ? d : d.parent);
 		    	  if(i.ref){
@@ -70,12 +70,12 @@ if d.name = "VACANT" then color = green; */
         .duration(1500)
         .attrTween("d", arcTween);
 		
-			var arrA = json.children;
+	/*		var arrA = json.children;
 		z = [];
 		for(var i=0; i < arrA.length; i++){
 			z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(colors[arrA[i].ref]);
 		}		
-		var nodes = partition.nodes(json);
+		var nodes = partition.nodes(json); */
 		
 				    titre.text(function(d) { 
     	return d.name + " : " + d.value; 
@@ -92,12 +92,12 @@ if d.name = "VACANT" then color = green; */
         .duration(1500)
         .attrTween("d", arcTween);
 		
-						var arrA = json.children;
+	/*					var arrA = json.children;
 		z = [];
 		for(var i=0; i < arrA.length; i++){
 			z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(colors[arrA[i].ref]);
 		}		
-		var nodes = partition.nodes(json);
+		var nodes = partition.nodes(json); */
 		
 				    titre.text(function(d) { 
     	return d.name + " : " + d.value; 
