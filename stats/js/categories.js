@@ -1,7 +1,7 @@
-var r = 960 / 2;
+var r = 800 / 2;
 
 var cluster = d3.layout.cluster()
-    .size([360, r - 120]);
+    .size([360, r - 100]);
 
 var diagonal = d3.svg.diagonal.radial()
     .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });

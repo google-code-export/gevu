@@ -1,4 +1,4 @@
-var w = 840,
+var w = 700,
     h = w,
     r = w / 2,
     x = d3.scale.linear().range([0, 2 * Math.PI]),

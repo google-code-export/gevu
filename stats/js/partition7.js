@@ -1,5 +1,5 @@
-﻿var w = 960,
-    h = 600,
+﻿var w = 600,
+    h = 400,
     r = Math.min(w, h) / 2,
 	z,
 	path, titre;
