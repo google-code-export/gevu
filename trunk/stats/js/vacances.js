@@ -4,7 +4,6 @@
     color = d3.scale.category20b();
 
 	  
-	  
 var vis = d3.select("#chart").append("svg")
     .attr("width", w)
     .attr("height", h)
