@@ -1,5 +1,5 @@
-﻿var w = 960,
-    h = 700,
+﻿var w = 800,
+    h = 450,
     r = Math.min(w, h) / 2,
     color = d3.scale.category20b();
 
