@@ -29,13 +29,13 @@ d3.json(urlJson, function(json) {
       .attr("d", arc)
       .attr("fill-rule", "evenodd")
       .style("stroke", "#fff")
-      .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
+      .style("fill", function(d) {
+    	  if(d.name == "OCCUPE") return "red";
+    	  if(d.name == "VACANT") return "green";    	  
+    	  return color(d.name); 
+    	  })
       .each(stash);
-	  
-	  
-/*if d.name = "OCCUPE" then color = red;
-if d.name = "VACANT" then color = green; */	
-	  
+	  	  
   var titre = path.append("svg:title")
   .text(function(d) { 
   	return d.name + " : " + d.value; 
@@ -57,8 +57,7 @@ if d.name = "VACANT" then color = green; */
   });
 
   d3.select("#count").on("click", function() {
-    path
-        .data(partition.value(function(d) { return 1; }))
+    path.data(partition.value(function(d) { return 1; }))
       .transition()
         .duration(1500)
         .attrTween("d", arcTween);
