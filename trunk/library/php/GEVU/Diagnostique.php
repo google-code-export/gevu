@@ -816,7 +816,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$geos[0]["id_lieu"] = $arrLieu["id_lieu"];
 		unset($geos[0]["id_geo"]);
 		unset($geos[0]["id_donnee"]);
-		if($idInst)$geos[0]["id_instant"] = $idInst;
+		if($idInst)$geos[0]["id_instant"] = $this->idInst;
 		$this->dbG->ajouter($geos[0], $existe);
 
 		if($rtnXml){
@@ -851,8 +851,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$c = str_replace("::", "_", __METHOD__); 
 		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
         
-        //récupère les infos du lieu
-        $lieu = $this->dbL->findById_lieu($idLieu);
+        //suppression du lieu
 		$this->dbL->remove($idLieu, $this->db);
 		
 		//retourne les informations du parent
