@@ -343,8 +343,7 @@
 			<mx:VRule height="100%"/>
 			<mx:VBox height="100%" width="100%">
 				<mx:Label fontSize="18" fontWeight="bold" text="Scènes copiées" />
-				<mx:Grid borderColor="#E37D2A" borderStyle="solid" borderThickness="4"
-						 themeColor="#FFA200">
+				<mx:Grid borderColor="#E37D2A" borderStyle="solid" >
 					<mx:GridRow id="grSceneCopie" name="grSceneCopie">
 						
 					</mx:GridRow> 
@@ -359,7 +358,7 @@
 				<!-- <mx:Image source="@Embed('images/legSceneHaut.png')" /> -->
 				<mx:HBox height="600" width="100%">
 					<!-- <mx:Image source="@Embed('images/legSceneBas.png')" /> -->
-					<mx:Grid id="grdScen" borderColor="#45A4CB" borderStyle="solid" borderThickness="4">
+					<mx:Grid id="grdScen" borderColor="#45A4CB" borderStyle="solid" >
 					</mx:Grid>									
 				</mx:HBox>
 			</mx:VBox>

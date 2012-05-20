@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" pageTitle="GEVU grilles" 
-		backgroundGradientColors="[#ffffff, #ffffff]"
 		xmlns:ns2="compo.*"
 		name="gevu_grilles"
 		creationComplete="login()"

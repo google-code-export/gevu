@@ -67,8 +67,8 @@
     </mx:Script>
 
 	<mx:VBox id="LieuDiag" height="100%" width="100%" >
-		<mx:HRule strokeColor="#1C999A" strokeWidth="4" themeColor="#83B5D4" width="100%" height="4"/>
-		<mx:HBox width="100%" id="hbAriane" borderStyle="none" borderColor="#6B055B" borderThickness="2" fontSize="8">
+		<mx:HRule strokeColor="#1C999A" strokeWidth="4" width="100%" height="4"/>
+		<mx:HBox width="100%" id="hbAriane" borderStyle="none" borderColor="#6B055B" fontSize="8">
 		</mx:HBox>
 		<mx:VBox paddingLeft="30" width="90%" id="vbCrit" paddingBottom="5" paddingTop="5" >
 			

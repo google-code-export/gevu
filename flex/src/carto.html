@@ -62,6 +62,23 @@ document.clearKml = function(params) {
   }
 }
 
+function deleteCouches() {
+	  if (kmlArray) {
+	    for (i in kmlArray) {
+	    	kmlArray[i].setMap(null);
+	    }
+	    kmlArray.length = 0;
+	  }
+	  if (polyArray) {
+		    for (i in polyArray) {
+		    	polyArray[i].setMap(null);
+		    }
+		    polyArray.length = 0;
+		  }
+	  d3.select('#listeCouche').remove();	  
+	  d3.select('#couches').append("div").attr("id", "listeCouche");	   
+	}
+
 // Shows any overlays currently in the array
 function showOverlays() {
   if (markersArray) {
@@ -70,16 +87,6 @@ function showOverlays() {
     }
   }
   showKml();  
-}
-
-//Shows any overlays currently in the array
-document.showKml = function() {
-  if (kmlArray) {
-    for (i in kmlArray) {
-    	kmlArray[i].setMap(map);
-    }
-  }
-  
 }
 
 function initialize() {
@@ -236,7 +243,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
   }
   </style>
   
-  <div style="overflow:auto;" >Couches :
+  <div id="couches" style="overflow:auto;" >Couches : <span onclick="" >(tout effacer)</span>
 	  <div id="listeCouche"></div>
   </div>
   <div id="mapCanvas"></div>

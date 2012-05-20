@@ -565,3 +565,9 @@ protected function tnDiagChange():void
 	}
 }
 
+protected function synchBase():void
+{
+	vbBasesSync.percentHeight = 100;
+	vbBasesSync.percentWidth = 100;
+}
+
