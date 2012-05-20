@@ -95,6 +95,7 @@ class Models_DbTable_Gevu_niveaux extends Zend_Db_Table_Abstract
 	    	$data["id_lieu"] = $idLieu;
 	    	$data["id_instant"] = $idInst;
 	    	$data["ref"] = $ref;
+	    	unset($data["id_niveau"]);
 	    	$this->ajouter($data);
 		    $arr = $this->findByRef($ref);
 	    }
@@ -187,8 +188,8 @@ class Models_DbTable_Gevu_niveaux extends Zend_Db_Table_Abstract
     public function findById_lieu($id_lieu)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_niveaux") )                           
-                    ->where( "g.id_lieu = ?", $id_lieu );
+			->from( array("n" => "gevu_niveaux") )                           
+			->where( "n.id_lieu = ?", $id_lieu );
 
         return $this->fetchAll($query)->toArray(); 
     }

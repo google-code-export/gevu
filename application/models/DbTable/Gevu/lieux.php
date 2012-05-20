@@ -66,7 +66,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 		$select = $this->select();
 		$select->from($this, array('id_lieu'));
 		foreach($data as $k=>$v){
-			$select->where($k.' = ?', $v);
+			if($k!="id_instant")
+				$select->where($k.' = ?', $v);
 		}
 	    $rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_lieu; else $id=false;
@@ -148,17 +149,30 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {    	
-        $arrEnfant = $this->getFullChild($id);
-        foreach ($arrEnfant as $enf){
-        	if($enf["id_lieu"]!=$id){
-	        	$this->remove($enf["id_lieu"]);
-        	}
-        }
-        $this->delete('gevu_lieux.id_lieu = ' . $id);
+        $lieu = $this->findById_lieu($id);
+    	
+    	//récupère tous les enfants
+    	$ids = $this->getFullChildIds($id);
+		$ids = $ids[0]['ids'];
+    	
+		//suppression des données lieés
+        $dt = $this->getDependentTables();
+        foreach($dt as $t){
+        	$dbT = new $t($this->db);
+        	$dbT->delete('id_lieu IN ('.$ids.')');
+        }        
+        $this->delete('id_lieu IN ('.$ids.')');
         
         /** TODO
-         * supprimer les données des tables parentes.
+         * supprimer les documents sur le serveur
          */
+        
+        //mis à jour des droites et gauches
+        $sql = 'UPDATE gevu_lieux SET rgt='.($lieu[0]['lft'] - 1).' WHERE rgt > '.$lieu[0]['rgt'];
+		$stmt = $this->_db->query($sql);
+        $sql = 'UPDATE gevu_lieux SET lft='.($lieu[0]['rgt'] + 1).' WHERE lft > '.$lieu[0]['rgt'];
+		$stmt = $this->_db->query($sql);
+        
     }
     
     /**
@@ -394,7 +408,27 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
                 $result = $this->fetchAll($query);
         return $result->toArray(); 
     }
-    
+
+    /*
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne la liste de tous ses enfants au format csv
+     *
+     * @param integer $idLieu
+     * @param string $order
+     * @return array
+     */
+    public function getFullChildIds($idLieu, $order="lft")
+    {
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('node' => 'gevu_lieux'),array("ids"=>"GROUP_CONCAT(enfants.id_lieu)"))
+            ->joinInner(array('enfants' => 'gevu_lieux'),
+                'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu'))
+            ->where( "node.id_lieu = ?", $idLieu);        
+        $result = $this->fetchAll($query);
+        return $result->toArray(); 
+    }
+        
      /*
      * Recherche une entrée Gevu_lieux correspondant à l'enfant d'un lieu pour un type de controle
      * création de ce lieu s'il n'exite pas  
@@ -460,4 +494,44 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         
     }
     
+    /**
+     * récupère les types de données liées pour un lieu
+     *
+     * @param int $idLieu
+     *  
+     * @return integer
+     */
+    public function getTypeRelatedData($idLieu)
+    {
+    	$sql = 'SELECT l.lib, l.id_lieu, l.lieu_parent, COUNT(a.id_antenne) antenne, COUNT(b.id_batiment) batiment, COUNT(c.id_geo) geo, COUNT(d.id_diag) diag, COUNT(e.id_doc) doc
+    			, COUNT(f.id_espace) espace, COUNT(g.id_espace_ext) espace_ext, COUNT(h.id_espace_int) espace_int, COUNT(i.id_etablissement) etablissement, COUNT(j.id_niveau) niveau
+    			, COUNT(k.id_objet_ext) objet_ext, COUNT(m.id_objet_int) objet_int, COUNT(n.id_objet_voirie) objet_voirie, COUNT(p.id_parcelle) parcelle
+    			, COUNT(q.id_probleme) probleme, COUNT(s.id_groupe) groupe, COUNT(t.id_logement) logement, COUNT(u.id_local) local, COUNT(v.id_part_commu) part_commu
+					  FROM gevu_lieux AS l
+						  LEFT JOIN gevu_antennes AS a ON a.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_batiments AS b ON b.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_geos AS c ON c.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_diagnostics AS d ON d.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_docsxlieux AS e ON e.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_espaces AS f ON f.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_espacesxexterieurs AS g ON g.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_espacesxinterieurs AS h ON h.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_etablissements AS i ON i.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_niveaux AS j ON j.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_objetsxexterieurs AS k ON k.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_objetsxinterieurs AS m ON m.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_objetsxvoiries AS n ON n.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_parcelles AS p ON p.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_problemes AS q ON q.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_groupes AS s ON s.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_logements AS t ON t.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_locaux AS u ON u.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_partiescommunes AS v ON v.id_lieu = l.id_lieu
+					  WHERE l.id_lieu = '.$idLieu.' 
+					  GROUP BY l.id_lieu
+					  ORDER BY l.id_lieu' ;
+    			$stmt = $this->_db->query($sql);
+
+    			return $stmt->fetch();
+    }     
 }
