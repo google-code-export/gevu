@@ -91,6 +91,7 @@ class Models_DbTable_Gevu_objetsxexterieurs extends Zend_Db_Table_Abstract
 	    	if($lib=="")$lib="Obj. Ext. - ".$ref;
 			$diag = new GEVU_Diagnostique();
 	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
+	    	unset($data["id_objet_ext"]);	  	
 		    $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "ref"=> $ref));
 		    $arr = $this->findByRef($ref);
 	    }

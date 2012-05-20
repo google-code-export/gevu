@@ -579,5 +579,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
 
         $result = $this->fetchAll($query);
         return $result->toArray(); 
-    }        
+    }
+    
+    
 }

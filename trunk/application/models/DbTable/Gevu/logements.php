@@ -96,6 +96,7 @@ class Models_DbTable_Gevu_logements extends Zend_Db_Table_Abstract
 	    	$data["id_lieu"] = $idLieu;
 	    	$data["id_instant"] = $idInst;
 	    	$data["ref"] = $ref;
+	    	unset($data["id_logement"]);	
 	    	$this->ajouter($data);
 	    	$arr = $this->findByRef($ref);
 	    }

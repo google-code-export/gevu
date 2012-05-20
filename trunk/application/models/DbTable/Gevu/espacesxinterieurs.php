@@ -109,6 +109,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
 	    	$data["id_lieu"] = $idLieu;
 	    	$data["id_instant"] = $idInst;
 	    	$data["ref"] = $ref;
+	    	unset($data["id_espace_int"]);
 	    	$this->ajouter($data);
 	    	$arr = $this->findByRef($ref);
 	    }
