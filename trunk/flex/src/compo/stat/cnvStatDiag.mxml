@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas label="Statistiques de diagnostic" xmlns:mx="http://www.adobe.com/2006/mxml" 
 	creationComplete="init()"
-	clipContent="false"
+	width="100%" height="100%"
 	>
 	<mx:Script><![CDATA[
+		import compo.cnvDiagListe;
 		import compo.twDiagListe;
 		
 		import mx.controls.Alert;
+		import mx.events.IndexChangedEvent;
 		import mx.managers.PopUpManager;
 		import mx.rpc.events.FaultEvent;
 		import mx.rpc.events.ResultEvent;
@@ -49,8 +51,10 @@
 		[Bindable]	public var idLieu:int;
 		
 		public function init():void {
+			details.removeAllChildren();
 			TraiteEtatDiag();
-        }
+		}
+		
 
 		public function TraiteEtatDiag():void {
 			
@@ -71,62 +75,80 @@
 			}
 
 		}
-			
-		private function chartEtatDiagChange(event:Event):void {
-			var allSeries:Array = event.currentTarget.series;
-			var strHandi:String = "";
-			var niv:String = "";
-			var titreSelect:String = "";
-			//construction de la requête
-			for (var i:int=0; i<allSeries.length; i++) {
-				//le type de handicap
-				switch (allSeries[i].selectedIndices[0]) {
-					case 0:
-						strHandi = "auditif";
-						break;
-					case 1:
-						strHandi = "cognitif";
-						break;
-					case 2:
-						strHandi = "moteur";
-						break;
-					case 3:
-						strHandi = "visuel";
-						break;
-				}				    
-				//le niveau seulemet si on a récupéré  l'indice
-				if(strHandi!="" && niv==""){
-					switch (allSeries[i].id) {
-						case "_cnvStatDiag_ColumnSeries1":
-							niv = "0";
+					
+		protected function chart_changeHandler(event:Event):void
+		{
+			try 
+			{ 
+				var allSeries:Array = event.currentTarget.series;
+				var strHandi:String = "";
+				var niv:String = "";
+				var titreSelect:String = "";
+				//construction de la requête
+				for (var i:int=0; i<allSeries.length; i++) {
+					//le type de handicap
+					switch (allSeries[i].selectedIndices[0]) {
+						case 0:
+							strHandi = "auditif";
 							break;
-						case "_cnvStatDiag_ColumnSeries2":
-							niv = "1";
+						case 1:
+							strHandi = "cognitif";
 							break;
-						case "_cnvStatDiag_ColumnSeries3":
-							niv = "2";
+						case 2:
+							strHandi = "moteur";
 							break;
-						case "_cnvStatDiag_ColumnSeries4":
-							niv = "3";
+						case 3:
+							strHandi = "visuel";
 							break;
+					}				    
+					//le niveau seulemet si on a récupéré  l'indice
+					if(strHandi!="" && niv==""){
+						switch (allSeries[i].id) {
+							case "_cnvStatDiag_ColumnSeries1":
+								niv = "0";
+								break;
+							case "_cnvStatDiag_ColumnSeries2":
+								niv = "1";
+								break;
+							case "_cnvStatDiag_ColumnSeries3":
+								niv = "2";
+								break;
+							case "_cnvStatDiag_ColumnSeries4":
+								niv = "3";
+								break;
+						}
+						//création du titre de la sélection
+						titreSelect = allSeries[i].legendData[0].label;	
 					}
-					//création du titre de la sélection
-					titreSelect = allSeries[i].legendData[0].label;	
 				}
-			}
-			var vn:Array = new Array();
-			vn["niv"] = niv;
-			vn["handi"] = strHandi;
-			vn["idLieu"] = this.idLieu;
-			
-			//affiche la liste des diag dans une fenêtre
-			var twDL:twDiagListe = twDiagListe(
+				var vn:Array = new Array();
+				vn["niv"] = niv;
+				vn["handi"] = strHandi;
+				vn["idLieu"] = this.idLieu;
+				
+				details.removeAllChildren();
+				var cnvListe:cnvDiagListe = new cnvDiagListe();
+				cnvListe.params = vn;
+				details.addChild(cnvListe);
+				
+				/*affiche la liste des diag dans une fenêtre
+				var twDL:twDiagListe = twDiagListe(
 				PopUpManager.createPopUp(this, twDiagListe));
-			twDL.params = vn;
-			PopUpManager.centerPopUp(twDL);
-
+				twDL.params = vn;
+				PopUpManager.centerPopUp(twDL);
+				*/
+				
+				/** il y a avait un bug à cause de la propagation de l'événement au canvas
+				 * merci à http://riaflex.blogspot.fr/2008/02/chartitemeventchange-in-conflict-with.html
+				**/
+				event.stopImmediatePropagation();				
+			} 
+			catch (err:Error) 
+			{ 
+				var t:String = "";
+			} 			
+			
 		}
-
 		
 	]]></mx:Script>
 	<!-- Define custom colors for use as fills. -->
@@ -141,66 +163,69 @@
 	<mx:Stroke id="s2" color="#ffa200" weight="2"/>
 	<mx:Stroke id="s3" color="red" weight="2"/>
 
-	<mx:VBox label="Diagnostic" height="300" >
-		<mx:HBox paddingLeft="70" visible="false" height="0" >
-			<mx:Label id="TauxCalc" />
-			<mx:Image id="imgMoteur" source="{MoteurIcon}" width="60" />
-			<mx:Image id="imgAudio" source="{AudioIcon}" width="60" />
-			<mx:Image id="imgCog" source="{CogIcon}" width="60" />
-			<mx:Image id="imgVisu" source="{VisuIcon}" width="60" />
-		</mx:HBox>
-		
-		<mx:ColumnChart id="chart" 
-						dataProvider="{rsEtatDiag}" 
-						type="stacked"
-						showDataTips="true" 
-						change="chartEtatDiagChange(event)"
-						selectionMode="multiple"
-						width="320" height="200"
-						>
-			<mx:horizontalAxis>
-				<mx:CategoryAxis id="h1" categoryField="id" />
-			</mx:horizontalAxis>
-			<mx:series>
-				<mx:ColumnSeries 
-					xField="id" 
-					yField="niv0" 
-					displayName="Critères valides"
-					fill="{sc0}"
-					stroke="{s0}"
-					selectable="true"
-					/>
-				<mx:ColumnSeries 
-					xField="id" 
-					yField="niv1" 
-					displayName="Obstacles niveau 1"
-					fill="{sc1}"
-					stroke="{s1}"
-					/>
-				<mx:ColumnSeries 
-					xField="id" 
-					yField="niv2" 
-					displayName="Obstacles niveau 2"
-					fill="{sc2}"
-					stroke="{s2}"
-					/>
-				<mx:ColumnSeries 
-					xField="id" 
-					yField="niv3" 
-					displayName="Obstacles niveau 3"
-					fill="{sc3}"
-					stroke="{s3}"
-					/>
-			</mx:series>
-		</mx:ColumnChart>
-		<mx:HBox paddingLeft="54" >
-			<mx:Image id="imgAlphaMoteur" source="{AIcon}" width="60" />
-			<mx:Image id="imgAlphaAudio" source="{BIcon}" width="60" />
-			<mx:Image id="imgAlphaCog" source="{CIcon}" width="60" />
-			<mx:Image id="imgAlphaVisu" source="{DIcon}" width="60" />		
-		</mx:HBox>
-	</mx:VBox>
-	
+	<mx:VBox height="100%" width="100%" >
+		<mx:VBox label="Diagnostic" height="300" width="100%"  >
+			<mx:HBox paddingLeft="70" visible="false" height="0" >
+				<mx:Label id="TauxCalc" />
+				<mx:Image id="imgMoteur" source="{MoteurIcon}" width="60" />
+				<mx:Image id="imgAudio" source="{AudioIcon}" width="60" />
+				<mx:Image id="imgCog" source="{CogIcon}" width="60" />
+				<mx:Image id="imgVisu" source="{VisuIcon}" width="60" />
+			</mx:HBox>
+			
+			<mx:ColumnChart id="chart" 
+							dataProvider="{rsEtatDiag}" 
+							type="stacked"
+							showDataTips="true"
+							change="chart_changeHandler(event)"
+							selectionMode="single"
+							width="320" height="200"
+							>
+				<mx:horizontalAxis>
+					<mx:CategoryAxis id="h1" categoryField="id" />
+				</mx:horizontalAxis>
+				<mx:series>
+					<mx:ColumnSeries 
+						xField="id" 
+						yField="niv0" 
+						displayName="Critères valides"
+						fill="{sc0}"
+						stroke="{s0}"
+						selectable="true"
+						/>
+					<mx:ColumnSeries 
+						xField="id" 
+						yField="niv1" 
+						displayName="Obstacles niveau 1"
+						fill="{sc1}"
+						stroke="{s1}"
+						/>
+					<mx:ColumnSeries 
+						xField="id" 
+						yField="niv2" 
+						displayName="Obstacles niveau 2"
+						fill="{sc2}"
+						stroke="{s2}"
+						/>
+					<mx:ColumnSeries 
+						xField="id" 
+						yField="niv3" 
+						displayName="Obstacles niveau 3"
+						fill="{sc3}"
+						stroke="{s3}"
+						/>
+				</mx:series>
+			</mx:ColumnChart>
+			<mx:HBox paddingLeft="54" >
+				<mx:Image id="imgAlphaMoteur" source="{AIcon}" width="60" />
+				<mx:Image id="imgAlphaAudio" source="{BIcon}" width="60" />
+				<mx:Image id="imgAlphaCog" source="{CIcon}" width="60" />
+				<mx:Image id="imgAlphaVisu" source="{DIcon}" width="60" />		
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VBox id="details" height="100%" width="100%" >
+		</mx:VBox>
+	</mx:VBox>	
 
 	
 </mx:Canvas>
