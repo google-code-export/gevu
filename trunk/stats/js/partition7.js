@@ -115,31 +115,6 @@ function getTypeLog(typeLog){
 			    path.transition()
 			      .duration(duration)
 			      .attrTween("d", arcTween(d));
-			
-			    /* Somewhat of a hack as we rely on arcTween updating the scales.
-			    text.style("visibility", function(e) {
-			        return isParentOf(d, e) ? null : d3.select(this).style("visibility");
-			      })
-			      .transition().duration(duration)
-			      .attrTween("text-anchor", function(d) {
-			        return function() {
-			          return x(d.x + d.dx / 2) > Math.PI ? "end" : "start";
-			        };
-			      })
-			      .attrTween("transform", function(d) {
-			        var multiline = (d.name || "").split(" ").length > 1;
-			        return function() {
-			          var angle = x(d.x + d.dx / 2) * 180 / Math.PI - 90,
-			              rotate = angle + (multiline ? -.5 : 0);
-			          return "rotate(" + rotate + ")translate(" + (y(d.y) + p) + ")rotate(" + (angle > 90 ? -180 : 0) + ")";
-			        };
-			      })
-			      .style("opacity", function(e) { return isParentOf(d, e) ? 1 : 1e-6; })
-			      .each("end", function(e) {
-			        d3.select(this).style("visibility", isParentOf(d, e) ? null : "hidden");
-			      });
-			      */
-			      
 			  }	  
 	});
 }
@@ -225,15 +200,10 @@ function getLegende(){
 				  	return d.name; 
 			  	});	
 }
-	
-	
-
-// Stash the old values for transition.
 function stash(d) {
   d.x0 = d.x;
   d.dx0 = d.dx;
 }
-
 
 function isParentOf(p, c) {
   if (p === c) return true;
@@ -245,7 +215,6 @@ function isParentOf(p, c) {
   return false;
 }
 
-//Interpolate the scales!
 function arcTween(d) {
   var my = maxY(d),
       xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
