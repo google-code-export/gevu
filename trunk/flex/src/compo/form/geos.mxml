@@ -43,9 +43,9 @@
 					</mx:ArrayCollection>
 				</mx:ComboBox>	
 				<mx:Label text="zoom max." />
-				<mx:NumericStepper id="F05" enabled="false" 
+				<mx:NumericStepper id="F05" enabled="true" 
 								   minimum="0" maximum="30"
-								   data="{NodeData.zoom_max}"  />
+								   data="{NodeData.zoom_max}" change="zoomMap(F05.value.toString())"  />
 			</mx:HBox>
 			<mx:Button id="save" label="enregistrer" click="saveModifications();"/>
 		</mx:VBox>
@@ -130,6 +130,9 @@
 				cbTypeCarte.selectedIndex = getIndex(label);				
 			}
 
+			public function zoomMap(val:String):void{
+				this.parentApplication.cartoIF.callFunction("zoom",val);
+			}
 			
 		]]>
 	</mx:Script>

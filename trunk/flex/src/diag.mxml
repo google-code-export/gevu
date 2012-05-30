@@ -50,7 +50,7 @@ todo :
 			<mx:Image source="@Embed('images/logo.png')" />
 			<mx:VBox horizontalAlign="left" >
 				<mx:Label fontSize="16" text="Saisie des diagnostics"/>		
-				<mx:Label text="V 0.586" />
+				<mx:Label text="V 0.604" />
 			</mx:VBox>
 			<mx:VBox horizontalAlign="left">
 				<mx:Label text="Diagnostic(s) disponible(s) : " />
@@ -115,36 +115,35 @@ todo :
 					<ns2:ariane id="bbAriane" width="100%"  />
 					<mx:TabNavigator id="tnDiag" width="100%" height="100%" change="tnDiagChange()">
 						<mx:HBox width="100%" height="100%" label="Informations générales">
-							<mx:VBox id="boxDiag" visible="false" width="100%" height="100%" >
-								<mx:Image id="imgLieux" verticalAlign="top" horizontalAlign="left" source="" width="100%" />
-								<mx:HBox id="detailLieu" width="100%" height="100%" >
-									<mx:VBox width="100%" height="100%" >
-										<mx:HBox id="rowHaut" width="100%" >
-											<mx:VBox >
-												<ns2:hbIcoMultimedia id="docs"  />
-											</mx:VBox>							   
-										</mx:HBox>						   
-										<mx:HBox width="100%" height="100%" >
-											<mx:VBox id="ctrlDispo" height="100%" >
-												<mx:Label text="Contrôle(s) disponible(s)" />
-												<mx:VBox id="vboxCtl" height="100%" horizontalAlign="center" >
+							<mx:HDividedBox width="100%" height="100%">								
+								<mx:VBox id="boxDiag" visible="false" width="100%" height="100%" >
+									<mx:Image id="imgLieux" verticalAlign="top" horizontalAlign="left" source="" width="100%" />
+									<mx:HBox id="detailLieu" width="100%" height="100%" >
+										<mx:VBox width="100%" height="100%" >
+											<mx:HBox id="rowHaut" width="100%" >
+												<mx:VBox >
+													<ns2:hbIcoMultimedia id="docs"  />
 												</mx:VBox>							   
-											</mx:VBox>
-											<mx:HBox id="tabDiag" width="100%" height="100%" >
-												
 											</mx:HBox>						   
-										</mx:HBox>
-									</mx:VBox>
-								</mx:HBox>
-							</mx:VBox>
-							<mx:Canvas width="100%" height="100%" >
+											<mx:HBox width="100%" height="100%" >
+												<mx:VBox id="ctrlDispo" height="100%" >
+													<mx:Label text="Contrôle(s) disponible(s)" />
+													<mx:VBox id="vboxCtl" height="100%" horizontalAlign="center" >
+													</mx:VBox>							   
+												</mx:VBox>
+												<mx:HBox id="tabDiag" width="100%" height="100%" >
+													
+												</mx:HBox>						   
+											</mx:HBox>
+										</mx:VBox>
+									</mx:HBox>
+								</mx:VBox>
 								<mx:Panel title="Géographie" id="tbCarto" width="100%" height="100%" cornerRadius="0"
 										  paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3">
 									<form:geos id="geo"  NodeData="{dataGeo}" />
 									<ns2:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" visible="false" />
 								</mx:Panel>
-							</mx:Canvas>
-							
+							</mx:HDividedBox>
 						</mx:HBox>
 						<mx:Canvas width="100%" height="100%" label="Accessibilité">
 							<stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
