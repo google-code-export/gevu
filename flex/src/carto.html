@@ -91,13 +91,13 @@ function showOverlays() {
 
 function initialize() {
 	var options = {
-		zoom: 3,
-		center: new google.maps.LatLng(60, 300),
+		zoom: 8,
+		center: new google.maps.LatLng(49.49, 0.11),
 		mapTypeId: google.maps.MapTypeId.TERRAIN,
 		streetViewControl: true,
 		mapTypeControlOptions: {
 			mapTypeIds:mt 
-		}			  
+		}
 	};	
 	
   map = new google.maps.Map(document.getElementById('mapCanvas'),options);
@@ -181,6 +181,10 @@ document.addMarker = function(params){
 
 }
 
+document.zoom = function(params){
+	map.setZoom(parseInt(params[0]));	
+}
+
 
 function addPolygone(kml) {
 	
@@ -243,7 +247,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
   }
   </style>
   
-  <div id="couches" style="overflow:auto;" >Couches : <span onclick="" >(tout effacer)</span>
+  <div id="couches" style="overflow:auto;" >Couches : <span onclick="deleteCouches()" >(tout effacer)</span>
 	  <div id="listeCouche"></div>
   </div>
   <div id="mapCanvas"></div>
