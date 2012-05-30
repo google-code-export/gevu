@@ -49,7 +49,7 @@ var vis = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-d3.json("../Data/flare.json", function(json) {
+d3.json("../data/flare.json", function(json) {
   root = json;
   root.x0 = h / 2;
   root.y0 = 0;
