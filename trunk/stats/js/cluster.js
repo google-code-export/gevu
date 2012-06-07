@@ -1,8 +1,8 @@
-var w = 1500,
-    h = 2500;
+var w = 900,
+    h = 1000;
 
 var cluster = d3.layout.cluster()
-    .size([h, w - 50]);
+    .size([h, w - 160]);
 
 var diagonal = d3.svg.diagonal()
     .projection(function(d) { return [d.y, d.x]; });
