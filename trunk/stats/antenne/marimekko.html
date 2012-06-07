@@ -49,7 +49,7 @@ d3.json("http://www.gevu.org/public/stat/antenne?type=zus_log", function(data) {
   // You can use reduce rather than reduceRight to reverse the ordering.
   // We also record a reference to the parent segment for each market.
   var sum = segments.reduce(function(v, p) {
-    return (p.offset = v) + (p.sum = p.nb.reduceRight(function(v, d) {
+    return (p.offset = v) + (p.sum = p.values.reduceRight(function(v, d) {
       d.parent = p;
       return (d.offset = v) + d.nb;
     }, 0));
@@ -99,10 +99,14 @@ d3.json("http://www.gevu.org/public/stat/antenne?type=zus_log", function(data) {
 
   // Add a rect for each market.
   var markets = segments.selectAll(".lib")
-      .data(function(d) { return d.nb; })
+      .data(function(d) { 
+    	  return d.values; 
+    	  })
     .enter().append("a")
       .attr("class", "lib")
-      .attr("xlink:title", function(d) { return d.lib + " " + d.parent.key + ": " + n(d.nb); })
+      .attr("xlink:title", function(d) { 
+    	  return d.lib + " " + d.parent.key + ": " + n(d.nb); 
+    	  })
     .append("rect")
       .attr("y", function(d) { return y(d.offset / d.parent.sum); })
       .attr("height", function(d) { return y(d.nb / d.parent.sum); })
