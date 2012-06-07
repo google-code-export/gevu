@@ -49,9 +49,9 @@ d3.json("http://www.gevu.org/public/stat/antenne?type=zus_log", function(data) {
   // You can use reduce rather than reduceRight to reverse the ordering.
   // We also record a reference to the parent segment for each market.
   var sum = segments.reduce(function(v, p) {
-    return (p.offset = v) + (p.sum = p.values.reduceRight(function(v, d) {
+    return (p.offset = v) + (p.sum = p.values.reduce(function(v, d) {
       d.parent = p;
-      return (d.offset = v) + d.nb;
+      return (d.offset = v) + parseInt(d.nb);
     }, 0));
   }, 0);
 
@@ -109,8 +109,12 @@ d3.json("http://www.gevu.org/public/stat/antenne?type=zus_log", function(data) {
     	  })
     .append("rect")
       .attr("y", function(d) { return y(d.offset / d.parent.sum); })
-      .attr("height", function(d) { return y(d.nb / d.parent.sum); })
-      .attr("width", function(d) { return x(d.parent.sum / sum); })
+      .attr("height", function(d) { 
+    	  return y(d.nb / d.parent.sum); 
+    	  })
+      .attr("width", function(d) { 
+    	  return x(d.parent.sum / sum); 
+    	  })
       .style("fill", function(d) { return z(d.lib); });
 });
 
