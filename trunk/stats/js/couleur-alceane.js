@@ -53,7 +53,7 @@ var visLeg = d3.select("#legende").append("svg")
 		
 function getTypeLog(typeLog){
 	//merci à http://www.jasondavies.com/coffee-wheel/	
-	d3.json("urlJson+typeLog, function(json) {
+	d3.json(urlJson+typeLog, function(json) {
 		//suprime l'ancien graphique
 		if(path)path.remove();
 		if(text)text.remove();
