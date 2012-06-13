@@ -29,7 +29,7 @@ svg {
 // Load data asynchronously.
 d3.json("http://www.gevu.org/public/stat/antenne?type=age", function(data) {
 
-	var logementsindividuels = d3.nest()
+	var anneeconstruction = d3.nest()
       .key(function(d) { return d.Annee_Construction; })
       .entries(data);
 
@@ -39,7 +39,7 @@ d3.json("http://www.gevu.org/public/stat/antenne?type=age", function(data) {
       r = 100,
       //z = d3.scale.category20b();
 	  z = d3.scale.ordinal()
-		.domain(logementsindividuels)
+		.domain(anneeconstruction)
 	  	.range(colorbrewer.Greens[9]);
 	  
   // Define a pie layout: the pie angle encodes the count of flights. Since our
