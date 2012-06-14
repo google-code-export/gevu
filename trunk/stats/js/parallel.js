@@ -18,20 +18,20 @@ var m = [160, 50, 10, 20],
 
 var xscale = d3.scale.ordinal().rangePoints([0, w], 1),
     yscale = {};
-	yticks = {"Logement":1,"Nombre_pieces":2,"Etage": (d3.time.scale(0, 3, 1)) ,"Surface_Reelle":20,"Date_Construction": d3.time.years(0, 2000, [200]) , "Consommation_Reelle":200};
+	yticks = {"Logement":1,"Nombre_pieces":2,"Etage": (d3.time.scale(0, 3, 1)) ,"Surface_Reelle":20,"Date_Construction": d3.time.years(1900, 2012, [10]) , "Consommation_Reelle":200};
 	
-	//D'après https://github.com/mbostock/d3/wiki/Time-Formatting
+	//D'aprï¿½s https://github.com/mbostock/d3/wiki/Time-Formatting
 	
-	//linear.invert(y) --> Retourne la valeur dans le domaine d'entrée x pour la valeur correspondante dans la plage de sortie y .
-	//linear.domain([numbers]) --> Si le nombre est spécifié, établit domaine d'entrée de l'échelle dans le tableau spécifié de chiffres
-	//linear.range([values]) --> Si les valeurs est spécifiée, définit la plage de sortie de l'échelle à l'ensemble des valeurs spécifiées.	
-	// linear.rangeRound(values) --> Définit la plage de sortie de l'échelle dans le tableau spécifié de valeurs, tout en établissant interpolateur l'échelle de d3.interpolateRound .
-	//linear.interpolate([factory]) --> Si l'usine est spécifié, définit interpolateur sortie de la balance à l'aide du spécifiées en usine .
-	//linear.clamp([boolean]) --> Si booléen est spécifié, active ou désactive serrage en conséquence. 
-	//linear.nice() --> Étend le domaine de sorte qu'il commence et se termine sur Nice valeurs arrondies. 
-	// linear.ticks(count) --> Retours d'environ compter des valeurs représentatives de domaine d'entrée de l'échelle
-	// linear.tickFormat(count) --> Retourne un format de numéro de fonction appropriée pour afficher une valeur ticks.
-	//linear.copy() --> Retourne une copie exacte de cette échelle linéaire.
+	//linear.invert(y) --> Retourne la valeur dans le domaine d'entrï¿½e x pour la valeur correspondante dans la plage de sortie y .
+	//linear.domain([numbers]) --> Si le nombre est spï¿½cifiï¿½, ï¿½tablit domaine d'entrï¿½e de l'ï¿½chelle dans le tableau spï¿½cifiï¿½ de chiffres
+	//linear.range([values]) --> Si les valeurs est spï¿½cifiï¿½e, dï¿½finit la plage de sortie de l'ï¿½chelle ï¿½ l'ensemble des valeurs spï¿½cifiï¿½es.	
+	// linear.rangeRound(values) --> Dï¿½finit la plage de sortie de l'ï¿½chelle dans le tableau spï¿½cifiï¿½ de valeurs, tout en ï¿½tablissant interpolateur l'ï¿½chelle de d3.interpolateRound .
+	//linear.interpolate([factory]) --> Si l'usine est spï¿½cifiï¿½, dï¿½finit interpolateur sortie de la balance ï¿½ l'aide du spï¿½cifiï¿½es en usine .
+	//linear.clamp([boolean]) --> Si boolï¿½en est spï¿½cifiï¿½, active ou dï¿½sactive serrage en consï¿½quence. 
+	//linear.nice() --> ï¿½tend le domaine de sorte qu'il commence et se termine sur Nice valeurs arrondies. 
+	// linear.ticks(count) --> Retours d'environ compter des valeurs reprï¿½sentatives de domaine d'entrï¿½e de l'ï¿½chelle
+	// linear.tickFormat(count) --> Retourne un format de numï¿½ro de fonction appropriï¿½e pour afficher une valeur ticks.
+	//linear.copy() --> Retourne une copie exacte de cette ï¿½chelle linï¿½aire.
 	//(d3.time.year, 300)
 	// (d3.time.format (Y%))
 	//(d3.scale.domain([0,2000]))
@@ -104,7 +104,9 @@ d3.csv("../data/caracteristiques_logements.csv", function(raw) {
   // Add an axis and title.
   g.append("svg:g")
       .attr("class", "axis")
-      .each(function(d) { d3.select(this).call(axis.scale(yscale[d])); })
+      .each(function(d) { 
+    	  d3.select(this).call(axis.scale(yscale[d]).ticks(yticks[d])); 
+    	  })
     .append("svg:text")
       .attr("text-anchor", "left")
       .attr("y", -8)
@@ -116,7 +118,9 @@ d3.csv("../data/caracteristiques_logements.csv", function(raw) {
   // Add and store a brush for each axis.
   g.append("svg:g")
       .attr("class", "brush")
-      .each(function(d) { d3.select(this).call(yscale[d].brush = d3.svg.brush().y(yscale[d]).on("brush", brush)); })
+      .each(function(d) { 
+    	  d3.select(this).call(yscale[d].brush = d3.svg.brush().y(yscale[d]).on("brush", brush)); 
+    	  })
     .selectAll("rect")
       .attr("x", -16)
       .attr("width", 32)
