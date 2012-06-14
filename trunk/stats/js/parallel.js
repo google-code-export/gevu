@@ -18,7 +18,7 @@ var m = [160, 50, 10, 20],
 
 var xscale = d3.scale.ordinal().rangePoints([0, w], 1),
     yscale = {};
-	yticks = {"Logement":1,"Nombre_pieces":1,"Etage": (d3.time.scale(0, 3, 1)) ,"Surface_Reelle":100,"Date_Construction": 10, "Consommation_Reelle":200};
+	yticks = {"Logement":10,"Nombre_pieces":10,"Etage":10,"Surface_Reelle":10,"Date_Construction": 10, "Consommation_Reelle":10};
 	
 	//D'apr�s https://github.com/mbostock/d3/wiki/Time-Formatting
 	
@@ -105,7 +105,7 @@ d3.csv("../data/caracteristiques_logements.csv", function(raw) {
   g.append("svg:g")
       .attr("class", "axis")
       .each(function(d) { 
-    	  d3.select(this).call(axis.scale(yscale[d]).ticks(yticks[d])); 
+    	  d3.select(this).call(axis.scale(yscale[d]).ticks(yticks[d]).tickFormat(d3.format(" .0f"))); 
     	  })
     .append("svg:text")
       .attr("text-anchor", "left")
