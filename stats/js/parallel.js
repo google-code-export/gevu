@@ -18,7 +18,7 @@ var m = [160, 50, 10, 20],
 
 var xscale = d3.scale.ordinal().rangePoints([0, w], 1),
     yscale = {};
-	yticks = {"Logement":1,"Nombre_pieces":2,"Etage": (d3.time.scale(0, 3, 1)) ,"Surface_Reelle":20,"Date_Construction": d3.time.years(1900, 2012, [10]) , "Consommation_Reelle":500};
+	yticks = {"Logement":1,"Nombre_pieces":1,"Etage": (d3.time.scale(0, 3, 1)) ,"Surface_Reelle":100,"Date_Construction": 10, "Consommation_Reelle":200};
 	
 	//D'apr�s https://github.com/mbostock/d3/wiki/Time-Formatting
 	
