@@ -37,26 +37,6 @@ d3.json(urlJson, function(json) {
       .style("stroke", "#fff")
       .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
       .each(stash);
-/*	    if(d.name == "OCCUPE") return "red";
-    	  if(d.name == "VACANT") return "green";    	  
-    	  return color(d.name); 
-    	  }) 
-      .each(stash); */
-	  
-		    /*	  var i = (d.children ? d : d.parent);
-		    	  if(i.ref){
-		    		  var color = z[i.ref]; 
-		    		  return color(i.nb);		    		  
-		    	  }else 
-		    		  return "white";
-		    	  }); */
-				  
-	/*  { return colors((d.children ? d : d.parent).name); })
-      .each(stash); */
-	  
-	  
-/*if d.name = "OCCUPE" then color = red;
-if d.name = "VACANT" then color = green; */	
 	  
   var titre = path.append("svg:title")
   .text(function(d) { 
@@ -110,13 +90,11 @@ if d.name = "VACANT" then color = green; */
   });
 });
 
-// Stash the old values for transition.
 function stash(d) {
   d.x0 = d.x;
   d.dx0 = d.dx;
 }
 
-// Interpolate the arcs in data space.
 function arcTween(a) {
   var i = d3.interpolate({x: a.x0, dx: a.dx0}, a);
   return function(t) {
