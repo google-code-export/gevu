@@ -28,14 +28,21 @@ var arc = d3.svg.arc()
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
 d3.json(urlJson, function(json) {
-  var path = vis.data([json]).selectAll("path")
+  
+	var path = vis.data([json]).selectAll("path")
       .data(partition.nodes)
     .enter().append("path")
       .attr("display", function(d) { return d.depth ? null : "blue"; }) // hide inner ring
       .attr("d", arc)
       .attr("fill-rule", "evenodd")
       .style("stroke", "#fff")
-      .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
+      .style("fill", function(d) {
+    	  var c = "white";
+    	  if(d.depth==1) c = d3.rgb(colors[d.ref][0];
+    	  if(d.depth==2) c = colors[d.parent.ref][0];
+    	  if(d.depth==3) c = colors[d.parent.parent.ref][0];
+    	  return c; 
+    	  })
       .each(stash);
 	  
   var titre = path.append("svg:title")
