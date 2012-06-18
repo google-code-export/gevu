@@ -9,7 +9,7 @@ var x = d3.scale.linear().range([0, 2 * Math.PI]),
 	duration = 900;
 var text;
 
-//merci Ã 
+//merci ï¿½ 
 //http://www.colorhexa.com 
 //http://vis.stanford.edu/color-names/analyzer/ number-6
 var colors = [];
@@ -27,7 +27,7 @@ var vis = d3.select("#chart").append("svg")
   	.attr("id","gVis")
     .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
 
-var partition = d3.layout.partition() //fct qui permet de calculer les donnees par rapport Ã  un tableau
+var partition = d3.layout.partition() //fct qui permet de calculer les donnees par rapport ï¿½  un tableau
     .sort(null)
     .size([2 * Math.PI, r * r])
     .value(function(d) { 
@@ -52,7 +52,7 @@ var visLeg = d3.select("#legende").append("svg")
 		
 		
 function getTypeLog(typeLog){
-	//merci à http://www.jasondavies.com/coffee-wheel/	
+	//merci ï¿½ http://www.jasondavies.com/coffee-wheel/	
 	d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog&typeLog="+typeLog, function(json) {
 		//suprime l'ancien graphique
 		if(path)path.remove();
@@ -62,7 +62,8 @@ function getTypeLog(typeLog){
 		var arrA = json.children;
 		z = [];
 		for(var i=0; i < arrA.length; i++){
-			z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(colors[arrA[i].ref]);
+			if(arrA[i].ref!="")
+				z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(colors[arrA[i].ref]);
 		}		
 		var nodes = partition.nodes(json);
 		
@@ -122,7 +123,7 @@ function getTypeLog(typeLog){
 function getLegende(){
 			
 	var dataCircle = {"id":"0","name":"Alc\u00e9ane","children":[{"id":"1","name":"Antenne","nb":1,"children":[{"id":"2","name":"Groupe","nb":1,"children":[{"id":"3","name":"Batiment","nb":1,"children":[{"id":"4","name":"Type logement","nb":"1"}]}]}],"max":"1","min":"1"}],"nb":1};
-	var dataTexte = [{"id":"0","name":"Alc\u00e9ane"},{"id":"1","name":"Antennes"},{"id":"2","name":"Groupes"},{"id":"3","name":"Bâtiments"},{"id":"4","name":"Type logement"}];
+	var dataTexte = [{"id":"0","name":"Alc\u00e9ane"},{"id":"1","name":"Antennes"},{"id":"2","name":"Groupes"},{"id":"3","name":"Bï¿½timents"},{"id":"4","name":"Type logement"}];
 	var dataCarre = [1,33,66,100];
 	var dataAntenne = [{"id":"1","ref":"BL","name":"Antenne - BL","value":dataCarre},{"id":"2","ref":"CA","name":"Antenne - CA","value":dataCarre},{"id":"3","ref":"CV","name":"Antenne - CV","value":dataCarre},{"id":"4","ref":"MR","name":"Antenne - MR","value":dataCarre},{"id":"5","ref":"QS","name":"Antenne - QS","value":dataCarre}];
 	
