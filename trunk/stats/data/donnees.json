@@ -3,6 +3,7 @@
  "children": [
   {
    "name": "Antenne - BL",
+   "ref" : "BL",
    "children": [
    	{
 		"name": "Types et nombres de logements",
@@ -55,6 +56,7 @@
    },	
 	{
 	"name": "Antenne - CA",
+	"ref" : "CA",
    "children": [
 		{
 		"name": "Types et nombres de logements",
@@ -104,6 +106,7 @@
    },
     {
 	"name": "Antenne - CV",
+	"ref" : "CV",
    "children": [
 		{
 		"name": "Types et nombres de logements",
@@ -160,6 +163,7 @@
    },
 	{
 	"name": "Antenne - MR",
+	"ref" : "MR",
    "children": [
 	{
 		"name": "Types et nombres de logements",
@@ -217,6 +221,7 @@
    },
     {
 	"name": "Antenne - QS",
+	"ref" : "QS",
    "children": [
 		{
 		"name": "Types et nombres de logements",

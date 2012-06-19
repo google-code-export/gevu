@@ -3,6 +3,7 @@
  "children": [
   {
    "name": "Antenne - BL",
+   "ref" : "BL",
    "children": [
       {"name": "Quatres pièces duplex", "size":10},
       {"name": "Divers", "size":6},
@@ -30,6 +31,7 @@
 	
   {
 	"name": "Antenne - CA",
+	"ref" : "CA",
    "children": [
       {"name": "Quatre pièces duplex", "size":2},
       {"name": "Divers", "size":17},
@@ -55,6 +57,7 @@
 	
 	  {
 	"name": "Antenne - CV",
+	"ref" : "CV",
    "children": [
       {"name": "Caves", "size":83},
       {"name": "Trois pièces duplex", "size":1},
@@ -78,6 +81,7 @@
 	 
 	 	    {
 	"name": "Antenne - MR",
+	"ref" : "MR",
    "children": [
       {"name": "Deux pièces duplex", "size":1},
       {"name": "Trois pièces duplex", "size":20},
@@ -105,6 +109,7 @@
 	
     {
 	"name": "Antenne - QS",
+	"ref" : "QS",
    "children": [
      {"name": "Caves", "size":16},
       {"name": "Trois pièces duplex", "size":33},

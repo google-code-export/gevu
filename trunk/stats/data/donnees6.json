@@ -3,6 +3,7 @@
  "children": [
    {
 	"name": "Antenne - BL",
+	"ref" : "BL",
    "children": [
 		{
 		"name": "Nombres de stationnements",
@@ -16,6 +17,7 @@
    },
      {
 	"name": "Antenne - CA",
+	"ref" : "CA",
    "children": [
 		{
 		"name": "Nombres de stationnements",
@@ -27,6 +29,7 @@
    },
   {
 	"name": "Antenne - CV",
+	"ref" : "CV",
    "children": [
 		{
 		"name": "Nombres de stationnements",
@@ -39,6 +42,7 @@
    },
 	{
 	"name": "Antenne - MR",
+	"ref" : "MR",
    "children": [
    	{
 		"name": "Nombres de stationnements",
@@ -50,6 +54,7 @@
    },
     {
 	"name": "Antenne - QS",
+	"ref" : "QS",
    "children": [
    	{
 		"name": "Nombres de stationnements",
