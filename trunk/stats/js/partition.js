@@ -35,6 +35,7 @@ d3.json(urlJson, function(json) {
 			if(arrA[i].ref!="")
 				z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(colors[arrA[i].ref]);
 		}		
+  var nodes = partition.nodes(json);
   
 	var path = vis.data([json]).selectAll("path")
       .data(partition.nodes)
