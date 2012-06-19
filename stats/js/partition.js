@@ -28,20 +28,27 @@ var arc = d3.svg.arc()
     .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
 
 d3.json(urlJson, function(json) {
+
+/*		var arrA = json.children;
+		z = [];
+		for(var i=0; i < arrA.length; i++){
+			if(arrA[i].ref!="")
+				z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(colors[arrA[i].ref]);
+		}	*/	
   
 	var path = vis.data([json]).selectAll("path")
       .data(partition.nodes)
     .enter().append("path")
-      .attr("display", function(d) { return d.depth ? null : "blue"; }) // hide inner ring
+      .attr("display", function(d) { return d.depth ? null : "blue"; })
       .attr("d", arc)
       .attr("fill-rule", "evenodd")
       .style("stroke", "#fff")
       .style("fill", function(d) {
-    	  var c = "white";
-    	  if(d.depth==1) c = d3.rgb(colors[d.ref][0];
+  /*  	  var c = "white";
+    	  if(d.depth==1) c = d3.rgb(colors[d.ref][0]);
     	  if(d.depth==2) c = colors[d.parent.ref][0];
     	  if(d.depth==3) c = colors[d.parent.parent.ref][0];
-    	  return c; 
+    	  return c;  */
     	  })
       .each(stash);
 	  
@@ -57,14 +64,7 @@ d3.json(urlJson, function(json) {
         .duration(1500)
         .attrTween("d", arcTween);
 		
-	/*		var arrA = json.children;
-		z = [];
-		for(var i=0; i < arrA.length; i++){
-			z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(colors[arrA[i].ref]);
-		}		
-		var nodes = partition.nodes(json); */
-		
-				    titre.text(function(d) { 
+		titre.text(function(d) { 
     	return d.name + " : " + d.value; 
     });
 
@@ -79,14 +79,7 @@ d3.json(urlJson, function(json) {
         .duration(1500)
         .attrTween("d", arcTween);
 		
-	/*					var arrA = json.children;
-		z = [];
-		for(var i=0; i < arrA.length; i++){
-			z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].nb]).range(colors[arrA[i].ref]);
-		}		
-		var nodes = partition.nodes(json); */
-		
-				    titre.text(function(d) { 
+		titre.text(function(d) { 
     	return d.name + " : " + d.value; 
     });
 	
