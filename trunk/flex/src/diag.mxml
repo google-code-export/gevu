@@ -123,8 +123,9 @@ todo :
 											<mx:HBox id="rowHaut" width="100%" >
 												<mx:VBox >
 													<ns2:hbIcoMultimedia id="docs"  />
-												</mx:VBox>							   
+												</mx:VBox>
 											</mx:HBox>						   
+											<form:interventions id="interv" />
 											<mx:HBox width="100%" height="100%" >
 												<mx:VBox id="ctrlDispo" height="100%" >
 													<mx:Label text="Contrôle(s) disponible(s)" />

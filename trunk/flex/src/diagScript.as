@@ -26,6 +26,7 @@ import compo.form.observations;
 import compo.form.parcelles;
 import compo.form.partiescommunes;
 import compo.form.problemes;
+import compo.form.interventions;
 
 import flash.display.DisplayObject;
 import flash.events.MouseEvent;
@@ -441,6 +442,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 	}
 	//ajoute les documents
 	docs.initDoc(docsxlieux);
+	interv.init(idLieu);
 	imgLieux.source = "";
 	boxDiag.visible = true;
 }
@@ -465,7 +467,8 @@ protected function lieuxAjout_resultHandler(event:ResultEvent):void
 {
 	arrSelect = new Array;
 	var x:XML = <root></root>;
-	x.appendChild(event.result);
+	var node:XML = XML(event.result);
+	x.appendChild(node);
 	var objTree:XMLList = treeTree.dataProvider[0].descendants().(@idLieu == this.idLieu);
 	objTree[0].appendChild(x.node);
 	//ouvre le noeud parent

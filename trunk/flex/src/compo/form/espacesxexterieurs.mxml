@@ -71,6 +71,8 @@
 			
 			protected function panel1_creationCompleteHandler(event:FlexEvent):void
 			{
+				if(NodeData.length<=0)return;
+
 				ro.getTypeControle(this.parentApplication.idScenar, NodeData.id_lieu);
 				if(NodeData.id_type_espace=="Lieu de Travail") reponse_1.selected=true;
 				if(NodeData.id_type_espace=="Public") reponse_2.selected=true;

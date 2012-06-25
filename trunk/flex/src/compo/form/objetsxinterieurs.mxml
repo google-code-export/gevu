@@ -73,6 +73,8 @@
 			}
 			
 			private function init():void{
+				if(NodeData.length<=0)return;
+
 				ro.getTypeControle(this.parentApplication.idScenar, NodeData.id_lieu);
 				
 			}
@@ -94,6 +96,7 @@
 			protected function method2_resultHandler(event:ResultEvent):void
 			{
 				cbType.dataProvider = event.result as Array;
+				if(NodeData.length <= 0)return;
 				if(!NodeData.id_type_objet || NodeData.id_type_objet!="0"){
 					for each(var row:Object in cbType.dataProvider){
 						if(row["id_type_controle"]==NodeData.id_type_objet){

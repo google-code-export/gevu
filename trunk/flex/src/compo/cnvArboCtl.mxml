@@ -9,12 +9,14 @@
 			
 			import compo.vbEditTreeScen;
 			
+			import gevu.UIDUtil;
+			
 			import memorphic.xpath.XPathQuery;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.core.DragSource;
-			import mx.core.IUIComponent;
+			import mx.core.UIComponent;
 			import mx.events.CloseEvent;
 			import mx.events.DragEvent;
 			import mx.events.FlexEvent;
@@ -24,6 +26,7 @@
 			import mx.rpc.events.ResultEvent;
 			
 
+			[Bindable] public var cptScenari:dgScenari;
 			[Bindable] public var arrCtrl:ArrayCollection;
 			[Bindable] public var idScene:int;
 
@@ -36,9 +39,9 @@
 			[Bindable]
 			[Embed(source="../images/folder-open.gif")] 
 			public var iconFolderOpen:Class; 			
+			[Bindable] public var bChange:Boolean=false;
 			
 			private var xmlTree:XML;
-			public var bChange:Boolean=false;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
@@ -54,13 +57,7 @@
 				
 				//récupèration des critère non utilisé
 				var ids:String = "-1";
-				/* plus nécessaire car on ne vide pas le datagrid
-				pour pouvoir faire de multiple scénario de critère
-				var critsNU:ArrayCollection = ArrayCollection(dataGrid.dataProvider);
-				for each (var cNU:Object in critsNU){
-					ids +=","+cNU.id_critere;
-				}
-				*/
+
 				//récupèration des critères sélectionné
 				tree.selectedIndex = 0;
 				var critsSE:XML =  XML(tree.selectedItem);
@@ -75,15 +72,12 @@
 				var arr:Array = e.result as Array;
 				if(arr[0]["paramsCtrl"] && arr[0]["paramsCtrl"]!="[]"){
 					var params:Object = JSON.decode(arr[0]["paramsCtrl"]);
-					/* plus nécessaire car on ne vide pas le datagrid
-					pour pouvoir faire de multiple scénario de critère
-					ROC.findByIdsControles(params[0]["idCritNU"]);
-					*/
 					xmlTree = XML(params[0]["idCritSE"]);
 				}else{
 					xmlTree = <node idCtrl="-1" lib="univers" isBranch="true"></node>;
 				}
 				tree.dataProvider=xmlTree;
+				openAllNodes(xmlTree);
 				bChange = false;
 			}
 			
@@ -93,7 +87,7 @@
 				/*ArrayCollection pour effectuer un refresh
 				mais attanetion au performances : http://blog.phiphou.com/index.php/?2009/01/18/148-performances-comparaison-rapide-entre-arraycollection-array-et-vector
 				*/
-				arrCtrl = new ArrayCollection(e.result as Array);;
+				arrCtrl = new ArrayCollection(e.result as Array);
 				//ajoute le nombre d'utilisation
 				for each( var o:Object in arrCtrl)
 				{
@@ -156,6 +150,8 @@
 						item = <node></node>;
 						item.@idCtrl = object.id_type_controle;
 						item.@lib = object.lib;
+						item.@objZend = object.zend_obj;
+						item.@uid = UIDUtil.createUID();
 						item.@isBranch = "false";
 					}
 					
@@ -176,7 +172,8 @@
 				}
 				//met à jour le grid
 				arrCtrl.refresh();
-
+				tree.hideDropFeedback(event);
+				saveScene();
 				bChange = true;
 			}
 			private function cloneNode(obj:Object):XML
@@ -185,6 +182,9 @@
 				var item:XML;
 				item = <node></node>;
 				item.@idCtrl = obj.@idCtrl;						
+				item.@lib = obj.@lib;
+				item.@objZend = obj.zend_obj;
+				item.@uid = UIDUtil.createUID();				
 				item.@controles = obj.@controles;
 				//on déplace les noeuds enfants
 				if(obj.children().length()>0){
@@ -198,8 +198,7 @@
 				
 				return item
 			}
-				
-			
+							
 			private function doDragEnter(event:DragEvent):void
 			{
 				// Cancel default behaviour
@@ -208,15 +207,17 @@
 				DragManager.acceptDragDrop( Tree(event.target) );
 				// hide the "drop line" that is shown in Tree control
 				// when dropping in a Tree
-				tree.showDropFeedback(event);
+				tree.hideDropFeedback(event);
 			}
 			
 			private function doDragOver(event:DragEvent):void
 			{
 				// Show the default "drop line" in the Tree control
 				tree.showDropFeedback(event);
+				DragManager.showFeedback(DragManager.COPY);
 				// Cancel default behavious
 				event.preventDefault();
+
 			}
 			
 			private function doDragExit(event:DragEvent):void
@@ -225,14 +226,7 @@
 				// when dropping in a Tree
 				tree.hideDropFeedback(event);
 			}
-			
-			private function doDragComplete(event:DragEvent):void
-			{
-				// hide the "drop line" that is shown in Tree control
-				// when dropping in a Tree
-				tree.hideDropFeedback(event);
-			}              			
-			
+						
 			private function TreeIconFunction(item:Object):Class{
 				
 				if(item.@idCrit==-1){
@@ -252,7 +246,29 @@
 				
 			}				
 				
+			public function openAllNodes(dtTree:Object):void
+			{
+				var openNodes:Array = new Array();				
+				var data:XML = new XML("<root></root>");
+				data.appendChild(dtTree);			
+				addNode(data, openNodes);
+				tree.openItems = openNodes;
+			}
 			
+			// fonction récursive
+			private function addNode(node:XML, array:Array):void
+			{
+				for each (var childNode:XML in node.children())
+				{
+					// Si ce noeud contient d'autres noeuds ou des feuilles
+					// faire traitement
+					if (childNode.hasComplexContent())
+					{
+						array.push(childNode);
+						addNode(childNode, array);
+					}
+				}
+			}			
 			protected function delCtl_clickHandler(event:MouseEvent):void
 			{
 				var node:XML = XML(tree.selectedItem);
@@ -263,8 +279,23 @@
 				for(var i:Number=0; i < children.length(); i++) {
 					if( children[i].@lib == node.@lib) {
 						delete children[i];
+						//supprime la scène associée pour l'arboressence des critères 
+						ROScenes.removeByScenarioType(cptScenari.idScenar, "arboCrit_"+node.@idCtrl+"_"+node.@uid);
 					}
-				}				
+				}
+				saveScene();
+			}
+
+			private function treeItemClicked(event:MouseEvent) : void {
+				var item:Object = event.currentTarget.selectedItem;
+				var idCtl:int = item.attribute("idCtrl");
+				var uid:String = item.attribute("uid");
+				var objZend:String = item.attribute("objZend");
+				var type:String = "arboCtl_"+idCtl+"_"+uid;
+				trace ("idCtl="+idCtl+" type="+type);
+				cptScenari.showCriteres(idCtl, type);
+				cptScenari.showFormulaire(objZend, type);
+				cptScenari.showProduit(idCtl, type);
 			}
 			
 		]]>
@@ -280,11 +311,16 @@
 					 showBusyCursor="true"
 					 fault="faultHandlerService(event)">
 		<mx:method name="edit"  result="fillScene(event)"/>  	
-		<mx:method name="findByIdScene"  result="fillScene(event)"/>  	
+		<mx:method name="findByIdScene"  result="fillScene(event)"/>
+		<mx:method name="removeByScenarioType" />
+		
 	</mx:RemoteObject>
 	
 	<mx:VBox left="4" right="4" top="4" bottom="4">
-		<mx:LinkButton id="delCtl" click="delCtl_clickHandler(event)" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un contrôle" />
+		<mx:HBox >
+			<mx:LinkButton id="delCtl" click="delCtl_clickHandler(event)" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un contrôle" />
+			<mx:Button label="Enregistrer" click="saveScene()" visible="false" toolTip="Enregistre les modifications de l'arboressence" />
+		</mx:HBox>
 		<mx:HBox height="100%" width="100%" >
 			<mx:DataGrid 
 				id="dataGrid"
@@ -292,16 +328,17 @@
 				resizableColumns="true" 
 				textAlign="left"
 				height="100%"
-				width="166"
+				width="260"
 				allowMultipleSelection="true" 
 				dragEnabled="true" 
-				dropEnabled="true" 
-				dragMoveEnabled="false"
+				dropEnabled="false" 
+				dragMoveEnabled="true"
 				>			
 				<mx:columns>
-					<mx:DataGridColumn headerText="Titre" dataField="lib" width="132"  />   					
-					<mx:DataGridColumn headerText="idCtl" dataField="id_type_controle" visible="false"   />   					
-					<mx:DataGridColumn headerText="Nb" dataField="NbUtil" />   					
+					<mx:DataGridColumn headerText="Titre" dataField="lib" width="200"  />   					
+					<mx:DataGridColumn headerText="idCtl" dataField="id_type_controle" visible="false" />   					
+					<mx:DataGridColumn dataField="zend_obj"  visible="false" />   					
+					<mx:DataGridColumn headerText="Nb" width="60"  dataField="NbUtil" />   					
 				</mx:columns>
 			</mx:DataGrid>
 			<mx:Tree id="tree" 
@@ -314,7 +351,7 @@
 					 dragDrop="doDragDrop(event)"
 					 dragEnter="doDragEnter(event)"
 					 dragExit="doDragExit(event)"
-					 
+					 click="treeItemClicked(event)"
 					 iconFunction="TreeIconFunction"
 					 />
 		</mx:HBox>

@@ -30,7 +30,7 @@
 			
 		]]>
 	</mx:Script>
-	<mx:TextArea text="{lblQ}" height="100%" width="100%" fontFamily="Times New Roman" fontSize="18" editable="false" />
+	<mx:TextArea text="{lblQ}" height="100%" width="100%" editable="false" />
 	<mx:HBox>		
 		<mx:RadioButton groupName="reponse" id="reponse_1" label="oui" color="0x323232" click="changeModif('1')" /> 
 		<mx:RadioButton groupName="reponse" id="reponse_2" label="non" color="0x323232" click="changeModif('2')" />

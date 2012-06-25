@@ -7,7 +7,7 @@
 		<![CDATA[
 			import com.adobe.serialization.json.JSON;
 			
-			import compo.vbEditTreeScen;
+			import compo.vbEditTreeCrit;
 			
 			import memorphic.xpath.XPathQuery;
 			
@@ -24,8 +24,10 @@
 			import mx.rpc.events.ResultEvent;
 			
 
-			[Bindable] public var arrCtrl:ArrayCollection;
+			[Bindable] public var arrCrit:ArrayCollection;
+			[Bindable] public var dt:Object;
 			[Bindable] public var idScene:int;
+			[Bindable] public var arrMC:Array;				
 
 			[Bindable]
 			[Embed(source="../images/file.gif")] 
@@ -42,8 +44,8 @@
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
-				ROScenes.findByIdScene(idScene);
-				ROC.getAll();				
+				ROScenes.findByIdScenarioType(dt.idScenar, dt.type);
+				ROC.findByIdTypeControle(dt.id_type_controle);				
 			}
 			
 			public function saveScene():void
@@ -54,57 +56,60 @@
 				
 				//récupèration des critère non utilisé
 				var ids:String = "-1";
-				/* plus nécessaire car on ne vide pas le datagrid
-				pour pouvoir faire de multiple scénario de critère
-				var critsNU:ArrayCollection = ArrayCollection(dataGrid.dataProvider);
-				for each (var cNU:Object in critsNU){
-					ids +=","+cNU.id_critere;
-				}
-				*/
 				//récupèration des critères sélectionné
 				tree.selectedIndex = 0;
 				var critsSE:XML =  XML(tree.selectedItem);
 				params.push({"idCritNU":ids,"idCritSE":critsSE.toXMLString()});
-				vn["paramsCtrl"] = JSON.encode(params);
+				vn["paramsCrit"] = JSON.encode(params);
 				//enregistrement des modifications
-				ROScenes.edit(idScene,vn);	
+				ROScenes.edit(idScene,vn);
+				
 			}
 			protected function fillScene(e:ResultEvent):void
 			{
-				if(!e || !e.result || e.result.length==0)return;
+				//si on ne trouve pas de scène on la crée
+				if(!e || !e.result || e.result.length==0){
+					var pArr:Array = new Array;
+					pArr["id_scenario"]=dt.idScenar;
+					pArr["type"]=dt.type;
+					ROScenes.ajouter(pArr);
+					return;
+				}
 				var arr:Array = e.result as Array;
-				if(arr[0]["paramsCtrl"] && arr[0]["paramsCtrl"]!="[]"){
-					var params:Object = JSON.decode(arr[0]["paramsCtrl"]);
+				idScene = arr[0]["id_scene"];
+				if(arr[0]["paramsCrit"] && arr[0]["paramsCrit"]!="[]"){
+					var params:Object = JSON.decode(arr[0]["paramsCrit"]);
 					/* plus nécessaire car on ne vide pas le datagrid
 					pour pouvoir faire de multiple scénario de critère
 					ROC.findByIdsControles(params[0]["idCritNU"]);
 					*/
 					xmlTree = XML(params[0]["idCritSE"]);
 				}else{
-					xmlTree = <node idCtrl="-1" lib="univers" isBranch="true"></node>;
+					xmlTree =<node idCrit="-1" ref="critères" isBranch="true"></node>;
 				}
 				tree.dataProvider=xmlTree;
+				openAllNodes(xmlTree);
 				bChange = false;
 			}
 			
-			private function fillCtrl(e:Object):void
+			private function fillCritere(e:Object):void
 			{
 				if(!e || e.result.length==0)return;
 				/*ArrayCollection pour effectuer un refresh
 				mais attanetion au performances : http://blog.phiphou.com/index.php/?2009/01/18/148-performances-comparaison-rapide-entre-arraycollection-array-et-vector
 				*/
-				arrCtrl = new ArrayCollection(e.result as Array);;
+				arrCrit = new ArrayCollection(e.result as Array);;
 				//ajoute le nombre d'utilisation
-				for each( var o:Object in arrCtrl)
+				for each( var o:Object in arrCrit)
 				{
 					// create the XPathQuery instance and parse the path
-					var myQuery:XPathQuery = new XPathQuery("//node[@id_ctrl='"+o.id_type_controle+"']");
+					var myQuery:XPathQuery = new XPathQuery("//node[@id_critere='"+o.id_critere+"']");
 					// execute the statement on an XML object and get the result
 					var result:XMLList = myQuery.exec(xmlTree);
 					o["NbUtil"] = result.length(); 
 				}
 				
-				dataGrid.dataProvider = arrCtrl;
+				dataGrid.dataProvider = arrCrit;
 				
 			}
 			
@@ -150,12 +155,12 @@
 					if(draggedFormat=="treeItems"){
 						item = cloneNode(object)
 						//on supprime l'ancien noeud
-						delete  tree.dataProvider[0].descendants().(@idCtrl==item.@id_type_controle)[0];
+						delete  tree.dataProvider[0].descendants().(@ref==item.@ref)[0];
 					}else{
 						// create item
 						item = <node></node>;
-						item.@idCtrl = object.id_type_controle;
-						item.@lib = object.lib;
+						item.@id_critere = object.id_critere;
+						item.@ref = object.ref;
 						item.@isBranch = "false";
 					}
 					
@@ -166,8 +171,8 @@
 					{
 						si.appendChild(item);
 						//incrémente le nombre d'utilisation
-						var i:int = arrCtrl.getItemIndex(object);
-						if(i>0) arrCtrl[i]["NbUtil"] ++;
+						var i:int = arrCrit.getItemIndex(object);
+						if(i>0) arrCrit[i]["NbUtil"] ++;
 					}
 					else{
 						si.@isBranch = true;
@@ -175,8 +180,8 @@
 					}
 				}
 				//met à jour le grid
-				arrCtrl.refresh();
-
+				arrCrit.refresh();
+				saveScene();
 				bChange = true;
 			}
 			private function cloneNode(obj:Object):XML
@@ -184,8 +189,8 @@
 				// create item
 				var item:XML;
 				item = <node></node>;
-				item.@idCtrl = obj.@idCtrl;						
-				item.@controles = obj.@controles;
+				item.@ref = obj.@ref;						
+				item.@criteres = obj.@criteres;
 				//on déplace les noeuds enfants
 				if(obj.children().length()>0){
 					for each( var ichild:Object in obj.children()){
@@ -231,7 +236,60 @@
 				// hide the "drop line" that is shown in Tree control
 				// when dropping in a Tree
 				tree.hideDropFeedback(event);
-			}              			
+			}
+									
+			protected function dataGrid_clickHandler(event:MouseEvent):void
+			{
+				var s:Object=event.currentTarget.selectedItem;
+				if(s)critSelect.text = s.criteres;				
+			}
+			
+			protected function tree_clickHandler(event:MouseEvent):void
+			{
+				if(!event.currentTarget.selectedItem)return;
+				var item:XML=event.currentTarget.selectedItem as XML;
+				//met à jour l'affichage du critère
+				critSelect.text = getCritText(item.@id_critere);
+			}
+			
+			private function getCritText(idCrit:String):String
+			{
+				for each (var cri:Object in this.arrCrit){
+					if(cri.id_critere==idCrit)return cri.criteres;
+				}
+				return "";				
+			}			
+
+			// Define the event listener for the itemEditBeginning event 
+			// to disable editing when the user selects 
+			// the top node in the tree.
+			private function disableEditing(event:ListEvent):void {
+				if(event.rowIndex==0) {  
+					event.preventDefault(); 
+				}
+			}                                       
+			
+			// Define the event listener for the itemEditEnd event 
+			// to copy the updated data back to the data provider 
+			// of the Tree control.
+			public function processData(event:ListEvent):void {    
+				
+				// Disable copying data back to the control.
+				event.preventDefault();
+				
+				//Charge les valeurs
+				tree.editedItemRenderer.data.@ref =	vbEditTreeCrit(event.currentTarget.itemEditorInstance).ref;
+				tree.editedItemRenderer.data.@CondRep =	vbEditTreeCrit(event.currentTarget.itemEditorInstance).CondRep;
+				if(vbEditTreeCrit(event.currentTarget.itemEditorInstance).remove=="oui"){
+					delete  tree.dataProvider[0].descendants().(@ref==tree.editedItemRenderer.data.@ref)[0];
+				}
+
+				// Close the cell editor.
+				tree.destroyItemEditor(); 
+				
+				// Notify the list control to update its display.
+				tree.dataProvider.notifyItemUpdate(tree.editedItemRenderer);
+			}                       			
 			
 			private function TreeIconFunction(item:Object):Class{
 				
@@ -251,40 +309,63 @@
 				}			
 				
 			}				
-				
 			
-			protected function delCtl_clickHandler(event:MouseEvent):void
+			protected function tree_itemEditBeginHandler(event:ListEvent):void
 			{
-				var node:XML = XML(tree.selectedItem);
-				if( node == null ) return;
-				if( node.@lib == "univers" ) return;
-				
-				var children:XMLList = XMLList(node.parent()).children();
-				for(var i:Number=0; i < children.length(); i++) {
-					if( children[i].@lib == node.@lib) {
-						delete children[i];
-					}
-				}				
+				vbEditTreeCrit(event.currentTarget.itemEditorInstance).cbData = arrMC;				
+			}
+						
+			
+			protected function ajouter_resultHandler(event:ResultEvent):void
+			{
+				ROScenes.findByIdScenarioType(dt.idScenar, dt.type);				
+			}
+
+			public function openAllNodes(dtTree:Object):void
+			{
+				var openNodes:Array = new Array();				
+				var data:XML = new XML("<root></root>");
+				data.appendChild(dtTree);			
+				addNode(data, openNodes);
+				tree.openItems = openNodes;
 			}
 			
+			// fonction récursive
+			private function addNode(node:XML, array:Array):void
+			{
+				for each (var childNode:XML in node.children())
+				{
+					// Si ce noeud contient d'autres noeuds ou des feuilles
+					// faire traitement
+					if (childNode.hasComplexContent())
+					{
+						array.push(childNode);
+						addNode(childNode, array);
+					}
+				}
+			}						
 		]]>
 	</mx:Script>
 	<mx:RemoteObject id="ROC"
-					 source="Models_DbTable_Gevu_typesxcontroles" destination="zend" 
+					 source="Models_DbTable_Gevu_criteres" destination="zend" 
 					 showBusyCursor="true"
 					 fault="faultHandlerService(event)">
-		<mx:method name="getAll"  result="fillCtrl(event)"/>
+		<mx:method name="findByIdTypeControle"  result="fillCritere(event)"/>
+		<mx:method name="findByIdsControles"  result="fillCritere(event)"/>
 	</mx:RemoteObject>
 	<mx:RemoteObject id="ROScenes"
 					 source="Models_DbTable_Gevu_scenes" destination="zend" 
 					 showBusyCursor="true"
+					  result="fillScene(event)"
 					 fault="faultHandlerService(event)">
-		<mx:method name="edit"  result="fillScene(event)"/>  	
-		<mx:method name="findByIdScene"  result="fillScene(event)"/>  	
+		<mx:method name="edit"  />  	
+		<mx:method name="findByIdScenarioType" />
+		<mx:method name="ajouter" result="ajouter_resultHandler(event)"  />
+		
 	</mx:RemoteObject>
 	
 	<mx:VBox left="4" right="4" top="4" bottom="4">
-		<mx:LinkButton id="delCtl" click="delCtl_clickHandler(event)" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un contrôle" />
+		<mx:Text fontSize="12" fontWeight="bold" id="critSelect" text="" width="100%" />
 		<mx:HBox height="100%" width="100%" >
 			<mx:DataGrid 
 				id="dataGrid"
@@ -297,16 +378,16 @@
 				dragEnabled="true" 
 				dropEnabled="true" 
 				dragMoveEnabled="false"
+				click="dataGrid_clickHandler(event)"
 				>			
 				<mx:columns>
-					<mx:DataGridColumn headerText="Titre" dataField="lib" width="132"  />   					
-					<mx:DataGridColumn headerText="idCtl" dataField="id_type_controle" visible="false"   />   					
+					<mx:DataGridColumn headerText="Référence" dataField="ref" width="132"  />   					
 					<mx:DataGridColumn headerText="Nb" dataField="NbUtil" />   					
 				</mx:columns>
 			</mx:DataGrid>
 			<mx:Tree id="tree" 
 					 width="100%" height="100%"
-					 labelField="@lib"
+					 labelField="@ref"
 					 showRoot="true"
 					 dragEnabled="true"
 					 dropEnabled="true"
@@ -315,7 +396,15 @@
 					 dragEnter="doDragEnter(event)"
 					 dragExit="doDragExit(event)"
 					 
+					 editable="true"  
+					 itemEditor="compo.vbEditTreeCrit" 
+					 editorHeightOffset="40" editorWidthOffset="200" 
+					 editorXOffset="10" editorYOffset="20"
+					 itemEditBeginning="disableEditing(event);" 
+					 itemEditEnd="processData(event);"
+
 					 iconFunction="TreeIconFunction"
+				 	 click="tree_clickHandler(event);"
 					 />
 		</mx:HBox>
 	</mx:VBox>

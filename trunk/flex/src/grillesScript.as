@@ -7,11 +7,11 @@ import mx.controls.listClasses.IDropInListItemRenderer;
 import mx.events.CloseEvent;
 import mx.events.DataGridEvent;
 import mx.managers.CursorManager;
+import mx.managers.PopUpManager;
 import mx.rpc.AsyncToken;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 import mx.rpc.http.HTTPService;
-import mx.managers.PopUpManager;
 
 //include the constant definition of the server endpoint URL
 include "grillesconfig.as";
@@ -22,6 +22,7 @@ public var dataArr:ArrayCollection = new ArrayCollection();
 [Bindable]
 public var exi:Object;
 [Bindable] public var idExi:String = "";
+[Bindable] public var idScenar:int;
 
  
 public function login():void
