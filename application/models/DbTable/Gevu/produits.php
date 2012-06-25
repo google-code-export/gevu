@@ -105,7 +105,7 @@ class Models_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
      * Récupère toutes les entrées Gevu_produits avec certains critères
      * de tri, intervalles
      */
-    public function getAll($order=null, $limit=0, $from=0)
+    public function getAll($order="description", $limit=0, $from=0)
     {
         $query = $this->select()
         			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
