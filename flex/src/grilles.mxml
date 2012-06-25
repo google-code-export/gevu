@@ -20,7 +20,7 @@
 				<mx:TabNavigator x="0" y="10" width="100%" height="100%" id="tabNavig" >
 					
 					<mx:Canvas id="tabScen" label="Scenario" width="100%" height="100%">
-						<ns2:dgScenario id="dgScen" bInsert="false" width="100%" height="100%" />										
+						<ns2:dgScenari id="dgScen" bInsert="false" width="100%" height="100%" />										
 					</mx:Canvas>
 
 					<mx:Canvas id="tabExis" label="Comptes" width="100%" height="100%">

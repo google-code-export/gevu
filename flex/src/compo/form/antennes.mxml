@@ -43,6 +43,9 @@
 			}
 			
 			private function init():void{
+				
+				if(NodeData.length<=0)return;
+
 				var arrParams:Array = new Array();
 				arrParams["id"]=NodeData.id_antenne;
 				ctc.paramsLien = arrParams;

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:compo="compo.*"
+		   title="Interventions"
+		   width="100%" height="100%"
+		   >
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.DataGridEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var NodeData : Object;
+			[Bindable] public var itemSelect:Object; 
+			[Bindable] public var idLieu:int; 
+			[Bindable] public var idBase:String; 
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			protected function btnAjouter_clickHandler(event:MouseEvent):void
+			{
+				//création du tableau de valeur
+				//id_lieuinterv 	id_lieu 	id_interv 	 	maj
+				var vn:Array = new Array();
+				vn["id_lieu"] = idLieu;
+				vn["id_interv"] = cbType.selectedItem.id_interv;
+				vn["quantite"] = quantite.value;
+				//calcule le cout
+				vn["cout"] = quantite.value*cbType.selectedItem.cout;
+				//calcule les dates
+				var fait:Date = dfFaitLe.selectedDate;
+				var afaire:Date = new Date();
+				afaire.setFullYear(int(fait.getFullYear())+int(cbType.selectedItem.frequence));
+				vn["fait"] = fait.fullYear+"-"+fait.month+"-"+fait.day;
+				vn["afaire"] = afaire.fullYear+"-"+afaire.month+"-"+afaire.day;
+				ro.ajouter(vn, this.parentApplication.idExi);
+			}
+			
+			private function deleteItem():void {
+				
+				if (dataGrid.selectedItem)
+				{
+					Alert.show("Confirmez-vous la suppression de cet élément ?",
+						"Confirmation Suppression", 3, this, deleteClickHandler);
+				}
+				
+			}
+			
+			private function deleteClickHandler(event:CloseEvent):void
+			{
+				if (event.detail == Alert.YES) 
+				{
+					ro.remove(itemSelect.id_lieuinterv);
+				}
+			}
+			
+			protected function ro_resultHandler(event:ResultEvent):void
+			{
+				NodeData = event.result as Object;
+				vs.selectedChild = lecture;
+			}
+			
+			private function selectItem(event:Event):void {
+				itemSelect=event.currentTarget.selectedItem;
+			}			
+						
+			public function init(id:int):void
+			{
+				idLieu = id;
+				if(idLieu){
+					ro.findByIdLieu(idLieu);
+				}
+			}
+			
+			
+			protected function getTypeInterv_resultHandler(event:ResultEvent):void
+			{
+				cbType.dataProvider = event.result as Array;
+			}
+			
+			
+			protected function dataGrid_itemEditEndHandler(event:DataGridEvent):void
+			{
+				var newValue:Number;
+				if(newValue = Number(event.currentTarget.itemEditorInstance.text))
+				{
+					var field:String = event.dataField;
+					var selectedID:String = event.currentTarget.selectedItem.id_lieuinterv.toString();
+					var vn:Array = new Array();		
+					vn[field] = newValue;
+					ro.edit(selectedID, vn);
+				}else{
+					Alert.show("La nouvelle valeur n'est pas un nombre.\nMerci de corriger.","Confirmation Suppression");
+					return;					
+				}
+				
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:RemoteObject id="ro"
+					 destination="zend"
+					 source="Models_DbTable_Gevu_lieuxinterventions"
+					 fault="faultHandlerService(event, this.label);"
+					 showBusyCursor="true" 
+					 >
+		<mx:method name="findByIdLieu" result="ro_resultHandler(event)" />
+		<mx:method name="edit" />
+		<mx:method name="ajouter" result="{ro.findByIdLieu(idLieu)}" />
+		<mx:method name="remove" result="{ro.findByIdLieu(idLieu)}"  />
+		<mx:method name="getTypeInterv" result="getTypeInterv_resultHandler(event)" />
+		
+	</mx:RemoteObject>
+		
+	<mx:ViewStack id="vs" width="100%" height="100%">
+		<mx:VBox id="lecture" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+			<mx:HBox width="100%" >
+				<mx:LinkButton id="btnAjout" click="vs.selectedChild = ajout;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une intervention" enabled="true" />
+				<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une intervention" enabled="true" />							
+			</mx:HBox>							
+			<mx:DataGrid width="100%" height="100%" id="dataGrid"
+						 click="selectItem(event);" itemEditEnd="dataGrid_itemEditEndHandler(event)" 
+						 rowCount="4" editable="true"
+						 dataProvider="{NodeData}">
+				<mx:columns>
+					<mx:DataGridColumn dataField="id_lieuinterv" visible="false" />
+					<mx:DataGridColumn dataField="id_interv" visible="false" />
+					<mx:DataGridColumn width="400" headerText="intervention" dataField="lib" editable="false" />
+					<mx:DataGridColumn headerText="quantité" dataField="quantite" editable="false" />
+					<mx:DataGridColumn headerText="fait le" dataField="fait" editable="false" />
+					<mx:DataGridColumn headerText="à faire le" dataField="afaire" editable="false" />
+					<mx:DataGridColumn headerText="coût" dataField="cout" editable="true" />
+				</mx:columns>
+			</mx:DataGrid>					
+		</mx:VBox>
+		<mx:VBox id="ajout" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+			<mx:Label text="Saisissez votre intervention :"/> 
+			<mx:Form width="100%" height="100%" id="insertForm">			                    		
+				<mx:FormItem label="type d'intervention : " >
+					<mx:ComboBox creationComplete="{ro.getTypeInterv(this.parentApplication.idScenar, idLieu);}" id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez" />				
+				</mx:FormItem>
+				<mx:FormItem label="quantité : " >
+					<mx:NumericStepper id="quantite" stepSize="1" width="100%" maximum="1000000"  />
+				</mx:FormItem>
+				<mx:FormItem label="fait le : " >
+					<mx:DateField id="dfFaitLe" yearNavigationEnabled="true" />
+				</mx:FormItem>
+			</mx:Form>		
+			<mx:HBox>
+				<mx:Button id="btnAjouter" label="Enregistrer" click="btnAjouter_clickHandler(event)" />
+				<mx:Button id="btnAnnuler" label="Annuler" click="vs.selectedChild = lecture;" />				
+			</mx:HBox>
+		</mx:VBox>
+	</mx:ViewStack>											
+</mx:Panel>

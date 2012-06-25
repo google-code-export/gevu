@@ -60,6 +60,8 @@
 			}
 			
 			private function init():void{
+				if(NodeData.length<=0)return;
+
 				ctcPro.paramsLien = GetParamContact("contact_proprietaire");
 				ctcPro.Init();
 			}

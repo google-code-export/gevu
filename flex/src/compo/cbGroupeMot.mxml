@@ -139,7 +139,7 @@
 			this.parentApplication.ShowSelection(cb.selectedItem["selection"])
 		}
 		if(objName=="Models_DbTable_Gevu_motsclefs"){
-			doSource.setCondRep(cb.selectedItem)
+			if(doSource)doSource.setCondRep(cb.selectedItem)
 		}
 	}
 
@@ -160,7 +160,7 @@
 		
 	</mx:RemoteObject>
  
-<mx:ComboBox id="cb" change="changeItem()" prompt="{annonce}" />
+<mx:ComboBox id="cb" change="changeItem()" prompt="{annonce}" width="100%" />
 <mx:LinkButton visible="{bRemove}" click="removeItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="{'Supprimer '+titre}" />
 <mx:LinkButton visible="{bAjout}" id="btnAddNew" click="AjoutMot()" icon="@Embed('images/AddRecord.png')" toolTip="{'Ajouter '+titre}" />
     

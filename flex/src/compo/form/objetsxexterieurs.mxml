@@ -92,6 +92,7 @@
 			protected function method2_resultHandler(event:ResultEvent):void
 			{
 				cbType.dataProvider = event.result as Array;
+				if(NodeData.length==0)return;
 				if(!NodeData.id_type_objet_ext || NodeData.id_type_objet_ext!="0"){
 					for each(var row:Object in cbType.dataProvider){
 						if(row["id_type_controle"]==NodeData.id_type_objet_ext){

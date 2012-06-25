@@ -5,36 +5,30 @@
 	width="100%" height="100%">
 	<mx:Script>
         <![CDATA[
-import mx.containers.TitleWindow;
-import mx.events.FlexEvent;
-import mx.controls.ComboBox;
-import mx.containers.Form;
-import mx.containers.FormItem;
+import compo.*;
 
 import mx.collections.ArrayCollection;
 import mx.collections.IViewCursor;
 import mx.collections.Sort;
 import mx.collections.SortField;
-
+import mx.containers.Form;
+import mx.containers.FormItem;
+import mx.containers.TitleWindow;
 import mx.controls.Alert;
+import mx.controls.CheckBox;
+import mx.controls.ComboBox;
 import mx.controls.DataGrid;
 import mx.controls.dataGridClasses.DataGridColumn;
 import mx.controls.listClasses.IDropInListItemRenderer;
-import mx.controls.CheckBox;
-
 import mx.events.CloseEvent;
 import mx.events.DataGridEvent;
-
+import mx.events.FlexEvent;
 import mx.managers.CursorManager;
-
+import mx.managers.PopUpManager;
 import mx.rpc.AsyncToken;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 import mx.rpc.http.HTTPService;
-
-import mx.managers.PopUpManager;
-
-import compo.*;
 
 /**
  * paramétrage de l'objet
@@ -67,6 +61,7 @@ private function selectItem(event:Event):void {
 		ROSP.findByIdProduit(idProduit);
 		ROC.findByIdProduit(idProduit);
 		ROTOF.findByIdProduit(idProduit);
+		ROINT.findByIdProduit(idProduit);
 
 	}
 }
@@ -189,7 +184,7 @@ private function deleteClickHandler(event:CloseEvent):void
 
 public function faultHandlerService(fault:FaultEvent):void
 {
-	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+	Alert.show(fault.fault.faultDetail, "FaultHandlerService");
 }
  
 public function resultHandlerService(result:ResultEvent):void
@@ -201,6 +196,12 @@ private function SolusHandler(e:Object):void
 {
 	vsSolus.selectedChild = viewSolus;
     ROSP.findByIdProduit(idProduit);
+}
+
+private function IntervHandler(e:Object):void
+{
+	vsInterv.selectedChild = viewInterv;
+	ROINT.findByIdProduit(idProduit);
 }
 
 private function CoutHandler(e:Object):void
@@ -235,6 +236,37 @@ private function deleteSolusClickHandler(event:CloseEvent):void
     }
 }
 
+private function deleteInterv():void {
+	
+	if (this.dgInterv.selectedItem)
+	{
+		Alert.show("Confirmez-vous la suppression de cette intervention ?",
+			"Confirmation Suppression", 3, this, deleteIntervClickHandler);
+	}
+	
+}
+private function deleteIntervClickHandler(event:CloseEvent):void
+{
+	if (event.detail == Alert.YES) 
+	{
+		//vérifie que l'intervention n'est pas liée à des lieux
+		ROINT.verifLienLieu(dgInterv.selectedItem['id_interv']);
+	}
+}
+
+protected function verifLienLieu_resultHandler(event:ResultEvent):void
+{
+	var nb:Number = event.result.length; 
+	if(nb==0){
+		//si aucun lieu n'est lié à l'intervention on peut la supprimer
+		ROINT.remove(dgInterv.selectedItem['id_interv'],idProduit);
+	}else{
+		Alert.show("Cette intervention est liée à "+nb+" lieu(x).\nVous ne pouvez pas la supprimer.",
+			"Suppression impossible");
+	}
+	
+}
+			
 private function TofHandler(e:Object):void
 {
 	if(!e)return;
@@ -270,7 +302,36 @@ private function TofRemoveHandler(e:Object):void
     ROTOF.findByIdProduit(idProduit);
 }
 
-        ]]>
+protected function ajoutInterv_clickHandler(event:MouseEvent):void
+{
+	var vn:Array = new Array();		
+	vn["id_produit"] = idProduit;
+	vn["interv"] = cbTypeInterv.cb.selectedItem.id_motclef;
+	vn["unite"] = cbUnite.cb.selectedItem.id_motclef;
+	vn["frequence"] = nsFreq.value;
+	vn["cout"] = nsIntCout.value;	
+	ROINT.ajouter(vn);
+}
+			
+			protected function dgInterv_itemEditEndHandler(event:DataGridEvent):void
+			{
+				var newValue:Number;
+				if(newValue = Number(event.currentTarget.itemEditorInstance.text))
+				{
+					var field:String = event.dataField;
+					var selectedID:String = event.currentTarget.selectedItem.id_interv.toString();
+					var vn:Array = new Array();		
+					vn[field] = newValue;
+					ROINT.edit(selectedID, vn);
+				}else{
+					Alert.show("La nouvelle valeur n'est pas un nombre.\nMerci de corriger.","Confirmation Suppression");
+					return;					
+				}
+				
+			}
+			
+			
+		]]>
     </mx:Script>
     
 	<mx:RemoteObject id="RO"
@@ -295,6 +356,18 @@ private function TofRemoveHandler(e:Object):void
 	 	<mx:method name="ajouter"  result="SolusHandler(event)"/>  	
 	</mx:RemoteObject>
 
+	<mx:RemoteObject id="ROINT"
+					 source="Models_DbTable_Gevu_interventions" destination="zend" 
+					 endpoint="{endPoint}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="findByIdProduit"  result="fillGridHandler(event,dgInterv)"/>  	
+		<mx:method name="remove"  result="IntervHandler(event)"/>  	
+		<mx:method name="ajouter"  result="IntervHandler(event)"/>  	
+		<mx:method name="edit"  result="IntervHandler(event)"/>
+		<mx:method name="verifLienLieu" result="verifLienLieu_resultHandler(event)"/>
+	</mx:RemoteObject>
+	
 	<mx:RemoteObject id="ROC"
 	    	source="Models_DbTable_Gevu_couts" destination="zend" 
 	    	endpoint="{endPoint}"
@@ -408,6 +481,42 @@ private function TofRemoveHandler(e:Object):void
 								<mx:HBox>
 									<mx:Button label="Enregistrer" click="ROSP.ajouter(cbSolus.cb.selectedItem['id_solution'],idProduit);" />
 									<mx:Button label="Annuler" click="vsSolus.selectedChild = viewSolus;" />				
+								</mx:HBox>							
+							</mx:VBox>
+						</mx:ViewStack>											
+					</mx:Panel>
+					<mx:Panel title="Interventions associées" width="100%" height="100%" layout="absolute">
+						<mx:ViewStack id="vsInterv" width="100%" height="100%">
+							<mx:VBox id="viewInterv" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:HBox>
+									<mx:LinkButton id="btnAddNewInterv" click="vsInterv.selectedChild = insertInterv;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une intervention" />
+									<mx:LinkButton id="btnDeleteInterv" click="deleteInterv()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une intervention" />							
+								</mx:HBox>							
+								<mx:DataGrid width="100%" height="100%" id="dgInterv" editable="true" itemEditEnd="dgInterv_itemEditEndHandler(event)">
+									<mx:columns>
+										<mx:DataGridColumn headerText="id_interv" width="100" dataField="id_interv" visible="false" editable="false" />
+										<mx:DataGridColumn headerText="Type d'intervention" dataField="libInterv" editable="false" />
+										<mx:DataGridColumn headerText="Unité" dataField="libUnite" editable="false" />
+										<mx:DataGridColumn headerText="Fréquence (nb. année)" dataField="frequence" editable="true" />
+										<mx:DataGridColumn headerText="Coût (HT)" dataField="cout" editable="true" />
+									</mx:columns>
+								</mx:DataGrid>					
+							</mx:VBox>
+							<mx:VBox id="insertInterv" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:Label text="Saisissez les caractères de l'intervention :"/> 
+								<ns2:cbGroupeMot titre="un type d'intervention" bAjout="false" 
+												 keyName="id_motclef" id="cbTypeInterv" labelName="titre" objMethode="getAllByType" objParam="55" objName="Models_DbTable_Gevu_motsclefs" 
+												 endPoint="{RO.endpoint}" />
+								<ns2:cbGroupeMot titre="une unité" bAjout="false" 
+												 keyName="id_motclef" id="cbUnite" labelName="titre" objMethode="getAllByType" objParam="19"  objName="Models_DbTable_Gevu_motsclefs"
+												 endPoint="{RO.endpoint}" />
+								<mx:Label text="Fréquence en nombre d'année : "/>
+								<mx:NumericStepper id="nsFreq" width="100%" stepSize="1" value="1" maximum="100" />
+								<mx:Label text="Coût en € HT : "/>
+								<mx:NumericStepper id="nsIntCout" stepSize="0.10" width="100%" maximum="1000000"  />
+								<mx:HBox>
+									<mx:Button label="Enregistrer" click="ajoutInterv_clickHandler(event)" />
+									<mx:Button label="Annuler" click="vsInterv.selectedChild = viewInterv;" />				
 								</mx:HBox>							
 							</mx:VBox>
 						</mx:ViewStack>											
