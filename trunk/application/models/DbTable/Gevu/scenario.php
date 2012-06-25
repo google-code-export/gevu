@@ -57,11 +57,12 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
      *
      * @param array $data
      * @param boolean $existe
+     * @param boolean $ajoutScene
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=false)
-    {
+    public function ajouter($data, $existe=false, $ajoutScene=false)
+    {    	
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
@@ -70,6 +71,14 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
     	}
     	//mise à jour des droits de scénario
     	$this->editDroits();
+    	
+    	//ajoute la scène
+    	if($ajoutScene){
+    		$dbScene = new Models_DbTable_Gevu_scenes();
+    		$idScn = $dbScene->ajouter(array("id_scenario"=>$id,"type"=>"arboCtl"));
+    		//met à jour les params
+    		$this->edit($id, array("params"=>$idScn));
+    	}
     	
     	return $id;
     } 

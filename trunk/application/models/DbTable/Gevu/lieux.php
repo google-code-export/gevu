@@ -52,6 +52,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
        ,"Models_DbTable_Gevu_locaux"
        ,"Models_DbTable_Gevu_partiescommunes"
        ,"Models_DbTable_Gevu_stats"
+       ,"Models_DbTable_Gevu_lieuxinterventions"
        );
            
     /**
@@ -154,7 +155,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     	//récupère tous les enfants
     	$ids = $this->getFullChildIds($id);
 		$ids = $ids[0]['ids'];
-    	
+		if($ids) $ids.=','.$id;
+		else $ids = $id;
 		//suppression des données lieés
         $dt = $this->getDependentTables();
         foreach($dt as $t){
@@ -424,7 +426,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
             ->from(array('node' => 'gevu_lieux'),array("ids"=>"GROUP_CONCAT(enfants.id_lieu)"))
             ->joinInner(array('enfants' => 'gevu_lieux'),
                 'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu'))
-            ->where( "node.id_lieu = ?", $idLieu);        
+            ->where( "node.id_lieu = ?", $idLieu)
+            ->group("node.id_lieu");        
         $result = $this->fetchAll($query);
         return $result->toArray(); 
     }

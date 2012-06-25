@@ -40,7 +40,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 		$select = $this->select();
 		$select->from($this, array('id_scene'));
 		foreach($data as $k=>$v){
-			$select->where($k.' = ?', $v);
+			if($k!=maj)
+				$select->where($k.' = ?', $v);
 		}
 	    $rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_scene; else $id=false;
@@ -55,7 +56,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=false)
+    public function ajouter($data, $existe=true)
     {
     	$id=false;
     	if($existe)$id = $this->existe($data);
@@ -124,6 +125,21 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     public function removeScenario($id_scenario)
     {
         $this->delete('gevu_scenes.id_scenario = ' . $id_scenario);
+        return -1;
+    }
+    
+    /**
+    * Recherche une entrée Gevu_scenes avec les paramètres spécifiés
+     * et supprime cette entrée.
+     *
+     * @param integer $id_scenario
+     * @param string $type
+     *
+     * @return integer
+     */
+    public function removeByScenarioType($id_scenario, $type)
+    {
+        $this->delete('gevu_scenes.id_scenario = '.$id_scenario.' AND gevu_scenes.type = "'.$type.'"');
         return -1;
     }
     
