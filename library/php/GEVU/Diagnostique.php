@@ -656,6 +656,10 @@ class GEVU_Diagnostique extends GEVU_Site{
 	            	}elseif($t=="Models_DbTable_Gevu_docsxlieux"){
 						$dbT = new $t($this->db);
 	            		$res[$t]= $dbT->findByIdLieu($idLieu);
+	            	}elseif($t=="Models_DbTable_Gevu_lieuxinterventions"){
+						//on affiche toujours le formulaire d'intervention 
+						//donc pas de traitement
+	            		$dbT = "";
 	            	}else{
 						$res[$t]=$items->toArray();
 	            	}
