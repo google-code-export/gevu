@@ -48,7 +48,7 @@ var visLeg = d3.select("#legende").append("svg")
 function getTypeLog(typeLog){
 		
 	
-	d3.json("http://www.gevu.org/public/stat/antenne?type=ArbreTypeLog&typeLog="+typeLog, function(json) {
+	d3.json("../stat/antenne?type=ArbreTypeLog&typeLog="+typeLog, function(json) {
 		//suprime l'ancien graphique
 		if(path)path.remove();
 		
