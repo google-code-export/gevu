@@ -1,9 +1,12 @@
-<html>
+﻿<html>
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-<script type="text/javascript" src="public/js/jquery.min.js"></script>
-<script type="text/javascript" src="public/js/d3.v2.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/d3.v2.js"></script>
+<script type="text/javascript" src="../js/couleur-alceane.js"></script>
+<script type="text/javascript" src="../js/coors.js"></script>
+
 
 <script type="text/javascript">
 var geocoder = new google.maps.Geocoder();
@@ -174,7 +177,7 @@ document.addMarker = function(params){
 	//bouge la carte.
 	map.setCenter(latLng);
 	//change le zoom
-	// ATTENTION il faut le faire après avoir changer de fond car il n'ont pas tous le même niveau de zoom max
+	// ATTENTION il faut le faire aprÃ¨s avoir changer de fond car il n'ont pas tous le mÃªme niveau de zoom max
 	map.setZoom(parseInt(params[3]));
 	
 	return "OK";
@@ -186,8 +189,33 @@ document.zoom = function(params){
 }
 
 
-function addPolygone(kml) {
+
+ //d3.json("../data/donnees2.json", function(json) {
+function addPolygone(coors) {
+//function addPolygone(kml) {
 	
+	/*	 var arrA = json.children;
+		z = [];
+		for(var i=0; i < arrA.length; i++){
+			if(arrA[i].ref!="")
+				z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].size]).range(colors[arrA[i].ref]);
+		}		
+		var nodes = partition.nodes(json);
+		
+		path = vis.selectAll("path")
+				      .style("fill", function(d) {
+		    	  var i = (d.children ? d : d.parent);
+		    	  if(i.ref){
+		    		  var colors = z[i.ref]; 
+		    		  return colors(i.size);		    		  
+		    	  }else 
+		    		  return "white";
+		    	  })
+		      ;
+			  
+			  */
+		
+		
 	var xml = getCoor(kml);
 	 
 	var coor = xmlDoc.getElementsByTagName("coordinates")[0].textContent;
@@ -208,7 +236,8 @@ function addPolygone(kml) {
 		    strokeColor: "#FF0000",
 		    strokeOpacity: 0.8,
 		    strokeWeight: 2,
-		    fillColor: "#FF0000",
+			fillColor: colors,
+		    //fillColor: "#FF0000",
 		    fillOpacity: 0.35
 		  });	
 
@@ -216,6 +245,7 @@ function addPolygone(kml) {
 		  
 	return planPath;
 }
+//}
 
 function getCoor(txt){
 	
