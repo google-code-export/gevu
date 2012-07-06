@@ -15,6 +15,7 @@ var kmlArray = [];
 var polyArray = [];
 var mt = new Array(google.maps.MapTypeId.HYBRID,google.maps.MapTypeId.ROADMAP,google.maps.MapTypeId.SATELLITE,google.maps.MapTypeId.TERRAIN);
 var lstKML = d3.select('#listeKML');
+var z;
 
 function setGeoParam(params) {
 	var flexApp = parent.document.getElementById('diag');
@@ -189,24 +190,18 @@ document.zoom = function(params){
 
 
 
-d3.json("../data/donnees2.json", function(json) {
+d3.json("../data/testcarto.json", function(json) {
 	
-		var arrA = json.children;
 		z = [];
-		for(var i=0; i < arrA.length; i++){
-			if(arrA[i].ref!="")
-				z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].size]).range(colors[arrA[i].ref]);
-		}		
+		for(var i=0; i < json.length; i++){
+			z[json[i].ref]=d3.scale.log().domain([0, parseInt(json[i].occupe+json[i].vacant)).range(colors[json[i].ref]);
+			var couleur = z[json[i].ref](json[i].occupe); 
+			addPolygone(coors[json[i].ref], couleur);
+		}
+		
 });	
 		
-function addPolygone(coors) {
-	var xml = getCoor(coors);		
-	//var xml = getCoor(kml);
-	 
-	var coor = xmlDoc.getElementsByTagName("coordinates")[0].textContent;
-
-	var arrCoor = coor.split(" ");
-	 
+function addPolygone(arrCoor, couleur) {
 	var planCoor = [], posi;
 	for (i in arrCoor) {
 		posi = $.trim(arrCoor[i]);
