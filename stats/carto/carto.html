@@ -114,7 +114,8 @@ function initialize() {
 			var rng = colors[json[i].ref];
 			z[json[i].ref]=d3.scale.log().domain([0, max]).range(rng);
 			var fctColor = z[json[i].ref]; 
-			var color = fctColor("123"); 
+			var color = fctColor("123");
+			color = rng[1];
 			addPolygoneByCoor(coors[json[i].ref], color);
 		}
 		
@@ -220,8 +221,8 @@ function addPolygoneByCoor(coor, couleur) {
 		    strokeColor: "#FF0000",
 		    strokeOpacity: 0.8,
 		    strokeWeight: 2,
-			//fillColor: colors,
-		    fillColor: "#FF0000",
+			fillColor: couleur,
+		    //fillColor: "#FF0000",
 		    fillOpacity: 0.35
 		  });	
 
