@@ -103,7 +103,22 @@ function initialize() {
 		}
 	};	
 	
-  map = new google.maps.Map(document.getElementById('mapCanvas'),options);
+	map = new google.maps.Map(document.getElementById('mapCanvas'),options);
+	
+	
+	d3.json("../data/testcarto.js", function(json) {
+		
+		z = [];
+		for(var i=0; i < json.length; i++){
+			var max = parseInt(json[i].occupe+json[i].vacant);
+			var rng = colors[json[i].ref];
+			z[json[i].ref]=d3.scale.log().domain([0, max]).range(rng);
+			var fctColor = z[json[i].ref]; 
+			var color = fctColor("123"); 
+			addPolygoneByCoor(coors[json[i].ref], color);
+		}
+		
+	});	
 
 }
 
@@ -187,21 +202,10 @@ document.addMarker = function(params){
 document.zoom = function(params){
 	map.setZoom(parseInt(params[0]));	
 }
-
-
-
-d3.json("../data/testcarto.js", function(json) {
+		
+function addPolygoneByCoor(coor, couleur) {
 	
-		z = [];
-		for(var i=0; i < json.length; i++){
-			z[json[i].ref]=d3.scale.log().domain([0, parseInt(json[i].occupe+json[i].vacant)]).range(colors[json[i].ref]);
-			var couleur = z[json[i].ref](json[i].occupe); 
-			addPolygone(coors[json[i].ref], couleur);
-		}
-		
-});	
-		
-function addPolygone(arrCoor, couleur) {
+	var arrCoor = coor.split(" ");
 	var planCoor = [], posi;
 	for (i in arrCoor) {
 		posi = $.trim(arrCoor[i]);
@@ -216,8 +220,40 @@ function addPolygone(arrCoor, couleur) {
 		    strokeColor: "#FF0000",
 		    strokeOpacity: 0.8,
 		    strokeWeight: 2,
-			fillColor: colors,
-		    //fillColor: "#FF0000",
+			//fillColor: colors,
+		    fillColor: "#FF0000",
+		    fillOpacity: 0.35
+		  });	
+
+	planPath.setMap(map);
+		  
+	return planPath;
+}
+
+
+function addPolygone(kml) {
+	
+	var xml = getCoor(kml);
+	 
+	var coor = xmlDoc.getElementsByTagName("coordinates")[0].textContent;
+
+	var arrCoor = coor.split(" ");
+	 
+	var planCoor = [], posi;
+	for (i in arrCoor) {
+		posi = $.trim(arrCoor[i]);
+		if(posi!=""){
+			posi = posi.split(",");
+			planCoor.push(new google.maps.LatLng(posi[1], posi[0]));			
+		}
+	}
+
+	var planPath = new google.maps.Polygon({
+		    paths: planCoor,
+		    strokeColor: "#FF0000",
+		    strokeOpacity: 0.8,
+		    strokeWeight: 2,
+		    fillColor: "#FF0000",
 		    fillOpacity: 0.35
 		  });	
 
