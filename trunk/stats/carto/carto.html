@@ -189,11 +189,9 @@ document.zoom = function(params){
 
 
 
- //d3.json("../data/donnees2.json", function(json) {
-function addPolygone(coors) {
-//function addPolygone(kml) {
+d3.json("../data/donnees2.json", function(json) {
 	
-	/*	 var arrA = json.children;
+		var arrA = json.children;
 		z = [];
 		for(var i=0; i < arrA.length; i++){
 			if(arrA[i].ref!="")
@@ -211,15 +209,9 @@ function addPolygone(coors) {
 		    		  return "white";
 		    	  })
 		      ;
-			  
-	*/	
-	
-//function Affiche(addPolygone) {
-	
-
-/*function Affiche() {
-		 alert('coors');*/
+});	
 		
+function addPolygone(coors) {
 	var xml = getCoor(coors);		
 	//var xml = getCoor(kml);
 	 
@@ -250,7 +242,6 @@ function addPolygone(coors) {
 		  
 	return planPath;
 }
-//}
 
 function getCoor(txt){
 	
