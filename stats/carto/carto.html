@@ -197,18 +197,6 @@ d3.json("../data/donnees2.json", function(json) {
 			if(arrA[i].ref!="")
 				z[arrA[i].ref]=d3.scale.log().domain([arrA[i].min, arrA[i].size]).range(colors[arrA[i].ref]);
 		}		
-		var nodes = partition.nodes(json);
-		
-		path = vis.selectAll("path")
-				      .style("fill", function(d) {
-		    	  var i = (d.children ? d : d.parent);
-		    	  if(i.ref){
-		    		  var colors = z[i.ref]; 
-		    		  return colors(i.size);		    		  
-		    	  }else 
-		    		  return "white";
-		    	  })
-		      ;
 });	
 		
 function addPolygone(coors) {
