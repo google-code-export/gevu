@@ -190,11 +190,11 @@ document.zoom = function(params){
 
 
 
-d3.json("../data/testcarto.json", function(json) {
+d3.json("../data/testcarto.js", function(json) {
 	
 		z = [];
 		for(var i=0; i < json.length; i++){
-			z[json[i].ref]=d3.scale.log().domain([0, parseInt(json[i].occupe+json[i].vacant)).range(colors[json[i].ref]);
+			z[json[i].ref]=d3.scale.log().domain([0, parseInt(json[i].occupe+json[i].vacant)]).range(colors[json[i].ref]);
 			var couleur = z[json[i].ref](json[i].occupe); 
 			addPolygone(coors[json[i].ref], couleur);
 		}
