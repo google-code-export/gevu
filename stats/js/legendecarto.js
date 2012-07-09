@@ -14,11 +14,11 @@ function getLegende(){
 	var dataAntenne = [{"id":"1","ref":"BL","name":"Antenne - BL","value":dataCarre},{"id":"2","ref":"CA","name":"Antenne - CA","value":dataCarre},{"id":"3","ref":"CV","name":"Antenne - CV","value":dataCarre},{"id":"4","ref":"MR","name":"Antenne - MR","value":dataCarre},{"id":"5","ref":"QS","name":"Antenne - QS","value":dataCarre}];
 	
 	z = [];
-	for(var i=0; i < dataAntenne.length; i++){
-		z[dataAntenne[i].ref]=d3.scale.log().domain([1, 100]).range(colors[dataAntenne[i].ref]);
+	for(var i=0; i < json.length; i++){
+		z[dataAntenne[i].ref]=d3.scale.log().domain([1, max]).range(colors[dataAntenne[i].ref]);
 	}		
 	
-/*	var antenneLeg = visLeg.selectAll("text").data(dataAntenne).enter()
+	var antenneLeg = visLeg.selectAll("text").data(dataAntenne).enter()
 	.append("text")
 	   .attr("transform", "translate(0,-300)")
        .attr("class", "txtLeg")
@@ -34,7 +34,6 @@ function getLegende(){
        .text(function(d) { 
     	   return d.name; 
 	   });
-*/
 
 	var wh = 30, ec=10; 
 	var carreLeg = visLeg.selectAll(".carrLeg").data(dataAntenne).enter()
@@ -73,4 +72,18 @@ function getLegende(){
 	      .each(stash)
 	      ;
 
+	var textLeg = visLeg.selectAll(".textLeg").data(dataTexte).enter().append("svg:g")
+	    .attr("class", "textLeg")
+	    .attr("transform", "rotate(164)")
+	    .append("text")
+	    	.attr("transform", "translate(0,-30)")
+	    	.attr("class", "txtLeg")
+	    	.attr("font-size", "30")
+	    	.append("textPath")
+	         	.attr("xlink:href", function(d) { 
+				  	return "#" + d.id; 
+	         	})
+			  	.text(function(d) { 
+				  	return d.name; 
+			  	});	
 }
