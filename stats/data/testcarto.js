@@ -3,4 +3,3 @@
 ,{"ref":"CV","type":"logement","occupe":323,"vacant":32}
 ,{"ref":"MR","type":"logement","occupe":423,"vacant":42}
 ,{"ref":"QS","type":"logement","occupe":523,"vacant":52}]
-
