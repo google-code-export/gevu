@@ -59,31 +59,4 @@ function getLegende(){
 		    	   return (wh+ec)*i; 
 			   })
 			  .attr("transform", "translate(320,-250)");
-	
-	var pathLeg = visLeg.data([dataCircle]).selectAll("path") 
-	      .data(partition.nodes) 
-	    .enter().append("path") 
-	      .attr("display", function(d) { return d.depth ? null : "blue"; }) 
-	      .attr("d", arc)
-	      .attr("id", function(d) { return d.id; })
-	      .attr("fill-rule", "evenodd")
-	      .style("stroke", "#fff") 
-	      .style("fill", "#CCCCCC")
-	      .each(stash)
-	      ;
-
-	var textLeg = visLeg.selectAll(".textLeg").data(dataTexte).enter().append("svg:g")
-	    .attr("class", "textLeg")
-	    .attr("transform", "rotate(164)")
-	    .append("text")
-	    	.attr("transform", "translate(0,-30)")
-	    	.attr("class", "txtLeg")
-	    	.attr("font-size", "30")
-	    	.append("textPath")
-	         	.attr("xlink:href", function(d) { 
-				  	return "#" + d.id; 
-	         	})
-			  	.text(function(d) { 
-				  	return d.name; 
-			  	});	
 }
