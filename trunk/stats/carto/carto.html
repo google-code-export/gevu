@@ -218,11 +218,11 @@ function addPolygoneByCoor(coor, couleur) {
 	var planPath = new google.maps.Polygon({
 		    paths: planCoor,
 		    strokeColor: "#FF0000",
-		    strokeOpacity: 0.8,
+		    strokeOpacity: 0.2,
 		    strokeWeight: 2,
 			fillColor: couleur,
 		    //fillColor: "#FF0000",
-		    fillOpacity: 0.35
+		    fillOpacity: 0.8
 		  });	
 
 	planPath.setMap(map);
@@ -297,5 +297,85 @@ google.maps.event.addDomListener(window, 'load', initialize);
 	  <div id="listeCouche"></div>
   </div>
   <div id="mapCanvas"></div>
+  
+      <div>
+	<button id='VLO' class='first'>VACANCES LOGEMENTS OCCUPES</button><button id='VLV' class='first'>VACANCES LOGEMENTS VACANTS</button><button id='VGO' class='first'>VACANCES GARAGES OCCUPES</button><button id='VGV' class='first'>VACANCES GARAGES VACANTS</button><button id='VCO' class='first'>VACANCES COMMERCES OCCUPES</button><button id='VCV' class='first'>VACANCES COMMERCES VACANTS</button>
+    </div>
+	
+	    <table>
+    	<tr>
+    		<td><div id="chart" ></div></td>
+    		<td><div id="legende" ></div></td>
+    	</tr>
+    </table>
+	
+    <script type="text/javascript" src="../js/legendecarto.js"></script>	
+	   <script type="text/javascript" align="center">
+    			getLegende();
+				d3.select("#VLO").on("click", function() {
+		   			getTypeLog("VLO");
+				d3.select("#VLO").classed("active", true);
+					d3.select("#VLV").classed("active", false);
+					d3.select("#VGO").classed("active", false);
+					d3.select("#VGV").classed("active", false);
+					d3.select("#VCO").classed("active", false);
+					d3.select("#VCV").classed("active", false);
+					 });
+					 
+				getLegende();
+				d3.select("#VLV").on("click", function() {
+		   			getTypeLog("VLV");
+				d3.select("#VLV").classed("active", true);
+					d3.select("#VLO").classed("active", false);
+					d3.select("#VGO").classed("active", false);
+					d3.select("#VGV").classed("active", false);
+					d3.select("#VCO").classed("active", false);
+					d3.select("#VCV").classed("active", false);
+					 });
+					 
+				getLegende();
+				d3.select("#VGO").on("click", function() {
+		   			getTypeLog("VGO");
+				d3.select("#VGO").classed("active", true);
+					d3.select("#VLV").classed("active", false);
+					d3.select("#VLO").classed("active", false);
+					d3.select("#VGV").classed("active", false);
+					d3.select("#VCO").classed("active", false);
+					d3.select("#VCV").classed("active", false);
+					 });	
+
+				getLegende();
+				d3.select("#VGV").on("click", function() {
+		   			getTypeLog("VGV");
+				d3.select("#VGV").classed("active", true);
+					d3.select("#VLV").classed("active", false);
+					d3.select("#VLO").classed("active", false);
+					d3.select("#VGO").classed("active", false);
+					d3.select("#VCO").classed("active", false);
+					d3.select("#VCV").classed("active", false);
+					 });
+
+				getLegende();
+				d3.select("#VCO").on("click", function() {
+		   			getTypeLog("VCO");
+				d3.select("#VCO").classed("active", true);
+					d3.select("#VLV").classed("active", false);
+					d3.select("#VLO").classed("active", false);
+					d3.select("#VGO").classed("active", false);
+					d3.select("#VCV").classed("active", false);
+					d3.select("#VCV").classed("active", false);
+					 });
+
+				getLegende();
+				d3.select("#VCV").on("click", function() {
+		   			getTypeLog("VCV");
+				d3.select("#VCV").classed("active", true);
+					d3.select("#VLV").classed("active", false);
+					d3.select("#VLO").classed("active", false);
+					d3.select("#VGO").classed("active", false);
+					d3.select("#VCV").classed("active", false);
+					d3.select("#VCO").classed("active", false);
+					 });						 
+	
 </body>
 </html>
