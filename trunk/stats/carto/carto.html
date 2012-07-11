@@ -148,7 +148,25 @@ function getDataGeo(url, occupation){
 	});
  
 	this.circlePolygon.setMap( this.map );
-}; */
+};
+
+// We load the map
+var latlng = new google.maps.LatLng(-34.397, 150.644);
+var myOptions = {
+	zoom: 8,
+	center: latlng,
+	mapTypeId: google.maps.MapTypeId.ROADMAP
+};
+var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+ 
+// We load the circle
+var circle = new MapCircleOverlay(
+	latlng.getPosition(),
+	10, "#FF0000", 0.8, 3, "#FF0000", 0.35 
+);
+// And we attach it to the map
+circle.setMap( map );
+ */
  
 MapCircleOverlay.prototype.clear = function() {
 	if ( this.circlePolygon != null ) {
