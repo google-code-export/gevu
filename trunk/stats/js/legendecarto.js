@@ -1,4 +1,4 @@
-/*var wL = 300, hL = 300;
+var wL = 300, hL = 300;
 var visLeg = d3.select("#legende").append("svg")
 	.attr("width", wL)
 	.attr("height", hL)
@@ -6,7 +6,7 @@ var visLeg = d3.select("#legende").append("svg")
 	.attr("preserveAspectRatio", "xMidYMid meet")
 	.append("g")
 		.attr("id","gLeg")
-		.attr("transform", "translate(" + wL + "," + hL + ")"); */
+		.attr("transform", "translate(" + wL + "," + hL + ")"); 
 		
 function getLegende(){
 			
@@ -14,7 +14,7 @@ function getLegende(){
 	var dataAntenne = [{"id":"1","ref":"BL","name":"Antenne - BL","value":dataCarre},{"id":"2","ref":"CA","name":"Antenne - CA","value":dataCarre},{"id":"3","ref":"CV","name":"Antenne - CV","value":dataCarre},{"id":"4","ref":"MR","name":"Antenne - MR","value":dataCarre},{"id":"5","ref":"QS","name":"Antenne - QS","value":dataCarre}];
 	
 	z = [];
-	for(var i=0; i < 1000; i++){
+	for(var i=0; i < dataAntenne.length; i++){
 	//for(var i=0; i < json.length; i++){
 		z[dataAntenne[i].ref]=d3.scale.log().domain([1, 10000]).range(colors[dataAntenne[i].ref]);
 	//z[dataAntenne[i].ref]=d3.scale.log().domain([1, max]).range(colors[dataAntenne[i].ref]);
