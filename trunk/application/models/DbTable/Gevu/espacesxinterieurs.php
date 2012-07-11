@@ -303,7 +303,7 @@ class Models_DbTable_Gevu_espacesxinterieurs extends Zend_Db_Table_Abstract
     public function getTypeControle($idScenar, $idLieu)
     {
     	$diag = new GEVU_Diagnostique();
-    	$arrCtl = $diag->getLieuCtl($idLieu, $idScenar, false, "/node");
+    	$arrCtl = $diag->getLieuCtl($idLieu, $idScenar, false, true);
         return $arrCtl; 
     }
 

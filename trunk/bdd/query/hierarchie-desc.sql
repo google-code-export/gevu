@@ -1,6 +1,5 @@
-SELECT parent.*
-FROM gevu_lieux AS node, gevu_lieux AS parent
-WHERE node.lft BETWEEN parent.lft AND parent.rgt
-AND parent.id_instant = node.id_instant
-AND node.id_lieu = 651
-ORDER BY parent.lft;
+﻿SELECT enfant.*
+FROM gevu_lieux AS node, gevu_lieux AS enfant
+WHERE enfant.lft BETWEEN node.lft AND node.rgt
+AND node.id_lieu = 22446
+ORDER BY enfant.lft;

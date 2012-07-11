@@ -53,11 +53,11 @@
 			protected function method1_resultHandler(event:ResultEvent):void
 			{
 				cbType.dataProvider = event.result as Array;
-				if(NodeData.length<=0)return;
+				if(!NodeData)return;
 
 				if(!NodeData.id_type_specifique_int || NodeData.id_type_specifique_int!="0"){
 					for each(var row:Object in cbType.dataProvider){
-						if(row["id_type_controle"]==NodeData.id_type_specifique_int){
+						if(row && row["id_type_controle"]==NodeData.id_type_specifique_int){
 							cbType.selectedItem=row;
 							cbType.enabled = false;
 							idTypeCtrl = NodeData.id_type_specifique_int;

@@ -108,7 +108,7 @@ private function insertItem():void {
 		var ctlVal:Object=ctl.getChildAt(0);
 		//vérifie le type pour récupérer les modifs
     	if(ctlVal.className=="cbGroupeMot"){
-    		val=ctlVal.cb.selectedItem[ctl.id];
+    		val=ctlVal.cb.selectedItem["lib"];
     	}
     	if(ctlVal.className=="TextInput" || ctlVal.className=="TextArea"){
     		val=ctlVal.text;
@@ -342,7 +342,7 @@ private function ExiContactHandler(e:Object):void
 	            	<mx:TextInput displayAsPassword="true" />
 	            </mx:FormItem>
 				<mx:FormItem label="Rôle:" id="role" >
-					<ns2:cbGroupeMot titre="un rôle" keyName="id_role"  objName="Models_DbTable_Gevu_roles" endPoint="{RO.endpoint}" />						
+					<ns2:cbGroupeMot titre="un rôle" keyName="id_role" labelName="lib"  objName="Models_DbTable_Gevu_roles" endPoint="{RO.endpoint}" />						
 				</mx:FormItem>
 			</mx:Form>			
 			<mx:HBox>

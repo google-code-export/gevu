@@ -2,7 +2,7 @@
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
 		   xmlns:compo="compo.*"
 		   title="Interventions"
-		   width="100%" height="100%"
+		   width="100%" height="100%" minHeight="140"
 		   >
 	
 	<mx:Script>

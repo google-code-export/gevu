@@ -28,6 +28,22 @@
 				reponse_141.selected = false;
 			}
 			
+			public function setVal(v:String):void{
+				this.val = v;
+				cocheVals();
+			}
+
+			public function getVal():String
+			{
+				var rep:String="";
+				if(reponse_1.selected) rep = reponse_1.label;
+				if(reponse_2.selected) rep = reponse_2.label;
+				if(reponse_124.selected) rep = reponse_124.label;
+				if(reponse_141.selected) rep = reponse_141.label;
+				
+				return rep;
+			}			
+
 		]]>
 	</mx:Script>
 	<mx:TextArea text="{lblQ}" height="100%" width="100%" editable="false" />
