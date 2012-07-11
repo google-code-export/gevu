@@ -484,23 +484,27 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param integer $idLieu
-     * @param string $TypeControle
+     * @param string $objTypeControle
+     * @param int $idTypeControle
      * 
      * @return array
      */
-    public function getParentForTypeControle($idLieu, $TypeControle)
+    public function getParentForTypeControle($idLieu, $objTypeControle, $idTypeControle=-1)
     {
-    	//récupère les infos de la table liée
-		$dbObj = new $TypeControle;
-		$info = $dbObj->info();
-    	
         $query = $this->select()
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->from(array('node' => 'gevu_lieux'))
             ->joinInner(array('parent' => 'gevu_lieux'),
                 'node.lft BETWEEN parent.lft AND parent.rgt')
-            ->joinInner(array('t' => $info["name"]),'t.id_lieu = parent.id_lieu')
             ->where( "node.id_lieu = ?", $idLieu);        
+    	if($objTypeControle && $objTypeControle!=""){
+	    	//récupère les infos de la table liée
+			$dbObj = new $objTypeControle;
+			$info = $dbObj->info();
+            $query->joinInner(array('t' => $info["name"]),'t.id_lieu = parent.id_lieu');
+    	}else{
+            $query->where( "parent.id_type_controle = ?", $idTypeControle);        	
+    	}
         $result = $this->fetchAll($query);
         return $result->toArray(); 
         
