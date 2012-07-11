@@ -182,18 +182,18 @@ function initialize() {
 	
 	
 	//	d3.csv("../data/vacances_logements&vacances_garages&/vacances_commerces.csv", function(json) {
-	//	d3.csv("../data/vacances_logements.csv", function(json) {
-	//	d3.csv("../data/vacances_garages.csv", function(json) {	
-	//	d3.csv("../data/vacances_commerces.csv", function(json) {		
+		d3.csv("../data/vacances_logements.csv", function(json) {
+		d3.csv("../data/vacances_garages.csv", function(json) {	
+		d3.csv("../data/vacances_commerces.csv", function(json) {		
 	//d3.json(urlJson + urlJson1 + urlJson2, function(json) {
 	d3.json("../data/testcarto.js", function(json) {
 		
 		z = [];
 		for(var i=0; i < json.length; i++){
 		//	var max = parseInt(json[i].occupation);		
-		//	var max = parseInt(json[i].occupation="Occup"+json[i].occupation="Vacant");
+			var max = parseInt(json[i].occupation="Occup"+json[i].occupation="Vacant");
 		//	var max = parseInt(json[i].Occup+json[i].Vacant);
-			var max = parseInt(json[i].occupe+json[i].vacant);
+		//	var max = parseInt(json[i].occupe+json[i].vacant);
 			var rng = ["#54f708","#f7081c"];
 			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
 			var fctColor = z[json[i].ref]; 
@@ -203,10 +203,10 @@ function initialize() {
 			addPolygoneByCoor(coors[json[i].ref], color);
 		}
 		
-//	});	
-//	});
+	});	
+	});
 });
-//});
+});
 //});
 
 function afficher(lat){
@@ -314,11 +314,11 @@ function addPolygoneByCoor(coor, couleur) {
 	var planPath = new google.maps.Polygon({
 		    paths: planCoor,
 		    strokeColor: "#FF0000",
-		    strokeOpacity: 0.8,
+		    strokeOpacity: 10,
 		    strokeWeight: 2,
 			fillColor: couleur,
 		    //fillColor: "#FF0000",
-		    fillOpacity: 0.35
+		    fillOpacity: 0.8
 		  });	
 
 	planPath.setMap(map);
