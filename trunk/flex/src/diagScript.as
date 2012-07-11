@@ -184,7 +184,7 @@ private function fillCtlListe(e:Object):void
 	ctrlDispo.visible = false;
 	ctrlDispo.width = 0;		
 	
-	if(!e)return;
+	if(!e || e.result == "")return;
 	var rs:Object = e.result;
 	for each (var oCtl:Object in rs.ctrl){
 		var hbCtl:hbControle = new hbControle();
