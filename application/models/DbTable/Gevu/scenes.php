@@ -164,23 +164,6 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_scenes 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_scene","champ"=>"id_scene","visible"=>true),
-    	array("titre"=>"id_scenario","champ"=>"id_scenario","visible"=>true),
-    	array("titre"=>"lib","champ"=>"lib","visible"=>true),
-    	array("titre"=>"params","champ"=>"params","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_scenes avec la valeur spécifiée
@@ -210,23 +193,29 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_scenes avec la valeur spécifiée
      * et retourne cette entrée.
      *
      * @param int $id_scenario
      * @param string $type
+     * @param boolean $like
+     * 
+     * @return array()
      */
-    public function findByIdScenarioType($id_scenario, $type)
+    public function findByIdScenarioType($id_scenario, $type, $like=false)
     {
         $query = $this->select()
                     ->from( array("g" => "gevu_scenes") )                           
-                    ->where( "g.type = ?", $type)
                     ->where( "g.id_scenario = ?", $id_scenario );
-
+		if($like){
+			$query->where( "g.type LIKE '%".$type."%'");
+		}else{
+			$query->where( "g.type = ?", $type);
+		}
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_scenes avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -240,7 +229,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_scenes avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -254,7 +243,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_scenes avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -268,6 +257,6 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    
+  
     
 }

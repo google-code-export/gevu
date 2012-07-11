@@ -265,7 +265,6 @@
 			
 			protected function listTypeDocs_clickHandler(event:ListEvent):void
 			{
-				// TODO Auto-generated method stub
 				var item:Object = dataIcons.getItemAt(event.columnIndex);
 				
 				if(item.content_type == "application/vnd.google-earth.kml+xml kml"){

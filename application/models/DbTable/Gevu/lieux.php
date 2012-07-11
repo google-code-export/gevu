@@ -145,22 +145,27 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      * et supprime cette entrée.
      *
      * @param integer $id
+     * @param boolean $hierarchie
      *
      * @return void
      */
-    public function remove($id)
+    public function remove($id, $hierarchie=true)
     {    	
         $lieu = $this->findById_lieu($id);
+        
+        if(count($lieu)==0)return;
     	
-    	//récupère tous les enfants
-    	$ids = $this->getFullChildIds($id);
-		$ids = $ids[0]['ids'];
-		if($ids) $ids.=','.$id;
-		else $ids = $id;
+		$ids = $id;
+        if($hierarchie){
+	    	//récupère tous les enfants
+	    	$ids = $this->getFullChildIds($id);
+			$ids = $ids[0]['ids'];
+			if($ids) $ids.=','.$id;
+        }
 		//suppression des données lieés
         $dt = $this->getDependentTables();
         foreach($dt as $t){
-        	$dbT = new $t($this->db);
+        	$dbT = new $t($this->_db);
         	$dbT->delete('id_lieu IN ('.$ids.')');
         }        
         $this->delete('id_lieu IN ('.$ids.')');
@@ -169,12 +174,15 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
          * supprimer les documents sur le serveur
          */
         
-        //mis à jour des droites et gauches
-        $sql = 'UPDATE gevu_lieux SET rgt='.($lieu[0]['lft'] - 1).' WHERE rgt > '.$lieu[0]['rgt'];
-		$stmt = $this->_db->query($sql);
-        $sql = 'UPDATE gevu_lieux SET lft='.($lieu[0]['rgt'] + 1).' WHERE lft > '.$lieu[0]['rgt'];
-		$stmt = $this->_db->query($sql);
-        
+        if($hierarchie){        
+	        //mis à jour des droites et gauches
+	        $sql = 'UPDATE gevu_lieux SET rgt = rgt-1, lft = lft - 1 WHERE lft BETWEEN '.$lieu[0]['lft'].' AND '.$lieu[0]['rgt'];
+			$stmt = $this->_db->query($sql);
+	        $sql = 'UPDATE gevu_lieux SET rgt=rgt-2 WHERE rgt > '.$lieu[0]['rgt'];
+			$stmt = $this->_db->query($sql);
+	        $sql = 'UPDATE gevu_lieux SET lft=lft - 2 WHERE lft > '.$lieu[0]['rgt'];
+			$stmt = $this->_db->query($sql);
+        }
     }
     
     /**
@@ -293,7 +301,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
             ->joinLeft(array('diag' => 'gevu_diagnostics'),
                 'diag.id_lieu = g.id_lieu',array('nbDiag'=>'COUNT(diag.id_diag)'))
 			->group("id_lieu")
-            ->where( "g.lieu_parent = ?", $lieu_parent );
+            ->where( "g.lieu_parent = ?", $lieu_parent )
+            ->order("g.lft DESC");
 
         return $this->fetchAll($query)->toArray(); 
     }

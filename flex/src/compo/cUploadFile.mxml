@@ -64,8 +64,9 @@
 
             // Called to add file(s) for upload direct
             private function addFilesDirect():void {
-				
-				if(objName=='Models_DbTable_Gevu_problemes' && !ctlBind.idSelect){
+				/**TODO problème avec le idSelect ???
+				 */
+				if(objName=='Models_DbTable_Gevu_problemes' && ctlBind.idSelect==-1){
 					Alert.show("Veuillez sélectionner un problème pour ajouter un document", "Ajout d'un document");
 					return;
 				}

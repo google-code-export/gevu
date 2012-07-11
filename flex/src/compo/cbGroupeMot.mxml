@@ -19,6 +19,7 @@
 	[Bindable] public var objSource:String="";
 	[Bindable] public var doSource:Object;
 	[Bindable] public var keyName:String;
+	[Bindable] public var keyValue:String = "";
 	[Bindable] public var labelName:String="lib";
 	[Bindable] public var titre:String="un mot clef";
 	[Bindable] public var bAjout:Boolean=true;
@@ -67,12 +68,25 @@
    		return -1;
 	}
 
+	public function getKeyIndex(key:String):int
+	{
+		var i:int
+		for each(var row:Object in cb.dataProvider){
+			if(row[keyName]==key){
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+			
 	private function fillHandler(e:Object):void
 	{
 		if(!e)return;
 		dpValue = e.result as Array;
     	cb.dataProvider = dpValue;
     	cb.labelField = labelName;
+		if(keyValue)cb.selectedIndex=getKeyIndex(keyValue);
 
 	}
 	

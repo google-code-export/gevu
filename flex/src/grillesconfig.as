@@ -18,5 +18,4 @@ public const ENDPOINT_EXECARTO:String = "http://127.0.0.1/gevu/library/php/ExecD
 public const ENDPOINT_RAPPORT:String = "http://127.0.0.1/gevu/services/rapport.php";
 public const ENDPOINT_GRAPH:String = "http://127.0.0.1/gevu/public/graph";
 public const ENDPOINT_VIS3D:String = "http://127.0.0.1/gevu/alceane/visites/Residence%20Zampa.html";
-
 //

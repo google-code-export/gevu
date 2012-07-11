@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
 		   xmlns:compo="compo.*"
 		   label="Diagnostics"
 		   name="formDiag"
@@ -29,7 +30,7 @@
 			[Bindable] public var scrDescData:Array;
 			[Bindable] public var sceneData:XML;
 			[Bindable] public var reponseData:Array;
-			[Bindable] public var choixData:Array = new Array;;
+			[Bindable] public var choixData:Array = new Array;
 			[Bindable] public var xlmScene:XML;
 			[Bindable] public var selectDiag:Object;			
 			[Bindable] public var bAjout:Boolean=false;			
@@ -44,6 +45,8 @@
 			private var nodeXpath:String="/node/node";
 			private var totQestionInter:int=-1;
 			private var numQestionInter:int;
+			private var arrQestion:Array = new Array;
+			private var idInstant:int=-1;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
@@ -51,7 +54,8 @@
 				roMC.getAllByType(2);
 				if(bAjout){
 					vs.selectedChild = ajout;
-					roDiag.getScenarioComplet(this.parentApplication.idScenar, idLieu, idTypeCtlParent);
+					if(idTypeCtlParent)
+						roDiag.getScenarioComplet(this.parentApplication.idScenar, idLieu, idTypeCtlParent);
 				}
 				
 			}
@@ -88,13 +92,19 @@
 			{
 				selectDiag = event.currentTarget.selectedItem;
 				if(selectDiag){
+					initProblemes(selectDiag.id_diag, selectDiag.criteres+" : "+selectDiag.reponse);
 					//formObs.idDiag = selectDiag.id_diag;
 					//formObs.init();
-					formProbs.idDiag = selectDiag.id_diag;
-					formProbs.init();
-					formProbs.txtCrit.text = selectDiag.criteres+" : "+selectDiag.reponse;
 				}
 			}
+			
+			private function initProblemes(idDiag:int, txtDiag:String):void
+			{
+				formProbs.idDiag = idDiag;
+				formProbs.init();
+				formProbs.txtCrit.text = txtDiag;				
+			}
+			
 			private function sortDiag(item:*, index:int, array:Array):Boolean
 			{
 				if(item.id_diag == selectDiag.id_diag)
@@ -109,106 +119,183 @@
 			{
 				scrDescData = event.result as Array;
 				if(scrDescData){
-					lblEtapeTot.text = scrDescData["etapes"].length;
-					//ATTENTION les étapes démarre à 0 = indice du tableau et les questions à 1 = xpath pour le xml
-					getQuestion(0,1);					
+					showQuestion();
 				}
 				
 			}
-			private function getQuestion(Etape:int, Question:int):void
+			
+			private function showQuestion():void{
+				lblEtapeTot.text = scrDescData["etapes"].length.toString();
+				getQuestion(0,0);									
+			}
+			
+			private function getQuestion(etape:int, question:int):void
 			{
 				
-				numEtape=Etape;
-				var myQuery:XPathQuery;
-				if(scrDescData["etapes"][numEtape][0]["paramsCrit"] && scrDescData["etapes"][numEtape][0]["paramsCrit"]!="[]"){
-					//vérifie si l'étape à changée
-					if(lblEtapeNum.text != String(numEtape+1)){
-						//change le numéro de l'étape courante
-						lblEtapeNum.text = String(numEtape+1);				
-						//récupère les paramètre de la scène
-						var params:Object = JSON.decode(scrDescData["etapes"][numEtape][0]["paramsCrit"]);
-						xlmScene = XML(params[0]["idCritSE"]);						
-						idTypeControle = scrDescData["etapes"][numEtape]["id_type_controle"];
-						//compte le nombre de toute les questions
-						myQuery = new XPathQuery("count(//@id_critere)");
-						lblQuestionAll.text = "("+String(myQuery.exec(xlmScene))+")";
-						//compte le nombre des questions de premier niveau
-						myQuery = new XPathQuery("count(/node/node)");
-						lblQuestionTot.text = String(myQuery.exec(xlmScene));
-					}
-				}
-				var xp:String = nodeXpath;
-				//vérifie si on traite une question intermédiaire
-				if(totQestionInter>0){
-					numQestionInter=Question;
-					//vérifie si les questions intermédiaires sont finies
-					if(numQestionInter>totQestionInter){
-						//recalcule la requète
-						nodeXpath= nodeXpath.substr(0,(nodeXpath.length-5));
-						totQestionInter = -1;
-						lblQuestionInter.text = "";
-						//passe à la question suivante au niveau du parent 
-						getQuestion(numEtape, numQuestion+1);
-						return;
-					}
-					lblQuestionInter.text = String(numQestionInter);
-					//calcul la requète
-					xp+="["+numQestionInter+"]";
-				}else{
-					numQuestion=Question;
-					//affiche le numéro de la question courante
-					lblQuestionNum.text = String(numQuestion);
-					//calcul la requète
-					xp+="["+numQuestion+"]";
+				if(arrQestion.length == 0 || !arrQestion[etape]){
+					//récupère les paramètre de la scène
+					setQuestionParams(etape);
 				}
 				
-				//conserve le noeud sélectionné
-				myQuery = new XPathQuery(xp);
-				nodeQuestion = myQuery.exec(xlmScene)[0];
-				//affiche la question
-				if(nodeQuestion){
-					idCritere = nodeQuestion.@["id_critere"];
-					//lblQuestion.text = getCritText(idTypeControle, idCritere);
-					ckReponse.lblQ = getCritText(idTypeControle, idCritere);
+				this.numEtape=etape;
+				this.numQuestion=question;
+				//vérifie si l'étape à changée
+				if(lblEtapeNum.text != String(etape+1)){
+					//change le numéro de l'étape courante
+					lblEtapeNum.text = String(etape+1);				
+					idTypeControle = arrQestion[etape]["idCtrl"];
+					lblQuestionAll.text = arrQestion[etape]["nbAll"];
 				}
+				ckReponse.lblQ = arrQestion[etape].qst[question]["lib"];
 				ckReponse.decocheVals();
-
+				lblQuestionNum.text = String(question+1);
+				
+				//change le nombre de question total
+				lblQuestionTot.text = arrQestion[this.numEtape].qst[this.numQuestion].cd[0].fin; 
+				
+				//vérifie s'il faut charger une réponse 
+				var strProb:String = "";
+				if(arrQestion[this.numEtape].qst[this.numQuestion].vn!=-1){
+					ckReponse.setVal(arrQestion[this.numEtape].qst[this.numQuestion].vn.id_reponse);
+					strProb = arrQestion[this.numEtape].qst[this.numQuestion].lib+" : "+ckReponse.getVal();
+				}
+				//charge les problèmes
+				initProblemes(arrQestion[this.numEtape].qst[this.numQuestion].idDiag, strProb);
+				
 			}
+			
+			private function setQuestionParams(etape:int):void
+			{
+				var myQuery:XPathQuery;
+				if(!arrQestion[etape]){
+					arrQestion.push({"idCtrl":0,"nbAll":0,"nbTot":0,"qst":new Array()});
+					var params:Object = JSON.decode(scrDescData["etapes"][etape]["paramsCrit"]);
+					xlmScene = XML(params[0]["idCritSE"]);						
+					arrQestion[etape]["idCtrl"] = scrDescData["etapes"][etape]["idCtrl"];
+					//compte le nombre de toute les questions
+					myQuery = new XPathQuery("count(//@id_critere)");
+					arrQestion[etape]["nbAll"] = "("+String(myQuery.exec(xlmScene))+")";
+					//création du tableau des questions
+					setArrQuestion(etape, xlmScene, 0);
+					arrQestion[etape]["nbTot"] = arrQestion[etape].qst.length;
+				}
+			}
+				
+			private function setArrQuestion(etape:int, node:XML, niv:int):int
+			{
+				var cd:String;var idCrit:String;var lib:String;var arrConRep:Array;var cds:Array;var fin:int;var i:Number;var o:Object;
 
+ 
+				for each (var q:XML in node.children()){
+					cd = String(q.@["CondRep"]);
+					if(cd=="")cd = "no";
+					idCrit = String(q.@["id_critere"]);
+					//vérifie si une question existe déjà pour ce critère et ce niveau
+					var verifCrit:int = verifArrQuestionCrit(etape,idCrit);
+					if(verifCrit!=-1){
+						fin = setArrQuestion(etape, q, niv);
+						arrQestion[etape].qst[verifCrit].cd.push({"valeur":cd,"next":niv,"fin":fin});
+						//met à jour la fin des questions enfants
+						for (i=niv; i<fin; i++){
+							cds = arrQestion[etape].qst[i].cd
+							for each (o in cds){
+								o.fin = fin;
+							}
+						}						
+					}else{
+						lib = getCritText(arrQestion[etape]["idCtrl"], idCrit);
+						arrQestion[etape].qst.push({"idCrit":idCrit,"lib":lib,"cd":new Array(),"vn":-1,"idDiag":-1});
+						fin = setArrQuestion(etape, q, niv+1);
+						arrQestion[etape].qst[niv].cd.push({"valeur":cd,"next":niv+1,"fin":fin});
+						//met à jour la fin des questions enfants
+						for (i=niv+1; i<fin; i++){
+							cds = arrQestion[etape].qst[i].cd
+							for each (o in cds){
+								o.fin = fin;							
+							}
+						}						
+					}
+					niv = fin;
+				}
+				return niv;
+			}
+			private function verifArrQuestionCrit(etape:int, idCrit:String):int
+			{
+				var i:int = 0;
+				for each (var q:Object in arrQestion[etape].qst){
+					if(q.idCrit==idCrit) return i;
+					i++;
+				}
+				return -1;
+			}
 
 			protected function chkReponse(nom:String, val:Object):void
 			{
-				if(!nodeQuestion)return;
 
 				//stocke la réponse
 				var vn:Array = new Array();
-				vn["id_critere"] = idCritere;
+				vn["id_critere"] = arrQestion[this.numEtape].qst[this.numQuestion].idCrit;
 				vn["id_reponse"] = val;	
-				vn["id_type_controle"] = idTypeControle;	
-				choixData.push(vn);
-				//vérifie s'il faut afficher une question particulière
-				var cd:String = String(nodeQuestion.@["CondRep"]);
-				if(cd!=""){
-					var arrConRep:Array = String(nodeQuestion.@["CondRep"]).split("_");
-					if(arrConRep[1]==val){
-						nodeXpath+="/node";
-						totQestionInter = nodeQuestion.children().length();
-						numQestionInter = 1;
-						getQuestion(numEtape,numQestionInter);									
-					}else{
-						totQestionInter = -1;
-						getQuestion(numEtape,numQuestion+1);									
-					}
+				vn["id_type_controle"] = idTypeControle;
+				if(idInstant==-1){
+					creaChoix(vn);
 				}else{
-					if(totQestionInter!=-1)
-						getQuestion(numEtape,numQestionInter+1);									
-					else
-						getQuestion(numEtape,numQuestion+1);									
+					if(arrQestion[this.numEtape].qst[this.numQuestion].idDiag!=-1)vn["id_diag"] = arrQestion[this.numEtape].qst[this.numQuestion].idDiag;
+					setChoix(vn);
 				}
-			}			
+				arrQestion[this.numEtape].qst[this.numQuestion].vn = vn;
+
+			}
+
+			protected function nextReponse(val:Object):void
+			{
+				//vérifie s'il faut afficher une question particulière
+				var cds:Array = arrQestion[this.numEtape].qst[this.numQuestion].cd;
+				var arrConRep:Array;
+				for each (var cd:Object in cds){
+					//1 	Oui, 2 	Non, 124 	N. A., 141 	Sous réserve
+					if(cd.valeur=="no" || val==124 || val==141){
+						getQuestion(this.numEtape, cd.next);
+					}else if(cd.valeur=="2_"+val){
+						getQuestion(this.numEtape, cd.next);
+					}
+				}					
+				
+			}
+			
+			protected function creaChoix(vn:Object):void
+			{
+				ajout.enabled = false
+				roDiag.creaChoix(this.parentApplication.idExi, idLieu, txtComment.text, vn, this.parentApplication.idBase);
+			}
+			
+			protected function setChoix(vn:Object):void
+			{
+				ajout.enabled = false
+				var choix:Array= new Array;
+				choix.push(vn);
+				roDiag.setChoix(this.parentApplication.idExi, idLieu, txtComment.text, choix, this.parentApplication.idBase, idInstant);
+			}
+			protected function roDiagSetChoix_resultHandler(event:ResultEvent):void
+			{
+				var arr:Array = event.result as Array;
+				arrQestion[this.numEtape].qst[this.numQuestion].idDiag = arr.idDiags[0];
+				nextReponse(arrQestion[this.numEtape].qst[this.numQuestion].vn.id_reponse);
+				ajout.enabled = true;
+			}
+			protected function roDiagCreaChoix_resultHandler(event:ResultEvent):void
+			{
+				var arr:Array = event.result as Array;
+				this.idInstant = arr.idInst;
+				arrQestion[this.numEtape].qst[this.numQuestion].idDiag = arr.idDiag;
+				nextReponse(arrQestion[this.numEtape].qst[this.numQuestion].vn.id_reponse);
+				ajout.enabled = true;
+			}
+						
+			
 			private function getCritText(idTypeControle:String, idCrit:String):String
 			{
-				for each (var cri:Object in scrDescData["criteres"]["idTypeControle"+idTypeControle]){
+				for each (var cri:Object in scrDescData["criteres"]["ctrl_"+idTypeControle]){
 					if(cri.id_critere==idCrit){
 						//affiche l'icone
 						var dt:Object = new Object;
@@ -239,14 +326,14 @@
 			protected function btnPrevQuest_clickHandler(event:MouseEvent):void
 			{
 				var numE:int = int(lblEtapeNum.text)-1;
-				var numQ:int = int(lblQuestionNum.text)-1;
+				var numQ:int = int(lblQuestionNum.text)-2;
 				getQuestion(numE,numQ);				
 			}
 			
 			protected function btnNextQuestion_clickHandler(event:MouseEvent):void
 			{
 				var numE:int = int(lblEtapeNum.text)-1;
-				var numQ:int = int(lblQuestionNum.text)+1;
+				var numQ:int = int(lblQuestionNum.text);
 				getQuestion(numE,numQ);								
 			}
 
@@ -261,23 +348,29 @@
 				if(!event || !event.result)return;
 				scenarData = event.result as Array;
 			}
-						
+			/*Ancienne version de l'enregistrement			
 			protected function btnSaveChoix_clickHandler(event:MouseEvent):void
 			{
+				
+				for each (var eta:Object in arrQestion){
+					for each (var qst:Object in eta.qst){
+						if(qst.vn!=-1)choixData.push(qst.vn);
+					}
+				}
 				if(choixData.length > 0){ 
-					roDiag.setChoix(this.parentApplication.idExi, idLieu, txtComment.text, choixData, this.parentApplication.idBase);
+					roDiag.setChoix(this.parentApplication.idExi, idLieu, txtComment.text, choixData, this.parentApplication.idBase, idInstant);
 				}			
 			}
-			
-			protected function method4_resultHandler(event:ResultEvent):void
+			protected function roDiagSetChoix_resultHandler(event:ResultEvent):void
 			{
-				
-				this.choixData = new Array;
-				//rafraichi la liste des diags
-				this.parentApplication.roDiagnostique.getNodeRelatedData(idLieu, this.parentApplication.idExi, this.parentApplication.idBase);
-				
-				
+			this.choixData = new Array;
+			this.idInstant = -1;
+			//rafraichi la liste des diags
+			this.parentApplication.roDiagnostique.getNodeRelatedData(idLieu, this.parentApplication.idExi, this.parentApplication.idBase);
 			}
+			*/
+			
+
 			/*
 			protected function cbScenario_changeHandler(event:ListEvent):void
 			{
@@ -288,8 +381,26 @@
 			*/			
 			protected function ajout_creationCompleteHandler(event:FlexEvent):void
 			{
-				roDiag.getScenarioComplet(this.parentApplication.idScenar, idLieu, idTypeCtlParent);
+				showQuestion();
 			}
+			
+			protected function btnAjout_clickHandler(event:MouseEvent):void
+			{				
+				vs.selectedChild = ajout;
+				/*on crée l'instant à la première réponse
+				var vn:Array = new Array();
+				vn["nom"] = "new_diag";
+				vn["id_exi"] = this.parentApplication.idExi;	
+				roDiag.setInstant(vn,this.parentApplication.idBase);
+				*/
+			}
+			
+			protected function roInstAjout_resultHandler(event:ResultEvent):void
+			{
+				if(!event.result)return;
+				idInstant = event.result as int;
+			}
+			
 			
 		]]>
 	</mx:Script>
@@ -297,11 +408,13 @@
 					 destination="zend"
 					 source="GEVU_Diagnostique"
 					 fault="faultHandlerService(event, 'GEVU - Diagnostic');"
-					 showBusyCursor="true"
+					 showBusyCursor="true" 
 					 >
 		<mx:method name="getDiagComplet" result="method1_resultHandler(event)" />
 		<mx:method name="getScenarioComplet" result="method2_resultHandler(event)" />
-		<mx:method name="setChoix" result="method4_resultHandler(event)" />
+		<mx:method name="setChoix" result="roDiagSetChoix_resultHandler(event)" />
+		<mx:method name="setInstant" result="roInstAjout_resultHandler(event)" />
+		<mx:method name="creaChoix" result="roDiagCreaChoix_resultHandler(event)" />
 	</mx:RemoteObject>
 	<mx:RemoteObject id="roScena"
 					 destination="zend"
@@ -321,7 +434,7 @@
 	<mx:VBox width="100%" height="100%">
 		<mx:HBox verticalAlign="middle">
 			<mx:LinkButton click="{vs.selectedChild = lecture;}" icon="@Embed('images/eye.gif')" height="18" width="18" toolTip="Voir les diagnostics" />			
-			<mx:LinkButton id="btnAjout" click="{vs.selectedChild = ajout;}" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un diagnostic" />			
+			<mx:LinkButton id="btnAjout" click="btnAjout_clickHandler(event)" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un diagnostic" />			
 		</mx:HBox>
 		<mx:ViewStack id="vs" width="100%" height="100%" >			
 			<mx:HBox id="lecture" width="100%" height="100%">
@@ -371,49 +484,25 @@
 					<compo:hbControle id="hbCtl" />
 					<mx:Label text="Questions : " />
 					<mx:Button styleName="leftArrowButton" id="btnPrevQuestion" click="btnPrevQuest_clickHandler(event)" toolTip="Passe à la question précédente" enabled="{int(lblQuestionNum.text) > 1}" />
-					<mx:Label id="lblQuestionNum" text="0" /><mx:Label id="lblQuestionInter" text="" /><mx:Label text=" sur " /><mx:Label id="lblQuestionTot" text="0" /><mx:Label id="lblQuestionAll" text="0" />
+					<mx:Label id="lblQuestionNum" text="1" /><mx:Label id="lblQuestionInter" text="" /><mx:Label text=" sur " /><mx:Label id="lblQuestionTot" text="0" /><mx:Label id="lblQuestionAll" text="0" />
 					<mx:Button styleName="rightArrowButton" id="btnNextQuestion" click="btnNextQuestion_clickHandler(event)" toolTip="Passe à la question suivante" enabled="{lblQuestionNum.text != lblQuestionTot.text}" />
 				</mx:HBox>
 				<form:repType2 id="ckReponse" lblQ="" Q="reponse_1" fnct="{this.chkReponse}" />
 				<mx:HBox width="100%">
-					<mx:Button id="btnSaveChoix" label="enregistrer" click="btnSaveChoix_clickHandler(event)" toolTip="Enregistre les réponses" />
+					<!-- <mx:Button id="btnSaveChoix" label="enregistrer" click="btnSaveChoix_clickHandler(event)" toolTip="Enregistre les réponses" /> -->
 					<mx:Label text="Commentaires :" />
 					<mx:TextInput id="txtComment" width="100%" />					
 				</mx:HBox>
 			</mx:VBox>
 		</mx:ViewStack>
-		<form:problemes id="formProbs" />
+		<mx:TabNavigator id="tn"  width="100%" height="100%" color="0x323232" >
+			<s:NavigatorContent label="Problèmes">
+				<form:problemes id="formProbs" />
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Solutions">
+				<s:Label text="bientôt..."/>
+			</s:NavigatorContent>
+		</mx:TabNavigator>		
 	</mx:VBox>
-	<!-- 
-	<mx:ColumnChart id="diagChart" 
-	height="207" 
-	width="100%" 
-	showDataTips="true" 
-	dataProvider="{NodeData}" 
-	selectionMode="multiple"
-	>
-	<mx:series>
-	<mx:ColumnSeries id="series1" 
-	yField="nbProbleme" 
-	displayName="Nb de problème" 
-	selectable="true"
-	/> 
-	<mx:ColumnSeries id="series2" 
-	yField="nbReponse" 
-	displayName="Nb de réponse" 
-	selectable="true"
-	/> 
-	<mx:ColumnSeries id="series3" 
-	yField="nbObservation" 
-	displayName="nb d'observation" 
-	selectable="true"
-	/> 
-	</mx:series>            
-	<mx:horizontalAxis>
-	<mx:CategoryAxis categoryField="instant"/>
-	</mx:horizontalAxis>                        
-	</mx:ColumnChart>
-	-->
-
 
 </mx:Canvas>

@@ -16,6 +16,7 @@ import compo.form.etablissements;
 import compo.form.georss;
 import compo.form.geos;
 import compo.form.groupes;
+import compo.form.interventions;
 import compo.form.locaux;
 import compo.form.logements;
 import compo.form.niveaux;
@@ -26,7 +27,6 @@ import compo.form.observations;
 import compo.form.parcelles;
 import compo.form.partiescommunes;
 import compo.form.problemes;
-import compo.form.interventions;
 
 import flash.display.DisplayObject;
 import flash.events.MouseEvent;
@@ -40,9 +40,9 @@ import mx.containers.Canvas;
 import mx.controls.Alert;
 import mx.controls.LinkButton;
 import mx.events.CloseEvent;
+import mx.events.IndexChangedEvent;
 import mx.events.ListEvent;
 import mx.events.TreeEvent;
-import mx.events.IndexChangedEvent;
 import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
@@ -184,25 +184,47 @@ private function fillCtlListe(e:Object):void
 	ctrlDispo.visible = false;
 	ctrlDispo.width = 0;		
 	
-	if(!e || e.result.length==0)return;
-	var arrCtl:Array = e.result;
-	
-	for each (var c:Object in arrCtl){
+	if(!e)return;
+	var rs:Object = e.result;
+	for each (var oCtl:Object in rs.ctrl){
 		var hbCtl:hbControle = new hbControle();
-		hbCtl.dt = c;
+		hbCtl.dt = oCtl;
 		hbCtl.fncClick = hbCtl_clickHandler;
 		hbCtl.bDoDrag = false;
 		vboxCtl.addChild(hbCtl);
 		ctrlDispo.visible = true;
-		ctrlDispo.width = 200;		
-	}	
-
+		ctrlDispo.width = 200;
+	}
+	if(rs.crit){
+		//vérifie si le formulaire de diagnostic est déjà présent
+		var formDiag:Object = tabDiag.getChildByName("formDiag");
+		if(formDiag){
+			formDiag.scrDescData = rs.crit;				
+		}else{
+			//ajoute le formulaire de diagnostic
+			var instance:diagnostics = new diagnostics();
+			instance.bAjout = true;
+			instance.name = "formDiag";
+			instance.idLieu = this.idLieu;
+			instance.scrDescData = rs.crit;
+			tabDiag.addChild(instance);
+		}
+	}
 }
 
 protected function hbCtl_clickHandler(dt:Object):void
 {
+	//vérifie s'il faut ajouter des données supplémentaires
+	var arr:Array = new Array();
+	if(dt["zend_obj"]=="Models_DbTable_Gevu_espaces"){
+		arr["id_type_controle"]= dt["id_type_controle"];
+	}
+	if(dt["zend_obj"]=="Models_DbTable_Gevu_espacesxinterieurs"){
+		arr["id_type_specifique_int"]= dt["id_type_controle"];
+		arr["fonction"]= dt["lib"];
+	}
 	//ajoute un nouveau contrôle au lieu
-	roDiagnostique.ajoutCtlLieu(idLieu, dt["zend_obj"], idExi, idBase);
+	roDiagnostique.ajoutCtlLieu(idLieu, dt["zend_obj"], idExi, idBase, arr);
 }
 
 
@@ -373,6 +395,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 						//récupère le type de contrôle
 						typeCtrlParent = getTypeControle(obj);
 						place = 2;
+						instance.name = "formDiag";
 						instance.NodeData = obj[item];
 						instance.idLieu = this.idLieu;
 						instance.idTypeCtlParent = typeCtrlParent;
@@ -413,6 +436,11 @@ private function displayNodeProperties(event:ResultEvent) : void {
 					instance.NodeData = obj[item][0];
 					rowHaut.addChild(DisplayObject(instance));				
 					break;
+				case "espaces":
+					//place = -1;
+					instance.NodeData = obj[item][0];
+					rowHaut.addChild(DisplayObject(instance));				
+					break;
 				default:
 					place = 1;
 					instance.NodeData = obj[item][0];
@@ -432,7 +460,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 			}
 		}
 	}
-	//s'il n'y a pas de diagnostics
+	/*s'il n'y a pas de diagnostics
 	if(aDiag){
 		ctrlDispo.visible = false;
 		ctrlDispo.width = 0;				
@@ -440,6 +468,10 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		//ajoute les controles disponibles
 		roDiagnostique.getLieuCtl(idLieu, idScenar, idBase);
 	}
+	*/
+	//ajoute les controles disponibles
+	roDiagnostique.getLieuCtl(idLieu, idScenar, idBase);
+	
 	//ajoute les documents
 	docs.initDoc(docsxlieux);
 	interv.init(idLieu);

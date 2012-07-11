@@ -16,7 +16,7 @@
 			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] public var NodeData : Object;
-			[Bindable] public var idSelect:int; 
+			[Bindable] public var idSelect:int=-1; 
 			[Bindable] public var idDiag:int; 
 			[Bindable] public var idBase:String; 
 			
@@ -81,13 +81,17 @@
 			
 			public function init():void
 			{
-				if(idDiag){
+				if(idDiag && idDiag!=-1){
 					ro.findByIdDiag(idDiag);
 					btnAjout.enabled = true;
 					btnDelete.enabled = true;
-					docs.uf.ctlBind = this;
-					docs.uf.objName = "Models_DbTable_Gevu_docsxproblemes";	
+				}else{
+					btnAjout.enabled = false;
+					btnDelete.enabled = false;
+					txtCrit.text = "";
 				}
+				docs.uf.ctlBind = this;
+				docs.uf.objName = "Models_DbTable_Gevu_docsxproblemes";	
 
 			}
 			

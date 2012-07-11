@@ -91,7 +91,7 @@ class Models_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
      */
     public function remove($idExi, $idDroit)
     {
-        $this->delete('gevu_exisxdroits.id_exi = ' . $id.' AND gevu_exisxdroits.id_droit ='.$idDroit);
+        $this->delete('gevu_exisxdroits.id_exi = '.$idExi.' AND gevu_exisxdroits.id_droit ='.$idDroit);
     }
     
     /**
