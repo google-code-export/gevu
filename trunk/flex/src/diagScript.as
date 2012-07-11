@@ -184,8 +184,8 @@ private function fillCtlListe(e:Object):void
 	ctrlDispo.visible = false;
 	ctrlDispo.width = 0;		
 	
-	if(!e || e.result == "")return;
 	var rs:Object = e.result;
+	if(rs==="") return;
 	for each (var oCtl:Object in rs.ctrl){
 		var hbCtl:hbControle = new hbControle();
 		hbCtl.dt = oCtl;
@@ -222,6 +222,11 @@ protected function hbCtl_clickHandler(dt:Object):void
 	if(dt["zend_obj"]=="Models_DbTable_Gevu_espacesxinterieurs"){
 		arr["id_type_specifique_int"]= dt["id_type_controle"];
 		arr["fonction"]= dt["lib"];
+	}
+	if(!dt["zend_obj"] || dt["zend_obj"]==""){
+		arr["id_type_controle"]= dt["id_type_controle"];
+		arr["lib"]= dt["lib"];
+		treeTree.selectedItem.@lib = dt["lib"];
 	}
 	//ajoute un nouveau contrôle au lieu
 	roDiagnostique.ajoutCtlLieu(idLieu, dt["zend_obj"], idExi, idBase, arr);
