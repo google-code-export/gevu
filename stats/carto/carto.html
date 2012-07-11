@@ -11,7 +11,18 @@
 	
     <script type="text/javascript" src="../js/legendecarto.js"></script>	
 	   <script type="text/javascript" align="center">
+
+	   
+var urlJson = "http://www.gevu.org/public/stat/antenne?type=vac_log";
+var urlJson1 = "http://www.gevu.org/public/stat/antenne?type=vac_gar";
+var urlJson2 = "../data/vac-commerces.json";
+
+var url = "../data/vacances_logements.csv";
+var url1 = "../data/vacances_garages.csv";
+var url2 = "../data/vacances_commerces.csv";	
+
     			getLegende();
+				if ("url" && occupation = "Occup"){
 				d3.select("#VLO").on("click", function() {
 		   			getTypeLog("VLO");
 				d3.select("#VLO").classed("active", true);
@@ -21,8 +32,10 @@
 					d3.select("#VCO").classed("active", false);
 					d3.select("#VCV").classed("active", false);
 					 });
+				}
 					 
 				getLegende();
+				if ("url" && occupation = "Vacant"){
 				d3.select("#VLV").on("click", function() {
 		   			getTypeLog("VLV");
 				d3.select("#VLV").classed("active", true);
@@ -32,8 +45,10 @@
 					d3.select("#VCO").classed("active", false);
 					d3.select("#VCV").classed("active", false);
 					 });
+				}
 					 
 				getLegende();
+				if ("url1" && occupation = "Occup"){
 				d3.select("#VGO").on("click", function() {
 		   			getTypeLog("VGO");
 				d3.select("#VGO").classed("active", true);
@@ -43,8 +58,10 @@
 					d3.select("#VCO").classed("active", false);
 					d3.select("#VCV").classed("active", false);
 					 });	
+				}				
 
 				getLegende();
+				if ("url1" && occupation = "Vacant"){
 				d3.select("#VGV").on("click", function() {
 		   			getTypeLog("VGV");
 				d3.select("#VGV").classed("active", true);
@@ -54,8 +71,10 @@
 					d3.select("#VCO").classed("active", false);
 					d3.select("#VCV").classed("active", false);
 					 });
+				}
 
 				getLegende();
+				if ("url2" && occupation = "Occup"){
 				d3.select("#VCO").on("click", function() {
 		   			getTypeLog("VCO");
 				d3.select("#VCO").classed("active", true);
@@ -64,9 +83,11 @@
 					d3.select("#VGO").classed("active", false);
 					d3.select("#VCV").classed("active", false);
 					d3.select("#VCV").classed("active", false);
-					 });
+					});
+				}
 
 				getLegende();
+				if ("url2" && occupation = "Vacant"){
 				d3.select("#VCV").on("click", function() {
 		   			getTypeLog("VCV");
 				d3.select("#VCV").classed("active", true);
@@ -75,11 +96,8 @@
 					d3.select("#VGO").classed("active", false);
 					d3.select("#VCV").classed("active", false);
 					d3.select("#VCO").classed("active", false);
-					 });	
-
-var urlJson = "http://www.gevu.org/public/stat/antenne?type=vac_log";
-var urlJson1 = "http://www.gevu.org/public/stat/antenne?type=vac_gar";
-var urlJson2 = "../data/vac-commerces.json";	
+					 });
+				}
 </script>
 
 <script type="text/javascript">
