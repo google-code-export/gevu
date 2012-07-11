@@ -103,12 +103,67 @@ function getDataGeo(url, occupation){
 			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
 			var fctColor = z[json[i].ref]; 
 			var color = fctColor(json[i].occupation=occupation);
-			addPolygoneByCoor(coors[json[i].ref], color);
-		}
-		
-	});	
+			addCircleByCoor(url[json[i].lat]+url[json[i].lng], color);
+				
+/*	if(occupation="Occup"){
+		strokeColor(addCircleByCoor) : "#43FB00"
+	}
 	
-}
+	if(occupation="Vacant"){
+		strokeColor(addCircleByCoor) : "#FB1900"
+	} */
+		}
+	});
+
+		
+/*var MapCircleOverlay = function(center, radius, strokeWeight, strokeColor, strokeOpacity, fillColor, fillOpacity) {
+	this.center = center;
+	this.radius = radius;
+	this.strokeWeight = strokeWeight;
+	this.strokeColor = strokeColor;
+	this.strokeOpacity = strokeOpacity;
+	this.fillColor = fillColor;
+	this.fillOpacity = fillOpacity;
+	this.circlePolygon = null;
+ 
+	// 50 lines look like a pretty good circle
+	this.numPoints = 50;
+ 
+	this.d2r = Math.PI / 180;
+ 
+	this.bound = null;
+ 
+	this.setCenter = function(lat, lng) {
+		this.center = lat, lng;
+		this.draw();
+	};
+
+	this.circlePolygon = new google.maps.Polygon({
+	  paths: circleLatLngs,
+	  strokeColor: this.strokeColor,
+	  strokeOpacity: this.strokeOpacity,
+	  strokeWeight: this.strokeWeight,
+	  fillColor: this.fillColor,
+	  fillOpacity: this.fillOpacity
+	});
+ 
+	this.circlePolygon.setMap( this.map );
+}; */
+ 
+MapCircleOverlay.prototype.clear = function() {
+	if ( this.circlePolygon != null ) {
+		this.circlePolygon.setMap( null );
+		this.circlePolygon = null;
+	}
+};
+ 
+MapCircleOverlay.prototype.onRemove = function() {
+	this.clear();
+};
+		
+	};	
+	
+
 
 function setGeoParam(params) {
 	var flexApp = parent.document.getElementById('diag');
