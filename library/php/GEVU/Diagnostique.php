@@ -2,6 +2,8 @@
 
 class GEVU_Diagnostique extends GEVU_Site{
     	
+	var $idScenar;
+	
 	/**
 	* constructeur de la class
 	*
@@ -33,15 +35,18 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
 		
 		//création de l'objet passé en paramètre
-		$db = new $Obj($this->db);
-
-		//initialisation des données
-		$data["id_instant"]=$idInst;
-		$data["id_lieu"]=$idLieu;
-		
-		//ajout du nouveau contrôle
-		$db->ajouter($data, false);
-			
+		if($Obj!=""){
+			$db = new $Obj($this->db);
+			//initialisation des données
+			$data["id_instant"]=$idInst;
+			$data["id_lieu"]=$idLieu;
+			//ajout du nouveau contrôle
+			$db->ajouter($data, false);
+		}else{
+			//met à jour le lieu avec le type de controle
+			$dbL = new Models_DbTable_Gevu_lieux($this->db);
+			$dbL->edit($idLieu, $data);
+		}			
 	}
 	
     /**
@@ -55,6 +60,8 @@ class GEVU_Diagnostique extends GEVU_Site{
     */
 	public function getLieuCtl($idLieu, $idScenar, $idBase=false, $forTypeControle=false){
 			
+		$this->idScenar = $idScenar;
+		
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
         if(!$this->dbScena)$this->dbScena = new Models_DbTable_Gevu_scenario($this->db);
@@ -69,7 +76,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         //récupération des données du lieu courant
 		$r = $this->dbL->find($idLieu);
 		$rLieu = $r->current();
-      	
+
 		//récupère la scène de départ du scénario
         $scene = $this->dbScene->findByIdScene($arrScenar[0]["params"]);
         $params = json_decode($scene[0]['paramsCtrl']);
@@ -80,8 +87,6 @@ class GEVU_Diagnostique extends GEVU_Site{
 		if($firstCtl){
 			//récupère les informations du contrôle
 		    $rTypeCtrl = $this->dbTypCtl->findById_type_controle($firstCtl["idCtrl"]);
-        	//sort s'il n'y a pas d'objet lié
-        	if($rTypeCtrl["zend_obj"]=="")return "";
 	        //vérifie si le lieu à le controle
 	        $items = $this->verifIsControle($rTypeCtrl, $rLieu);
 			if($items && $items->count()){
@@ -99,16 +104,18 @@ class GEVU_Diagnostique extends GEVU_Site{
 				for ($i = 0; $i < $niv; $i++) {						
 					$path .= "/node";
 					//vérifie si un des parents à déjà le contrôle
-	        		$result = $xmlScene->xpath($path);
-					foreach ($result as $node) {
-		        		$rTC = $this->dbTypCtl->findById_type_controle($node["idCtrl"]);
-        				if($rTC["zend_obj"]!=""){
-			        		$arrLP = $this->dbL->getParentForTypeControle($idLieu, $rTC["zend_obj"]);				        						
+					//sauf pour le dernier niveau 
+					//car une type de contrôle peut être plusieurs fois dans un scénario
+					if($i+1 < $niv){
+		        		$result = $xmlScene->xpath($path);
+						foreach ($result as $node) {
+			        		$rTC = $this->dbTypCtl->findById_type_controle($node["idCtrl"]);
+	        				$arrLP = $this->dbL->getParentForTypeControle($idLieu, $rTC["zend_obj"], $rTC["id_type_controle"]);				        						
 							if($arrLP){
 								//ajoute une condition dans la requête XML
 								$path .= "[@idCtrl=".$node["idCtrl"]."]";
-							}
-        				};
+							}	
+						}
 					}						
 				}
 				/*on ajoute un niveau 
@@ -130,19 +137,18 @@ class GEVU_Diagnostique extends GEVU_Site{
 						if($forTypeControle){
 							$arrCtl[] = $rTypeCtrl1;										
 						}else{
-							foreach ($node->node as $nodeCtrl) {
-								$idCtrl = $nodeCtrl["idCtrl"]."";
-								$uid = $nodeCtrl["uid"]."";
-								//Recherche la scène
-								$arrScene = $this->dbScene->findByIdScenarioType($idScenar, $uid, true);
-								//vérifie si la scène possède des critères
-								if($arrScene[0]['paramsCrit']){
+							//recherche les critères pour le controle
+							$idCtrl = $node["idCtrl"]."";
+							$uid = $node["uid"]."";
+							//Recherche la scène
+							$arrScene = $this->dbScene->findByIdScenarioType($idScenar, $uid, true);
+							//vérifie si la scène possède des critères
+							if(count($arrScene)>0 && $arrScene[0]['paramsCrit']){
 					        		$rsCrit = $this->dbC->findByIdTypeControle($idCtrl);	        		
 									$arrCrit["criteres"]["ctrl_".$idCtrl] = $rsCrit;										
 									$arrCrit["etapes"][] = array("idCtrl"=>$idCtrl,"uid"=>$uid,'paramsCrit'=>$arrScene[0]['paramsCrit']);										
-								}
 							}
-			        		return array("ctrl"=>$arrCtl,"crit"=>$arrCrit);
+							return array("ctrl"=>"","crit"=>$arrCrit);
 						}
 		        	}else{
 						$arrCtl[] = $rTypeCtrl1;										
@@ -208,6 +214,12 @@ class GEVU_Diagnostique extends GEVU_Site{
         if($arrType["zend_obj"]){
 	    	//récupère l'objet en rapport avec le lieu
         	$items = $rLieu->findDependentRowset($arrType["zend_obj"]);
+        }else{
+        	//vérifie si le lieu à le type de controle
+        	if($rLieu['id_type_controle']==$arrType["id_type_controle"]){
+        		//pour la suite il faut que item soit le résultat d'une requête
+        		$items=$rLieu->findDependentRowset("Models_DbTable_Gevu_geos");
+        	}
         }
         return $items;
 	}
@@ -530,10 +542,13 @@ class GEVU_Diagnostique extends GEVU_Site{
 		foreach ($r as $v){
         	$xml .= $this->getXmlLieu($v);
         	//vérifie s'il faut afficher les enfants
+        	//on continue d'afficher les enfants
+        	/*
         	if($v['nbDiag']>0){
 				$xml = "";
         		break;        		
-        	} 
+        	}
+        	*/
         	if($nivMax > $niv){
 		    	//récupère le xml des enfants
 	    		$xml .= $this->getXmlEnfant($v['id_lieu'], $nivMax, $niv+1);

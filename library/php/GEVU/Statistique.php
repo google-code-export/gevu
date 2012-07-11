@@ -64,6 +64,19 @@ class GEVU_Statistique extends GEVU_Site{
 	 * 
     * @return array
     */
+	public function getGeoTypeLog($typeLog=""){
+	   $c = str_replace("::", "_", __METHOD__).$typeLog; 
+	   $rs = $this->cache->load($c);
+       if(!$rs){
+       }
+	}
+	
+	/**
+	 * calcule la hiérarchie des types de logement
+    * @param string $typeLog
+	 * 
+    * @return array
+    */
 	public function getArbreTypeLog($typeLog=""){
 	   $c = str_replace("::", "_", __METHOD__).$typeLog; 
 	   $rs = $this->cache->load($c);
