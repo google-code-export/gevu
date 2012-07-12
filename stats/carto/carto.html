@@ -9,11 +9,11 @@
 <link type="text/css" rel="stylesheet" href="../css/button.css"/>
 <script type="text/javascript" src="../js/legendecarto.js"></script>	
 	
-	<div>
-	<button id='VLO' class='first'>VACANCES LOGEMENTS OCCUPES</button><button id='VLV' class='first'>VACANCES LOGEMENTS VACANTS</button><button id='VGO' class='first'>VACANCES GARAGES OCCUPES</button><button id='VGV' class='first'>VACANCES GARAGES VACANTS</button><button id='VCO' class='first'>VACANCES COMMERCES OCCUPES</button><button id='VCV' class='first'>VACANCES COMMERCES VACANTS</button>
-    </div>
+<div>
+<button id='VLO' class='first'>VACANCES LOGEMENTS OCCUPES</button><button id='VLV' class='first'>VACANCES LOGEMENTS VACANTS</button><button id='VGO' class='first'>VACANCES GARAGES OCCUPES</button><button id='VGV' class='first'>VACANCES GARAGES VACANTS</button><button id='VCO' class='first'>VACANCES COMMERCES OCCUPES</button><button id='VCV' class='first'>VACANCES COMMERCES VACANTS</button>
+</div>
 	
-	   <script type="text/javascript" align="center">
+<script type="text/javascript">
 	   
 var urlJson = "http://www.gevu.org/public/stat/antenne?type=vac_log";
 var urlJson1 = "http://www.gevu.org/public/stat/antenne?type=vac_gar";
@@ -100,10 +100,12 @@ function getDataGeo(url, occupation){
 			var max = parseInt(json[i].occupation="Occup"+json[i].occupation="Vacant");
 			var rng = ["#54f708","#f7081c"];
 			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
-			var fctColor = z[json[i].ref]; 
-			var color = fctColor(json[i].occupation=occupation);
-			addCircleByCoor(url[json[i].lat]+url[json[i].lng], color);
-				
+			var fctColor = z[json[i].ref];
+			var color = fctColor(json[i].coors);	
+		//	var color = fctColor(json[i].occupation=occupation);
+			addPolygoneByCoor(coors[json[i].ref], color);
+		//	addCircleByCoor(url[json[i].lat]+url[json[i].lng], color);
+		
 /*	if(occupation="Occup"){
 		strokeColor(addCircleByCoor) : "#43FB00"
 	}
@@ -112,75 +114,10 @@ function getDataGeo(url, occupation){
 		strokeColor(addCircleByCoor) : "#FB1900"
 	} */
 		}
-	});
-
 		
-/*var MapCircleOverlay = function(center, radius, strokeWeight, strokeColor, strokeOpacity, fillColor, fillOpacity) {
-	this.center = center;
-	this.radius = radius;
-	this.strokeWeight = strokeWeight;
-	this.strokeColor = strokeColor;
-	this.strokeOpacity = strokeOpacity;
-	this.fillColor = fillColor;
-	this.fillOpacity = fillOpacity;
-	this.circlePolygon = null;
- 
-	// 50 lines look like a pretty good circle
-	this.numPoints = 50;
- 
-	this.d2r = Math.PI / 180;
- 
-	this.bound = null;
- 
-	this.setCenter = function(lat, lng) {
-		this.center = lat, lng;
-		this.draw();
-	};
-
-	this.circlePolygon = new google.maps.Polygon({
-	  paths: circleLatLngs,
-	  strokeColor: this.strokeColor,
-	  strokeOpacity: this.strokeOpacity,
-	  strokeWeight: this.strokeWeight,
-	  fillColor: this.fillColor,
-	  fillOpacity: this.fillOpacity
-	});
- 
-	this.circlePolygon.setMap( this.map );
-};
-
-// We load the map
-var latlng = new google.maps.LatLng(-34.397, 150.644);
-var myOptions = {
-	zoom: 8,
-	center: latlng,
-	mapTypeId: google.maps.MapTypeId.ROADMAP
-};
-var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
- 
-// We load the circle
-var circle = new MapCircleOverlay(
-	latlng.getPosition(),
-	10, "#FF0000", 0.8, 3, "#FF0000", 0.35 
-);
-// And we attach it to the map
-circle.setMap( map );
- */
- 
-MapCircleOverlay.prototype.clear = function() {
-	if ( this.circlePolygon != null ) {
-		this.circlePolygon.setMap( null );
-		this.circlePolygon = null;
-	}
-};
- 
-MapCircleOverlay.prototype.onRemove = function() {
-	this.clear();
-};
-		
-	};	
+	});	
 	
-
+}
 
 function setGeoParam(params) {
 	var flexApp = parent.document.getElementById('diag');
