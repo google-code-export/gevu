@@ -1,9 +1,9 @@
-function LatLong(degLat, degLong) {
-     this.lat = LatLong.llToRad(degLat);
-     this.lon = LatLong.llToRad(degLong);
+function LatLng(degLat, degLong) {
+     this.lat = LatLng.llToRad(degLat);
+     this.lon = LatLng.llToRad(degLong);
    }    
    
-   LatLong.llToRad = function(brng) {
+   LatLng.llToRad = function(brng) {
      if (!isNaN(brng)) return brng * Math.PI / 180; 
    
      brng = brng.replace(/[\s]*$/,'');               
@@ -25,13 +25,13 @@ function LatLong(degLat, degLong) {
      return deg * Math.PI / 180;                     
    }
    
-   LatLong.distHaversine = function(p1, p2) {
+   LatLng.distHaversine = function(p1, p2) {
      var R = 6371;
      var dLat  = p2.lat - p1.lat;
-     var dLong = p2.lon - p1.lon;
+     var dLng = p2.lng - p1.lng;
 
      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-             Math.cos(p1.lat) * Math.cos(p2.lat) * Math.sin(dLong/2) * Math.sin(dLong/2);
+             Math.cos(p1.lat) * Math.cos(p2.lat) * Math.sin(dLng/2) * Math.sin(dLng/2);
      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
      var d = R * c;
    
