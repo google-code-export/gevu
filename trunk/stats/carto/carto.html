@@ -8,7 +8,9 @@
 <script type="text/javascript" src="../js/coors.js"></script>
 <link type="text/css" rel="stylesheet" href="../css/button.css"/>
 <script type="text/javascript" src="../js/legendecarto.js"></script>
-<script type="text/javascript" src="../js/calculer-distance.js"></script>		
+<script type="text/javascript" src="../js/calculer-distance.js"></script>	
+<link type="text/css" rel="stylesheet" href="../css/style-carte.css"/>	
+<script type="text/javascript" src="../js/map.js"></script>	
 	
 <div>
 <button id='VLO' class='first'>VACANCES LOGEMENTS OCCUPES</button><button id='VLV' class='first'>VACANCES LOGEMENTS VACANTS</button><button id='VGO' class='first'>VACANCES GARAGES OCCUPES</button><button id='VGV' class='first'>VACANCES GARAGES VACANTS</button><button id='VCO' class='first'>VACANCES COMMERCES OCCUPES</button><button id='VCV' class='first'>VACANCES COMMERCES VACANTS</button>
@@ -368,6 +370,175 @@ function getCoor(txt){
 
 // Onload handler to fire off the app.
 google.maps.event.addDomListener(window, 'load', initialize);
+
+
+
+
+
+
+
+		//	var markersJson = <?php echo generateJson() ?>; //génere le fichier JSON des marqueurs
+			
+			var maCarte = null;
+			
+			var circle = null;
+			
+			var markerCenter = null;
+			
+			var markerResize = null;
+			
+			var kmToLng = 0.0002179/15;
+			
+			var radius = 1;
+			
+			circle_moving = false;
+			
+			circle_resizing = false;
+			
+			markersArray = [];
+			
+			//prend une adresse en paramètre et affiche le cercle
+			function getLatLng(query)
+			{
+				var geocoder = new google.maps.Geocoder();
+				
+				if ( query != '' )
+				{
+					geocoder.geocode({ 'address' : query }, function ( results, status )
+																{
+																	if (status == google.maps.GeocoderStatus.OK)
+																	{
+																		var latlng = results[0].geometry.location + "";
+																		var tab_latlng = latlng.split(',');
+																		var latitude = tab_latlng[0].replace('(', '' );
+																		var longitude = tab_latlng[1].replace(')', '' );
+																		addressChange ( latitude, longitude );
+																	}
+																	else
+																	{
+																		document.getElementById("latlng").innerHTML = "Aucun resultat";
+																	}
+																});
+				}
+			}
+			
+			//Center la carte et affiche le cercle sur les coordonné donné en paramètre
+			function addressChange( latitude, longitude )
+			{
+				maCarte.setCenter(new google.maps.LatLng (latitude, longitude));
+				
+				if ( circle != null )
+					circle.setMap(null);
+				
+				if ( markerCenter != null )
+					markerCenter.setMap(null);
+					
+				if ( markerResize != null )
+					markerResize.setMap(null);
+				
+				var optionsCircle = { 
+					center: maCarte.getCenter(),
+					fillOpacity: 0.5,
+					fillColor: '#FF9933',
+					strokeOpacity: 0,
+					radius: 15000,
+					map: maCarte
+					}
+					
+
+				circle = new google.maps.Circle(optionsCircle);
+			
+				maCarte.fitBounds(circle.getBounds());
+				
+				var optionsMarker = { position: new google.maps.LatLng (lat, lng),
+									map: maCarte,
+									icon: bluepin,
+									draggable: true }
+									
+				markerCenter = new google.maps.Marker(optionsMarker);
+				
+				google.maps.event.addListener(markerCenter, 'dragstart', function() { circle_moving = true; });
+				
+				google.maps.event.addListener(markerCenter, 'drag', function(point) { drawCircle(point); });
+				
+				google.maps.event.addListener(markerCenter, 'dragend', function(point) 
+																			{ drawCircle(point);circle_moving = false;maCarte.setCenter ( point.latLng);
+																				modifyMarkerInCircle(); });
+
+				var optionsMarker = { position: new google.maps.LatLng (latitude, parseFloat(longitude) + 15000*kmToLng),
+									map: maCarte,
+									icon: redpin,
+									draggable: true }
+									
+				markerResize = new google.maps.Marker(optionsMarker);
+				
+				google.maps.event.addListener(markerResize, 'dragstart', function() { circle_resizing = true; });
+				
+				google.maps.event.addListener(markerResize, 'drag', function(point) { 
+																		markerResize.setPosition ( new google.maps.LatLng(markerCenter.getPosition().lat(), 
+																		point.latLng.lng()));});
+				
+				google.maps.event.addListener(markerResize, 'dragend', function(point) { resizeCircle(point);circle_resizing = false;modifyMarkerInCircle(); });
+				modifyMarkerInCircle();
+			}
+			
+			//déplace le cercle
+			function drawCircle ( point)
+			{
+				circle.setCenter (point.latLng);
+
+				markerResize.setPosition ( new google.maps.LatLng (point.latLng.lat(), 
+												point.latLng.lng() + circle.getRadius()*kmToLng) );
+				
+			}
+			
+			//redimensionne le cercle
+			function resizeCircle ( point )
+			{
+				circle.setRadius (LatLong.distHaversine(new LatLong(markerCenter.getPosition().lat(), 
+									markerCenter.getPosition().lng()), 
+									new LatLong(point.latLng.lat(), point.latLng.lng()))*1000);
+				markerResize.setPosition ( new google.maps.LatLng(markerCenter.getPosition().lat(), point.latLng.lng()));
+			}
+			
+			//affiche les marqueurs du tableau JSON qui sont contenus dans le rayon du cercle
+			function modifyMarkerInCircle()
+			{
+				for ( i in markersArray )
+				{
+					markersArray[i].setMap(null);
+				}
+				
+				startPoint = new LatLong ( markerCenter.getPosition().lat(), markerCenter.getPosition().lng());
+				
+				var markers = markersJson.markers;
+				
+				for (j = 0; j < markers.length; j++)
+				{
+				
+					endPoint = new LatLong(markers[j]['lat'], markers[j]['lng']);
+					dist = LatLong.distHaversine(startPoint, endPoint);
+
+					if ( dist*1000 <= circle.getRadius() )
+					{
+						marker = markers[j];
+						
+						var lat = marker['lat'];
+						var lng = marker['lng'];
+						var adresse = marker['adresse'];
+						
+						var optionsMarqueur = {
+							position: new google.maps.LatLng(lat,lng),
+							map: maCarte,
+							title: adresse
+						}
+						var tmpMarker = new google.maps.Marker(optionsMarqueur);
+						markersArray.push ( tmpMarker );
+					}
+				}
+				
+				
+			}
 
 </script>
 </head>
