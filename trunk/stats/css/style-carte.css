@@ -1,0 +1,84 @@
+
+.underlinemenu{
+font-weight: bold;
+width: 100%;
+}
+
+.underlinemenu ul{
+padding: 6px 0 7px 0;
+margin: 0;
+text-align: center;
+}
+
+.underlinemenu ul li{
+display: inline;
+}
+
+.underlinemenu ul li a{
+color: #494949;
+padding: 6px 3px 4px 3px; /*top padding is 6px, bottom padding is 4px*/
+margin-right: 20px; /*spacing between each menu link*/
+text-decoration: none;
+border-bottom: 3px solid gray; /*bottom border is 3px*/
+}
+
+.underlinemenu ul li a:hover, .underlinemenu ul li a.selected{
+border-bottom-color: black;
+}		
+
+html {
+margin:0;
+padding:0;
+}
+body {
+color:#555753;
+font:75%/1.88889 georgia,sans-serif;
+margin:0;
+padding:0;
+}
+p {
+margin-top:0;
+text-align:justify;
+}
+
+
+h3 {
+color:#584900;
+font-size:130%;
+margin-left:18px;
+}
+
+h2 {
+color:#584900;
+font-size:130%;
+margin-left:18px;
+}
+
+h1 {
+text-align:center;
+margin-top:10px;
+}
+
+.content {
+margin-left:170px;
+margin-right:170px;
+}
+
+
+pre {
+color:#7D775C;
+font: 1em georgia,sans-serif;
+border: 1px dashed grey;
+margin-left:10px;
+margin-top:10px;
+padding:10px;
+text-align:justify;
+overflow:auto;
+}
+
+span {
+margin-left:30px;
+margin-right:50px;
+font-size:93%;
+text-indent:0px;
+}
