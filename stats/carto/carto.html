@@ -104,16 +104,16 @@ function getDataGeo(url, occupation){
 			var rng = ["#54f708","#f7081c"];
 			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
 			var fctColor = z[json[i].ref];
-			var color = fctColor(json[i].coors);	
-		//	var color = fctColor(json[i].occupation=occupation);
-			addPolygoneByCoor(coors[json[i].ref], color);
-		//	addCircleByCoor(url[json[i].lat]+url[json[i].lng], color);
+		//	var color = fctColor(json[i].coors);	
+			var color = fctColor(json[i].occupation=occupation);
+		//	addPolygoneByCoor(coors[json[i].ref], color);
+			addCircleByCoor(url[json[i].lat] && url[json[i].lng], colorCircle);
 		
-/*	if(occupation="Occup"){
+/*	colorCircle = if(occupation="Occup"){
 		strokeColor(addCircleByCoor) : "#43FB00"
 	}
 	
-	if(occupation="Vacant"){
+	colorCircle = if(occupation="Vacant"){
 		strokeColor(addCircleByCoor) : "#FB1900"
 	} */
 		}
@@ -209,7 +209,48 @@ function initialize() {
 	};	
 	
 	map = new google.maps.Map(document.getElementById('mapCanvas'),options);
-		
+
+var markerCenter = null;
+var markerResize = null;
+	
+				function addressChange(lat, lng)
+			{
+				var optionsCircle = { 
+					center: map.getCenter(),
+					fillOpacity: 0.5,
+					fillColor: colorCircle,
+					strokeOpacity: 0,
+					radius: 15000,
+					map: map
+					}
+					
+				circle = new google.maps.Circle(optionsCircle);
+
+				var optionsMarker = { position: new google.maps.LatLng (lat, lng),
+									map: map
+									}
+									
+				markerCenter = new google.maps.Marker(optionsMarker);
+
+				var optionsMarker = { position: new google.maps.LatLng (lat, parseFloat(lng) + 15000*kmToLng),
+									map: map,
+									}
+									
+				markerResize = new google.maps.Marker(optionsMarker);
+			}
+			
+				marker = markers[j];
+						
+						var lat = marker['lat'];
+						var lng = marker['lng'];
+						
+						var optionsMarqueur = {
+							position: new google.maps.LatLng(lat,lng),
+							map: map,
+						}
+			
+			
+
 }
 
 document.addKml = function(params){
@@ -374,81 +415,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 
 
-var markerCenter = null;
-var markerResize = null;
+
 			
-			
-			//Center la carte et affiche le cercle sur les coordonnées données en paramètre
-			function addressChange(lat, lng)
-			{
-
-				var optionsCircle = { 
-					center: map.getCenter(),
-					fillOpacity: 0.5,
-					fillColor: '#FF9933',
-					strokeOpacity: 0,
-					radius: 15000,
-					map: map
-					}
-					
-
-				circle = new google.maps.Circle(optionsCircle);
-				
-				var optionsMarker = { position: new google.maps.LatLng (lat, lng),
-									map: map
-									}
-									
-				markerCenter = new google.maps.Marker(optionsMarker);
-
-				var optionsMarker = { position: new google.maps.LatLng (lat, parseFloat(lng) + 15000*kmToLng),
-									map: map,
-									}
-									
-				markerResize = new google.maps.Marker(optionsMarker);
-			}
-			
-			//déplace le cercle
-			function drawCircle (point)
-			{
-				circle.setCenter (point.latLng);
-
-				markerResize.setPosition ( new google.maps.LatLng (point.latLng.lat(), 
-												point.latLng.lng() + circle.getRadius()*kmToLng) );
-			}
-			
-			//affiche les marqueurs du tableau JSON qui sont contenus dans le rayon du cercle
-			function modifyMarkerInCircle()
-			{
-				for ( i in markersArray )
-				{
-					markersArray[i].setMap(null);
-				}
-				
-				startPoint = new LatLng ( markerCenter.getPosition().lat(), markerCenter.getPosition().lng());
-				
-				var markers = markersJson.markers;
-				
-				for (j = 0; j < markers.length; j++)
-				{
-				
-					endPoint = new LatLong(markers[j]['lat'], markers[j]['lng']);
-					dist = LatLng.distHaversine(startPoint, endPoint);
-
-					if ( dist*1000 <= circle.getRadius() )
-					{
-						marker = markers[j];
-						
-						var lat = marker['lat'];
-						var lng = marker['lng'];
-						
-						var optionsMarqueur = {
-							position: new google.maps.LatLng(lat,lng),
-							map: map,
-						}
-
-					}
-				}
-			}
 
 </script>
 </head>
