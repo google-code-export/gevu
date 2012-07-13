@@ -233,13 +233,14 @@ var markerResize = null;
 				markerCenter = new google.maps.Marker(optionsMarker);
 
 				var optionsMarker = { position: new google.maps.LatLng (lat, parseFloat(lng) + 15000*kmToLng),
-									map: map,
+									map: map
 									}
 									
 				markerResize = new google.maps.Marker(optionsMarker);
 			}
 			
-				marker = markers[j];
+			var j;
+			var	marker = marker[j];
 						
 						var lat = marker['lat'];
 						var lng = marker['lng'];
@@ -247,6 +248,7 @@ var markerResize = null;
 						var optionsMarqueur = {
 							position: new google.maps.LatLng(lat,lng),
 							map: map,
+							fillColor: colorCircle
 						}
 			
 			
