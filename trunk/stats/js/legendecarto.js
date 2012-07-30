@@ -16,7 +16,7 @@ function getLegende(){
 	z = [];
 	for(var i=0; i < dataAntenne.length; i++){
 	//for(var i=0; i < json.length; i++){
-		z[dataAntenne[i].ref]=d3.scale.log().domain([1, 10000]).range(colors[dataAntenne[i].ref]);
+		z[dataAntenne[i].ref]=d3.scale.log().domain([1, 5]).range(colors[dataAntenne[i].ref]);
 	//z[dataAntenne[i].ref]=d3.scale.log().domain([1, max]).range(colors[dataAntenne[i].ref]);
 	}		
 	
@@ -27,7 +27,7 @@ function getLegende(){
        .attr("font-size", "30")
        .attr("font-weight", "bold")
        .attr("fill", function(d) { 
-    	   return colors[d.ref][1]; 
+    	   return color[d.ref][1]; 
     	   })
        .attr("x", "320")
        .attr("y", function(d) { 
