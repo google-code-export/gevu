@@ -27,7 +27,7 @@ function getLegende(){
        .attr("font-size", "30")
        .attr("font-weight", "bold")
        .attr("fill", function(d) { 
-    	   return color[d.ref][1]; 
+    	   return colors[d.ref][1]; 
     	   })
        .attr("x", "320")
        .attr("y", function(d) { 
