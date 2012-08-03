@@ -18,9 +18,9 @@
 	
 <script type="text/javascript">
 	   
-/*var urlJson = "http://www.gevu.org/public/stat/antenne?type=vac_log";
+var urlJson = "http://www.gevu.org/public/stat/antenne?type=vac_log";
 var urlJson1 = "http://www.gevu.org/public/stat/antenne?type=vac_gar";
-var urlJson2 = "../data/vac-commerces.json"; */
+var urlJson2 = "../data/vac-commerces.json";
 
 var url = "../data/vacances_logements.csv";
 var url1 = "../data/vacances_garages.csv";
@@ -106,16 +106,13 @@ function getDataGeo(url, occupation){
 			var fctColor = z[json[i].ref];
 		//	var color = fctColor(json[i].coors);	
 			var color = fctColor(json[i].occupation=occupation);
-			addPolygoneByCoor(coors[json[i].ref], color);
-		//	addCircleByCoor(url[json[i].lat] && url[json[i].lng], colorCircle);
+		//	addPolygoneByCoor(coors[json[i].ref], color);
 		
-/*	colorCircle = if(occupation="Occup"){
-		strokeColor(addCircleByCoor) : "#43FB00"
-	}
-	
-	colorCircle = if(occupation="Vacant"){
-		strokeColor(addCircleByCoor) : "#FB1900"
-	} */
+		var colorCircle;
+		if(occupation="Occup") colorCircle = "#43FB00";
+		if(occupation="Vacant") colorCircle = "#43FB00";
+		addCircleByCoor(json[i].lat, json[i].lng, colorCircle);
+			
 		}
 		
 	});	
@@ -209,51 +206,26 @@ function initialize() {
 	};	
 	
 	map = new google.maps.Map(document.getElementById('mapCanvas'),options);
-
-var markerCenter = null;
-var markerResize = null;
-	
-				function addressChange(lat, lng)
-			{
-				var optionsCircle = { 
-					center: map.getCenter(),
-					fillOpacity: 0.5,
-					fillColor: colorCircle,
-					strokeOpacity: 0,
-					radius: 15000,
-					map: map
-					}
-					
-				circle = new google.maps.Circle(optionsCircle);
-
-				var optionsMarker = { position: new google.maps.LatLng (lat, lng),
-									map: map
-									}
-									
-				markerCenter = new google.maps.Marker(optionsMarker);
-
-				var optionsMarker = { position: new google.maps.LatLng (lat, parseFloat(lng) + 15000*kmToLng),
-									map: map
-									}
-									
-				markerResize = new google.maps.Marker(optionsMarker);
-			}
-			
-			var j;
-			var	marker = marker[j];
-						
-						var lat = marker['lat'];
-						var lng = marker['lng'];
-						
-						var optionsMarqueur = {
-							position: new google.maps.LatLng(lat,lng),
-							map: map,
-							fillColor: colorCircle
-						}
-			
-			
-
+				
 }
+
+function addCircleByCoor(lat, lng, colorCircle){
+	var optionsCircle = { 
+		center: map.getCenter(),
+		fillOpacity: 0.5,
+		fillColor: colorCircle,
+		strokeOpacity: 0,
+		radius: 15000,
+		map: map
+		}
+		
+	var circle = new google.maps.Circle(optionsCircle);
+	var optionsMarker = { position: new google.maps.LatLng (lat, lng), map: map};					
+	var markerCenter = new google.maps.Marker(optionsMarker);
+	var optionsMarker = { position: new google.maps.LatLng (lat, parseFloat(lng) + 15000*kmToLng),map: map};
+	var markerResize = new google.maps.Marker(optionsMarker);
+}
+
 
 document.addKml = function(params){
 	
