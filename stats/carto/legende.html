@@ -23,7 +23,7 @@ function getLegende(){
 		z[dataAntenne[i].ref]=d3.scale.log().domain([1, 5]).range(colors[dataAntenne[i].ref]);
 	}		
 	
-	var antenneLeg = visLeg.selectAll("text").data(dataAntenne).enter()
+	var antenneLeg = visLeg.selectAll("text").data(dataAntenne).enter() 
 	.append("text")
 	   .attr("transform", "translate(0,-300)")
        .attr("class", "txtLeg")
