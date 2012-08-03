@@ -127,7 +127,7 @@ function getDataGeo(url, occupation){
 			
 			var colorCircle;
 			if(occupation="Occup") colorCircle = "#43FB00";
-			if(occupation="Vacant") colorCircle = "#43FB00";
+			if(occupation="Vacant") colorCircle = "#f7081c";
 			addCircleByCoor(json[i].lat, json[i].lng, colorCircle);
 			
 		}
@@ -228,20 +228,23 @@ function initialize() {
 
 function addCircleByCoor(lat, lng, colorCircle){
 	console.log("addCircleByCoor "+lat+", "+lng);
+	var p = new google.maps.LatLng (lat, lng);
 	var optionsCircle = { 
-		center: map.getCenter(),
+		center: p,
 		fillOpacity: 0.5,
 		fillColor: colorCircle,
 		strokeOpacity: 0,
-		radius: 10,
+		radius: 50,
 		map: map
 		}
 		
 	var circle = new google.maps.Circle(optionsCircle);
+	/*
 	var optionsMarker = { position: new google.maps.LatLng (lat, lng), map: map};					
 	var markerCenter = new google.maps.Marker(optionsMarker);
 	var optionsMarker = { position: new google.maps.LatLng (lat, parseFloat(lng) + 15000),map: map};
 	var markerResize = new google.maps.Marker(optionsMarker);
+	*/
 }
 
 
