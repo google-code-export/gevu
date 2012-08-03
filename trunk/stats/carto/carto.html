@@ -98,20 +98,36 @@ var z;
 function getDataGeo(url, occupation){
 	
 	d3.csv(url, function(json) {
-		z = [];
+		//calculer le nombre de vacant et d'occupé total
+		//et pour chaque antenne
+		var arrO = [], o;
+		var arrV = [], v;
 		for(var i=0; i < json.length; i++){
-			var max = parseInt(json[i].occupation="Occup"+json[i].occupation="Vacant");
+			if(json[i].occupation=="Occup"){
+				if(arrO[json[i].ref])arrO[json[i].ref]++; else arrO[json[i].ref]=0;
+				o++;
+			}			                                
+			if(json[i].occupation=="Vacant"){
+				if(arrV[json[i].ref])arrV[json[i].ref]++; else arrV[json[i].ref]=0;			
+			}
+		}
+		
+		//ajoute les cercles
+		var z = [];
+		for(var i=0; i < json.length; i++){
+			/*pour une échelle de couleur
 			var rng = ["#54f708","#f7081c"];
 			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
 			var fctColor = z[json[i].ref];
 		//	var color = fctColor(json[i].coors);	
 			var color = fctColor(json[i].occupation=occupation);
 		//	addPolygoneByCoor(coors[json[i].ref], color);
-		
-		var colorCircle;
-		if(occupation="Occup") colorCircle = "#43FB00";
-		if(occupation="Vacant") colorCircle = "#43FB00";
-		addCircleByCoor(json[i].lat, json[i].lng, colorCircle);
+			*/
+			
+			var colorCircle;
+			if(occupation="Occup") colorCircle = "#43FB00";
+			if(occupation="Vacant") colorCircle = "#43FB00";
+			addCircleByCoor(json[i].lat, json[i].lng, colorCircle);
 			
 		}
 		
