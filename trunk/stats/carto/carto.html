@@ -100,15 +100,16 @@ function getDataGeo(url, occupation){
 	d3.csv(url, function(json) {
 		//calculer le nombre de vacant et d'occupé total
 		//et pour chaque antenne
-		var arrO = [], o;
-		var arrV = [], v;
+		var arrO = [], o=0;
+		var arrV = [], v=0;
 		for(var i=0; i < json.length; i++){
 			if(json[i].occupation=="Occup"){
-				if(arrO[json[i].ref])arrO[json[i].ref]++; else arrO[json[i].ref]=0;
+				if(arrO[json[i].ref])arrO[json[i].ref]=arrO[json[i].ref]+1; else arrO[json[i].ref]=1;
 				o++;
 			}			                                
 			if(json[i].occupation=="Vacant"){
-				if(arrV[json[i].ref])arrV[json[i].ref]++; else arrV[json[i].ref]=0;			
+				if(arrV[json[i].ref])arrV[json[i].ref]=arrV[json[i].ref]+1; else arrV[json[i].ref]=1;			
+				v++;
 			}
 		}
 		
@@ -226,19 +227,20 @@ function initialize() {
 }
 
 function addCircleByCoor(lat, lng, colorCircle){
+	console.log("addCircleByCoor "+lat+", "+lng);
 	var optionsCircle = { 
 		center: map.getCenter(),
 		fillOpacity: 0.5,
 		fillColor: colorCircle,
 		strokeOpacity: 0,
-		radius: 15000,
+		radius: 10,
 		map: map
 		}
 		
 	var circle = new google.maps.Circle(optionsCircle);
 	var optionsMarker = { position: new google.maps.LatLng (lat, lng), map: map};					
 	var markerCenter = new google.maps.Marker(optionsMarker);
-	var optionsMarker = { position: new google.maps.LatLng (lat, parseFloat(lng) + 15000*kmToLng),map: map};
+	var optionsMarker = { position: new google.maps.LatLng (lat, parseFloat(lng) + 15000),map: map};
 	var markerResize = new google.maps.Marker(optionsMarker);
 }
 
