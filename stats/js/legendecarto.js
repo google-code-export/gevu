@@ -15,29 +15,27 @@ function getLegende(){
 	
 	z = [];
 	for(var i=0; i < dataAntenne.length; i++){
-	//for(var i=0; i < json.length; i++){
 		z[dataAntenne[i].ref]=d3.scale.log().domain([1, 5]).range(colors[dataAntenne[i].ref]);
-	//z[dataAntenne[i].ref]=d3.scale.log().domain([1, max]).range(colors[dataAntenne[i].ref]);
 	}		
 	
-	var antenneLeg = visLeg.selectAll("text").data(dataAntenne).enter()
+	var antenneLeg = visLeg.selectAll("text").data(dataAntenne).enter() //Peut-être mettre name à la place de enter pour afficher le nom de chaque antenne ?
 	.append("text")
 	   .attr("transform", "translate(0,-300)")
        .attr("class", "txtLeg")
        .attr("font-size", "30")
        .attr("font-weight", "bold")
        .attr("fill", function(d) { 
-    	   return colors[d.ref][1]; 
+    	   return colors[d.ref][1]; //Affiche la référence de l'antenne avec sa couleur
     	   })
        .attr("x", "320")
        .attr("y", function(d) { 
     	   return 100*d.id; 
 	   })
        .text(function(d) { 
-    	   return d.name; 
+    	   return d.name; //Affiche le nom de l'antenne entier
 	   });
 
-	var wh = 30, ec=10; 
+	var wh = 30, ec=10; //Pour créer les carrés de couleurs
 	var carreLeg = visLeg.selectAll(".carrLeg").data(dataAntenne).enter()
 		.append("g")
 			.attr("class","carrLeg")
@@ -60,5 +58,5 @@ function getLegende(){
 		       .attr("x", function(d, i) { 
 		    	   return (wh+ec)*i; 
 			   })
-			  .attr("transform", "translate(320,-250)");
+			  .attr("transform", "translate(320,-250)"); //Pour chaque d.ref, on met le dégradé de couleurs.
 }
