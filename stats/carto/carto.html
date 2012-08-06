@@ -12,7 +12,7 @@
 <link type="text/css" rel="stylesheet" href="../css/button.css"/>
 	
 <div>
-<button id='VLO' class='first'>VACANCES LOGEMENTS OCCUPES</button><button id='VLV' class='first'>VACANCES LOGEMENTS VACANTS</button><button id='VGO' class='first'>VACANCES GARAGES OCCUPES</button><button id='VGV' class='first'>VACANCES GARAGES VACANTS</button><button id='VCO' class='first'>VACANCES COMMERCES OCCUPES</button><button id='VCV' class='first'>VACANCES COMMERCES VACANTS</button>
+<button id='VLO' class='first'>VACANCES LOGEMENTS</button><button id='VGO' class='first'>VACANCES GARAGES</button><button id='VCO' class='first'>VACANCES COMMERCES</button>
 </div>
 	
 <script type="text/javascript">
@@ -27,7 +27,7 @@ var url2 = "../data/vacances_commerces.csv";
 
 
 d3.select("#VLO").on("click", function() {
-	getDataGeo("../data/vacances_logements.csv", "Occup");
+	getDataGeo("../data/vacances_logements.csv","Occup");
 	d3.select("#VLO").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VGO").classed("active", false);
@@ -36,7 +36,7 @@ d3.select("#VLO").on("click", function() {
 	d3.select("#VCV").classed("active", false);
 });
 
-d3.select("#VLV").on("click", function() {
+/*d3.select("#VLV").on("click", function() {
 	getDataGeo("../data/vacances_logements.csv","Vacant");
 	d3.select("#VLV").classed("active", true);
 	d3.select("#VLO").classed("active", false);
@@ -44,7 +44,7 @@ d3.select("#VLV").on("click", function() {
 	d3.select("#VGV").classed("active", false);
 	d3.select("#VCO").classed("active", false);
 	d3.select("#VCV").classed("active", false);
-});
+}); */
 	 
 d3.select("#VGO").on("click", function() {
 	getDataGeo("../data/vacances_garages.csv","Occup");
@@ -56,7 +56,7 @@ d3.select("#VGO").on("click", function() {
 	d3.select("#VCV").classed("active", false);
 });	
 
-d3.select("#VGV").on("click", function() {
+/*d3.select("#VGV").on("click", function() {
 	getDataGeo("../data/vacances_garages.csv","Vacant");
 	d3.select("#VGV").classed("active", true);
 	d3.select("#VLV").classed("active", false);
@@ -64,7 +64,7 @@ d3.select("#VGV").on("click", function() {
 	d3.select("#VGO").classed("active", false);
 	d3.select("#VCO").classed("active", false);
 	d3.select("#VCV").classed("active", false);
-});
+}); */
 
 d3.select("#VCO").on("click", function() {
 	getDataGeo("../data/vacances_commerces.csv","Occup");
@@ -76,7 +76,7 @@ d3.select("#VCO").on("click", function() {
 	d3.select("#VCV").classed("active", false);
 });
 
-d3.select("#VCV").on("click", function() {
+/* d3.select("#VCV").on("click", function() {
 	getDataGeo("../data/vacances_commerces.csv","Vacant");
 	d3.select("#VCV").classed("active", true);
 	d3.select("#VLV").classed("active", false);
@@ -84,7 +84,7 @@ d3.select("#VCV").on("click", function() {
 	d3.select("#VGO").classed("active", false);
 	d3.select("#VGV").classed("active", false);
 	d3.select("#VCO").classed("active", false);
-});
+}); */
 
 var geocoder = new google.maps.Geocoder();
 var map;
@@ -103,12 +103,13 @@ function getDataGeo(url, occupation){
 		var arrO = [], o=0;
 		var arrV = [], v=0;
 		for(var i=0; i < json.length; i++){
+		
 			if(json[i].occupation=="Occup"){
-				if(arrO[json[i].ref])arrO[json[i].ref]=arrO[json[i].ref]+2; else arrO[json[i].ref]=1;
+				if(arrO[json[i].ref])arrO[json[i].ref]=arrO[json[i].ref]+1; else arrO[json[i].ref]=1;
 				o++;
 			}			                                
 			if(json[i].occupation=="Vacant"){
-				if(arrV[json[i].ref])arrV[json[i].ref]=arrV[json[i].ref]+2; else arrV[json[i].ref]=1;			
+				if(arrV[json[i].ref])arrV[json[i].ref]=arrV[json[i].ref]+1; else arrV[json[i].ref]=1;			
 				v++;
 			}
 		}
@@ -127,9 +128,8 @@ function getDataGeo(url, occupation){
 			
 			var colorCircle;
 			if(occupation="Occup") colorCircle = "#F70101";
-			if(occupation="Vacant") colorCircle = "#1901F7";
-			addCircleByCoor(json[i].lat, json[i].lng, colorCircle);
-			
+			if(occupation="Vacant") colorCircle = "#F70101";
+			addCircleByCoor(json[i].lat, json[i].lng, colorCircle); 
 		}
 		
 
