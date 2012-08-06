@@ -1,13 +1,11 @@
-Essai pour afficher les polygones des antennes
-
-<html>
+﻿<html>
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/d3.v2.js"></script>
-<script type="text/javascript" src="../js/coors.js"></script>
 <script type="text/javascript" src="../js/couleur-alceane.js"></script>
+<script type="text/javascript" src="../js/coors.js"></script>
 
 <script type="text/javascript">
 var geocoder = new google.maps.Geocoder();
@@ -17,18 +15,7 @@ var kmlArray = [];
 var polyArray = [];
 var mt = new Array(google.maps.MapTypeId.HYBRID,google.maps.MapTypeId.ROADMAP,google.maps.MapTypeId.SATELLITE,google.maps.MapTypeId.TERRAIN);
 var lstKML = d3.select('#listeKML');
-
-
-	d3.csv("../data/testcarto.js", function(json) {
-		z = [];
-		for(var i=0; i < json.length; i++){
-			var max = parseInt(json[i].occupe+json[i].vacant);
-			var rng = ["#54f708","#f7081c"];
-			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
-			var fctColor = z[json[i].ref];
-			var color = fctColor(json[i].coors);	
-			addPolygoneByCoor(coors[json[i].ref], color);
-		
+var z;
 
 function setGeoParam(params) {
 	var flexApp = parent.document.getElementById('diag');
@@ -116,7 +103,22 @@ function initialize() {
 		}
 	};	
 	
-  map = new google.maps.Map(document.getElementById('mapCanvas'),options);
+	map = new google.maps.Map(document.getElementById('mapCanvas'),options);
+	
+	
+	d3.json("../data/testcarto.js", function(json) {
+		
+		z = [];
+		for(var i=0; i < json.length; i++){
+			var max = parseInt(json[i].occupe+json[i].vacant);
+			var rng = ["#54f708","#f7081c"];
+			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
+			var fctColor = z[json[i].ref]; 
+			var color = fctColor(json[i].vacant);
+			addPolygoneByCoor(coors[json[i].ref], color);
+		}
+		
+	});	
 
 }
 
@@ -190,7 +192,7 @@ document.addMarker = function(params){
 	//bouge la carte.
 	map.setCenter(latLng);
 	//change le zoom
-	// ATTENTION il faut le faire après avoir changer de fond car il n'ont pas tous le même niveau de zoom max
+	// ATTENTION il faut le faire aprÃ¨s avoir changer de fond car il n'ont pas tous le mÃªme niveau de zoom max
 	map.setZoom(parseInt(params[3]));
 	
 	return "OK";
@@ -199,6 +201,33 @@ document.addMarker = function(params){
 
 document.zoom = function(params){
 	map.setZoom(parseInt(params[0]));	
+}
+		
+function addPolygoneByCoor(coor, couleur) {
+	
+	var arrCoor = coor.split(" ");
+	var planCoor = [], posi;
+	for (i in arrCoor) {
+		posi = $.trim(arrCoor[i]);
+		if(posi!=""){
+			posi = posi.split(",");
+			planCoor.push(new google.maps.LatLng(posi[1], posi[0]));			
+		}
+	}
+
+	var planPath = new google.maps.Polygon({
+		    paths: planCoor,
+		    strokeColor: "#FF0000",
+		    strokeOpacity: 0.2,
+		    strokeWeight: 2,
+			fillColor: couleur,
+		    //fillColor: "#FF0000",
+		    fillOpacity: 0.8
+		  });	
+
+	planPath.setMap(map);
+		  
+	return planPath;
 }
 
 
