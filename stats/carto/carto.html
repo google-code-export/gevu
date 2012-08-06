@@ -1,4 +1,4 @@
-﻿<html>
+<html>
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
@@ -12,7 +12,7 @@
 <link type="text/css" rel="stylesheet" href="../css/button.css"/>
 	
 <div>
-<button id='VLO' class='first'>VACANCES LOGEMENTS</button><button id='VGO' class='first'>VACANCES GARAGES</button><button id='VCO' class='first'>VACANCES COMMERCES</button>
+<button id='VLO' class='first'>VACANCES LOGEMENTS</button><button id='VGO' class='first'>VACANCES GARAGES</button><button id='VCO' class='first'>VACANCES COMMERCES</button><button id='VCV' class='first'>VACANCES COMMERCES VACANT</button>
 </div>
 	
 <script type="text/javascript">
@@ -76,15 +76,15 @@ d3.select("#VCO").on("click", function() {
 	d3.select("#VCV").classed("active", false);
 });
 
-/* d3.select("#VCV").on("click", function() {
-	getDataGeo("../data/vacances_commerces.csv","Vacant");
+ d3.select("#VCV").on("click", function() {
+	getDataGeo("../data/vacances_commerces_vacants.csv");
 	d3.select("#VCV").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VLO").classed("active", false);
 	d3.select("#VGO").classed("active", false);
 	d3.select("#VGV").classed("active", false);
 	d3.select("#VCO").classed("active", false);
-}); */
+}); 
 
 var geocoder = new google.maps.Geocoder();
 var map;
@@ -98,7 +98,7 @@ var z;
 function getDataGeo(url, occupation){
 	
 	d3.csv(url, function(json) {
-		//calculer le nombre de vacant et d'occupé total
+		//calculer le nombre de vacant et d'occup� total
 		//et pour chaque antenne
 		var arrO = [], o=0;
 		var arrV = [], v=0;
@@ -116,7 +116,7 @@ function getDataGeo(url, occupation){
 		//ajoute les cercles
 		var z = [];
 		for(var i=0; i < json.length; i++){
-			/*pour une échelle de couleur
+			/*pour une �chelle de couleur
 			var rng = ["#54f708","#f7081c"];
 			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
 			var fctColor = z[json[i].ref];
@@ -231,6 +231,20 @@ function initialize() {
 	};	
 	
 	map = new google.maps.Map(document.getElementById('mapCanvas'),options);
+	
+		d3.json("../data/testcarto.js", function(json) {
+		
+		z = [];
+		for(var i=0; i < json.length; i++){
+			var max = parseInt(json[i].occupe+json[i].vacant);
+			var rng = ["#FAFA00","#00FA08"];
+			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
+			var fctColor = z[json[i].ref]; 
+			var color = fctColor(json[i].vacant);
+			addPolygoneByCoor(coors[json[i].ref], color);
+		}
+		
+	});	
 				
 }
 
@@ -242,7 +256,7 @@ function addCircleByCoor(lat, lng, colorCircle){
 		fillOpacity: 1,
 		fillColor: colorCircle,
 		strokeOpacity: 0,
-		radius: 50,
+		radius: 60,
 		map: map
 		}
 		
@@ -326,7 +340,7 @@ document.addMarker = function(params){
 	//bouge la carte.
 	map.setCenter(latLng);
 	//change le zoom
-	// ATTENTION il faut le faire aprÃ¨s avoir changer de fond car il n'ont pas tous le mÃªme niveau de zoom max
+	// ATTENTION il faut le faire après avoir changer de fond car il n'ont pas tous le même niveau de zoom max
 	map.setZoom(parseInt(params[3]));
 	
 	return "OK";
@@ -356,7 +370,7 @@ function addPolygoneByCoor(coor, couleur) {
 		    strokeWeight: 2,
 			fillColor: couleur,
 		    //fillColor: "#FF0000",
-		    fillOpacity: 0.8
+		    fillOpacity: 0.3
 		  });	
 
 	planPath.setMap(map);
