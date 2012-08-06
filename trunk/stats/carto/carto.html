@@ -27,7 +27,7 @@ var url2 = "../data/vacances_commerces.csv";
 
 
 d3.select("#VLO").on("click", function() {
-	getDataGeo("../data/vacances_logements.csv","Occup");
+	getDataGeo("../data/vacances_logements.csv");
 	d3.select("#VLO").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VGO").classed("active", false);
@@ -47,7 +47,7 @@ d3.select("#VLO").on("click", function() {
 }); */
 	 
 d3.select("#VGO").on("click", function() {
-	getDataGeo("../data/vacances_garages.csv","Occup");
+	getDataGeo("../data/vacances_garages.csv");
 	d3.select("#VGO").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VLO").classed("active", false);
@@ -67,7 +67,7 @@ d3.select("#VGO").on("click", function() {
 }); */
 
 d3.select("#VCO").on("click", function() {
-	getDataGeo("../data/vacances_commerces.csv","Occup");
+	getDataGeo("../data/vacances_commerces.csv");
 	d3.select("#VCO").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VLO").classed("active", false);
@@ -102,14 +102,13 @@ function getDataGeo(url, occupation){
 		//et pour chaque antenne
 		var arrO = [], o=0;
 		var arrV = [], v=0;
-		for(var i=0; i < json.length; i++){
-		
+		for(var i=0; i < json.length; i++){	
 			if(json[i].occupation=="Occup"){
-				if(arrO[json[i].ref])arrO[json[i].ref]=arrO[json[i].ref]+1; else arrO[json[i].ref]=1;
+				if(arrO[json[i].ref]) arrO[json[i].ref]=arrO[json[i].ref]+1; else arrO[json[i].ref]=1;
 				o++;
 			}			                                
 			if(json[i].occupation=="Vacant"){
-				if(arrV[json[i].ref])arrV[json[i].ref]=arrV[json[i].ref]+1; else arrV[json[i].ref]=1;			
+				if(arrV[json[i].ref]) arrV[json[i].ref]=arrV[json[i].ref]+1; else arrV[json[i].ref]=1;			
 				v++;
 			}
 		}
@@ -126,13 +125,16 @@ function getDataGeo(url, occupation){
 		//	addPolygoneByCoor(coors[json[i].ref], color);
 			*/
 			
-		/*	var colorCircle;
+			var colorCircle;
 			if(occupation="Occup") colorCircle = "#F70101";
-			if(occupation="Vacant") colorCircle = "#F70101";
-			addCircleByCoor(json[i].lat, json[i].lng, colorCircle); 
-		} */
-		
-		si vac garages alors couleur bleu ..
+			//if(occupation="Vacant") colorCircle = "#1901F7";
+			addCircleByCoor(json[i].lat, json[i].lng, colorCircle);
+			
+			/*var colorCircle;
+			if("../data/vacances_logements.csv") colorCircle = "#1900F6";
+			if("../data/vacances_garages.csv") colorCircle = "#F40000";
+			if("../data/vacances_commerces.csv") colorCircle = "#00FA11";*/
+		}
 		
 
 		
