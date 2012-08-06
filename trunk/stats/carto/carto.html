@@ -8,7 +8,6 @@
 <script type="text/javascript" src="../js/coors.js"></script>
 <script type="text/javascript" src="../js/legendecarto.js"></script>
 <script type="text/javascript" src="../js/calculer-distance.js"></script>	
-
 <link type="text/css" rel="stylesheet" href="../css/style-carte.css"/>	
 <link type="text/css" rel="stylesheet" href="../css/button.css"/>
 	
@@ -24,10 +23,11 @@ var urlJson2 = "../data/vac-commerces.json";
 
 var url = "../data/vacances_logements.csv";
 var url1 = "../data/vacances_garages.csv";
-var url2 = "../data/vacances_commerces.csv";	
+var url2 = "../data/vacances_commerces.csv";
+
 
 d3.select("#VLO").on("click", function() {
-	getDataGeo("../data/vacances_logements.csv","Occup");
+	getDataGeo("../data/vacances_logements.csv", "Occup");
 	d3.select("#VLO").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VGO").classed("active", false);
@@ -82,7 +82,7 @@ d3.select("#VCV").on("click", function() {
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VLO").classed("active", false);
 	d3.select("#VGO").classed("active", false);
-	d3.select("#VCV").classed("active", false);
+	d3.select("#VGV").classed("active", false);
 	d3.select("#VCO").classed("active", false);
 });
 
@@ -104,11 +104,11 @@ function getDataGeo(url, occupation){
 		var arrV = [], v=0;
 		for(var i=0; i < json.length; i++){
 			if(json[i].occupation=="Occup"){
-				if(arrO[json[i].ref])arrO[json[i].ref]=arrO[json[i].ref]+1; else arrO[json[i].ref]=1;
+				if(arrO[json[i].ref])arrO[json[i].ref]=arrO[json[i].ref]+2; else arrO[json[i].ref]=1;
 				o++;
 			}			                                
 			if(json[i].occupation=="Vacant"){
-				if(arrV[json[i].ref])arrV[json[i].ref]=arrV[json[i].ref]+1; else arrV[json[i].ref]=1;			
+				if(arrV[json[i].ref])arrV[json[i].ref]=arrV[json[i].ref]+2; else arrV[json[i].ref]=1;			
 				v++;
 			}
 		}
@@ -126,16 +126,20 @@ function getDataGeo(url, occupation){
 			*/
 			
 			var colorCircle;
-			if(occupation="Occup") colorCircle = "#43FB00";
-			if(occupation="Vacant") colorCircle = "#f7081c";
+			if(occupation="Occup") colorCircle = "#F70101";
+			if(occupation="Vacant") colorCircle = "#1901F7";
 			addCircleByCoor(json[i].lat, json[i].lng, colorCircle);
 			
 		}
 		
+
+		
 	});	
-	
+
+
 }
 
+		  
 function setGeoParam(params) {
 	var flexApp = parent.document.getElementById('diag');
 	flexApp.modifLieu(params);
@@ -231,7 +235,7 @@ function addCircleByCoor(lat, lng, colorCircle){
 	var p = new google.maps.LatLng (lat, lng);
 	var optionsCircle = { 
 		center: p,
-		fillOpacity: 0.5,
+		fillOpacity: 1,
 		fillColor: colorCircle,
 		strokeOpacity: 0,
 		radius: 50,
