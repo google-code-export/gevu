@@ -28,6 +28,7 @@ class StatController extends Zend_Controller_Action {
 	    	,array("Antenne : logement co-propriétaire", WEB_ROOT_AJAX."/stat/antenne?type=copro")
 	    	,array("Antenne : type de financement", WEB_ROOT_AJAX."/stat/antenne?type=financement")
 	    	,array("Antenne : âge du patrimoine", WEB_ROOT_AJAX."/stat/antenne?type=age")
+	    	,array("Antenne : géolocalisation", WEB_ROOT_AJAX."/stat/antenne?type=geoTypeLog")
 	    	
 	    	);
 	}
@@ -44,6 +45,8 @@ class StatController extends Zend_Controller_Action {
 			if ($this->_getParam('type', 0)){
 				$type = $this->_getParam('type', 0);
 				if($type == "ArbreTypeLog"){
+					$this->view->stats = $s->getArbreTypeLog($this->_getParam('typeLog', 0));
+				}elseif($type == "geoTypeLog"){
 					$this->view->stats = $s->getArbreTypeLog($this->_getParam('typeLog', 0));
 				}else{
 					$this->view->stats = $db->getStatType($type);			
