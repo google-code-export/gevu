@@ -11,7 +11,7 @@
 			<mx:Label text="fonctions" />
 			<mx:TextInput id="F3" width="100%" text="{NodeData.fonctions}" change="editModif('fonctions', F3.text)" />
 		</mx:HBox>
-		<mx:HBox width="100%">
+		<mx:HBox width="100%" visible="false" >
 			<mx:Label text="Type d'objet" />
 			<mx:ComboBox id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez" change="cbType_changeHandler(event)" />				
 		</mx:HBox>
@@ -28,7 +28,6 @@
 		-->
 		<mx:HBox width="100%" >
 			<mx:Button id="saveModif" label="Enregistrer" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
-			<mx:Button id="ajoutDiag" label="Ajouter des diagnostics" click="ajoutDiag_clickHandler(event)"/>			
 		</mx:HBox>
 		
 	</mx:VBox>
@@ -38,8 +37,8 @@
 					 source="Models_DbTable_Gevu_objetsxinterieurs"
 					 fault="faultHandlerService(event, this.title);">
 		<mx:method name="edit" result="method1_resultHandler(event)" />
-		<mx:method name="getTypeControle" result="method2_resultHandler(event)" />
-		<mx:method name="ajoutDiag" result="method3_resultHandler(event)" />
+		<mx:method name="getTypeControle" result="getTypeControle_resultHandler(event)" />
+		<mx:method name="ajoutDiag" result="ajoutDiag_resultHandler(event)" />
 	</mx:RemoteObject>
 	
 	<mx:Script>
@@ -68,15 +67,14 @@
 			protected function cbType_changeHandler(event:ListEvent):void
 			{
 				idTypeCtrl = cbType.selectedItem["id_type_controle"];
-				modifData["id_type_objet"]=idTypeCtrl;
-				isChange = true;
+				modifData["id_type_objet"]=idTypeCtrl;				
+				ro.ajoutDiag(this.parentApplication.idExi, this.parentApplication.idScenar, NodeData.id_lieu, idTypeCtrl, this.parentApplication.idBase);
+				ro.edit(NodeData.id_objet_int, modifData);
+				cbType.enabled = false;
 			}
 			
 			private function init():void{
-				if(NodeData.length<=0)return;
-
 				ro.getTypeControle(this.parentApplication.idScenar, NodeData.id_lieu);
-				
 			}
 
 			public function editModif(nom:String, val:Object) : void {
@@ -93,10 +91,10 @@
 				isChange = false;
 			}
 			
-			protected function method2_resultHandler(event:ResultEvent):void
+			protected function getTypeControle_resultHandler(event:ResultEvent):void
 			{
-				cbType.dataProvider = event.result as Array;
-				if(NodeData.length <= 0)return;
+				cbType.dataProvider = event.result["ctrl"] as Array;
+
 				if(!NodeData.id_type_objet || NodeData.id_type_objet!="0"){
 					for each(var row:Object in cbType.dataProvider){
 						if(row["id_type_controle"]==NodeData.id_type_objet){
@@ -108,19 +106,12 @@
 				}
 				
 			}
-
-			protected function ajoutDiag_clickHandler(event:MouseEvent):void
-			{
-				if(!cbType.selectedItem){
-					Alert.show("Veuillez sélectionner un type d'espace", "Ajout de diagnostics");
-					return;
-				}
-				ro.ajoutDiag(this.parentApplication.idExi, this.parentApplication.idScenar, NodeData.id_lieu, cbType.selectedItem["id_type_controle"])
-			}
 			
-			protected function method3_resultHandler(event:ResultEvent):void
+			protected function ajoutDiag_resultHandler(event:ResultEvent):void
 			{
-				//on vérifie si le parent a déjà un composant diagnostic
+				this.parentApplication.roDiagnostique.getNodeRelatedData(this.parentApplication.idLieu, this.parentApplication.idExi, this.parentApplication.idBase, this.parentApplication.idScenar);
+				
+				/*on vérifie si le parent a déjà un composant diagnostic
 				var td:HBox = this.parentApplication.tabDiag;
 				var df:diagnostics = td.getChildByName("formDiag") as diagnostics;
 				if(df){
@@ -133,7 +124,7 @@
 					df.idTypeCtlParent = cbType.selectedItem["id_type_controle"];
 					td.addChild(df);
 				}
-				
+				*/
 			}
 			
 		]]>

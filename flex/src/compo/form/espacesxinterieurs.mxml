@@ -116,13 +116,13 @@
 			<mx:Label text="fonction" />
 			<mx:TextInput id="F3" width="100%" text="{NodeData.fonction}" change="editModif('fonction', F3.text)" />
 		</mx:HBox>
-		<mx:HBox width="100%" id="lblType" >
+		<mx:HBox width="100%" id="lblType" visible="false" >
 			<mx:Label text="Type d'espace : " />
 			<mx:ComboBox id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez" change="cbType_changeHandler(event)" />				
 		</mx:HBox>
 		<mx:HBox width="100%" >
 			<mx:Button id="saveModif" label="Enregistrer" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
-			<mx:Button id="ajoutDiag" label="Ajouter des diagnostics" click="ajoutDiag_clickHandler(event)"/>			
+			<mx:Button visible="false" id="ajoutDiag" label="Ajouter des diagnostics" click="ajoutDiag_clickHandler(event)"/>			
 		</mx:HBox>
 	</mx:VBox>
 	

@@ -15,10 +15,7 @@ todo :
 	<mx:Style source="styles.css" />	
 	<mx:Script>
 		<![CDATA[
-			
-			
-			
-			
+						
 			
 		]]>
 	</mx:Script>
@@ -42,6 +39,7 @@ todo :
 		<mx:method name="deleteDoc"				result="roDiagnostique.getLieuDocs(idLieu, idBase);" />
 		<mx:method name="getLieuCtl"			result="fillCtlListe(event);" />
 		<mx:method name="ajoutCtlLieu"			result="roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);" />
+		<mx:method name="copiecolleLieu"		result="copiecolle_resultHandler(event)" />
 		
 	</mx:RemoteObject>
 		
@@ -50,7 +48,7 @@ todo :
 			<mx:Image source="@Embed('images/logo.png')" />
 			<mx:VBox horizontalAlign="left" >
 				<mx:Label fontSize="16" text="Saisie des diagnostics"/>		
-				<mx:Label text="V 0.700" />
+				<mx:Label text="V 0.715" />
 			</mx:VBox>
 			<mx:VBox horizontalAlign="left">
 				<mx:Label text="Diagnostic(s) disponible(s) : " />
@@ -87,6 +85,8 @@ todo :
 							<mx:HBox>
 								<mx:LinkButton click="ajouterLieu()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un lieu" />
 								<mx:LinkButton click="deleteLieu()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un lieu" />															
+								<mx:LinkButton click="copierLieu_clickHandler(event)" icon="@Embed('images/copier.jpg')" toolTip="copier un lieu" />															
+								<mx:LinkButton click="collerLieu_clickHandler(event)"  icon="@Embed('images/coller.jpg')" toolTip="coller un lieu" />															
 								<!-- <mx:LinkButton click="synchBase()" icon="@Embed('images/sync.gif')" toolTip="Synchronise deux bases" /> -->															
 							</mx:HBox>
 							<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
@@ -125,7 +125,6 @@ todo :
 												</mx:VBox>
 											</mx:HBox>
 											<mx:VDividedBox width="100%" height="100%" >												
-												<form:interventions id="interv" height="30%" />
 												<mx:HBox width="100%" height="70%" >
 													<mx:VBox id="ctrlDispo" height="100%" >
 														<mx:Label text="Contrôle(s) disponible(s)" />

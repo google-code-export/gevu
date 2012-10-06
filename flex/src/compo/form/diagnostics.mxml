@@ -139,8 +139,19 @@
 				
 				this.numEtape=etape;
 				this.numQuestion=question;
+				
+				//vérifie si le nombre total de question est atteint 
+				if(arrQestion[etape]["nbAll"] == "("+question+")"){
+					//vérifie s'il reste des étapes
+					if(int(lblEtapeTot.text) > int(lblEtapeNum.text)){
+						//on passe à l'étape suivante
+						var num:int = int(lblEtapeNum.text);
+						getQuestion(num,1);						
+					}else return;
+				}
+				
 				//vérifie si l'étape à changée
-				if(lblEtapeNum.text != String(etape+1)){
+				if(int(lblEtapeNum.text) != (etape+1)){
 					//change le numéro de l'étape courante
 					lblEtapeNum.text = String(etape+1);				
 					idTypeControle = arrQestion[etape]["idCtrl"];
@@ -402,6 +413,13 @@
 			}
 			
 			
+			protected function getDiagForLieu_resultHandler(event:ResultEvent):void
+			{
+				NodeData = event.result;
+				gcCrit.refresh();
+				vs.selectedChild = lecture;
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:RemoteObject id="roDiag"
@@ -415,6 +433,7 @@
 		<mx:method name="setChoix" result="roDiagSetChoix_resultHandler(event)" />
 		<mx:method name="setInstant" result="roInstAjout_resultHandler(event)" />
 		<mx:method name="creaChoix" result="roDiagCreaChoix_resultHandler(event)" />
+		<mx:method name="getDiagForLieu" result="getDiagForLieu_resultHandler(event)" />
 	</mx:RemoteObject>
 	<mx:RemoteObject id="roScena"
 					 destination="zend"
@@ -433,7 +452,7 @@
 		
 	<mx:VBox width="100%" height="100%">
 		<mx:HBox verticalAlign="middle">
-			<mx:LinkButton click="{vs.selectedChild = lecture;}" icon="@Embed('images/eye.gif')" height="18" width="18" toolTip="Voir les diagnostics" />			
+			<mx:LinkButton click="{roDiag.getDiagForLieu(idLieu, this.parentApplication.idExi, this.parentApplication.idBase)}" icon="@Embed('images/eye.gif')" height="18" width="18" toolTip="Voir les diagnostics" />			
 			<mx:LinkButton id="btnAjout" click="btnAjout_clickHandler(event)" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un diagnostic" />			
 		</mx:HBox>
 		<mx:ViewStack id="vs" width="100%" height="100%" >			
@@ -443,7 +462,7 @@
 									 itemClick="adgCrit_itemClickHandler(event)"
 									 >
 					<mx:dataProvider>
-						<mx:GroupingCollection id="gcCrit" source="{NodeData.enfants}">
+						<mx:GroupingCollection id="gcCrit" source="{NodeData}">
 							<mx:grouping>
 								<mx:Grouping>
 									<mx:GroupingField name="controle" />
