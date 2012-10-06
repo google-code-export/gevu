@@ -213,7 +213,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 						foreach ($result as $node) {
 			        		$rTC = $this->dbTypCtl->findById_type_controle($node["idCtrl"]);
 	        				$arrLP = $this->dbL->getParentForTypeControle($idLieu, $rTC["zend_obj"], $rTC["id_type_controle"]);				        						
-							if($arrLP){
+							//vérifie si le contrôle est bien dans le bon niveau de lieu
+	        				if($arrLP && $arrLP[0]['niv'] >= $i){
 								//ajoute une condition dans la requête XML
 								$path .= "[@idCtrl=".$node["idCtrl"]."]";
 							}	
