@@ -16,6 +16,101 @@ class GEVU_Diagnostique extends GEVU_Site{
 		
     }
 	
+    
+	/**
+	* copie et colle un lieu
+    * @param int $idLieu
+    * @param string $Obj
+    * @param int $idExi
+    * @param string $idBase
+    * 
+	* @return xml
+    */
+	public function copiecolleLieu($idLieuSrc, $idLieuDst, $idExi, $idBase=false){
+			
+            $this->idExi = $idExi;
+            
+			//initialise les gestionnaires de base de données
+			$this->getDb($idBase);
+        	if(!$this->dbL) $this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+			if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+		
+			//création d'un nouvel instant
+			$c = str_replace("::", "_", __METHOD__); 
+			$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+        	
+        	//création du fil d'ariane
+            $ariane=$this->dbL->getFullChild($idLieuSrc);
+            $nbLieu = count($ariane);
+            $newIdLieu = -1;
+            $newLieu = -1;
+            $arrParent = array();
+	        for ($i = 0; $i < $nbLieu; $i++) {
+            
+	            //récupération des données courantes
+				$lSrc = $ariane[$i];
+	        	$Rowset = $this->dbL->find($lSrc["id_lieu"]);
+				$lieuSrc = $Rowset->current();
+				
+				//création des data du nouveau lieu
+				$dataLieu["lib"] = $lieuSrc["lib"];
+				$dataLieu["id_instant"] = $idInst;
+				$dataLieu["id_type_controle"] = $lieuSrc["id_type_controle"];
+				//vérifie qui est le parent
+				if($i==0){
+					//dans le cas du premier niveau le lieu parent est la destination
+					$dataLieu["lieu_parent"] = $idLieuDst;
+				} elseif ($lSrc["niv"] > $ariane[$i-1]["niv"]){
+					//dans le cas d'un lieu d'un niveau supérieur au précédent lieu le parent est le dernier lieu ajouté
+					$dataLieu["lieu_parent"] = $newIdLieu;
+				} elseif ($lSrc["niv"] < $ariane[$i-1]["niv"]){
+					//dans le cas d'un lieu d'un niveau inférieur au précédent lieu le parent est celui du niveau inférieur
+					$dataLieu["lieu_parent"] = $arrParent[$lSrc["niv"]];
+				}
+				//dans le cas d'un lieu au même niveau que le précédent le lieu parent est le dernier parent calculer
+				//donc on garde la même valeur
+				$arrParent[$lSrc["niv"]] = $dataLieu["lieu_parent"];
+				
+				//création du nouveau lieu
+				if($i==0){
+					$newLieu=$this->dbL->ajouter($dataLieu, false, true);	
+					$newIdLieu = $newLieu["id_lieu"];					
+				}else{
+					$newIdLieu = $this->dbL->ajouter($dataLieu, false);					
+				}
+				
+				//récupération des données lieés
+	            $dt = $this->dbL->getDependentTables();
+	            foreach($dt as $t){
+					$items = $lieuSrc->findDependentRowset($t);
+					if($items->count()){
+						//vérifie si on traite une des tables qu'on ne copie pas
+						// $t!="Models_DbTable_Gevu_diagnostics" && 
+						// && $t!="Models_DbTable_Gevu_lieuxinterventions"
+						// && $t!="Models_DbTable_Gevu_problemes" && 
+		            	if($t!="Models_DbTable_Gevu_stats" && $t!="Models_DbTable_Gevu_observations" && $t!="Models_DbTable_Gevu_docsxlieux"){
+		            	 	$dbT = new $t($this->db);
+		            	 	foreach ($items as $row) {
+		            	 		$d = $row->toArray();
+		            	 		$d["id_lieu"] = $newIdLieu;		            	 		
+		            	 		if(isset($d["id_instant"]))$d["id_instant"] = $idInst;
+		            	 		$k = $dbT->info('primary');
+		            	 		unset($d[$k[1]]);
+		            	 		$dbT->ajouter($d);
+		            	 	}
+		            	}
+	            	}
+				}
+			    
+            }
+
+            $xml = $this->getXmlNode($newLieu["id_lieu"], $idBase);
+			return $xml;	
+            
+	}
+	
+    
+    
 	/**
 	* ajoute un contrôle pour le lieu 
     * @param int $idLieu
@@ -55,12 +150,14 @@ class GEVU_Diagnostique extends GEVU_Site{
     * @param string $idScenar
     * @param string $idBase
     * @param string $forTypeControle
+    * @param string $forTypeInterv
     * 
     * @return Array
     */
-	public function getLieuCtl($idLieu, $idScenar, $idBase=false, $forTypeControle=false){
+	public function getLieuCtl($idLieu, $idScenar, $idBase=false, $forTypeControle=false, $forTypeInterv=false){
 			
 		$this->idScenar = $idScenar;
+		$arrCrit = "";
 		
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
@@ -90,8 +187,13 @@ class GEVU_Diagnostique extends GEVU_Site{
 	        //vérifie si le lieu à le controle
 	        $items = $this->verifIsControle($rTypeCtrl, $rLieu);
 			if($items && $items->count()){
-				//si le lieu à déjà le contrôle on ne peut pas en ajouter
-				return "";
+				//vérifie si on recherche les types d'intervention
+				if($forTypeInterv){
+					//on récupère les types d'intervention
+					return $scene[0]['paramsProd'];
+				}else
+					//si le lieu à déjà le contrôle on ne peut pas en ajouter
+					return "";
 			}
 			//récupère le parent qui possède ce type de controle
 			$arrLieuxParents = $this->dbL->getParentForTypeControle($idLieu, $rTypeCtrl["zend_obj"]);				
@@ -121,10 +223,10 @@ class GEVU_Diagnostique extends GEVU_Site{
 				/*on ajoute un niveau 
 				 *dans le cas d'une liste de type de contrôle possible
 				 *cf. Models_DbTable_Gevu_espacesxinterieurs.getTypeControle
+				*/
 				if($forTypeControle){
 					$path .= $forTypeControle;
 				} 
-				*/
         		$result = $xmlScene->xpath($path);
 				foreach ($result as $node) {
 		        	//vérifie si le lieu à le controle
@@ -142,6 +244,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 							$uid = $node["uid"]."";
 							//Recherche la scène
 							$arrScene = $this->dbScene->findByIdScenarioType($idScenar, $uid, true);
+							//vérifie si on recherche les types d'intervention
+							if($forTypeInterv) return $arrScene[0]['paramsProd'];
 							//vérifie si la scène possède des critères
 							if(count($arrScene)>0 && $arrScene[0]['paramsCrit']){
 					        		$rsCrit = $this->dbC->findByIdTypeControle($idCtrl);	        		
@@ -401,9 +505,12 @@ class GEVU_Diagnostique extends GEVU_Site{
         if(!$r){
 			$this->idExi = $idExi;
 			
-			//initialise les gestionnaires de base de données
-			$this->getDb($idBase);
-        	if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
+	        if(!$this->dbD){
+				$this->getDb($idBase);
+	        	$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
+				//marque les derniers diagnostics car la demande ne vient pas de getnodedata
+	        	$this->dbD->setLastDiagForLieu($idLieu);        	
+	        }
 				        
 	        //récupère les campagnes pour le lieu
 	        $r = $this->dbD->getCampagnes($idLieu);
@@ -513,7 +620,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 			$this->getDb($idBase);
         	if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
 			
-        	$r = $this->dbL->findById_lieu($idLieu);
+        	//$r = $this->dbL->findById_lieu($idLieu);
         	$xml = $this->getXmlEnfant($idLieu, $nivMax);
 	    	$this->cache->save($xml, $c);
         }
@@ -542,8 +649,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		foreach ($r as $v){
         	$xml .= $this->getXmlLieu($v);
         	//vérifie s'il faut afficher les enfants
-        	//on continue d'afficher les enfants
-        	/*
+        	/*on continue d'afficher les enfants
         	if($v['nbDiag']>0){
 				$xml = "";
         		break;        		
@@ -652,9 +758,11 @@ class GEVU_Diagnostique extends GEVU_Site{
      * @param int $idLieu
      * @param int $idExi
      * @param string $idBase
+     * @param int $idScenar
+     * 
      * @return array
      */
-    public function getNodeRelatedData($idLieu, $idExi, $idBase=false){
+    public function getNodeRelatedData($idLieu, $idExi, $idBase=false, $idScenar=false){
     
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idExi."_".$idBase; 
 	   	$res = $this->cache->load($c);
@@ -665,8 +773,9 @@ class GEVU_Diagnostique extends GEVU_Site{
             
 			//initialise les gestionnaires de base de données
 			$this->getDb($idBase);
-        	if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
-                    	
+        	if(!$this->dbL) $this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+	        if(!$this->dbD) $this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
+        	
         	//création du fil d'ariane
             $res['ariane']=$this->dbL->getFullPath($idLieu);
 	        
@@ -684,7 +793,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 	            		//récupère les informations seulement si ce n'est pas déjà fait
 	            		// car une même requête renvoie les informations des 3 tables
 	            		if(!isset($res["___diagnostics"])){
-				        	$res["___diagnostics"] = $this->getDiagForLieu($idLieu, $idExi, $idBase);			
+				        	$res["___diagnostics"]["self"] = $this->getDiagForLieu($idLieu, $idExi, $idBase);			
 	            		}
 	            	}elseif($t=="Models_DbTable_Gevu_docsxlieux"){
 						$dbT = new $t($this->db);
@@ -698,24 +807,89 @@ class GEVU_Diagnostique extends GEVU_Site{
 	            	}
             	}
 			}
+			
 			//vérifie si les enfants ont des diagnostics
-			$rs = $this->dbL->findByLieu_parent($idLieu);
-			foreach ($rs as $r){
-				if($r['nbDiag']>0){
-					//récupère les informations de l'enfant
-					$resEnf = $this->getDiagForLieu($r['id_lieu'], $idExi, $idBase);
-					if(count($res["___diagnostics"]["enfants"])== 0)$res["___diagnostics"]["enfants"]=$resEnf;
-					else $res["___diagnostics"]["enfants"] = array_merge($res["___diagnostics"]["enfants"], $resEnf);			
-				}
-			}
+			/*plus besoin
+			$rs = $this->getDiagForLieuEnfants($idLieu, $idExi, $idBase);
+			$res["___diagnostics"]["enfants"] = $rs["enfants"];			
+			*/
+			
 			//ajoute le dernier diagnostic pour le lieu
 	        $res["___diagnostics"]['diag'] = $this->calculDiagForLieu($idLieu,-1,$idBase);
 			
+	        if($idScenar){
+		        //ajoute les interventions
+		        $res["___interventions"] = $this->getTypeInterv($idScenar, $idLieu, $idBase);	
+	        }
+	        	        
             $this->cache->save($res, $c);
         }
         return $res;
     }
 
+	/**
+	* renvoie le diagnostic des enfants d'un lieu
+    * @param string $idLieu
+    * @param int $idExi
+    * @param string $idBase
+    * @return Array
+    */
+	public function getDiagForLieuEnfants($idLieu, $idExi, $idBase=false){
+    
+        if(!$this->dbL){
+			$this->getDb($idBase);
+        	$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+			//marque les derniers diagnostics car la demande ne vient pas de getnodedata
+        	$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
+        	$this->dbD->setLastDiagForLieu($idLieu);        	
+        }
+		        
+		//vérifie si les enfants ont des diagnostics
+		$rs = $this->dbL->findByLieu_parent($idLieu);
+		$res = array();
+		foreach ($rs as $r){
+			if($r['nbDiag']>0){
+				//récupère les informations de l'enfant
+				$resEnf = $this->getDiagForLieu($r['id_lieu'], $idExi, $idBase);
+				if(count($res["enfants"])== 0)$res["enfants"]=$resEnf;
+				else $res["enfants"] = array_merge($res["enfants"], $resEnf);			
+			}
+		}
+		
+		return $res;
+	}
+    
+    
+    
+    /**
+     * Recherche les type d'intervention autorisés pour ce lieu
+     * et retourne ces entrées.
+     *
+     * @param int $idScenar
+     * @param int $idLieu
+     * @param int $idBase
+     * 
+     */
+    public function getTypeInterv($idScenar, $idLieu, $idBase)
+    {
+    	//récupère la liste des produits du scénario en cours pour le lieu en cours
+    	$json = $this->getLieuCtl($idLieu, $idScenar, false, false, true);
+    	if($json){
+    		$arr = json_decode($json);
+    		$ids = "";
+    		foreach ($arr as $p) {
+    			$ids .= $p->id_produit.", ";
+    		}
+    		$ids .= "-1";
+        	if(!$this->dbInt)$this->dbInt = new Models_DbTable_Gevu_interventions($this->db);
+    		return $this->dbInt->findByIdsProduit($ids);     	
+    	}else{
+    		//il n'y a pas de produit pour le scénario
+	        return "no_product";
+    	} 
+    }
+        
+    
     /**
      * Récupération d'un scenario complet
      *
@@ -792,11 +966,13 @@ class GEVU_Diagnostique extends GEVU_Site{
         $oTypeControle = -1;
         $idDiags = array();
        	foreach ($params as $p) {
+       		/*plus besoin car le lieu = le type de controle
        		if($oTypeControle != $p['id_type_controle']){
 	       		//récupère le lieu enfant correspondant au type de controle
 	       		$idLieuControle = $this->dbL->getEnfantForTypeControle($idLieu, $p['id_type_controle'], $idInst);
 	       		$oTypeControle = $p['id_type_controle'];       			
-       		}
+       		}*/
+       		$idLieuControle = $idLieu;
        		if(!$p['id_diag']){
 	       		//ajoute le diagnostique
 	       		$idDiags[] = $this->dbD->ajouter(array('id_critere'=>$p['id_critere'],'id_reponse'=>$p['id_reponse'],'id_instant'=>$idInst,'id_lieu'=>$idLieuControle),false);
@@ -833,7 +1009,11 @@ class GEVU_Diagnostique extends GEVU_Site{
         $idInst = $this->dbI->ajouter(array('id_exi'=>$idExi,'commentaires'=>$comment,'nom'=>'setChoix'),false,$idBase);
  		       
 		//récupère le lieu enfant correspondant au type de controle
+		/*plus besoin car le lieu correspond au type de controle
 	    $idLieuControle = $this->dbL->getEnfantForTypeControle($idLieu, $p['id_type_controle'], $idInst);
+	    */
+        $idLieuControle = $idLieu;
+        
    		//ajoute le diagnostique
 	    $idDiag = $this->dbD->ajouter(array('id_critere'=>$p['id_critere'],'id_reponse'=>$p['id_reponse'],'id_instant'=>$idInst,'id_lieu'=>$idLieuControle),false);
         return array("idInst"=>$idInst,"idDiag"=>$idDiag);

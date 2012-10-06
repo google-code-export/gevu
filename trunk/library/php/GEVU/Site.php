@@ -16,6 +16,7 @@ class GEVU_Site{
     var $dbG;
     var $dbGrp;
     var $dbI;
+    var $dbInt;
     var $dbL;
     var $dbLieu;
     var $dbLDoc;
