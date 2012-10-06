@@ -280,5 +280,31 @@ class Models_DbTable_Gevu_interventions extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }    
+
+    /**
+     * Recherche une entrée Gevu_interventions avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param string $ids
+     *
+     * @return array
+     */
+    public function findByIdsProduit($ids)
+    {
+        $query = $this->select()
+			->from( array("i" => "gevu_interventions"),array("id_interv", frequence, cout, 'lib'=>"CONCAT(description,' : ',mc.titre,' ',cout,' € par ',mc1.titre, ' tout les ',frequence, ' an(s)') AS lib") )                           
+			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->joinInner(array('mc' => 'gevu_motsclefs'),
+                'mc.id_motclef = i.interv',array("libInterv"=>'titre'))
+            ->joinInner(array('mc1' => 'gevu_motsclefs'),
+                'mc1.id_motclef = i.unite',array("libUnite"=>'titre'))
+            ->joinInner(array('p' => 'gevu_produits'),
+                'p.id_produit = i.id_produit',array("description"))
+            ->order(array("description", "mc.titre"));
+        $query->where( "i.id_produit IN (".$ids.")");
+
+        return $this->fetchAll($query)->toArray(); 
+    }
+    
     
 }

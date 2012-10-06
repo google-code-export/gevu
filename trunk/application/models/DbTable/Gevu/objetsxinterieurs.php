@@ -325,7 +325,7 @@ class Models_DbTable_Gevu_objetsxinterieurs extends Zend_Db_Table_Abstract
     public function getTypeControle($idScenar, $idLieu)
     {
     	$diag = new GEVU_Diagnostique();
-    	$arrCtl = $diag->getLieuCtl($idLieu, $idScenar, false, "/node");
+    	$arrCtl = $diag->getLieuCtl($idLieu, $idScenar, false, "[@idCtrl='58']/node");
         return $arrCtl; 
     }
     
@@ -337,18 +337,22 @@ class Models_DbTable_Gevu_objetsxinterieurs extends Zend_Db_Table_Abstract
      * @param int $idScenar
      * @param int $idLieu
      * @param int $idTypeCtrl
+     * @param string $idBase
      * 
      */
-    public function ajoutDiag($idExi, $idScenar, $idLieu, $idTypeCtrl)
+    public function ajoutDiag($idExi, $idScenar, $idLieu, $idTypeCtrl, $idBase=false)
     {
-    	$diag = new GEVU_Diagnostique();
-    	//récupère la liste des contrôles à effectuer
+    	$diag = new GEVU_Diagnostique($idBase);
+		$dbL = new Models_DbTable_Gevu_lieux($diag->db);
+    	
+		//récupère la liste des contrôles à effectuer
     	$arrCtl = $diag->getLieuCtl($idLieu, $idScenar, false, "/node[@idCtrl='".$idTypeCtrl."']/node");
     	$arrResult = array();
-    	foreach ($arrCtl as $ctl) {
+    	foreach ($arrCtl['ctrl'] as $ctl) {
     		//création d'un lieu pour chaque type de controles
     		//ou récupération du lieu existant : $existe = true 
-			$idNewLieu = $diag->ajoutLieu($idLieu, $idExi, false, $ctl["lib"],true,false);			    		
+			$idNewLieu = $diag->ajoutLieu($idLieu, $idExi, $idBase, $ctl["lib"],false, false);
+			$dbL->edit($idNewLieu, array("id_type_controle"=>$ctl["id_type_controle"]));
     	}
     	
 		//récupère le diagnostic du lieu

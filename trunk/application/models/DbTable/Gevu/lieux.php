@@ -411,9 +411,9 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
-            ->from(array('node' => 'gevu_lieux'))
+            ->from(array('node' => 'gevu_lieux'),array('libO'=>'lib', 'id_lieu0'=>'id_lieu'))
             ->joinInner(array('enfants' => 'gevu_lieux'),
-                'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu'))
+                'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu', 'lieu_parent', 'niv', 'id_type_controle'))
             ->where( "node.id_lieu = ?", $idLieu)
            	->order("enfants.".$order);        
                 $result = $this->fetchAll($query);

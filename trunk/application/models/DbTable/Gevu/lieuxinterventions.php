@@ -232,24 +232,4 @@ class Models_DbTable_Gevu_lieuxinterventions extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
-    /**
-     * Recherche les type d'intervention autorisés pour ce lieu
-     * et retourne ces entrées.
-     *
-     * @param int $idScenar
-     * @param int $idLieu
-     * 
-     */
-    public function getTypeInterv($idScenar, $idLieu)
-    {
-    	/*
-    	$diag = new GEVU_Diagnostique();
-    	$arrCtl = $diag->getLieuCtl($idLieu, $idScenar, false, "/node");
-        return $arrCtl; 
-    	*/
-    	$dbInt = new Models_DbTable_Gevu_interventions();
-        
-        return $dbInt->findLienByIds();     	
-    }
-    
 }
