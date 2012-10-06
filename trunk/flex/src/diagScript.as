@@ -57,7 +57,9 @@ import mx.rpc.events.ResultEvent;
 
 private var TreeObject:XML;
 private var xmlTree:XML
-public var idLieu:int;
+public var idLieu:int=-1;
+public var idLieuCopie:int=-1;
+public var idLieuColle:int=-1;
 private var libLieu:String;
 public var idBase:String;
 public var idScenar:String;
@@ -87,6 +89,7 @@ private var o19:compo.form.groupes;
 private var o20:compo.form.logements;
 private var o21:compo.form.partiescommunes;
 private var o22:compo.form.locaux;
+private var o23:compo.form.interventions;
 
 public function login():void
 {
@@ -361,7 +364,7 @@ private function treeItemClicked(event:ListEvent) : void {
 	idLieu = event.currentTarget.selectedItem.attribute("idLieu");
 	libLieu = event.currentTarget.selectedItem.attribute("lib");
 	if(libLieu=="univers")return;
-	if(idLieu>0) roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);
+	if(idLieu>0) roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase, idScenar);
 	
 	//map.showNode(idLieu);
 }
@@ -396,12 +399,12 @@ private function displayNodeProperties(event:ResultEvent) : void {
 			place = -1;
 			switch (arr[3]) {
 				case "diagnostics":
-					if(obj[item].enfants){
+					if(obj[item].self){
 						//récupère le type de contrôle
 						typeCtrlParent = getTypeControle(obj);
 						place = 2;
 						instance.name = "formDiag";
-						instance.NodeData = obj[item];
+						instance.NodeData = obj[item].self;
 						instance.idLieu = this.idLieu;
 						instance.idTypeCtlParent = typeCtrlParent;
 						aDiag = true;
@@ -446,6 +449,14 @@ private function displayNodeProperties(event:ResultEvent) : void {
 					instance.NodeData = obj[item][0];
 					rowHaut.addChild(DisplayObject(instance));				
 					break;
+				case "interventions":
+					place = -1;
+					if(obj[item]!="no_product"){
+						instance.produitsData = obj[item];
+						instance.idLieu = idLieu;
+						place = 1;
+					}
+					break;
 				default:
 					place = 1;
 					instance.NodeData = obj[item][0];
@@ -474,12 +485,13 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		roDiagnostique.getLieuCtl(idLieu, idScenar, idBase);
 	}
 	*/
+	
 	//ajoute les controles disponibles
 	roDiagnostique.getLieuCtl(idLieu, idScenar, idBase);
 	
 	//ajoute les documents
 	docs.initDoc(docsxlieux);
-	interv.init(idLieu);
+		
 	imgLieux.source = "";
 	boxDiag.visible = true;
 }
@@ -502,15 +514,19 @@ public function ajouterLieu():void{
 
 protected function lieuxAjout_resultHandler(event:ResultEvent):void
 {
+	treeNewLieu(XML(event.result));
+}
+
+private function treeNewLieu(node:XML):void {
 	arrSelect = new Array;
 	var x:XML = <root></root>;
-	var node:XML = XML(event.result);
 	x.appendChild(node);
 	var objTree:XMLList = treeTree.dataProvider[0].descendants().(@idLieu == this.idLieu);
 	objTree[0].appendChild(x.node);
 	//ouvre le noeud parent
-	treeTree.expandItem(objTree[0],true);
+	treeTree.expandItem(objTree[0],true);	
 }
+
 
 private function deleteLieu():void {
 	
@@ -534,7 +550,6 @@ private function deleteLieuClickHandler(event:CloseEvent):void
 	}
 }
 
-
 public function modifLieu(params:String):void{
 	var objParams:Object = JSON.decode(params);
 	geo.F01.text = objParams[0].adresse;
@@ -547,6 +562,32 @@ public function modifLieu(params:String):void{
 	//geo.F04.value = Number(objParams[0].zoom);
 	geo.F05.value = Number(objParams[0].zoom);
 	geo.setMapType(objParams[0].mapType);
+}
+
+protected function copierLieu_clickHandler(event:MouseEvent):void
+{
+	idLieuCopie = idLieu;
+	
+}
+
+protected function collerLieu_clickHandler(event:MouseEvent):void
+{
+	if(idLieu == idLieuCopie){
+		Alert.show("La destination et le source ne peuvent pas être le même lieu.\nVeuillez sélectionner un autre lieu.","Copier-coller un lieu");
+		return;
+	}
+	idLieuColle = idLieu;
+	roDiagnostique.copiecolleLieu(idLieuCopie, idLieu, idExi, idBase);	
+}
+
+protected function copiecolle_resultHandler(event:ResultEvent):void
+{
+	//ajoute les nouveau noeuds
+	var node:XML = XML(event.result);
+	treeNewLieu(node);
+	//roDiagnostique.getXmlNode(node.attribute("idLieu"),idBase);
+	Alert.show("Le lieu a bien été copié-collé.","Copier-coller un lieu");
+	
 }
 
 protected function getDocs_resultHandler(event:ResultEvent):void

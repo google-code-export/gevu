@@ -3,6 +3,7 @@
 		   xmlns:compo="compo.*"
 		   title="Interventions"
 		   width="100%" height="100%" minHeight="140"
+		    creationComplete="creationCompleteHandler(event)"
 		   >
 	
 	<mx:Script>
@@ -16,6 +17,7 @@
 			import mx.rpc.events.ResultEvent;
 			
 			[Bindable] public var NodeData : Object;
+			[Bindable] public var produitsData : Object;
 			[Bindable] public var itemSelect:Object; 
 			[Bindable] public var idLieu:int; 
 			[Bindable] public var idBase:String; 
@@ -76,22 +78,7 @@
 			
 			private function selectItem(event:Event):void {
 				itemSelect=event.currentTarget.selectedItem;
-			}			
-						
-			public function init(id:int):void
-			{
-				idLieu = id;
-				if(idLieu){
-					ro.findByIdLieu(idLieu);
-				}
-			}
-			
-			
-			protected function getTypeInterv_resultHandler(event:ResultEvent):void
-			{
-				cbType.dataProvider = event.result as Array;
-			}
-			
+			}														
 			
 			protected function dataGrid_itemEditEndHandler(event:DataGridEvent):void
 			{
@@ -110,6 +97,14 @@
 				
 			}
 			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if(idLieu){
+					ro.findByIdLieu(idLieu);
+				}
+				
+			}
+			
 		]]>
 	</mx:Script>
 	
@@ -123,7 +118,6 @@
 		<mx:method name="edit" />
 		<mx:method name="ajouter" result="{ro.findByIdLieu(idLieu)}" />
 		<mx:method name="remove" result="{ro.findByIdLieu(idLieu)}"  />
-		<mx:method name="getTypeInterv" result="getTypeInterv_resultHandler(event)" />
 		
 	</mx:RemoteObject>
 		
@@ -152,7 +146,7 @@
 			<mx:Label text="Saisissez votre intervention :"/> 
 			<mx:Form width="100%" height="100%" id="insertForm">			                    		
 				<mx:FormItem label="type d'intervention : " >
-					<mx:ComboBox creationComplete="{ro.getTypeInterv(this.parentApplication.idScenar, idLieu);}" id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez" />				
+					<mx:ComboBox id="cbType" dataProvider="{produitsData}" width="100%" height="100%" labelField="lib" prompt="Choisissez" />				
 				</mx:FormItem>
 				<mx:FormItem label="quantité : " >
 					<mx:NumericStepper id="quantite" stepSize="1" width="100%" maximum="1000000"  />
