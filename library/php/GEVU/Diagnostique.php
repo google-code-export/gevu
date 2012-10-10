@@ -210,15 +210,22 @@ class GEVU_Diagnostique extends GEVU_Site{
 					//car une type de contrôle peut être plusieurs fois dans un scénario
 					if($i+1 < $niv){
 		        		$result = $xmlScene->xpath($path);
+		        		$nivO = 1000000000;
+		        		$pathInt = "";
 						foreach ($result as $node) {
 			        		$rTC = $this->dbTypCtl->findById_type_controle($node["idCtrl"]);
 	        				$arrLP = $this->dbL->getParentForTypeControle($idLieu, $rTC["zend_obj"], $rTC["id_type_controle"]);				        						
 							//vérifie si le contrôle est bien dans le bon niveau de lieu
-	        				if($arrLP && $arrLP[0]['niv'] >= $i){
+	        				if($arrLP && $arrLP[0]['niv'] >= $i && $arrLP[0]['niv'] < $nivO){
 								//ajoute une condition dans la requête XML
-								$path .= "[@idCtrl=".$node["idCtrl"]."]";
+								$pathInt = "[@idCtrl=".$node["idCtrl"]."]";
+								//enregistre le niveau pour prendre en compte que le niveau le plus haut
+								$nivO = $arrLP[0]['niv'];
 							}	
 						}
+						//ajoute une condition dans la requête XML
+						$path .= $pathInt;
+						
 					}						
 				}
 				/*on ajoute un niveau 
