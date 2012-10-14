@@ -269,6 +269,8 @@
 						getQuestion(this.numEtape, cd.next);
 					}else if(cd.valeur=="2_"+val){
 						getQuestion(this.numEtape, cd.next);
+					}else{
+						getQuestion(this.numEtape, cd.fin);						
 					}
 				}					
 				
