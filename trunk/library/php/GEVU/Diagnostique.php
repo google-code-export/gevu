@@ -114,12 +114,12 @@ class GEVU_Diagnostique extends GEVU_Site{
 	/**
 	* ajoute un contrôle pour le lieu 
     * @param int $idLieu
-    * @param string $Obj
+    * @param array $Obj
     * @param int $idExi
     * @param string $idBase
     * 
     */
-	public function ajoutCtlLieu($idLieu, $Obj, $idExi, $idBase=false, $data=false){
+	public function ajoutCtlLieu($idLieu, $Obj, $idExi, $idBase=false){
 			
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
@@ -127,21 +127,26 @@ class GEVU_Diagnostique extends GEVU_Site{
 		
 		//création d'un nouvel instant
 		$c = str_replace("::", "_", __METHOD__); 
-		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
 		
 		//création de l'objet passé en paramètre
-		if($Obj!=""){
-			$db = new $Obj($this->db);
+		if($Obj["zend_obj"]!=""){
+			$data = array();
+			$o = $Obj["zend_obj"];
+			$db = new $o($this->db);
+			if($Obj["zend_obj"]=="Models_DbTable_Gevu_espacesxinterieurs"){
+				$data["id_type_specifique_int"]= $Obj["id_type_controle"];
+				$data["fonction"]= $Obj["lib"];
+			}		
 			//initialisation des données
 			$data["id_instant"]=$idInst;
 			$data["id_lieu"]=$idLieu;
 			//ajout du nouveau contrôle
 			$db->ajouter($data, false);
-		}else{
-			//met à jour le lieu avec le type de controle
-			$dbL = new Models_DbTable_Gevu_lieux($this->db);
-			$dbL->edit($idLieu, $data);
-		}			
+		}
+		//met à jour le lieu avec le type de controle
+		$dbL = new Models_DbTable_Gevu_lieux($this->db);
+		$dbL->edit($idLieu, array("id_type_controle"=>$Obj["id_type_controle"], "lib"=>$Obj["lib"]));
 	}
 	
     /**
