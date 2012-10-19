@@ -502,7 +502,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 			$dbObj = new $objTypeControle;
 			$info = $dbObj->info();
             $query->joinInner(array('t' => $info["name"]),'t.id_lieu = parent.id_lieu');
-    	}else{
+    	}
+    	if($idTypeControle && $idTypeControle!=-1){
             $query->where( "parent.id_type_controle = ?", $idTypeControle);        	
     	}
         $result = $this->fetchAll($query);

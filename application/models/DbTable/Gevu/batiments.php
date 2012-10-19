@@ -46,7 +46,8 @@ class Models_DbTable_Gevu_batiments extends Zend_Db_Table_Abstract
 		$select = $this->select();
 		$select->from($this, array('id_batiment'));
 		foreach($data as $k=>$v){
-			$select->where($k.' = ?', $v);
+			if($k != "maj" && $v)
+				$select->where($k.' = ?', $v);
 		}
 	    $rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_batiment; else $id=false;

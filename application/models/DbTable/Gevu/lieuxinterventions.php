@@ -63,10 +63,10 @@ class Models_DbTable_Gevu_lieuxinterventions extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouter($data, $idExi)
+    public function ajouter($data, $idExi=false)
     {    	
 		if(!isset($data['fait']))$data['fait']= new Zend_Db_Expr('NOW()');
-		if(!isset($data['id_instant'])){
+		if(!isset($data['id_instant']) && $idExi){
 			$dbInst = new Models_DbTable_Gevu_instants();
 			$c = str_replace("::", "_", __METHOD__); 
 			$idInstant = $dbInst->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
