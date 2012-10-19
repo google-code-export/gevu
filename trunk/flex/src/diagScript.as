@@ -218,21 +218,9 @@ private function fillCtlListe(e:Object):void
 protected function hbCtl_clickHandler(dt:Object):void
 {
 	//vérifie s'il faut ajouter des données supplémentaires
-	var arr:Array = new Array();
-	if(dt["zend_obj"]=="Models_DbTable_Gevu_espaces"){
-		arr["id_type_controle"]= dt["id_type_controle"];
-	}
-	if(dt["zend_obj"]=="Models_DbTable_Gevu_espacesxinterieurs"){
-		arr["id_type_specifique_int"]= dt["id_type_controle"];
-		arr["fonction"]= dt["lib"];
-	}
-	if(!dt["zend_obj"] || dt["zend_obj"]==""){
-		arr["id_type_controle"]= dt["id_type_controle"];
-		arr["lib"]= dt["lib"];
-		treeTree.selectedItem.@lib = dt["lib"];
-	}
+	treeTree.selectedItem.@lib = dt["lib"];
 	//ajoute un nouveau contrôle au lieu
-	roDiagnostique.ajoutCtlLieu(idLieu, dt["zend_obj"], idExi, idBase, arr);
+	roDiagnostique.ajoutCtlLieu(idLieu, dt, idExi, idBase);
 }
 
 
