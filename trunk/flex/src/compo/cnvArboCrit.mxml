@@ -255,7 +255,9 @@
 			private function getCritText(idCrit:String):String
 			{
 				for each (var cri:Object in this.arrCrit){
-					if(cri.id_critere==idCrit)return cri.criteres;
+					if(cri.id_critere==idCrit){
+						return cri.criteres;
+					}
 				}
 				return "";				
 			}			
