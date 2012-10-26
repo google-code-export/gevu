@@ -55,9 +55,9 @@
 	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend" showBusyCursor="true"
-					 source="Models_DbTable_Gevu_geos"
+					 source="GEVU_Diagnostique"
 					 fault="faultHandlerService(event, 'Geos');">
-		<mx:method name="edit" result="edit_resultHandler(event)" />
+		<mx:method name="editGeo" result="edit_resultHandler(event)" />
 	</mx:RemoteObject>
 	
 	<mx:Script>
@@ -105,7 +105,7 @@
 				arr["kml"]=F06.text;
 				arr["type_carte"]=cbTypeCarte.selectedItem["data"];
 				
-				roModifBase.edit(NodeData.id_geo, arr);
+				roModifBase.editGeo(NodeData.id_geo, arr, this.parentApplication.idBase);
 			}			
 	
 			protected function edit_resultHandler(event:ResultEvent):void
