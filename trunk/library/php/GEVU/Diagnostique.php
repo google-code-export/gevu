@@ -166,10 +166,10 @@ class GEVU_Diagnostique extends GEVU_Site{
 		
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
-        if(!$this->dbScena)$this->dbScena = new Models_DbTable_Gevu_scenario($this->db);
-        if(!$this->dbScene)$this->dbScene = new Models_DbTable_Gevu_scenes($this->db);
-        if(!$this->dbTypCtl)$this->dbTypCtl = new Models_DbTable_Gevu_typesxcontroles($this->db);
-        if(!$this->dbC)$this->dbC = new Models_DbTable_Gevu_criteres($this->db);
+        if(!$this->dbScena)$this->dbScena = new Models_DbTable_Gevu_scenario();
+        if(!$this->dbScene)$this->dbScene = new Models_DbTable_Gevu_scenes();
+        if(!$this->dbTypCtl)$this->dbTypCtl = new Models_DbTable_Gevu_typesxcontroles();
+        if(!$this->dbC)$this->dbC = new Models_DbTable_Gevu_criteres();
         if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
         
         //récupère les paramètres du scénario
@@ -918,9 +918,9 @@ class GEVU_Diagnostique extends GEVU_Site{
         if(!$rs){           
 
 			//initialise les gestionnaires de base de données
-        	if(!$this->dbScena)$this->dbScena = new Models_DbTable_Gevu_scenario($this->db);
-        	if(!$this->dbScene)$this->dbScene = new Models_DbTable_Gevu_scenes($this->db);
-        	if(!$this->dbC)$this->dbC = new Models_DbTable_Gevu_criteres($this->db);
+        	if(!$this->dbScena)$this->dbScena = new Models_DbTable_Gevu_scenario();
+        	if(!$this->dbScene)$this->dbScene = new Models_DbTable_Gevu_scenes();
+        	if(!$this->dbC)$this->dbC = new Models_DbTable_Gevu_criteres();
 
 	    	//récupère la liste des contrôles à effectuer
 	    	$arrCtl = $this->getLieuCtl($idLieu, $idScenario, false, "/node[@idCtrl='".$idTypeCtrl."']/node");
@@ -1070,6 +1070,24 @@ class GEVU_Diagnostique extends GEVU_Site{
         return $this->dbL->edit($idLieu, $data);
     }
 
+    /**
+     * Enregistre la modification d'une géographie
+     *
+     * @param int $idGeo
+     * @param array $data
+     * @param string $idBase
+     * 
+     * @return integer
+     */
+    public function editGeo($idGeo, $data, $idBase){
+		
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_geos($this->db);
+    	    	
+        return $this->dbL->edit($idGeo, $data);
+    }
+    
     /**
      * Ajoute un lieu 
      *
