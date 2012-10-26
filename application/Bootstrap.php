@@ -16,7 +16,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 						
 	    return $moduleLoader;
 	}
-	//merci à http://jameshd.wordpress.com/2010/09/27/zend-multi-db/
+	/*merci à http://jameshd.wordpress.com/2010/09/27/zend-multi-db/
 	protected function _initDbAdaptersToRegistry()
 	{
 		$this->bootstrap('multidb');
@@ -29,7 +29,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		Zend_Registry::set('gevu',$Adapter2);
 		
 	}
-
+	*/
 	
 }
 
