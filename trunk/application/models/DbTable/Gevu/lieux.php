@@ -53,6 +53,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
        ,"Models_DbTable_Gevu_partiescommunes"
        ,"Models_DbTable_Gevu_stats"
        ,"Models_DbTable_Gevu_lieuxinterventions"
+       ,"Models_DbTable_Gevu_chainesdeplacements"
+       ,"Models_DbTable_Gevu_lieuxchainedeplacements"
        );
            
     /**
