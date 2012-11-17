@@ -139,8 +139,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
      */
     public function removeByScenarioType($id_scenario, $type)
     {
-        $this->delete('gevu_scenes.id_scenario = '.$id_scenario.' AND gevu_scenes.type = "'.$type.'"');
-        return -1;
+        return $this->delete('gevu_scenes.id_scenario = '.$id_scenario.' AND gevu_scenes.type = "'.$type.'"');
     }
     
     /**
@@ -257,6 +256,35 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-  
+
+	/**
+	* vérifie si les noeuds d'un scénario existe ou sont en trop
+	*  
+    * @param int $idScene
+    * 
+    */
+	function verifIsNodeExiste($idScene){
+
+		//récupère la scène de départ du scénario
+        $scene = $this->findByIdScene($idScene);
+        $params = json_decode($scene[0]['paramsCtrl']);
+		$xmlScene = simplexml_load_string($params[0]->idCritSE);
+			
+		$arrScene = $this->findById_scenario($scene[0]['id_scenario']);
+		foreach ($arrScene as $sc) {
+			if($idScene != $sc['id_scene']){
+				//vérifie si le noeud est dans l'arbre
+				$arr = explode("_",$sc["type"]);
+		        $result = $xmlScene->xpath("//node[@uid='".$arr[2]."']");
+		        if(count($result)>0){
+		        	$toto = true;
+		        }else{
+					$this->removeByScenarioType(13, $sc["type"]);				
+		        	$toto = false;
+		        }
+			}
+		}
+	}
+    
     
 }

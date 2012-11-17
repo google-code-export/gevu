@@ -60,11 +60,17 @@ class Models_DbTable_Gevu_lieuxinterventions extends Zend_Db_Table_Abstract
      *
      * @param array $data
      * @param int $idExi
+	 * @param string $idBase
      *  
      * @return integer
      */
-    public function ajouter($data, $idExi=false)
-    {    	
+    public function ajouter($data, $idExi=false, $idBase=false)
+    { 
+    	if(!$idBase){
+    		$s = new GEVU_Site($idBase);
+    		$this->_db = $s->db;
+    	}
+    	
 		if(!isset($data['fait']))$data['fait']= new Zend_Db_Expr('NOW()');
 		if(!isset($data['id_instant']) && $idExi){
 			$dbInst = new Models_DbTable_Gevu_instants();
@@ -83,11 +89,16 @@ class Models_DbTable_Gevu_lieuxinterventions extends Zend_Db_Table_Abstract
      *
      * @param integer $id
      * @param array $data
+	 * @param string $idBase
      *
      * @return void
      */
-    public function edit($id, $data)
-    {        
+    public function edit($id, $data, $idBase=false)
+    {
+    	if($idBase){
+    		$s = new GEVU_Site($idBase);
+    		$this->_db = $s->db;
+    	}
    	
     	$this->update($data, 'gevu_lieuxinterventions.id_lieuinterv = ' . $id);
     }
@@ -97,11 +108,16 @@ class Models_DbTable_Gevu_lieuxinterventions extends Zend_Db_Table_Abstract
      * et supprime cette entrée.
      *
      * @param integer $id
-     *
+	 * @param string $idBase
      * @return void
      */
-    public function remove($id)
+    public function remove($id, $idBase=false)
     {
+    	if($idBase){
+    		$s = new GEVU_Site($idBase);
+    		$this->_db = $s->db;
+    	}
+    	
     	$this->delete('gevu_lieuxinterventions.id_lieuinterv = ' . $id);
     }
 
@@ -147,11 +163,16 @@ class Models_DbTable_Gevu_lieuxinterventions extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param int $id_lieuinterv
+     * @param string $idBase
      *
      * @return array
      */
-    public function findById_lieuinterv($id_lieuinterv)
+    public function findById_lieuinterv($id_lieuinterv, $idBase=false)
     {
+    	if($idBase){
+    		$s = new GEVU_Site($idBase);
+    		$this->_db = $s->db;
+    	}
         $query = $this->select()
                     ->from( array("g" => "gevu_lieuxinterventions") )                           
                     ->where( "g.id_lieuinterv = ?", $id_lieuinterv );
@@ -163,11 +184,17 @@ class Models_DbTable_Gevu_lieuxinterventions extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param int $id_lieu
+     * @param string $idBase
      *
      * @return array
      */
-    public function findByIdLieu($id_lieu)
+    public function findByIdLieu($id_lieu, $idBase=false)
     {
+    	if($idBase){
+    		$s = new GEVU_Site($idBase);
+    		$this->_db = $s->db;
+    	}
+    
         $query = $this->select()
 			->from(array("li" => "gevu_lieuxinterventions"),array("id_lieuinterv","quantite","cout","fait"=>"DATE_FORMAT(fait, '%d %m %Y')","afaire"=>"DATE_FORMAT(afaire, '%d %m %Y')"))
 			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table

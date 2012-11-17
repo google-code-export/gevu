@@ -36,7 +36,40 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
         )
     );	
 
+    /**
+     * spécification du select pour récupérer les points
+     */
+	var $selectFields = array("id_geo", "id_instant", "id_lieu", "lat", "lng"
+		, "latlng"=>"CONCAT('(',X(latlng),',',Y(latlng),')')", "sw"=>"CONCAT('(',X(sw),',',Y(sw),')')", "ne"=>"CONCAT('(',X(ne),',',Y(ne),')')"
+		, "zoom_min", "zoom_max", "adresse", "codepostal", "ville", "pays", "kml", "type_carte", "maj", "data");
 
+    /**
+     * Vérifie la valeur des données géographiques et de date
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function verifData($data)
+    {
+    	if(!isset($data["latlng"]))$data["latlng"]=new Zend_Db_Expr("Point(".$data["lat"].",".$data["lng"].")");
+    	elseif($data["latlng"])$data["latlng"]=new Zend_Db_Expr("Point".$data["latlng"]);
+    	else unset($data["latlng"]);
+    	
+    	if(isset($data["sw"])){
+    		$data["sw"]=new Zend_Db_Expr("Point".$data["sw"]);
+    	}else unset($data["sw"]); 
+    	 
+    	
+    	if(isset($data["ne"])){
+    		$data["ne"]=new Zend_Db_Expr("Point".$data["ne"]); 
+    	}else unset($data["ne"]); 
+
+    	if(!isset($data['maj']))$data['maj']=new Zend_Db_Expr('NOW()');
+    	
+    	return $data;
+    }
+		
     /**
      * Vérifie si une entrée Gevu_geos existe.
      *
@@ -48,9 +81,15 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     {
 		$select = $this->select();
 		$select->from($this, array('id_geo'));
+		/**
+		 * il n'y a qu'une géolocalisation par lieu
+		 */
+		$select->where('id_lieu = ?', $data['id_lieu']);
+		/*
 		foreach($data as $k=>$v){
 			$select->where($k.' = ?', $v);
 		}
+		*/
 	    $rows = $this->fetchAll($select);        
 	    if($rows->count()>0)$id=$rows[0]->id_geo; else $id=false;
         return $id;
@@ -69,6 +108,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
+    		$data = $this->verifData($data);
     	 	$id = $this->insert($data);
     	}
     	return $id;
@@ -99,6 +139,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      */
     public function edit($id, $data)
     {
+    	$data = $this->verifData($data);    	
     	$this->update($data, 'gevu_geos.id_geo = ' . $id);
     }
 
@@ -113,7 +154,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      */
     public function editByLieu($id, $data)
     {
-    	if(!isset($data['maj']))$data['maj']=new Zend_Db_Expr('NOW()');
+    	$data = $this->verifData($data);
     	$this->update($data, 'gevu_geos.id_lieu = ' . $id);
     }
     
@@ -128,7 +169,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      */
     public function editByIdsLieux($ids, $data)
     {
-    	if(!isset($data['maj']))$data['maj']=new Zend_Db_Expr('NOW()');
+    	$data = $this->verifData($data);
     	$this->update($data, 'gevu_geos.id_lieu IN('.$ids.')');
     }
     
@@ -153,8 +194,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-                    ->from( array("gevu_geos" => "gevu_geos") );
-                    
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields);                           
+    	                    
         if($order != null)
         {
             $query->order($order);
@@ -206,8 +248,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findById_geo($id_geo)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.id_geo = ?", $id_geo );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.id_geo = ?", $id_geo );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -220,8 +263,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findById_instant($id_instant)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.id_instant = ?", $id_instant );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.id_instant = ?", $id_instant );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -234,8 +278,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findById_lieu($id_lieu)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.id_lieu = ?", $id_lieu );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+            ->where( "g.id_lieu = ?", $id_lieu );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -248,8 +293,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findByLat($lat)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.lat = ?", $lat );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.lat = ?", $lat );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -262,8 +308,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findByLng($lng)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.lng = ?", $lng );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.lng = ?", $lng );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -276,8 +323,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findByZoom_min($zoom_min)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.zoom_min = ?", $zoom_min );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.zoom_min = ?", $zoom_min );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -290,8 +338,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findByZoom_max($zoom_max)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.zoom_max = ?", $zoom_max );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.zoom_max = ?", $zoom_max );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -304,8 +353,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findByAdresse($adresse)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.adresse = ?", $adresse );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.adresse = ?", $adresse );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -318,8 +368,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findByKml($kml)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.kml = ?", $kml );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.kml = ?", $kml );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -332,8 +383,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findById_type_carte($id_type_carte)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.id_type_carte = ?", $id_type_carte );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.id_type_carte = ?", $id_type_carte );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -346,8 +398,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findById_donnee($id_donnee)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.id_donnee = ?", $id_donnee );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.id_donnee = ?", $id_donnee );
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -360,8 +413,9 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findByMaj($maj)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos") )                           
-                    ->where( "g.maj = ?", $maj );
+        	->setIntegrityCheck(false)
+			->from(array("g" => "gevu_geos"),$this->selectFields)                           
+    		->where( "g.maj = ?", $maj );
 
         return $this->fetchAll($query)->toArray(); 
     }
