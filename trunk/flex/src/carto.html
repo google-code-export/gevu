@@ -8,15 +8,27 @@
 <script type="text/javascript">
 var geocoder = new google.maps.Geocoder();
 var map;
+var iti;
 var markersArray = [];
 var kmlArray = [];
 var polyArray = [];
 var mt = new Array(google.maps.MapTypeId.HYBRID,google.maps.MapTypeId.ROADMAP,google.maps.MapTypeId.SATELLITE,google.maps.MapTypeId.TERRAIN);
 var lstKML = d3.select('#listeKML');
+var flexApp = parent.document.getElementById('diag');
+
+var rendererOptions = {
+		  draggable: true
+		};
+var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);;
+var directionsService = new google.maps.DirectionsService();
+
 
 function setGeoParam(params) {
-	var flexApp = parent.document.getElementById('diag');
 	flexApp.modifLieu(params);
+}
+
+function setIti(params) {
+	flexApp.setIti(params);
 }
 
 function geocodePosition(pos) {
@@ -28,7 +40,8 @@ function geocodePosition(pos) {
     } else {
       adresse = "pas d'adresse...";
     }
-	setGeoParam('[{"LatLng":"'+pos+'","zoom":"'+map.getZoom()+'","adresse":"'+adresse+'","mapType":"'+map.getMapTypeId()+'"}]');  
+    var b = map.getBounds();
+	setGeoParam('[{"LatLng":"'+pos+'","zoom":"'+map.getZoom()+'","adresse":"'+adresse+'","mapType":"'+map.getMapTypeId()+'","ne":"'+b.getNorthEast()+'","sw":"'+b.getSouthWest()+'"}]');  
 
   });
 }
@@ -40,7 +53,9 @@ function deleteOverlays() {
       markersArray[i].setMap(null);
     }
     markersArray.length = 0;
-  }	  
+  }
+  directionsDisplay.setMap(null);
+
 }
 
 //Removes the overlays from the map, but keeps them in the array
@@ -77,7 +92,8 @@ function deleteCouches() {
 		  }
 	  d3.select('#listeCouche').remove();	  
 	  d3.select('#couches').append("div").attr("id", "listeCouche");	   
-	}
+	  directionsDisplay.setMap(null);
+}
 
 // Shows any overlays currently in the array
 function showOverlays() {
@@ -102,7 +118,37 @@ function initialize() {
 	
   map = new google.maps.Map(document.getElementById('mapCanvas'),options);
 
+  directionsDisplay.setMap(map);
+  directionsDisplay.setPanel(document.getElementById("itineraireTexte"));
+
+  google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
+	  setIti(directionsDisplay.directions);
+  });
+  
+  
 }
+
+document.addIti = function(params){
+
+	  directionsDisplay.setMap(map);
+	  directionsDisplay.setPanel(document.getElementById("itineraireTexte"));
+	
+	  var request = {
+	  	origin: params[0],
+	  	destination: params[1],
+	  	travelMode: google.maps.TravelMode.WALKING
+	  }
+
+	  directionsService.route(request, function(response, status) {
+		    if (status == google.maps.DirectionsStatus.OK) {
+		      directionsDisplay.setDirections(response);
+		  	  setIti(response); 
+		    }else{
+		  		alert('Erreur : ' + status);
+		  	}
+		  });
+}
+
 
 document.addKml = function(params){
 	
@@ -173,9 +219,23 @@ document.addMarker = function(params){
 
 	//bouge la carte.
 	map.setCenter(latLng);
-	//change le zoom
-	// ATTENTION il faut le faire après avoir changer de fond car il n'ont pas tous le même niveau de zoom max
-	map.setZoom(parseInt(params[3]));
+	
+	/*vérifie si un bound est défini
+	if(params[7] && params[8]){
+		var sw = params[7].substring(1,params[7].length-1);
+		sw = sw.split(",");
+		var ne = params[8].substring(1,params[8].length-1);
+		ne = ne.split(",");
+		var b = new google.maps.LatLngBounds(new google.maps.LatLng(sw[0], sw[1]), new google.maps.LatLng(ne[0], ne[1]));
+		map.panToBounds(b);
+	}else{
+		//change le zoom
+		// ATTENTION il faut le faire après avoir changer de fond car il n'ont pas tous le même niveau de zoom max
+		map.setZoom(parseInt(params[3]));		
+	}
+	*/
+	map.setZoom(parseInt(params[3]));		
+	
 	
 	return "OK";
 
@@ -233,6 +293,7 @@ function getCoor(txt){
 	return xmlDoc;
 }
 
+
 // Onload handler to fire off the app.
 google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -252,6 +313,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 	  <div id="listeCouche"></div>
   </div>
   <div id="mapCanvas"></div>
+  <div id="itineraireTexte" ></div>
 </body>
 </html>
 

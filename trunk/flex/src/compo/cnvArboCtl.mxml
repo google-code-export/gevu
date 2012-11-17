@@ -280,7 +280,7 @@
 					if( children[i].@lib == node.@lib) {
 						delete children[i];
 						//supprime la scène associée pour l'arboressence des critères 
-						ROScenes.removeByScenarioType(cptScenari.idScenar, "arboCrit_"+node.@idCtrl+"_"+node.@uid);
+						ROScenes.removeByScenarioType(cptScenari.idScenar, "arboCtl_"+node.@idCtrl+"_"+node.@uid);
 					}
 				}
 				saveScene();
@@ -293,6 +293,9 @@
 				var objZend:String = item.attribute("objZend");
 				var type:String = "arboCtl_"+idCtl+"_"+uid;
 				trace ("idCtl="+idCtl+" type="+type);
+				//affiche le critère sélectionné
+				lblCtlSelect.text = item.attribute("lib");
+				lblCtlSelectId.text = " ("+uid+")";
 				cptScenari.showCriteres(idCtl, type);
 				cptScenari.showFormulaire(objZend, type);
 				cptScenari.showProduit(idCtl, type);
@@ -320,6 +323,8 @@
 		<mx:HBox >
 			<mx:LinkButton id="delCtl" click="delCtl_clickHandler(event)" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un contrôle" />
 			<mx:Button label="Enregistrer" click="saveScene()" visible="false" toolTip="Enregistre les modifications de l'arboressence" />
+			<mx:Label text="Contrôle :" /><mx:Label id="lblCtlSelect" text="" /><mx:Label id="lblCtlSelectId" text="" selectable="true" />
+
 		</mx:HBox>
 		<mx:HBox height="100%" width="100%" >
 			<mx:DataGrid 

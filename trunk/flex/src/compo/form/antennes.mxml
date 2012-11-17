@@ -16,7 +16,7 @@
 	
 	<mx:RemoteObject id="ro"
 					 destination="zend"
-					 source="Models_DbTable_Gevu_antennes"
+					 source="GEVU_Diagnostique"
 					 fault="faultHandlerService(event, this.label);">
 		<mx:method name="edit"	result=";" />
 	</mx:RemoteObject>
@@ -26,6 +26,8 @@
 			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+
+			private var obj:String = "Models_DbTable_Gevu_antennes";
 			
 			[Bindable] public var NodeData:Object;
 			[Bindable] public var isChange:Boolean=false;
@@ -59,7 +61,7 @@
 
 			protected function SaveModif_clickHandler(event:MouseEvent):void
 			{
-				ro.edit(NodeData.id_antenne, modifData);
+				ro.edit(NodeData.id_antenne, modifData, obj, this.parentApplication.idBase);
 				isChange = false;
 			}
 
