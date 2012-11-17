@@ -7,6 +7,7 @@ import compo.*;
 import compo.ariane;
 import compo.form.antennes;
 import compo.form.batiments;
+import compo.form.chainesdeplacements;
 import compo.form.diagnostics;
 import compo.form.docsxlieux;
 import compo.form.espaces;
@@ -90,6 +91,7 @@ private var o20:compo.form.logements;
 private var o21:compo.form.partiescommunes;
 private var o22:compo.form.locaux;
 private var o23:compo.form.interventions;
+private var oChDep:compo.form.chainesdeplacements;
 
 public function login():void
 {
@@ -114,6 +116,7 @@ public function init():void
 	var dataScenar:Array = JSON.decode(this.exi.droit_4);
 	cbScenar.dataProvider = dataScenar;
 	ExternalInterface.addCallback("modifLieu",modifLieu);	
+	ExternalInterface.addCallback("setIti",setIti);	
 
 	//roDiagnostique.getTablesNames();
 }
@@ -378,7 +381,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		var className:String;
 		var place:int;
 		//vérifie si on traite un objet du modele
-		if(arr.length == 4){
+		if(arr.length == 4 && arr[3] != "lieuxchainedeplacements"){
 			//création dynamique de l'objet
 			className="compo.form."+arr[3];
 			ClassReference = getDefinitionByName(className) as Class;			
@@ -427,15 +430,16 @@ private function displayNodeProperties(event:ResultEvent) : void {
 					instance.NodeData = obj[item][0];
 					rowHaut.addChild(DisplayObject(instance));				
 					break;
-				case "objetsxexterieurs":
-					//place = -1;
-					instance.NodeData = obj[item][0];
-					rowHaut.addChild(DisplayObject(instance));				
-					break;
 				case "espaces":
 					//place = -1;
 					instance.NodeData = obj[item][0];
 					rowHaut.addChild(DisplayObject(instance));				
+					break;
+				case "chainesdeplacements":
+					place = 1;
+					instance.NodeData = obj[item][0];
+					instance.cartoIF = cartoIF;
+					oChDep = instance as chainesdeplacements;
 					break;
 				case "interventions":
 					place = -1;
@@ -549,7 +553,13 @@ public function modifLieu(params:String):void{
 	geo.F03.value = Number(arrlatlng[1]);
 	//geo.F04.value = Number(objParams[0].zoom);
 	geo.F05.value = Number(objParams[0].zoom);
+	geo.sw.text = objParams[0].sw;
+	geo.ne.text = objParams[0].ne;
 	geo.setMapType(objParams[0].mapType);
+}
+
+public function setIti(params:Object):void{
+	oChDep.showIti(params);
 }
 
 protected function copierLieu_clickHandler(event:MouseEvent):void

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:compo="compo.*"
+		   title="Chaîne de déplacement"
+		   width="100%" height="100%" xmlns:form="compo.form.*"
+		    creationComplete="init()"
+		   >
+	
+	<mx:HBox width="100%">
+		<mx:Label text="Nom de la chaîne :" />
+		<mx:TextInput id="F2" width="100%" text="{NodeData.lib}" change="editModif('lib', F2.text)" />
+	</mx:HBox>
+	<mx:HBox width="100%">
+		<mx:Label text="Adresse de départ :" />
+		<mx:TextInput id="adDep" width="100%" text=""  />
+		<mx:Label id="latDep" text="" />
+		<mx:Label id="lngDep" text="" />
+	</mx:HBox>
+	<mx:HBox width="100%">
+		<mx:Label text="Adresse d'arrivée :" />
+		<mx:TextInput id="adArr" width="100%" text=""  />
+		<mx:Label id="latArr" text="" />
+		<mx:Label id="lngArr" text="" />
+	</mx:HBox>
+	<mx:HBox width="100%">
+		<mx:Button id="calcIti" label="Calculer l'itinéraire" click="calcIti_clickHandler(event)"/>
+		<mx:Button id="genereDiag" label="Générer les diagnostics" click="genereDiag_clickHandler(event)" />
+		<mx:TextArea id="iti" width="100%" text=""  />
+	</mx:HBox>
+	<mx:Tree id="tree" 
+			 width="100%" height="30%"
+			 labelField="@instructions"
+			 showRoot="true"
+			 click="tree_clickHandler(event)"
+			 />
+	<mx:Panel title="Accessibilité" id="pnlAcces" width="100%" height="400" cornerRadius="0"
+			  paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3">
+		<mx:VBox id="bAcces" width="100%">
+			
+		</mx:VBox>
+	</mx:Panel>
+	
+	<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+	
+	<mx:RemoteObject id="ro"
+					 showBusyCursor="true"
+					 destination="zend"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, this.label);">
+		<mx:method name="edit" result="edit_resultHandler(event)"/>
+		<mx:method name="genereDiagWithIti" result="genereDiagWithIti_resultHandler(event)"/>
+		<mx:method name="getChaineDepla" result="getChaineDepla_resultHandler(event)"/>
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			import compo.cnvIFCarto;
+			import compo.stat.cnvStatDiag;
+			
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			private var obj:String = "Models_DbTable_Gevu_chainesdeplacements";
+			private var xmlTree:XML;
+			
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			[Bindable] public var cartoIF:cnvIFCarto;
+			
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			private function init():void{
+								
+				if(NodeData.params){
+					xmlTree = XML(NodeData.params);
+					tree.dataProvider=xmlTree;
+					openAllNodes(xmlTree);
+					ro.getChaineDepla(NodeData.id_chainedepla,this.parentApplication.idBase);					
+
+				}
+				
+				isChange = false;
+				
+				
+			}
+
+			public function openAllNodes(dtTree:Object):void
+			{
+				var openNodes:Array = new Array();				
+				var data:XML = new XML("<root></root>");
+				data.appendChild(dtTree);			
+				addNode(data, openNodes);
+				tree.openItems = openNodes;
+			}
+			
+			// fonction récursive
+			private function addNode(node:XML, array:Array):void
+			{
+				for each (var childNode:XML in node.children())
+				{
+					// Si ce noeud contient d'autres noeuds ou des feuilles
+					// faire traitement
+					if (childNode.hasComplexContent())
+					{
+						array.push(childNode);
+						addNode(childNode, array);
+					}
+				}
+			}						
+			
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
+
+			public function showIti(params:Object) : void {
+
+				// use appendChild to add the item.
+				xmlTree = XML(<node instructions="Chaîne de déplacement" isBranch="true" ></node>);
+				xmlTree.@copyrights = params.routes[0].copyrights;
+				xmlTree.@distance = params.routes[0].legs[0].distance.value;
+				xmlTree.@duration = params.routes[0].legs[0].duration.value;
+				
+				adDep.text = params.routes[0].legs[0].start_address;
+				xmlTree.@start = params.routes[0].legs[0].start_location.Ya+","+params.routes[0].legs[0].start_location.Za;
+				latDep.text = params.routes[0].legs[0].start_location.Ya;
+				lngDep.text = params.routes[0].legs[0].start_location.Za;
+
+				adArr.text = params.routes[0].legs[0].end_address;
+				xmlTree.@end = params.routes[0].legs[0].end_location.Ya+","+params.routes[0].legs[0].end_location.Za;
+				latArr.text = params.routes[0].legs[0].end_location.Ya;
+				lngArr.text = params.routes[0].legs[0].end_location.Za;
+				
+				var item:XML;
+				for each( var etap:Object in params.routes[0].legs[0].steps){
+					item = getNode(etap);
+					xmlTree.appendChild(item);
+				}
+				tree.dataProvider=xmlTree;
+				openAllNodes(xmlTree);
+				editModif("params",xmlTree.toXMLString());
+				ro.edit(NodeData.id_chainedepla, modifData, obj, this.parentApplication.idBase);
+				
+			}
+			
+			
+			private function getNode(obj:Object):XML
+			{
+				// create item
+				var item:XML;
+				item = <node></node>;
+				item.@ref = obj.encoded_lat_lngs;						
+				item.@distance = obj.distance.value;						
+				item.@duration = obj.duration.value;						
+				item.@start = obj.start_location.Ya+","+obj.start_location.Za;
+				item.@end = obj.end_location.Ya+","+obj.end_location.Za;
+				var inst:String = obj.instructions;
+				inst = inst.replace("<b>","-");
+				inst = inst.replace("</b>","-");
+				item.@instructions = inst;				
+				return item
+			}
+
+			
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				ro.edit(NodeData.id_chainedepla, modifData, obj, this.parentApplication.idBase);
+				isChange = false;
+			}
+
+			
+			protected function edit_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function calcIti_clickHandler(event:MouseEvent):void
+			{
+				if(adDep.text == "" || adArr.text == ""){
+					Alert.show("Merci de saisir les adresses de départ ET d'arrivée", "Informations manquantes");
+					return;
+				}
+				cartoIF.callAddIti(adDep.text, adArr.text);					
+			}
+			
+			protected function tree_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function genereDiagWithIti_resultHandler(event:ResultEvent):void
+			{
+				setChaineDepla(event.result);								
+				//Alert.show("Les diagnostics ont été générés", "Opération effectuée");
+
+			}
+			
+			protected function genereDiag_clickHandler(event:MouseEvent):void
+			{
+				ro.genereDiagWithIti(NodeData.id_chainedepla,this.parentApplication.idBase,this.parentApplication.idExi);					
+			}
+			
+			protected function getChaineDepla_resultHandler(event:ResultEvent):void
+			{
+				setChaineDepla(event.result);
+			}
+			
+			public function setChaineDepla(result:Object):void{
+				if(result){
+					var first:Boolean = true;				
+					for each( var etap:Object in result){
+						if(first){
+							adDep.text = etap.adresse;
+							latDep.text = etap.lat;
+							lngDep.text = etap.lng;
+							first=false;
+						}
+						
+						var lbl:Label=new Label;
+						lbl.text = etap.adresse;
+						bAcces.addChild(lbl);
+						var sd:cnvStatDiag=new cnvStatDiag;
+						sd.rsEtatDiag = etap.diag.stat.EtatDiag;
+						sd.idLieu = etap.id_lieu;
+						bAcces.addChild(sd);
+					}
+					if(etap){
+						adArr.text = etap.adresse;
+						latArr.text = etap.lat;
+						lngArr.text = etap.lng;						
+						this.parentApplication.roDiagnostique.getXmlNode(etap.id_lieu, this.parentApplication.idBase);
+					}
+				}
+				
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Panel>

@@ -12,12 +12,17 @@
 		[Bindable]	public var urlCarto:String="carto.html";
 		
 		public function callChangeGeo():void {		
-			cartoIFrame.callIFrameFunction('addMarker', [rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib], handleChangeGeo);
+			cartoIFrame.callIFrameFunction('addMarker', [rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib, rsCarto.sw, rsCarto.ne], handleChangeGeo);
 		}
 
 		public function callChargeKml(params:Array):void {
 			cartoIFrame.callIFrameFunction('addKml', params, handleChangeGeo);	
 		}
+
+		public function callAddIti(adresseDep:String, adresseArr:String):void {		
+			cartoIFrame.callIFrameFunction('addIti', [adresseDep, adresseArr], handleChangeGeo);
+		}
+		
 		public function callFunction(name:String, params):void {
 			cartoIFrame.callIFrameFunction(name, [params], handleChangeGeo);	
 		}

@@ -15,29 +15,33 @@
 			import mx.rpc.events.ResultEvent;
             private var titreListeDiag:String;
 			public var params:Array;
+			public var mainCtrlWidth:int;
 
 			private function init():void{
 				roDiag.getDiagListe(params,this.parentApplication.idBase);
-				lblTitre.text = "Liste des problèmes "+params['handi']+"s de niveau "+params['niv'];
-				setStyleListeDiag(params['niv']);
-
+				setStyleListeDiag();
+				if(mainCtrlWidth)mainCtrl.width = mainCtrlWidth;
 			}
 			
-			public function setStyleListeDiag(niv:int):void{
-				switch(niv) {
-		            case 0:
+			public function setStyleListeDiag():void{
+				switch(params['niv']) {
+		            case "0":
+						lblTitre.text = "Critères "+params['handi']+"s valides";
 						mainCtrl.setStyle("borderColor","green");
 						mainCtrl.setStyle("backgroundColor","green");
 		                break;
-		            case 1:
+		            case "1":
+						lblTitre.text = "Gène "+params['handi']+"s mineure";
 						mainCtrl.setStyle("borderColor","yellow");
 						mainCtrl.setStyle("backgroundColor","yellow");
 		                break;
-		            case 2:
+		            case "2":
+						lblTitre.text = "Gène "+params['handi']+"s intermédiaire";
 						mainCtrl.setStyle("borderColor","#ffa200");
 						mainCtrl.setStyle("backgroundColor","#ffa200");
 		                break;
-		            case 3:
+		            case "3":
+						lblTitre.text = "Gène "+params['handi']+"s majeure";
 						mainCtrl.setStyle("borderColor","red");
 						mainCtrl.setStyle("backgroundColor","red");
 		                break;
