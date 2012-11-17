@@ -3,16 +3,18 @@
 class GEVU_Diagnostique extends GEVU_Site{
     	
 	var $idScenar;
-	
+	var $idUnivers;
+		
 	/**
 	* constructeur de la class
 	*
     * @param string $idBase
+    * @param boolean $cache
     * 
     */
-	public function __construct($idBase=false)
+	public function __construct($idBase=false, $cache = false)
     {
-    	parent::__construct($idBase);
+    	parent::__construct($idBase, $cache = false);
 		
     }
 	
@@ -117,17 +119,20 @@ class GEVU_Diagnostique extends GEVU_Site{
     * @param array $Obj
     * @param int $idExi
     * @param string $idBase
+    * @param int $idInst
     * 
     */
-	public function ajoutCtlLieu($idLieu, $Obj, $idExi, $idBase=false){
+	public function ajoutCtlLieu($idLieu, $Obj, $idExi, $idBase=false, $idInst=false){
 			
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
-		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
 		
-		//création d'un nouvel instant
-		$c = str_replace("::", "_", __METHOD__); 
-		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
+		if(!$idInst){
+			if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);			
+			//création d'un nouvel instant
+			$c = str_replace("::", "_", __METHOD__); 
+			$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
+		}
 		
 		//création de l'objet passé en paramètre
 		if($Obj["zend_obj"]!=""){
@@ -145,8 +150,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 			$db->ajouter($data, false);
 		}
 		//met à jour le lieu avec le type de controle
-		$dbL = new Models_DbTable_Gevu_lieux($this->db);
-		$dbL->edit($idLieu, array("id_type_controle"=>$Obj["id_type_controle"], "lib"=>$Obj["lib"]));
+		if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		$this->dbL->edit($idLieu, array("id_type_controle"=>$Obj["id_type_controle"], "lib"=>$Obj["lib"]));
 	}
 	
     /**
@@ -183,10 +188,8 @@ class GEVU_Diagnostique extends GEVU_Site{
         $scene = $this->dbScene->findByIdScene($arrScenar[0]["params"]);
         $params = json_decode($scene[0]['paramsCtrl']);
 		$xmlScene = simplexml_load_string($params[0]->idCritSE);
-        //recherche le premier controle
-		$firstCtl = $xmlScene->node[0]; 
 		
-		if($firstCtl){
+		foreach ($xmlScene->node as $firstCtl) {
 			//récupère les informations du contrôle
 		    $rTypeCtrl = $this->dbTypCtl->findById_type_controle($firstCtl["idCtrl"]);
 	        //vérifie si le lieu à le controle
@@ -201,20 +204,22 @@ class GEVU_Diagnostique extends GEVU_Site{
 					return "";
 			}
 			//récupère le parent qui possède ce type de controle
-			$arrLieuxParents = $this->dbL->getParentForTypeControle($idLieu, $rTypeCtrl["zend_obj"]);				
+			$arrLieuxParents = $this->dbL->getParentForTypeControle($idLieu, $rTypeCtrl["zend_obj"], $rTypeCtrl["id_type_controle"]);				
 
 			if($arrLieuxParents){
+				//on réinitialise le tableau des contrôles
+				$arrCtl = array(); 
 				//calcul le nombre de niveau entre le lieu et son parent
 				$niv = $rLieu["niv"]-$arrLieuxParents[0]["niv"];
 				//création de la requête Xpath
-				$path = "/node/node";
+				$path = "/node/node[@idCtrl=".$rTypeCtrl["id_type_controle"]."]";
 				for ($i = 0; $i < $niv; $i++) {						
 					$path .= "/node";
 					//vérifie si un des parents à déjà le contrôle
 					//sauf pour le dernier niveau 
 					//car une type de contrôle peut être plusieurs fois dans un scénario
 					if($i+1 < $niv){
-		        		$result = $xmlScene->xpath($path);
+						$result = $xmlScene->xpath($path);
 		        		$nivO = 1000000000;
 		        		$pathInt = "";
 						foreach ($result as $node) {
@@ -270,7 +275,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 		        	}else{
 						$arrCtl[] = $rTypeCtrl1;										
 					}		        	
-				}					
+				}
+				return array("ctrl"=>$arrCtl,"crit"=>$arrCrit);				
 			}else{
 				//si on ne trouve aucun controle on peut ajouter le contrôle
 				$arrCtl[] = $rTypeCtrl;										
@@ -278,7 +284,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		}
 		return array("ctrl"=>$arrCtl,"crit"=>$arrCrit);
 	}
-	
+					
 	/**
 	* vérifie si un lieu possède le controle dans une hiérarchie et renvoie les informations
 	*  
@@ -808,6 +814,9 @@ class GEVU_Diagnostique extends GEVU_Site{
 	            		if(!isset($res["___diagnostics"])){
 				        	$res["___diagnostics"]["self"] = $this->getDiagForLieu($idLieu, $idExi, $idBase);			
 	            		}
+	            	}elseif($t=="Models_DbTable_Gevu_geos"){
+						$dbT = new $t($this->db);
+	            		$res[$t]= $dbT->findById_lieu($idLieu);
 	            	}elseif($t=="Models_DbTable_Gevu_docsxlieux"){
 						$dbT = new $t($this->db);
 	            		$res[$t]= $dbT->findByIdLieu($idLieu);
@@ -1070,22 +1079,24 @@ class GEVU_Diagnostique extends GEVU_Site{
         return $this->dbL->edit($idLieu, $data);
     }
 
+
     /**
-     * Enregistre la modification d'une géographie
+     * Enregistre la modification d'un objet
      *
-     * @param int $idGeo
+     * @param int $id
      * @param array $data
+     * @param string $obj
      * @param string $idBase
      * 
      * @return integer
      */
-    public function editGeo($idGeo, $data, $idBase){
+    public function edit($id, $data, $obj, $idBase){
 		
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
-        if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_geos($this->db);
+        $o = new $obj($this->db);
     	    	
-        return $this->dbL->edit($idGeo, $data);
+        return $o->edit($id, $data);
     }
     
     /**
@@ -1123,7 +1134,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$geos[0]["id_lieu"] = $arrLieu["id_lieu"];
 		unset($geos[0]["id_geo"]);
 		unset($geos[0]["id_donnee"]);
-		if($idInst)$geos[0]["id_instant"] = $this->idInst;
+		if($this->idInst)$geos[0]["id_instant"] = $this->idInst;
 		$this->dbG->ajouter($geos[0], $existe);
 
 		if($rtnXml){
@@ -1135,6 +1146,242 @@ class GEVU_Diagnostique extends GEVU_Site{
 		}
 		
         
+    }
+
+    
+    /**
+     * genere une arboressence de diagnostic à partir d'un itinéraire
+     *
+     * @param int $idChaine
+     * @param string $idBase
+     * 
+     * @return array
+    */
+	public function getChaineDepla($idChaine, $idBase=false){
+		
+	    //initialise la base
+		if($idBase!=$this->idBase)$this->getDb($idBase);		
+		if(!$this->dbLCD)$this->dbLCD = new Models_DbTable_Gevu_lieuxchainedeplacements($this->db);
+		
+		//récupère le détail de la chaîne de déplacement
+		$arr = $this->dbLCD->findById_chainedepla($idChaine);
+		$nb = count($arr);
+		for ($i = 0; $i < $nb; $i++) {
+			//ajoute le diagnostique du lieu
+			$arr[$i]['diag'] = $this->calculDiagForLieu($arr[$i]['id_lieu'],-1,$idBase);
+		}
+		return $arr;
+	}
+        
+    
+    /**
+     * genere une arboressence de diagnostic à partir d'un itinéraire
+     *
+     * @param int $idChaine
+     * @param string $idBase
+     * @param int $idExi
+     * 
+     * @return array
+     */
+    public function genereDiagWithIti($idChaine, $idBase=false, $idExi=-1){
+
+	    set_time_limit(1000);
+    	
+	    //initialise la base
+		if($idBase!=$this->idBase)$this->getDb($idBase);
+    	
+    	//initialise les gestionnaires de base de données
+        if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		if(!$this->dbCD)$this->dbCD = new Models_DbTable_Gevu_chainesdeplacements($this->db);
+		if(!$this->dbLCD)$this->dbLCD = new Models_DbTable_Gevu_lieuxchainedeplacements($this->db);
+		if(!$this->dbG)$this->dbG = new Models_DbTable_Gevu_geos($this->db);
+		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+		
+		//création d'un nouvel instant
+		if(!$this->idInst){
+			$c = str_replace("::", "_", __METHOD__); 
+			$this->idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
+		}
+		
+        //récupère le lieu univers
+		$arrLieux = $this->dbL->findByLft(1);
+		$this->idUnivers = $arrLieux[0]['id_lieu'];
+		
+		//récupère la chaine de déplacement
+		$arr = $this->dbCD->findById_chainedepla($idChaine);
+		$xml = simplexml_load_string($arr[0]['params']);
+		
+		//création du lieu de départ à toutes les échelles
+		$idLieu = $this->genereDiagWithGeo($xml['start']."", -1, $idBase, $idExi);
+		
+		//création de l'arboressence du diagnostic à la dernière échelle
+		$ordre = 0;
+		foreach ($xml->node as $n) {
+			$idLieu = $this->genereDiagWithGeo($n['start']."", 0, $idBase, $idExi);
+			$this->dbLCD->ajouter(array("id_chainedepla"=>$idChaine, "id_lieu"=>$idLieu, "ordre"=>$ordre));
+			$ordre ++;
+		}
+
+		//création du lieux d'arrivée à toutes les échelles
+		$idLieu = $this->genereDiagWithGeo($xml['end']."", -1, $idBase, $idExi);
+		$this->dbLCD->ajouter(array("id_chainedepla"=>$idChaine, "id_lieu"=>$idLieu, "ordre"=>$ordre));
+
+		return $this->getChaineDepla($idChaine, $idBase);
+    }	    
+
+    /**
+     * genere une arboressence de diagnostic à partir d'une définition geographique
+     *
+     * @param number $latlng
+     * @param int $echelle : permet de définir si on traite toutes les échelles géographique ou juste un niveau spécifique
+     * @param string $idBase
+     * @param int $idExi
+     * 
+     * @return int
+     */
+    public function genereDiagWithGeo($latlng, $echelle=-1, $idBase=false, $idExi=-1){
+
+		//initialise la base
+		if($idBase!=$this->idBase)$this->getDb($idBase);
+    	
+    	//initialise les gestionnaires de base de données
+        if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		if(!$this->dbCD)$this->dbCD = new Models_DbTable_Gevu_chainesdeplacements($this->db);
+		if(!$this->dbG)$this->dbG = new Models_DbTable_Gevu_geos($this->db);
+		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+		
+		//création d'un nouvel instant
+		if(!$this->idInst){
+			$c = str_replace("::", "_", __METHOD__); 
+			$this->idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
+		}
+		
+		//récupère les données géographiques du lieu
+		$html = $this->getUrlBodyContent("http://maps.googleapis.com/maps/api/geocode/json?",array('latlng'=>$latlng,'sensor'=>'true'));
+		$js = json_decode($html);
+		//traite les données géographique
+		if($js->status="OK"){
+			$arrLieux = $js->results;
+			//gestion des niveaux d'échelles
+			if($echelle==-1){
+				//on inverse l'échelle des lieux
+				krsort($arrLieux);
+				$idParent = $this->idUnivers;
+				$echelle = count($arrLieux)-1;
+			}else{
+				//on récupère le parent du lieu qu'on traite
+				/*
+				foreach ($arrLieux[$echelle+1]->address_components as $lp) {
+					if($lp->types[0] != "postal_code" ){
+						$libP = $lp->long_name;
+						break;
+					} 
+				}
+				*/
+				//le lieu parent est "normalement" la ville
+				$arrParent = $this->dbL->findByLib($arrLieux[$echelle+1]->address_components[1]->long_name);
+				$idParent = $arrParent[0]['id_lieu'];				
+			}
+			//création des lieux correspondant
+			$i=0;
+			foreach ($arrLieux as $l) {
+				if($l->types[0] != "postal_code" && $i<=$echelle){
+					//gestion des diags suivant le type de lieu
+					switch ($l->types[0]) {
+						case "street_address":
+							/*on crée un lieux pour l'ensemble des voiries
+							$lib = "voiries";
+							//ajoute le lieu
+							$idLieu = $this->dbL->ajouter(array("lib"=>$lib,"lieu_parent"=>$idParent));
+							//ajoute un contrôle de type voiries
+							$this->ajoutCtlLieu($idLieu, array("zend_obj"=>"","id_type_controle"=>117,"lib"=>$lib), $idExi, $idBase, $this->idInst);
+							$idParent = $idLieu;
+							*/
+							
+							//on crée en premier la voie
+							$lib = $l->address_components[1]->long_name;
+							//ajoute le lieu
+							$idLieu = $this->dbL->ajouter(array("lib"=>$lib,"lieu_parent"=>$idParent));
+							//ajoute la géographie
+							$this->dbG->ajouter(array("id_lieu"=>$idLieu, "adresse"=>$lib, "zoom_max"=>"17", "type_carte"=>"hybrid", "lat"=>$l->geometry->viewport->northeast->lat, "lng"=>$l->geometry->viewport->northeast->lng));
+							//ajoute un contrôle de type voie
+							$this->ajoutCtlLieu($idLieu, array("zend_obj"=>"","id_type_controle"=>55,"lib"=>$lib), $idExi, $idBase, $this->idInst);
+							$idParent = $idLieu;
+							
+							//on crée ensuite le tronçon
+							//il correspond au trottoir pair et impair
+							$numVoie = explode("_",$l->address_components[0]->long_name);
+							if($numVoie[0]%2==0)$troncon="tronçon pair"; else $troncon="tronçon impair";
+							//ajoute le lieu
+							$idLieu = $this->dbL->ajouter(array("lib"=>$troncon,"lieu_parent"=>$idParent));
+							//ajoute la géographie
+							$this->dbG->ajouter(array("id_lieu"=>$idLieu, "adresse"=>$troncon, "zoom_max"=>"18", "type_carte"=>"hybrid", "lat"=>$l->geometry->viewport->northeast->lat, "lng"=>$l->geometry->viewport->northeast->lng));
+							//ajoute un contrôle de type segment
+							$this->ajoutCtlLieu($idLieu, array("zend_obj"=>"","id_type_controle"=>130,"lib"=>$troncon), $idExi, $idBase, $this->idInst);
+							$idParent = $idLieu;
+							
+							//on crée enfin le segment à partir du numéro de voie
+							$lib = "segment ".$l->address_components[0]->long_name;
+							//ajoute le lieu
+							$idLieu = $this->dbL->ajouter(array("lib"=>$lib,"lieu_parent"=>$idParent));
+							//ajoute la géographie
+							$this->dbG->ajouter(array("id_lieu"=>$idLieu, "adresse"=>$l->formatted_address, "lat"=>$l->geometry->location->lat, "lng"=>$l->geometry->location->lng
+								, "zoom_max"=>"20", "type_carte"=>"hybrid", "latlng"=>"(".$l->geometry->location->lat.",".$l->geometry->location->lng.")"
+								, "ne"=>"(".$l->geometry->viewport->northeast->lat.",".$l->geometry->viewport->northeast->lng.")"
+								, "sw"=>"(".$l->geometry->viewport->southwest->lat.",".$l->geometry->viewport->southwest->lng.")"
+								, "data"=>json_encode($l)));
+							//ajoute un contrôle de type segment
+							$this->ajoutCtlLieu($idLieu, array("zend_obj"=>"","id_type_controle"=>56,"lib"=>$lib), $idExi, $idBase, $this->idInst);
+							$idParent = $idLieu;
+							
+							/**TODO:gérer la création des diag suivant le scénario
+							 * pour l'instant on le fait en dur 
+							 */
+							$lib = "Voirie cheminement";
+							$idLieu = $this->dbL->ajouter(array("lib"=>$lib,"lieu_parent"=>$idParent));
+							$this->dbG->ajouter(array("id_lieu"=>$idLieu, "adresse"=>$l->formatted_address, "zoom_max"=>"20", "type_carte"=>"hybrid", "lat"=>$l->geometry->location->lat, "lng"=>$l->geometry->location->lng));
+							$this->ajoutCtlLieu($idLieu, array("zend_obj"=>"","id_type_controle"=>28,"lib"=>$lib), $idExi, $idBase, $this->idInst);
+							
+							$lib = "Voirie pente";
+							$idLieu = $this->dbL->ajouter(array("lib"=>$lib,"lieu_parent"=>$idParent));
+							$this->dbG->ajouter(array("id_lieu"=>$idLieu, "adresse"=>$l->formatted_address, "zoom_max"=>"20", "type_carte"=>"hybrid", "lat"=>$l->geometry->location->lat, "lng"=>$l->geometry->location->lng));
+							$this->ajoutCtlLieu($idLieu, array("zend_obj"=>"","id_type_controle"=>32,"lib"=>$lib), $idExi, $idBase, $this->idInst);
+							
+							$lib = "Voirie ressaut";
+							$idLieu = $this->dbL->ajouter(array("lib"=>$lib,"lieu_parent"=>$idParent));
+							$this->dbG->ajouter(array("id_lieu"=>$idLieu, "adresse"=>$l->formatted_address, "zoom_max"=>"20", "type_carte"=>"hybrid", "lat"=>$l->geometry->location->lat, "lng"=>$l->geometry->location->lng));
+							$this->ajoutCtlLieu($idLieu, array("zend_obj"=>"","id_type_controle"=>34,"lib"=>$lib), $idExi, $idBase, $this->idInst);
+							
+							$lib = "Voirie signalétique";
+							$idLieu = $this->dbL->ajouter(array("lib"=>$lib,"lieu_parent"=>$idParent));
+							$this->dbG->ajouter(array("id_lieu"=>$idLieu, "adresse"=>$l->formatted_address, "zoom_max"=>"20", "type_carte"=>"hybrid", "lat"=>$l->geometry->location->lat, "lng"=>$l->geometry->location->lng));
+							$this->ajoutCtlLieu($idLieu, array("zend_obj"=>"","id_type_controle"=>35,"lib"=>$lib), $idExi, $idBase, $this->idInst);
+							
+							$lib = "Voirie équipement";
+							$idLieu = $this->dbL->ajouter(array("lib"=>$lib,"lieu_parent"=>$idParent));
+							$this->dbG->ajouter(array("id_lieu"=>$idLieu, "adresse"=>$l->formatted_address, "lat"=>$l->geometry->location->lat, "lng"=>$l->geometry->location->lng));
+							$this->ajoutCtlLieu($idLieu, array("zend_obj"=>"","id_type_controle"=>29,"lib"=>$lib), $idExi, $idBase, $this->idInst);
+							
+							//on garde le lieu du segment comme référence
+							$idLieu = $idParent;
+							
+							break;
+						default:
+							$lib = $l->address_components[0]->long_name;
+							//ajoute le lieu
+							$idLieu = $this->dbL->ajouter(array("lib"=>$lib,"lieu_parent"=>$idParent));
+							//ajoute la géographie
+							$this->dbG->ajouter(array("id_lieu"=>$idLieu, "adresse"=>$lib, "lat"=>$l->geometry->location->lat, "lng"=>$l->geometry->location->lng
+								, "latlng"=>"(".$l->geometry->location->lat.",".$l->geometry->location->lng.")"
+								, "data"=>json_encode($l)));
+							break;						
+					}
+					$idParent = $idLieu;
+				}
+				$i++;
+			}
+		}
+    	return $idLieu;
     }
     
     

@@ -9,7 +9,8 @@ class GEVU_Site{
     var $dbAnt;
     var $dbBat;
     var $dbC;
-    var $dbD;
+	var $dbCD;
+	var $dbD;
     var $dbDoc;
     var $dbEspInt;
     var $dbEspExt;
@@ -18,6 +19,7 @@ class GEVU_Site{
     var $dbI;
     var $dbInt;
     var $dbL;
+	var $dbLCD;
     var $dbLieu;
     var $dbLDoc;
     var $dbLoc;
@@ -38,11 +40,12 @@ class GEVU_Site{
 	* constructeur de la class
 	*
     * @param string $idBase
+    * @param boolean $cache
     * 
     */
 	function __construct($idBase=false, $cache = false){    	
 		
-		try {			
+		try {
 		    $this->getDb($idBase);
 	        
 	        $this->idInst = -1;
@@ -81,7 +84,8 @@ class GEVU_Site{
     */
     public function getDb($idBase){
     	
- 		$db = Zend_Db_Table::getDefaultAdapter();
+		$this->idBase = $idBase;			
+    	$db = Zend_Db_Table::getDefaultAdapter();
     	if($idBase){
     		//change la connexion à la base
 			$arr = $db->getConfig();
@@ -92,4 +96,46 @@ class GEVU_Site{
     	return $db;
     }
 
+   /**
+     * Récupère le contenu body d'une url
+     *
+     * @param string $url
+     * @param array $param
+     * @param boolean $cache
+     *   
+     * @return string
+     */
+	function getUrlBodyContent($url, $param=false, $cache=true) {
+		$html = false;
+		if(substr($url, 0, 7)!="http://")$url = urldecode($url);
+		if($cache){
+			$c = str_replace("::", "_", __METHOD__)."_".md5($url); 
+			if($param)$c .= "_".$this->getParamString($param);
+		   	$html = $this->cache->load($c);
+		}
+        if(!$html){
+	    	$client = new Zend_Http_Client($url);
+	    	if($param)$client->setParameterGet($param);
+	    	try {
+				$response = $client->request();
+				$html = $response->getBody();
+			}catch (Zend_Exception $e) {
+				echo "Récupère exception: " . get_class($e) . "\n";
+			    echo "Message: " . $e->getMessage() . "\n";
+			}				
+        	if($cache)$this->cache->save($html, $c);
+        }
+		return $html;
+	}
+    
+	function getParamString($params, $md5=false){
+		$s="";
+		foreach ($params as $k=>$v){
+			$v = str_replace(".","_",$v);
+			$v = str_replace(",","_",$v);
+			if($md5) $s .= "_".md5($v);
+			else $s .= "_".$v;
+		}
+		return $s;	
+	}    
 }
