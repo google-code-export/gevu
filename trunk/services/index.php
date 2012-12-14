@@ -3,60 +3,36 @@ require_once( "../param/ParamAppli.php" );
 
 
 try {
-	
+
 	/*
-	$db = new Models_DbTable_Gevu_antennes();
-	$arr = $db->getStatType();
-	
-	$s = new Models_DbTable_Gevu_scenario();
-	$arr = $s->findByExiDroit("1");
+	$idBase = "gevu_prospective";	
+	$idExi = 1;
+	$idLieu = 23053;
+	$idScenario = 13;
 
 	$d = new GEVU_Diagnostique();
-	$arr = $d->getScenarioComplet(10, 9, 71);
+	//$d->ajoutLieu(1,$idExi,$idBase);
+	//$d->edit(4,array("adresse"=>"Route de Feins, 45230 Adon, France","kml"=>"","lat"=>47.754098,"lng"=>2.8125,"ne"=>"(65.80277639340238, 86.484375)"
+	//	,"sw"=>"(-46.55886030311717, -156.09375)","type_carte"=>"terrain","zoom_max"=>2,"zoom_min"=>0),"Models_DbTable_Gevu_geos",$idBase);
+	//$arr = $d->getChaineDepla(1,$idBase);
+	$d->genereDiagWithIti(1,$idBase);	
+	//$arr = $d->getNodeRelatedData(6, $idExi, $idBase, $idScenario);
+	//$arr = $d->getLieuCtl(6, $idScenario, $idBase);	
 	
-	$idBase = "gevu_new_alceane";
-	$idExi = 1;
-
-	$o = new Models_DbTable_Gevu_espacesxinterieurs();
-	$arr = $o->ajoutDiag(1, 10, 9, 71);
-	
-	
-	$d->ajoutLieu(22045, $idExi, $idBase);
-	$arr = $d->getLieuCtl(22048, "13", $idBase);
-	$o=new Models_DbTable_Gevu_niveaux();
-	$o->edit(6085, array('reponse_1'=>"2"));
-	
-	$o = new Models_DbTable_Gevu_contactsxantennes();
-	$o->ajouterContact(array("idCtc"=>6,"idLien"=>1));
-	$o = new Models_DbTable_Gevu_batiments();
-	$o->getContact(array("id"=>2244,"type"=>"contact_proprietaire"));
-	
-	$d->deleteDoc(240, $idBase);
-	//$d->deleteLieu(22046, $idExi, $idBase);
-	
-	/*	
-	$arr = $d->getNodeRelatedData(5,$idExi,$idBase);
-	$d->editLieux(2, array("lib"=>"tetst"), $idBase);
-	$d->findLieu(881,"",$idBase);
-	$arr = $d->getNodeRelatedData(881,$idExi,$idBase);
-	$d->setChoix($idExi, 212, "il pleut encore", array(array("id_critere"=>40,"id_reponse"=>1, "id_type_controle"=>2),array("id_critere"=>27,"id_reponse"=>1, "id_type_controle"=>2)), $idBase);
-	$d->getDiagComplet(218,$idBase,48);
-	$d->getScenarioComplet(9);
-	$arr = $d->getDiagListe(array("idLieu"=>1,"handi"=>"moteur","niv"=>2),$idBase);
-	$arr = $d->calculDiagForLieu(1,-1,$idBase);
-	$d->findLieu(212,"",$idBase);
-	$xml = $d->getXmlNode(212,$idBase);
-	$db = $d->getDb($idBase);
-	$o = new Models_DbTable_Gevu_diagnostics($db);
-	$o->getAllDesc(13);
-	$o = new Models_DbTable_Gevu_observations();
-	$arr = $o->ajouter(array("num_marker"=>"2121","lib"=>"test","id_diag"=>-100),1,$idBase);
-	$o = new Models_DbTable_Gevu_problemes();
-	$arr = $o->findDocs(329,$idBase);
-	$s = new Models_DbTable_Gevu_scenario();
-	$s->ajouter(array("lib"=>"test sam"));
 	*/
-		
+	//$arr = $d->copiecolleLieu(22992, 22991, $idExi, $idBase);	
+	//$arr = $d->getLieuCtl($idLieu, $idScenario, $idBase);	
+	//$arr = $d->getXmlNode($idLieu, $idBase);
+	//$arr = $d->getNodeRelatedData($idLieu, $idExi, $idBase, $idScenario);
+	
+	//$db = new Models_DbTable_Gevu_objetsxinterieurs();
+	//$db->ajoutDiag($idExi, 12, $idLieu, 106, $idBase);
+
+    //$dbScene = new Models_DbTable_Gevu_scenes();
+    //$scene = $dbScene->verifIsNodeExiste(321);
+
+
+	
 $server = new Zend_Amf_Server();
 
 $server->addDirectory(APPLICATION_PATH);

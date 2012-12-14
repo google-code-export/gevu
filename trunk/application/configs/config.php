@@ -23,8 +23,8 @@ defined('APPLICATION_ENV')
 
 
 set_include_path(ROOT_PATH.'/library/php');       
-set_include_path(get_include_path().PATH_SEPARATOR.$www."/ZendFramework-1.10.8/library");
-set_include_path(get_include_path().PATH_SEPARATOR.$www."/ZendFramework-1.10.8/extras/library");
+set_include_path(get_include_path().PATH_SEPARATOR.$www."/Zend/library");
+set_include_path(get_include_path().PATH_SEPARATOR.$www."/Zend/extras/library");
 
 /** Zend_Application */
 require_once 'Zend/Application.php';

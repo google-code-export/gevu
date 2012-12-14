@@ -11,6 +11,8 @@
 			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+
+			private var obj:String = "Models_DbTable_Gevu_etablissements";
 			
 			[Bindable] public var NodeData:Object;
 			public var valChanged:Boolean;
@@ -53,7 +55,7 @@
 				arr["reponse_3"]=F11.acualId;
 				arr["reponse_4"]=F12.text;
 				arr["reponse_5"]=F13.text;
-				roModifBase.edit(NodeData.id_etablissement, arr);
+				roModifBase.edit(NodeData.id_etablissement, arr, obj, this.parentApplication.idBase);
 				valChanged = false;
 			}
 			
@@ -80,10 +82,9 @@
 	
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
-					 source="Models_DbTable_Gevu_etablissements"
+					 source="GEVU_Diagnostique"
 					 fault="faultHandlerService(event, 'Remote Object');">
 		<mx:method name="edit" result="resultHandler(event)" />
-		<mx:method name="remove" result="remove_resultHandler(event)" />
 	</mx:RemoteObject>
 	<mx:ViewStack id="vs" >
 

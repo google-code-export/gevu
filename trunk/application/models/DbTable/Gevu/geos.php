@@ -52,6 +52,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      */
     public function verifData($data)
     {
+    	/*
     	if(!isset($data["latlng"]))$data["latlng"]=new Zend_Db_Expr("Point(".$data["lat"].",".$data["lng"].")");
     	elseif($data["latlng"])$data["latlng"]=new Zend_Db_Expr("Point".$data["latlng"]);
     	else unset($data["latlng"]);
@@ -63,8 +64,12 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     	
     	if(isset($data["ne"])){
     		$data["ne"]=new Zend_Db_Expr("Point".$data["ne"]); 
-    	}else unset($data["ne"]); 
-
+    	}else unset($data["ne"]);
+    	*/ 
+    	unset($data["latlng"]);
+    	unset($data["sw"]); 
+    	unset($data["ne"]);
+    	
     	if(!isset($data['maj']))$data['maj']=new Zend_Db_Expr('NOW()');
     	
     	return $data;

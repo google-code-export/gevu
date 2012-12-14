@@ -3,7 +3,6 @@
 		   xmlns:composants="compo.*"
 		   title="Espace extérieur"
 		   width="100%" height="100%"
-		   creationComplete="panel1_creationCompleteHandler(event)" 
 		   >
 		<mx:VBox>
 			<mx:HBox width="100%">
