@@ -17,7 +17,7 @@
 	<mx:RemoteObject id="ro"
 					 destination="zend"
 					  showBusyCursor="true"
-					 source="Models_DbTable_Gevu_groupes"
+					 source="GEVU_Diagnostique"
 					 fault="faultHandlerService(event, this.label);">
 		<mx:method name="edit"	result=";" />
 	</mx:RemoteObject>
@@ -29,6 +29,8 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			private var obj:String = "Models_DbTable_Gevu_groupes";
+
 			[Bindable] public var NodeData:Object;
 			[Bindable] public var isChange:Boolean=false;
 			[Bindable] public var modifData:Array = new Array;
@@ -51,7 +53,8 @@
 
 			protected function SaveModif_clickHandler(event:MouseEvent):void
 			{
-				ro.edit(NodeData.id_groupe, modifData);
+				ro.edit(NodeData.id_groupe, modifData, obj, this.parentApplication.idBase);
+
 				isChange = false;
 			}
 			

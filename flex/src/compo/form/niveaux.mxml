@@ -20,10 +20,9 @@
 	<mx:RemoteObject id="roModifBase"
 					 destination="zend"
 					 showBusyCursor="true"
-					 source="Models_DbTable_Gevu_niveaux"
+					 source="GEVU_Diagnostique"
 					 fault="faultHandlerService(event, this.title);">
 		<mx:method name="edit"	result=";" />
-		<mx:method name="remove"	result=";" />
 	</mx:RemoteObject>
 	
 	<mx:Script>
@@ -32,6 +31,9 @@
 			import mx.controls.Alert;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			private var obj:String = "Models_DbTable_Gevu_niveaux";
+
 			
 			[Bindable] public var NodeData:Object;
 			[Bindable] public var isChange:Boolean=false;
@@ -58,7 +60,7 @@
 
 			protected function SaveModif_clickHandler(event:MouseEvent):void
 			{
-				roModifBase.edit(NodeData.id_niveau, modifData);
+				roModifBase.edit(NodeData.id_niveau, modifData, obj, this.parentApplication.idBase);
 				isChange = false;
 			}
 			

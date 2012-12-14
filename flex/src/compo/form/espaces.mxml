@@ -20,7 +20,7 @@
 	
 	<mx:RemoteObject id="RO"
 					 destination="zend"
-					 source="Models_DbTable_Gevu_espaces"
+					 source="GEVU_Diagnostique"
 					 fault="faultHandlerService(event, 'Espaces');">
 		<mx:method name="edit"	result=";" />
 	</mx:RemoteObject>
@@ -31,6 +31,8 @@
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+
+			private var obj:String = "Models_DbTable_Gevu_espaces";
 			
 			[Bindable] public var NodeData:Object;
 			public var valChanged:Boolean;
@@ -49,7 +51,7 @@
 			public function saveModifications() : void {
 				var arr:Array = new Array();
 				arr["ref"]=F1.text;
-				RO.edit(NodeData.id_espace, arr);
+				RO.edit(NodeData.id_espace, arr, obj, this.parentApplication.idBase);
 				
 				valChanged = false;
 			}
