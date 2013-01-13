@@ -190,6 +190,11 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     /**
      * Récupère toutes les entrées Gevu_lieux avec certains critères
      * de tri, intervalles
+     * @param string $order
+     * @param int $limit
+     * @param int $from
+	 *
+     * @return array
      */
     public function getAll($order=null, $limit=0, $from=0)
     {
@@ -246,7 +251,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return($rows[0]->amount);       
     }    
     
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -260,7 +265,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -274,7 +279,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -289,7 +294,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
         
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -309,7 +314,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -323,7 +328,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -337,7 +342,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -351,7 +356,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -365,7 +370,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -380,7 +385,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
 
-     /*
+     /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne la liste de tous ses parents
      *
@@ -401,7 +406,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
 
-     /*
+     /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne la liste de tous ses enfants
      *
@@ -422,7 +427,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
 
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne la liste de tous ses enfants au format csv
      *
@@ -443,7 +448,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
         
-     /*
+     /**
      * Recherche une entrée Gevu_lieux correspondant à l'enfant d'un lieu pour un type de controle
      * création de ce lieu s'il n'exite pas  
      * et retourne cette entrée.
@@ -481,7 +486,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         
     }
 
-     /*
+     /**
      * Recherche une entrée Gevu_lieux correspondant au parent d'un lieu pour un type de controle
      * et retourne cette entrée.
      *
