@@ -154,18 +154,20 @@ todo :
 						<mx:Canvas width="100%" height="100%" label="Accessibilité">
 							<stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
 						</mx:Canvas>
-						<mx:Canvas width="100%" height="100%" label="Statistiques">
+						<!--
+						<mx:Canvas width="100%" height="100%" label="Statistiques" >
 							<flexiframe:IFrame id="statIFrame"
 											   width="100%" height="100%"
 											   source="{ENDPOINT_GRAPH}"
 											   />
 						</mx:Canvas>
-						<mx:Canvas width="100%" height="100%" label="Visite">
+						<mx:Canvas width="100%" height="100%" label="Visite"  >
 							<flexiframe:IFrame id="visiteIFrame"
 											   width="100%" height="100%"
 											   source="{ENDPOINT_VIS3D}"
 											   />
 						</mx:Canvas>
+						-->
 					</mx:TabNavigator>					
 				</mx:VBox>
 		</mx:HDividedBox> 

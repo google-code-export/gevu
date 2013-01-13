@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas label="Statistiques de diagnostic" xmlns:mx="http://www.adobe.com/2006/mxml" 
-	creationComplete="init()" borderColor="black" borderThickness="1" borderStyle="solid"
+	creationComplete="init()" borderColor="black" borderStyle="solid"
 	width="100%" height="100%"
 	>
 	<mx:Script><![CDATA[
