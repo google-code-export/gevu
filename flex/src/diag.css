@@ -41,9 +41,3 @@ Alert
 	titleStyleName: alertTitle;
 	statusStyleName: alertStatus;
 }
-TitleWindow
-{
-	controlBarStyleName: titleWindowControlBar;
-	borderColor: #010000;
-	statusStyleName: titleWindowStatus;
-}
