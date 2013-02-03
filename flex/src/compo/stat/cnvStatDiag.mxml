@@ -165,7 +165,7 @@
 	<mx:Stroke id="s3" color="red" weight="2"/>
 
 	<mx:HBox height="100%" width="100%" >
-		<mx:VBox label="Diagnostic" height="300" width="100%"  >
+		<mx:VBox label="Diagnostic" height="300" >
 			<mx:HBox paddingLeft="70" visible="false" height="0" >
 				<mx:Label id="TauxCalc" />
 				<mx:Image id="imgMoteur" source="{MoteurIcon}" width="60" />

@@ -154,7 +154,8 @@
 				if(kml){
 					d.vignette = KmlIcon;
 					dataIcons.addItem(d);
-					this.parentApplication.cartoIF.callChargeKml([d.url, d.titre, d.id_doc]);					
+					if(this.parentApplication.cartoIF)
+						this.parentApplication.cartoIF.callChargeKml([d.url, d.titre, d.id_doc]);					
 				}
 			}
 		}

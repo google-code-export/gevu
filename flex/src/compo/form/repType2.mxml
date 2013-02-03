@@ -6,6 +6,7 @@
 	<mx:Script>
 		<![CDATA[			
 			[Bindable] public var lblQ:String;
+			[Bindable] public var lblRef:String;
 			[Bindable] public var Q:String;
 			[Bindable] public var val:String;
 			[Bindable] public var fnct:Function;
@@ -46,7 +47,10 @@
 
 		]]>
 	</mx:Script>
-	<mx:TextArea text="{lblQ}" height="100%" width="100%" editable="false" />
+	<mx:HBox width="100%" >		
+		<mx:Label text="{lblRef}" />
+		<mx:TextArea text="{lblQ}" height="100%" width="100%" editable="false" />
+	</mx:HBox>
 	<mx:HBox>		
 		<mx:RadioButton groupName="reponse" id="reponse_1" label="oui" color="0x323232" click="changeModif('1')" /> 
 		<mx:RadioButton groupName="reponse" id="reponse_2" label="non" color="0x323232" click="changeModif('2')" />

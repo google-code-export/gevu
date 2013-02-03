@@ -31,23 +31,31 @@
 						mainCtrl.setStyle("backgroundColor","green");
 		                break;
 		            case "1":
-						lblTitre.text = "Gène "+params['handi']+"s mineure";
+						lblTitre.text = "Gène "+getHandiLabelFeminin(params['handi'])+"s mineure";
 						mainCtrl.setStyle("borderColor","yellow");
 						mainCtrl.setStyle("backgroundColor","yellow");
 		                break;
 		            case "2":
-						lblTitre.text = "Gène "+params['handi']+"s intermédiaire";
+						lblTitre.text = "Gène "+getHandiLabelFeminin(params['handi'])+"s intermédiaire";
 						mainCtrl.setStyle("borderColor","#ffa200");
 						mainCtrl.setStyle("backgroundColor","#ffa200");
 		                break;
 		            case "3":
-						lblTitre.text = "Gène "+params['handi']+"s majeure";
+						lblTitre.text = "Gène "+getHandiLabelFeminin(params['handi'])+"s majeure";
 						mainCtrl.setStyle("borderColor","red");
 						mainCtrl.setStyle("backgroundColor","red");
 		                break;
 		        } 
 				//lblTitre.text += " "+titreListeDiag;
 			}	
+			
+			private function getHandiLabelFeminin(handi:String):String{
+				if(handi=="moteur")handi="moteur";
+				if(handi=="visuel")handi="visuelle";
+				if(handi=="cognitif")handi="cognitive";
+				if(handi=="auditif")handi="auditive";
+				return handi;
+			}
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -94,7 +102,7 @@
 		<mx:method name="getDiagListe" result="getDiagListe_resultHandler(event)" />
 	</mx:RemoteObject>	
 
-	<mx:VBox id="mainCtrl" width="100%" height="100%">
-		<mx:Label id="lblTitre" fontSize="18" />
+	<mx:Label id="lblTitre" fontSize="18" color="black" />
+	<mx:VBox id="mainCtrl" width="100%" height="100%" minHeight="0" >
 	</mx:VBox>
 </mx:VBox>
