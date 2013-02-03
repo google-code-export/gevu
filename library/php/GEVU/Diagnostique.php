@@ -744,7 +744,7 @@ class GEVU_Diagnostique extends GEVU_Site{
      */
     public function getDiagListe($params, $idBase=false){
 		$c = str_replace("::", "_", __METHOD__)."_".$idBase."_".$params['idLieu']."_".$params['handi']."_".$params['niv']; 
-	   	$rs = $this->cache->load($c);
+	   	$rs = false;//$this->cache->load($c);
         if(!$rs){           
 			//initialise les gestionnaires de base de données
 			$this->getDb($idBase);
