@@ -70,7 +70,8 @@
 			
 			protected function SaveModif_clickHandler(event:MouseEvent):void
 			{
-				ro.edit(NodeData.id_espace_int, modifData);				
+				ro.edit(NodeData.id_espace_int, modifData, obj, this.parentApplication.idBase);
+				
 			}
 			
 			protected function method2_resultHandler(event:ResultEvent):void

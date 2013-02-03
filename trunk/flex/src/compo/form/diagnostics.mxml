@@ -158,6 +158,7 @@
 					lblQuestionAll.text = arrQestion[etape]["nbAll"];
 				}
 				ckReponse.lblQ = arrQestion[etape].qst[question]["lib"];
+				ckReponse.lblRef = arrQestion[etape].qst[question]["ref"];
 				ckReponse.decocheVals();
 				lblQuestionNum.text = String(question+1);
 				
@@ -194,7 +195,7 @@
 				
 			private function setArrQuestion(etape:int, node:XML, niv:int):int
 			{
-				var cd:String;var idCrit:String;var lib:String;var arrConRep:Array;var cds:Array;var fin:int;var i:Number;var o:Object;
+				var cd:String;var idCrit:String;var crit:Object;var arrConRep:Array;var cds:Array;var fin:int;var i:Number;var o:Object;
 
  
 				for each (var q:XML in node.children()){
@@ -214,8 +215,8 @@
 							}
 						}						
 					}else{
-						lib = getCritText(arrQestion[etape]["idCtrl"], idCrit);
-						arrQestion[etape].qst.push({"idCrit":idCrit,"lib":lib,"cd":new Array(),"vn":-1,"idDiag":-1});
+						crit = getCrit(arrQestion[etape]["idCtrl"], idCrit);
+						arrQestion[etape].qst.push({"idCrit":idCrit,"lib":crit.criteres,"ref":crit.ref,"cd":new Array(),"vn":-1,"idDiag":-1});
 						fin = setArrQuestion(etape, q, niv+1);
 						arrQestion[etape].qst[niv].cd.push({"valeur":cd,"next":niv+1,"fin":fin});
 						//met à jour la fin des questions enfants
@@ -267,8 +268,10 @@
 					//1 	Oui, 2 	Non, 124 	N. A., 141 	Sous réserve
 					if(cd.valeur=="no" || val==124 || val==141){
 						getQuestion(this.numEtape, cd.next);
+						return;
 					}else if(cd.valeur=="2_"+val){
 						getQuestion(this.numEtape, cd.next);
+						return;
 					}else{
 						getQuestion(this.numEtape, cd.fin);						
 					}
@@ -306,7 +309,7 @@
 			}
 						
 			
-			private function getCritText(idTypeControle:String, idCrit:String):String
+			private function getCrit(idTypeControle:String, idCrit:String):Object
 			{
 				for each (var cri:Object in scrDescData["criteres"]["ctrl_"+idTypeControle]){
 					if(cri.id_critere==idCrit){
@@ -316,10 +319,13 @@
 						dt.lib = cri.lib;
 						hbCtl.dt = dt;
 						hbCtl.init();
-						return cri.criteres;
+						return cri;
 					}
 				}
-				return "";				
+				var def:Object = new Object;
+				def.lib = "";
+				def.ref = ""
+				return def;				
 			}
 			
 			protected function btnNextEtape_clickHandler(event:MouseEvent):void
@@ -483,7 +489,7 @@
 							 >
 					<mx:columns>
 						<mx:DataGridColumn dataField="id_diag" visible="false" />
-						<mx:DataGridColumn dataField="ref" width="100" />
+						<mx:DataGridColumn dataField="ref" width="110" />
 						<mx:DataGridColumn dataField="criteres" />
 						<mx:DataGridColumn dataField="reponse" width="60" />
 					</mx:columns>
