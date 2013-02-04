@@ -20,17 +20,17 @@
 			//include the constant definition of the server endpoint URL
 			include "../grillesconfig.as";
                     
-            import mx.states.*;
-            import mx.controls.*;
-            import mx.managers.*;
-            import mx.events.*;
-            import flash.events.*;
-            import flash.net.*;
-            
-            import compo.twWinProgress;
-            import compo.twResultImport;            
+			import mx.managers.PopUpManager;
 			
 			import com.adobe.serialization.json.JSON;
+
+			import mx.controls.Alert;
+            import mx.controls.Button;
+            import mx.controls.LinkButton;
+            import mx.controls.List;
+            
+            import compo.twResultImport;
+            import compo.twWinProgress;
 
 			[Bindable]public var wf:String;
 			[Bindable]public var idExi:String;
