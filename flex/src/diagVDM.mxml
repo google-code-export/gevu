@@ -11,7 +11,7 @@ todo :
 				xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
 
 				width="100%" height="100%" creationComplete="login()" layout="absolute"
-				name="GEVU Val de Marne" xmlns:stat="compo.stat.*" >
+				name="gevu_diagnostic" xmlns:stat="compo.stat.*" >
 	<mx:Style source="styles.css" />	
 	<mx:Script>
 		<![CDATA[
