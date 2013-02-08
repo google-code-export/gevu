@@ -28,6 +28,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     protected $_primary = 'id_scene';
 
     
+    var $xml;
+    
     /**
      * Vérifie si une entrée Gevu_scenes existe.
      *
@@ -85,6 +87,116 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     	$id = $db->lastInsertId();
     	return $id;
     } 
+    
+    /**
+     * Copie colle une entrée Gevu_scenes.
+     *
+     * @param string $copieUI
+     * @param string $colleUI
+     *  
+     * @return xml
+     */
+    public function copiecolle($copieUI, $colleUI)
+    {
+    	
+    	//récupère l'arboressence complète du scénario à copier
+    	$sceneCopie = $this->getArboScenar($copieUI);
+    	//récupère l'arboressence complète du scénario où coller
+    	$sceneColle = $this->getArboScenar($colleUI);
+    	
+    	//recherche le noeud à copier
+		$path = "//node[@uid='".$copieUI."']";
+		$result = $sceneCopie["xml"]->xpath($path);
+    	
+		//copie toute l'arboressence du noeud
+		$this->xml =  new DOMDocument();
+		$this->xml->appendChild($this->copieScene($result[0],$sceneCopie["rs"]["id_scenario"],$sceneColle["rs"]["id_scenario"]));
+
+		return $this->xml;
+    } 
+
+    /**
+     * Copie une scene.
+     *
+     * @param xmlnode $node
+     * @param int $idScenarSrc
+     * @param int $idScenarDst
+     *  
+     * @return xml
+     */
+    public function copieScene($node, $idScenarSrc, $idScenarDst)
+    {
+    	
+		//recherche le détail de la scène
+		$sc = $this->findByIdScenarioType($idScenarSrc, $node["uid"], true);
+
+		//modifie les données
+		$uId = $sc["type"];
+		$uId = explode("_", $uId);
+		unset($sc[0]["id_scene"]);
+		$sc[0]["id_scenario"]=$idScenarDst;
+		$nUid = uniqid();
+		$sc[0]["type"]=$uId[0]."_".$uId[1]."_".$nUid;
+
+		//ajoute une nouvelle scene
+		$idScene = $this->ajouter($sc[0]);
+
+		//création du xml
+		$nn = $this->xml->createElement("node");
+		$att = $nn->createAttribute('idCtrl');
+		$att->value = $node["idCtrl"];
+		$nn->appendChild($att);
+		$att = $nn->createAttribute('lib');
+		$att->value = $node["lib"];
+		$nn->appendChild($att);
+		$att = $nn->createAttribute('objZend');
+		$att->value = $node["objZend"];
+		$nn->appendChild($att);
+		$att = $nn->createAttribute('uid');
+		$att->value = $nUid;
+		$nn->appendChild($att);
+		$att = $nn->createAttribute('isBranch');
+		if($node->count()){
+			$att->value = "true";
+			$nn->appendChild($att);
+			foreach($node->children() as $n){
+				$nScene = $this->copieScene($n, $idScenarSrc, $idScenarDst);
+				$nn->appendChild($nScene);
+			}
+		}else{
+			$att->value = "false";
+			$nn->appendChild($att);
+		}
+		
+		return $nn;
+
+    }
+    
+    
+    /**
+     * renvoie l'arboressence générale d'un scenario à partir d'une scène
+     *
+     * @param string $ui
+     *  
+     * @return array
+     */
+    public function getArboScenar($ui)
+    {
+    	//récupère l'arboressence complète du scénario
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('se' => 'gevu_scenes'),array())
+            ->joinInner(array('so' => 'gevu_scenario'),
+                'so.id_scenario = se.id_scenario',array())
+            ->joinInner(array('set' => 'gevu_scenes'),
+                'set.id_scene = so.params',array("id_scene", "type", "arbo"=>"paramsCtrl", "id_scenario"=>"id_scenario"))
+            ->where( "se.type like '%".$ui."%'");    	
+        $result = $this->fetchAll($query)->toArray();
+        $params = json_decode($result[0]["arbo"]);
+		$xmlScene = simplexml_load_string($params[0]->idCritSE);		
+    	
+		return array("xml"=>$xmlScene, "rs"=>$result[0]);
+    }
     
     /**
      * Recherche une entrée Gevu_scenes avec la clef primaire spécifiée
