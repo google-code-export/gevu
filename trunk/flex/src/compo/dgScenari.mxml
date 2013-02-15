@@ -103,8 +103,8 @@
 			
 			public var dCrit:cnvArboCrit;
 			public var dCtrl:cnvArboCtl;
-			public var dProd:cnvProdCtl;
-						
+			public var dProd:cnvProdCtl;			
+			
 			public function init():void 
 			{
 			    //chargement des données
@@ -259,6 +259,7 @@
 				//enregistrement des modifications
 				ROS.edit(idScenar,vn);	
 			}
+
 			
 		]]>
     </mx:Script>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:LinkBar  xmlns:mx="http://www.adobe.com/2006/mxml"
-			  dataProvider="{NodeData}" fontSize="8" borderStyle="solid"
+			  dataProvider="{NodeData}" fontSize="12" borderStyle="solid"
 			  itemClick="itemClicked(event);" labelField="lib"
 			  > 
 	<mx:Script>

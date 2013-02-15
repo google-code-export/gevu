@@ -9,8 +9,6 @@
 			
 			import compo.vbEditTreeScen;
 			
-			import mx.utils.UIDUtil;
-			
 			import memorphic.xpath.XPathQuery;
 			
 			import mx.collections.ArrayCollection;
@@ -24,6 +22,7 @@
 			import mx.managers.DragManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			import mx.utils.UIDUtil;
 			
 
 			[Bindable] public var cptScenari:dgScenari;
@@ -43,8 +42,13 @@
 			
 			private var xmlTree:XML;
 			
+			private var uidCopie:String;
+			private var uidColle:String;
+			private var ui:String;
+			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
+				this.uidCopie = this.parentApplication.uidCopie;
 				ROScenes.findByIdScene(idScene);
 				ROC.getAll();				
 			}
@@ -289,16 +293,57 @@
 			private function treeItemClicked(event:MouseEvent) : void {
 				var item:Object = event.currentTarget.selectedItem;
 				var idCtl:int = item.attribute("idCtrl");
-				var uid:String = item.attribute("uid");
+				ui = item.attribute("uid");
 				var objZend:String = item.attribute("objZend");
-				var type:String = "arboCtl_"+idCtl+"_"+uid;
+				var type:String = "arboCtl_"+idCtl+"_"+ui;
 				trace ("idCtl="+idCtl+" type="+type);
 				//affiche le critère sélectionné
 				lblCtlSelect.text = item.attribute("lib");
-				lblCtlSelectId.text = " ("+uid+")";
+				lblCtlSelectId.text = " ("+ui+")";
 				cptScenari.showCriteres(idCtl, type);
 				cptScenari.showFormulaire(objZend, type);
 				cptScenari.showProduit(idCtl, type);
+			}
+			protected function copierLieu_clickHandler(event:MouseEvent):void
+			{
+				uidCopie = ui;
+				this.parentApplication.uidCopie = this.uidCopie;
+				
+			}
+			
+			protected function collerLieu_clickHandler(event:MouseEvent):void
+			{
+				if(ui == ""){
+					Alert.show("Vous ne pouvez pas coller un contrôle directement dans l'univers.\nVeuillez coller dans un contrôle.","Copier-coller un contrôle");
+					return;
+				}
+				if(ui == uidCopie){
+					Alert.show("La destination et la source ne peuvent pas être les même.\nVeuillez sélectionner un autre contrôle.","Copier-coller un contrôle");
+					return;
+				}
+				uidColle = ui;
+				ROScenes.copiecolle(uidCopie, uidColle);	
+			}
+			
+			protected function copiecolle_resultHandler(event:ResultEvent):void
+			{
+				//ajoute les nouveau noeuds
+				var node:XML = XML(event.result);
+				treeNewCtl(node);
+				saveScene();
+				Alert.show("Le contrôle a bien été copié-collé.","Copier-coller un contrôle");
+				
+			}
+			
+			
+			private function treeNewCtl(node:XML):void {
+				var x:XML = <root></root>;
+				x.appendChild(node);
+				var objTree:XMLList = tree.dataProvider[0].descendants().(@uid == this.uidColle);
+				if(objTree[0].@isBranch=="false")objTree[0].@isBranch="true";
+				objTree[0].appendChild(x.node);
+				//ouvre le noeud parent
+				tree.expandItem(objTree[0],true);	
 			}
 			
 		]]>
@@ -316,12 +361,14 @@
 		<mx:method name="edit"  result="fillScene(event)"/>  	
 		<mx:method name="findByIdScene"  result="fillScene(event)"/>
 		<mx:method name="removeByScenarioType" />
-		
+		<mx:method name="copiecolle" result="copiecolle_resultHandler(event)" />
 	</mx:RemoteObject>
 	
 	<mx:VBox left="4" right="4" top="4" bottom="4">
 		<mx:HBox >
 			<mx:LinkButton id="delCtl" click="delCtl_clickHandler(event)" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un contrôle" />
+			<mx:LinkButton click="copierLieu_clickHandler(event)" icon="@Embed('images/copier.png')" toolTip="copier un lieu" />															
+			<mx:LinkButton click="collerLieu_clickHandler(event)"  icon="@Embed('images/coller.png')" toolTip="coller un lieu" />															
 			<mx:Button label="Enregistrer" click="saveScene()" visible="false" toolTip="Enregistre les modifications de l'arboressence" />
 			<mx:Label text="Contrôle :" /><mx:Label id="lblCtlSelect" text="" /><mx:Label id="lblCtlSelectId" text="" selectable="true" />
 
@@ -350,7 +397,7 @@
 					 width="100%" height="100%"
 					 labelField="@lib"
 					 showRoot="true"
-					 dragEnabled="true"
+					 dragEnabled="false"
 					 dropEnabled="true"
 					 dragOver="doDragOver(event)"
 					 dragDrop="doDragDrop(event)"
