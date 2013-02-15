@@ -108,24 +108,30 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     		}else{
     			//récupère les informations du parent
     			$arr = $this->findById_lieu($data["lieu_parent"]);
-    			//met à jour les niveaux pour les lieux
-    			$sql = 'UPDATE gevu_lieux SET rgt = rgt + 2 WHERE rgt >'.$arr[0]['lft'];
-    			$stmt = $this->_db->query($sql);
-    			$sql = 'UPDATE gevu_lieux SET lft = lft + 2 WHERE lft >'.$arr[0]['lft'];
-    			$stmt = $this->_db->query($sql);
-    			//
-    			$data['lft'] = $arr[0]['lft']+1;
-    			$data['rgt'] = $arr[0]['lft']+2;
+    			//vérifie si la base n'est pas vide
+    			if(count($arr)==0){
+    				$data['lft'] = 1;
+    				$data['rgt'] = 2;
+    			}else{
+	    			//met à jour les niveaux pour les lieux
+	    			$sql = 'UPDATE gevu_lieux SET rgt = rgt + 2 WHERE rgt >'.$arr[0]['lft'];
+	    			$stmt = $this->_db->query($sql);
+	    			$sql = 'UPDATE gevu_lieux SET lft = lft + 2 WHERE lft >'.$arr[0]['lft'];
+	    			$stmt = $this->_db->query($sql);
+	    			//
+	    			$data['lft'] = $arr[0]['lft']+1;
+	    			$data['rgt'] = $arr[0]['lft']+2;
+    			}
     		}    		
     		$data['niv'] = $arrP[0]['niv']+1;
     	 	$data["id_lieu"] = $this->insert($data);
-    	}else{
-	    	$data["id_lieu"] = $id;   		
+    	 	$id = $data["id_lieu"];
     	}
-    	if($rData)
-	    	return $data;
-    	else
-	    	return $data["id_lieu"];
+    	if($rData){
+    		$data = $this->findById_lieu($id);
+    		return $data[0];
+    	}else
+	    	return $id;
     } 
            
     /**

@@ -9,7 +9,7 @@
 
 
 /**
- * Classe ORM qui représente la table 'gevu_scenes'.
+ * Classe ORM qui reprÃ©sente la table 'gevu_scenes'.
  *
  * @copyright  2010 Samuel Szoniecky
  * @license    "New" BSD License
@@ -31,7 +31,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     var $xml;
     
     /**
-     * Vérifie si une entrée Gevu_scenes existe.
+     * VÃ©rifie si une entrÃ©e Gevu_scenes existe.
      *
      * @param array $data
      *
@@ -51,7 +51,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     } 
         
     /**
-     * Ajoute une entrée Gevu_scenes.
+     * Ajoute une entrÃ©e Gevu_scenes.
      *
      * @param array $data
      * @param boolean $existe
@@ -69,7 +69,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     	return $id;
     } 
     /**
-     * Copie une entrée Gevu_scenes.
+     * Copie une entrÃ©e Gevu_scenes.
      *
      * @param array $data
      *  
@@ -89,7 +89,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     } 
     
     /**
-     * Copie colle une entrée Gevu_scenes.
+     * Copie colle une entrÃ©e Gevu_scenes.
      *
      * @param string $copieUI
      * @param string $colleUI
@@ -99,19 +99,21 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     public function copiecolle($copieUI, $colleUI)
     {
     	
-    	//récupère l'arboressence complète du scénario à copier
+    	//rÃ©cupÃ¨re l'arboressence complÃ¨te du scÃ©nario Ã  copier
     	$sceneCopie = $this->getArboScenar($copieUI);
-    	//récupère l'arboressence complète du scénario où coller
+    	//rÃ©cupÃ¨re l'arboressence complÃ¨te du scÃ©nario oÃ¹ coller
     	$sceneColle = $this->getArboScenar($colleUI);
     	
-    	//recherche le noeud à copier
+    	//recherche le noeud Ã  copier
 		$path = "//node[@uid='".$copieUI."']";
-		$result = $sceneCopie["xml"]->xpath($path);
+		$xml = $sceneCopie["xml"]; 
+		$result = $xml->xpath($path);
     	
 		//copie toute l'arboressence du noeud
 		$this->xml =  new DOMDocument();
-		$this->xml->appendChild($this->copieScene($result[0],$sceneCopie["rs"]["id_scenario"],$sceneColle["rs"]["id_scenario"]));
-
+		$xmlArbo = $this->copieScene($result[0],$sceneCopie["rs"]["id_scenario"],$sceneColle["rs"]["id_scenario"]);
+		$this->xml->appendChild($xmlArbo);
+		
 		return $this->xml;
     } 
 
@@ -127,46 +129,43 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     public function copieScene($node, $idScenarSrc, $idScenarDst)
     {
     	
-		//recherche le détail de la scène
+		//recherche le dÃ©tail de la scÃ¨ne
 		$sc = $this->findByIdScenarioType($idScenarSrc, $node["uid"], true);
 
-		//modifie les données
-		$uId = $sc["type"];
+		//modifie les donnÃ©es
+		$uId = $sc[0]["type"];
 		$uId = explode("_", $uId);
 		unset($sc[0]["id_scene"]);
+		unset($sc[0]["maj"]);
 		$sc[0]["id_scenario"]=$idScenarDst;
 		$nUid = uniqid();
 		$sc[0]["type"]=$uId[0]."_".$uId[1]."_".$nUid;
 
 		//ajoute une nouvelle scene
-		$idScene = $this->ajouter($sc[0]);
+		$idScene = $this->ajouter($sc[0],false);
 
-		//création du xml
+		//crÃ©ation du xml
 		$nn = $this->xml->createElement("node");
-		$att = $nn->createAttribute('idCtrl');
-		$att->value = $node["idCtrl"];
-		$nn->appendChild($att);
-		$att = $nn->createAttribute('lib');
-		$att->value = $node["lib"];
-		$nn->appendChild($att);
-		$att = $nn->createAttribute('objZend');
-		$att->value = $node["objZend"];
-		$nn->appendChild($att);
-		$att = $nn->createAttribute('uid');
-		$att->value = $nUid;
-		$nn->appendChild($att);
-		$att = $nn->createAttribute('isBranch');
+		$nn->setAttribute("idCtrl", $node["idCtrl"]);
+		$nn->setAttribute("lib", $node["lib"]);
+		$nn->setAttribute("objZend", $node["objZend"]);
+		$nn->setAttribute("uid", $nUid);
+		$att = $this->xml->createAttribute('isBranch');
 		if($node->count()){
-			$att->value = "true";
-			$nn->appendChild($att);
+			$nn->setAttribute("isBranch", "true");
 			foreach($node->children() as $n){
 				$nScene = $this->copieScene($n, $idScenarSrc, $idScenarDst);
 				$nn->appendChild($nScene);
 			}
 		}else{
-			$att->value = "false";
-			$nn->appendChild($att);
+			$nn->setAttribute("isBranch", "false");
 		}
+
+		/*vérifie la valeur du xml
+		$s = new GEVU_Site();
+		$object = new stdClass();
+		$s->getDomElementToObject($nn, $object);
+		*/
 		
 		return $nn;
 
@@ -174,7 +173,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     
     
     /**
-     * renvoie l'arboressence générale d'un scenario à partir d'une scène
+     * renvoie l'arboressence gÃ©nÃ©rale d'un scenario Ã  partir d'une scÃ¨ne
      *
      * @param string $ui
      *  
@@ -182,25 +181,25 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
      */
     public function getArboScenar($ui)
     {
-    	//récupère l'arboressence complète du scénario
+    	//rÃ©cupÃ¨re l'arboressence complÃ¨te du scÃ©nario
         $query = $this->select()
-                ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+                ->setIntegrityCheck(false) //pour pouvoir sÃ©lectionner des colonnes dans une autre table
             ->from(array('se' => 'gevu_scenes'),array())
             ->joinInner(array('so' => 'gevu_scenario'),
                 'so.id_scenario = se.id_scenario',array())
             ->joinInner(array('set' => 'gevu_scenes'),
-                'set.id_scene = so.params',array("id_scene", "type", "arbo"=>"paramsCtrl", "id_scenario"=>"id_scenario"))
+                'set.id_scene = so.params',array("id_scene", "type", "paramsCtrl", "id_scenario"))
             ->where( "se.type like '%".$ui."%'");    	
         $result = $this->fetchAll($query)->toArray();
-        $params = json_decode($result[0]["arbo"]);
+        $params = json_decode($result[0]["paramsCtrl"]);
 		$xmlScene = simplexml_load_string($params[0]->idCritSE);		
     	
 		return array("xml"=>$xmlScene, "rs"=>$result[0]);
     }
     
     /**
-     * Recherche une entrée Gevu_scenes avec la clef primaire spécifiée
-     * et modifie cette entrée avec les nouvelles données.
+     * Recherche une entrée Gevu_scenes avec la clef primaire spÃ©cifiÃ©e
+     * et modifie cette entrÃ©e avec les nouvelles donnÃ©es.
      *
      * @param integer $id
      * @param array $data
@@ -213,8 +212,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     }
     
     /**
-     * Recherche une entrée Gevu_scenes avec la clef primaire spécifiée
-     * et supprime cette entrée.
+     * Recherche une entrÃ©e Gevu_scenes avec la clef primaire spÃ©cifiÃ©e
+     * et supprime cette entrÃ©e.
      *
      * @param integer $id
      *
@@ -227,8 +226,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     }
 
     /**
-    * Recherche une entrée Gevu_scenes avec la clef secondaire spécifiée
-     * et supprime cette entrée.
+    * Recherche une entrÃ©e Gevu_scenes avec la clef secondaire spÃ©cifiÃ©e
+     * et supprime cette entrÃ©e.
      *
      * @param integer $id_scenario
      *
@@ -241,8 +240,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     }
     
     /**
-    * Recherche une entrée Gevu_scenes avec les paramètres spécifiés
-     * et supprime cette entrée.
+    * Recherche une entrÃ©e Gevu_scenes avec les paramÃ¨tres spÃ©cifiÃ©s
+     * et supprime cette entrÃ©e.
      *
      * @param integer $id_scenario
      * @param string $type
@@ -255,7 +254,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     }
     
     /**
-     * Récupère toutes les entrées Gevu_scenes avec certains critères
+     * RÃ©cupÃ¨re toutes les entrÃ©es Gevu_scenes avec certains critÃ¨res
      * de tri, intervalles
      */
     public function getAll($order=null, $limit=0, $from=0)
@@ -277,8 +276,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     }
     
     /*
-     * Recherche une entrée Gevu_scenes avec la valeur spécifiée
-     * et retourne cette entrée.
+     * Recherche une entrÃ©e Gevu_scenes avec la valeur spÃ©cifiÃ©e
+     * et retourne cette entrÃ©e.
      *
      * @param int $id_scene
      */
@@ -291,8 +290,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     /*
-     * Recherche une entrée Gevu_scenes avec la valeur spécifiée
-     * et retourne cette entrée.
+     * Recherche une entrÃ©e Gevu_scenes avec la valeur spÃ©cifiÃ©e
+     * et retourne cette entrÃ©e.
      *
      * @param int $id_scenario
      */
@@ -305,8 +304,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     /**
-     * Recherche une entrée Gevu_scenes avec la valeur spécifiée
-     * et retourne cette entrée.
+     * Recherche une entrÃ©e Gevu_scenes avec la valeur spÃ©cifiÃ©e
+     * et retourne cette entrÃ©e.
      *
      * @param int $id_scenario
      * @param string $type
@@ -327,8 +326,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     /**
-     * Recherche une entrée Gevu_scenes avec la valeur spécifiée
-     * et retourne cette entrée.
+     * Recherche une entrÃ©e Gevu_scenes avec la valeur spÃ©cifiÃ©e
+     * et retourne cette entrÃ©e.
      *
      * @param varchar $lib
      */
@@ -341,8 +340,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     /**
-     * Recherche une entrée Gevu_scenes avec la valeur spécifiée
-     * et retourne cette entrée.
+     * Recherche une entrÃ©e Gevu_scenes avec la valeur spÃ©cifiÃ©e
+     * et retourne cette entrÃ©e.
      *
      * @param longtext $params
      */
@@ -355,8 +354,8 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     /**
-     * Recherche une entrée Gevu_scenes avec la valeur spécifiée
-     * et retourne cette entrée.
+     * Recherche une entrÃ©e Gevu_scenes avec la valeur spÃ©cifiÃ©e
+     * et retourne cette entrÃ©e.
      *
      * @param datetime $maj
      */
@@ -370,14 +369,14 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     }
 
 	/**
-	* vérifie si les noeuds d'un scénario existe ou sont en trop
+	* vÃ©rifie si les noeuds d'un scÃ©nario existe ou sont en trop
 	*  
     * @param int $idScene
     * 
     */
 	function verifIsNodeExiste($idScene){
 
-		//récupère la scène de départ du scénario
+		//rÃ©cupÃ¨re la scÃ¨ne de dÃ©part du scÃ©nario
         $scene = $this->findByIdScene($idScene);
         $params = json_decode($scene[0]['paramsCtrl']);
 		$xmlScene = simplexml_load_string($params[0]->idCritSE);
@@ -385,7 +384,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 		$arrScene = $this->findById_scenario($scene[0]['id_scenario']);
 		foreach ($arrScene as $sc) {
 			if($idScene != $sc['id_scene']){
-				//vérifie si le noeud est dans l'arbre
+				//vÃ©rifie si le noeud est dans l'arbre
 				$arr = explode("_",$sc["type"]);
 		        $result = $xmlScene->xpath("//node[@uid='".$arr[2]."']");
 		        if(count($result)>0){
