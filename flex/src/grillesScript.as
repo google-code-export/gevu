@@ -24,6 +24,8 @@ public var exi:Object;
 [Bindable] public var idExi:String = "";
 [Bindable] public var idScenar:int;
 
+public var uidCopie:String;
+
  
 public function login():void
 {

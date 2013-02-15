@@ -85,8 +85,8 @@ todo :
 							<mx:HBox>
 								<mx:LinkButton click="ajouterLieu()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un lieu" />
 								<mx:LinkButton click="deleteLieu()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un lieu" />															
-								<mx:LinkButton click="copierLieu_clickHandler(event)" icon="@Embed('images/copier.jpg')" toolTip="copier un lieu" />															
-								<mx:LinkButton click="collerLieu_clickHandler(event)"  icon="@Embed('images/coller.jpg')" toolTip="coller un lieu" />															
+								<mx:LinkButton click="copierLieu_clickHandler(event)" icon="@Embed('images/copier.png')" toolTip="copier un lieu" />															
+								<mx:LinkButton click="collerLieu_clickHandler(event)"  icon="@Embed('images/coller.png')" toolTip="coller un lieu" />															
 								<!-- <mx:LinkButton click="synchBase()" icon="@Embed('images/sync.gif')" toolTip="Synchronise deux bases" /> -->															
 							</mx:HBox>
 							<mx:Tree id="treeTree" labelField="@lib" iconField="@icon" showRoot="false"
