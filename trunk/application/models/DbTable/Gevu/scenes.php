@@ -98,7 +98,6 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
      */
     public function copiecolle($copieUI, $colleUI)
     {
-    	
     	//rÃ©cupÃ¨re l'arboressence complÃ¨te du scÃ©nario Ã  copier
     	$sceneCopie = $this->getArboScenar($copieUI);
     	//rÃ©cupÃ¨re l'arboressence complÃ¨te du scÃ©nario oÃ¹ coller
@@ -143,7 +142,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 
 		//ajoute une nouvelle scene
 		$idScene = $this->ajouter($sc[0],false);
-
+		
 		//crÃ©ation du xml
 		$nn = $this->xml->createElement("node");
 		$nn->setAttribute("idCtrl", $node["idCtrl"]);
@@ -151,16 +150,17 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 		$nn->setAttribute("objZend", $node["objZend"]);
 		$nn->setAttribute("uid", $nUid);
 		$att = $this->xml->createAttribute('isBranch');
-		if($node->count()){
+		$enfants = $node->children();
+		if(count($enfants)){
 			$nn->setAttribute("isBranch", "true");
-			foreach($node->children() as $n){
+			foreach($enfants->node as $n){
 				$nScene = $this->copieScene($n, $idScenarSrc, $idScenarDst);
 				$nn->appendChild($nScene);
 			}
 		}else{
 			$nn->setAttribute("isBranch", "false");
 		}
-
+		
 		/*vérifie la valeur du xml
 		$s = new GEVU_Site();
 		$object = new stdClass();
@@ -275,7 +275,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
     
-    /*
+    /**
      * Recherche une entrÃ©e Gevu_scenes avec la valeur spÃ©cifiÃ©e
      * et retourne cette entrÃ©e.
      *
@@ -289,7 +289,7 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrÃ©e Gevu_scenes avec la valeur spÃ©cifiÃ©e
      * et retourne cette entrÃ©e.
      *
