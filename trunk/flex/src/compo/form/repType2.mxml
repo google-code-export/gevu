@@ -6,7 +6,6 @@
 	<mx:Script>
 		<![CDATA[			
 			[Bindable] public var lblQ:String;
-			[Bindable] public var lblRef:String;
 			[Bindable] public var Q:String;
 			[Bindable] public var val:String;
 			[Bindable] public var fnct:Function;
@@ -47,15 +46,12 @@
 
 		]]>
 	</mx:Script>
-	<mx:HBox width="100%" >		
-		<mx:Label text="{lblRef}" />
-		<mx:TextArea text="{lblQ}" height="100%" width="100%" editable="false" />
-	</mx:HBox>
+	<mx:TextArea text="{lblQ}" height="100%" width="100%" editable="false" />
 	<mx:HBox>		
-		<mx:RadioButton groupName="reponse" id="reponse_1" label="oui" color="0x323232" click="changeModif('1')" /> 
-		<mx:RadioButton groupName="reponse" id="reponse_2" label="non" color="0x323232" click="changeModif('2')" />
-		<mx:RadioButton groupName="reponse" id="reponse_124" label="n. a." color="0x323232" click="changeModif('124')" />
-		<mx:RadioButton groupName="reponse" id="reponse_141" label="sous réserve" color="0x323232" click="changeModif('141')" />
+		<mx:RadioButton groupName="reponse" id="reponse_1" label="oui" click="changeModif('1')" /> 
+		<mx:RadioButton groupName="reponse" id="reponse_2" label="non" click="changeModif('2')" />
+		<mx:RadioButton groupName="reponse" id="reponse_124" label="n. a." click="changeModif('124')" />
+		<mx:RadioButton groupName="reponse" id="reponse_141" label="sous réserve" click="changeModif('141')" />
 	</mx:HBox>
 
 </mx:VBox>

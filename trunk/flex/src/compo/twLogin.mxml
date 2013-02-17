@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
 	close="PopUpManager.removePopUp(this);" title="Authentification"
-	xmlns:ns2="compo.*"
-	>
+	xmlns:ns2="compo.*"	>
 	<mx:Script>
         <![CDATA[
 	       	import com.adobe.serialization.json.JSON;
