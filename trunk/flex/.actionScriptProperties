@@ -18,6 +18,7 @@
     <application path="diagVDM.mxml"/>
     <application path="diag.mxml"/>
     <application path="grilles.mxml"/>
+    <application path="gevuAlceane.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>

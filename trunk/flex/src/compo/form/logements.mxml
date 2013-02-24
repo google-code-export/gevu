@@ -1,30 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
-		   title="Logement"
-		   width="100%" height="100%"
-		   xmlns:compo="compo.*" 
-		   initialize="init();" >
+		  xmlns:compo="compo.*"
+		  width="100%" height="100%" initialize="init();" layout="vertical" paddingBottom="6"
+		  paddingLeft="6" paddingRight="6" paddingTop="6" title="Logement" xmlns:form="compo.form.*" xmlns:s="library://ns.adobe.com/flex/spark">
 	<mx:VBox>
 
-		<mx:HBox width="100%">
-			<mx:Label text="Identifiant du logement :" />
-			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
-			<mx:Label text="N° de porte :" />
-			<mx:TextInput id="F3" width="100%" text="{NodeData.num_porte}" change="editModif('num_porte', F3.text)" />
-		</mx:HBox>
-		<mx:HBox width="100%">
-			<mx:Label text="Type de logement : " />
-			<mx:RadioButton groupName="type" id="reponse_T1" label="T1" color="0x323232" change="editModif('type', RadioButton(event.target).label)" /> 
-			<mx:RadioButton groupName="type" id="reponse_T2" label="T2" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
-			<mx:RadioButton groupName="type" id="reponse_T3" label="T3" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
-			<mx:RadioButton groupName="type" id="reponse_T4" label="T4" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
-			<mx:RadioButton groupName="type" id="reponse_T5" label="T5" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
-			<mx:RadioButton groupName="type" id="reponse_T6" label="T6" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
-			<mx:RadioButton groupName="type" id="reponse_T7" label="T7" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
-			<mx:RadioButton groupName="type" id="reponse_T8" label="T8" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
-			<mx:RadioButton groupName="type" id="reponse_T9" label="T9" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
-			<mx:RadioButton groupName="type" id="reponse_T10" label="T10" color="0x323232" change="editModif('type', RadioButton(event.target).label)" />
-		</mx:HBox>
+		<mx:Panel width="100%" title="Informations générale">
+			<mx:HBox width="100%">
+				<mx:Label text="Identifiant du logement :" />
+				<mx:TextInput id="F2" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
+				<mx:Label text="Escalier :" />
+				<mx:TextInput id="Code_Escalier" />
+				<mx:Label text="Etage :" />
+				<mx:TextInput id="Etage" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:HBox width="100%">
+				<mx:VBox>
+					<mx:Label text="Exposition : " />
+					<mx:TextInput text="" />
+					<mx:Label text="Nombre de pièce :" />
+					<mx:TextInput id="Nombre_pieces" />
+					<mx:Label text="Surface réelle :" />
+					<mx:TextInput id="Surface_Reelle" text="" />
+					<mx:Label text="Surface appliquée :" />
+					<mx:TextInput id="Surface_Appliquee" width="100%" text="" />
+					<mx:Label text="Raccordement :" />
+					<mx:TextInput id="Type_Reception_TV" width="100%" text="" />
+				</mx:VBox>
+				<s:Image source="images/synchronize.png"/>
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:HBox width="100%">
+				<mx:Label text="Type de logement :" />
+				<mx:RadioButton groupName="Type_Logement" id="duplex" label="Duplex" change="editModif('data', '')" /> 
+				<mx:RadioButton groupName="Type_Logement" id="pavillon" label="Pavillon" change="editModif('data', '')" />
+				<mx:RadioButton groupName="Type_Logement" id="appartement" label="Appartement" change="editModif('data', '')" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:HBox width="100%">
+				<mx:Label text="Activitée(s) :" />
+				<mx:RadioButton groupName="activite" id="com" label="Commerce" change="editModif('data', '')" /> 
+				<mx:RadioButton groupName="activite" id="assos" label="Association" change="editModif('data', '')" />
+			</mx:HBox>
+		</mx:Panel>
+		<mx:Panel width="100%" height="100%" title="Diagnostics">
+			<mx:Label text="Plomb :" />
+			<mx:HBox width="100%">
+				<mx:Label text="Date :" /><mx:TextInput id="CREP_Date" text="" />
+				<mx:Label text="Présence :" />
+				<mx:RadioButton groupName="CREP_presence_Plomb" id="CREP_presence_Plomb_0" label="Oui" /> 
+				<mx:RadioButton groupName="CREP_presence_Plomb" id="CREP_presence_Plomb_N" label="Non" />
+				<mx:Label text="Seuil dépassé :" />
+				<mx:RadioButton groupName="CREP_Seuil_Plomb_depasse" id="CREP_Seuil_Plomb_depasse_0" label="Oui" /> 
+				<mx:RadioButton groupName="CREP_Seuil_Plomb_depasse" id="CREP_Seuil_Plomb_depasse_N" label="Non" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:Label text="Amiante :" />
+			<mx:HBox width="100%">
+				<mx:Label text="Date :" /><mx:TextInput id="DTA_Date" text="" />
+				<mx:Label text="Présence :" />
+				<mx:RadioButton groupName="DTA_Presence_Amiante" id="DTA_Presence_Amiante_0" label="Oui" /> 
+				<mx:RadioButton groupName="DTA_Presence_Amiante" id="DTA_Presence_Amiante_N" label="Non" />
+				<mx:Label text="Dégradée :" />
+				<mx:RadioButton groupName="DTA_Presence_Amiante_Degradee" id="DTA_Presence_Amiante_Degradee_0" label="Oui" /> 
+				<mx:RadioButton groupName="DTA_Presence_Amiante_Degradee" id="DTA_Presence_Amiante_Degradee_N" label="Non" />
+				<mx:Label text="Mesure conservatoire :" />
+				<mx:RadioButton groupName="DTA_Mesure_Conservatoire" id="DTA_Mesure_Conservatoire_conf" label="Confinement" /> 
+				<mx:RadioButton groupName="DTA_Mesure_Conservatoire" id="DTA_Mesure_Conservatoire_elim" label="Elimination" />
+				<mx:Label text="Date des travaux :" /><mx:TextInput id="DTA_Date_Travaux" text="" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:Label text="Performance énergétique :" />
+			<mx:HBox width="100%">
+				<form:dpe dateDiag="{DPE_Date.text}" catDiag="{DPE_consommation_reelle.text}" conso="{int(DPE_Categorie_Consommation.text)}" />
+				<mx:Label text="Date :" /><mx:TextInput id="DPE_Date" text="" />
+				<mx:Label text="Consommation réelle :" /><mx:TextInput id="DPE_consommation_reelle" text="" />
+				<mx:Label text="Catégorie de Consommation :" /><mx:TextInput id="DPE_Categorie_Consommation" text="" />
+				<mx:Label text="Emissions GES :" /><mx:TextInput id="DPE_emissions_GES" text="" />
+				<mx:Label text="Catégorie émissions GES :" /><mx:TextInput id="DPE_Categorie_Emissions_GES" text="" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:Label text="Electricité :" />
+			<mx:HBox width="100%">
+				<mx:Label text="Date :" /><mx:TextInput text="" />
+				<mx:Label text="Consommation réelle :" /><mx:TextInput  text="" />
+				<mx:Label text="Catégorie de Consommation :" /><mx:TextInput text="" />
+			</mx:HBox>
+		</mx:Panel>
 		<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
 		
 	</mx:VBox>
