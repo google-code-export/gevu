@@ -74,11 +74,6 @@
 			<mx:Label text="Performance énergétique :" />
 			<mx:HBox width="100%">
 				<form:dpe dateDiag="{DPE_Date.text}" catDiag="{DPE_consommation_reelle.text}" conso="{int(DPE_Categorie_Consommation.text)}" />
-				<mx:Label text="Date :" /><mx:TextInput id="DPE_Date" text="" />
-				<mx:Label text="Consommation réelle :" /><mx:TextInput id="DPE_consommation_reelle" text="" />
-				<mx:Label text="Catégorie de Consommation :" /><mx:TextInput id="DPE_Categorie_Consommation" text="" />
-				<mx:Label text="Emissions GES :" /><mx:TextInput id="DPE_emissions_GES" text="" />
-				<mx:Label text="Catégorie émissions GES :" /><mx:TextInput id="DPE_Categorie_Emissions_GES" text="" />
 			</mx:HBox>
 			<mx:HRule width="100%"/>
 			<mx:Label text="Electricité :" />
