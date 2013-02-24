@@ -6,7 +6,7 @@
 		>
     <mx:Script source="grillesScript.as" />
 
-	<mx:VBox width="100%" height="100%" id="boxGen" visible="false" >
+	<mx:VBox width="100%" height="100%" id="boxGen" visible="false" backgroundColor="#39628C" >
 		<mx:HBox>
 			<mx:Image source="@Embed('images/logo.png')" />
 			<mx:VBox>

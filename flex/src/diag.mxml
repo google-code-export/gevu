@@ -13,6 +13,7 @@ todo :
 				width="100%" height="100%" creationComplete="login()" layout="absolute"
 				name="gevu_diagnostic" xmlns:stat="compo.stat.*" >
 	<mx:Style source="styles.css" />	
+	<mx:Style source="gevu_alceane.css"/>
 	<mx:Script>
 		<![CDATA[
 						
