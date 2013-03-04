@@ -2,35 +2,80 @@
 <s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
-		 creationComplete="creationCompleteHandler(event)">
+		 creationComplete="creationCompleteHandler(event)" 
+		 >
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
+			[Bindable] public var co2:int=-1;
 			[Bindable] public var conso:int=-1;
 			[Bindable] public var dateDiag:String="";
-			[Bindable] public var catDiag:String="";
+			[Bindable] public var catDPE:String="";
+			[Bindable] public var catGES:String="";
 
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				//affichage de la flèche DPE
 				if(conso < 0)grFlecheDPE.visible = false;
-				if(conso <= 50)grFlecheDPE.y = 19;
-				if(conso >= 51 && conso <= 90 )grFlecheDPE.y = 59;
-				if(conso >= 91 && conso <= 150 )grFlecheDPE.y = 96;
-				if(conso >= 151 && conso <= 230 )grFlecheDPE.y = 137;
-				if(conso >= 231 && conso <= 330 )grFlecheDPE.y = 176;
-				if(conso >= 331 && conso <= 450 )grFlecheDPE.y = 215;
-				if(conso > 450)grFlecheDPE.y = 254;
+				if(conso <= 50){
+					grFlecheDPE.x = 60;
+					grFlecheDPE.y = 18;
+				}
+				if(conso >= 51 && conso <= 90 ){
+					grFlecheDPE.x = 78;
+					grFlecheDPE.y = 43;
+				}
+				if(conso >= 91 && conso <= 150 ){
+					grFlecheDPE.x = 96;
+					grFlecheDPE.y = 67;
+				}
+				if(conso >= 151 && conso <= 230 ){
+					grFlecheDPE.x = 114;
+					grFlecheDPE.y = 91;
+				}
+				if(conso >= 231 && conso <= 330 ){
+					grFlecheDPE.x = 132;
+					grFlecheDPE.y = 116;
+				}
+				if(conso >= 331 && conso <= 450 ){
+					grFlecheDPE.x = 150;
+					grFlecheDPE.y = 139;
+				}
+				if(conso > 450){
+					grFlecheDPE.x = 167;
+					grFlecheDPE.y = 164;
+				}
 
 				//affichage de la flèche GES
-				if(conso < 0)grFlecheGES.visible = false;
-				if(conso <= 50)grFlecheGES.y = 19;
-				if(conso >= 51 && conso <= 90 )grFlecheGES.y = 59;
-				if(conso >= 91 && conso <= 150 )grFlecheGES.y = 96;
-				if(conso >= 151 && conso <= 230 )grFlecheGES.y = 137;
-				if(conso >= 231 && conso <= 330 )grFlecheGES.y = 176;
-				if(conso >= 331 && conso <= 450 )grFlecheGES.y = 215;
-				if(conso > 450)grFlecheGES.y = 254;
+				if(co2 < 0)grFlecheGES.visible = false;
+				if(co2 <= 5){
+					grFlecheGES.x = 52;
+					grFlecheGES.y = 19;
+				}
+				if(co2 >= 6 && co2 <= 10 ){
+					grFlecheGES.x = 70;
+					grFlecheGES.y = 44;
+				}
+				if(co2 >= 11 && co2 <= 20 ){
+					grFlecheGES.x = 89;
+					grFlecheGES.y = 67;
+				}
+				if(co2 >= 21 && co2 <= 35 ){
+					grFlecheGES.x = 107;
+					grFlecheGES.y = 91;
+				}
+				if(co2 >= 36 && co2 <= 55 ){
+					grFlecheGES.x = 124;
+					grFlecheGES.y = 115;
+				}
+				if(co2 >= 56 && co2 <= 80 ){
+					grFlecheGES.x = 142;
+					grFlecheGES.y = 138;
+				}
+				if(co2 > 80){
+					grFlecheGES.x = 162;
+					grFlecheGES.y = 162;
+				}
 
 			}
 			
@@ -39,22 +84,24 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Label color="#000000" text="Date du diagnostics :"/><s:TextInput id="DPE_Date" />
+	<s:HGroup verticalAlign="middle">
+		<s:Label color="#000000" text="Diag. performance énergétique :"/><s:TextInput id="DPE_Date" />		
+	</s:HGroup>
 	<s:HGroup width="100%" height="100%">
 		<s:Group>
-			<s:Image x="10" y="17" width="159" height="170" source="images/DPE.png"/>
-			<s:Label x="8" y="4" chromeColor="#010101" color="#030303" fontFamily="Arial" fontSize="14" text="Consommation énergétique - kWh/m².an" />
+			<s:Image x="10" y="17" height="240" source="images/DPE.png"/>
+			<s:Label x="8" y="4" chromeColor="#010101" color="#030303" fontFamily="Arial" fontSize="14" text="Consommation énergétique" />
 			<s:Group id="grFlecheDPE" x="60" y="18" width="40" height="23">
-				<s:Image x="0" y="0" width="40" height="23" source="images/DPE-fleche.png"/>
-				<s:Label x="2" y="0" width="40" height="23" color="#FFFFFF" fontSize="12" text="{conso.toString()}" textAlign="center" verticalAlign="middle"/>
+				<s:Image  width="40" height="23" source="images/DPE-fleche.png"/>
+				<s:Label  width="40" height="23" color="#FFFFFF" fontSize="12" text="{conso.toString()}" textAlign="center" verticalAlign="middle"/>
 			</s:Group>			
 		</s:Group>
-		<s:Group>
-			<s:Image x="7" y="0" width="192" height="205" source="images/GES.jpg"/>
-			<s:Label x="8" y="4" chromeColor="#010101" color="#030303" fontFamily="Arial" fontSize="14" text="Emissions de gaz à effet de serre - kgéqCO2/m².an" />
-			<s:Group id="grFlecheGES" x="254" y="175" width="76" height="36">
-				<s:Image x="0" y="0" width="75" height="36" source="images/DPE-fleche.png"/>
-				<s:Label x="9" y="6" width="50" height="27" color="#FFFFFF" fontSize="24" text="{conso.toString()}" textAlign="center" verticalAlign="middle"/>
+		<s:Group x="300">
+			<s:Image x="7" y="0" height="240" source="images/GES.jpg"/>
+			<s:Label x="8" y="4" chromeColor="#010101" color="#030303" fontFamily="Arial" fontSize="14" text="Emissions de gaz à effet de serre" />
+			<s:Group id="grFlecheGES" x="52" y="19" width="40" height="23">
+				<s:Image  width="40" height="23" source="images/DPE-fleche.png"/>
+				<s:Label  width="40" height="23" color="#FFFFFF" fontSize="12" text="{conso.toString()}" textAlign="center" verticalAlign="middle"/>
 			</s:Group>			
 		</s:Group>
 		
