@@ -66,7 +66,6 @@
 	<mx:RemoteObject
 		id="LoginService"
 		destination="zend"
-	   	endpoint="{endPoint}"
 	   	fault="faultHandlerService(event)"
 		source="AUTH_LoginManager" showBusyCursor="true">
 		<mx:method name="verifyUser"   result="resultHandlerService(event)" />

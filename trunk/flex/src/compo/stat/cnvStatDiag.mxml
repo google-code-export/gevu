@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas label="Statistiques de diagnostic" xmlns:mx="http://www.adobe.com/2006/mxml" 
-	creationComplete="init()" borderColor="black" borderStyle="solid"
+	creationComplete="init()" 
 	width="100%" height="100%"
 	>
 	<mx:Script><![CDATA[
@@ -165,7 +165,10 @@
 	<mx:Stroke id="s3" color="red" weight="2"/>
 
 	<mx:HBox height="100%" width="100%" >
-		<mx:VBox label="Diagnostic" height="300" >
+		<mx:VBox label="Diagnostic" height="320" >
+			<mx:HBox>
+				<mx:Label text="Diag. performance accessibilité :" /><mx:TextInput text=""/>
+			</mx:HBox>
 			<mx:HBox paddingLeft="70" visible="false" height="0" >
 				<mx:Label id="TauxCalc" />
 				<mx:Image id="imgMoteur" source="{MoteurIcon}" width="60" />
