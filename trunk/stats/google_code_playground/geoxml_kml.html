@@ -1,12 +1,11 @@
-<html>
-	<head>
-		<title>Code Playground de Geo XML en KML</title>
-	</head>
-	
-	<body>
-		<script type="text/javascript">
-		
-var map;
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Google Maps API Sample</title>
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAuPsJpk3MBtDpJ4G8cqBnjRRaGTYH6UMl8mADNa0YKuWNNa8VNxQCzVBXTx2DYyXGsTOxpWhvIG7Djw" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    var map;
 var geoXml; 
 var toggleState = 1;
 
@@ -29,7 +28,15 @@ function toggleMyKml() {
     map.addOverlay(geoXml);
     toggleState = 1;
   }
-}​
-		</script>
-	</body>
+}
+
+    </script>
+  </head>
+  <body onload="initialize()" onunload="GUnload()" style="font-family: Arial;border: 0 none;">
+    <div id="map_canvas" style="width: 640px; height: 480px; float:left; border: 1px solid black;"></div>
+  </div>
+  <br clear="all"/>
+  <br/>
+  <input type="button" value="Toggle KML" onClick="toggleMyKml();"/>
+  </body>
 </html>
