@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:compo="compo.*"
+		   label="Diagnostics"
+		   width="100%" height="100%"
+		   creationComplete="creationCompleteHandler(event)" xmlns:stat="compo.stat.*" xmlns:form="compo.form.*"
+		   >
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.serialization.json.JSON;
+			
+			import memorphic.xpath.XPathQuery;
+			
+			import mx.charts.ChartItem;
+			import mx.charts.chartClasses.ChartBase;
+			import mx.charts.series.items.ColumnSeriesItem;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.DropdownEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;        
+						
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var diagData:Array;
+			[Bindable] public var scenarData:Array;
+			[Bindable] public var scrDescData:Array;
+			[Bindable] public var sceneData:XML;
+			[Bindable] public var reponseData:Array;
+			[Bindable] public var choixData:Array = new Array;;
+			[Bindable] public var xlmScene:XML;
+			[Bindable] public var selectDiag:Object;			
+			private var numEtape:int;
+			private var numQuestion:int;
+			private var nodeQuestion:XML;
+			private var idTypeControle:String;
+			private var idCritere:String;
+			private var nodeXpath:String="/node/node";
+			private var totQestionInter:int=-1;
+			private var numQestionInter:int;
+			private var idLieu:int;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				roScena.findByExiDroit(this.parentApplication.idExi);
+				roMC.getAllByType(2);
+				idLieu = NodeData.diag.DiagNon[0].id_lieu;
+			}
+			
+			protected function adgCrit_itemClickHandler(event:ListEvent):void
+			{
+				var s:Object=event.currentTarget.selectedItem;
+				if(s.id_lieu){
+					// récupère les données du diagnostic
+					roDiag.getDiagComplet(s.id_lieu,this.parentApplication.idBase,s.id_instant);					
+				}
+				
+			}
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			protected function method1_resultHandler(event:ResultEvent):void
+			{
+				diagData = event.result as Array;
+				dgQuestions.dataProvider = diagData['questions'];
+			}
+			
+			
+			protected function dgQuestions_itemClickHandler(event:ListEvent):void
+			{
+				selectDiag = event.currentTarget.selectedItem;
+				if(selectDiag){
+					//formObs.idDiag = selectDiag.id_diag;
+					//formObs.init();
+					formProbs.idDiag = selectDiag.id_diag;
+					formProbs.init();
+				}
+			}
+			private function sortDiag(item:*, index:int, array:Array):Boolean
+			{
+				if(item.id_diag == selectDiag.id_diag)
+					return true;
+				else
+					return false;
+
+			}
+			//TODO : assistant saisie d'un scénario : http://www.seaflexandsun.com/demo/carrousel/srcview/index.html
+			
+			protected function cbScenario_changeHandler(event:ListEvent):void
+			{
+				var item:Object = cbScenario.selectedItem;
+				var arr:Array = item["id"].toString().split("_");
+				roDiag.getScenarioComplet(arr[1]);
+			}
+			
+			protected function method2_resultHandler(event:ResultEvent):void
+			{
+				scrDescData = event.result as Array;
+				lblEtapeTot.text = scrDescData["etapes"].length;
+				//ATTENTION les étapes démarre à 0 = indice du tableau et les questions à 1 = xpath pour le xml
+				getQuestion(0,1);
+				
+			}
+			private function getQuestion(Etape:int, Question:int):void
+			{
+				
+				numEtape=Etape;
+				var myQuery:XPathQuery;
+				if(scrDescData["etapes"][numEtape][0]["params"] && scrDescData["etapes"][numEtape][0]["params"]!="[]"){
+					//vérifie si l'étape à changée
+					if(lblEtapeNum.text != String(numEtape+1)){
+						//change le numéro de l'étape courante
+						lblEtapeNum.text = String(numEtape+1);				
+						//récupère les paramètre de la scène
+						var params:Object = JSON.decode(scrDescData["etapes"][numEtape][0]["params"]);
+						xlmScene = XML(params[0]["idCritSE"]);						
+						idTypeControle = scrDescData["etapes"][numEtape]["id_type_controle"];
+						//compte le nombre de toute les questions
+						myQuery = new XPathQuery("count(//@id_critere)");
+						lblQuestionAll.text = "("+String(myQuery.exec(xlmScene))+")";
+						//compte le nombre des questions de premier niveau
+						myQuery = new XPathQuery("count(/node/node)");
+						lblQuestionTot.text = String(myQuery.exec(xlmScene));
+					}
+				}
+				var xp:String = nodeXpath;
+				//vérifie si on traite une question intermédiaire
+				if(totQestionInter>0){
+					numQestionInter=Question;
+					//vérifie si les questions intermédiaires sont finies
+					if(numQestionInter>totQestionInter){
+						//recalcule la requète
+						nodeXpath= nodeXpath.substr(0,(nodeXpath.length-5));
+						totQestionInter = -1;
+						lblQuestionInter.text = "";
+						//passe à la question suivante au niveau du parent 
+						getQuestion(numEtape, numQuestion+1);
+						return;
+					}
+					lblQuestionInter.text = String(numQestionInter);
+					//calcul la requète
+					xp+="["+numQestionInter+"]";
+				}else{
+					numQuestion=Question;
+					//affiche le numéro de la question courante
+					lblQuestionNum.text = String(numQuestion);
+					//calcul la requète
+					xp+="["+numQuestion+"]";
+				}
+				
+				//conserve le noeud sélectionné
+				myQuery = new XPathQuery(xp);
+				nodeQuestion = myQuery.exec(xlmScene)[0];
+				//affiche la question
+				idCritere = nodeQuestion.@["id_critere"];
+				lblQuestion.text = getCritText(idTypeControle, idCritere);
+				
+			}
+			
+			protected function cbReponse_closeHandler(event:DropdownEvent):void
+			{
+				if(!nodeQuestion)return;
+				var item:Object = cbReponse.selectedItem;
+				//stocke la réponse
+				var vn:Array = new Array();
+				vn["id_critere"] = idCritere;
+				vn["id_reponse"] = item.id_motclef;	
+				vn["id_type_controle"] = idTypeControle;	
+				choixData.push(vn);
+				//vérifie s'il faut afficher une question particulière
+				var cd:String = String(nodeQuestion.@["CondRep"]);
+				if(cd!=""){
+					var arrConRep:Array = String(nodeQuestion.@["CondRep"]).split("_");
+					if(arrConRep[0]==item.type && arrConRep[1]==item.id_motclef){
+						nodeXpath+="/node";
+						totQestionInter = nodeQuestion.children().length();
+						numQestionInter = 1;
+						getQuestion(numEtape,numQestionInter);									
+					}else{
+						totQestionInter = -1;
+						getQuestion(numEtape,numQuestion+1);									
+					}
+				}else{
+					if(totQestionInter!=-1)
+						getQuestion(numEtape,numQestionInter+1);									
+					else
+						getQuestion(numEtape,numQuestion+1);									
+				}
+			}
+			
+			private function getCritText(idTypeControle:String, idCrit:String):String
+			{
+				for each (var cri:Object in scrDescData["criteres"]["idTypeControle"+idTypeControle]){
+					if(cri.id_critere==idCrit){
+						//affiche l'icone
+						var dt:Object = new Object;
+						dt.icone = cri.icone;
+						dt.lib = cri.lib;
+						hbCtl.dt = dt;
+						hbCtl.init();
+						return cri.criteres;
+					}
+				}
+				return "";				
+			}
+			
+			protected function btnNextEtape_clickHandler(event:MouseEvent):void
+			{
+				var num:int = int(lblEtapeNum.text);
+				getQuestion(num,1);
+				
+			}
+			
+			protected function btnPrevEtape_clickHandler(event:MouseEvent):void
+			{
+				var num:int = int(lblEtapeNum.text);
+				getQuestion(num-2,1);
+				
+			}
+			
+			protected function btnPrevQuest_clickHandler(event:MouseEvent):void
+			{
+				var numE:int = int(lblEtapeNum.text)-1;
+				var numQ:int = int(lblQuestionNum.text)-1;
+				getQuestion(numE,numQ);				
+			}
+			
+			protected function btnNextQuestion_clickHandler(event:MouseEvent):void
+			{
+				var numE:int = int(lblEtapeNum.text)-1;
+				var numQ:int = int(lblQuestionNum.text)+1;
+				getQuestion(numE,numQ);								
+			}
+
+			protected function roMC_resultHandler(e:ResultEvent):void
+			{
+				if(!e || !e.result)return;
+				reponseData = e.result as Array;
+			}			
+			
+			protected function method3_resultHandler(event:ResultEvent):void
+			{
+				if(!event || !event.result)return;
+				scenarData = event.result as Array;
+			}
+						
+			protected function btnSaveChoix_clickHandler(event:MouseEvent):void
+			{
+				if(choixData.length > 0){ 
+					roDiag.setChoix(this.parentApplication.idExi, idLieu, txtComment.text, choixData, this.parentApplication.idBase);
+				}			
+			}
+			
+			protected function method4_resultHandler(event:ResultEvent):void
+			{
+				
+				this.choixData = new Array;
+				//rafraichi la liste des diags
+				this.parentApplication.roDiagnostique.getNodeRelatedData(idLieu, this.parentApplication.idExi, this.parentApplication.idBase);
+				
+				
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="roDiag"
+					 destination="zend"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, 'GEVU - Diagnostic');"
+					 showBusyCursor="true"
+					 >
+		<mx:method name="getDiagComplet" result="method1_resultHandler(event)" />
+		<mx:method name="getScenarioComplet" result="method2_resultHandler(event)" />
+		<mx:method name="setChoix" result="method4_resultHandler(event)" />
+	</mx:RemoteObject>
+	<mx:RemoteObject id="roScena"
+					 destination="zend"
+					 source="Models_DbTable_Gevu_scenario"
+					 fault="faultHandlerService(event, 'GEVU - Diagnostic');"
+					 showBusyCursor="true"
+					 >
+		<mx:method name="findByExiDroit" result="method3_resultHandler(event)" />
+	</mx:RemoteObject>
+	<mx:RemoteObject id="roMC"
+					 source="Models_DbTable_Gevu_motsclefs" destination="zend" 
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="getAllByType" result="roMC_resultHandler(event)"/>  	
+	</mx:RemoteObject>
+		
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox verticalAlign="middle">
+			<mx:LinkButton click="{vs.selectedChild = lecture;}" icon="@Embed('images/eye.gif')" height="18" width="18" toolTip="Voir les diagnostics" />			
+			<mx:LinkButton id="btnAjout" click="{vs.selectedChild = ajout;}" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un diagnostic" />			
+		</mx:HBox>
+		<mx:ViewStack id="vs" width="100%" height="100%">			
+			<mx:HBox id="lecture" width="100%" height="100%">
+				<mx:AdvancedDataGrid id="adgCrit"  width="100%" height="100%" color="0x323232"
+									 initialize="gcCrit.refresh();"
+									 itemClick="adgCrit_itemClickHandler(event)"
+									 >
+					<mx:dataProvider>
+						<mx:GroupingCollection id="gcCrit" source="{NodeData.enfants}">
+							<mx:grouping>
+								<mx:Grouping>
+									<mx:GroupingField name="controle" />
+								</mx:Grouping>
+							</mx:grouping>
+						</mx:GroupingCollection>
+					</mx:dataProvider>        		
+					<mx:columns>
+						<mx:AdvancedDataGridColumn dataField="exis" headerText="Diagnostics" />
+						<mx:AdvancedDataGridColumn dataField="commentaires" headerText="Commentaires" />
+						<mx:AdvancedDataGridColumn dataField="instant" headerText="Date"  />
+					</mx:columns>
+				</mx:AdvancedDataGrid>
+				<mx:DataGrid id="dgQuestions" height="100%" width="100%"
+							 itemClick="dgQuestions_itemClickHandler(event)"  
+							 >
+					<mx:columns>
+						<mx:DataGridColumn dataField="id_diag" visible="false" />
+						<mx:DataGridColumn dataField="ref" width="100" />
+						<mx:DataGridColumn dataField="criteres" />
+						<mx:DataGridColumn dataField="reponse" width="60" />
+					</mx:columns>
+				</mx:DataGrid>
+			</mx:HBox>
+			<mx:VBox id="ajout" width="100%" height="100%">
+				<mx:HBox verticalAlign="middle">
+					<mx:ComboBox id="cbScenario" change="cbScenario_changeHandler(event)" dataProvider="{scenarData}" labelField="lib"  prompt="Selectionner un scenario" />				
+					<mx:Label text="Etapes : " />
+					<mx:Button styleName="leftArrowButton" id="btnPrevEtape" click="btnPrevEtape_clickHandler(event)" toolTip="Passe à l'étape précédente" enabled="{int(lblEtapeNum.text) > 1}" />
+					<mx:Label id="lblEtapeNum" text="0" /><mx:Label text=" sur " /><mx:Label id="lblEtapeTot" text="0" />
+					<mx:Button styleName="rightArrowButton" id="btnNextEtape" click="btnNextEtape_clickHandler(event)" toolTip="Passe à l'étape suivante" enabled="{lblEtapeNum.text != lblEtapeTot.text}" />
+				</mx:HBox>
+				<mx:HBox verticalAlign="middle">
+					<compo:hbControle id="hbCtl" />
+					<mx:Label text="Questions : " />
+					<mx:Button styleName="leftArrowButton" id="btnPrevQuestion" click="btnPrevQuest_clickHandler(event)" toolTip="Passe à la question précédente" enabled="{int(lblQuestionNum.text) > 1}" />
+					<mx:Label id="lblQuestionNum" text="0" /><mx:Label id="lblQuestionInter" text="" /><mx:Label text=" sur " /><mx:Label id="lblQuestionTot" text="0" /><mx:Label id="lblQuestionAll" text="0" />
+					<mx:Button styleName="rightArrowButton" id="btnNextQuestion" click="btnNextQuestion_clickHandler(event)" toolTip="Passe à la question suivante" enabled="{lblQuestionNum.text != lblQuestionTot.text}" />
+				</mx:HBox>
+				<mx:Label id="lblQuestion" fontFamily="Times New Roman" fontSize="18" text=""/>						
+				<mx:ComboBox id="cbReponse" dataProvider="{reponseData}" labelField="titre" close="cbReponse_closeHandler(event)"  prompt="Choisissez une réponse" />
+				<mx:HBox width="100%">
+					<mx:Button id="btnSaveChoix" label="enregistrer" click="btnSaveChoix_clickHandler(event)" toolTip="Enregistre les réponses" />
+					<mx:Label text="Commentaires :" />
+					<mx:TextInput id="txtComment" width="100%" />					
+				</mx:HBox>
+			</mx:VBox>
+		</mx:ViewStack>
+		<mx:HBox width="100%" height="100%">
+				<form:problemes id="formProbs" />
+				<!--<form:observations id="formObs" />-->
+		</mx:HBox>
+	</mx:VBox>
+	<!-- 
+	<mx:ColumnChart id="diagChart" 
+	height="207" 
+	width="100%" 
+	showDataTips="true" 
+	dataProvider="{NodeData}" 
+	selectionMode="multiple"
+	>
+	<mx:series>
+	<mx:ColumnSeries id="series1" 
+	yField="nbProbleme" 
+	displayName="Nb de problème" 
+	selectable="true"
+	/> 
+	<mx:ColumnSeries id="series2" 
+	yField="nbReponse" 
+	displayName="Nb de réponse" 
+	selectable="true"
+	/> 
+	<mx:ColumnSeries id="series3" 
+	yField="nbObservation" 
+	displayName="nb d'observation" 
+	selectable="true"
+	/> 
+	</mx:series>            
+	<mx:horizontalAxis>
+	<mx:CategoryAxis categoryField="instant"/>
+	</mx:horizontalAxis>                        
+	</mx:ColumnChart>
+	-->
+
+
+</mx:Canvas>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<vbox id="EtatDiag" flex="1">
+		<hbox flex="1">
+			<vbox >
+				<label id="etatdiag_titre" value="Etat des lieux de " />
+				<label id="etatdiag_TauxCalc" value="Taux de calcul : " />
+				<hbox >
+					<vbox >
+						<image src="images/moteur.jpg"/>
+						<box style="background-color:green;">
+							<label class="text-link" tooltiptext="Cliquer pour afficher le détail" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="0_moteur" value="0" />
+						</box>
+						<box style="background-color:yellow;"><label tooltiptext="Cliquer pour afficher le détail" class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="1_moteur" value="0" /></box>
+						<box style="background-color:orange;"><label tooltiptext="Cliquer pour afficher le détail" class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="2_moteur" value="0" /></box>
+						<box style="background-color:red;"><label tooltiptext="Cliquer pour afficher le détail" class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="3_moteur" value="0" /></box>
+						<image id="IndicAcc_moteur" src="images/A.png"/>
+						<label style="text-align:center;" hidden="true" flex="1" id="AppliVal_moteur" value="" />
+					</vbox>
+					<vbox >
+						<image src="images/audio.jpg"/>
+						<box style="background-color:green;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="0_audio" value="0" /></box>
+						<box style="background-color:yellow;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="1_audio" value="0" /></box>
+						<box style="background-color:orange;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="2_audio" value="0" /></box>
+						<box style="background-color:red;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="3_audio" value="0" /></box>
+						<image id="IndicAcc_audio" src="images/A.png"/>
+						<label style="text-align:center;" hidden="true" flex="1" id="AppliVal_audio" value="" />
+					</vbox>
+					<vbox >
+						<image src="images/visu.jpg"/>
+						<box style="background-color:green;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="0_visu" value="0" /></box>
+						<box style="background-color:yellow;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="1_visu" value="0" /></box>
+						<box style="background-color:orange;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="2_visu" value="0" /></box>
+						<box style="background-color:red;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="3_visu" value="0" /></box>
+						<image id="IndicAcc_visu" src="images/A.png"/>
+						<label style="text-align:center;" hidden="true" flex="1" id="AppliVal_visu" value="" />
+					</vbox>
+					<vbox >
+						<image src="images/cog.jpg"/>
+						<box style="background-color:green;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="0_cog" value="0" /></box>
+						<box style="background-color:yellow;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="1_cog" value="0" /></box>
+						<box style="background-color:orange;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="2_cog" value="0" /></box>
+						<box style="background-color:red;"><label class="text-link" onclick="GetEtatDiagListe(this.id);" style="text-align:center;" flex="1" id="3_cog" value="0" /></box>
+						<image id="IndicAcc_cog" src="images/A.png"/>
+						<label style="text-align:center;" hidden="true" flex="1" id="AppliVal_cog" value="" />
+					</vbox>
+					<vbox id="ArtDoc" >
+						<image id="ico_kml" onclick="GetFriseDocs(this.id,-1,'FriseDocs');" src="images/kml.png"/>
+						<image id="ico_images" onclick="GetFriseDocs(this.id,-1,'FriseDocs');" src='images/jpg.png' />
+						<image id="ico_videos" onclick="GetFriseDocs(this.id,-1,'FriseDocs');" src='images/mpg.png' />
+						<image id="ico_sons"  onclick="GetFriseDocs(this.id,-1),'FriseDocs');" src='images/mp3.png' />
+
+					</vbox>			
+				</hbox>
+				<hbox id="icoenplus" >
+					<image id="ico_ascenseur" src="images/ascenseur.png"/>
+					<image id="ico_guichet" src="images/guichet.png"/>
+					<image id="ico_personnel" src="images/Personnel.png"/>
+					<image id="ico_wc" src="images/wc.png"/>
+					<image id="ico_douche" src="images/douche.png"/>
+					<image id="ico_gig-gic" src="images/GIG_GIC.png"/>
+					<image id="ico_chem_ext" src="images/chem_ext.png"/>
+				</hbox>				
+				<splitter collapse="before" resizeafter="farthest">
+					<grippy/>
+				</splitter>			
+				<box id="ListeEtatDiag" flex="1" />
+			</vbox>
+		</hbox>
+		<hbox>
+			<iframe height='450px' width='500px' src=''  id='frameGM' />
+		</hbox>
+	</vbox>
+</overlay>

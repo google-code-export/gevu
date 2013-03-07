@@ -1,0 +1,17 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+
+mx|HBox
+{
+	borderAlpha: 1.0;
+	borderVisible: false;
+	cornerRadius: 0;
+	dropShadowVisible: false;
+	paddingBottom: 3;
+	paddingLeft: 3;
+	paddingRight: 3;
+	paddingTop: 3;
+}
+	

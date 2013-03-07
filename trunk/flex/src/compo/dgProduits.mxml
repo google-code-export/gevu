@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns2="compo.*"
+	creationComplete="Init()"
+	width="100%" height="100%">
+	<mx:Script>
+        <![CDATA[
+import compo.*;
+
+import mx.collections.ArrayCollection;
+import mx.collections.IViewCursor;
+import mx.collections.Sort;
+import mx.collections.SortField;
+import mx.containers.Form;
+import mx.containers.FormItem;
+import mx.containers.TitleWindow;
+import mx.controls.Alert;
+import mx.controls.CheckBox;
+import mx.controls.ComboBox;
+import mx.controls.DataGrid;
+import mx.controls.dataGridClasses.DataGridColumn;
+import mx.controls.listClasses.IDropInListItemRenderer;
+import mx.events.CloseEvent;
+import mx.events.DataGridEvent;
+import mx.events.FlexEvent;
+import mx.managers.CursorManager;
+import mx.managers.PopUpManager;
+import mx.rpc.AsyncToken;
+import mx.rpc.events.FaultEvent;
+import mx.rpc.events.ResultEvent;
+import mx.rpc.http.HTTPService;
+
+/**
+ * paramétrage de l'objet
+ */
+[Bindable] public var endPoint:String;
+
+/**
+ * identifiants de la grille en cours de consultation
+ */
+[Bindable] public var idExi:String;
+public var idProduit:int;	
+private var idCout:int;	
+private var idTof:int;	
+
+
+private function selectItem(event:Event):void {
+	var item:Object=event.currentTarget.selectedItem;
+	if(item){
+		idProduit = item.id_produit;
+		UpdRef.text=item.ref;
+		UpdDesc.text=item.description;
+		UpdMarque.text=item.marque;
+		var i:int=UpdEntreprise.getIndex(item.LibEntreprise);
+		UpdEntreprise.cb.selectedIndex=i;
+		UpdPreco.text=item.preconisation;
+		UpdTech.text=item.technique;
+		UpdUrl.text=item.url;
+		UpdModele.text=item.modele;
+		
+		ROSP.findByIdProduit(idProduit);
+		ROC.findByIdProduit(idProduit);
+		ROTOF.findByIdProduit(idProduit);
+		ROINT.findByIdProduit(idProduit);
+
+	}
+}
+
+public function Init():void 
+{
+    //chargement des données
+    RO.getAll();        
+}
+
+private function updateItem():void
+{
+	//création du tableau de valeur
+	var vn:Array = new Array();
+	vn["ref"] = this.UpdRef.text;
+	vn["description"] = this.UpdDesc.text;
+	vn["marque"] = this.UpdMarque.text;
+	vn["id_entreprise"] = this.UpdEntreprise.cb.selectedItem['id_entreprise'];
+	vn["preconisation"] = this.UpdPreco.text;
+	vn["technique"] = this.UpdTech.text;
+	vn["url"] = this.UpdUrl.text;
+	vn["modele"] = this.UpdModele.text;
+	RO.edit(idProduit,vn);	
+}
+
+private function insertItem():void {
+
+	//création du tableau de param
+	var pArr:Array = new Array;
+	var val:String="";
+    var frmC:Array = insertForm.getChildren();
+	//boucle sur chaque composant du modèle
+    for each(var ctl:Object in frmC){
+    	//récupère l'identifiant de la valeur
+    	var ctlId:String=ctl.id;
+		//récupère le contrôle d'édition
+		var ctlVal:Object=ctl.getChildAt(0);
+		//vérifie le type pour récupérer les modifs
+    	if(ctlVal.className=="cbGroupeMot"){
+    		val=ctlVal.cb.selectedItem[ctl.id];
+    	}
+    	if(ctlVal.className=="TextInput" || ctlVal.className=="TextArea"){
+    		val=ctlVal.text;
+    	}
+    	//vérifie si le champ est obligatoire
+    	if(!VerifChampOblig(val, ctlVal))return;
+    	//incrémente le tableau
+		pArr[ctlId]=val;
+   	}
+   	
+	RO.ajouter(pArr);
+	
+}
+
+private function updateCout():void
+{
+
+	var vn:Array = new Array();
+	vn["unite"] = this.UpdCunite.text;
+	vn["metre_lineaire"] = this.UpdCmetre_lineaire.text;
+	vn["metre_carre"] = this.UpdCmetre_carre.text;
+	vn["achat"] = UpdCachat.text;
+	vn["pose"] = this.UpdCpose.text;
+	ROC.edit(idCout,vn);	
+	
+}
+
+private function VerifChampOblig(val:String, ctlVal:Object):Boolean{
+	
+	if(val!="")return true;
+
+	var verif:Boolean=true;
+	
+	if(ctlVal.id=="ref"){
+		Alert.show("La référence est obligatoire.");
+		return false;
+	}
+	if(ctlVal.id=="lib"){
+		Alert.show("Le libellé est obligatoire.");
+		return false;
+	}
+	if(ctlVal.id=="id_type_solution"){
+		Alert.show("Le type de solution est obligatoire.");
+		return false;
+	}
+	
+	return verif;
+}
+
+private function insertItemHandler(e:Object):void
+{
+    this.selectedChild = view;
+    RO.getAll();
+}
+
+
+private function fillGridHandler(e:Object, dg:DataGrid):void
+{
+	if(!e)return;
+    dg.dataProvider = e.result as Array;
+}
+
+private function deleteItem():void {
+    
+    if (dataGrid.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression de cet élément ?",
+        "Confirmation Suppression", 3, this, deleteClickHandler);
+    }
+   
+}
+
+private function deleteClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		RO.remove(idProduit);
+    }
+}
+
+public function faultHandlerService(fault:FaultEvent):void
+{
+	Alert.show(fault.fault.faultDetail, "FaultHandlerService");
+}
+ 
+public function resultHandlerService(result:ResultEvent):void
+{
+	RO.getAll();
+}
+
+private function SolusHandler(e:Object):void
+{
+	vsSolus.selectedChild = viewSolus;
+    ROSP.findByIdProduit(idProduit);
+}
+
+private function IntervHandler(e:Object):void
+{
+	vsInterv.selectedChild = viewInterv;
+	ROINT.findByIdProduit(idProduit);
+}
+
+private function CoutHandler(e:Object):void
+{
+	var item:Object=e.result[0];	
+	if(item){
+		idCout = item.id_cout;
+		this.UpdCunite.text = item.unite;
+		this.UpdCmetre_lineaire.text = item.metre_lineaire;
+		this.UpdCmetre_carre.text = item.metre_carre;
+		this.UpdCachat.text = item.achat;
+		this.UpdCpose.text = item.pose;
+
+	}
+}
+
+
+private function deleteSolus():void {
+    
+    if (this.dgSolus.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression de la solution pour ce produit ?",
+        "Confirmation Suppression", 3, this, deleteSolusClickHandler);
+    }
+    
+}
+private function deleteSolusClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		ROSP.remove(dgSolus.selectedItem['id_solution'],idProduit);
+    }
+}
+
+private function deleteInterv():void {
+	
+	if (this.dgInterv.selectedItem)
+	{
+		Alert.show("Confirmez-vous la suppression de cette intervention ?",
+			"Confirmation Suppression", 3, this, deleteIntervClickHandler);
+	}
+	
+}
+private function deleteIntervClickHandler(event:CloseEvent):void
+{
+	if (event.detail == Alert.YES) 
+	{
+		//vérifie que l'intervention n'est pas liée à des lieux
+		ROINT.verifLienLieu(dgInterv.selectedItem['id_interv']);
+	}
+}
+
+protected function verifLienLieu_resultHandler(event:ResultEvent):void
+{
+	var nb:Number = event.result.length; 
+	if(nb==0){
+		//si aucun lieu n'est lié à l'intervention on peut la supprimer
+		ROINT.remove(dgInterv.selectedItem['id_interv'],idProduit);
+	}else{
+		Alert.show("Cette intervention est liée à "+nb+" lieu(x).\nVous ne pouvez pas la supprimer.",
+			"Suppression impossible");
+	}
+	
+}
+			
+private function TofHandler(e:Object):void
+{
+	if(!e)return;
+    tlTof.dataProvider = e.result as Array;
+}
+
+
+private function showPhoto(event:Event):void{
+	
+	idTof = event.currentTarget.selectedItem.id_doc;
+
+}
+
+private function removePhoto():void {
+    
+    if (idTof)
+    {
+        Alert.show("Confirmez-vous la suppression de la photo ?",
+        "Confirmation Suppression", 3, this, deleteTofClickHandler);
+    }
+    
+}
+private function deleteTofClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+			ROTOF.remove(idTof);
+    }
+}
+
+private function TofRemoveHandler(e:Object):void
+{
+    ROTOF.findByIdProduit(idProduit);
+}
+
+protected function ajoutInterv_clickHandler(event:MouseEvent):void
+{
+	var vn:Array = new Array();		
+	vn["id_produit"] = idProduit;
+	vn["interv"] = cbTypeInterv.cb.selectedItem.id_motclef;
+	vn["unite"] = cbUnite.cb.selectedItem.id_motclef;
+	vn["frequence"] = nsFreq.value;
+	vn["cout"] = nsIntCout.value;	
+	ROINT.ajouter(vn);
+}
+			
+			protected function dgInterv_itemEditEndHandler(event:DataGridEvent):void
+			{
+				var newValue:Number;
+				if(newValue = Number(event.currentTarget.itemEditorInstance.text))
+				{
+					var field:String = event.dataField;
+					var selectedID:String = event.currentTarget.selectedItem.id_interv.toString();
+					var vn:Array = new Array();		
+					vn[field] = newValue;
+					ROINT.edit(selectedID, vn);
+				}else{
+					Alert.show("La nouvelle valeur n'est pas un nombre.\nMerci de corriger.","Confirmation Suppression");
+					return;					
+				}
+				
+			}
+			
+			
+		]]>
+    </mx:Script>
+    
+	<mx:RemoteObject id="RO"
+	    	source="Models_DbTable_Gevu_produits" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="getAll"  result="fillGridHandler(event,dataGrid)"/>  	
+	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="ajouter"  result="insertItemHandler(event)"/>  	
+	 	<mx:method name="csv"  result="resultHandlerService(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROSP"
+	    	source="Models_DbTable_Gevu_solutionsxproduits" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdProduit"  result="fillGridHandler(event,dgSolus)"/>  	
+	 	<mx:method name="remove"  result="SolusHandler(event)"/>  	
+	 	<mx:method name="ajouter"  result="SolusHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROINT"
+					 source="Models_DbTable_Gevu_interventions" destination="zend" 
+					 endpoint="{endPoint}"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="findByIdProduit"  result="fillGridHandler(event,dgInterv)"/>  	
+		<mx:method name="remove"  result="IntervHandler(event)"/>  	
+		<mx:method name="ajouter"  result="IntervHandler(event)"/>  	
+		<mx:method name="edit"  result="IntervHandler(event)"/>
+		<mx:method name="verifLienLieu" result="verifLienLieu_resultHandler(event)"/>
+	</mx:RemoteObject>
+	
+	<mx:RemoteObject id="ROC"
+	    	source="Models_DbTable_Gevu_couts" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdProduit"  result="CoutHandler(event)"/>  	
+	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:RemoteObject id="ROTOF"
+	    	source="Models_DbTable_Gevu_docsxproduits" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="findByIdProduit"  result="TofHandler(event)"/>  	
+	 	<mx:method name="remove"  result="TofRemoveHandler(event)"/>  	
+	</mx:RemoteObject>
+
+
+	<mx:Canvas id="view" width="100%" height="100%">
+		<mx:HBox width="100%" height="100%">
+			<mx:VBox width="100%" height="100%" >		
+				<mx:HBox id="AddDelete" >		
+					<mx:LinkButton id="btnAddNew" click="this.selectedChild = insert;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un produit" />
+					<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un produit" />
+				</mx:HBox>
+				<mx:VBox id="fiche" width="100%" >
+					<mx:HRule/>				
+				</mx:VBox>
+				<mx:DataGrid 
+					id="dataGrid"
+					editable="false"
+					resizableColumns="true" 
+					click="selectItem(event);"
+					textAlign="left"
+					width="100%" height="100%"
+					>			
+					<mx:columns>
+						<mx:DataGridColumn visible="false" headerText="id_produit" dataField="id_produit" />
+						<mx:DataGridColumn headerText="Référence" dataField="ref" />   					
+						<mx:DataGridColumn headerText="Description" dataField="description" />   					
+	   					<mx:DataGridColumn headerText="Technique"  dataField="technique" />
+						<mx:DataGridColumn headerText="Préconisation" dataField="preconisation" />									
+						<mx:DataGridColumn headerText="Marque" dataField="marque" />									
+						<mx:DataGridColumn headerText="Modèle" dataField="modele" />									
+	   					<mx:DataGridColumn headerText="Entreprise"  dataField="LibEntreprise" />
+	   					<mx:DataGridColumn headerText="Site"  dataField="url" />
+ 					</mx:columns>
+				</mx:DataGrid>
+				<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+					<mx:HBox width="100%" >
+						<mx:VBox width="100%">
+							<mx:Label text="Référence:" />
+			            	<mx:TextInput id="UpdRef" />							
+						</mx:VBox>
+						<mx:VBox width="100%">
+							<mx:Label text="Marque:" />
+			            	<mx:TextInput id="UpdMarque" />							
+						</mx:VBox>
+						<mx:VBox width="100%">
+							<mx:Label text="modèle:"/>
+			            	<mx:TextInput id="UpdModele" />						
+						</mx:VBox>
+					</mx:HBox>			
+					<mx:HBox width="100%" >
+						<mx:VBox>
+							<mx:Label text="Entreprise:"/>
+			            	<ns2:cbGroupeMot id="UpdEntreprise" labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Models_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises" />						
+						</mx:VBox>
+						<mx:VBox width="100%" >
+							<mx:Label text="Site web :" />
+			            	<mx:TextInput id="UpdUrl" width="100%" />							
+						</mx:VBox>
+					</mx:HBox>			
+					<mx:Label text="Description:" />
+	            	<mx:TextInput id="UpdDesc" width="100%" />							
+					<mx:HBox width="100%" >
+						<mx:VBox width="100%" >
+							<mx:Label text="Technique du produit:" />
+			            	<mx:TextArea id="UpdTech" width="100%" height="50" />
+						</mx:VBox>
+						<mx:VBox width="100%" >
+							<mx:Label text="Préconisation du produit:" />
+			            	<mx:TextArea id="UpdPreco" width="100%" height="50" />
+						</mx:VBox>
+					</mx:HBox>			
+					<mx:Button label="Enregistrer" click="updateItem()" />
+				</mx:VBox>
+			</mx:VBox>
+			<mx:VBox id="detail" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+					<mx:Panel title="Solutions associées" width="100%" height="100%" layout="absolute">
+						<mx:ViewStack id="vsSolus" width="100%" height="100%">
+							<mx:VBox id="viewSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:HBox>
+									<mx:LinkButton id="btnAddNewSolus" click="vsSolus.selectedChild = insertSolus;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une solution au produit" />
+									<mx:LinkButton id="btnDeleteSolus" click="deleteSolus()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une solution du produit" />							
+								</mx:HBox>							
+								<mx:DataGrid width="100%" height="100%" id="dgSolus">
+									<mx:columns>
+										<mx:DataGridColumn headerText="Référence" width="100" dataField="ref" />
+										<mx:DataGridColumn headerText="Solution" dataField="lib" />
+										<mx:DataGridColumn headerText="Id Solution" dataField="id_solution" visible="false"/>
+									</mx:columns>
+								</mx:DataGrid>					
+							</mx:VBox>
+							<mx:VBox id="insertSolus" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:Label text="Choisissez une solution :"/> 
+				            	<ns2:cbGroupeMot titre="une solution" labelName="ref" bAjout="false" 
+				            		keyName="id_solution" id="cbSolus" objName="Models_DbTable_Gevu_solutions" 
+				            		endPoint="{RO.endpoint}" />
+								<mx:HBox>
+									<mx:Button label="Enregistrer" click="ROSP.ajouter(cbSolus.cb.selectedItem['id_solution'],idProduit);" />
+									<mx:Button label="Annuler" click="vsSolus.selectedChild = viewSolus;" />				
+								</mx:HBox>							
+							</mx:VBox>
+						</mx:ViewStack>											
+					</mx:Panel>
+					<mx:Panel title="Interventions associées" width="100%" height="100%" layout="absolute">
+						<mx:ViewStack id="vsInterv" width="100%" height="100%">
+							<mx:VBox id="viewInterv" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:HBox>
+									<mx:LinkButton id="btnAddNewInterv" click="vsInterv.selectedChild = insertInterv;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une intervention" />
+									<mx:LinkButton id="btnDeleteInterv" click="deleteInterv()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une intervention" />							
+								</mx:HBox>							
+								<mx:DataGrid width="100%" height="100%" id="dgInterv" editable="true" itemEditEnd="dgInterv_itemEditEndHandler(event)">
+									<mx:columns>
+										<mx:DataGridColumn headerText="id_interv" width="100" dataField="id_interv" visible="false" editable="false" />
+										<mx:DataGridColumn headerText="Type d'intervention" dataField="libInterv" editable="false" />
+										<mx:DataGridColumn headerText="Unité" dataField="libUnite" editable="false" />
+										<mx:DataGridColumn headerText="Fréquence (nb. année)" dataField="frequence" editable="true" />
+										<mx:DataGridColumn headerText="Coût (HT)" dataField="cout" editable="true" />
+									</mx:columns>
+								</mx:DataGrid>					
+							</mx:VBox>
+							<mx:VBox id="insertInterv" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:Label text="Saisissez les caractères de l'intervention :"/> 
+								<ns2:cbGroupeMot titre="un type d'intervention" bAjout="false" 
+												 keyName="id_motclef" id="cbTypeInterv" labelName="titre" objMethode="getAllByType" objParam="55" objName="Models_DbTable_Gevu_motsclefs" 
+												 endPoint="{RO.endpoint}" />
+								<ns2:cbGroupeMot titre="une unité" bAjout="false" 
+												 keyName="id_motclef" id="cbUnite" labelName="titre" objMethode="getAllByType" objParam="19"  objName="Models_DbTable_Gevu_motsclefs"
+												 endPoint="{RO.endpoint}" />
+								<mx:Label text="Fréquence en nombre d'année : "/>
+								<mx:NumericStepper id="nsFreq" width="100%" stepSize="1" value="1" maximum="100" />
+								<mx:Label text="Coût en € HT : "/>
+								<mx:NumericStepper id="nsIntCout" stepSize="0.10" width="100%" maximum="1000000"  />
+								<mx:HBox>
+									<mx:Button label="Enregistrer" click="ajoutInterv_clickHandler(event)" />
+									<mx:Button label="Annuler" click="vsInterv.selectedChild = viewInterv;" />				
+								</mx:HBox>							
+							</mx:VBox>
+						</mx:ViewStack>											
+					</mx:Panel>
+					<mx:HBox width="100%" height="320" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">						
+						<mx:Panel title="Coût associé" layout="absolute" width="360" height="100%">
+							<mx:VBox fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+								<mx:Label text="Les coûts sont en € HT"  fontWeight="bold" fontSize="18"/>
+								<mx:Label text="Unitaire:" />
+				            	<mx:TextInput id="UpdCunite" />							
+								<mx:HBox >
+									<mx:VBox>
+										<mx:Label text="Mètre linéaire:" />
+						            	<mx:TextInput id="UpdCmetre_lineaire" />							
+									</mx:VBox>
+									<mx:VBox>
+										<mx:Label text="Mètre carré:" />
+						            	<mx:TextInput id="UpdCmetre_carre" />							
+									</mx:VBox>
+								</mx:HBox>			
+								<mx:HBox >
+									<mx:VBox>
+										<mx:Label text="A l'achat:" />
+						            	<mx:TextInput id="UpdCachat" />							
+									</mx:VBox>
+									<mx:VBox>
+										<mx:Label text="A la pose:" />
+						            	<mx:TextInput id="UpdCpose" />							
+									</mx:VBox>
+								</mx:HBox>			
+								<mx:Button label="Enregistrer" click="updateCout()" />
+							</mx:VBox>					
+						</mx:Panel>
+						<mx:Panel width="100%" height="100%" title="Photos" layout="absolute" >
+							<mx:VBox width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+								<mx:HBox>
+									<ns2:cUploadFile id="ufIma" iconBtn="@Embed('images/AddRecord.png')" idExi="{idExi}" objName="img_produit"  ttBtn="Ajouter une photo" ctlBind="{this}" wf="auton" typeFic="images" />				
+									<mx:LinkButton click="removePhoto()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une photo" />							
+								</mx:HBox>
+								<mx:TileList id="tlTof"
+									width="100%" height="100%"
+									itemClick="showPhoto(event)">
+									<mx:itemRenderer>
+										<mx:Component>
+							                <mx:VBox width="74" height="74"
+							                    paddingRight="5" paddingLeft="5"
+							                    horizontalAlign="center">
+							                    <mx:Image 
+							                        height="64" width="64"
+							                        source="{data.url}"/>
+							                </mx:VBox>
+							            </mx:Component>
+									</mx:itemRenderer>
+									
+								</mx:TileList>							
+							</mx:VBox>
+
+						</mx:Panel>
+					</mx:HBox>
+			</mx:VBox>		
+		</mx:HBox>
+
+	</mx:Canvas>
+	<mx:Canvas id="insert" width="100%" height="100%" >
+		<mx:VBox>			
+			<mx:Form width="100%" height="100%" id="insertForm">			                    		
+	            <mx:FormItem label="Référence:" id="ref" >
+	            	<mx:TextInput id="ProdRef" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Marque:" id="marque" >
+	            	<mx:TextInput id="ProdMarque" width="100%" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Modèle:" id="modele" >
+	            	<mx:TextInput width="100%" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Entreprise:" id="id_entreprise" >
+	            	<ns2:cbGroupeMot labelName="nom" titre="une entreprise" keyName="id_entreprise"  objName="Models_DbTable_Gevu_entreprises" endPoint="{RO.endpoint}" objSource="dgEntreprises"  />						
+	            </mx:FormItem>
+	            <mx:FormItem label="Site web:" id="url" width="100%" >
+	            	<mx:TextInput width="100%" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Description:" id="description" width="100%" >
+	            	<mx:TextInput width="100%" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Technique du produit:" id="technique" >
+	            	<mx:TextArea id="ProdTech"  width="400" height="100" />
+	            </mx:FormItem>
+	            <mx:FormItem label="Préconisation du produit:" id="preconisation" >
+	            	<mx:TextArea id="ProdPreco"  width="400" height="100" />
+	            </mx:FormItem>
+			</mx:Form>
+			<mx:HBox>
+				<mx:Button label="Enregistrer" click="insertItem()" />
+				<mx:Button label="Annuler" click="this.selectedChild = view;" />				
+			</mx:HBox>
+		</mx:VBox>
+	</mx:Canvas>
+
+	 
+</mx:ViewStack>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		  xmlns:compo="compo.*"
+		  width="100%" height="100%" layout="vertical" paddingBottom="6"
+		  paddingLeft="6" paddingRight="6" paddingTop="6" title="Logement" 
+		  xmlns:form="compo.form.*" xmlns:stat="compo.stat.*">
+	<mx:TabNavigator id="tnLog" width="100%" height="100%" >
+		<mx:VBox width="100%" label="Informations générale" paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3">
+			<mx:HBox width="100%">
+				<mx:Label text="Identifiant du logement :" />
+				<mx:TextInput id="F2" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
+				<mx:Label text="Escalier :" />
+				<mx:TextInput id="Code_Escalier" text="{NodeData.Code_Escalier}" />
+				<mx:Label text="Etage :" />
+				<mx:TextInput id="Etage" text="{NodeData.Etage}" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:HBox width="100%">
+				<mx:VBox>
+					<mx:Label text="Exposition : " />
+					<mx:TextInput text="{NodeData.Exposition}" />
+					<mx:Label text="Nombre de pièce :" />
+					<mx:TextInput id="Nombre_pieces" text="{NodeData.Nombre_pieces}" />
+					<mx:Label text="Surface réelle :" />
+					<mx:TextInput id="Surface_Reelle" text="{NodeData.Surface_Reelle}" />
+					<mx:Label text="Surface appliquée :" />
+					<mx:TextInput id="Surface_Appliquee" text="{NodeData.Surface_Appliquee}" />
+					<mx:Label text="Raccordement :" />
+					<mx:TextInput id="Type_Reception_TV" width="100%" text="{NodeData.Type_Reception_TV}" />
+				</mx:VBox>
+				<mx:Box width="100%" height="100%" label="plan" borderStyle="solid" dropShadowVisible="true">
+					<mx:Label id="lblPlan" text="Ajouter un plan" />
+					<mx:Image id="imgPlan" source="images/synchronize.png"/>					
+				</mx:Box> 
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:HBox width="100%">
+				<mx:Label text="Type de logement :" />
+				<mx:RadioButton groupName="Type_Logement" id="duplex" label="Duplex"  /> 
+				<mx:RadioButton groupName="Type_Logement" id="pavillon" label="Pavillon"  />
+				<mx:RadioButton groupName="Type_Logement" id="appartement" label="Appartement" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:HBox width="100%">
+				<mx:Label text="Activitée(s) :" />
+				<mx:RadioButton groupName="activite" id="commerce" label="Commerce" /> 
+				<mx:RadioButton groupName="activite" id="assos" label="Association" />
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VBox width="100%" height="100%" label="Diagnostics" paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3">
+			<mx:HBox width="100%">
+				<mx:Label text="Diag. plommb :" /><mx:TextInput id="CREP_Date" text="{NodeData.CREP_Date}" />
+				<mx:Label text="Présence :" />
+				<mx:RadioButton groupName="CREP_presence_Plomb" id="CREP_presence_Plomb_0" label="Oui" /> 
+				<mx:RadioButton groupName="CREP_presence_Plomb" id="CREP_presence_Plomb_N" label="Non" />
+				<mx:Label text="Seuil dépassé :" />
+				<mx:RadioButton groupName="CREP_Seuil_Plomb_depasse" id="CREP_Seuil_Plomb_depasse_0" label="Oui" /> 
+				<mx:RadioButton groupName="CREP_Seuil_Plomb_depasse" id="CREP_Seuil_Plomb_depasse_N" label="Non" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:Label text="Amiante :" />
+			<mx:HBox width="100%">
+				<mx:Label text="Diag. Amiante :" /><mx:TextInput id="DTA_Date" text="{NodeData.DTA_Date}" />
+				<mx:Label text="Présence :" />
+				<mx:RadioButton groupName="DTA_Presence_Amiante" id="DTA_Presence_Amiante_0" label="Oui" /> 
+				<mx:RadioButton groupName="DTA_Presence_Amiante" id="DTA_Presence_Amiante_N" label="Non" />
+				<mx:Label text="Dégradée :" />
+				<mx:RadioButton groupName="DTA_Presence_Amiante_Degradee" id="DTA_Presence_Amiante_Degradee_0" label="Oui" /> 
+				<mx:RadioButton groupName="DTA_Presence_Amiante_Degradee" id="DTA_Presence_Amiante_Degradee_N" label="Non" />
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label text="Mesure conservatoire :" />
+				<mx:RadioButton groupName="DTA_Mesure_Conservatoire" id="DTA_Mesure_Conservatoire_conf" label="Confinement" /> 
+				<mx:RadioButton groupName="DTA_Mesure_Conservatoire" id="DTA_Mesure_Conservatoire_elim" label="Elimination" />
+				<mx:Label text="Date des travaux :" /><mx:TextInput id="DTA_Date_Travaux" text="" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:HBox width="100%">
+				<form:dpe dateDiag="{NodeData.DPE_Date}" catDPE="{NodeData.DPE_Categorie_Consommation}" catGES="{NodeData.DPE_Categorie_Emissions_GES}" conso="{NodeData.DPE_consommation_reelle}" co2="{NodeData.DPE_emissions_GES}" />
+				<stat:cnvStatDiag id="stat" rsEtatDiag="{NodeData.dataDiag}" />
+			</mx:HBox>
+			<mx:HRule width="100%"/>
+			<mx:Label text="Electricité :" />
+			<mx:HBox width="100%">
+				<mx:Label text="Date :" /><mx:TextInput text="" />
+				<mx:Label text="Consommation réelle :" /><mx:TextInput  text="" />
+				<mx:Label text="Catégorie de Consommation :" /><mx:TextInput text="" />
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VBox width="100%" height="100%" label="Carte d'identité Immopep" paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3">
+			<form:interventions produitsData="{NodeData.dataProduits}" idLieu="{NodeData.idLieu}" />
+		</mx:VBox>		
+	</mx:TabNavigator>
+	<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					 showBusyCursor="true"
+					 source="Models_DbTable_Gevu_logements"
+					 fault="faultHandlerService(event, this.title);">
+		<mx:method name="edit"	result=";" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			private function init():void{
+				if(NodeData.type && NodeData.type!="0"){
+					var rbNom:String = "reponse_"+NodeData.type;
+					var rb:RadioButton = this[rbNom];
+					rb.selected = true;
+				}
+				if(NodeData.Type_Logement){
+					var t:String = String(NodeData.Type_Logement);
+					t = t.substr(0,1);
+					if(t=="D")duplex.value = true;					
+					if(t=="P")pavillon.value = true;					
+					if(t=="T")appartement.value = true;					
+				}
+				if(NodeData.Categorie_Module){
+					if(NodeData.Categorie_Module=="C")commerce.value = true;					
+					if(NodeData.Categorie_Module=="A")assos.value = true;					
+				}
+				if(NodeData.CREP_presence_Plomb){
+					if(NodeData.CREP_presence_Plomb=="O")DTA_Presence_Amiante_0.value = true;
+					else DTA_Presence_Amiante_N.value = true;					
+				}
+				if(NodeData.CREP_Seuil_Plomb_depasse){
+					if(NodeData.CREP_Seuil_Plomb_depasse=="O")CREP_Seuil_Plomb_depasse_0.value = true;
+					else CREP_Seuil_Plomb_depasse_N.value = true;					
+				}
+				if(NodeData.DTA_Presence_Amiante_Degradee){
+					if(NodeData.DTA_Presence_Amiante_Degradee=="O")DTA_Presence_Amiante_Degradee_0.value = true;
+					else DTA_Presence_Amiante_Degradee_N.value = true;					
+				}
+				if(NodeData.DTA_Mesure_Conservatoire){
+					if(NodeData.DTA_Mesure_Conservatoire=="Confinement")DTA_Mesure_Conservatoire_conf.value = true;
+					if(NodeData.DTA_Mesure_Conservatoire=="Elimination")DTA_Mesure_Conservatoire_elim.value = true;
+				}
+				
+			}
+
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
+
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				isChange = false;
+				roModifBase.edit(NodeData.id_logement, modifData);
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Panel>

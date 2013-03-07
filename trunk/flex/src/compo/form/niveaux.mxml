@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		   title="Niveau"
+		   width="100%" height="100%"
+		   xmlns:compo="compo.*" xmlns:form="compo.form.*"
+		   initialize="init();" >
+	<mx:VBox width="100%">
+
+		<mx:HBox width="100%">
+			<mx:Label text="ref" />
+			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
+		</mx:HBox>
+		<form:repType2 lblQ="Le niveau peut accueillir plus de 50 pers. (100 dans les établissements d’enseignement) ?" Q="reponse_1" val="{NodeData.reponse_1}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="Le niveau offre des prestations spécifiques (hors RdC) ?" Q="reponse_2" val="{NodeData.reponse_2}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="Le niveau est desservi par un ascenseur (hors RdC) ?" Q="reponse_3" val="{NodeData.reponse_3}" fnct="{this.editModif}" />
+		<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+		
+	</mx:VBox>
+	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					 showBusyCursor="true"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, this.title);">
+		<mx:method name="edit"	result=";" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			private var obj:String = "Models_DbTable_Gevu_niveaux";
+
+			
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			private function init():void{
+			}
+
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
+
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				roModifBase.edit(NodeData.id_niveau, modifData, obj, this.parentApplication.idBase);
+				isChange = false;
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Panel>

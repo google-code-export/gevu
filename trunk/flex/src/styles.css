@@ -1,0 +1,16 @@
+
+.leftArrowButton
+{
+	up-skin:		Embed("/images/left_arrow_up.gif");
+	over-skin:		Embed("/images/left_arrow_over.gif");
+	down-skin:		Embed("/images/left_arrow_up.gif");
+	disabled-skin:	Embed("/images/left_arrow_disabled.gif");
+}
+
+.rightArrowButton
+{
+	up-skin:		Embed("/images/right_arrow_up.gif");
+	over-skin:		Embed("/images/right_arrow_over.gif");
+	down-skin:		Embed("/images/right_arrow_up.gif");
+	disabled-skin:	Embed("/images/right_arrow_disabled.gif");
+}

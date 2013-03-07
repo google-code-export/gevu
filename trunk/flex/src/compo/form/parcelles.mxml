@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:composants="compo.*"
+		   title="Parcelle"
+		   width="100%" height="100%"
+		   creationComplete="init()" xmlns:form="compo.form.*"
+	>
+	<mx:VBox >
+		<mx:HBox width="100%">
+			<mx:Label text="identifiant" />
+			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="Référence cadastre : " />
+			<mx:TextInput id="F21" width="100%" text="{NodeData.ref_cadastre}" change="editModif('ref_cadastre', F21.text)" />
+		</mx:HBox>
+		<form:contacts title="Contact propriétaire" id="ctcPro" unique="true" objLien="Models_DbTable_Gevu_parcelles" />		 
+		<mx:VBox>
+			<mx:Label text="Superficie de la parcelle extérieure (m²) :"/>
+			<mx:NumericStepper id="F3" width="100%" stepSize="1" value="{NodeData.superficie}" change="editModif('superficie', F3.value)" />
+		</mx:VBox>
+		<form:repType2 lblQ="La parcelle extérieure est-elle cloturée ?" Q="cloture" val="{NodeData.cloture}" fnct="{this.editModif}" />
+		<mx:Button id="saveModif" label="Enregistrer" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+		
+	</mx:VBox>
+	
+	<mx:RemoteObject id="ro"
+					 destination="zend"
+					 source="Models_DbTable_Gevu_parcelles"
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event, this.title);">
+		<mx:method name="edit" result="method1_resultHandler(event)" />
+	</mx:RemoteObject>
+	<mx:Script>
+		<![CDATA[
+
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			[Bindable] public var idTypeCtrl:String;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+				      "Detail: "+fault.fault.faultDetail.toString()+"\n"+
+				      "String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
+			
+			private function init():void{
+				if(NodeData.length<=0)return;
+
+				ctcPro.paramsLien = GetParamContact("contact_proprietaire");
+				ctcPro.Init();
+			}
+			
+			private function GetParamContact(type:String):Array
+			{
+				var arrParams:Array = new Array();
+				arrParams["id"]=NodeData.id_parcelle;
+				arrParams["type"]=type;
+				
+				return arrParams;
+			}	
+			
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				ro.edit(NodeData.id_parcelle, modifData);				
+			}
+			
+			protected function method1_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Panel>

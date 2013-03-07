@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<hierarchie>
+<node idLieu="1" lieuParent="-1" lib="univers" niv="0">
+	<node idLieu="2" lieuParent="1" lib="T" niv="1">
+		<node idLieu="3" lieuParent="2" lib="T-1" niv="2">
+			<node idLieu="4" lieuParent="3" lib="T01-1-1" niv="3"/>
+			<node idLieu="5" lieuParent="3" lib="T-1-1" niv="3">
+				<node idLieu="6" lieuParent="5" lib="ERP-T11-A" niv="4">
+					<node idLieu="7" lieuParent="6" lib="ERP-T11-A-BAT1" niv="5">
+						<node idLieu="8" lieuParent="7" lib="NIV1" niv="6">
+							<node idLieu="9" lieuParent="8" lib="EI1" niv="7">
+								<node idLieu="10" lieuParent="9" lib="Eclairage" niv="8"/>
+								<node idLieu="11" lieuParent="9" lib="Commandes" niv="8"/>
+								<node idLieu="12" lieuParent="9" lib="Pentes et ressauts" niv="8"/>
+								<node idLieu="13" lieuParent="9" lib="Signalétique" niv="8"/>
+								<node idLieu="14" lieuParent="9" lib="Sols, murs et plafonds" niv="8"/>
+								<node idLieu="15" lieuParent="9" lib="Equipement et mobilier" niv="8"/>
+							</node>
+						</node>
+					</node>
+				</node>
+				<node idLieu="16" lieuParent="5" lib="ERP-T11-B" niv="4"/>
+			</node>
+			<node idLieu="17" lieuParent="3" lib="T-1-2" niv="3"/>
+			<node idLieu="18" lieuParent="3" lib="T-1-3" niv="3"/>
+		</node>
+		<node idLieu="19" lieuParent="2" lib="T-2" niv="2">
+			<node idLieu="20" lieuParent="19" lib="T-2-1" niv="3"/>
+		</node>
+	</node>
+</node>
+</hierarchie>
