@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:compo="compo.*" xmlns:form="compo.form.*"
+		    title="Bâtiment"
+		   width="100%" height="100%"
+		   >
+
+	<mx:VBox initialize="init();" width="100%" height="100%" >
+		<mx:HBox width="100%">
+			<mx:Label text="Identifiant du bâtiment : " />
+			<mx:TextInput id="F02" width="100%" text="{NodeData.ref}" change="editModif('ref', F02.text)" />
+		</mx:HBox>
+		<mx:HBox width="100%" height="100%">
+			<form:contacts title="Contact propriétaire" id="ctcPro" unique="true" objLien="Models_DbTable_Gevu_batiments" />		
+			<form:contacts title="Contact délégataire" id="ctcDel" unique="true" objLien="Models_DbTable_Gevu_batiments" />		
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<form:contacts title="Contact gardien" id="ctcGar" unique="true" objLien="Models_DbTable_Gevu_batiments" />		
+			<mx:VBox width="100%" height="100%">
+				<mx:Label text="Horaires du gardien : " />
+				<mx:TextArea id="F10" width="100%" height="100%" text="{NodeData.horaires_gardien}" change="editModif('horaires_gardien', F10.text)" />				
+				<mx:Label text="Horaires du bâtiment : " />
+				<mx:TextArea id="F11" width="100%" height="100%" text="{NodeData.horaires_batiment}" change="editModif('horaires_batiment', F11.text)" />				
+			</mx:VBox>
+		</mx:HBox>		
+		<mx:HBox width="100%">
+			<mx:VBox>
+				<mx:Label text="Superficie de la parcelle : "/>
+				<mx:NumericStepper id="F12" width="100%" stepSize="1" value="{NodeData.superficie_parcelle}" change="editModif('superficie_parcelle', F12.value)" />
+			</mx:VBox>
+			<mx:VBox>
+				<mx:Label text="Superficie du bâtiment" />
+				<mx:NumericStepper id="F13" width="100%"  stepSize="1" value="{NodeData.superficie_batiment}" change="editModif('superficie_batiment', F13.value)" />
+			</mx:VBox>
+		</mx:HBox>
+		
+		<mx:HBox width="100%">
+			<mx:VBox>
+				<mx:Label text="Date d'achèvement : " />
+				<mx:DateField id="F14" yearNavigationEnabled="true" change="editModif('date_achevement', formeDate(DateField(event.target).selectedDate))" />
+			</mx:VBox>
+			<mx:VBox>
+				<mx:Label text="Date du dépot de permis" />
+				<mx:DateField id="F15" yearNavigationEnabled="true" change="editModif('date_depot_permis', formeDate(DateField(event.target).selectedDate))" />
+			</mx:VBox>
+			<mx:VBox>
+				<mx:Label text="Date de la dernière réhabilitation" />
+				<mx:DateField id="F16" yearNavigationEnabled="true" change="editModif('date_reha', formeDate(DateField(event.target).selectedDate))" />
+			</mx:VBox>
+		</mx:HBox>
+		<form:repType2 lblQ="Le bâtiment est-il uniquement un lieu de travail ?" Q="reponse_1" val="{NodeData.reponse_1}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="Si le bâtiment est un lieu de travail, compte-t-il plus de 20 salariés ?" Q="reponse_2" val="{NodeData.reponse_2}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="S'agit-il d'un bâtiment de grande hauteur ?" Q="reponse_3" val="{NodeData.reponse_3}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="Le bâtiment est t-il en ZPPAUP ?" Q="reponse_4" val="{NodeData.reponse_4}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="Le bâtiment est-il inscrit au Monument Historique ?" Q="reponse_5" val="{NodeData.reponse_5}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="Le bâtiment est-il classé au Monument Historique ?" Q="reponse_6" val="{NodeData.reponse_6}" fnct="{this.editModif}" />
+		<mx:HBox width="100%">
+			<mx:VBox>
+				<mx:Label text="Nombre de niveaux avec RDC : "/>
+				<mx:NumericStepper id="F23" width="100%" stepSize="1" value="{NodeData.reponse_7}" change="editModif('reponse_7', F23.value)" />
+			</mx:VBox>
+			<mx:VBox>
+				<mx:Label text="Nombre de niveaux au dessus du RDC : "/>
+				<mx:NumericStepper id="F24" width="100%" stepSize="1" value="{NodeData.reponse_8}" change="editModif('reponse_8', F24.value)" />
+			</mx:VBox>
+			<mx:VBox>
+				<mx:Label text="Nombre de niveaux en dessous du RDC : "/>
+				<mx:NumericStepper id="F25" width="100%" stepSize="1" value="{NodeData.reponse_9}" change="editModif('reponse_9', F25.value)" />
+			</mx:VBox>
+		</mx:HBox>		
+
+		<mx:HBox width="100%">
+			<mx:VBox>
+				<mx:Label text="Nombre d'entrée(s) principale(s) : "/>
+				<mx:NumericStepper id="F26" width="100%" stepSize="1" value="{NodeData.reponse_10}" change="editModif('reponse_10', F26.value)" />
+			</mx:VBox>
+			<mx:VBox>
+				<mx:Label text="Nombre d'ascenseur(s) : "/>
+				<mx:NumericStepper id="F27" width="100%" stepSize="1" value="{NodeData.reponse_11}" change="editModif('reponse_11', F27.value)" />
+			</mx:VBox>
+			<mx:VBox>
+				<mx:Label text="Nombre d'escalier(s) : "/>
+				<mx:NumericStepper id="F28" width="100%" stepSize="1" value="{NodeData.reponse_12}" change="editModif('reponse_12', F28.value)" />
+			</mx:VBox>
+		</mx:HBox>		
+
+		<form:repType2 lblQ="Présence d'aire(s) de stationnement(s), à l'intérieur du bâtiment ?" Q="reponse_13" val="{NodeData.reponse_13}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="Présence d'aire(s) de stationnement(s), à l'extérieur du bâtiment ?" Q="reponse_14" val="{NodeData.reponse_14}" fnct="{this.editModif}" />
+		<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+		
+	</mx:VBox>
+	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					  showBusyCursor="true"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, this.title);">
+		<mx:method name="edit" result="method1_resultHandler(event)" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+
+			private var obj:String = "Models_DbTable_Gevu_batiments";
+			
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+
+			private function init():void{
+				
+				if(NodeData.length<=0)return;
+				
+				ctcPro.paramsLien = GetParamContact("contact_proprietaire");
+				ctcPro.Init();
+				ctcDel.paramsLien = GetParamContact("contact_delegataire");
+				ctcDel.Init();
+				ctcGar.paramsLien = GetParamContact("contact_delegataire");
+				ctcGar.Init();
+
+				if(NodeData.date_achevement!="0000-00-00") F14.selectedDate=parseDate(NodeData.date_achevement);
+				if(NodeData.date_depot_permis!="0000-00-00") F15.selectedDate=parseDate(NodeData.date_depot_permis);
+				if(NodeData.date_reha!="0000-00-00") F16.selectedDate=parseDate(NodeData.date_reha);
+								
+			}
+
+			private function GetParamContact(type:String):Array
+			{
+				var arrParams:Array = new Array();
+				arrParams["id"]=NodeData.id_batiment;
+				arrParams["type"]=type;
+				
+				return arrParams;
+			}	
+
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true; 
+			}
+			
+			protected function method1_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				var toto:String = "toto";
+			}
+			private function formeDate(d:Date):String{
+				return d.fullYear+"-"+d.month+"-"+d.day;
+			}
+			private function parseDate(s:String):Date{
+				var arrD:Array = s.split("-");
+				var d:Date = new Date(arrD[0],arrD[1],arrD[2]);
+				return d;
+			}
+			
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				roModifBase.edit(NodeData.id_batiment, modifData, obj, this.parentApplication.idBase);
+
+				isChange = false;
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Panel>

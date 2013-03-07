@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas label="Statistiques de diagnostic" xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="init()" 
+	width="100%" height="100%"
+	>
+	<mx:Script><![CDATA[
+		import compo.cnvDiagListe;
+		import compo.twDiagListe;
+		
+		import mx.controls.Alert;
+		import mx.events.IndexChangedEvent;
+		import mx.managers.PopUpManager;
+		import mx.rpc.events.FaultEvent;
+		import mx.rpc.events.ResultEvent;
+
+		[Embed(source="/images/A.png")] [Bindable] private var AIcon:Class;
+		[Embed(source="/images/B.png")] [Bindable] private var BIcon:Class;
+		[Embed(source="/images/C.png")] [Bindable] private var CIcon:Class;
+		[Embed(source="/images/D.png")] [Bindable] private var DIcon:Class;
+		[Embed(source="/images/E.png")] [Bindable] private var EIcon:Class;
+		
+		[Embed(source="/images/audio.jpg")] [Bindable] private var AudioIcon:Class;
+		[Embed(source="/images/cog.jpg")] [Bindable] private var CogIcon:Class;
+		[Embed(source="/images/moteur.jpg")] [Bindable] private var MoteurIcon:Class;
+		[Embed(source="/images/visu.jpg")] [Bindable] private var VisuIcon:Class;
+
+		private var handi:Object = 
+			{ "A": {
+				"color": 0xFF0000,
+				"icon": AIcon,
+				"markers": []}, 
+				"B": {
+					"color": 0x0000FF,
+					"icon": BIcon,
+					"markers": []},
+				"C": {
+					"color": 0x0000FF,
+					"icon": CIcon,
+					"markers": []},
+				"D": {
+					"color": 0x0000FF,
+					"icon": DIcon,
+					"markers": []},
+				"E": {
+					"color": 0x0000FF,
+					"icon": EIcon,
+					"markers": []}
+			};
+
+		[Bindable]	public var rsEtatDiag:Object;
+		[Bindable]	public var idLieu:int;
+		
+		public function init():void {
+			details.removeAllChildren();
+			TraiteEtatDiag();
+		}
+		
+
+		public function TraiteEtatDiag():void {
+			
+			//mise à jour du taux de calcul
+			//TauxCalc.text = "Taux de calcul : "+rsEtatDiag.EtatDiag.TauxCalc;
+			
+			//mise à jour des icones handicateur
+			for each (var obs:Object in rsEtatDiag)
+			{
+				if(obs.id=="moteur")
+					imgAlphaMoteur.source=handi[obs.handi].icon;
+				if(obs.id=="auditif")
+					imgAlphaAudio.source=handi[obs.handi].icon;
+				if(obs.id=="cognitif")
+					imgAlphaCog.source=handi[obs.handi].icon;
+				if(obs.id=="visuel")
+					imgAlphaVisu.source=handi[obs.handi].icon;
+			}
+
+		}
+					
+		protected function chart_changeHandler(event:Event):void
+		{
+			try 
+			{ 
+				var allSeries:Array = event.currentTarget.series;
+				var strHandi:String = "";
+				var niv:String = "";
+				var titreSelect:String = "";
+				//construction de la requête
+				for (var i:int=0; i<allSeries.length; i++) {
+					//le type de handicap
+					switch (allSeries[i].selectedIndices[0]) {
+						case 0:
+							strHandi = "auditif";
+							break;
+						case 1:
+							strHandi = "cognitif";
+							break;
+						case 2:
+							strHandi = "moteur";
+							break;
+						case 3:
+							strHandi = "visuel";
+							break;
+					}				    
+					//le niveau seulemet si on a récupéré  l'indice
+					if(strHandi!="" && niv==""){
+						switch (allSeries[i].id) {
+							case "_cnvStatDiag_ColumnSeries1":
+								niv = "0";
+								break;
+							case "_cnvStatDiag_ColumnSeries2":
+								niv = "1";
+								break;
+							case "_cnvStatDiag_ColumnSeries3":
+								niv = "2";
+								break;
+							case "_cnvStatDiag_ColumnSeries4":
+								niv = "3";
+								break;
+						}
+						//création du titre de la sélection
+						titreSelect = allSeries[i].legendData[0].label;	
+					}
+				}
+				var vn:Array = new Array();
+				vn["niv"] = niv;
+				vn["handi"] = strHandi;
+				vn["idLieu"] = this.idLieu;
+				
+				details.removeAllChildren();
+				var cnvListe:cnvDiagListe = new cnvDiagListe();
+				cnvListe.params = vn;
+				//cnvListe.mainCtrlWidth = 100;
+				details.addChild(cnvListe);
+				
+				/*affiche la liste des diag dans une fenêtre
+				var twDL:twDiagListe = twDiagListe(
+				PopUpManager.createPopUp(this, twDiagListe));
+				twDL.params = vn;
+				PopUpManager.centerPopUp(twDL);
+				*/
+				
+				/** il y a avait un bug à cause de la propagation de l'événement au canvas
+				 * merci à http://riaflex.blogspot.fr/2008/02/chartitemeventchange-in-conflict-with.html
+				**/
+				event.stopImmediatePropagation();				
+			} 
+			catch (err:Error) 
+			{ 
+				var t:String = "";
+			} 			
+			
+		}
+		
+	]]></mx:Script>
+	<!-- Define custom colors for use as fills. -->
+	<mx:SolidColor id="sc0" color="green" alpha=".8"/>
+	<mx:SolidColor id="sc1" color="yellow" alpha=".8"/>
+	<mx:SolidColor id="sc2" color="#ffa200" alpha=".6"/>
+	<mx:SolidColor id="sc3" color="red" alpha=".6"/>
+	
+	<!-- Define custom Strokes for the columns. -->
+	<mx:Stroke id="s0" color="green" weight="2"/>
+	<mx:Stroke id="s1" color="yellow" weight="2"/>
+	<mx:Stroke id="s2" color="#ffa200" weight="2"/>
+	<mx:Stroke id="s3" color="red" weight="2"/>
+
+	<mx:HBox height="100%" width="100%" >
+		<mx:VBox label="Diagnostic" height="320" >
+			<mx:HBox>
+				<mx:Label text="Diag. performance accessibilité :" /><mx:TextInput text=""/>
+			</mx:HBox>
+			<mx:HBox paddingLeft="70" visible="false" height="0" >
+				<mx:Label id="TauxCalc" />
+				<mx:Image id="imgMoteur" source="{MoteurIcon}" width="60" />
+				<mx:Image id="imgAudio" source="{AudioIcon}" width="60" />
+				<mx:Image id="imgCog" source="{CogIcon}" width="60" />
+				<mx:Image id="imgVisu" source="{VisuIcon}" width="60" />
+			</mx:HBox>
+			
+			<mx:ColumnChart id="chart" 
+							dataProvider="{rsEtatDiag}" 
+							type="stacked"
+							showDataTips="true"
+							change="chart_changeHandler(event)"
+							selectionMode="single"
+							width="320" height="200"
+							>
+				<mx:horizontalAxis>
+					<mx:CategoryAxis id="h1" categoryField="id" />
+				</mx:horizontalAxis>
+				<mx:series>
+					<mx:ColumnSeries 
+						xField="id" 
+						yField="niv0" 
+						displayName="Critères valides"
+						fill="{sc0}"
+						stroke="{s0}"
+						selectable="true"
+						/>
+					<mx:ColumnSeries 
+						xField="id" 
+						yField="niv1" 
+						displayName="Obstacles niveau 1"
+						fill="{sc1}"
+						stroke="{s1}"
+						/>
+					<mx:ColumnSeries 
+						xField="id" 
+						yField="niv2" 
+						displayName="Obstacles niveau 2"
+						fill="{sc2}"
+						stroke="{s2}"
+						/>
+					<mx:ColumnSeries 
+						xField="id" 
+						yField="niv3" 
+						displayName="Obstacles niveau 3"
+						fill="{sc3}"
+						stroke="{s3}"
+						/>
+				</mx:series>
+			</mx:ColumnChart>
+			<mx:HBox paddingLeft="54" >
+				<mx:Image id="imgAlphaMoteur" source="{AIcon}" width="60" />
+				<mx:Image id="imgAlphaAudio" source="{BIcon}" width="60" />
+				<mx:Image id="imgAlphaCog" source="{CIcon}" width="60" />
+				<mx:Image id="imgAlphaVisu" source="{DIcon}" width="60" />		
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VBox id="details" height="100%" width="100%">
+		</mx:VBox>
+	</mx:HBox>	
+
+	
+</mx:Canvas>

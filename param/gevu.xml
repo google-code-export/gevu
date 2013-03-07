@@ -1,0 +1,2361 @@
+<XmlParams>
+
+	<!-- Gestion des icones supplémentaire -->		
+	<icones>
+		<objet titre="etablissement" IdGrille='55' >
+			<question srcIdGrille='59'  srcRefCont='2_air_sta_07' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='2_air_sta_10' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+			</question>
+			<question srcIdGrille='59'  srcRefCont='2_qi_air_sta_02' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+		    </question>
+		    <question srcIdGrille='59'  srcRefCont='air_sta_07' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='air_sta_10' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+		    </question>
+			<question isrcIdGrille='59' srcRefCont='2_cr_chem_ext_01' srcIdChamp='mot_1' srcCheckVal='2'>
+				<icone id='chem_ext'/>
+			</question>
+		    <question isrcIdGrille='59' srcRefCont='cr_chem_ext_01' srcIdChamp='mot_1' srcCheckVal='2'>
+				<icone id='chem_ext'/>
+		    </question>
+		</objet>
+		<objet titre="batiment" IdGrille='53' >
+		    <question srcIdGrille='59' srcRefCont='2_cr_acc_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='guichet'/>
+		    </question>
+			 <question srcIdGrille='59' srcRefCont='cr_acc_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='guichet'/>
+		    </question>
+		    <question srcIdGrille='59' srcRefCont='2_cr_acc_17' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='personnel'/>
+		    </question>
+			 <question srcIdGrille='59' srcRefCont='cr_acc_17' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='personnel'/>
+		    </question>
+		    <question srcIdGrille='35' srcIdChamp='mot_2' srcCheckVal='1'>
+		        <question srcIdGrille='35' srcIdChamp='mot_1' srcCheckVal='2'>
+		            <icone id='ascenseur'/>
+			    </question>
+		    </question>
+		    <question srcIdGrille='35' srcIdChamp='mot_3' srcCheckVal='1'>
+		        <question srcIdGrille='35' srcIdChamp='mot_1' srcCheckVal='2'>
+		            <icone id='ascenseur'/>
+		        </question>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='2_cr_san_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+		    <question srcIdGrille='59' srcRefCont='2_cr_san_02' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='cr_san_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+		    <question srcIdGrille='59' srcRefCont='cr_san_02' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+		</objet>
+		<objet titre="niveau" IdGrille='35' >
+		    <question srcIdGrille='35' srcIdChamp='mot_2' srcCheckVal='1'>
+		        <question srcIdGrille='35' srcIdChamp='mot_1' srcCheckVal='2'>
+		            <icone id='ascenseur'/>
+		        </question>
+		    </question>
+		    <question srcIdGrille='35' srcIdChamp='mot_3' srcCheckVal='1'>
+		        <question srcIdGrille='35' srcIdChamp='mot_1' srcCheckVal='2'>
+		            <icone id='ascenseur'/>
+		        </question>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='2_cr_san_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+		    <question srcIdGrille='59' srcRefCont='2_cr_san_02' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='cr_san_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+		    <question srcIdGrille='59' srcRefCont='cr_san_02' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+			<question srcIdGrille='59' srcRefCont='2_cr_douche_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='douche'/>
+		    </question>
+			<question srcIdGrille='59' srcRefCont='cr_douche_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='douche'/>
+		    </question>
+		</objet>
+		<objet titre="espace" IdGrille='57' >
+		    <question srcIdGrille='59' srcRefCont='2_cr_douche_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='douche'/>
+		    </question>
+			<question srcIdGrille='59' srcRefCont='cr_douche_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='douche'/>
+		    </question>
+		    <question srcIdGrille='59'  srcRefCont='2_cr_san_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+		    <question srcIdGrille='59' srcRefCont='2_cr_san_02' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='cr_san_01' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+		    <question srcIdGrille='59' srcRefCont='cr_san_02' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='wc'/>
+		    </question>
+		    <question srcIdGrille='59'  srcRefCont='2_air_sta_07' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='2_air_sta_10' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='air_sta_07' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='air_sta_10' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+		    </question>
+			<question srcIdGrille='59'  srcRefCont='2_qi_air_sta_02' srcIdChamp='mot_1' srcCheckVal='2'>
+		        <icone id='gig-gic'/>
+		    </question>
+		    <question srcIdGrille='59' srcRefCont='2_cr_chem_ext_01' srcIdChamp='mot_1' srcCheckVal='2'>
+				<icone id='chem_ext'/>
+			</question>
+			<question srcIdGrille='59' srcRefCont='cr_chem_ext_01' srcIdChamp='mot_1' srcCheckVal='2'>
+				<icone id='chem_ext'/>
+			</question>
+		</objet>
+	</icones>
+
+	<!-- Gestion des fils d'ariane -->		
+	<XmlParam nom="FilAriane">
+		<js evt="onclick" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','-param5-');"/>
+		<fil codeTree="terre" codeSaisi="Terre" lib="Territoire" idForm="66" />
+		<fil codeTree="etab" codeSaisi="Etab" lib="Etablissement(s)" idForm="55" />
+		<fil codeTree="voirie" codeSaisi="Voirie" lib="Voirie(s)" idForm="62" />
+		<fil codeTree="parcelle" codeSaisi="Parcelle" lib="Parcelle(s)" idForm="58" />
+		<fil codeTree="bat" codeSaisi="Bat" lib="Batiment(s)" idForm="53" />
+		<fil codeTree="espaceext" codeSaisi="EspaceExt" lib="Espace(s) exterieur" idForm="61" />
+		<fil codeTree="objetext" codeSaisi="ObjetExt" lib="Objet(s) exterieur" idForm="64" />
+		<fil codeTree="espacegen" codeSaisi="EspaceGen" lib="Espaces généraux" idForm="56" />
+		<fil codeTree="niveau" codeSaisi="Niveau" lib="Niveau" idForm="35" />
+		<fil codeTree="objetintbat" codeSaisi="ObjetExt" lib="Cabines Ascenseurs" />
+		<fil codeTree="espaceint" codeSaisi="EspaceInt" lib="Espaces intérieurs" idForm="57" />
+		<fil codeTree="objetint" codeSaisi="ObjetInt" lib="Objet(s) intérieurs bâtiment" idForm="65" />
+		<fil codeTree="objetint" codeSaisi="ObjetInt" lib="Objet(s) intérieurs" idForm="63" />
+		<fil codeTree="voie" codeSaisi="Voie" lib="Voie" idForm="78" />
+		<fil codeTree="troncon" codeSaisi="Troncon" lib="Tronçon de voirie" idForm="74" />
+		<fil codeTree="segment" codeSaisi="Segment" lib="Segment de voirie" idForm="80" />
+		<fil codeTree="objetvoie" codeSaisi="ObjetVoie" lib="Objet de voirie" idForm="79" />
+		<fil codeTree="elementvoirie" codeSaisi="ElementVoirie" lib="Elément de voirie" idForm="69" />
+		<fil codeTree="ligne" codeSaisi="Ligne" lib="Ligne de transport" idForm="72" />
+		
+	</XmlParam>
+
+
+	<!-- Gestion des menus contextuels -->		
+	<XmlParam nom="MenuNavig">
+		<menuDst codeTree="tree" codeSaisi="Terre" lib="Territoire" idForm="66" >
+			<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Niveau');"/>
+		</menuDst>
+		<menuSrc code="Terre">
+			<menuDst codeTree="etab" codeSaisi="Etab" lib="Etablissement(s)" idForm="55" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Etab');"/>
+				<menuSrc code="Etab"/></menuDst>
+			<menuDst codeTree="voirie" codeSaisi="Voirie" lib="Voirie(s)" idForm="69" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Etab');"/>
+			</menuDst>
+			<menuDst codeTree="ligne" codeSaisi="Ligne" lib="Ligne de transport" idForm="72" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Ligne');"/>
+			</menuDst>
+		</menuSrc>
+		<menuSrc code="Etab" idForm="55" >
+			<menuDst codeTree="parcelle" codeSaisi="Parcelle" lib="Parcelle(s)" idForm="58" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Parcelle');"/>
+						<menuSrc code="Parcelle"></menuSrc>
+			</menuDst>
+			<menuDst codeTree="bat" codeSaisi="Bat" lib="Batiment(s)" idForm="53" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Bat');"/>
+				<menuSrc code="Bat"></menuSrc>
+			</menuDst>
+		</menuSrc>
+		<menuSrc code="Parcelle" idForm="58">
+			<menuDst codeTree="espaceext" codeSaisi="EspaceExt" lib="Espace(s) exterieur" idForm="61" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','EspaceExt');"/>
+			</menuDst>
+			<menuDst codeTree="objetext" codeSaisi="ObjetExt" lib="Objet(s) exterieur" idForm="64" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','ObjetExt');"/>
+			</menuDst>
+		</menuSrc>
+
+		<menuSrc code="Bat" idForm="53">
+			<menuDst codeTree="niveau" codeSaisi="Niveau" lib="Niveau" idForm="35" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Niveau');"/>
+			</menuDst>
+			<menuDst codeTree="objetintbat" codeSaisi="ObjetExt" lib="Cabines Ascenseurs" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','ObjetIntBat');"/>
+			</menuDst>
+		</menuSrc>
+		<menuSrc code="Niveau" idForm="35">
+			<menuDst codeTree="espaceint" codeSaisi="EspaceInt" lib="Espaces intérieurs" idForm="57" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','EspaceInt');"/>
+			</menuDst>
+			<menuDst codeTree="objetint" codeSaisi="ObjetInt" lib="Objet(s) intérieurs" idForm="65" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','ObjetInt');"/>
+			</menuDst>
+		</menuSrc>
+		<menuSrc code="EspaceInt">
+			<menuDst codeTree="espacegen" codeSaisi="EspaceGen" lib="Paramètres de contôle" idForm="54" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','EspaceGen');"/>
+			</menuDst>
+		</menuSrc>
+		<menuSrc code="ObjetInt">
+			<menuDst codeTree="espacegen" codeSaisi="EspaceGen"  lib="Paramètres de contôle" idForm="54">
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','EspaceGen');"/>
+			</menuDst>
+		</menuSrc>
+		
+		<menuSrc code="Voirie" idForm="62" >
+			<menuDst codeTree="voie" codeSaisi="Voie" lib="Voie" idForm="78" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Voie');"/>
+			</menuDst>
+		</menuSrc>
+		
+		<menuSrc code="Voie">
+			<menuDst codeTree="troncon" codeSaisi="Troncon" lib="Tronçon" idForm="74" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Troncon');"/>
+			</menuDst>
+			<menuDst codeTree="objetvoie" codeSaisi="ObjetVoie" lib="objet de voirie" idForm="79" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','ObjetVoie');"/>
+			</menuDst>
+		</menuSrc>
+
+		<menuSrc code="Troncon">
+			<menuDst codeTree="segment" codeSaisi="Segment" lib="Segment" idForm="80" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','Segment');"/>
+			</menuDst>
+		</menuSrc>
+
+		<menuSrc code="ObjetVoie">
+			<menuDst codeTree="espacegen" codeSaisi="EspaceGen"  lib="Paramètres de contôle" idForm="54" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','EspaceGen');"/>
+			</menuDst>
+		</menuSrc>
+
+		<menuSrc code="Segment">
+			<menuDst codeTree="elementvoirie" codeSaisi="ElementVoirie" lib="Element de voirie" idForm="69" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','ElementVoirie');"/>
+			</menuDst>
+		</menuSrc>
+
+		<menuSrc code="ElementVoirie">
+			<menuDst codeTree="espacegen" codeSaisi="EspaceGen"  lib="Paramètres de contôle" idForm="54" >
+				<js evt="oncommand" function="RefreshEcran(-param0-,'-param1-','-param2-','-param3-');ChargeTabboxFromAjax(-param4-,'FormSaisi','EspaceGen');"/>
+			</menuDst>
+		</menuSrc>
+		
+	</XmlParam>
+
+	<!-- Gestion des requêtes SPIP -->		
+	<XmlParam nom="GetOntoTree">
+		<Querys>
+
+			<!-- Recherche une rubrique par rapport à un egrille et un champ -->
+			<Query fonction="Grille_RechercheRubId">
+				<select>SELECT a.id_rubrique idRub </select>
+				<from> FROM spip_forms_donnees fd
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_donnee = fd.id_donnee 
+INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee 
+	AND fdc.champ = "-champ-" AND fdc.valeur = "-valeur-"
+INNER JOIN spip_articles a ON a.id_article = fda.id_article 
+				 </from>
+				<where> WHERE fd.id_form = -idGrille-</where>
+			</Query>
+
+				
+<!-- Requêtes pour la création des arbres  -->
+			<Query fonction="GetTreeChildren_SigProb">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<col tag="type"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+					INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique AND mr.id_mot IN (54,56,57,58,59,60,138,139,146)
+				</from>
+				<where def="1942"> WHERE id_parent = -parent- GROUP BY r.id_rubrique</where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Terre');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_SynchroRub">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre
+					,mr.id_mot
+					,a.id_article
+				</select>
+				<from> FROM spip_rubriques r
+					INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+				</from>
+				<where def="1942"> WHERE r.id_parent = -parent-</where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Terre');"/>
+			</Query>
+			<Query fonction="GetTreeChildren_SynchroArt">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT a.id_article id, a.titre
+					,ma.id_mot
+					,a.id_article
+				</select>
+				<from> FROM spip_articles a
+					INNER JOIN spip_mots_articles ma ON mr.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+				</from>
+				<where def="1942"> WHERE r.id_article = -idArt-</where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Terre');"/>
+			</Query>
+
+
+			<Query fonction="GetTreeChildren_terre">
+				<!-- récupère par rapport au parent les rubriques qui ont un mot clef type de territoire-->
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+					INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique AND mr.id_mot IN (54,56,57,58,59,60,138,139,146,249)
+				</from>
+				<where def="1942"> WHERE id_parent = -parent- GROUP BY r.id_rubrique ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Terre');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_etab">
+				<!-- récupère par rapport au parent les rubriques qui ont une grille information établissement-->
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 55
+				</from>
+				<where def="9"> WHERE id_parent = -parent-  ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Etab');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_voirie">
+				<!-- récupère par rapport au parent les rubriques qui ont une grille information voirie-->
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 62
+				</from>
+				<where def="9"> WHERE id_parent = -parent-  ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Voirie');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_espace">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 56
+				</from>
+				<where def="9"> WHERE id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Espace');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_bat">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 53
+				</from>
+				<where def="9"> WHERE id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Bat');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_niveau">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 35
+				</from>
+				<where def="9"> WHERE id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Niveau');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_objetint">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 63
+
+				</from>
+				<where def="9"> WHERE id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','ObjetInt');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_objetext">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 64
+
+				</from>
+				<where def="9"> WHERE id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','ObjetExt');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_espaceint">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 57
+				</from>
+				<where def="9"> WHERE id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','EspaceInt');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_espacegen">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form =59
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','EspaceGen');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_objetintbat">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form =65
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','ObjetIntBat');"/>
+			</Query>
+			
+			
+			<Query fonction="GetTreeChildren_elementvoirie">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form IN (62,69)
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','ElementVoirie');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_objetgen">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form =59
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','ObjetGen');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_objetgenext">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form =59
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','ObjetGenExt');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_espacespe">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_rubriques rp ON rp.id_rubrique = r.id_parent
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form =59
+				</from>
+				<where> WHERE rp.id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','EspaceSpe');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_parcelle">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 58
+				</from>
+				<where def="9"> WHERE r.id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Parcelle');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_porte">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+				INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique AND mr.id_mot = 37
+				INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+				INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+				INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 59
+				</from>
+				<where def="9"> WHERE r.id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Porte');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_escalier">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+				INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique AND mr.id_mot = 36
+				INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+				INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+				INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 59
+				</from>
+				<where def="9"> WHERE r.id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Escalier');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_palierascenseur">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+				INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique AND mr.id_mot = 126
+				INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+				INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+				INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 59
+				</from>
+				<where def="9"> WHERE r.id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','PalierAscenseur');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_escameca">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+				INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique AND mr.id_mot = 38
+				INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+				INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+				INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 59
+				</from>
+				<where def="9"> WHERE r.id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','EscaMeca');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_entree">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 59
+				</from>
+				<where def="9"> WHERE r.id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Entree');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_cabineascenseur">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 65
+				</from>
+				<where def="9"> WHERE r.id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','CabineAscenseur');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_espaceext">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 61
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','EspaceExt');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_espaceextparamgen">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT DISTINCT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 59
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','EspaceExtParamGen');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_espaceextparamspe">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 59
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','EspaceExtParamSpe');"/>
+			</Query>
+
+			<Query fonction="GetTreeChildren_objet">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<col tag="parent" hidden="true"/>
+				<select>SELECT id_rubrique id, titre, id_parent parent </select>
+				<from> FROM spip_rubriques </from>
+				<where def="7"> WHERE id_parent = -parent-</where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['id-param0-','lib-param0-'],[0,1])"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_FormSet">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>
+				<col tag="parent" hidden="true"/>
+				<select>SELECT id_rubrique id, titre, id_parent parent </select>
+				<from> FROM spip_rubriques </from>
+				<where def="9"> WHERE id_parent = -parent- ORDER BY r.titre </where>
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['id-param0-','lib-param0-'],[0,1])"/>
+			</Query>
+
+			<Query fonction="GetTreeChildren_ligne">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 72
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Ligne');"/>
+			</Query>
+
+			<Query fonction="GetTreeChildren_chaine">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 71
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Chaine');"/>
+			</Query>
+
+			<Query fonction="GetTreeChildren_voie">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 78
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Voie');"/>
+			</Query>
+
+			<Query fonction="GetTreeChildren_objetvoie">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 79
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','ObjetVoie');"/>
+			</Query>
+			
+			<Query fonction="GetTreeChildren_troncon">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 74
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Troncon');"/>
+			</Query>
+
+			<Query fonction="GetTreeChildren_segment">
+				<col tag="id" parse="Integer"/>
+				<col tag="titre"/>				
+				<select>SELECT r.id_rubrique id, r.titre, r.id_parent parent </select>
+				<from> FROM spip_rubriques r
+INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees d ON d.id_donnee = da.id_donnee AND d.id_form = 80
+				</from>
+				<where> WHERE id_parent = -parent-  ORDER BY r.titre </where>				
+				<js evt="onselect" function="GetTreeSelect('tree-param0-',['idRub','libRub'],[0,1]);ChargeTabboxFromAjax('idRub','FormSaisi','Segment');"/>
+			</Query>
+
+		</Querys>
+		
+	</XmlParam>
+	
+	
+<!-- Requêtes pour la création des formulaires de saisie  -->
+	<XmlParam nom="GetTabForm">
+		<Querys>
+			<Query fonction="Grille_GetRubDon">
+				<select>SELECT r.id_rubrique id </select>
+				<from> FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article 
+				</from>
+				<where> WHERE da.id_donnee = -id-</where>
+			</Query>
+			<Query fonction="Grille_GetArtDon">
+				<select>SELECT id_article id </select>
+				<from> FROM spip_forms_donnees_articles 
+				</from>
+				<where> WHERE id_donnee = -id-</where>
+			</Query>
+			
+<!-- Requêtes pour la création des panels  -->
+			<Query fonction="Grille_GetXulTabFormRub">
+				<select>SELECT id_article id, titre </select>
+				<from> FROM spip_articles </from>
+				<where> WHERE id_rubrique = -id- AND statut = 'prepa'</where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormTerre">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 66
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormEtab">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 55
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormVoirie">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 62
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormEspace">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 56
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormEspaceInt">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 57
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormBat">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 53
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormObjetInt">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 63
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormObjetIntBat">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 65
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormObjetExt">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 64
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormParcelle">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 58
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormEspaceExt">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 61
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormEspaceExtParamGen">
+				<select>SELECT DISTINCT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 59
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormEspaceExtParamSpe">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 59
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormNiveau">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 35
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormEspace">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 56
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormEspaceGen">
+				<select>SELECT DISTINCT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 59
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormObjetIntBat">
+				<select>SELECT DISTINCT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 59
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormElementVoirie">
+				<select>SELECT DISTINCT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form IN (62,69)
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormObjetGen">
+				<select>SELECT DISTINCT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 59
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormObjetGenExt">
+				<select>SELECT DISTINCT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 59
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormEspaceSpe">
+				<select>SELECT DISTINCT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 59
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabFormObjet">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 56
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+
+			<Query fonction="Grille_GetXulTabFormSignalementProbleme">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 60
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+
+			<Query fonction="Grille_GetXulTabFormLigne">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 72
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+
+			<Query fonction="Grille_GetXulTabFormChaine">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 71
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+
+			<Query fonction="Grille_GetXulTabFormVoie">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 78
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+
+			<Query fonction="Grille_GetXulTabFormObjetVoie">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 79
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+
+			<Query fonction="Grille_GetXulTabFormTroncon">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 74
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+
+			<Query fonction="Grille_GetXulTabFormSegment">
+				<select>SELECT a.id_article id, a.titre</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = 80
+				</from>
+				<where> WHERE r.id_rubrique = -id- </where>
+				<dst>Art</dst>
+			</Query>
+
+<!-- Requêtes pour l'affichage des tableaux de bord -->
+			<Query fonction="Grille_GetListeSignalementProbleme">
+				<select>
+				SELECT a.id_article idArt, a.titre titreArt, a.date aDate
+					, r.id_rubrique idRub, r.titre titreRub
+					, rp.id_rubrique idRubPar, rp.titre titreRubPar
+					, fd.id_donnee idDon
+					, fdc.valeur idCont
+					, fdc1.valeur idPbPlan
+					, fdc2.valeur photo
+					, fdc3.valeur obs
+					, fdc5.valeur RepProb
+
+					, fdcc.valeur idCrit
+					, fdcc1.valeur TextCont
+					, m.titre RepCont
+					, m1.titre ReponsePhoto
+					, fdc21.valeur regle
+					, fdc23.valeur affir
+					, fdp2.id_donnee idDonneCont
+				</select>
+				<from> 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					
+					 INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					 INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee
+					 AND fd.id_form =60
+					 LEFT JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee
+					 AND fdc.champ = 'ligne_3'
+					 LEFT JOIN spip_forms_donnees_champs fdc1 ON fdc1.id_donnee = fd.id_donnee
+					 AND fdc1.champ = 'ligne_1'
+					 LEFT JOIN spip_forms_donnees_champs fdc3 ON fdc3.id_donnee = fd.id_donnee
+					 AND fdc3.champ = 'texte_1'
+					 LEFT JOIN spip_forms_donnees_champs fdc2 ON fdc2.id_donnee = fd.id_donnee
+					 AND fdc2.champ = 'mot_1'
+					 LEFT JOIN spip_mots m1 ON m1.id_mot = fdc2.valeur
+					LEFT JOIN spip_forms_donnees_champs fdc5 ON fdc5.id_donnee = fd.id_donnee
+					 	AND fdc5.champ = 'ligne_5'
+					 						 
+					INNER JOIN spip_rubriques rp ON rp.id_rubrique = r.id_parent
+					
+					
+					INNER JOIN spip_articles a1 ON a1.id_rubrique = r.id_rubrique
+					INNER JOIN spip_forms_donnees_articles fda1 ON fda1.id_article = a1.id_article
+					INNER JOIN spip_forms_donnees fdp ON fdp.id_donnee = fda1.id_donnee
+					AND fdp.id_form =59
+					INNER JOIN spip_forms_donnees_champs fdcc ON fdcc.id_donnee = fdp.id_donnee
+					AND fdcc.champ = 'ligne_1'
+					 AND fdcc.valeur = fdc.valeur
+					INNER JOIN spip_forms_donnees_champs fdcc1 ON fdcc1.id_donnee = fdcc.id_donnee
+					AND fdcc1.champ = 'ligne_2'
+					INNER JOIN spip_forms_donnees_champs fdcc2 ON fdcc2.id_donnee = fdcc.id_donnee
+					AND fdcc2.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcc2.valeur AND m.titre='Non'
+					
+					INNER JOIN spip_forms_donnees fdp2 ON fdp2.id_form IN (54,70)
+					INNER JOIN spip_forms_donnees_champs fdc22 ON fdc22.id_donnee = fdp2.id_donnee
+					AND fdc22.champ = 'ligne_1' AND fdc22.valeur = fdc.valeur 
+					LEFT JOIN spip_forms_donnees_champs fdc21 ON fdc21.id_donnee = fdp2.id_donnee
+					AND fdc21.champ = 'multiple_1' AND fdc21.valeur = 'multiple_1_1'
+					LEFT JOIN spip_forms_donnees_champs fdc23 ON fdc23.id_donnee = fdp2.id_donnee
+					AND fdc23.champ = 'texte_2'
+					 
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-) GROUP BY idRubPar, idRub, IdArt ORDER BY idRubPar, idRub, IdArt, idCont</where>
+				<dst>Art</dst>
+			</Query>
+
+
+
+			<Query fonction="Grille_GetListeObservations">
+				<select>
+				SELECT a.id_article idArt, a.titre titreArt, a.date aDate
+					, r.id_rubrique idRub, r.titre titreRub
+					, rp.id_rubrique idRubPar, rp.titre titreRubPar
+					, fd.id_donnee idDon
+					, fdc1.valeur ComVal1
+					, fdc2.valeur ComVal2
+					, fdc3.valeur ComVal3
+					, fdc4.valeur ComVal4
+					, fdc5.valeur ComVal5
+					, d.fichier ComFic
+
+					, fdcc1.id_donnee idCont
+					, fdcc1.valeur ContVal1
+					, fdcc2.valeur ContVal2
+					, fdcc3.valeur ContVal3
+					, m.titre ContRep
+				</select>
+				<from> 
+				 
+					FROM spip_rubriques r
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+					
+					 INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+					 INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee
+						 AND fd.id_form =67
+					 INNER  JOIN spip_forms_donnees_champs fdc5 ON fdc5.id_donnee = fd.id_donnee
+						 AND fdc5.champ = 'ligne_5'
+					 INNER  JOIN spip_forms_donnees_champs fdc4 ON fdc4.id_donnee = fd.id_donnee
+						 AND fdc4.champ = 'ligne_4'
+					 INNER  JOIN spip_forms_donnees_champs fdc3 ON fdc3.id_donnee = fd.id_donnee
+						 AND fdc3.champ = 'ligne_3'
+					 INNER  JOIN spip_forms_donnees_champs fdc2 ON fdc2.id_donnee = fd.id_donnee
+						 AND fdc2.champ = 'ligne_2'
+					 INNER  JOIN spip_forms_donnees_champs fdc1 ON fdc1.id_donnee = fd.id_donnee
+					 	AND fdc1.champ = 'ligne_1'
+
+					 LEFT JOIN spip_documents_articles da ON da.id_article = a.id_article
+					 LEFT JOIN spip_documents d ON d.id_document = da.id_document
+					 
+					INNER JOIN spip_rubriques rp ON rp.id_rubrique = r.id_parent
+
+					INNER JOIN spip_forms_donnees_champs fdcc1 ON fdcc1.id_donnee = fdc4.valeur
+						AND fdcc1.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcc2 ON fdcc2.id_donnee = fdc4.valeur
+						AND fdcc2.champ = 'ligne_2'
+					INNER JOIN spip_forms_donnees_champs fdcc3 ON fdcc3.id_donnee = fdc4.valeur
+						AND fdcc3.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcc3.valeur					
+				</from>
+				<where>
+					WHERE r.id_rubrique IN(-ids-) 
+					GROUP BY idRubPar, idRub, IdArt 
+					ORDER BY idRubPar, idRub, IdArt
+				</where>				
+				<dst>Art</dst>
+			</Query>
+
+
+			<Query fonction="Grille_GetEtatDiagSum">
+				<select>
+					SELECT SUM(audio) audio, SUM(cog) cog, SUM(moteur) moteur, SUM(visu) visu </select>
+				<from> FROM ona_etatdiag eta
+					INNER JOIN spip_rubriques_enfants re ON re.id_rubrique = eta.id_rubrique </from>
+				<where> WHERE re.id_parent=-idRub- AND handi=-handi- </where>
+			</Query> 
+			<Query fonction="Grille_GetEtatDiagSumNew">
+				<select>
+					SELECT SUM(audio) audio, SUM(cog) cog, SUM(moteur) moteur, SUM(visu) visu </select>
+				<from> FROM ona_etatdiag eta </from>
+				<where> WHERE eta.id_rubrique=-idRub- AND eta.handi=-handi- </where>
+			</Query> 
+			<Query fonction="Grille_GetEtatDiagOuiOLD">
+				<select>
+					SELECT  COUNT(fdcMoteur.valeur) moteur
+					, COUNT(fdcAudio.valeur) audio
+					, COUNT(fdcVisu.valeur) visu
+					, COUNT(fdcCog.valeur) cog
+				</select>
+				<from> 
+					FROM spip_rubriques r 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcRep.valeur AND m.titre='Oui'
+					
+					INNER JOIN spip_forms_donnees fdCont ON fdCont.id_form IN (54,70)
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = fdCont.id_donnee
+					   AND fdcCont.champ = 'ligne_1' AND fdcCont.valeur = fdcRef.valeur 
+					LEFT JOIN spip_forms_donnees_champs fdcMoteur ON fdcMoteur.id_donnee = fdCont.id_donnee
+					   AND fdcMoteur.champ = 'multiple_3'  AND fdcMoteur.valeur = 'multiple_3_1'
+					LEFT JOIN spip_forms_donnees_champs fdcAudio ON fdcAudio.id_donnee = fdCont.id_donnee
+					   AND fdcAudio.champ = 'multiple_3'  AND fdcAudio.valeur = 'multiple_3_2'
+					LEFT JOIN spip_forms_donnees_champs fdcVisu ON fdcVisu.id_donnee = fdCont.id_donnee
+					   AND fdcVisu.champ = 'multiple_3'  AND fdcVisu.valeur = 'multiple_3_3'
+					LEFT JOIN spip_forms_donnees_champs fdcCog ON fdcCog.id_donnee = fdCont.id_donnee
+					   AND fdcCog.champ = 'multiple_3'  AND fdcCog.valeur = 'multiple_3_4'
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-)</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagOui">
+				<select>SELECT  COUNT(gc3.id_critere) moteur
+					, COUNT(gc1.id_critere) audio
+					, COUNT(gc4.id_critere) visu
+					, COUNT(gc2.id_critere) cog
+				</select>
+				<from> 
+					FROM spip_rubriques r 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcRep.valeur AND m.titre='Oui'
+					
+					LEFT JOIN gevu.gevu_criteres gc1 ON gc1.ref = fdcRef.valeur AND gc1.handicateur_auditif > 0
+		          	LEFT JOIN gevu.gevu_criteres gc2 ON gc2.ref = fdcRef.valeur AND gc2.handicateur_cognitif > 0
+		          	LEFT JOIN gevu.gevu_criteres gc3 ON gc3.ref = fdcRef.valeur AND gc3.handicateur_moteur > 0
+		          	LEFT JOIN gevu.gevu_criteres gc4 ON gc4.ref = fdcRef.valeur AND gc4.handicateur_visuel > 0					
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-)</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagHandiOLD">
+				<select>
+					SELECT  
+					 COUNT(fdcM.valeur)	moteur			 
+					, COUNT(fdcA.valeur) audio			 
+					, COUNT(fdcV.valeur) visu			 
+					, COUNT(fdcC.valeur) cog			 
+				</select>
+				<from> 
+					FROM spip_rubriques r 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcRep.valeur AND m.titre='Non'
+					
+					INNER JOIN spip_forms_donnees fdCont ON fdCont.id_form IN (54,70)
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = fdCont.id_donnee
+					   AND fdcCont.champ = 'ligne_1' AND fdcCont.valeur = fdcRef.valeur 
+
+					LEFT JOIN spip_forms_donnees_champs fdcM ON fdcM.id_donnee = fdCont.id_donnee
+					   AND fdcM.champ = 'ligne_2' AND fdcM.valeur = -handi- 
+					
+					LEFT JOIN spip_forms_donnees_champs fdcA ON fdcA.id_donnee = fdCont.id_donnee
+					   AND fdcA.champ = 'ligne_3' AND fdcA.valeur = -handi- 
+ 
+					LEFT JOIN spip_forms_donnees_champs fdcV ON fdcV.id_donnee = fdCont.id_donnee
+					   AND fdcV.champ = 'ligne_4' AND fdcV.valeur = -handi- 
+ 
+					LEFT JOIN spip_forms_donnees_champs fdcC ON fdcC.id_donnee = fdCont.id_donnee
+					   AND fdcC.champ = 'ligne_5' AND fdcC.valeur = -handi- 
+
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-)</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagHandi">
+				<select>
+					SELECT  
+					COUNT(gc3.id_critere) moteur
+					, COUNT(gc1.id_critere) audio
+					, COUNT(gc4.id_critere) visu
+					, COUNT(gc2.id_critere) cog	 			 
+				</select>
+				<from> 
+					FROM spip_rubriques r 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcRep.valeur AND m.titre='Non'
+					
+					INNER JOIN spip_forms_donnees fdCont ON fdCont.id_form IN (54,70)
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = fdCont.id_donnee
+					   AND fdcCont.champ = 'ligne_1' AND fdcCont.valeur = fdcRef.valeur 
+
+			          LEFT JOIN gevu.gevu_criteres gc1 ON gc1.ref = fdcRef.valeur AND gc1.handicateur_auditif = -handi-
+			          LEFT JOIN gevu.gevu_criteres gc2 ON gc2.ref = fdcRef.valeur AND gc2.handicateur_cognitif = -handi-
+			          LEFT JOIN gevu.gevu_criteres gc3 ON gc3.ref = fdcRef.valeur AND gc3.handicateur_moteur = -handi-
+			          LEFT JOIN gevu.gevu_criteres gc4 ON gc4.ref = fdcRef.valeur AND gc4.handicateur_visuel = -handi-
+
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-)</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagOuiListe__">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+						, fdcRef.valeur valRef
+						, fdcAff.valeur affirm
+						, fd.id_donnee idDonRep
+						, fdCont.id_donnee idDonCont, a.id_article idArt			 
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+					INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_articles a ON a.id_rubrique = oe.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article 
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcRep.valeur AND m.titre='Oui'
+					
+					INNER JOIN spip_forms_donnees fdCont ON fdCont.id_form IN (54,70)
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = fdCont.id_donnee
+					   AND fdcCont.champ = 'ligne_1' AND fdcCont.valeur = fdcRef.valeur 					   
+					INNER JOIN spip_forms_donnees_champs fdcM ON fdcM.id_donnee = fdCont.id_donnee
+					   AND fdcM.champ = '-champ-'  AND fdcM.valeur = '-valeur-'
+					LEFT JOIN spip_forms_donnees_champs fdcAff ON fdcAff.id_donnee = fdCont.id_donnee 
+					   AND fdcAff.champ = 'texte_1'	   
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique, a.id_article
+				</where>
+			</Query>
+			<Query fonction="Grille_GetEtatDiagOuiListeOld">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+						, fdcRef.valeur valRef
+						, fdcAff.valeur affirm
+						, oed.idDonRep
+						, oed.idDonCont
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+						INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+							AND oe.handi = -handi- AND -TypeHandi-
+						INNER JOIN ona_etatdiag_donnees oed ON oed.id_etatdiag = oe.id_etatdiag
+						
+						INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = oed.idDonRep 
+						INNER JOIN spip_mots m ON m.id_mot = fdcRef.valeur AND m.titre='Oui'
+						
+						INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont
+						INNER JOIN spip_forms_donnees_champs fdcM ON fdcM.id_donnee = oed.idDonCont
+						   AND fdcM.champ = '-champ-'  AND fdcM.valeur = '-valeur-'
+						LEFT JOIN spip_forms_donnees_champs fdcAff ON fdcAff.id_donnee = oed.idDonCont 
+						   AND fdcAff.champ = 'texte_1'	   	   
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique
+				</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagOuiListe">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+			            , gc.ref valRef
+						, gc.affirmation affirm
+						, oed.idDonRep
+						, oed.idDonCont
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+						INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+							AND oe.handi = -handi- AND -TypeHandi-
+						INNER JOIN ona_etatdiag_donnees oed ON oed.id_etatdiag = oe.id_etatdiag
+						
+						INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = oed.idDonRep 
+						INNER JOIN spip_mots m ON m.id_mot = fdcRef.valeur AND m.titre='Oui'
+						
+						INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont AND fdcCont.champ = 'ligne_1'             
+			            INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcCont.valeur AND -champ- > 0 
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique
+				</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagHandiListe">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+			            , gc.ref valRef
+						, gc.affirmation affirm
+						, oed.idDonRep
+						, oed.idDonCont
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+					INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+						AND oe.handi = -handi- AND -TypeHandi-
+					INNER JOIN ona_etatdiag_donnees oed ON oed.id_etatdiag = oe.id_etatdiag
+
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = oed.idDonRep 
+					INNER JOIN spip_mots m ON m.id_mot = fdcRef.valeur AND m.titre='Non'
+					
+					
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont AND fdcCont.champ = 'ligne_1'             
+		            INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcCont.valeur AND -champ- = -valeur- 
+
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique
+				</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagHandiListeOLD">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+						, fdcRef.valeur valRef
+						, fdcAff.valeur affirm
+						, oed.idDonRep
+						, oed.idDonCont
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+					INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+						AND oe.handi = -handi- AND -TypeHandi-
+					INNER JOIN ona_etatdiag_donnees oed ON oed.id_etatdiag = oe.id_etatdiag
+
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = oed.idDonRep 
+					INNER JOIN spip_mots m ON m.id_mot = fdcRef.valeur AND m.titre='Non'
+					
+					
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont
+					INNER JOIN spip_forms_donnees_champs fdcM ON fdcM.id_donnee = oed.idDonCont
+					   AND fdcM.champ = '-champ-' AND fdcM.valeur = -valeur- 
+					LEFT JOIN spip_forms_donnees_champs fdcAff ON fdcAff.id_donnee = oed.idDonCont 
+					   AND fdcAff.champ = 'texte_2'	   
+
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique
+				</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagListeTot">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+						, fdcRef.valeur valRef
+						, fdcAff.valeur affirm
+						, oed.idDonRep
+						, oed.idDonCont
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+					INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+					INNER JOIN ona_etatdiag_donnees oed ON oed.id_etatdiag = oe.id_etatdiag
+
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = oed.idDonRep 
+					INNER JOIN spip_mots m ON m.id_mot = fdcRef.valeur AND m.titre='Non'
+					
+					
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = oed.idDonCont
+					INNER JOIN spip_forms_donnees_champs fdcM ON fdcM.id_donnee = oed.idDonCont
+					LEFT JOIN spip_forms_donnees_champs fdcAff ON fdcAff.id_donnee = oed.idDonCont 
+					   AND fdcAff.champ = 'texte_2'	   
+
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique
+				</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagHandiListe__">
+				<select>
+					SELECT DISTINCT r.id_rubrique
+						, fdcRef.valeur valRef
+						, fdcAff.valeur affirm
+						, fd.id_donnee idDonRep, fdCont.id_donnee idDonCont
+						, a.id_article idArt			 
+				</select>
+				<from> FROM spip_rubriques_enfants r 
+					INNER JOIN ona_etatdiag oe ON oe.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_articles a ON a.id_rubrique = oe.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article 
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'	   
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1'
+					INNER JOIN spip_mots m ON m.id_mot = fdcRep.valeur AND m.titre='Non'
+					
+					
+					INNER JOIN spip_forms_donnees fdCont ON fdCont.id_form IN (54,70)
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = fdCont.id_donnee
+					   AND fdcCont.champ = 'ligne_1' AND fdcCont.valeur = fdcRef.valeur 
+					INNER JOIN spip_forms_donnees_champs fdcM ON fdcM.id_donnee = fdCont.id_donnee
+					   AND fdcM.champ = '-champ-' AND fdcM.valeur = -valeur- 
+					LEFT JOIN spip_forms_donnees_champs fdcAff ON fdcAff.id_donnee = fdCont.id_donnee 
+					   AND fdcAff.champ = 'texte_2'	   
+
+				</from>
+				<where> WHERE r.id_parent = -idRub- 
+					ORDER BY r.id_rubrique, a.id_article
+				</where>
+			</Query>
+
+			<Query fonction="Grille_GetEtatDiagApplicableOLD">
+				<select>
+					SELECT  
+					 SUM(fdcM.valeur)	moteur			 
+					, SUM(fdcA.valeur) audio			 
+					, SUM(fdcV.valeur) visu			 
+					, SUM(fdcC.valeur) cog			 
+				</select>
+				<from> 
+					FROM spip_rubriques r 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1' AND fdcRep.valeur IN (1,2,141) 
+					
+					INNER JOIN spip_forms_donnees fdCont ON fdCont.id_form IN (54,70)
+					INNER JOIN spip_forms_donnees_champs fdcCont ON fdcCont.id_donnee = fdCont.id_donnee
+					   AND fdcCont.champ = 'ligne_1' AND fdcCont.valeur = fdcRef.valeur 
+
+					LEFT JOIN spip_forms_donnees_champs fdcM ON fdcM.id_donnee = fdCont.id_donnee
+					   AND fdcM.champ = 'ligne_2' 
+					
+					LEFT JOIN spip_forms_donnees_champs fdcA ON fdcA.id_donnee = fdCont.id_donnee
+					   AND fdcA.champ = 'ligne_3' 
+ 
+					LEFT JOIN spip_forms_donnees_champs fdcV ON fdcV.id_donnee = fdCont.id_donnee
+					   AND fdcV.champ = 'ligne_4' 
+ 
+					LEFT JOIN spip_forms_donnees_champs fdcC ON fdcC.id_donnee = fdCont.id_donnee
+					   AND fdcC.champ = 'ligne_5' 
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-)</where>
+			</Query>
+			<Query fonction="Grille_GetEtatDiagApplicable">
+				<select>
+					SELECT  COUNT(gc.handicateur_moteur) moteur
+					, COUNT(gc.handicateur_auditif) audio
+					, COUNT(gc.handicateur_visuel) visu
+					, COUNT(gc.handicateur_cognitif) cog
+				</select>
+				<from> 
+					FROM spip_rubriques r 
+					INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique 
+					INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee 
+					   AND fd.id_form =-idFormRep- 
+					INNER JOIN spip_forms_donnees_champs fdcRef ON fdcRef.id_donnee = fd.id_donnee 
+					   AND fdcRef.champ = 'ligne_1'
+					INNER JOIN spip_forms_donnees_champs fdcRep ON fdcRep.id_donnee = fd.id_donnee 
+					   AND fdcRep.champ = 'mot_1' AND fdcRep.valeur IN (1,2,141) 
+					
+					INNER JOIN gevu.gevu_criteres gc ON gc.ref = fdcRef.valeur					
+				</from>
+				<where> WHERE r.id_rubrique IN(-ids-)</where>
+			</Query>					
+
+			<Query fonction="Grille_GetListeSignalementProblemeStat">
+				<select>
+					SELECT fcc.titre TypeCrit
+					, COUNT(1) nb
+				</select>
+				<from> 
+					FROM spip_rubriques r
+						INNER JOIN spip_articles a ON a.id_rubrique = r.id_rubrique
+						INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+						INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee
+							AND fd.id_form =60
+						INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee
+							AND fdc.champ = 'ligne_3'
+						INNER JOIN spip_forms_donnees_champs fdcc ON fdcc.champ = 'ligne_1'
+							AND fdcc.valeur = fdc.valeur
+						INNER JOIN spip_forms_donnees_champs fdcc3 ON fdcc.id_donnee = fdcc.id_donnee
+							AND fdcc.champ = 'multiple_3'
+						INNER JOIN spip_forms_champs_choix fcc ON fcc.choix = fdcc.valeur
+							AND fcc3.id_form =54
+				</from>
+				<where> 
+					WHERE r.id_rubrique IN(-ids-) ORDER BY idRubPar, idRub, IdArt GROUP BY TypeCrit
+				</where>
+				<dst>Art</dst>
+			</Query>
+
+			<Query fonction="Grille_GetXulTabFormGrille">
+				<select>SELECT f.id_form id, f.titre, fda.id_article idArt </select>
+				<from> FROM spip_forms f
+INNER JOIN spip_forms_donnees fd ON fd.id_form = f.id_form
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_donnee = fd.id_donnee
+				 </from>
+				<where> WHERE fda.id_article = -id- GROUP BY f.id_form</where>
+				<dst>Form</dst>
+			</Query>
+
+			<Query fonction="Grille_VerifDonneeLienGrille">
+				<select>SELECT fdV.id_donnee idDonV </select>
+				<from> FROM spip_forms_donnees fd
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_donnee = fd.id_donnee
+INNER JOIN spip_articles a ON a.id_article = fda.id_article
+INNER JOIN spip_articles ar ON ar.id_rubrique = a.id_rubrique
+INNER JOIN spip_forms_donnees_articles fdaV ON fdaV.id_article = ar.id_article
+INNER JOIN spip_forms_donnees fdV ON fdV.id_donnee = fdaV.id_donnee AND fdV.id_form = -idGrille-
+				 </from>
+				<where> WHERE fd.id_donnee = -idDon- </where>
+			</Query>
+
+			<Query fonction="Grille_GetLienDonneeGRILLE_OBS">
+				<select>SELECT fdV.id_donnee idDonV, fdaV.id_article  </select>
+				<from> FROM spip_forms_donnees fd
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_donnee = fd.id_donnee
+INNER JOIN spip_articles a ON a.id_article = fda.id_article
+INNER JOIN spip_articles ar ON ar.id_rubrique = a.id_rubrique
+INNER JOIN spip_forms_donnees_articles fdaV ON fdaV.id_article = ar.id_article
+INNER JOIN spip_forms_donnees fdV ON fdV.id_donnee = fdaV.id_donnee 
+	AND fdV.id_form = 67 
+INNER JOIN spip_forms_donnees_champs fdcV ON fdcV.id_donnee = fdV.id_donnee 
+	AND fdcV.champ = 'ligne_5' AND fdcV.valeur = '-valRef-'
+				 </from>
+				<where> WHERE fd.id_donnee = -idDon- </where>
+			</Query>
+
+			<Query fonction="Grille_GetLienDonneeGRILLE_SIG_PROB">
+				<select>SELECT fdV.id_donnee, fdaV.id_article </select>
+				<from> FROM spip_forms_donnees fd
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_donnee = fd.id_donnee
+INNER JOIN spip_articles a ON a.id_article = fda.id_article
+INNER JOIN spip_articles ar ON ar.id_rubrique = a.id_rubrique
+INNER JOIN spip_forms_donnees_articles fdaV ON fdaV.id_article = ar.id_article
+INNER JOIN spip_forms_donnees fdV ON fdV.id_donnee = fdaV.id_donnee 
+	AND fdV.id_form = 60 
+INNER JOIN spip_forms_donnees_champs fdcV ON fdcV.id_donnee = fdV.id_donnee 
+	AND fdcV.champ = 'ligne_3' AND fdcV.valeur = '-valRef-'
+				 </from>
+				<where> WHERE fd.id_donnee = -idDon- </where>
+				<dst>Form</dst>
+			</Query>
+
+			<!-- Recherche une donnée par rapport à un article, un champ et une valeur -->
+			<Query fonction="Grille_RechercheDonneeId">
+				<select>SELECT fd.id_donnee idDon </select>
+				<from> FROM spip_forms_donnees fd
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_donnee = fd.id_donnee 
+	AND fda.id_article = -idArt-
+INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee 
+	AND fdc.champ = "-champ-" AND fdc.valeur = "-valeur-"
+				 </from>
+				<where> </where>
+			</Query>
+			<!-- Recherche une donnée par rapport à une série de rubrique, un champ et une valeur -->
+			<Query fonction="Grille_RechercheDonneeIdByRub">
+				<select>SELECT fd.id_donnee idDon </select>
+				<from> FROM spip_articles a 
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+INNER JOIN spip_forms_donnees fd ON fda.id_donnee = fd.id_donnee AND fd.id_form = -grille- 
+INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee 
+	AND fdc.champ = "-champ-" AND fdc.valeur = "-valeur-"
+				 </from>
+				<where> WHERE a.id_rubrique IN (-ids-)</where>
+			</Query>
+			<!-- Recherche une donnée par rapport à une série de rubrique, un champ, une valeur et une référence -->
+			<Query fonction="Grille_RechercheDonneeIdByRubRef">
+				<select>SELECT fd.id_donnee idDon </select>
+				<from> FROM spip_articles a 
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+INNER JOIN spip_forms_donnees fd ON fda.id_donnee = fd.id_donnee 
+INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee 
+	AND fdc.champ = "-champ-" AND fdc.valeur = "-valeur-"
+INNER JOIN spip_forms_donnees_champs fdcR ON fdcR.id_donnee = fd.id_donnee
+	AND fdcR.champ = "ligne_1" AND fdcR.valeur = "-ref-"
+				 </from>
+				<where> WHERE a.id_rubrique IN (-ids-)</where>
+			</Query>
+
+			<!-- Récupère les noeuds de communes -->
+			<Query fonction="Grille_GetNoeudCommunes">
+				<select>SELECT a.id_rubrique, a.id_article id, a.titre, fdc.id_donnee
+					, fd.id_form
+					, fdc.id_donnee, fdc.valeur
+					</select>
+				<from> FROM spip_articles a 
+INNER JOIN spip_rubriques r ON r.id_rubrique = a.id_rubrique
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee
+	AND fd.id_form IN (66)
+INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee
+	AND fdc.champ = 'mot_1' AND fdc.valeur = '59'
+				 </from>
+				<where> ORDER BY a.titre</where>
+			</Query>
+			<!-- Récupère les noeuds de déplacement : voirie, établissement -->
+			<Query fonction="Grille_GetNoeudDeplacement">
+				<select>SELECT a.id_rubrique, a.id_article id, a.titre
+					, fd.id_form
+					, fdc.id_donnee, fdc.valeur
+					, rp.titre titreRubParent 
+					</select>
+				<from> FROM spip_articles a 
+INNER JOIN spip_rubriques r ON r.id_rubrique = a.id_rubrique
+INNER JOIN spip_rubriques rp ON rp.id_rubrique = r.id_parent
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee
+	AND fd.id_form IN (55,62)
+INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee
+				 </from>
+				<where> WHERE a.id_rubrique IN (-ids-) GROUP BY a.id_rubrique ORDER BY a.titre</where>
+			</Query>
+			<!-- Récupère les noeuds de transports : gare, pang, arret de bus -->
+			<Query fonction="Grille_GetEtabTransport">
+				<select>SELECT a.id_rubrique, a.id_article id, a.titre
+					, fd.id_form
+					, fdc.id_donnee, fdc.valeur
+					, rp.titre titreRubParent 
+					</select>
+				<from> FROM spip_articles a 
+INNER JOIN spip_rubriques r ON r.id_rubrique = a.id_rubrique
+INNER JOIN spip_rubriques rp ON rp.id_rubrique = r.id_parent
+INNER JOIN spip_forms_donnees_articles fda ON fda.id_article = a.id_article
+INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee
+	AND fd.id_form = 55
+INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = fd.id_donnee
+	AND fdc.champ = "mot_2" AND fdc.valeur IN ( 62, 64 )
+				 </from>
+				<where> WHERE a.id_rubrique IN (-ids-) ORDER BY a.titre</where>
+			</Query>
+			<Query fonction="Grille_GetVoirieTransport">
+				<select>SELECT r.id_rubrique, r.titre
+					, m.titre mtitre
+					, rp.titre titreRubParent 
+				 </select>
+				<from> FROM spip_rubriques r 
+INNER JOIN spip_rubriques rp ON rp.id_rubrique = r.id_parent
+INNER JOIN spip_mots_rubriques mr ON mr.id_rubrique = r.id_rubrique
+	AND mr.id_mot IN (129)
+INNER JOIN spip_mots m ON m.id_mot = mr.id_mot
+				 </from>
+				<where> WHERE r.id_rubrique IN (-ids-) ORDER BY r.titre</where>
+			</Query>
+
+
+
+
+<!-- Requêtes pour la création des formulaires -->
+			
+			<Query fonction="Grille_GetXulTabPanelsArt">
+				<select>SELECT id_article id, titre, id_rubrique idRub </select>
+				<from> FROM spip_articles </from>
+				<where> WHERE id_article = -id-</where>
+				<dst>Grille</dst>
+			</Query>
+			
+			<Query fonction="Grille_GetXulTabPanelsForm">
+				<select>SELECT da.id_donnee id, a.id_rubrique idRub </select>
+				<from> FROM spip_forms_donnees_articles da
+				INNER JOIN spip_forms_donnees fd ON fd.id_donnee = da.id_donnee
+				INNER JOIN spip_articles a ON a.id_article = da.id_article
+				 </from>
+				<where> WHERE da.id_article =-src-  AND fd.id_form =-id-</where>
+				<dst>Form</dst>
+			</Query>
+
+			<Query fonction="Grille_GetLegendeControleOLD">
+				<select>SELECT dc.valeur, dc.champ, dc.id_donnee, fc.id_form grille, fc.titre, fc.type, fc.extra_info </select>
+				<from> FROM spip_forms_donnees_champs dc
+				INNER JOIN spip_forms_champs fc ON fc.champ = dc.champ
+				 </from>
+				<where> WHERE dc.id_donnee =-id- AND fc.id_form =-idGrille-
+				ORDER BY fc.rang, dc.champ</where>
+			</Query>
+
+			<Query fonction="Grille_GetLegendeControle">
+				<select>SELECT c.ref
+				  , c.handicateur_auditif audio, c.handicateur_cognitif cog, c.handicateur_moteur moteur, c.handicateur_visuel visu 
+				  , tc.lib type, td.lib droit
+				</select>
+				<from> FROM spip_forms_donnees_champs dc
+INNER JOIN spip_forms_champs fc ON fc.champ = dc.champ AND fc.champ = 'ligne_1'
+INNER JOIN gevu.gevu_criteres c ON c.ref = dc.valeur
+LEFT JOIN gevu.gevu_criteresxtypesxcriteres ctc ON ctc.id_critere = c.id_critere
+LEFT JOIN gevu.gevu_typesxcriteres tc ON tc.id_type_critere = ctc.id_type_critere
+LEFT JOIN gevu.gevu_criteresxtypesxdroits ctd ON ctd.id_critere = c.id_critere
+LEFT JOIN gevu.gevu_typesxdroits td ON td.id_type_droit = ctd.id_type_droit 
+				 </from>
+				<where> WHERE dc.id_donnee =-id- AND fc.id_form =-idGrille-
+				ORDER BY fc.rang, dc.champ</where>
+			</Query>
+
+			
+			<Query fonction="Grille_GetDonnee">
+				<select>SELECT fda.id_article, dc.valeur, dc.champ, dc.id_donnee
+					, fc.id_form grille, fc.titre, fc.type, fc.extra_info
+					, a.id_rubrique </select>
+				<from> FROM spip_forms_donnees_champs dc
+				INNER JOIN spip_forms_champs fc ON fc.champ = dc.champ
+				INNER JOIN spip_forms_donnees_articles fda ON fda.id_donnee = dc.id_donnee
+				INNER JOIN spip_articles a ON a.id_article = fda.id_article
+				 </from>
+				<where> WHERE dc.id_donnee =-id- AND fc.id_form =-idGrille-
+				ORDER BY dc.id_donnee, fc.rang, dc.champ</where>
+				<js evt="onchange" type="textbox" function="SetVal('-param0-')"/>
+				<js evt="onclick" type="radio" function="SetVal('-param0-');"/>
+				<js evt="oncommand" type="multiple" function="SetVal('-param0-');"/>
+				<js evt="oncommand" type="menu" function="SetVal('-param0-');"/>
+				<js evt="onclick" type="fichier" function="GetFichierKml('-param0-');"/>
+			</Query>
+			
+			<Query fonction="Grille_GetDonneeCritere">
+				<select> SELECT sfd.id_donnee idDonnee, sfdc.champ </select>
+				<from> FROM spip_forms_donnees sfd
+				INNER JOIN spip_forms_donnees_champs sfdc ON sfdc.id_donnee = sfd.id_donnee AND sfdc.valeur = '-critere-'
+				 </from>
+				<where> WHERE sfd.id_form = -idForm- GROUP BY idDonnee DESC</where>
+			</Query>
+			
+			<Query fonction="Grille_GetDonneeChoix">
+				<select> SELECT sfd.id_donnee idDonnee, sfd.champ, sfd.valeur</select>
+				<from> FROM spip_forms_donnees_champs sfd</from>
+				<where> WHERE sfd.id_donnee =-id-</where>
+				<and_multiple1> AND sfd.champ = 'multiple_1'</and_multiple1>
+				<and_multiple2> AND sfd.champ = 'multiple_2'</and_multiple2>
+				<and_multiple3> AND sfd.champ = 'multiple_3'</and_multiple3>
+			</Query>
+			
+			<Query fonction="Grille_GetChoixselect">
+				<select>SELECT choix, titre</select>
+				<from> FROM spip_forms_champs_choix </from>
+				<where> WHERE champ ='-champ-' AND id_form =-id- ORDER BY rang</where>
+			</Query>
+			
+			<Query fonction="Grille_GetChoixmultiple">
+				<select>SELECT choix, titre</select>
+				<from> FROM spip_forms_champs_choix </from>
+				<where> WHERE champ ='-champ-' AND choix='-valeur-' AND id_form =-id- ORDER BY rang</where>
+			</Query>
+			<Query fonction="Grille_GetChoixmultipleNotIn">
+				<select>SELECT choix, titre</select>
+				<from> FROM spip_forms_champs_choix </from>
+				<where> WHERE champ ='-champ-' AND choix NOT IN (-multiSelect-) AND id_form =-id- ORDER BY rang</where>
+			</Query>
+			<Query fonction="Grille_GetChoixmot">
+				<select>SELECT id_mot choix, titre</select>
+				<from> FROM spip_mots </from>
+				<where> WHERE id_groupe =-extra_info- ORDER BY titre</where>
+			</Query>
+			<Query fonction="Grille_DelDonnee">
+				<select>DELETE </select>
+				<from> FROM spip_forms_donnees_champs </from>
+				<where> WHERE id_donnee = -idDon-</where>
+			</Query>
+			<Query fonction="Grille_GetDonneeArtForm">
+				<select>SELECT fda.id_donnee </select>
+				<from> FROM spip_forms_donnees_articles fda
+INNER JOIN spip_forms_donnees fd ON fd.id_donnee = fda.id_donnee AND fd.id_form = -idGrille-
+ 				</from>
+				<where> WHERE fda.id_article = -idArt-</where>
+			</Query>
+			<Query fonction="Grille_DelGrilleDonnee">
+				<select>DELETE </select>
+				<from> FROM spip_forms_donnees </from>
+				<where> WHERE id_donnee = -idDon-</where>
+			</Query>
+			<Query fonction="Grille_DelGrilleArtDonnee">
+				<select>DELETE </select>
+				<from> FROM spip_forms_donnees_articles </from>
+				<where> WHERE id_donnee = -idDon-</where>
+			</Query>
+			<Query fonction="Grille_InsDonnee">
+				<insert>INSERT INTO `spip_forms_donnees_champs` (`id_donnee`, `champ`, `valeur`, `maj`)</insert>
+				<values> VALUES (-idDon-, '-champ-', '-val-', now()) </values>
+			</Query>
+			<Query fonction="Grille_DelChamp">
+				<select>DELETE </select>
+				<from> FROM spip_forms_donnees_champs </from>
+				<where> WHERE id_donnee = -idDon- AND champ = '-champ-' AND valeur = '-choix-' </where>
+			</Query>
+			<Query fonction="Grille_InsChamp">
+				<insert>INSERT INTO `spip_forms_donnees_champs` (`id_donnee`, `champ`, `valeur`, `maj`, valint, valdec)</insert>
+				<values> VALUES (-idDon-, '-champ-', '-val-', now(),'-valint-','-valdec-') </values>
+			</Query>
+			<Query fonction="Grille_GetGrillesPublie">
+				<select>SELECT f.id_form, f.titre, a.id_article </select>
+				<from> FROM spip_articles a
+					INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+					INNER JOIN spip_forms_donnees fd ON fd.id_donnee = da.id_donnee
+					INNER JOIN spip_forms f ON f.id_form = fd.id_form
+				 </from>
+				<where> WHERE a.id_rubrique = -idRub- AND a.statut = 'publie'</where>
+			</Query>
+			<Query fonction="Grille_GetRubInLiens">
+				<select>SELECT nom_site, url_site, url_syndic, descriptif idRub </select>
+				<from> FROM spip_syndic </from>
+				<where> WHERE id_rubrique = -idRub- AND statut = 'publie'</where>
+			</Query>
+			<Query fonction="Grille_VerifLiensInRub">
+				<select>SELECT nom_site, url_site, url_syndic, descriptif idRub </select>
+				<from> FROM spip_syndic </from>
+				<where> WHERE id_rubrique = -idRub- AND descriptif = -idRubVerif- </where>
+			</Query>
+			<Query fonction="Grille_GetChamps">
+				<select>SELECT champ, rang, titre, '' valeur, '' id_donnee </select>
+				<from> FROM spip_forms_champs </from>
+				<where> WHERE id_form = -idGrille- </where>
+			</Query>
+			<Query fonction="Grille_AddQuestion">
+				<select>SELECT fd.id_donnee, fd.id_form, '59' FormRep, a.id_article, fdc1.valeur ref, fdc2.valeur question, '124' valdef, fdc3.valeur typecon, fdc4.valeur droit </select>
+				<from> FROM spip_articles a
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees fd ON fd.id_donnee = da.id_donnee AND fd.id_form = -idForm-
+INNER JOIN spip_forms_donnees_champs fdc1 ON fdc1.id_donnee = fd.id_donnee AND fdc1.champ = 'ligne_1'
+INNER JOIN spip_forms_donnees_champs fdc2 ON fdc2.id_donnee = fd.id_donnee AND fdc2.champ = 'texte_1'
+INNER JOIN spip_forms_donnees_champs fdc3 ON fdc3.id_donnee = fd.id_donnee AND fdc3.champ = 'mot_1'
+LEFT JOIN spip_forms_donnees_champs fdc4 ON fdc4.id_donnee = fd.id_donnee AND fdc4.champ = 'multiple_2'
+				</from>
+				<where> WHERE a.id_rubrique =-idRubSrc- AND a.statut = 'publie'</where>
+			</Query>
+			
+			<Query fonction="Grille_GetValeurChamp">
+				<select>SELECT dc.valeur </select>
+				<from> FROM spip_forms_donnees_champs dc
+				</from>
+				<where> WHERE dc.id_donnee = -id- AND dc.champ ='-champ-'	</where>
+			</Query>
+			<Query fonction="Grille_GetMot">
+				<select>SELECT m.titre </select>
+				<from> FROM spip_mots m
+				</from>
+				<where> WHERE m.id_mot = -id- </where>
+			</Query>
+			<Query fonction="Grille_GetIdMot">
+				<select>SELECT m.id_mot </select>
+				<from> FROM spip_mots m
+				</from>
+				<where> WHERE m.titre = '-titre-' </where>
+			</Query>
+			
+
+
+		</Querys>
+	</XmlParam>
+	<!-- Gestion du Workflow -->		
+	<XmlParam nom="Workflow">
+	
+		<!-- Mise à jour des noms des articles et rubriques -->
+		<workflow srcObj="grille;champ" srcId="66;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="66;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>		
+		<workflow srcObj="grille;champ" srcId="55;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="55;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="53;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="53;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="56;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="56;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="57;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="57;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="58;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="58;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="35;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="35;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		
+		<workflow srcObj="grille;champ" srcId="61;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="61;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="63;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="63;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="62;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="62;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="65;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="65;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="64;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="64;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="69;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="69;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="72;ligne_2" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="72;ligne_2" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="71;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="71;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		
+		<workflow srcObj="grille;champ" srcId="80;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="80;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="79;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="79;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="78;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="78;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+		<workflow srcObj="grille;champ" srcId="74;ligne_1" dstObj="Rubrique" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_RubTitre']"/>
+		<workflow srcObj="grille;champ" srcId="74;ligne_1" dstObj="Article" dstQuery="/XmlParams/XmlParam/Querys/Query[@fonction='update_ArtTitre']"/>
+
+		<!-- Reponse non à un diagnostic -->
+		<workflow srcObj="grille;champ;valeur" srcId="59;mot_1" srcCheckVal="2" dstObj="Rubrique" trsId="60" dstQuery="AddNewArtGrille" />
+		
+		<!-- Reponse Observations à un diagnostic -->
+		<workflow srcObj="grille;champ;valeur" srcId="59;mot_1" srcCheckVal="151" dstObj="Rubrique" trsId="67" dstQuery="AddNewArtGrille" />
+		
+		<!-- affichage d'un diagnostic -->
+		<workflow srcObj="grille;champ;valeur" srcId="60;Modif" dstObj="Article" dstQuery="ShowArtGrille" />
+		<!-- suppression d'un diagnostic -->
+		<workflow srcObj="grille;champ;valeur" srcId="60;Sup" dstObj="Article" dstQuery="ShowSupArtGrille" />
+		
+		<!-- affichage signalement pb -->
+		<workflow srcObj="grille;champ;valeur" srcId="60;Modif" trsId="60" dstQuery="ShowDonnee" />
+		<!-- affichage observation -->
+		<workflow srcObj="grille;champ;valeur" srcId="67;Sup" trsId="67" dstQuery="ShowDonnee" />
+		
+		<!-- Espaces intérieurs spécifiques -->
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_2" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="56" />
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_3" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="57" />
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_4" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="1062" />
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_5" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="59" />
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_6" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="60" />
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_7" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="58" />
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_10" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="1078" />
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_11" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="54" />
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_12" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="1018" />
+		<workflow srcObj="grille;champ;valeur" srcId="57;select_2" srcCheckVal="select_2_13" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="55" />
+		
+		<!-- Espaces extérieurs spécifiques -->
+		<workflow srcObj="grille;champ;valeur" srcId="61;select_2" srcCheckVal="select_2_2" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="57" />
+		<workflow srcObj="grille;champ;valeur" srcId="61;select_2" srcCheckVal="select_2_3" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="2170" />
+		<workflow srcObj="grille;champ;valeur" srcId="61;select_2" srcCheckVal="select_2_4" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="58" />
+		<workflow srcObj="grille;champ;valeur" srcId="61;select_2" srcCheckVal="select_2_5" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="1091" />
+		
+		<!-- Eléments de voirie mot -->
+		<workflow srcObj="grille;champ;valeur" srcId="69;mot_1" srcCheckVal="212" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="585" />
+		<workflow srcObj="grille;champ;valeur" srcId="69;mot_1" srcCheckVal="213" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="580" />
+		<workflow srcObj="grille;champ;valeur" srcId="69;mot_1" srcCheckVal="162" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="582" />
+		<workflow srcObj="grille;champ;valeur" srcId="69;mot_1" srcCheckVal="163" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="583" />
+		<workflow srcObj="grille;champ;valeur" srcId="69;mot_1" srcCheckVal="210" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="6404" />
+		<workflow srcObj="grille;champ;valeur" srcId="69;mot_1" srcCheckVal="165" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="584" />
+		<workflow srcObj="grille;champ;valeur" srcId="69;mot_1" srcCheckVal="211" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="6405" />
+		<workflow srcObj="grille;champ;valeur" srcId="69;mot_1" srcCheckVal="166" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="586" />
+			
+		<!-- Objets niveau intérieur -->	
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="220" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="52" />
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="221" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="53" />
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="222" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="51" />
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="223" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="50" />
+		<workflow srcObj="grille;champ;valeur" srcId="63;mot_3" srcCheckVal="224" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="5015" />
+		
+		<!-- Objets extérieurs parcelle -->	
+		<workflow srcObj="grille;champ;valeur" srcId="64;select_2" srcCheckVal="select_2_1" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="1416" />
+		<workflow srcObj="grille;champ;valeur" srcId="64;select_2" srcCheckVal="select_2_2" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="52" />
+		<workflow srcObj="grille;champ;valeur" srcId="64;select_2" srcCheckVal="select_2_3" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="53" />
+		<workflow srcObj="grille;champ;valeur" srcId="64;select_2" srcCheckVal="select_2_4" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="51" />
+		<workflow srcObj="grille;champ;valeur" srcId="64;select_2" srcCheckVal="select_2_5" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="50" />
+		
+		<!-- Objets batiment -->
+		<workflow srcObj="grille;champ;valeur" srcId="65;select_2" srcCheckVal="select_2_1" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="613" />
+
+		<!-- Objets voirie -->
+		<workflow srcObj="grille;champ;valeur" srcId="79;mot_1" srcCheckVal="209" dstObj="Rubrique" dstQuery="AddNewArtGrille" trsObjet="controles" trsId="581" />
+		
+		<!-- Mot clef territoire -->		
+		<workflow srcObj="grille;champ;valeur" srcId="66;mot_1" srcCheckVal="138" dstObj="Rubrique" dstQuery="AddNewMotClef" trsObjet="motclef" trsId="138" />
+		<workflow srcObj="grille;champ;valeur" srcId="66;mot_1" srcCheckVal="59" dstObj="Rubrique" dstQuery="AddNewMotClef" trsObjet="motclef" trsId="59" />
+		<workflow srcObj="grille;champ;valeur" srcId="66;mot_1" srcCheckVal="57" dstObj="Rubrique" dstQuery="AddNewMotClef" trsObjet="motclef" trsId="57" />
+		<workflow srcObj="grille;champ;valeur" srcId="66;mot_1" srcCheckVal="60" dstObj="Rubrique" dstQuery="AddNewMotClef" trsObjet="motclef" trsId="60" />
+		<workflow srcObj="grille;champ;valeur" srcId="66;mot_1" srcCheckVal="58" dstObj="Rubrique" dstQuery="AddNewMotClef" trsObjet="motclef" trsId="58" />
+		<workflow srcObj="grille;champ;valeur" srcId="66;mot_1" srcCheckVal="139" dstObj="Rubrique" dstQuery="AddNewMotClef" trsObjet="motclef" trsId="139" />
+		<workflow srcObj="grille;champ;valeur" srcId="66;mot_1" srcCheckVal="54" dstObj="Rubrique" dstQuery="AddNewMotClef" trsObjet="motclef" trsId="54" />
+		<workflow srcObj="grille;champ;valeur" srcId="66;mot_1" srcCheckVal="146" dstObj="Rubrique" dstQuery="AddNewMotClef" trsObjet="motclef" trsId="146" />
+		<workflow srcObj="grille;champ;valeur" srcId="66;mot_1" srcCheckVal="56" dstObj="Rubrique" dstQuery="AddNewMotClef" trsObjet="motclef" trsId="56" />
+							
+		<!-- Gestion de l'affichage des onglets liés -->		
+		<workflow srcObj="TabForm;Type" srcId="GetXulTabForm;EspaceExtParamGenkkkk" dstQuery="AddNewTab" />
+
+		<Querys>
+			<Query fonction="update_ArtTitre">
+				<update>UPDATE spip_articles </update>
+				<set> SET titre = "-param-"	</set>
+				<where> WHERE id_article = -id-</where>
+			</Query>
+			<Query fonction="update_RubTitre">
+				<update>UPDATE spip_rubriques </update>
+				<set> SET titre = "-param-"	</set>
+				<where> WHERE id_rubrique = -id-</where>
+			</Query>
+			<Query fonction="GetIdRubrique">
+				<select>SELECT a.id_rubrique id </select>
+				<from> FROM spip_articles a INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article</from>
+				<where> WHERE da.id_donnee = -id-</where>
+			</Query>
+			<Query fonction="GetIdArticle">
+				<select>SELECT id_article id </select>
+				<from> FROM spip_forms_donnees_articles </from>
+				<where> WHERE id_donnee = -id-</where>
+			</Query>
+		</Querys>
+	</XmlParam>
+	
+	
+	<!-- Gestion de la cohérence des droits -->		
+	<XmlParam nom="CoheDroit">
+	<CoheDroit srcId="57" srcChamp="select_1" srcCheckVal="select_1_1" dstId="54" dstCheckVal="multiple_2_1"  />
+	<CoheDroit srcId="57" srcChamp="select_1" srcCheckVal="select_1_2" dstId="54" dstCheckVal="multiple_2_2"  />
+	<CoheDroit srcId="57" srcChamp="select_1" srcCheckVal="select_1_3" dstId="54" dstCheckVal="multiple_2_1" />
+	<CoheDroit srcId="57" srcChamp="select_1" srcCheckVal="select_1_3" dstId="54" dstCheckVal="multiple_2_2" />
+		<Querys>
+			<Query fonction="GetLastDonnee">
+				<select>SELECT a.id_article, fd.id_form, fd.id_donnee </select>
+				<from> FROM spip_articles a
+INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+INNER JOIN spip_forms_donnees fd ON fd.id_donnee = da.id_donnee
+				</from>
+				<where> WHERE a.id_rubrique =-id-
+ORDER BY a.date DESC
+LIMIT 0 , 1 
+ 				</where>
+			</Query>
+		</Querys>
+	</XmlParam>
+	<!-- Gestion de la synchronisation -->		
+	<XmlParam nom="Synchronise">
+		<Querys>
+			<Query fonction="GetRubriquesAuteur">
+				<select>SELECT r.id_auteur , r.id_rubrique </select>
+				<from> FROM spip_auteurs_rubriques r </from>
+				<where> WHERE r.id_auteur =-idAuteur- </where>
+			</Query>
+			<Query fonction="GetRubriquesTitre">
+				<select>SELECT r.id_rubrique , r.titre </select>
+				<from> FROM spip_rubriques r </from>
+				<where> WHERE r.id_rubrique =-idRubrique- </where>
+			</Query>
+			<Query fonction="InsertDbType">
+				<insertfrom>
+					INSERT INTO -dbDst-.spip_-type-s
+					SELECT * 
+					FROM -dbSrc-.spip_-type-s
+				</insertfrom>
+				<where> WHERE id_-type- = -id- </where>			
+			</Query>
+			<Query fonction="InsertDbTypeAuteur">
+				<insertfrom>
+					INSERT INTO -dbDst-.spip_auteurs_-type-s
+					SELECT * 
+					FROM -dbSrc-.spip_auteurs_-type-s 
+				</insertfrom>			
+				<where> WHERE id_-type- = -id- </where>			
+			</Query>
+			<Query fonction="InsertDbTypeMot">
+				<insertfrom>
+					INSERT INTO -dbDst-.spip_mots_-type-s
+					SELECT * 
+					FROM -dbSrc-.spip_mots_-type-s 
+				</insertfrom>			
+				<where> WHERE id_-type- = -id- </where>			
+			</Query>
+			<Query fonction="InsertDbForm">
+				<insertfrom>
+					INSERT INTO -dbDst-.spip_forms_articles
+					SELECT * 
+					FROM -dbSrc-.spip_forms_articles 
+				</insertfrom>			
+				<where> WHERE id_article = -id- </where>			
+			</Query>
+			<Query fonction="InsertDbDonnee">
+				<insertfrom>
+					INSERT INTO -dbDst-.spip_forms_donnees
+					SELECT * 
+					FROM -dbSrc-.spip_forms_donnees
+				</insertfrom>			
+				<where> WHERE id_donnee = -id- </where>			
+			</Query>
+			<Query fonction="InsertDbDonneeArt">
+				<insertfrom>
+					INSERT INTO -dbDst-.spip_forms_donnees_articles
+					SELECT * 
+					FROM -dbSrc-.spip_forms_donnees_articles 
+				</insertfrom>			
+				<where> WHERE id_donnee = -id- </where>			
+			</Query>
+			<Query fonction="InsertDbDonneeChamp">
+				<insertfrom>
+					INSERT INTO -dbDst-.spip_forms_donnees_champs
+					SELECT * 
+					FROM -dbSrc-.spip_forms_donnees_champs 
+				</insertfrom>			
+				<where> WHERE id_donnee = -id- </where>			
+			</Query>
+		</Querys>
+		<synchro action="AJOUT" type="rubrique" >
+			<Query fonction="InsertDbType" />
+			<Query fonction="InsertDbTypeAuteur"/>
+			<Query fonction="InsertDbTypeMot"/>
+		</synchro>
+		<synchro action="AJOUT" type="article" >
+			<Query fonction="InsertDbType" />
+			<Query fonction="InsertDbTypeAuteur"/>
+			<Query fonction="InsertDbTypeMot"/>
+		</synchro>
+		<synchro action="AJOUT" type="donnee" >
+			<Query fonction="InsertDbDonnee"/>
+			<Query fonction="InsertDbDonneeArt"/>
+			<Query fonction="InsertDbDonneeChamp"/>
+		</synchro>
+		<synchro action="AJOUT" type="champ" >
+			<Query fonction="InsertDbChamp"/>
+		</synchro>
+		<synchro action="UpdateReferenceId" >
+			<Query table="spip_rubriques" champ="id_rubrique" sql="UPDATE spip_rubriques SET id_rubrique = (id_rubrique*-1), id_parent = (id_parent*-1) WHERE id_rubrique -sens- 0"/>
+			<Query sql="UPDATE spip_mots_rubriques SET id_rubrique = (id_rubrique*-1) WHERE id_rubrique -sens- 0"/>
+			<Query sql="UPDATE spip_documents_rubriques SET id_rubrique = (id_rubrique*-1), id_document = (id_document*-1) WHERE id_rubrique -sens- 0"/>
+			<Query sql="UPDATE spip_auteurs_rubriques SET id_rubrique = (id_rubrique*-1) WHERE id_rubrique -sens- 0"/>
+			<Query sql="UPDATE spip_syndic SET id_rubrique = (id_rubrique*-1), id_syndic = (id_syndic*-1) WHERE id_rubrique -sens- 0"/>
+
+			<Query table="spip_articles" champ="id_article" sql="UPDATE spip_articles SET id_article = (id_article*-1), id_rubrique = (id_rubrique*-1) WHERE id_article -sens- 0"/>
+			<Query sql="UPDATE spip_mots_articles SET id_article = (id_article*-1) WHERE id_article -sens- 0"/>
+			<Query sql="UPDATE spip_documents_articles SET id_article = (id_article*-1), id_document = (id_document*-1) WHERE id_article -sens- 0"/>
+			<Query sql="UPDATE spip_auteurs_articles SET id_article = (id_article*-1) WHERE id_article -sens- 0"/>
+
+			<Query sql="UPDATE spip_forms_articles SET id_article = (id_article*-1) WHERE id_article -sens- 0"/>
+			<Query sql="UPDATE spip_forms_donnees_articles SET id_article = (id_article*-1),id_donnee = (id_donnee*-1) WHERE id_donnee -sens- 0"/>
+			<Query table="spip_forms_donnees" champ="id_donnee" sql="UPDATE spip_forms_donnees SET id_donnee = (id_donnee*-1) WHERE id_donnee -sens- 0"/>
+			<Query sql="UPDATE spip_forms_donnees_champs SET id_donnee = (id_donnee*-1) WHERE id_donnee -sens- 0"/>
+
+			<Query table="spip_documents" champ="id_document" sql="UPDATE spip_documents SET id_document = (id_document*-1) WHERE id_document -sens- 0"/>
+
+		</synchro>
+		
+	</XmlParam>
+	<!-- Gestion des documents -->		
+	<XmlParam nom="Documents">
+		<Querys>
+			<Query fonction="AddNewDoc">
+				<insert>INSERT INTO `spip_documents` (`id_type`, `titre`, `date`, `descriptif`, `fichier`, `taille`, `largeur`, `hauteur`, `mode`, `distant`, `idx`, `maj`) </insert>
+				<values> VALUES (-type-, '-titre-', now(), '-desc-', '-fichier-', -taille-, -largeur-, -hauteur-, 'document', 'non', 'oui', now())</values>
+			</Query>
+			<Query fonction="AddNewArtDoc">
+				<insert>INSERT INTO spip_documents_articles (id_article, id_document) </insert>
+				<values> VALUES (-idArt-, -idDoc-)</values>
+			</Query>
+		</Querys>
+	</XmlParam>
+
+	<!-- Gestion de la scénarisation -->		
+	<XmlParam nom="Scenarisation">
+		<Querys>
+			<Query fonction="GetDonneeCritere">
+				<select>SELECT da.id_donnee </select>
+				<from> FROM spip_articles a
+					INNER JOIN spip_forms_donnees_articles da ON da.id_article = a.id_article
+					INNER JOIN spip_forms_donnees_champs fdc ON fdc.id_donnee = da.id_donnee
+						AND fdc.champ='ligne_1' AND fdc.valeur = '-critere-' 
+				 </from>
+				<where> WHERE a.id_article = -idArt- </where>
+			</Query>
+		</Querys>
+	</XmlParam>
+	
+</XmlParams>

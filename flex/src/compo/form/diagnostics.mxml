@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:s="library://ns.adobe.com/flex/spark" 
+		   xmlns:compo="compo.*"
+		   label="Diagnostics"
+		   name="formDiag"
+		   width="100%" height="100%"
+		   creationComplete="creationCompleteHandler(event)" xmlns:stat="compo.stat.*" xmlns:form="compo.form.*"
+		   >
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.serialization.json.JSON;
+			
+			import memorphic.xpath.XPathQuery;
+			
+			import mx.charts.ChartItem;
+			import mx.charts.chartClasses.ChartBase;
+			import mx.charts.series.items.ColumnSeriesItem;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Image;
+			import mx.events.DropdownEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.UIDUtil;
+						
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var diagData:Array;
+			[Bindable] public var scenarData:Array;
+			[Bindable] public var scrDescData:Array;
+			[Bindable] public var sceneData:XML;
+			[Bindable] public var reponseData:Array;
+			[Bindable] public var choixData:Array = new Array;
+			[Bindable] public var xlmScene:XML;
+			[Bindable] public var selectDiag:Object;			
+			[Bindable] public var bAjout:Boolean=false;			
+			[Bindable] public var idLieu:int;
+			[Bindable] public var idTypeCtlParent:String;
+			[Bindable] public var totQestion:int=0;
+			private var numEtape:int;
+			private var numQuestion:int;
+			private var numPrevQuestion:int;
+			private var nodeQuestion:XML;
+			private var nodeQuestionPrev:XML;
+			private var idTypeControle:String;
+			private var idCritere:String;
+			private var nodeXpath:String="/node/node";
+			private var totQestionInter:int=-1;
+			private var numQestionInter:int;
+			private var arrQuestion:Array = new Array;
+			private var idInstant:int=-1;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				//roScena.findByExiDroit(this.parentApplication.idExi);
+				roMC.getAllByType(2);
+				if(bAjout){
+					vs.selectedChild = ajout;
+					if(idTypeCtlParent)
+						roDiag.getScenarioComplet(this.parentApplication.idScenar, idLieu, idTypeCtlParent);
+				}
+				
+			}
+			
+			protected function adgCrit_itemClickHandler(event:ListEvent):void
+			{
+				var s:Object=event.currentTarget.selectedItem;
+				if(s.id_lieu){
+					// récupère les données du diagnostic
+					roDiag.getDiagComplet(s.id_lieu,this.parentApplication.idBase,s.id_instant);					
+				}
+				
+			}
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			protected function method1_resultHandler(event:ResultEvent):void
+			{
+				diagData = event.result as Array;
+				dgQuestions.dataProvider = diagData['questions'];
+			}
+			
+			
+			protected function dgQuestions_itemClickHandler(event:ListEvent):void
+			{
+				selectDiag = event.currentTarget.selectedItem;
+				if(selectDiag){
+					initProblemes(selectDiag.id_diag, selectDiag.criteres+" : "+selectDiag.reponse);
+					//formObs.idDiag = selectDiag.id_diag;
+					//formObs.init();
+				}
+			}
+			
+			private function initProblemes(idDiag:int, txtDiag:String):void
+			{
+				formProbs.idDiag = idDiag;
+				formProbs.init();
+				formProbs.txtCrit.text = txtDiag;				
+			}
+			
+			private function sortDiag(item:*, index:int, array:Array):Boolean
+			{
+				if(item.id_diag == selectDiag.id_diag)
+					return true;
+				else
+					return false;
+
+			}
+			//TODO : assistant saisie d'un scénario : http://www.seaflexandsun.com/demo/carrousel/srcview/index.html
+						
+			protected function method2_resultHandler(event:ResultEvent):void
+			{
+				scrDescData = event.result as Array;
+				if(scrDescData){
+					showQuestion();
+				}
+				
+			}
+			
+			private function showQuestion():void{
+				var key:String;
+				var myQuery:XPathQuery;
+				var params:Object = JSON.decode(scrDescData["etapes"][0]["paramsCrit"]);
+				xlmScene = XML(params[0]["idCritSE"]);
+				setKeyQuestion(xlmScene);
+				
+				getNextQuestion();				
+			}
+
+			private function getPrevQuestion():void
+			{
+				if(arrQuestion.length>0){
+					nodeQuestion = arrQuestion.pop();
+					showCritere();
+				}
+			}
+						
+			
+			private function getNextQuestion():void
+			{
+				
+				//calcule la prochaine question
+				if(!nodeQuestion){
+					//on prend la première question
+					nodeQuestion = xlmScene.children()[0];
+				}else{
+					verifRepCond(nodeQuestion);
+				}
+				arrQuestion.push(nodeQuestion);
+				showCritere();
+			}			
+			
+			private function showCritere():void
+			{
+				//vérifie s'il faut charger une réponse 
+				if(nodeQuestion.@["val"]){
+					ckReponse.setVal(nodeQuestion.@["val"]);
+				}									
+				idTypeControle = nodeQuestion.@["idCtrl"];
+				ckReponse.lblQ = nodeQuestion.@["lib"];
+				ckReponse.decocheVals();
+				lblQuestionNum.text = nodeQuestion.@["num"];
+				refCtl.text = nodeQuestion.@["ref"];
+				typeCtl.text = nodeQuestion.@["type"];
+				//ajoute les icones de critères
+				addIconesCritere(nodeQuestion);
+				
+				//charge les problèmes
+				initProblemes(nodeQuestion.idDiag, nodeQuestion.lib+" : "+nodeQuestion.@["val"]);				
+			}
+
+			private function addIconesCritere(node:XML):void
+			{
+				var larg:int = 20;
+				iconCtl.removeAllChildren();
+				
+				var imaMo:Image = new Image;
+				imaMo.source = "images/moteur"+node.@["moteur"]+".jpg";
+				imaMo.width = larg;
+				imaMo.autoLoad = true;
+				iconCtl.addChild(imaMo);
+
+				var imaAu:Image = new Image;
+				imaAu.source="images/audio"+node.@["auditif"]+".jpg";
+				imaAu.width = larg;
+				imaAu.autoLoad = true;
+				iconCtl.addChild(imaAu);
+				
+				var imaVi:Image = new Image;
+				imaVi.source="images/visu"+node.@["visuel"]+".jpg";
+				imaVi.width = larg;
+				imaVi.autoLoad = true;
+				iconCtl.addChild(imaVi);
+
+				var imaCo:Image = new Image;
+				imaCo.source="images/cog"+node.@["cognitif"]+".jpg";
+				imaCo.width = larg;
+				imaCo.autoLoad = true;
+				iconCtl.addChild(imaCo);
+								
+			}
+			
+			private function verifRepCond(node:XML):void
+			{
+				
+				//charge la question
+				var parent:XML = node.parent();
+				var nbEnfant:int = node.children().length();
+				//vérifie s' il y a des questions enfants 
+				if(nbEnfant > 0){
+					//on vérifie s'il existe une condition
+					var cr:String = nodeQuestion.@["CondRep"]+"";
+					var val:String = nodeQuestion.@["val"]+"";					
+					if(cr){							
+						if(cr=="2_"+val){								
+							//on passe à la première question de l'enfant
+							nodeQuestion = node.children()[0];							
+						}else{
+							//on passe à la question frère
+							getNextQuestionFrere(parent, node);
+						}
+					}else{
+						//on passe à la première question de l'enfant
+						nodeQuestion = node.children()[0];							
+					}
+				}else{
+					//on passe à la question frère
+					getNextQuestionFrere(parent, node);
+				}
+
+				
+			}
+
+			private function getNextQuestionFrere(parent:XML, node:XML):void
+			{
+				var nbFrere:int = parent.children().length();
+				var nodeIndex:int = node.childIndex();
+				
+				//vérifie s'il reste des questions frères
+				if(nodeIndex==(nbFrere-1)){
+					//on arrète s'il n'y a pas de parent
+					if(parent.parent()==null) return;
+					//on recherche le premier frère du parent
+					getNextQuestionFrere(parent.parent(), parent);
+				}else{
+					//on passe à la question frère
+					var nodeQuestionFrere:XML = parent.children()[nodeIndex+1];
+					//on vérifie si la question frère porte sur le même critère
+					if(nodeQuestionFrere.@["ref"]==node.@["ref"]){
+						//on passe à la question suivante
+						nodeQuestionFrere.@["val"] = nodeQuestion.@["val"];
+						nodeQuestion = nodeQuestionFrere;
+						getNextQuestion();
+					}else{
+						nodeQuestion = nodeQuestionFrere;
+					}					
+				}
+				
+			}
+
+			
+			private function setKeyQuestion(node:XML):void
+			{
+				var crit:Object;
+				for each (var q:XML in node.children()){
+					//vérifie si la question à une clef
+					if(q.@["uid"]==""){
+						q.@["uid"] = UIDUtil.createUID();
+					}
+					totQestion++;
+					q.@["num"] = totQestion;
+					
+					crit = getCrit(scrDescData["etapes"][0]["idCtrl"], q.@["id_critere"]);
+					q.@["lib"] = crit.criteres;
+					q.@["moteur"] = crit.handicateur_moteur;
+					q.@["auditif"] = crit.handicateur_auditif;
+					q.@["visuel"] = crit.handicateur_visuel;
+					q.@["cognitif"] = crit.handicateur_cognitif;
+					q.@["type"] = "";
+					if(crit.id_type_critere==1)q.@["type"] = "Réglementaire";;
+					if(crit.id_type_critere==3)q.@["type"] = "Souhaitable";
+					q.@["idDiag"] = -1;
+					q.@["idCtrl"] = scrDescData["etapes"][0]["idCtrl"];
+
+					setKeyQuestion(q);
+				}
+			}
+			
+			protected function chkReponse(nom:String, val:Object):void
+			{
+
+				//stocke la réponse
+				var vn:Array = new Array();
+				vn["id_critere"] = nodeQuestion.@["id_critere"]+"";
+				vn["id_reponse"] = val;	
+				vn["id_type_controle"] = nodeQuestion.@["idCtrl"]+"";
+				if(idInstant==-1){
+					creaChoix(vn);
+				}else{
+					var idDiag:String = nodeQuestion.@["idDiag"]+"";
+					if(idDiag!="-1")vn["id_diag"] = idDiag;
+					setChoix(vn);
+				}
+				nodeQuestion.@["val"] = val;
+
+			}
+			
+			protected function creaChoix(vn:Object):void
+			{
+				ajout.enabled = false
+				roDiag.creaChoix(this.parentApplication.idExi, idLieu, txtComment.text, vn, this.parentApplication.idBase);
+			}
+			
+			protected function setChoix(vn:Object):void
+			{
+				ajout.enabled = false
+				var choix:Array= new Array;
+				choix.push(vn);
+				roDiag.setChoix(this.parentApplication.idExi, idLieu, txtComment.text, choix, this.parentApplication.idBase, idInstant);
+			}
+			protected function roDiagSetChoix_resultHandler(event:ResultEvent):void
+			{
+				var arr:Array = event.result as Array;
+				nodeQuestion.@["idDiag"] = arr.idDiags[0];
+				getNextQuestion();
+				ajout.enabled = true;
+			}
+			protected function roDiagCreaChoix_resultHandler(event:ResultEvent):void
+			{
+				var arr:Array = event.result as Array;
+				this.idInstant = arr.idInst;
+				nodeQuestion.@["idDiag"] = arr.idDiag;
+				getNextQuestion();
+				ajout.enabled = true;
+			}
+
+			private function getCrit(idTypeControle:String, idCrit:String):Object
+			{
+				for each (var cri:Object in scrDescData["criteres"]["ctrl_"+idTypeControle]){
+					if(cri.id_critere==idCrit){
+						//affiche l'icone
+						var dt:Object = new Object;
+						dt.icone = cri.icone;
+						dt.lib = cri.lib;
+						hbCtl.dt = dt;
+						hbCtl.init();
+						return cri;
+					}
+				}
+				var def:Object = new Object;
+				def.lib = "";
+				def.ref = ""
+				return def;				
+			}
+			
+			
+			protected function btnPrevQuest_clickHandler(event:MouseEvent):void
+			{
+				getPrevQuestion();
+			}
+			
+			protected function btnNextQuestion_clickHandler(event:MouseEvent):void
+			{
+				getNextQuestion();
+			}
+
+			protected function roMC_resultHandler(e:ResultEvent):void
+			{
+				if(!e || !e.result)return;
+				reponseData = e.result as Array;
+			}			
+			
+			protected function method3_resultHandler(event:ResultEvent):void
+			{
+				if(!event || !event.result)return;
+				scenarData = event.result as Array;
+			}
+
+			protected function ajout_creationCompleteHandler(event:FlexEvent):void
+			{
+				showQuestion();
+			}
+			
+			protected function btnAjout_clickHandler(event:MouseEvent):void
+			{				
+				vs.selectedChild = ajout;
+			}
+			
+			protected function roInstAjout_resultHandler(event:ResultEvent):void
+			{
+				if(!event.result)return;
+				idInstant = event.result as int;
+			}
+			
+			
+			protected function getDiagForLieu_resultHandler(event:ResultEvent):void
+			{
+				NodeData = event.result;
+				gcCrit.refresh();
+				vs.selectedChild = lecture;
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="roDiag"
+					 destination="zend"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, 'GEVU - Diagnostic');"
+					 showBusyCursor="true" 
+					 >
+		<mx:method name="getDiagComplet" result="method1_resultHandler(event)" />
+		<mx:method name="getScenarioComplet" result="method2_resultHandler(event)" />
+		<mx:method name="setChoix" result="roDiagSetChoix_resultHandler(event)" />
+		<mx:method name="setInstant" result="roInstAjout_resultHandler(event)" />
+		<mx:method name="creaChoix" result="roDiagCreaChoix_resultHandler(event)" />
+		<mx:method name="getDiagForLieu" result="getDiagForLieu_resultHandler(event)" />
+	</mx:RemoteObject>
+	<mx:RemoteObject id="roScena"
+					 destination="zend"
+					 source="Models_DbTable_Gevu_scenario"
+					 fault="faultHandlerService(event, 'GEVU - Diagnostic - Scenario');"
+					 showBusyCursor="true"
+					 >
+		<mx:method name="findByExiDroit" result="method3_resultHandler(event)" />
+	</mx:RemoteObject>
+	<mx:RemoteObject id="roMC"
+					 source="Models_DbTable_Gevu_motsclefs" destination="zend" 
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event, 'GEVU - Diagnostic - Mot-clef')">
+		<mx:method name="getAllByType" result="roMC_resultHandler(event)"/>  	
+	</mx:RemoteObject>
+		
+	<mx:VBox width="100%" height="100%">
+		<mx:HBox verticalAlign="middle">
+			<mx:LinkButton click="{roDiag.getDiagForLieu(idLieu, this.parentApplication.idExi, this.parentApplication.idBase)}" icon="@Embed('images/eye.gif')" height="18" width="18" toolTip="Voir les diagnostics" />			
+			<mx:LinkButton id="btnAjout" click="btnAjout_clickHandler(event)" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un diagnostic" />			
+		</mx:HBox>
+		<mx:ViewStack id="vs" width="100%" height="100%" >			
+			<mx:HBox id="lecture" width="100%" height="100%">
+				<mx:AdvancedDataGrid id="adgCrit"  width="100%" height="100%" color="0x323232"
+									 initialize="gcCrit.refresh();"
+									 itemClick="adgCrit_itemClickHandler(event)"
+									 >
+					<mx:dataProvider>
+						<mx:GroupingCollection id="gcCrit" source="{NodeData}">
+							<mx:grouping>
+								<mx:Grouping>
+									<mx:GroupingField name="controle" />
+								</mx:Grouping>
+							</mx:grouping>
+						</mx:GroupingCollection>
+					</mx:dataProvider>        		
+					<mx:columns>
+						<mx:AdvancedDataGridColumn dataField="exis" headerText="Diagnostics" />
+						<mx:AdvancedDataGridColumn dataField="commentaires" headerText="Commentaires" />
+						<mx:AdvancedDataGridColumn dataField="instant" headerText="Date"  />
+					</mx:columns>
+				</mx:AdvancedDataGrid>
+				<mx:DataGrid id="dgQuestions" height="100%" width="100%"
+							 itemClick="dgQuestions_itemClickHandler(event)"  
+							 >
+					<mx:columns>
+						<mx:DataGridColumn dataField="id_diag" visible="false" />
+						<mx:DataGridColumn dataField="ref" width="110" />
+						<mx:DataGridColumn dataField="criteres" />
+						<mx:DataGridColumn dataField="reponse" width="60" />
+					</mx:columns>
+				</mx:DataGrid>
+			</mx:HBox>
+			<mx:VBox id="ajout" width="100%" height="100%" creationComplete="ajout_creationCompleteHandler(event)" >
+				<mx:HBox verticalAlign="middle">
+					<compo:hbControle id="hbCtl" />
+					<mx:Label text="Questions : " />
+					<mx:Button styleName="leftArrowButton" id="btnPrevQuestion" click="btnPrevQuest_clickHandler(event)" toolTip="Passe à la question précédente" enabled="{int(lblQuestionNum.text) > 1}" />
+					<mx:Label id="lblQuestionNum" text="1" /><mx:Label id="lblQuestionInter" text="" /><mx:Label text=" sur " /><mx:Label id="lblQuestionTot" text="{totQestion}" />
+					<mx:Button styleName="rightArrowButton" id="btnNextQuestion" click="btnNextQuestion_clickHandler(event)" toolTip="Passe à la question suivante" enabled="{lblQuestionNum.text != lblQuestionTot.text}" />
+				</mx:HBox>
+				<mx:HBox width="100%" >
+					<mx:VBox>
+						<mx:Label id="refCtl" text="" />
+						<mx:Label id="typeCtl" text="" />
+						<mx:HBox id="iconCtl">
+							
+						</mx:HBox>
+					</mx:VBox>				
+					<form:repType2 id="ckReponse" lblQ="" Q="reponse_1" fnct="{this.chkReponse}" />
+				</mx:HBox>	
+				<mx:HBox width="100%">
+					<!-- <mx:Button id="btnSaveChoix" label="enregistrer" click="btnSaveChoix_clickHandler(event)" toolTip="Enregistre les réponses" /> -->
+					<mx:Label text="Commentaires :" />
+					<mx:TextInput id="txtComment" width="100%" />					
+				</mx:HBox>
+			</mx:VBox>
+		</mx:ViewStack>
+		<mx:TabNavigator id="tn"  width="100%" height="100%" >
+			<s:NavigatorContent label="Problèmes">
+				<form:problemes id="formProbs" />
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Solutions">
+				<s:Label text="bientôt..."/>
+			</s:NavigatorContent>
+		</mx:TabNavigator>		
+	</mx:VBox>
+
+</mx:Canvas>

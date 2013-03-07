@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:compo="compo.*"
+		   title="Antenne"
+		   width="100%" height="100%" xmlns:form="compo.form.*"
+		   >
+	
+	<mx:HBox width="100%">
+		<mx:Label text="Identifiant du local :" />
+		<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
+	</mx:HBox>
+	<mx:VBox initialize="init();" width="100%" height="100%" >
+		<form:contacts id="ctc" label="Contacts de l'antenne" objLien="Models_DbTable_Gevu_contactsxantennes" />		
+	</mx:VBox>
+	<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+	
+	<mx:RemoteObject id="ro"
+					 destination="zend"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, this.label);">
+		<mx:method name="edit"	result=";" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+
+			private var obj:String = "Models_DbTable_Gevu_antennes";
+			
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			private function init():void{
+				
+				if(NodeData.length<=0)return;
+
+				var arrParams:Array = new Array();
+				arrParams["id"]=NodeData.id_antenne;
+				ctc.paramsLien = arrParams;
+				ctc.Init();
+			}
+
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
+
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				ro.edit(NodeData.id_antenne, modifData, obj, this.parentApplication.idBase);
+				isChange = false;
+			}
+
+			
+		]]>
+	</mx:Script>
+</mx:Panel>

@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns2="compo.*"
+	width="100%" height="100%" creationComplete="init()"
+	>
+	<mx:Script>
+        <![CDATA[
+			import com.adobe.serialization.json.JSON;
+			
+			import compo.*;
+			import compo.form.antennes;
+			import compo.form.batiments;
+			import compo.form.diagnostics;
+			import compo.form.docsxlieux;
+			import compo.form.espaces;
+			import compo.form.espacesxexterieurs;
+			import compo.form.espacesxinterieurs;
+			import compo.form.etablissements;
+			import compo.form.georss;
+			import compo.form.geos;
+			import compo.form.groupes;
+			import compo.form.locaux;
+			import compo.form.logements;
+			import compo.form.niveaux;
+			import compo.form.objetsxexterieurs;
+			import compo.form.objetsxinterieurs;
+			import compo.form.objetsxvoiries;
+			import compo.form.observations;
+			import compo.form.parcelles;
+			import compo.form.partiescommunes;
+			
+			import flash.utils.getDefinitionByName;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IViewCursor;
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import mx.containers.Canvas;
+			import mx.containers.Form;
+			import mx.containers.FormItem;
+			import mx.containers.TitleWindow;
+			import mx.controls.Alert;
+			import mx.controls.CheckBox;
+			import mx.controls.ComboBox;
+			import mx.controls.DataGrid;
+			import mx.controls.Image;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.controls.listClasses.IDropInListItemRenderer;
+			import mx.core.DragSource;
+			import mx.events.ChildExistenceChangedEvent;
+			import mx.events.CloseEvent;
+			import mx.events.DataGridEvent;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.CursorManager;
+			import mx.managers.DragManager;
+			import mx.managers.PopUpManager;
+			import mx.rpc.AsyncToken;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.http.HTTPService;
+			import mx.utils.ObjectUtil;
+			import mx.utils.object_proxy;
+			
+			private var o2:compo.form.batiments;
+			private var o3:compo.form.diagnostics;
+			private var o4:compo.form.docsxlieux;
+			private var o5:compo.form.espaces;
+			private var o6:compo.form.espacesxexterieurs;
+			private var o7:compo.form.espacesxinterieurs;
+			private var o8:compo.form.etablissements;
+			private var o9:compo.form.georss;
+			private var o10:compo.form.geos;
+			private var o11:compo.form.niveaux;
+			private var o12:compo.form.objetsxexterieurs;
+			private var o13:compo.form.objetsxinterieurs;
+			private var o14:compo.form.objetsxvoiries;
+			private var o15:compo.form.observations;
+			private var o16:compo.form.parcelles;
+			private var o17:compo.form.problemes;
+			private var o18:compo.form.antennes;
+			private var o19:compo.form.groupes;
+			private var o20:compo.form.logements;
+			private var o21:compo.form.partiescommunes;
+			private var o22:compo.form.locaux;
+			
+			
+			/**
+			 * paramétrage de l'objet
+			 */
+			[Bindable] public var idExi:String;
+			[Bindable] public var bInit:Boolean=true;
+			[Bindable] public var bInsert:Boolean=true;
+			[Bindable] public var twAR:twAjoutRef;
+			[Bindable] public var arrCrit:Array;
+			[Bindable] public var arrCtl:Array;		
+			[Bindable] public var idExiContact:int;	
+			[Bindable] public var idScenar:int;	
+			
+			private var dtScen:Object;	
+			private var params:String;	
+			private var bModif:Boolean=false;	
+			
+			public var dCrit:cnvArboCrit;
+			public var dCtrl:cnvArboCtl;
+			public var dProd:cnvProdCtl;			
+			
+			public function init():void 
+			{
+			    //chargement des données
+				ROS.getAll();
+			}
+			
+			private function selectItem(event:Event):void {
+
+				if(bModif){
+					Alert.show("Voulez-vous enregistrer vos modifications ?",
+						"Confirmation modification", 3, this, modifHandler);					
+				}
+				var item:Object=event.currentTarget.selectedItem;
+				if(item){
+					dtScen = item;
+					idScenar = item.id_scenario;
+					this.parentApplication.idScenar = idScenar;
+					UpdLib.text = item.lib;
+					//réinitiale les panels
+					pArboCtl.removeAllChildren();
+					pArboCrit.removeAllChildren();
+					pFormCtl.removeAllChildren();
+					pProduit.removeAllChildren();
+					//affiche l'arboressence des contrôles
+					dCtrl = new cnvArboCtl();
+					dCtrl.idScene = item.params;
+					dCtrl.cptScenari = this;
+					pArboCtl.addChild(dCtrl);
+					
+				}
+				
+			}
+			
+			public function showCriteres(idCtl:int, type:String):void{
+				pArboCrit.removeAllChildren();
+				dCrit = new cnvArboCrit();
+				dCrit.dt = {"id_type_controle":idCtl,"type":type,"idScenar":idScenar};
+				pArboCrit.addChild(dCrit);
+			}
+			
+			public function showFormulaire(objZend:String, type:String):void{
+				pFormCtl.removeAllChildren();
+				if(objZend && objZend!="null"){
+					var ClassReference:Class;
+					var instance:Object;
+					var arr:Array = objZend.split("_");
+					var className:String="compo.form."+arr[3];
+					ClassReference = getDefinitionByName(className) as Class;			
+					instance = new ClassReference();
+					instance.NodeData = [];
+					pFormCtl.addChild(DisplayObject(instance));					
+				}
+			}
+			
+			public function showProduit(idCtl:int, type:String):void{
+				pProduit.removeAllChildren();
+				dProd = new cnvProdCtl();
+				dProd.dt = {"id_type_controle":idCtl,"type":type,"idScenar":idScenar};
+				pProduit.addChild(dProd);
+			}
+			
+			private function insertItem():void {
+				
+				if(bModif){
+					Alert.show("Voulez-vous enregistrer vos modifications ?",
+						"Confirmation modification", 3, this, modifHandler);					
+				}
+				
+				//création du tableau de param
+				var pArr:Array = new Array;
+				pArr["lib"]=taLib.text;
+				ROS.ajouter(pArr,false,true);
+				
+			}
+			private function modifHandler(event:CloseEvent):void
+			{
+				if (event.detail == Alert.YES) 
+				{
+				}
+				bModif = false;
+			}
+						
+			
+			private function fillGridHandler(e:Object, dg:DataGrid):void
+			{
+				if(!e)return;
+			    dg.dataProvider = e.result as Array;
+				bModif = false;
+			}
+			
+			public function faultHandlerService(fault:FaultEvent):void
+			{				
+				Alert.show(fault.fault.faultString, "FaultHandlerService");
+			}
+			
+			
+			private function deleteScen():void {
+				
+				if (this.dgScen.selectedItem)
+				{
+					Alert.show("Confirmez-vous la suppression de ce scenario ?",
+						"Confirmation Suppression", 3, this, deleteScenClickHandler);
+				}
+				
+			}
+			private function deleteScenClickHandler(event:CloseEvent):void
+			{
+				if (event.detail == Alert.YES) 
+				{
+					ROS.remove(idScenar);
+				}
+			}
+
+			private function ScenHandler(e:Object):void
+			{
+				selectedChild = view;
+				ROS.getAll();
+			}
+						
+
+			protected function UpdLib_changeHandler(event:Event):void
+			{
+				//enregistre la modification
+				bModif = true;
+			}
+			
+			
+			protected function insItem_clickHandler(event:MouseEvent):void
+			{
+				if(bModif){
+					Alert.show("Voulez-vous enregistrer vos modifications ?",
+						"Confirmation modification", 3, this, modifHandler);					
+				}
+				selectedChild = insert;				
+			}
+			
+			protected function remove_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				ScenHandler(event);
+			}
+			
+			private function testerScenario():void
+			{
+				// TODO créer uen fenêtre de saisie du scénario
+			}
+			public function updateItem():void
+			{
+				//création du tableau de valeur
+				var vn:Array = new Array();
+				vn["lib"] = UpdLib.text;
+				//enregistrement des modifications
+				ROS.edit(idScenar,vn);	
+			}
+
+			
+		]]>
+    </mx:Script>
+    
+	<mx:RemoteObject id="ROS"
+					 source="Models_DbTable_Gevu_scenario" destination="zend" 
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event)">
+		<mx:method name="getAll"  result="fillGridHandler(event,dgScen)"/>  	
+		<mx:method name="remove"  result="remove_resultHandler(event)"/>  	
+		<mx:method name="ajouter"  result="ScenHandler(event)"/>  	
+		<mx:method name="edit"  result="ScenHandler(event)"/>  	
+	</mx:RemoteObject>
+	
+	<mx:Canvas id="view" width="100%" height="100%">
+		<mx:HBox width="100%" height="100%" paddingBottom="6" paddingLeft="6"
+				 paddingRight="6" paddingTop="6">
+			<mx:VBox height="100%">
+				<mx:HBox>
+					<mx:LinkButton id="insItem" click="insItem_clickHandler(event)"  icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un scénario" />
+					<mx:LinkButton click="deleteScen()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un scénario" />
+				</mx:HBox>
+				<mx:DataGrid id="dgScen" click="selectItem(event);" height="300" width="100%" >
+					<mx:columns>
+						<mx:DataGridColumn headerText="Nom" dataField="lib"/>
+						<mx:DataGridColumn headerText="Id Scen" dataField="id_scenario" visible="false"/>
+						<mx:DataGridColumn headerText="Params" dataField="params" visible="false"/>
+					</mx:columns>
+				</mx:DataGrid>
+			</mx:VBox>	
+			<mx:VRule height="100%"/>
+			<mx:HDividedBox width="100%" height="100%">
+				<mx:VBox width="100%" height="100%" >
+					<mx:HBox>
+						<mx:Label  fontSize="12" fontWeight="bold" text="Nom du scénario :" />
+						<mx:TextInput id="UpdLib" change="UpdLib_changeHandler(event)" />
+						<mx:Button label="Enregistrer" click="updateItem()" toolTip="Enregistre les modifications du scénario" />
+					</mx:HBox>
+					<mx:Panel id="pArboCtl" width="100%" height="100%" title="Arboressence des contrôles" >
+					</mx:Panel>
+				</mx:VBox>
+				<mx:VDividedBox width="100%" height="100%">					
+					<mx:Panel id="pArboCrit" width="100%" height="100%" minHeight="200" title="Arboressence des critères" >
+						
+					</mx:Panel>
+					<mx:Panel id="pProduit" width="100%" height="100%" minHeight="200" title="Produits associés" >
+					</mx:Panel>
+					<mx:Panel id="pFormCtl" width="100%" height="100%" title="Formulaire de saisie du contrôle" >
+						
+					</mx:Panel>					
+				</mx:VDividedBox>
+			</mx:HDividedBox>
+		</mx:HBox>
+	</mx:Canvas>
+	<mx:Canvas id="insert" width="100%" height="100%">
+		<mx:VBox>			
+			<mx:Form width="100%" height="100%" id="insertForm">			                    		
+				<mx:FormItem label="Nom du scénario :" id="lib" >
+					<mx:TextArea id="taLib"  width="100%" height="60" />
+				</mx:FormItem>
+			</mx:Form>		
+			<mx:HBox>
+				<mx:Button label="Enregistrer" click="insertItem()" />
+				<mx:Button label="Annuler" click="this.selectedChild = view;" />				
+			</mx:HBox>
+		
+		</mx:VBox>
+	</mx:Canvas>
+	 
+</mx:ViewStack>

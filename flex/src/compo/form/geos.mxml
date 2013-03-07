@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		  xmlns:composants="compo.*"
+		  label="Géographie"
+		  width="100%"
+		  height="120"
+		   creationComplete="creationCompleteHandler(event)"
+		  >
+	<mx:HBox width="100%" height="100%" >
+		<mx:VBox width="100%" >
+			
+			<mx:HBox width="100%">
+				<mx:Label text="{NodeData.id_lieu}" /><mx:Label text="adresse" />
+				<mx:TextInput id="F01" data="{NodeData.adresse}" width="100%" />
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label text="lat."/>
+				<mx:NumericStepper id="F02" 
+								   minimum="-90" maximum="90"
+								   stepSize="0.000001"
+								   data="{NodeData.lat}" enabled="{Modif}" />
+		
+				<mx:Label text="long." />
+				<mx:NumericStepper id="F03" 
+								   minimum="-180" maximum="180"
+								   stepSize="0.000001"
+								   data="{NodeData.lng}" enabled="{Modif}" />
+				<!--
+				<mx:Label text="zoom min." />
+				<mx:NumericStepper id="F04" 
+								   minimum="0" maximum="20"
+								   data="{NodeData.zoom_min}" enabled="{Modif}" />
+				-->
+			</mx:HBox>
+			<mx:HBox>
+				<mx:Label text="fond carto." />
+				<mx:ComboBox id="cbTypeCarte" selectedIndex="{getIndex(NodeData.type_carte)}" enabled="{Modif}" >
+					<mx:ArrayCollection>
+						<mx:Object label="terrain" data="terrain"/>
+						<mx:Object label="hybride" data="hybrid"/>
+						<mx:Object label="routier" data="roadmap"/>
+						<mx:Object label="satellite" data="satellite"/>
+					</mx:ArrayCollection>
+				</mx:ComboBox>	
+				<mx:Label text="zoom max." />
+				<mx:NumericStepper id="F05" enabled="true" 
+								   minimum="0" maximum="30"
+								   data="{NodeData.zoom_max}" change="zoomMap(F05.value.toString())"  />
+			</mx:HBox>
+			<mx:HBox width="0" height="0">
+				<mx:Label text="Coin Nord-Est :"/>
+				<mx:Label id="ne" text=""/>
+			</mx:HBox>
+			<mx:HBox width="0" height="0">
+				<mx:Label text="Coin Sud-Ouest :" />
+				<mx:Label id="sw" text=""/>
+			</mx:HBox>
+			<mx:Button id="save" label="enregistrer" click="saveModifications();"/>
+		</mx:VBox>
+		<mx:Label text="kml" />
+		<mx:TextArea id="F06" data="{NodeData.kml}" editable="true" height="100%" width="100%" />
+	</mx:HBox>
+	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend" showBusyCursor="true"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, 'Geos');">
+		<mx:method name="edit" result="edit_resultHandler(event)" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			private var obj:String = "Models_DbTable_Gevu_geos";
+
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var Modif:Boolean=false;
+			
+			public function init():void{
+				this.visible = true;
+				F01.data = NodeData["adresse"];
+				F02.data = NodeData["lat"];
+				F03.data = NodeData["lng"];
+				//F04.data;
+				F05.data = NodeData["zoom_max"];
+				F06.data = NodeData["kml"];
+				ne.text = NodeData["ne"];
+				sw.text = NodeData["sw"];
+				setMapType(NodeData["type_carte"]);
+
+			}
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			public function saveModifications() : void {
+				var arr:Array = new Array();
+				arr["adresse"]=F01.text;
+				arr["lat"]=F02.data;
+				arr["lng"]=F03.data;
+				arr["zoom_min"]=0;//F04.data;
+				arr["zoom_max"]=F05.data;
+				arr["kml"]=F06.text;
+				arr["type_carte"]=cbTypeCarte.selectedItem["data"];
+				arr["ne"] = ne.text;
+				arr["sw"]= sw.text;
+				
+				roModifBase.edit(NodeData.id_geo, arr, obj, this.parentApplication.idBase);
+			}			
+	
+			protected function edit_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public function getIndex(label:String):int
+			{
+				var i:int
+				for each(var row:Object in cbTypeCarte.dataProvider){
+					if(row["data"]==label){
+						return i;
+					}
+					i++;
+				}
+				return 0;
+			}			
+			
+			public function setMapType(label:String):void{
+				cbTypeCarte.selectedIndex = getIndex(label);				
+			}
+
+			public function zoomMap(val:String):void{
+				this.parentApplication.cartoIF.callFunction("zoom",val);
+			}
+			
+			public function initData():void
+			{
+				// TODO Auto-generated method stub
+				if(this.parentApplication.dataGeo){
+					this.NodeData = this.parentApplication.dataGeo;
+					init();
+					this.parentApplication.cartoIF.visible = true;
+					this.parentApplication.cartoIF.rsCarto = this.parentApplication.dataGeo;											
+					this.parentApplication.cartoIF.callChangeGeo();											
+
+				}
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				initData();
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Canvas>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
+	title="Editer mes données"
+	showCloseButton="true"
+	close="PopUpManager.removePopUp(this);"  
+	width="600" height="500"
+	xmlns:ns2="compo.*" 
+	>
+	<mx:Script>
+        <![CDATA[
+	       	import mx.managers.PopUpManager;
+			import mx.managers.CursorManager;
+			import compo.*;
+			
+			[Bindable] public var colorTheme:uint= 0xCCB5A3;
+        ]]>
+    </mx:Script>
+	<mx:VBox width="100%" height="100%" >
+		<mx:LinkBar dataProvider="{viewstack1}"/>					
+		<mx:ViewStack id="viewstack1" width="100%" height="100%">
+			<mx:Canvas label="Transport" width="100%" height="100%">
+			   	<mx:ApplicationControlBar backgroundColor="{colorTheme}" borderColor="{colorTheme}" width="100%" height="100%" >
+					<ns2:dgGrille id="dg" showAddDelete="true" showFiche="false" orderField="titre" width="100%" height="100%" Edit="true" />									
+				</mx:ApplicationControlBar>
+			</mx:Canvas>
+			<mx:Canvas label="..." width="100%" height="100%">
+				<mx:Label text="d'autres données seront bientôt disponibles..." />
+			</mx:Canvas>
+		</mx:ViewStack>
+		
+	</mx:VBox>
+	
+</mx:TitleWindow>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" pageTitle="GEVU rapports" 
+	xmlns:compo="compo.*"
+	creationComplete="init()"
+	name="gevu_rapports"
+	>
+
+<mx:Script source="rapportsScript.as" />
+<mx:Style source="rapport.css"/>
+
+<mx:HTTPService id="srvEtab" result="readXmlEtab(event);" showBusyCursor="true" /> 
+<mx:HTTPService id="srvSolus" result="readXmlSolus(event);" showBusyCursor="true" /> 
+<mx:HTTPService id="srvFC" showBusyCursor="true" /> 
+<mx:RemoteObject id="ROS"
+    	source="Model_DbTable_Gevu_rapports" destination="zend" 
+    	endpoint="{ENDPOINT_SERVICE}"
+    	showBusyCursor="true"
+    	fault="faultHandlerService(event)">
+ 	<mx:method name="edit"  result="fillHandler(event)"/>  	
+</mx:RemoteObject>
+	    
+<mx:Panel id="boxGen" visible="false" title="V 0.155 GEVU Global EValuation Urbaine : Création des rapports " width="100%" height="100%">
+ 	<mx:HBox paddingLeft="6" verticalAlign="middle">
+ 		<mx:VBox>
+			<mx:CheckBox label="Forcer le calcul" id="cbForceCalcul" change="ForceCalcul()" selected="false" /> 			
+		 	<mx:ComboBox id="cbBD"  
+				dataProvider="{rsBD}"
+				labelField="lib"
+				data="value"
+				prompt="Choisissez une base de donnée..."
+				rowCount="6"
+				close="choixBD(event)"
+			/>
+ 		</mx:VBox>
+ 		<mx:HBox id="boxEtab" visible="false"> 			
+			<mx:Label id="nomEtab" text="" fontSize="24"/>
+			<!-- 
+			<mx:Button label="Voir les solutions aux problèmes" click="showSolusProbEtab();" />
+			-->
+	 		<mx:VBox>
+				<mx:Label text="Sélection des solutions et produits" />
+	           	<mx:HBox>
+	           		<compo:cbGroupeMot bRemove="true" bAjout="true" titre="une sélection" keyName="id_rapport" id="cbSelection" objName="Model_DbTable_Gevu_rapports" objMethode="findByIdLieu"  objParam="{selectedEtab.idRub}" endPoint="{ENDPOINT_SERVICE}" />
+					<mx:LinkButton click="SauveSelection()" icon="@Embed('images/UpdateRecord.png')" toolTip="Enregistrer la sélection des solutions et produits" />
+				</mx:HBox>
+	 		</mx:VBox>
+	 		<mx:VBox>
+				<mx:Label text="Modèles de rapport" />
+				<mx:HBox>
+		           	<compo:cbGroupeMot labelName="titre" bRemove="true" bAjout="false" titre="un modèle" keyName="id_doc" id="cbModel" objName="Model_DbTable_Gevu_docs" objMethode="findByTronc"  objParam="model_rapport" endPoint="{ENDPOINT_SERVICE}" />
+					<compo:cUploadFile x="-100" id="ufModel" iconBtn="@Embed('images/AddRecord.png')" idExi="{idExi}" objName="model_rapport" ttBtn="Ajouter un modèle" ctlBind="{this}" wf="models" typeFic="models" />								
+				</mx:HBox>
+	 		</mx:VBox>
+ 		</mx:HBox>
+ 	</mx:HBox>
+	<!--
+ 	<mx:Panel title="Choisissez un territoire" width="100%" height="100%" borderColor="#080808">
+ 		<compo:treeTerritoire id="tTerre" />
+ 	</mx:Panel>
+ 	-->
+	<mx:HBox width="100%" height="100%" > 			
+	 	<mx:Panel  title="Choisissez un établissement" width="25%" height="100%" borderColor="#080808">
+			<mx:DataGrid 
+				id="dgEtab"
+				dataProvider="{rsEtab}"
+				editable="false"
+				resizableColumns="false" 
+				textAlign="left"
+				width="100%" height="100%"
+				click="selectEtab(event);"
+				>			
+				<mx:columns>
+					<mx:DataGridColumn visible="false" headerText="idGrille" dataField="idGrille" />
+					<mx:DataGridColumn visible="false" headerText="idRub" dataField="idRub" />
+					<mx:DataGridColumn visible="false" headerText="idSite" dataField="idSite" />
+					<mx:DataGridColumn headerText="Nom" dataField="titreRub" />   					
+	 			</mx:columns>
+			</mx:DataGrid>
+	 	</mx:Panel>
+		<mx:VBox width="100%" height="100%" >
+				<mx:HRule width="64%" strokeColor="black" />
+		 		<mx:Label fontSize="12" text="Sélectionnez les solutions et les produits adéquates." />
+				<mx:HRule width="64%" strokeColor="black" />
+			 	<mx:Canvas width="100%" height="100%" borderColor="#080808" >
+			 		<mx:VBox id="pSolusProb" width="100%" height="100%" >
+		 			
+		 			</mx:VBox>
+		 	</mx:Canvas>
+	 	</mx:VBox>
+	 	<mx:VBox width="60%" height="100%" >
+				<mx:HRule width="64%" strokeColor="black" />
+		 		<!--
+		 			<mx:Label fontSize="12"  text="Précisez les coûts pour chaque problème." />
+		 		-->
+				<mx:HBox>
+			 		<mx:Button label="calculer les coûts" click="calculerCout();" />
+					<mx:Button label="Editer le rapport" click="calculerRapport(true);"  />
+				</mx:HBox>
+				<mx:HBox>
+					<mx:Label text=" - Régl. : " fontSize="12"/>
+					<mx:Label id="coutReg" text="" fontSize="12"/> 				
+					<mx:Label text=" - Souhai. : " fontSize="12"/>
+					<mx:Label id="coutSou" text="" fontSize="12"/>
+					<mx:Label text=" - Total : " fontSize="12"/>
+					<mx:Label id="coutTot" text="" fontSize="12"/>			 		
+				</mx:HBox>
+		 		
+				<mx:HRule width="64%" strokeColor="black" />
+			 	<mx:Canvas height="100%" width="100%" borderColor="#080808" >
+	 				<mx:VBox id="selectCout"  width="100%" height="100%" >
+	 			
+	 				</mx:VBox>			
+			 	</mx:Canvas>
+ 		</mx:VBox>
+
+	</mx:HBox> 			
+ 	
+</mx:Panel>
+	
+</mx:Application>

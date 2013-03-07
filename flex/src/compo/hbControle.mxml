@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 creationComplete="init()"
+	  verticalAlign="middle"
+	  horizontalAlign="center"
+	  mouseDown="DoDrag(event)"
+	  click="vbox1_clickHandler(event)"
+	  height="100%" 
+	>
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Text;
+			[Bindable] public var dt:Object;
+			[Bindable] public var imgSrc:String;
+			[Bindable] public var lbl:String;
+			[Bindable] public var idTypeControle:int;
+			[Bindable] public var bDoDrag:Boolean=true;
+			public var fncClick:Function;
+			
+			public function init():void{
+				if(!dt)return;
+				if(dt.icone!=""){
+					imgSrc="images/"+dt.icone;
+				}else{
+					imgSrc="images/interrogation.gif";
+				}
+				txt.text = dt.lib;
+				lbl = dt.lib;					
+			}
+			public function DoDrag(event:MouseEvent):void{
+				if(bDoDrag){
+					parentApplication.dgScen.beginDragAndDrop(event);
+				}
+			}
+			
+			protected function vbox1_clickHandler(event:MouseEvent):void
+			{
+				if(fncClick){fncClick(dt);}
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Image source="{imgSrc}" toolTip="{lbl}" />
+	<mx:Text id="txt" text="" />
+</mx:VBox>

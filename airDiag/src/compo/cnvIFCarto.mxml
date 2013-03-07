@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas label="Cartographie" xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
+		   visible="false" 
+		  width="100%" height="100%">
+	<mx:Script><![CDATA[
+		import flash.external.*;
+		import flash.html.HTMLLoader;
+		
+		import mx.controls.Alert;
+		
+		
+		
+		[Bindable]
+		
+		public var rsCarto:Object;
+		public var loader:HTMLLoader= new HTMLLoader();
+		
+		
+		
+		
+		public function callChangeGeo():void {
+	    
+		this.html.htmlLoader.window.addMarker([rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib]);
+		//this.html.htmlLoader.window.setGeoParam();
+		}
+        
+		public function callChargeKml(url:String):void {
+			
+			this.html.htmlLoader.window.addKml([url], handleChangeGeo);	
+		}
+		public function callFunction(name:String, params):void {
+			/**if(ExternalInterface.available)
+			ExternalInterface.call(name, [params], handleChangeGeo);	*/
+		}
+		
+		/**
+		 * Handle the JavaScript method result.
+		 */
+		
+		private function handleChangeGeo(result : Object):void
+		{
+			trace("The method returned '" + result + "'.");
+		}
+		
+	]]></mx:Script>
+
+<!--	<flexiframe:IFrame id="cartoIFrame"
+					   width="100%" height="100%"
+					   source="carto.html"
+					   visible="{this.visible}"
+					   overlayDetection="true"
+					   /> -->
+	
+	<mx:HTML id="html"
+			 width="100%" height="100%"
+			 location="http://www.gevu.org/Aircarto.html"/> 
+		
+
+	
+</mx:Canvas>
