@@ -533,10 +533,11 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      */
     public function getTypeRelatedData($idLieu)
     {
-    	$sql = 'SELECT l.lib, l.id_lieu, l.lieu_parent, COUNT(a.id_antenne) antenne, COUNT(b.id_batiment) batiment, COUNT(c.id_geo) geo, COUNT(d.id_diag) diag, COUNT(e.id_doc) doc
+    	$sql = 'SELECT l.id_lieu, COUNT(a.id_antenne) antenne, COUNT(b.id_batiment) batiment, COUNT(c.id_geo) geo, COUNT(d.id_diag) diag, COUNT(e.id_doc) doc
     			, COUNT(f.id_espace) espace, COUNT(g.id_espace_ext) espace_ext, COUNT(h.id_espace_int) espace_int, COUNT(i.id_etablissement) etablissement, COUNT(j.id_niveau) niveau
     			, COUNT(k.id_objet_ext) objet_ext, COUNT(m.id_objet_int) objet_int, COUNT(n.id_objet_voirie) objet_voirie, COUNT(p.id_parcelle) parcelle
     			, COUNT(q.id_probleme) probleme, COUNT(s.id_groupe) groupe, COUNT(t.id_logement) logement, COUNT(u.id_local) local, COUNT(v.id_part_commu) part_commu
+    			, COUNT(li.id_lieuinterv) lieux_interventions, COUNT(cd.id_chainedepla) chaines_deplacements
 					  FROM gevu_lieux AS l
 						  LEFT JOIN gevu_antennes AS a ON a.id_lieu = l.id_lieu
 						  LEFT JOIN gevu_batiments AS b ON b.id_lieu = l.id_lieu
@@ -557,7 +558,9 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 						  LEFT JOIN gevu_logements AS t ON t.id_lieu = l.id_lieu
 						  LEFT JOIN gevu_locaux AS u ON u.id_lieu = l.id_lieu
 						  LEFT JOIN gevu_partiescommunes AS v ON v.id_lieu = l.id_lieu
-					  WHERE l.id_lieu = '.$idLieu.' 
+						  LEFT JOIN gevu_lieuxinterventions AS li ON li.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_chainesdeplacements AS cd ON cd.id_lieu = l.id_lieu
+    			WHERE l.id_lieu = '.$idLieu.' 
 					  GROUP BY l.id_lieu
 					  ORDER BY l.id_lieu' ;
     			$stmt = $this->_db->query($sql);

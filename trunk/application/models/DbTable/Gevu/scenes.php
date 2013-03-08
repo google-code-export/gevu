@@ -196,6 +196,22 @@ class Models_DbTable_Gevu_scenes extends Zend_Db_Table_Abstract
     	
 		return array("xml"=>$xmlScene, "rs"=>$result[0]);
     }
+
+    /**
+     * renvoie la lsite des scène avec produit pour un scenario
+     *
+     * @param int $idScenario
+     *
+     * @return array
+     */
+    public function getScenarProduits($idScenario)
+    {
+        $query = $this->select()
+     		->from( array("g" => "gevu_scenes") )                           
+            ->where( "g.paramsProd != '' AND g.id_scenario =".$idScenario);
+
+        return $this->fetchAll($query)->toArray(); 
+    }
     
     /**
      * Recherche une entrée Gevu_scenes avec la clef primaire spÃ©cifiÃ©e
