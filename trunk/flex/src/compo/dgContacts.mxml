@@ -117,7 +117,7 @@ private function insertItem():void {
 		pArr[ctlId]=val;
    	}
    	
-	RO.ajouter(pArr);
+	RO.ajouter(pArr, true, this.parentApplication.idBase);
 	
 }
 

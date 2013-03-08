@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas label="Statistiques de diagnostic" xmlns:mx="http://www.adobe.com/2006/mxml" 
 	creationComplete="init()" 
-	width="100%" height="100%"
+	width="100%" height="100%" 
 	>
 	<mx:Script><![CDATA[
 		import compo.cnvDiagListe;
 		import compo.twDiagListe;
 		
+		import mx.charts.HitData;
+		import mx.charts.events.ChartEvent;
+		import mx.charts.series.ColumnSeries;
+		import mx.charts.series.items.ColumnSeriesItem;
 		import mx.controls.Alert;
 		import mx.events.IndexChangedEvent;
 		import mx.managers.PopUpManager;
@@ -49,6 +53,8 @@
 
 		[Bindable]	public var rsEtatDiag:Object;
 		[Bindable]	public var idLieu:int;
+		public var selectHandi:String;
+		public var selectNiv:String;
 		
 		public function init():void {
 			details.removeAllChildren();
@@ -79,7 +85,8 @@
 		protected function chart_changeHandler(event:Event):void
 		{
 			try 
-			{ 
+			{
+				/*
 				var allSeries:Array = event.currentTarget.series;
 				var strHandi:String = "";
 				var niv:String = "";
@@ -121,9 +128,10 @@
 						titreSelect = allSeries[i].legendData[0].label;	
 					}
 				}
+				*/
 				var vn:Array = new Array();
-				vn["niv"] = niv;
-				vn["handi"] = strHandi;
+				vn["niv"] = this.selectNiv.substr(3);
+				vn["handi"] = this.selectHandi;
 				vn["idLieu"] = this.idLieu;
 				
 				details.removeAllChildren();
@@ -151,7 +159,29 @@
 			
 		}
 		
+		public function dtFunc(e:HitData):String {
+			
+			selectHandi = e.item.id;
+			selectNiv = ColumnSeries(e.element).yField;
+			var nb:Number = Number(e.item[selectNiv]);
+			var tot:Number = Number(e.item.niv0)+Number(e.item.niv1)+Number(e.item.niv2)+Number(e.item.niv3);
+			var pourcent:Number =  Math.round((100/tot)*nb);
+			var s:String;
+			s = "<FONT COLOR='#050505'>" +e.item.id+" : "+e.item.handi+"</FONT>\n";
+			s += "<FONT COLOR='#050505'>" +ColumnSeries(e.element).displayName+" : "+nb+" ("+pourcent+" %)</FONT>\n";
+			s += "<FONT COLOR='#050505'>TOTAL = "+tot+"</FONT>";
+
+			return s;
+		}
+		
+		protected function chart_chartClickHandler(event:ChartEvent):void
+		{
+			// TODO Auto-generated method stub
+			
+		}
+		
 	]]></mx:Script>
+	
 	<!-- Define custom colors for use as fills. -->
 	<mx:SolidColor id="sc0" color="green" alpha=".8"/>
 	<mx:SolidColor id="sc1" color="yellow" alpha=".8"/>
@@ -171,9 +201,9 @@
 			</mx:HBox>
 			<mx:HBox paddingLeft="70" visible="false" height="0" >
 				<mx:Label id="TauxCalc" />
-				<mx:Image id="imgMoteur" source="{MoteurIcon}" width="60" />
 				<mx:Image id="imgAudio" source="{AudioIcon}" width="60" />
 				<mx:Image id="imgCog" source="{CogIcon}" width="60" />
+				<mx:Image id="imgMoteur" source="{MoteurIcon}" width="60" />
 				<mx:Image id="imgVisu" source="{VisuIcon}" width="60" />
 			</mx:HBox>
 			
@@ -181,7 +211,9 @@
 							dataProvider="{rsEtatDiag}" 
 							type="stacked"
 							showDataTips="true"
-							change="chart_changeHandler(event)"
+							dataTipFunction="dtFunc"
+							 change="chart_changeHandler(event)"
+							
 							selectionMode="single"
 							width="320" height="200"
 							>
@@ -221,9 +253,9 @@
 				</mx:series>
 			</mx:ColumnChart>
 			<mx:HBox paddingLeft="54" >
-				<mx:Image id="imgAlphaMoteur" source="{AIcon}" width="60" />
 				<mx:Image id="imgAlphaAudio" source="{BIcon}" width="60" />
 				<mx:Image id="imgAlphaCog" source="{CIcon}" width="60" />
+				<mx:Image id="imgAlphaMoteur" source="{AIcon}" width="60" />
 				<mx:Image id="imgAlphaVisu" source="{DIcon}" width="60" />		
 			</mx:HBox>
 		</mx:VBox>

@@ -37,12 +37,12 @@ todo :
 		
 	</mx:RemoteObject>
 		
-	<mx:VBox id="boxGen" visible="false" width="100%" height="100%" backgroundColor="white" >
-		<mx:HBox width="100%">
+	<mx:VBox id="boxGen" visible="false" width="100%" height="100%" backgroundColor="black" >
+		<mx:HBox width="100%" >
 			<mx:Image source="@Embed('images/logo.png')" />
 			<mx:VBox horizontalAlign="left" >
 				<mx:Label fontSize="16" text="Saisie des diagnostics"/>		
-				<mx:Label text="V 0.801" />
+				<mx:Label text="V 0.815" />
 			</mx:VBox>
 			<mx:VBox horizontalAlign="left">
 				<mx:Label text="Diagnostic(s) disponible(s) : " />

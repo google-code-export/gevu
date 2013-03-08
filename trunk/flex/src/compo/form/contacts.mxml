@@ -40,7 +40,7 @@
 					vsContact.selectedChild = viewContact;
 
 				//chargement des données
-				if(paramsLien)roLien.getContact(paramsLien);
+				if(paramsLien)roLien.getContact(this.parentApplication.idBase,objLien,paramsLien);
 				
 			}
 			
@@ -57,7 +57,7 @@
 			
 			private function ContactHandler(e:Object):void
 			{
-				roLien.getContact(paramsLien);
+				roLien.getContact(this.parentApplication.idBase,objLien,paramsLien);
 			}
 			
 			private function deleteContact():void {
@@ -71,14 +71,14 @@
 				if (event.detail == Alert.YES) 
 				{
 					var arrParams:Array = new Array();
-					arrParams["idLien"]=paramsLien['id'];
+					arrParams["idLien"] = paramsLien['id'];
 					if(paramsLien["type"]) arrParams["type"] = paramsLien["type"];
 					if(unique)
 						arrParams["idCtc"]= idContact;
 					else
 						arrParams["idCtc"]= dgContact.selectedItem['id_contact'];
 					
-					roLien.removeContact(arrParams);
+					roLien.removeContact(this.parentApplication.idBase,objLien,arrParams);
 				}
 			}
 			
@@ -116,14 +116,14 @@
 					vsContact.selectedChild = viewContactUnique;
 				else
 					vsContact.selectedChild = viewContact;
-				roLien.ajouterContact(arrParams);
+				roLien.ajouterContact(this.parentApplication.idBase,objLien,arrParams);
 			}
 						
 		]]>
 	</mx:Script>
 	
 	<mx:RemoteObject id="roLien"
-		 source="{objLien}" destination="zend" 
+		 source="GEVU_Diagnostique" destination="zend" 
 		 showBusyCursor="true"
 		 fault="faultHandlerService(event, this.label);"			
 		 >
