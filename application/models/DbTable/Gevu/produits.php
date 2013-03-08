@@ -233,6 +233,29 @@ class Models_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
-    
+
+    /**
+     * Recherche les intervention et leur caractéristiques pour un produit
+    * et retourne ces entrées.
+    *
+    * @param int $idProduit
+    * 
+    */
+    public function getProduitInterv($idProduit)
+    {
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sÃ©lectionner des colonnes dans une autre table
+            ->from(array('p' => 'gevu_produits'),array("id_produit", "ref", "description"))
+            ->joinInner(array('i' => 'gevu_interventions'),
+                'i.id_produit = p.id_produit', array("id_interv", "interv", "unite", "frequence", "cout"))
+            ->joinInner(array('mcI' => 'gevu_motsclefs'),
+                'mcI.id_motclef = i.interv', array("lblInterv"=>"titre"))
+            ->joinInner(array('mcU' => 'gevu_motsclefs'),
+                'mcU.id_motclef = i.unite', array("lblUnite"=>"titre"))
+            ->where('p.id_produit ='.$idProduit);
+            
+        return  $this->fetchAll($query)->toArray();
+    	    
+    }    
     
 }
