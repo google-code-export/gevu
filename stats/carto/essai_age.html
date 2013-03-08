@@ -1,13 +1,11 @@
 <html>
   <head>
       <meta charset="utf-8">
-    <title>Google Maps JavaScript API v3 Example: Heatmap Layer</title>
-    <link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet">
+    <title>Carte sur l'âge des bâtiments au Havre</title>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
     <script>
       // Données
-      var map, pointarray, heatmap; 
-	//  var map, myPano, panoClient, nextPanoId;
+      var map, pointarray, heatmap, map1, geocoder, adress; 
 
       var Logements = [
         new google.maps.LatLng(49.51952250, 0.11028360),
@@ -128,7 +126,26 @@
         new google.maps.LatLng(49.52053140, 0.10761180),
         new google.maps.LatLng(49.52045040, 0.10771400),
         new google.maps.LatLng(49.52039750, 0.10794930),
-        new google.maps.LatLng(49.52060290, 0.10820590)
+        new google.maps.LatLng(49.52060290, 0.10820590),
+		new google.maps.LatLng(49.52090670, 0.10597810),
+        new google.maps.LatLng(49.52059840, 0.10579100),
+        new google.maps.LatLng(49.52125660, 0.10734310),
+        new google.maps.LatLng(49.52121250, 0.10706830),
+        new google.maps.LatLng(49.52087700, 0.10575430),
+        new google.maps.LatLng(49.52023030, 0.10587520),
+        new google.maps.LatLng(49.52089180, 0.10574910),
+        new google.maps.LatLng(49.52076960, 0.10577890),
+        new google.maps.LatLng(49.52104280, 0.10763120),
+        new google.maps.LatLng(49.52096050, 0.10563410),
+        new google.maps.LatLng(49.52110170, 0.10748780),
+        new google.maps.LatLng(49.52091840, 0.10704650),
+        new google.maps.LatLng(49.52072410, 0.10682160),
+        new google.maps.LatLng(49.52058350, 0.10726080),
+        new google.maps.LatLng(49.52050950, 0.10745440),
+        new google.maps.LatLng(49.52089180, 0.10574910),
+        new google.maps.LatLng(49.52043060, 0.10775030),
+        new google.maps.LatLng(49.52053210, 0.10805160),
+        new google.maps.LatLng(49.52980150, 0.11631880)
       ];
 
 	 //Centre de la carte
@@ -139,56 +156,18 @@
           mapTypeId: google.maps.MapTypeId.SATELLITE
         };
 
-  	      map = new google.maps.Map(document.getElementById('map_canvas'),
+//pour affichage données		
+function initialize1() {
+  map1 = new GMap2(document.getElementById("map_canvas"));
+  map1.setCenter(new GLatLng(49.54403690, 0.13247040), 11);
+  map1.addControl(new GLargeMapControl);
+  GEvent.addListener(map1, "click", getAddress);
+  geocoder = new GClientGeocoder();
+}
+
+  	    map = new google.maps.Map(document.getElementById('map_canvas'),
             mapOptions);
 	
-
-	
-/*
-
-	panoClient = new GStreetviewClient();
-			
-		//Clik pour carte ( 
-	 GEvent.addListener(map, "click", function(overlay,latlng) {
-    panoClient.getNearestPanorama(latlng, showPanoData);
-  });
-
-  
-	  myPano = new GStreetviewPanorama(document.getElementById("pano"));
-  myPano.setLocationAndPOV(fenwayPark, fenwayPOV);
-  GEvent.addListener(myPano, "error", handleNoFlash);  
-  panoClient.getNearestPanorama(fenwayPark, showPanoData);
-}
-
-
-function showPanoData(panoData) {
-  if (panoData.code != 200) {
-    GLog.write('showPanoData: Server rejected with code: ' + panoData.code);
-    return;
-  }
-  nextPanoId = panoData.links[0].panoId;
-  var displayString = [
-    "LatLng: " + panoData.location.latlng,
-  ].join("<br/>");
-  map.openInfoWindowHtml(panoData.location.latlng, displayString);
-  
-  GLog.write('Viewer moved to' + panoData.location.latlng);
-  myPano.setLocationAndPOV(panoData.location.latlng);
-}
-
-function next() {
-  // Get the next panoId
-  // Note that this is not sophisticated. At the end of the block, it will get stuck
-  panoClient.getPanoramaById(nextPanoId, showPanoData);
-}
-
-function handleNoFlash(errorCode) {
-  if (errorCode == 603) {
-    alert("Error: Flash doesn't appear to be supported by your browser");
-    return;
-  }
-}  
-//) */
         pointArray = new google.maps.MVCArray(Logements);
 
         heatmap = new google.maps.visualization.HeatmapLayer({
@@ -197,6 +176,32 @@ function handleNoFlash(errorCode) {
 
         heatmap.setMap(map);
      }
+
+//affichage données	 
+function getAddress(overlay, latlng) {
+  if (latlng != null) {
+    address = latlng;
+    geocoder.getLocations(latlng, showAddress);
+  }
+}	 
+//affichage données
+function showAddress(response) {
+  map1.clearOverlays();
+  if (!response || response.Status.code != 200) {
+    alert("Status Code:" + response.Status.code);
+  } else {
+    place = response.Placemark[0];
+    point = new GLatLng(place.Point.coordinates[1],
+                        place.Point.coordinates[0]);
+    marker = new GMarker(point);
+    map1.addOverlay(marker);
+    marker.openInfoWindowHtml(
+    '<b>orig latlng:</b>' + response.name + '<br/>' + 
+    '<b>Latitude-Longitude:</b>' + place.Point.coordinates[1] + "," + place.Point.coordinates[0] + '<br>' +
+    '<b>Addresse:</b>' + place.address + '<br>' +
+    '<b>Code du Pays:</b> ' + place.AddressDetails.Country.CountryNameCode);
+  }
+}
 
       function toggleHeatmap() {
         heatmap.setMap(heatmap.getMap() ? null : map);
@@ -239,12 +244,12 @@ function handleNoFlash(errorCode) {
     </script>
   </head>
 
-  <body onload="initialize()">
+  <body onload="initialize()" onload="initialise1()">
     <div id="map_canvas" style="height: 600px; width: 800px;"></div>
-    <button onclick="toggleHeatmap()">Toggle Heatmap</button>
-    <button onclick="changeGradient()">Change gradient</button>
-    <button onclick="changeRadius()">Change radius</button>
-    <button onclick="changeOpacity()">Change opacity</button>
+    <button onclick="toggleHeatmap()">Affichage logements</button>
+    <button onclick="changeGradient()">Change couleur</button>
+    <button onclick="changeRadius()">Change épaisseur</button>
+    <button onclick="changeOpacity()">Change opacité</button>
   </body>
 </html>
 
