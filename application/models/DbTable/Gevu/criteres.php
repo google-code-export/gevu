@@ -158,8 +158,6 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
             ->from( array("c" => "gevu_criteres"))
             ->joinInner(array('tc' => 'gevu_typesxcontroles'),
             	'tc.id_type_controle = c.id_type_controle',array('icone','lib'))                                   
-            ->joinInner(array('tcri' => 'gevu_criteresxtypesxcriteres'),
-            	'tcri.id_critere = c.id_critere',array('id_type_critere'))                                   
 			->where( "c.id_type_controle = " . $id_type_controle );
 
         return $this->fetchAll($query)->toArray(); 

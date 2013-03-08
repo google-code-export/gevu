@@ -36,7 +36,6 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         )
     );	
     
-    
     /**
      * Vérifie si une entrée Gevu_diagnostics existe.
      *
@@ -560,7 +559,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
             ->joinInner(array('l' => 'gevu_lieux'),
                 'le.lft BETWEEN l.lft AND l.rgt',array('lib', 'id_lieu'))
             ->joinInner(array('crit' => 'gevu_criteres'),
-            	'diag.id_critere = crit.id_critere',array('ref','handicateur_moteur','handicateur_auditif','handicateur_visuel','handicateur_cognitif','affirmation','criteres'))
+            	'diag.id_critere = crit.id_critere',array('ref','handicateur_moteur','handicateur_auditif','handicateur_visuel','handicateur_cognitif','affirmation'))
         	->joinInner(array('tc' => 'gevu_typesxcontroles'),
             	'tc.id_type_controle = crit.id_type_controle',array('controle'=>'lib','icone'))
         	->joinInner(array('inst' => 'gevu_instants'),
@@ -574,21 +573,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         //les derniers diagnostics
         if($last)$query->where("diag.last = 1");        
         //un niveau de handicap
-        if($niv!=-1){
-        	if($niv==0){
-        		//on prend les réponse du niveau 1 2 3
-        		$nivW = " IN (1,2,3)";
-        		//et la réponse doit être oui
-        		$nivW .= " AND diag.id_reponse = 1";
-        	}else{
-        		//on ne prend que les réponse du niveau
-        		$nivW = " = ".$niv;
-        		//et la réponse doit être non
-        		$nivW .= " AND diag.id_reponse = 2";
-        	}
-        }else{
-        	$nivW = " > 0 ";  
-        }
+        if($niv) $nivW = " = ".$niv; else $nivW = " > 0 ";  
         //un type de handicap
         if($handi)$query->where("crit.handicateur_".$handi.$nivW);
 

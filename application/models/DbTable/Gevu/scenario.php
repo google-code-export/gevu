@@ -32,15 +32,6 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_scenario';
 
-    /**
-     * tableau d'export
-     */
-    var $arrExport;
-    
-    /**
-     * scenario XML
-     */
-    var $xmlScene;
     
     /**
      * Vérifie si une entrée Gevu_scenario existe.
@@ -235,7 +226,7 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /**
+    /*
      * Recherche une entrée Gevu_scenario avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -250,79 +241,5 @@ class Models_DbTable_Gevu_scenario extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
-    /**
-     * Retourne l'xml des scènes pour une entrée Gevu_scenario
-     *
-     * @param int $idScenario
-     * 
-     * return SimpleXMLElement
-     */
-    public function getXmlScene($idScenario)
-    {
-    	//récupère l'arboressence des scenes
-        $query = $this->select()
-                ->setIntegrityCheck(false) //pour pouvoir sÃ©lectionner des colonnes dans une autre table
-            ->from(array('so' => 'gevu_scenario'))
-            ->joinInner(array('se' => 'gevu_scenes'),
-                'se.id_scene = so.params', array("id_scene", "type", "paramsCtrl", "id_scenario"))
-            ->where('so.id_scenario ='.$idScenario);    	
-        $result = $this->fetchAll($query)->toArray();
-        $params = json_decode($result[0]["paramsCtrl"]);
-		$this->xmlScene = simplexml_load_string($params[0]->idCritSE);
-
-    	return $this->xmlScene;
-    }
-    
-    /**
-     * Exporte les données d'une entrée Gevu_scenario
-     * et retourne les valeurs.
-     *
-     * @param int $idScenario
-     * 
-     * return array
-     */
-    public function exporteScenarProduits($idScenario)
-    {
-    	//récupère l'arboressence des scenes
-    	$this->getXmlScene($idScenario);
-
-    	$dbScene = new Models_DbTable_Gevu_scenes();
-    	$dbProduit = new Models_DbTable_Gevu_produits();
-    	 
-    	$arr = $dbScene->getScenarProduits($idScenario);
-    	$this->arrExport = array();
-    	 
-    	foreach ($arr as $n){
-    		$arrType = explode("_",$n['type']);
-    		//récupère le noeud et ses parents
-    		$path = "//node[@uid='".$arrType[2]."']/ancestor-or-self::node";
-    		$result = $this->xmlScene->xpath($path);
-    		//construction du tableau des produits
-    		$ariane = "";
-    		$nbA = count($result);
-    		foreach ($result as $k => $node) {
-    			//$ariane .= $k."(".$node["idCtrl"]."):".$node["lib"];
-    			$ariane .= $node["lib"];
-    			if($k == ($nbA-1)){
-    				$obj = json_decode($n['paramsProd']);
-    				//ajoute les produits
-    				foreach ($obj as $o) {
-    					$arrInterv = $dbProduit->getProduitInterv($o->id_produit);
-    					foreach ($arrInterv as $int) {
-    						$this->arrExport[] = array("idScenario"=>$idScenario,"idScene"=>$n['id_scene'],"ariane"=>$ariane,"uid"=>$node["uid"].""
-    							, "idProduit"=>$int["id_produit"], "ref"=>$int["ref"], "description"=>$int["description"], "id_interv"=>$int["id_interv"], "interv"=>$int["interv"]
-    							, "lblInterv"=>$int["lblInterv"], "unite"=>$int["unite"], "lblUnite"=>$int["lblUnite"], "frequence"=>$int["frequence"], "cout"=>$int["cout"]
-    						);    						
-    					}    							
-    				}    				
-    				$ariane = "";    				
-    			}else{
-    				$ariane .= " _ ";    				
-    			}
-    		}
-    	}
-    	    	    
-    	return $this->arrExport;
-    }
     
 }

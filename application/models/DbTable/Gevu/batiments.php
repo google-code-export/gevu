@@ -664,5 +664,47 @@ class Models_DbTable_Gevu_batiments extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
 
+    /**
+     * Recherche un contacts avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param array $params
+     * 
+	 * @return array
+     */
+    public function getContact($params)
+    {
+        $query = $this->select()
+			->from( array("b" => "gevu_batiments"), array($params["type"]))                           
+			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->joinInner(array('c' => 'gevu_contacts'),
+                'b.'.$params["type"].' = c.id_contact',array('id_contact','nom','prenom','fixe','mobile','fax','mail'))
+    		->where( "b.id_batiment = ?", $params["id"]);
+
+        return $this->fetchAll($query)->toArray();
+    }
+    
+    /**
+     * Ajoute un contacts avec la valeur spécifiée
+     *
+     * @param array $params
+     *  
+     */
+    public function ajouterContact($params)
+    {
+    	$data = array($params['type']=>$params['idCtc']);
+		$this->update($data, 'gevu_batiments.id_batiment = ' . $params['idLien']);
+    } 
+
+    /**
+     * Supprime un contact avec la valeur spécifiée
+     *
+     * @param array $params
+     */
+    public function removeContact($params)
+    {
+    	$data = array($params['type']=>-1);
+		$this->update($data, 'gevu_batiments.id_batiment = ' . $params['idLien']);
+    }
     
 }
