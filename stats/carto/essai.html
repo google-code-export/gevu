@@ -5,11 +5,13 @@
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
     <script>
       // Adding 500 Data Points
-      var map, pointarray, heatmap;
+      var n, map, pointarray, heatmap;
 
 	  d3.json("../donnees_tables/gevulieux.json", function(json) {
       var Logements = [
-        new google.maps.LatLng(lat, lng)
+		for (var i=0; i<n ; i++){
+			new google.maps.LatLng(lat, lng)
+		}
       ];
 	 }
 
