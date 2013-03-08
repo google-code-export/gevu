@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
-    creationComplete="init();"  > 
+    creationComplete="init();"   
+	paddingTop="3" paddingBottom="3" paddingLeft="3" paddingRight="3"
+	> 
             
 	<mx:Script>
         <![CDATA[
 			import compo.form.affirmations;
 			
 			import mx.collections.ArrayCollection;
+			import mx.containers.HBox;
 			import mx.controls.Alert;
+			import mx.controls.HRule;
 			import mx.controls.Image;
 			import mx.managers.CursorManager;
 			import mx.managers.PopUpManager;
@@ -28,22 +32,18 @@
 		            case "0":
 						lblTitre.text = "Critères "+params['handi']+"s valides";
 						mainCtrl.setStyle("borderColor","green");
-						mainCtrl.setStyle("backgroundColor","green");
 		                break;
 		            case "1":
 						lblTitre.text = "Gène "+getHandiLabelFeminin(params['handi'])+"s mineure";
 						mainCtrl.setStyle("borderColor","yellow");
-						mainCtrl.setStyle("backgroundColor","yellow");
 		                break;
 		            case "2":
 						lblTitre.text = "Gène "+getHandiLabelFeminin(params['handi'])+"s intermédiaire";
 						mainCtrl.setStyle("borderColor","#ffa200");
-						mainCtrl.setStyle("backgroundColor","#ffa200");
 		                break;
 		            case "3":
 						lblTitre.text = "Gène "+getHandiLabelFeminin(params['handi'])+"s majeure";
 						mainCtrl.setStyle("borderColor","red");
-						mainCtrl.setStyle("backgroundColor","red");
 		                break;
 		        } 
 				//lblTitre.text += " "+titreListeDiag;
@@ -71,7 +71,6 @@
 			
 			protected function getDiagListe_resultHandler(event:ResultEvent):void
 			{
-				if(event.result=="") return;
 				var rsListe:Object = event.result;
 								
 				//boucle sur les critères
@@ -83,14 +82,71 @@
 					var ar:ariane = new ariane;
 					ar.NodeData = rLieu["ariane"]["id"][0]["ariane"];
 					vb.addChild(ar);
+					for each (var crit:Object in rLieu)
+					{
+						if(crit.affirmation){
+							vb.addChild(addCritere(crit));													
+						}
+					}
+					
+					/*
 					var af:affirmations = new affirmations;
 					af.NodeData = rLieu;
 					vb.addChild(af);
-					mainCtrl.addChild(vb);	
+					*/
+					mainCtrl.addChild(vb);
 				}
+			}
+			
+			function addCritere(crit:Object):VBox
+			{
+				var larg:int = 20;
 
+				var vb:VBox = new VBox();
+				var lbl:Label = new Label();
+				lbl.text = crit.affirmation;
+				vb.addChild(lbl);
+				
+				var hb:HBox = new HBox();
+				var lblCtrl:Label = new Label();
+				lblCtrl.text = crit.controle;
+				var lblRef:Label = new Label();
+				lblRef.text = crit.ref;
+				hb.addChild(lblCtrl);
+				hb.addChild(lblRef);
+				
+				var imaAu:Image = new Image;
+				imaAu.source="images/audio"+crit.handicateur_auditif+".jpg";
+				imaAu.width = larg;
+				imaAu.autoLoad = true;
+				hb.addChild(imaAu);
+				
+				var imaCo:Image = new Image;
+				imaCo.source="images/cog"+crit.handicateur_cognitif+".jpg";
+				imaCo.width = larg;
+				imaCo.autoLoad = true;
+				hb.addChild(imaCo);
+
+				var imaMo:Image = new Image;
+				imaMo.source = "images/moteur"+crit.handicateur_moteur+".jpg";
+				imaMo.width = larg;
+				imaMo.autoLoad = true;
+				hb.addChild(imaMo);
+
+				var imaVi:Image = new Image;
+				imaVi.source="images/visu"+crit.handicateur_visuel+".jpg";
+				imaVi.width = larg;
+				imaVi.autoLoad = true;
+				hb.addChild(imaVi);
+				vb.addChild(hb);
+				
+				var t:HRule = new HRule();
+				vb.addChild(t);
+				
+				return vb;
 				
 			}
+			
         ]]>
     </mx:Script>
 	<mx:RemoteObject id="roDiag"
@@ -102,7 +158,7 @@
 		<mx:method name="getDiagListe" result="getDiagListe_resultHandler(event)" />
 	</mx:RemoteObject>	
 
-	<mx:Label id="lblTitre" fontSize="18" color="black" />
-	<mx:VBox id="mainCtrl" width="100%" height="100%" minHeight="0" >
+	<mx:Label id="lblTitre" fontSize="18"/>
+	<mx:VBox id="mainCtrl" width="100%" height="100%" minHeight="0" borderStyle="solid" paddingTop="3" paddingBottom="3" paddingLeft="3" paddingRight="3">
 	</mx:VBox>
 </mx:VBox>

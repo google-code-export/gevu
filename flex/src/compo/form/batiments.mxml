@@ -3,6 +3,7 @@
 		   xmlns:compo="compo.*" xmlns:form="compo.form.*"
 		    title="Bâtiment"
 		   width="100%" height="100%"
+		   paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"
 		   >
 
 	<mx:VBox initialize="init();" width="100%" height="100%" >
@@ -129,7 +130,7 @@
 				ctcPro.Init();
 				ctcDel.paramsLien = GetParamContact("contact_delegataire");
 				ctcDel.Init();
-				ctcGar.paramsLien = GetParamContact("contact_delegataire");
+				ctcGar.paramsLien = GetParamContact("contact_gardien");
 				ctcGar.Init();
 
 				if(NodeData.date_achevement!="0000-00-00") F14.selectedDate=parseDate(NodeData.date_achevement);

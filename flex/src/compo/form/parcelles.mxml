@@ -4,6 +4,7 @@
 		   title="Parcelle"
 		   width="100%" height="100%"
 		   creationComplete="init()" xmlns:form="compo.form.*"
+		   paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"
 	>
 	<mx:VBox >
 		<mx:HBox width="100%">

@@ -35,7 +35,7 @@
 			public function setKeyword(k:int=2):int{
 				//pourquoi 2 par defaut ???
 				var i:int
-				for each(var row:Object in dataProvider){
+				for each(var row:Object in DataList){
 					if(row['id_motclef']==k){
 						this.selectedIndex=i;
 						acualId=k;
@@ -55,7 +55,7 @@
 			}
 			
 			public function keywordChanged() : void {
-				acualId=dataProvider[this.selectedIndex]['id_motclef']; 
+				acualId=DataList[this.selectedIndex]['id_motclef']; 
 			}
 			
 			public function setListType(i:int=2):void{
@@ -63,17 +63,11 @@
 			}
 			
 			private function setDataList(event:ResultEvent):void{
-				var dp:Array = event.result as Array;
-				dataProvider = dp;
-				/*
-				DataList = [];
-				var dp:Array=[];
-				for(var i:int=0; i<event.result.length; ++i){
-					DataList.push(event.result[i]);
-					dp.push(event.result[i]['titre']);
-				}
-				dataProvider = dp;
-				*/
+				
+				DataList = event.result as Array;
+				dataProvider = DataList;
+				//affiche l'item
+				this.selectedIndex= setKeyword(this.acualId);
 			}
 		
 		]]>

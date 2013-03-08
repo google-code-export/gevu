@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
-		   xmlns:compo="compo.*"
-		   label="Etablissement"
-		   width="100%" height="100%"
-		   creationComplete="init()" 
-		   >
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		  xmlns:compo="compo.*" xmlns:form="compo.form.*"
+		  title="Etablissement" creationComplete="init()" 
+		  width="100%" height="100%"
+		  paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"
+		  >
 	<mx:Script>
 		<![CDATA[
 			
@@ -35,26 +35,36 @@
 					F9.setListType(2);
 					F10.setListType(23);
 					F11.setListType(24);
+					F12.setListType(2);
+					F13.setListType(2);
 				}else{
 					//this.selectedChild = insert;
 				}
+				ctcPro.paramsLien = GetParamContact("contact_proprietaire");
+				ctcPro.Init();
+				ctcDel.paramsLien = GetParamContact("contact_delegataire");
+				ctcDel.Init();
+				
 			}
+
+			private function GetParamContact(type:String):Array
+			{
+				var arrParams:Array = new Array();
+				arrParams["id"]=NodeData.id_etablissement;
+				arrParams["type"]=type;
+				
+				return arrParams;
+			}	
 			
 			public function saveModifications() : void {
 				var arr:Array = new Array();
 				arr["nom"]=F1.text;
 				arr["ref"]=F2.text;
-				arr["adresse"]=F3.text;
-				arr["commune"]=F4.text;
-				arr["pays"]=F5.text;
-				arr["code_postal"]=F6.text;
-				arr["contact_proprietaire"]=F7.text;
-				arr["contact_delegataire"]=F8.text;
 				arr["reponse_1"]=F9.acualId;
 				arr["reponse_2"]=F10.acualId;
 				arr["reponse_3"]=F11.acualId;
-				arr["reponse_4"]=F12.text;
-				arr["reponse_5"]=F13.text;
+				arr["reponse_4"]=F12.acualId;
+				arr["reponse_5"]=F13.acualId;
 				roModifBase.edit(NodeData.id_etablissement, arr, obj, this.parentApplication.idBase);
 				valChanged = false;
 			}
@@ -93,68 +103,33 @@
 			<mx:VBox>
 	
 				<mx:HBox width="100%">
-					<mx:Label text="nom" />
+					<mx:Label text="Nom : " />
 					<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
 				</mx:HBox>
 	
 				<mx:HBox width="100%">
-					<mx:Label text="ref" />
+					<mx:Label text="Ref :" />
 					<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
 				</mx:HBox>
-	
+				<mx:HBox width="100%" height="100%">
+					<form:contacts title="Contact propriétaire" id="ctcPro" unique="true" objLien="Models_DbTable_Gevu_etablissements" />		
+					<form:contacts title="Contact délégataire" id="ctcDel" unique="true" objLien="Models_DbTable_Gevu_etablissements" />		
+				</mx:HBox>
+					
 				<mx:HBox width="100%">
-					<mx:Label text="adresse" />
-					<mx:TextInput id="F3" width="100%" data="{NodeData.adresse}" change="valChanged=true;" />
+					<mx:Label text="ERP :" />
+					<compo:KeywordsList id="F9" width="100%" acualId="{NodeData.reponse_1}" change="valChanged=true;" />
+					<mx:Label text="Type d'ERP spécifique :" />
+					<compo:KeywordsList id="F10" width="100%" acualId="{NodeData.reponse_2}" change="valChanged=true;" />
+					<mx:Label text="Catégorie d'ERP : " />
+					<compo:KeywordsList id="F11" width="100%" acualId="{NodeData.reponse_3}" change="valChanged=true;" />
 				</mx:HBox>
 	
 				<mx:HBox width="100%">
-					<mx:Label text="commune" />
-					<mx:TextInput id="F4" width="100%" data="{NodeData.commune}" change="valChanged=true;" />
-				</mx:HBox>
-	
-				<mx:HBox width="100%">
-					<mx:Label text="pays" />
-					<mx:TextInput id="F5" width="100%" data="{NodeData.pays}" change="valChanged=true;" />
-				</mx:HBox>
-	
-				<mx:HBox width="100%">
-					<mx:Label text="code_postal" />
-					<mx:TextInput id="F6" width="100%" data="{NodeData.code_postal}" change="valChanged=true;" />
-				</mx:HBox>
-	
-				<mx:HBox width="100%">
-					<mx:Label text="contact_proprietaire" />
-					<mx:TextInput id="F7" width="100%" data="{NodeData.contact_proprietaire}" change="valChanged=true;" />
-				</mx:HBox>
-	
-				<mx:HBox width="100%">
-					<mx:Label text="contact_delegataire" />
-					<mx:TextInput id="F8" width="100%" data="{NodeData.contact_delegataire}" change="valChanged=true;" />
-				</mx:HBox>
-	
-				<mx:HBox width="100%">
-					<mx:Label text="reponse_1" />
-					<compo:KeywordsList id="F9" width="100%" selectedIndex="{F9.setKeyword(NodeData.reponse_1)}" change="valChanged=true;" />
-				</mx:HBox>
-	
-				<mx:HBox width="100%">
-					<mx:Label text="reponse_2" />
-					<compo:KeywordsList id="F10" width="100%" selectedIndex="{F10.setKeyword(NodeData.reponse_2)}" change="valChanged=true;" />
-				</mx:HBox>
-	
-				<mx:HBox width="100%">
-					<mx:Label text="reponse_3" />
-					<compo:KeywordsList id="F11" width="100%" selectedIndex="{F11.setKeyword(NodeData.reponse_3)}" change="valChanged=true;" />
-				</mx:HBox>
-	
-				<mx:HBox width="100%">
-					<mx:Label text="reponse_4" />
-					<mx:TextInput id="F12" width="100%" data="{NodeData.reponse_4}" change="valChanged=true;" />
-				</mx:HBox>
-	
-				<mx:HBox width="100%">
-					<mx:Label text="reponse_5" />
-					<mx:TextInput id="F13" width="100%" data="{NodeData.reponse_5}" change="valChanged=true;" />
+					<mx:Label text="L'établissement est-il uniquement un lieu de travail ?" />
+					<compo:KeywordsList id="F12" width="100%" selectedIndex="{F12.setKeyword(NodeData.reponse_4)}" change="valChanged=true;" />
+					<mx:Label text="Si l'établissement est un lieu de travail, compte t-il plus de 20 salariés ?" />
+					<compo:KeywordsList id="F13" width="100%" acualId="{NodeData.reponse_5}" change="valChanged=true;" />
 				</mx:HBox>
 	
 			</mx:VBox>
@@ -171,5 +146,5 @@
 			</mx:VBox>
 		</mx:Canvas>	
 	</mx:ViewStack>
-</mx:Canvas>	
+</mx:Panel>	
 
