@@ -27,23 +27,6 @@ class Models_DbTable_Gevu_contacts extends Zend_Db_Table_Abstract
      */
     protected $_primary = 'id_contact';
 
-
-    /**
-     * retourne une connexion à une base de donnée suivant son nom
-     * @param string $idBase
-     * @return Zend_Db_Adapter_Abstract
-     */
-    public function setDb($idBase){
-    	 
-    	$db = Zend_Db_Table::getDefaultAdapter();
-    	if($idBase){
-    		//change la connexion à la base
-    		$arr = $db->getConfig();
-    		$arr['dbname']=$idBase;
-    		$db = Zend_Db::factory('PDO_MYSQL', $arr);
-    	}
-    	$this->_db = self::_setupAdapter($db);
-    }
     
     /**
      * Vérifie si une entrée Gevu_contacts existe.
@@ -69,13 +52,11 @@ class Models_DbTable_Gevu_contacts extends Zend_Db_Table_Abstract
      *
      * @param array $data
      * @param boolean $existe
-     * @param string $idBase
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true, $idBase=false)
+    public function ajouter($data, $existe=true)
     {
-    	if($idBase)$this->setDb($idBase);
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
@@ -115,10 +96,8 @@ class Models_DbTable_Gevu_contacts extends Zend_Db_Table_Abstract
      * Récupère toutes les entrées Gevu_contacts avec certains critères
      * de tri, intervalles
      */
-    public function getAll($idBase=false, $order=null, $limit=0, $from=0)
+    public function getAll($order=null, $limit=0, $from=0)
     {
-    	if($idBase)$this->setDb($idBase);
-    	 
         $query = $this->select()
                     ->from( array("gevu_contacts" => "gevu_contacts") );
                     

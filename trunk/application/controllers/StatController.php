@@ -79,27 +79,8 @@ class StatController extends Zend_Controller_Action {
 		}catch (Zend_Exception $e) {
 	          echo "Récupère exception: " . get_class($e) . "\n";
 	          echo "Message: " . $e->getMessage() . "\n";
-		}			
-	}
-
-
-	/**
-	 * export csv
-	 */
-	public function csvAction() {
-	
-		try {
-				//
-				$dbScenario = new Models_DbTable_Gevu_scenario();		
-				//récupère les data
-				$this->view->stats = $dbScenario->exporteScenarProduits(12);
-				$this->view->filename = "ScenarioLotsTechniques.csv";
-				//
-						
-		}catch (Zend_Exception $e) {
-			echo "Récupère exception: " . get_class($e) . "\n";
-			echo "Message: " . $e->getMessage() . "\n";
 		}
+			
 	}
 	
 }
