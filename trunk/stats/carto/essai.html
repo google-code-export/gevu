@@ -3,18 +3,19 @@
     <meta charset="utf-8">
     <title>Carte sur l'âge des bâtiments au Havre</title>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
+    <script type="text/javascript" src="../js/d3.v2.js"></script>
     <script>
       // Adding 500 Data Points
-      var n, map, pointarray, heatmap;
+    var n, map, pointarray, heatmap;
+	var Logements = [];
 
 	  d3.json("../donnees_tables/gevulieux.json", function(json) {
-      var Logements = [
-		for (var i=0; i<n ; i++){
-			new google.maps.LatLng(lat, lng)
+		var nb = json.children.length
+		for(var i=0;i<nb;i++){
+			var item = json.children[i];
+			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.value});
 		}
-      ];
-	 }
-
+	 	});
 
       function initialize() {
         var mapOptions = {
@@ -29,19 +30,17 @@
         pointArray = new google.maps.MVCArray(Logements);
 
         heatmap = new google.maps.visualization.HeatmapLayer({
-         // data: pointArray
-		data: 2013 - s.Annee_Construction
+        	data: pointArray
         });
 
         heatmap.setMap(map);
       }
-	  
 	/*  function couleur(){
 		if((2013 - s.Annee_Construction)<5){color="yellow"},
 		if(5<(2013 - s.Annee_Construction)<20){color="orange"},
 		if(20<(2013 - s.Annee_Construction)<60){color="red"};
-	  } */
-
+	  } 
+	*/
       function toggleHeatmap() {
         heatmap.setMap(heatmap.getMap() ? null : map);
       }
@@ -69,13 +68,12 @@
       }
 
       function changeRadius() {
-        heatmap.setOptions({radius: heatmap.get('radius') ? null : 20});
+        heatmap.setOptions({radius: heatmap.get('radius') ? null : 2});
       }
 
       function changeOpacity() {
         heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
       }
-	
     </script>
   </head>
 
