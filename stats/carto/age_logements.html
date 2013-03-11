@@ -4,6 +4,7 @@
     <title>Carte sur l'âge des bâtiments au Havre</title>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
     <script type="text/javascript" src="../js/d3.v2.js"></script>
+    <script type="text/javascript" src="../carto/legende_age.js"></script>
     <script>
       // Adding 500 Data Points
     var n, map, pointarray, heatmap;
@@ -34,12 +35,7 @@
         heatmap.setMap(map);
         
 	  });
-	/*  function couleur(){
-		if((2013 - s.Annee_Construction)<5){color="yellow"},
-		if(5<(2013 - s.Annee_Construction)<20){color="orange"},
-		if(20<(2013 - s.Annee_Construction)<60){color="red"};
-	  } 
-	*/
+
       function toggleHeatmap() {
         heatmap.setMap(heatmap.getMap() ? null : map);
       }
@@ -73,11 +69,13 @@
       function changeOpacity() {
         heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
       }
+	  
+// height : 600 width : 800 à remettre
     </script>
   </head>
 
   <body>
-    <div id="map_canvas" style="height: 600px; width: 800px;"></div>
+    <div id="map_canvas" style="height: 300px; width: 400px;"></div>
     <button onclick="toggleHeatmap()">Toggle Heatmap</button>
     <button onclick="changeGradient()">Change gradient</button>
     <button onclick="changeRadius()">Change radius</button>
