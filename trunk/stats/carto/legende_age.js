@@ -1,22 +1,22 @@
 //légende
 var colors = [];
-colors['UN'] = ["#EEFF00", "#FCEB00"];
-colors['DEUX'] = ["#FCD200", "#FFB300"];
-colors['TROIS'] = ["#A2FF00", "#00FF22"];
+colors['UN'] = ["#A2FF00", "#00FF22"];
+colors['DEUX'] = ["#EEFF00", "#FCEB00"];
+colors['TROIS'] = ["#FCD200", "#FFB300"];
 colors['QUATRE'] = ["#FF5500", "#FF0000"];
 	  
-var wL = 400, hL = 400;
+var wL = 650, hL = 650;
 var visLeg = d3.select("#legende").append("svg")
 	.attr("width", wL)
 	.attr("height", hL)
-	.attr("viewBox", "0 0 800 900")
+	.attr("viewBox", "0 0 1300 950")
 	.attr("preserveAspectRatio", "xMidYMid meet")
 	.append("g")
 		.attr("id","gLeg")
 		.attr("transform", "translate(" + wL + "," + hL + ")");
 		
 function getLegende(){
-			
+	
 	var dataTexte = [{"id":"0","name":"Logements jeunes"},{"id":"1","name":"Logements moins jeunes"},{"id":"2","name":"Logements anciens"},{"id":"3","name":"Logements très anciens"}];
 	var dataCarre = [1,33,66,100];
 	var dataCouleur = [{"id":"1","ref":"UN","name":"Logements jeunes","value":dataCarre},{"id":"2","ref":"DEUX","name":"Logements moins jeunes","value":dataCarre},{"id":"3","ref":"TROIS","name":"Logements anciens","value":dataCarre},{"id":"4","ref":"QUATRE","name":"Logements très anciens","value":dataCarre}];
@@ -43,7 +43,7 @@ function getLegende(){
     	   return d.name; 
 	   });
 
-	var wh = 30, ec=10; 
+	var wh = 40, ec=10; 
 	var carreLeg = visLeg.selectAll(".carrLeg").data(dataCouleur).enter()
 		.append("g")
 			.attr("class","carrLeg")
