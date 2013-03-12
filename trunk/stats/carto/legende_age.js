@@ -5,7 +5,7 @@ colors['DEUX'] = ["#EEFF00", "#FCEB00"];
 colors['TROIS'] = ["#FCD200", "#FFB300"];
 colors['QUATRE'] = ["#FF5500", "#FF0000"];
 	  
-var wL = 650, hL = 650;
+var wL = 600, hL = 600;
 var visLeg = d3.select("#legende").append("svg")
 	.attr("width", wL)
 	.attr("height", hL)
