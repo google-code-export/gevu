@@ -8,7 +8,7 @@
 <big><b>Age des logements à la ville du Havre</b></big>
     <script>
 
-    var n, map, pointarray, heatmap;
+    var n, map, pointarray, heatmap, map1, geocoder, adress;
 	var Logements = [];
 
 	  d3.json("../donnees_tables/gevulieux.json", function(json) {
@@ -24,6 +24,16 @@
           mapTypeId: google.maps.MapTypeId.SATELLITE
         };
 
+//AFFICHAGE DONNEES
+function initialize1() {
+  map1 = new GMap2(document.getElementById("map_canvas"));
+  map1.setCenter(new GLatLng(49.54403690, 0.13247040), 11);
+  map1.addControl(new GLargeMapControl);
+  GEvent.addListener(map1, "click", getAddress);
+  geocoder = new GClientGeocoder();
+}
+
+
         map = new google.maps.Map(document.getElementById('map_canvas'),
             mapOptions);
 
@@ -36,6 +46,32 @@
         heatmap.setMap(map);
         
 	  });
+	  
+//affichage données	 
+function getAddress(overlay, latlng) {
+  if (latlng != null) {
+    address = latlng;
+    geocoder.getLocations(latlng, showAddress);
+  }
+}
+//affichage données
+function showAddress(response) {
+  map1.clearOverlays();
+  if (!response || response.Status.code != 200) {
+    alert("Status Code:" + response.Status.code);
+  } else {
+    place = response.Placemark[0];
+    point = new GLatLng(place.Point.coordinates[1],
+                        place.Point.coordinates[0]);
+    marker = new GMarker(point);
+    map1.addOverlay(marker);
+    marker.openInfoWindowHtml(
+    '<b>orig latlng:</b>' + response.name + '<br/>' + 
+    '<b>Latitude-Longitude:</b>' + place.Point.coordinates[1] + "," + place.Point.coordinates[0] + '<br>' +
+    '<b>Addresse:</b>' + place.address + '<br>' +
+    '<b>Code du Pays:</b> ' + place.AddressDetails.Country.CountryNameCode);
+  }
+}
 
       function toggleHeatmap() {
         heatmap.setMap(heatmap.getMap() ? null : map);
@@ -75,7 +111,7 @@
     </script>
   </head>
 
-  <body>
+  <body onload="initialize1">
     <div id="map_canvas" style="height: 600px; width: 800px;"></div>
     <button onclick="toggleHeatmap()">Toggle Heatmap</button>
     <button onclick="changeGradient()">Change gradient</button>
