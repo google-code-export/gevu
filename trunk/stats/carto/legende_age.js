@@ -5,14 +5,14 @@ colors['DEUX'] = ["#EEFF00", "#FCEB00"];
 colors['TROIS'] = ["#FCD200", "#FFB300"];
 colors['QUATRE'] = ["#F14C40", "#FF0000"];
 	  
-var wL = 600, hL = 600;
+var wL = 1200, hL = 1200;
 		
 function getLegende(){
 
 	var visLeg = d3.select("#legendeCarto").append("svg")
 	.attr("width", wL)
 	.attr("height", hL)
-	.attr("viewBox", "0 0 1300 950")
+	.attr("viewBox", "0 0 2000 1500")
 	.attr("preserveAspectRatio", "xMidYMid meet")
 	.append("g")
 		.attr("id","gLeg")
