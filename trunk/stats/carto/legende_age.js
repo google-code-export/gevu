@@ -3,7 +3,7 @@ var colors = [];
 colors['UN'] = ["#A2FF00", "#00FF22"];
 colors['DEUX'] = ["#EEFF00", "#FCEB00"];
 colors['TROIS'] = ["#FCD200", "#FFB300"];
-colors['QUATRE'] = ["#FF5500", "#FF0000"];
+colors['QUATRE'] = ["#F14C40", "#FF0000"];
 	  
 var wL = 600, hL = 600;
 var visLeg = d3.select("#legende").append("svg")
@@ -42,6 +42,7 @@ function getLegende(){
        .text(function(d) { 
     	   return d.name; 
 	   });
+
 
 	var wh = 40, ec=10; 
 	var carreLeg = visLeg.selectAll(".carrLeg").data(dataCouleur).enter()
