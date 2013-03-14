@@ -6,7 +6,10 @@ colors['TROIS'] = ["#FCD200", "#FFB300"];
 colors['QUATRE'] = ["#F14C40", "#FF0000"];
 	  
 var wL = 600, hL = 600;
-var visLeg = d3.select("#legende").append("svg")
+		
+function getLegende(){
+
+	var visLeg = d3.select("#legendeCarto").append("svg")
 	.attr("width", wL)
 	.attr("height", hL)
 	.attr("viewBox", "0 0 1300 950")
@@ -14,8 +17,6 @@ var visLeg = d3.select("#legende").append("svg")
 	.append("g")
 		.attr("id","gLeg")
 		.attr("transform", "translate(" + wL + "," + hL + ")");
-		
-function getLegende(){
 	
 	var dataTexte = [{"id":"0","name":"Logements jeunes"},{"id":"1","name":"Logements moins jeunes"},{"id":"2","name":"Logements anciens"},{"id":"3","name":"Logements très anciens"}];
 	var dataCarre = [1,33,66,100];
@@ -84,7 +85,5 @@ function getLegende(){
 				  	return d.name; 
 			  	});
 }
-
-getLegende();			  
 	
 	
