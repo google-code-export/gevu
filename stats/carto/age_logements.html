@@ -2,16 +2,19 @@
   <head>
     <meta charset="utf-8">
     <title>Carte sur l'âge des bâtiments au Havre</title>
+	<link rel="stylesheet" href="../css/colorbrewer.css" />
+    <link type="text/css" rel="stylesheet" href="../css/button.css"/>
+    
+    <script type="text/javascript" src="../js/colorbrewer.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
     <script type="text/javascript" src="../js/d3.v2.js"></script>
-    <script type="text/javascript" src="../carto/legende_age.js"></script>
-<big><b>Age des logements à la ville du Havre</b></big>
+    <script type="text/javascript" src="../carto/legende_age.js"></script>    
     <script>
 
-    var n, map, pointarray, heatmap, map1, geocoder, adress;
+    var n, map, pointarray, heatmap, geocoder, adress;
 	var Logements = [];
 
-	  d3.json("../donnees_tables/gevulieux.json", function(json) {
+	d3.json("../donnees_tables/gevulieux.json", function(json) {
 		var nb = json.children.length
 		for(var i=0;i<nb;i++){
 			var item = json.children[i];
@@ -24,19 +27,17 @@
           mapTypeId: google.maps.MapTypeId.SATELLITE
         };
 
-//AFFICHAGE DONNEES
-function initialize1() {
-  map1 = new GMap2(document.getElementById("map_canvas"));
-  map1.setCenter(new GLatLng(49.54403690, 0.13247040), 11);
-  map1.addControl(new GLargeMapControl);
-  GEvent.addListener(map1, "click", getAddress);
-  geocoder = new GClientGeocoder();
-}
-
-
         map = new google.maps.Map(document.getElementById('map_canvas'),
             mapOptions);
 
+        /*
+        google.maps.event.addListener(map, 'click', function() {
+        	getAddress();
+          });
+
+        geocoder = new GClientGeocoder();
+		*/
+		
         pointArray = new google.maps.MVCArray(Logements);
 
         heatmap = new google.maps.visualization.HeatmapLayer({
@@ -44,34 +45,36 @@ function initialize1() {
         });
 
         heatmap.setMap(map);
+     	
+        getLegende();
         
 	  });
 	  
-//affichage données	 
-function getAddress(overlay, latlng) {
-  if (latlng != null) {
-    address = latlng;
-    geocoder.getLocations(latlng, showAddress);
-  }
-}
-//affichage données
-function showAddress(response) {
-  map1.clearOverlays();
-  if (!response || response.Status.code != 200) {
-    alert("Status Code:" + response.Status.code);
-  } else {
-    place = response.Placemark[0];
-    point = new GLatLng(place.Point.coordinates[1],
-                        place.Point.coordinates[0]);
-    marker = new GMarker(point);
-    map1.addOverlay(marker);
-    marker.openInfoWindowHtml(
-    '<b>orig latlng:</b>' + response.name + '<br/>' + 
-    '<b>Latitude-Longitude:</b>' + place.Point.coordinates[1] + "," + place.Point.coordinates[0] + '<br>' +
-    '<b>Addresse:</b>' + place.address + '<br>' +
-    '<b>Code du Pays:</b> ' + place.AddressDetails.Country.CountryNameCode);
-  }
-}
+	//affichage données	 
+	function getAddress(overlay, latlng) {
+	  if (latlng != null) {
+	    address = latlng;
+	    geocoder.getLocations(latlng, showAddress);
+	  }
+	}
+	//affichage données
+	function showAddress(response) {
+	  map.clearOverlays();
+	  if (!response || response.Status.code != 200) {
+	    alert("Status Code:" + response.Status.code);
+	  } else {
+	    place = response.Placemark[0];
+	    point = new GLatLng(place.Point.coordinates[1],
+	                        place.Point.coordinates[0]);
+	    marker = new GMarker(point);
+	    map.addOverlay(marker);
+	    marker.openInfoWindowHtml(
+	    '<b>orig latlng:</b>' + response.name + '<br/>' + 
+	    '<b>Latitude-Longitude:</b>' + place.Point.coordinates[1] + "," + place.Point.coordinates[0] + '<br>' +
+	    '<b>Addresse:</b>' + place.address + '<br>' +
+	    '<b>Code du Pays:</b> ' + place.AddressDetails.Country.CountryNameCode);
+	  }
+	}
 
       function toggleHeatmap() {
         heatmap.setMap(heatmap.getMap() ? null : map);
@@ -105,39 +108,18 @@ function showAddress(response) {
 
       function changeOpacity() {
         heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
-      }
-	  
-// height : 600 width : 800 à remettre
+      }	  
     </script>
   </head>
 
-  <body onload="initialize1">
+  <body>
+	<big><b>Age des logements à la ville du Havre</b></big>
     <div id="map_canvas" style="height: 600px; width: 800px;"></div>
     <button onclick="toggleHeatmap()">Toggle Heatmap</button>
     <button onclick="changeGradient()">Change gradient</button>
     <button onclick="changeRadius()">Change radius</button>
     <button onclick="changeOpacity()">Change opacity</button>
-  </body>
-</html>
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <title>GEVU : Echelle logements du Havre</title>
-	<link rel="stylesheet" href="../css/colorbrewer.css" />
-    <script type="text/javascript" src="../js/colorbrewer.js"></script>
-    <link type="text/css" rel="stylesheet" href="../css/button.css"/>
-  </head>
-  <body>
-    <table>
-    	<tr>
-    		<td><div id="legende" ></div></td>
-    	</tr>
-    </table>
-   <script type="text/javascript" src="../carto/legende_age.js"></script>
-    <script type="text/javascript" >
-    			getLegende();
-	    </script>
+    <div style="height: 600px; width: 800px;" id="legendeCarto">TOTO</div>
   </body>
 </html>
 
