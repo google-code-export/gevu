@@ -1,32 +1,42 @@
-<?php define("DEBUG_MODE", true); ?>
 <?php
-	//charge le fichier de paramétrage
-	include_once '../param/Constantes.php';
-	
+
+	define("DEBUG_MODE", true);
+
 	/*
+TRUNCATE `gevu_antennes`;
+TRUNCATE `gevu_batiments`;
 TRUNCATE `gevu_diagnostics`;
-TRUNCATE `gevu_diagnosticsxvoirie`;
 TRUNCATE `gevu_docs`;
 TRUNCATE `gevu_docsxlieux`;
+TRUNCATE `gevu_docsxproblemes`;
+TRUNCATE `gevu_entreprises`;
+TRUNCATE `gevu_espaces`;
 TRUNCATE `gevu_espacesxexterieurs`;
 TRUNCATE `gevu_espacesxinterieurs`;
 TRUNCATE `gevu_etablissements`;
 TRUNCATE `gevu_geos`;
+TRUNCATE `gevu_groupes`;
+TRUNCATE `gevu_instants`;
+TRUNCATE `gevu_interventions`;
 TRUNCATE `gevu_lieux`;
+TRUNCATE `gevu_lieuxinterventions`;
+TRUNCATE `gevu_locaux`;
+TRUNCATE `gevu_logements`;
 TRUNCATE `gevu_niveaux`;
+TRUNCATE `gevu_objetsxexterieurs`;
 TRUNCATE `gevu_objetsxinterieurs`;
 TRUNCATE `gevu_objetsxvoiries`;
 TRUNCATE `gevu_observations`;
 TRUNCATE `gevu_parcelles`;
+TRUNCATE `gevu_partiescommunes`;
 TRUNCATE `gevu_problemes`;
+TRUNCATE `gevu_stats`;
 	 */
 	
 	
     if (DEBUG_MODE){
-        //$dbN = "gevu_solus";    
-		//$dbO = "gevu_alceane";
-        $dbN = "gevu_new_trouville_voirie3";    
-		$dbO = "gevu_trouville_voirie3";
+        $dbN = "gevu_trouville";    
+		$dbO = "gevu_spip";
 		$showdiff = false;
     }
     else{
@@ -35,7 +45,6 @@ TRUNCATE `gevu_problemes`;
         $showdiff = isset($_POST['mon_champ'][0]) ? true : false;
         if ($_POST['mon_champ'][0]<>"showdiff") $showdiff=false; 
     }
-    	$objSite = $SITES["alceane"];
     ?>
  <html>
     <head>
@@ -116,7 +125,7 @@ if($dbN && $dbO){
 	    }else{
 	    	echo "<p>fusion en cours ...</p>\n";
 	    	ChercheDifferences($dbN, $dbO);
-	    	CopieNoueuds($dbN, $dbO, $objSite);
+	    	CopieNoueuds($dbN, $dbO);
 	    	echo "<p>fusion des bases $dbO et $dbN terminé.</p>\n";
 	    	verifBase();
 	    }	   
@@ -222,7 +231,7 @@ function ChercheDifferencesCore($dbN, $dbO, $idRubParent, $idRubEnfant, $niv=1){
 }
 
 
-function CopieNoueuds($dbN, $dbO, $objSite)
+function CopieNoueuds($dbN, $dbO)
 {
     global $ListEntree;
     
@@ -288,7 +297,7 @@ function CopieNoueuds($dbN, $dbO, $objSite)
         if (!$res) echo 'Requête invalide : ' . mysql_error().'<br />'.$sql.'<br />';
         
         // et enfin, copier les diagnostiques et états
-        CopieEtats($dbN, $dbO, $idLieu, $idInstant, $objSite);
+        CopieEtats($dbN, $dbO, $idLieu, $idInstant);
         
         echo "</li>\n";
     }
@@ -321,7 +330,7 @@ function verifierEtats($dbN, $dbO, $idLieux, $idRub){
 }
 
 
-function CopieEtats($dbN, $dbO, $idLieu, $idInstant, $objSite){
+function CopieEtats($dbN, $dbO, $idLieu, $idInstant){
     //DIAGNOSTICS 
     //on ne conserve que les réponses 'non' et 'sous réserve'
     // pour les questions qui ne sont pas interméfiaire
@@ -471,7 +480,7 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant, $objSite){
     
     //NIVEAU
     $sql = "INSERT INTO $dbN.gevu_niveaux
-    (id_lieu, id_instant, nom, ref, id_reponse_1, id_reponse_2, id_reponse_3, id_donnee, maj)
+    (id_lieu, id_instant, nom, ref, reponse_1, reponse_2, reponse_3, id_donnee, maj)
     SELECT l.id_lieu
                     , $idInstant
                     , fdc1.valeur
@@ -505,7 +514,7 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant, $objSite){
     //(53, 'ligne_10', 12, 'Coordonn�es du gardien'
     //les horaires devront �tre retrait�
     $sql = "INSERT INTO $dbN.gevu_batiments
-    (id_lieu, id_instant, nom, ref, adresse, commune, pays, code_postal
+    (id_lieu, id_instant, nom, ref
             , contact_proprietaire, contact_delegataire, contact_gardien
             , horaires_gardien, horaires_batiment
             , superficie_parcelle, superficie_batiment
@@ -530,10 +539,6 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant, $objSite){
             , $idInstant
             , fdc1.valeur
             , fdc2.valeur
-            , fdc3.valeur
-            , fdc4.valeur
-            , fdc5.valeur
-            , fdc6.valeur
             , fdc7.valeur
             , fdc8.valeur
             , fdc9.valeur
@@ -776,21 +781,15 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant, $objSite){
     
     //PARCELLES
     $sql = "INSERT INTO $dbN.gevu_parcelles
-    (id_lieu, id_instant, nom, ref, adresse, commune, pays, code_postal
+    (id_lieu, id_instant, nom, ref
             , contact_proprietaire
-            , reponse_1
-            , reponse_2
+            , cloture
     , id_donnee, maj)
     SELECT l.id_lieu
             , $idInstant
             , fdc1.valeur
             , fdc2.valeur
-            , fdc3.valeur
-            , fdc4.valeur
-            , fdc5.valeur
-            , ''
             , fdc6.valeur
-            , fdc7.valeur
             , fdc17.valeur
             , fd.id_donnee, fd.date 
     FROM $dbO.spip_forms_donnees fd
@@ -1027,7 +1026,7 @@ function CopieEtats($dbN, $dbO, $idLieu, $idInstant, $objSite){
     (tronc, id_instant, url, path_source, titre, content_type, maj)
     SELECT d.id_document
             , $idInstant
-            , CONCAT('".$objSite["pathSpip"]."', fichier)
+            , fichier
             , fichier
             , d.titre
             , mime_type
