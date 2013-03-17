@@ -56,20 +56,22 @@ class Models_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($data, $existe=true, $creaLiee=true)
     {
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
     	 	$id = $this->insert($data);
     	}
-    	//on crée un cout pour le produit
-		$s = new Models_DbTable_Gevu_couts();
-		$data = array("unite"=>0);
-		$idC = $s->ajouter($data);
-		$s = new Models_DbTable_Gevu_produitsxcouts();
-		$data = array("id_produit"=>$id,"id_cout"=>$idC);
-		$s->ajouter($data,false);
+    	if($creaLiee){
+    		//on crée un cout pour le produit
+    		$s = new Models_DbTable_Gevu_couts();
+    		$data = array("unite"=>0);
+    		$idC = $s->ajouter($data);
+    		$s = new Models_DbTable_Gevu_produitsxcouts();
+    		$data = array("id_produit"=>$id,"id_cout"=>$idC);
+    		$s->ajouter($data,false);
+    	}
 		
     	return $id;
     } 
@@ -126,24 +128,6 @@ class Models_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
 
-    /**
-     * Récupère les spécifications des colonnes Gevu_produits 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_produit","champ"=>"id_produit","visible"=>true),
-    	array("titre"=>"id_entreprise","champ"=>"id_entreprise","visible"=>true),
-    	array("titre"=>"description","champ"=>"description","visible"=>true),
-    	array("titre"=>"technique","champ"=>"technique","visible"=>true),
-    	array("titre"=>"preconisation","champ"=>"preconisation","visible"=>true),
-    	array("titre"=>"marque","champ"=>"marque","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
-    
     /*
      * Recherche une entrée Gevu_produits avec la valeur spécifiée
      * et retourne cette entrée.
@@ -233,6 +217,29 @@ class Models_DbTable_Gevu_produits extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
-    
+
+    /**
+     * Recherche les intervention et leur caractéristiques pour un produit
+    * et retourne ces entrées.
+    *
+    * @param int $idProduit
+    * 
+    */
+    public function getProduitInterv($idProduit)
+    {
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sÃ©lectionner des colonnes dans une autre table
+            ->from(array('p' => 'gevu_produits'),array("id_produit", "ref", "description"))
+            ->joinInner(array('i' => 'gevu_interventions'),
+                'i.id_produit = p.id_produit', array("id_interv", "interv", "unite", "frequence", "cout"))
+            ->joinInner(array('mcI' => 'gevu_motsclefs'),
+                'mcI.id_motclef = i.interv', array("lblInterv"=>"titre"))
+            ->joinInner(array('mcU' => 'gevu_motsclefs'),
+                'mcU.id_motclef = i.unite', array("lblUnite"=>"titre"))
+            ->where('p.id_produit ='.$idProduit);
+            
+        return  $this->fetchAll($query)->toArray();
+    	    
+    }    
     
 }

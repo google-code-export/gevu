@@ -36,6 +36,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         )
     );	
     
+    
     /**
      * Vérifie si une entrée Gevu_diagnostics existe.
      *
@@ -559,7 +560,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
             ->joinInner(array('l' => 'gevu_lieux'),
                 'le.lft BETWEEN l.lft AND l.rgt',array('lib', 'id_lieu'))
             ->joinInner(array('crit' => 'gevu_criteres'),
-            	'diag.id_critere = crit.id_critere',array('ref','handicateur_moteur','handicateur_auditif','handicateur_visuel','handicateur_cognitif','affirmation'))
+            	'diag.id_critere = crit.id_critere',array('ref','handicateur_moteur','handicateur_auditif','handicateur_visuel','handicateur_cognitif','affirmation','criteres'))
         	->joinInner(array('tc' => 'gevu_typesxcontroles'),
             	'tc.id_type_controle = crit.id_type_controle',array('controle'=>'lib','icone'))
         	->joinInner(array('inst' => 'gevu_instants'),
@@ -573,12 +574,99 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         //les derniers diagnostics
         if($last)$query->where("diag.last = 1");        
         //un niveau de handicap
-        if($niv) $nivW = " = ".$niv; else $nivW = " > 0 ";  
+        if($niv!=-1){
+        	if($niv==0){
+        		//on prend les réponse du niveau 1 2 3
+        		$nivW = " IN (1,2,3)";
+        		//et la réponse doit être oui
+        		$nivW .= " AND diag.id_reponse = 1";
+        	}else{
+        		//on ne prend que les réponse du niveau
+        		$nivW = " = ".$niv;
+        		//et la réponse doit être non
+        		$nivW .= " AND diag.id_reponse = 2";
+        	}
+        }else{
+        	$nivW = " > 0 ";  
+        }
         //un type de handicap
         if($handi)$query->where("crit.handicateur_".$handi.$nivW);
 
         $result = $this->fetchAll($query);
         return $result->toArray(); 
+    }
+    
+
+    /*
+     * Recherche la liste des diagnostics et des solutions pour un lieu
+    *
+    * @param int $idLieu
+    * @param string $dbDiag
+    * @param string $dbRef
+    *
+    * @return array
+    */
+    public function getDiagSolus($idLieu, $dbDiag, $dbRef)
+    {
+    	//
+    	$query = "SELECT 
+			diag.id_diag, diag.id_critere, diag.id_reponse
+			 , mc.titre AS reponse
+			, le.id_lieu AS diagIdLieu, le.lib AS diagLieu
+			, l.id_lieu, l.lib
+ 			, typc.id_type_critere
+    		, crit.ref, crit.affirmation
+			 , tc.lib AS controle
+			 , s.id_solution, s.lib AS solution, s.ref AS refSolu
+ 			, cS.id_cout AS Sid_cout, cS.unite AS Sunite, cS.metre_lineaire AS Smetre_lineaire, cS.metre_carre AS Smetre_carre, cS.achat Sachat, cS.pose Spose
+    		, p.id_produit, p.ref  AS refProd, p.description, p.marque, p.modele
+			 , cP.id_cout, cP.unite, cP.metre_lineaire, cP.metre_carre, cP.achat, cP.pose
+			FROM ".$dbDiag.".gevu_diagnostics AS diag
+			 INNER JOIN ".$dbDiag.".gevu_lieux AS le ON le.id_lieu = diag.id_lieu
+			 INNER JOIN ".$dbDiag.".gevu_lieux AS l ON le.lft BETWEEN l.lft AND l.rgt
+			 INNER JOIN ".$dbRef.".gevu_criteres AS crit ON diag.id_critere = crit.id_critere
+			 INNER JOIN ".$dbRef.".gevu_typesxcontroles AS tc ON tc.id_type_controle = crit.id_type_controle
+ 			INNER JOIN ".$dbRef.".gevu_criteresxtypesxcriteres AS typc ON crit.id_critere = typc.id_critere  
+    		INNER JOIN ".$dbRef.".gevu_motsclefs AS mc ON mc.id_motclef = diag.id_reponse AND diag.id_reponse IN (124,2)
+			 LEFT JOIN ".$dbRef.".gevu_solutionsxcriteres as sc ON sc.id_critere = crit.id_critere
+			 LEFT JOIN ".$dbRef.".gevu_solutions as s ON s.id_solution = sc.id_solution
+			 LEFT JOIN ".$dbRef.".gevu_solutionsxcouts as sco ON sco.id_solution = s.id_solution
+			 LEFT JOIN ".$dbRef.".gevu_couts as cS ON cS.id_cout = sco.id_cout
+			 LEFT JOIN ".$dbRef.".gevu_solutionsxproduits as sp ON sp.id_solution = sc.id_solution
+			 LEFT JOIN ".$dbRef.".gevu_produits as p ON p.id_produit = sp.id_produit
+			 LEFT JOIN ".$dbRef.".gevu_produitsxcouts as pc ON pc.id_produit = p.id_produit
+			 LEFT JOIN ".$dbRef.".gevu_couts as cP ON cP.id_cout = pc.id_cout
+			WHERE (l.id_lieu = ".$idLieu.") AND (diag.last = 1)  AND crit.affirmation != ''
+			ORDER BY diag.id_lieu ASC";
+    	/*
+    	$query = "SELECT 
+			diag.id_diag, diag.id_critere, diag.id_reponse
+			 , mc.titre AS reponse
+			, le.id_lieu AS diagIdLieu, le.lib AS diagLieu
+			, l.id_lieu, l.lib
+ 			, typc.id_type_critere
+    		, crit.ref, crit.affirmation
+			 , tc.lib AS controle
+			 , sp.id_solution, sp.id_produit
+			 , pc.id_cout
+			FROM ".$dbDiag.".gevu_diagnostics AS diag
+			 INNER JOIN ".$dbDiag.".gevu_lieux AS le ON le.id_lieu = diag.id_lieu
+			 INNER JOIN ".$dbDiag.".gevu_lieux AS l ON le.lft BETWEEN l.lft AND l.rgt
+			 INNER JOIN ".$dbRef.".gevu_criteres AS crit ON diag.id_critere = crit.id_critere
+			 INNER JOIN ".$dbRef.".gevu_typesxcontroles AS tc ON tc.id_type_controle = crit.id_type_controle
+ 			INNER JOIN ".$dbRef.".gevu_criteresxtypesxcriteres AS typc ON crit.id_critere = typc.id_critere  
+			INNER JOIN ".$dbRef.".gevu_motsclefs AS mc ON mc.id_motclef = diag.id_reponse AND diag.id_reponse IN (124,2)
+			 LEFT JOIN ".$dbRef.".gevu_solutionsxcriteres as sc ON sc.id_critere = crit.id_critere
+			 LEFT JOIN ".$dbRef.".gevu_solutionsxproduits as sp ON sp.id_solution = sc.id_solution
+			 LEFT JOIN ".$dbRef.".gevu_produitsxcouts as pc ON pc.id_produit = sp.id_produit
+			WHERE (l.id_lieu = ".$idLieu.") AND (diag.last = 1)  AND crit.affirmation != ''
+			ORDER BY diag.id_lieu ASC";
+		*/
+    	$adpt = $this->getAdapter();
+    	$result = $adpt->query($query);
+
+    	return $result->fetchAll();
+
     }
     
     

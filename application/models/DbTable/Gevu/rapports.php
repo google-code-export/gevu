@@ -116,22 +116,6 @@ class Models_DbTable_Gevu_rapports extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
 
-    /**
-     * Récupère les spécifications des colonnes Gevu_rapports 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_rapport","champ"=>"id_rapport","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_exi","champ"=>"id_exi","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-    	array("titre"=>"selection","champ"=>"selection","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_rapports avec la valeur spécifiée

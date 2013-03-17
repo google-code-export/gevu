@@ -108,24 +108,30 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     		}else{
     			//récupère les informations du parent
     			$arr = $this->findById_lieu($data["lieu_parent"]);
-    			//met à jour les niveaux pour les lieux
-    			$sql = 'UPDATE gevu_lieux SET rgt = rgt + 2 WHERE rgt >'.$arr[0]['lft'];
-    			$stmt = $this->_db->query($sql);
-    			$sql = 'UPDATE gevu_lieux SET lft = lft + 2 WHERE lft >'.$arr[0]['lft'];
-    			$stmt = $this->_db->query($sql);
-    			//
-    			$data['lft'] = $arr[0]['lft']+1;
-    			$data['rgt'] = $arr[0]['lft']+2;
+    			//vérifie si la base n'est pas vide
+    			if(count($arr)==0){
+    				$data['lft'] = 1;
+    				$data['rgt'] = 2;
+    			}else{
+	    			//met à jour les niveaux pour les lieux
+	    			$sql = 'UPDATE gevu_lieux SET rgt = rgt + 2 WHERE rgt >'.$arr[0]['lft'];
+	    			$stmt = $this->_db->query($sql);
+	    			$sql = 'UPDATE gevu_lieux SET lft = lft + 2 WHERE lft >'.$arr[0]['lft'];
+	    			$stmt = $this->_db->query($sql);
+	    			//
+	    			$data['lft'] = $arr[0]['lft']+1;
+	    			$data['rgt'] = $arr[0]['lft']+2;
+    			}
     		}    		
     		$data['niv'] = $arrP[0]['niv']+1;
     	 	$data["id_lieu"] = $this->insert($data);
-    	}else{
-	    	$data["id_lieu"] = $id;   		
+    	 	$id = $data["id_lieu"];
     	}
-    	if($rData)
-	    	return $data;
-    	else
-	    	return $data["id_lieu"];
+    	if($rData){
+    		$data = $this->findById_lieu($id);
+    		return $data[0];
+    	}else
+	    	return $id;
     } 
            
     /**
@@ -190,6 +196,11 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     /**
      * Récupère toutes les entrées Gevu_lieux avec certains critères
      * de tri, intervalles
+     * @param string $order
+     * @param int $limit
+     * @param int $from
+	 *
+     * @return array
      */
     public function getAll($order=null, $limit=0, $from=0)
     {
@@ -246,7 +257,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return($rows[0]->amount);       
     }    
     
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -260,7 +271,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -274,7 +285,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -289,7 +300,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
         
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -309,7 +320,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -323,7 +334,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -337,7 +348,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -351,7 +362,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -365,7 +376,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -380,7 +391,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
 
-     /*
+     /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne la liste de tous ses parents
      *
@@ -401,7 +412,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
 
-     /*
+     /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne la liste de tous ses enfants
      *
@@ -422,7 +433,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
 
-    /*
+    /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne la liste de tous ses enfants au format csv
      *
@@ -443,7 +454,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
         
-     /*
+     /**
      * Recherche une entrée Gevu_lieux correspondant à l'enfant d'un lieu pour un type de controle
      * création de ce lieu s'il n'exite pas  
      * et retourne cette entrée.
@@ -481,7 +492,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         
     }
 
-     /*
+     /**
      * Recherche une entrée Gevu_lieux correspondant au parent d'un lieu pour un type de controle
      * et retourne cette entrée.
      *
@@ -522,10 +533,11 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      */
     public function getTypeRelatedData($idLieu)
     {
-    	$sql = 'SELECT l.lib, l.id_lieu, l.lieu_parent, COUNT(a.id_antenne) antenne, COUNT(b.id_batiment) batiment, COUNT(c.id_geo) geo, COUNT(d.id_diag) diag, COUNT(e.id_doc) doc
+    	$sql = 'SELECT l.id_lieu, COUNT(a.id_antenne) antenne, COUNT(b.id_batiment) batiment, COUNT(c.id_geo) geo, COUNT(d.id_diag) diag, COUNT(e.id_doc) doc
     			, COUNT(f.id_espace) espace, COUNT(g.id_espace_ext) espace_ext, COUNT(h.id_espace_int) espace_int, COUNT(i.id_etablissement) etablissement, COUNT(j.id_niveau) niveau
     			, COUNT(k.id_objet_ext) objet_ext, COUNT(m.id_objet_int) objet_int, COUNT(n.id_objet_voirie) objet_voirie, COUNT(p.id_parcelle) parcelle
     			, COUNT(q.id_probleme) probleme, COUNT(s.id_groupe) groupe, COUNT(t.id_logement) logement, COUNT(u.id_local) local, COUNT(v.id_part_commu) part_commu
+    			, COUNT(li.id_lieuinterv) lieux_interventions, COUNT(cd.id_chainedepla) chaines_deplacements
 					  FROM gevu_lieux AS l
 						  LEFT JOIN gevu_antennes AS a ON a.id_lieu = l.id_lieu
 						  LEFT JOIN gevu_batiments AS b ON b.id_lieu = l.id_lieu
@@ -546,7 +558,9 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 						  LEFT JOIN gevu_logements AS t ON t.id_lieu = l.id_lieu
 						  LEFT JOIN gevu_locaux AS u ON u.id_lieu = l.id_lieu
 						  LEFT JOIN gevu_partiescommunes AS v ON v.id_lieu = l.id_lieu
-					  WHERE l.id_lieu = '.$idLieu.' 
+						  LEFT JOIN gevu_lieuxinterventions AS li ON li.id_lieu = l.id_lieu
+						  LEFT JOIN gevu_chainesdeplacements AS cd ON cd.id_lieu = l.id_lieu
+    			WHERE l.id_lieu = '.$idLieu.' 
 					  GROUP BY l.id_lieu
 					  ORDER BY l.id_lieu' ;
     			$stmt = $this->_db->query($sql);
