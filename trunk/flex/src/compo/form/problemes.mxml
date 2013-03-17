@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
 		   xmlns:compo="compo.*"
-		   title="Problèmes"
 		   width="100%" height="100%"
 		   creationComplete="init()"
 		   >
@@ -39,7 +38,7 @@
 				vn["mesure"] = mesure.text;
 				vn["observations"] = observations.text;
 				vn["id_diag"] = idDiag;				
-				ro.ajouter(vn,this.parentApplication.idExi);
+				ro.ajouter(vn,this.parentApplication.idExi,this.parentApplication.idBase);
 			}
 			
 			private function deleteItem():void {
@@ -56,7 +55,7 @@
 			{
 				if (event.detail == Alert.YES) 
 				{
-					ro.remove(idSelect);
+					ro.remove(idSelect,this.parentApplication.idBase);
 				}
 			}
 			
@@ -70,7 +69,7 @@
 				var item:Object=event.currentTarget.selectedItem;
 				if(item){
 					idSelect = item.id_probleme;
-					ro.findDocs(idSelect);
+					ro.findDocs(idSelect,this.parentApplication.idBase);
 				}
 			}			
 			
@@ -82,7 +81,7 @@
 			public function init():void
 			{
 				if(idDiag && idDiag!=-1){
-					ro.findByIdDiag(idDiag);
+					ro.findByIdDiag(idDiag, this.parentApplication.idBase);
 					btnAjout.enabled = true;
 					btnDelete.enabled = true;
 				}else{
@@ -106,7 +105,7 @@
 	<mx:RemoteObject id="ro"
 					 destination="zend"
 					 source="Models_DbTable_Gevu_problemes"
-					 fault="faultHandlerService(event, this.label);"
+					 fault="faultHandlerService(event);"
 					 result="ro_resultHandler(event)"
 					 showBusyCursor="true" 
 					 >
@@ -156,4 +155,4 @@
 			</mx:Form>		
 		</mx:VBox>
 	</mx:ViewStack>											
-</mx:Panel>
+</mx:Canvas>
