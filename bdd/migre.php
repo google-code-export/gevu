@@ -1,5 +1,5 @@
 <?php
-//connexion à l'ancienne base
+//connexion ï¿½ l'ancienne base
 $ldb = mysql_connect("localhost", "root", "")
     or die("Impossible de se connecter : " . mysql_error());    
 mysql_select_db('gevu_solus');
@@ -66,10 +66,10 @@ function ModifBranche($r1, $oR, $idInstant){
 
 	echo "ModifBranche: ".str_repeat("- ", $r1['niv'])." : ".$r1['lib']."<br/>";								
 
-	//on ajoute à la référence
-	//les éléments lié au lieu ayant le même nom que la référence
+	//on ajoute ï¿½ la rï¿½fï¿½rence
+	//les ï¿½lï¿½ments liï¿½ au lieu ayant le mï¿½me nom que la rï¿½fï¿½rence
 	if($r1['nbLieux']>0){
-		//récupèration des éléments liés
+		//rï¿½cupï¿½ration des ï¿½lï¿½ments liï¿½s
 		$sql="SELECT CONCAT(e.ids, eR.ids) ids
 		FROM (SELECT GROUP_CONCAT(e.id_lieu) ids
 			FROM gevu_lieux e
@@ -77,7 +77,7 @@ function ModifBranche($r1, $oR, $idInstant){
 		, (SELECT GROUP_CONCAT(e.id_lieu) ids
 			FROM gevu_lieux e
 			WHERE e.id_instant = ".$idInstant." AND e.lft >  ".$oR['lft']." AND e.rgt < ".$oR['rgt'].") eR";
-		//on récupère les enfants de reférence et ceux à comparer pour le niveau suivant
+		//on rï¿½cupï¿½re les enfants de refï¿½rence et ceux ï¿½ comparer pour le niveau suivant
 		$rs2 = mysql_query($sql);
 		$r2=mysql_fetch_array($rs2);
 		if($r2["ids"]=="")$ids=-1;else $ids = $r2["ids"];
@@ -85,8 +85,8 @@ function ModifBranche($r1, $oR, $idInstant){
 		CompareBranche($ids.",-2", $idInstant, $oR['id_lieu']);
 		
 	}
-	//si seulement l'identifiant de lieu est différent
-	//on met à jour les éléments liés 
+	//si seulement l'identifiant de lieu est diffï¿½rent
+	//on met ï¿½ jour les ï¿½lï¿½ments liï¿½s 
 	//et on supprime le lieu
 	if($r1['id_lieu']!= $oR['id_lieu']){
 	    if($r1['nbBat']>0){
@@ -192,29 +192,29 @@ function ChangeBranche($id_lieuSrc, $lftDst, $idInstantDst, $niv=0){
 	/*
 	$sql="UPDATE gevu_lieux SET rgt = rgt + 2 WHERE rgt > ".$lftDst." AND id_instant=".$idInstantDst;
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	//echo "ChangeBranche rgt = rgt + 2: ".$id_lieuSrc." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="UPDATE gevu_lieux SET lft = lft + 2 WHERE lft > ".$lftDst." AND id_instant=".$idInstantDst;
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	//echo "ChangeBranche lft = lft + 2 : ".$id_lieuSrc." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="UPDATE gevu_lieux SET lft = ".($lftDst+1).", rgt = ".($lftDst+2).", id_instant=".$idInstantDst." WHERE id_lieu = ".$id_lieuSrc."";
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
    	//echo "ChangeBranche: ".str_repeat("- ", $niv)." < ".$id_lieuSrc." < : ".mysql_affected_rows()."<br/>";	
 	*/
 	
-	//Met à jour les enfants du lieu à ajouter
+	//Met ï¿½ jour les enfants du lieu ï¿½ ajouter
 	$sql="SELECT e.id_lieu, e.niv
 		FROM gevu_lieux e
 		WHERE e.lieu_parent = $id_lieuSrc";
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
    	//echo "ChangeBranche: ".str_repeat("- ", $niv)." > ".$id_lieuSrc." > : ".mysql_affected_rows()."<br/>";	
 	while($r=mysql_fetch_array($result)){
-		//on ajoute la branche à la référence
+		//on ajoute la branche ï¿½ la rï¿½fï¿½rence
 		ChangeBranche($r['id_lieu'], $lftDst+1, $idInstantDst, $r['niv']);							
 	}
 
@@ -225,93 +225,93 @@ function DeleteLieu($id_lieu, $lft=-1, $rgt=-1, $idInstant=-1){
 
 	$sql="DELETE FROM gevu_batiments WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_diagnostics WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_diagnosticsxvoirie WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_docsxlieux WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_espaces WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_espacesxexterieurs WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_espacesxinterieurs WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_etablissements WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_georss WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_geos WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_niveaux WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_objetsxexterieurs WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_objetsxinterieurs WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_objetsxvoiries WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_observations WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_parcelles WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	$sql="DELETE FROM gevu_problemes WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
 	if($idInstant==-1){
 		$sql="SELECT lft, rgt, id_instant FROM gevu_lieux WHERE id_lieu = ".$id_lieu;			          			
 		$result = mysql_query($sql);
-		if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+		if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 		$r=mysql_fetch_array($result);
 		$lft = $r['lft'];	
 		$rgt = $r['rgt'];
@@ -329,58 +329,58 @@ function DeleteLieu($id_lieu, $lft=-1, $rgt=-1, $idInstant=-1){
 
 	$sql="DELETE FROM gevu_lieux WHERE id_lieu = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	echo "DeleteLieu: ".$id_lieu." ".mysql_affected_rows()."<br/>";	
 	
-	//mise à jour de la hiérarchie
+	//mise ï¿½ jour de la hiï¿½rarchie
 	$sql="UPDATE gevu_lieux SET rgt = rgt - 1, lft = lft - 1 WHERE id_instant = $idInstant AND lft BETWEEN $lft AND ".$rgt;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	
 	$sql="UPDATE gevu_lieux SET rgt = rgt - 2 WHERE id_instant = $idInstant AND rgt > ".$rgt;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	
 	$sql="UPDATE gevu_lieux SET lft = lft - 2 WHERE id_instant = $idInstant AND lft > ".$rgt;			          			
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	
 	//supprime tous les enfants
 	$sql="SELECT id_lieu, lft, rgt, id_instant FROM gevu_lieux WHERE lieu_parent = ".$id_lieu;			          			
 	$result = mysql_query($sql);
-	if (!$result)echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result)echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	while($r=mysql_fetch_array($result)){
 		DeleteLieu($r['id_lieu'], $r['lft'], $r['rgt'], $idInstant);
 	}
 	
 }
 
-function migreBase($dbN, $dbO){
+function migreBase(){
         
-        //création d'un instant
+        //crï¿½ation d'un instant
         $sql = "INSERT INTO $dbN.gevu_instants (`maintenant`, `ici`, `id_exi`, `nom`) VALUES
         (now(), '-1', 1, 'Migre_GEVU $dbO')";
         $result = mysql_query($sql);
-        if (!$result) die('Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>');
+        if (!$result) die('Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>');
         $idInstant = mysql_insert_id();
         echo "$dbO Instant : ".mysql_affected_rows()."<br/>";   
 
-        //mise à jour de l'instant de l'univers
-        //récupère les lieux
+        //mise ï¿½ jour de l'instant de l'univers
+        //rï¿½cupï¿½re les lieux
         $sql = "UPDATE gevu_lieux SET id_instant=".$idInstant." WHERE id_lieu = 1";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         
-        //récupère les propriété de l'univers
+        //rï¿½cupï¿½re les propriï¿½tï¿½ de l'univers
         $sql = "SELECT id_lieu, lft, rgt FROM $dbN.gevu_lieux WHERE id_lieu = 1";
         $result = mysql_query($sql);
-        if (!$result) die('Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>');
+        if (!$result) die('Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>');
         $r=mysql_fetch_array($result);
         echo "$dbO univers : ".$r['lft']." - ".$r['rgt']."<br/>";               
         
         //LIEUX
         setLieuxHierarchie($r['id_lieu'], $dbN, $dbO, $idInstant, 5479, $r['lft'], $r['rgt']);
-        /*pour vérifier
+        /*pour vï¿½rifier
         SELECT CONCAT( REPEAT(' ', COUNT(pl.lib) - 1), l.lib) AS name
         FROM gevu_lieux AS l,
         gevu_lieux AS pl
@@ -389,17 +389,17 @@ function migreBase($dbN, $dbO){
         ORDER BY l.lft
         */
         
-        //on met à jour le droite de l'univers
+        //on met ï¿½ jour le droite de l'univers
         $sql = "SELECT MAX(rgt)+1 m FROM gevu_lieux";
         $result = mysql_query($sql);
         $r=mysql_fetch_array($result);
         $sql = "UPDATE gevu_lieux SET rgt=".$r['m']." WHERE id_lieu = 1";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         
         //DIAGNOSTICS 
-        //on ne conserve que les réponses 'non' et 'sous réserve'
-        // pour les questions qui ne sont pas interméfiaire
+        //on ne conserve que les rï¿½ponses 'non' et 'sous rï¿½serve'
+        // pour les questions qui ne sont pas intermï¿½fiaire
         $sql = "INSERT INTO $dbN.gevu_diagnostics
         (id_critere, id_reponse, id_instant, id_lieu, id_donnee, maj)
         SELECT c.id_critere, fdc1.valeur, $idInstant, l.id_lieu, fd.id_donnee, fd.date 
@@ -415,13 +415,13 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form =59
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO DIAGNOSTICS : ".mysql_affected_rows()."<br/>";       
         
         
         //PROBLEMES
         //on ne conserve que le champ photo
-        //les champs 'fichier' et 'doc' devront être ajouter à la table gevu_doc
+        //les champs 'fichier' et 'doc' devront ï¿½tre ajouter ï¿½ la table gevu_doc
         $sql = "INSERT INTO $dbN.gevu_problemes
         (id_lieu, id_critere, num_marker, mesure, observations, fichier, doc, id_instant, id_donnee, maj)
         SELECT l.id_lieu
@@ -457,7 +457,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form =60
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO PROBLEMES : ".mysql_affected_rows()."<br/>"; 
         
         
@@ -495,7 +495,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 1
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO GEOGRAPHIE : ".mysql_affected_rows()."<br/>";        
         
         //GEORSS
@@ -514,7 +514,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 81
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO GEORSS : ".mysql_affected_rows()."<br/>";    
         
         //NIVEAU
@@ -545,13 +545,13 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 35
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO NIVEAU : ".mysql_affected_rows()."<br/>";    
         
         //BATIMENT
-        //les contacts devront être retraités
-        //(53, 'ligne_10', 12, 'Coordonnées du gardien'
-        //les horaires devront être retraité
+        //les contacts devront ï¿½tre retraitï¿½s
+        //(53, 'ligne_10', 12, 'Coordonnï¿½es du gardien'
+        //les horaires devront ï¿½tre retraitï¿½
         $sql = "INSERT INTO $dbN.gevu_batiments
         (id_lieu, id_instant, nom, ref, adresse, commune, pays, code_postal
                 , contact_proprietaire, contact_delegataire, contact_gardien
@@ -683,7 +683,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 53
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO BATIMENT : ".mysql_affected_rows()."<br/>";  
         
         //ETABLISSEMENT
@@ -748,7 +748,7 @@ function migreBase($dbN, $dbO){
                         WHERE fd.id_form = 55
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO ETABLISSEMENT : ".mysql_affected_rows()."<br/>";     
         
         //ESPACES
@@ -788,7 +788,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 56
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO ESPACES : ".mysql_affected_rows()."<br/>";   
         
         //ESPACES INTERIEURS
@@ -819,7 +819,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 57
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO ESPACES INTERIEURS : ".mysql_affected_rows()."<br/>";        
         
         //PARCELLES
@@ -868,7 +868,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 58
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO PARCELLES : ".mysql_affected_rows()."<br/>"; 
         
         //ESPACES EXTERIEURS
@@ -903,7 +903,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 61
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO ESPACES EXTERIEURS : ".mysql_affected_rows()."<br/>";        
         
         //DIAGNOSTICS VOIRIE
@@ -925,7 +925,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 62
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO DIAGNOSTICS VOIRIE : ".mysql_affected_rows()."<br/>";        
         
         //OBJETS INTERIEURS
@@ -964,7 +964,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 63
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO OBJETS INTERIEURS : ".mysql_affected_rows()."<br/>"; 
         
         //OBJETS EXTERIEURS
@@ -999,7 +999,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 64
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO OBJETS EXTERIEURS : ".mysql_affected_rows()."<br/>"; 
         
         //ELEMENTS VOIRIE
@@ -1026,7 +1026,7 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form = 69
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO ELEMENTS VOIRIE : ".mysql_affected_rows()."<br/>";   
         
         //DOCUMENTS
@@ -1042,7 +1042,7 @@ function migreBase($dbN, $dbO){
                 INNER JOIN $dbO.spip_types_documents td ON td.id_type = d.id_type
         ";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO DOCUMENTS : ".mysql_affected_rows()."<br/>"; 
         
         //DOCUMENTS LIEUX
@@ -1057,7 +1057,7 @@ function migreBase($dbN, $dbO){
                 INNER JOIN $dbN.gevu_lieux l ON l.id_rubrique = dr.id_rubrique  AND l.id_instant = $idInstant
         ";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO DOCUMENTS LIEUX rubrique: ".mysql_affected_rows()."<br/>";   
         
         $sql = "INSERT INTO $dbN.gevu_docsxlieux
@@ -1072,13 +1072,13 @@ function migreBase($dbN, $dbO){
                 INNER JOIN $dbN.gevu_lieux l ON l.id_rubrique = a.id_rubrique AND l.id_instant = $idInstant
         ";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO DOCUMENTS LIEUX article: ".mysql_affected_rows()."<br/>";    
         
         
         //OBSERVATIONS
         //on ne conserve que le champ photo
-        //les champs 'fichier' et 'doc' devront être ajouter à la table gevu_doc
+        //les champs 'fichier' et 'doc' devront ï¿½tre ajouter ï¿½ la table gevu_doc
         $sql = "INSERT INTO $dbN.gevu_observations
         (id_lieu, id_instant, id_reponse, num_marker, lib, id_critere, id_donnee, maj)
         SELECT l.id_lieu
@@ -1107,12 +1107,12 @@ function migreBase($dbN, $dbO){
         WHERE fd.id_form =67
         GROUP BY fd.id_donnee";
         $result = mysql_query($sql);
-        if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         echo "$dbO OBSERVATIONS: ".mysql_affected_rows()."<br/>";       
 
 
         //AUTEURS
-        //l'importation n'est à faire que une fois
+        //l'importation n'est ï¿½ faire que une fois
         $sql = "INSERT INTO $dbN.gevu_exis
         (nom, url, mail, mdp, mdp_sel, role)
         SELECT a.nom
@@ -1124,10 +1124,10 @@ function migreBase($dbN, $dbO){
         FROM $dbO.spip_auteurs a
         ";
         //$result = mysql_query($sql);
-        //if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        //if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         $sql = "UPDATE gevu_exis SET role = 'manager'";
         //$result = mysql_query($sql);
-        //if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+        //if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
         //echo "$dbO AUTEURS: ".mysql_affected_rows()."<br/>";       
         
         echo "FIN IMPORT --------------------<br/>--------------<br/>"; 
@@ -1135,11 +1135,11 @@ function migreBase($dbN, $dbO){
 }
 	
 
-//pour créer la hiérarchie des lieux
+//pour crï¿½er la hiï¿½rarchie des lieux
 function setLieuxHierarchie($idParent, $dbN, $dbO, $idInstant, $idRub, $lft, $rgt, $niv=1){
 	//http://dev.mysql.com/tech-resources/articles/hierarchical-data.html
 	
-	//récupère les enfants de la rubrique
+	//rï¿½cupï¿½re les enfants de la rubrique
 	$sql = "SELECT r.id_rubrique, r.titre, r.id_parent
 		FROM $dbO.spip_rubriques r
 		WHERE id_parent = $idRub";
@@ -1149,14 +1149,14 @@ function setLieuxHierarchie($idParent, $dbN, $dbO, $idInstant, $idRub, $lft, $rg
    	$lft++;
    	$rgt++;
    	
-	//on insert un lieu pour récupérer l'identifiant
+	//on insert un lieu pour rï¿½cupï¿½rer l'identifiant
    	$sql = "INSERT INTO $dbN.gevu_lieux
 	(id_instant, lieu_parent, id_rubrique, lib, id_parent, lft, rgt, niv, maj)
 	SELECT $idInstant, $idParent, r.id_rubrique, r.titre, r.id_parent, $lft, $rgt, $niv, r.maj 
 	FROM $dbO.spip_rubriques r
 	WHERE id_rubrique = ".$row['id_rubrique'];
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
    	$idLieu = mysql_insert_id();
    	
    	echo str_repeat("- ", $niv).$row['id_rubrique'].' -> lft: '.$lft.' rgt: '.$rgt.' niv: '.$niv.'<br/>';
@@ -1169,23 +1169,23 @@ function setLieuxHierarchie($idParent, $dbN, $dbO, $idInstant, $idRub, $lft, $rg
 	}
    	echo str_repeat("- ", $niv).$row['id_rubrique'].' <-> lft: '.$lft.' rgt: '.$rgt.' niv: '.$niv.'<br/>';
 	
-   	//on met à jour le gauche droite
+   	//on met ï¿½ jour le gauche droite
    	$sql = "UPDATE $dbN.gevu_lieux
 	SET lft = $lft, rgt = $rgt
 	WHERE id_lieu = ".$idLieu;
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	$lft = $rgt;
 	$rgt= $lft+1;	
    }
 	return array($lft,$rgt);		
 }
 
-//pour mettre à jour la hiérarchie des lieux
+//pour mettre ï¿½ jour la hiï¿½rarchie des lieux
 function updLieuxHierarchie($idLieu, $idInstant, $lft, $rgt, $niv=1){
 	//http://dev.mysql.com/tech-resources/articles/hierarchical-data.html
 	
-	//récupère les enfants de la rubrique
+	//rï¿½cupï¿½re les enfants de la rubrique
 	$sql = "SELECT id_lieu, lib
 		FROM gevu_lieux
 		WHERE lieu_parent = $idLieu";
@@ -1205,12 +1205,12 @@ function updLieuxHierarchie($idLieu, $idInstant, $lft, $rgt, $niv=1){
 	}
    	echo str_repeat("- ", $niv)." ".$row['lib']." ".$row['id_lieu'].' <-> lft: '.$lft.' rgt: '.$rgt.' niv: '.$niv.'<br/>';
 	
-   	//on met à jour le gauche droite
+   	//on met ï¿½ jour le gauche droite
    	$sql = "UPDATE gevu_lieux
 	SET lft = $lft, rgt = $rgt
 	WHERE id_lieu = ".$idLieu;
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	$lft = $rgt;
 	$rgt= $lft+1;	
    }
@@ -1219,59 +1219,59 @@ function updLieuxHierarchie($idLieu, $idInstant, $lft, $rgt, $niv=1){
 
 function ajusteBase($idLieu){
 
-	//création d'un instant
+	//crï¿½ation d'un instant
 	$sql = "INSERT INTO gevu_instants (`maintenant`, `ici`, `id_exi`, `nom`) VALUES
 	(now(), '-1', 1, 'ajusteBase')";
 	$result = mysql_query($sql);
-	if (!$result) die('Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>');
+	if (!$result) die('Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>');
 	$idInstant = mysql_insert_id();
 	echo "Instant : ".$idInstant."<br/>";		
 	
-	//mise à jour de l'instant de l'univers
-	//récupère les lieux
+	//mise ï¿½ jour de l'instant de l'univers
+	//rï¿½cupï¿½re les lieux
 	$sql = "UPDATE gevu_lieux SET id_instant=".$idInstant." WHERE id_lieu = $idLieu";
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 
-	//récupère les lieux avec le même nom, niveau, id_parent, id_rubrique
+	//rï¿½cupï¿½re les lieux avec le mï¿½me nom, niveau, id_parent, id_rubrique
 	$sql = "SELECT count(*) nb, GROUP_CONCAT(l.id_lieu) ids
 		FROM gevu_lieux l
 		WHERE l.lieu_parent = $idLieu
 		GROUP BY l.id_rubrique, l.lib, l.id_parent, l.niv
 		ORDER BY l.maj DESC";
 	$rs = mysql_query($sql);
-	if (!$rs) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$rs) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	
 	while($r=mysql_fetch_array($rs)) {
 		CompareBranche($r['ids'], $idInstant, $idLieu);
 	}
 
-	//récupère les lieux du niveau inférieur pour changer leur instant et récalculer les gauche droite
+	//rï¿½cupï¿½re les lieux du niveau infï¿½rieur pour changer leur instant et rï¿½calculer les gauche droite
 	$sql = "SELECT e.id_lieu, e.niv, p.lft, e.lib
 		FROM gevu_lieux e
 			INNER JOIN gevu_lieux p ON p.id_lieu = e.lieu_parent
 		WHERE p.id_lieu = $idLieu";
 	$rs = mysql_query($sql);
-	if (!$rs) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$rs) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	while($r=mysql_fetch_array($rs)) {
 		echo 'ajusteBase niv inf -> : '.$r['lib'].'<br/>';	
 		ChangeBranche($r['id_lieu'], $r['lft'], $idInstant, $r['niv']);
 	}
 
-	//on met à jour la droite de l'univers
+	//on met ï¿½ jour la droite de l'univers
 	$sql = "SELECT MAX(rgt)+1 m FROM gevu_lieux";
 	$result = mysql_query($sql);
 	$r=mysql_fetch_array($result);
 	$sql = "UPDATE gevu_lieux SET rgt=".$r['m']." WHERE id_lieu = 1";
 	$result = mysql_query($sql);
-	if (!$result) echo 'Requête invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
+	if (!$result) echo 'Requï¿½te invalide : ' . mysql_error().'<br/>'.$sql.'<br/>';
 	
 }
 
 
 function CompareBranche($idsLieux, $idInstant, $LieuParent){
 
-	//récupère les liens du lieu ayant la même rubrique et le même parent 
+	//rï¿½cupï¿½re les liens du lieu ayant la mï¿½me rubrique et le mï¿½me parent 
 	$sql = "SELECT l.id_lieu, l.lieu_parent, l.lib, l.maj, l.lft, l.rgt, l.id_instant, l.niv
 				,count(enfant.id_lieu) nbLieux
           		,count(t1.id_lieu) nbBat
@@ -1366,7 +1366,7 @@ function CompareBranche($idsLieux, $idInstant, $LieuParent){
 		if($oLib!=$r1['lib']){
 			/*
 			if($Plft==-1){
-				//récupère la branche du parent
+				//rï¿½cupï¿½re la branche du parent
 				$sql="SELECT parent.lft
 				FROM gevu_lieux AS parent
 				WHERE parent.id_lieu = ".$r1['lieu_parent'];
@@ -1375,31 +1375,31 @@ function CompareBranche($idsLieux, $idInstant, $LieuParent){
 				$Plft = $r2['lft'];
 			}
 			*/	
-			//le lieux le plus récent avec un nom différent sert de référence
-			//on met à jour l'instant de la référence et de ses enfants
+			//le lieux le plus rï¿½cent avec un nom diffï¿½rent sert de rï¿½fï¿½rence
+			//on met ï¿½ jour l'instant de la rï¿½fï¿½rence et de ses enfants
 			//ChangeBranche($r1['id_lieu'], $r1['lft'], $r1['rgt'], $r1['id_instant'], $Plft, $idInstant, $r1['niv']);							
 			$oLieu = $r1['id_lieu'];
 			$oLft = $r1['lft'];
 			$oK = $r1['k'];
 			$oR = $r1;
-			//on met à jour les instants de la branche
+			//on met ï¿½ jour les instants de la branche
 			$sql="UPDATE gevu_lieux SET id_instant = $idInstant
 			WHERE lft >= ".$r1['lft']." AND rgt <= ".$r1['rgt']." AND id_instant = ".$r1['id_instant'];
 			$rs2 = mysql_query($sql);
 			echo "CompareBranche: ".str_repeat("- ", $r1['niv'])." : ".$r1['lib']."<br/>";								
 			//ModifBranche($r1, $oLieu, $oLft, $idInstant);
 		}else{
-			//on vérifie si les lieux sont identiques
+			//on vï¿½rifie si les lieux sont identiques
 			if($oDate==$r1['maj'] && $oK==$r1['k'] ){
-				//on supprime le lieu et tout ces élements
+				//on supprime le lieu et tout ces ï¿½lements
 				DeleteLieu($r1['id_lieu'], $r1['lft'], $r1['rgt'], $r1['id_instant']);
-			//on vérifie s'il y a des éléments liés
+			//on vï¿½rifie s'il y a des ï¿½lï¿½ments liï¿½s
 			}elseif($r1['nbTot']==0){
-				//on supprime la donnée
+				//on supprime la donnï¿½e
 				DeleteLieu($r1['id_lieu'], $r1['lft'], $r1['rgt'], $r1['id_instant']);
 			}else{
 				ModifBranche($r1, $oR, $idInstant);
-				//on met à jour le parent
+				//on met ï¿½ jour le parent
 				$sql="UPDATE gevu_batiments SET lieu_parent=".$LieuParent." WHERE id_lieu = ".$r1['id_lieu'];			          			
 				mysql_query($sql);
 			}
