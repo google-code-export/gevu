@@ -606,7 +606,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 	        $nb = count($r);
 	        for ($i = 0; $i < $nb; $i++) {        	
 		        //récupère les diags 
-		        $r[$i]['diag'] = $this->calculDiagForLieu($idLieu, $r[$i]["id_instant"]);
+		        $r[$i]['diag'] = $this->calculDiagForLieu($idLieu, $r[$i]["id_instant"], $idBase);
 	        }
 	        
 	        $this->cache->save($r, $c);
