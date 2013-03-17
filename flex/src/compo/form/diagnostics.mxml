@@ -97,11 +97,19 @@
 				selectDiag = event.currentTarget.selectedItem;
 				if(selectDiag){
 					initProblemes(selectDiag.id_diag, selectDiag.criteres+" : "+selectDiag.reponse);
-					//formObs.idDiag = selectDiag.id_diag;
-					//formObs.init();
+					initSolutions();
 				}
 			}
 			
+			private function initSolutions():void
+			{
+				if(formSolus){
+					formSolus.idDiag = selectDiag.id_diag;
+					formSolus.idCrit = selectDiag.id_critere;
+					formSolus.init();
+				}
+			}
+
 			private function initProblemes(idDiag:int, txtDiag:String):void
 			{
 				formProbs.idDiag = idDiag;
@@ -507,8 +515,8 @@
 			<s:NavigatorContent label="Problèmes">
 				<form:problemes id="formProbs" />
 			</s:NavigatorContent>
-			<s:NavigatorContent label="Solutions">
-				<s:Label text="bientôt..."/>
+			<s:NavigatorContent label="Solutions" >
+				<form:solutions id="formSolus" creationComplete="initSolutions()" />
 			</s:NavigatorContent>
 		</mx:TabNavigator>		
 	</mx:VBox>
