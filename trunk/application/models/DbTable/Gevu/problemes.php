@@ -36,6 +36,23 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
         )
     );	
 
+    /**
+     * retourne une connexion à une base de donnée suivant son nom
+     * @param string $idBase
+     * @return Zend_Db_Adapter_Abstract
+     */
+    public function setDb($idBase){
+    
+    	$db = Zend_Db_Table::getDefaultAdapter();
+    	if($idBase){
+    		//change la connexion à la base
+    		$arr = $db->getConfig();
+    		$arr['dbname']=$idBase;
+    		$db = Zend_Db::factory('PDO_MYSQL', $arr);
+    	}
+    	$this->_db = self::_setupAdapter($db);
+    }
+    
     
     /**
      * Recherche les entrées de Gevu_batiments avec la clef de lieu
@@ -75,13 +92,16 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
      *
      * @param array $data
      * @param int $idExi
+     * @param string $idBase
      *  
      * @return integer
      */
-    public function ajouter($data, $idExi=-1)
-    {    	    	
+    public function ajouter($data, $idExi=-1, $idBase=false)
+    {
+    	if($idBase)$this->setDb($idBase);
+    	 
 		//création d'un nouvel instant
-    	$dbI = new Models_DbTable_Gevu_instants();
+    	$dbI = new Models_DbTable_Gevu_instants($this->_db);
     	$idI = $dbI->ajouter(array("id_exi"=>$idExi));
     	$data['id_instant']=$idI;
     	$data['maj']= new Zend_Db_Expr('NOW()');
@@ -109,11 +129,14 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
      * et supprime cette entrée.
      *
      * @param int $id
+     * @param string $idBase
      *  
      * @return void
      */
-    public function remove($id)
+    public function remove($id, $idBase=false)
     {
+    	if($idBase)$this->setDb($idBase);
+    	 
         $this->delete('gevu_problemes.id_probleme = ' . $id);
     }
     
@@ -299,14 +322,17 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param integer $idDiag
+	 * @param string $idBase
      * 
      * @return array
      */
-    public function findByIdDiag($IdDiag)
+    public function findByIdDiag($idDiag, $idBase=false)
     {
+    	if($idBase)$this->setDb($idBase);
+    	
     	$query = $this->select()
                     ->from( array("g" => "gevu_problemes") )                           
-                    ->where( "g.id_diag = ?", $IdDiag);
+                    ->where( "g.id_diag = ?", $idDiag);
 
         return $this->fetchAll($query)->toArray(); 
     }
@@ -315,11 +341,14 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
      * et retourne ces entrées.
      *
      * @param integer $idProb
+	 * @param string $idBase
      * 
      * @return array
      */
-    public function findDocs($IdProb)
+    public function findDocs($IdProb, $idBase=false)
     {
+    	if($idBase)$this->setDb($idBase);
+    	 
     	$dbDocProb = new Models_DbTable_Gevu_docsxproblemes($this->_db);
     	
     	return $dbDocProb->findByIdProbleme($IdProb);
