@@ -100,7 +100,7 @@ class Models_DbTable_Gevu_couts extends Zend_Db_Table_Abstract
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-                    ->from( array("gevu_couts" => "gevu_cout") );
+                    ->from( array("gevu_couts" => "gevu_couts") );
                     
         if($order != null)
         {
@@ -115,24 +115,6 @@ class Models_DbTable_Gevu_couts extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
 
-    /**
-     * Récupère les spécifications des colonnes Gevu_cout 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_cout","champ"=>"id_cout","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"unite","champ"=>"unite","visible"=>true),
-    	array("titre"=>"metre_lineaire","champ"=>"metre_lineaire","visible"=>true),
-    	array("titre"=>"metre_carre","champ"=>"metre_carre","visible"=>true),
-    	array("titre"=>"achat","champ"=>"achat","visible"=>true),
-    	array("titre"=>"pose","champ"=>"pose","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_cout avec la valeur spécifiée
@@ -288,7 +270,7 @@ class Models_DbTable_Gevu_couts extends Zend_Db_Table_Abstract
             	'sc.id_critere = c.id_critere','ref')
             ->joinInner(array('so' => 'gevu_solutions'),
             	'so.id_solution = s.id_solution',array('ref'=>'ref','lib'=>'lib'))
-            ->where( "c.ref IN ($refsCrits)");
+            ->where( "c.id_critere IN (".$refsCrits.")");
     
         return $this->fetchAll($query)->toArray(); 
     }

@@ -59,7 +59,6 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
      *
      * @param array $data
      * @param boolean $existe
-     * @param string $idBase
      *  
      * @return integer
      */
