@@ -37,6 +37,23 @@ class Models_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
 	);
     
     /**
+     * retourne une connexion à une base de donnée suivant son nom
+     * @param string $idBase
+     * @return Zend_Db_Adapter_Abstract
+     */
+    public function setDb($idBase){
+    
+    	$db = Zend_Db_Table::getDefaultAdapter();
+    	if($idBase){
+    		//change la connexion à la base
+    		$arr = $db->getConfig();
+    		$arr['dbname']=$idBase;
+    		$db = Zend_Db::factory('PDO_MYSQL', $arr);
+    	}
+    	$this->_db = self::_setupAdapter($db);
+    }
+    
+    /**
      * Vérifie si une entrée Gevu_solutions existe.
      *
      * @param array $data
@@ -63,7 +80,7 @@ class Models_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
      * 
      * @return integer
      */
-    public function ajouter($data, $existe=true)
+    public function ajouter($data, $existe=true, $creaLiee=true)
     {
     	if($existe)$id = $this->existe($data);
     	if(!$id){
@@ -71,13 +88,14 @@ class Models_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
     	 	$id = $this->insert($data);
     	}
     	//on crée un cout pour la solution
-		$s = new Models_DbTable_Gevu_couts();
-		$data = array("unite"=>0);
-		$idC = $s->ajouter($data);
-		$s = new Models_DbTable_Gevu_solutionsxcouts();
-		$data = array("id_solution"=>$id,"id_cout"=>$idC);
-		$s->ajouter($data,false);
-    	
+    	if($creaLiee){
+			$s = new Models_DbTable_Gevu_couts();
+			$data = array("unite"=>0);
+			$idC = $s->ajouter($data);
+			$s = new Models_DbTable_Gevu_solutionsxcouts();
+			$data = array("id_solution"=>$id,"id_cout"=>$idC);
+			$s->ajouter($data,false);
+    	}    	
     	return $id;
     } 
        
@@ -145,21 +163,6 @@ class Models_DbTable_Gevu_solutions extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
 
-    /**
-     * Récupère les spécifications des colonnes Gevu_solutions 
-     * @return array
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    		array("titre"=>"Mise à jour","champ"=>"maj","visible"=>true)
-    		, array("titre"=>"Id. solution","champ"=>"id_solution","visible"=>true)
-    		, array("titre"=>"Libellé","champ"=>"lib","visible"=>true)
-    		, array("titre"=>"Type de solution","champ"=>"id_type_solution","visible"=>true,"objName"=>"Models_DbTable_Gevu_typesxsolutions")
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_solutions avec la valeur spécifiée
