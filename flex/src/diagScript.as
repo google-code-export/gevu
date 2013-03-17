@@ -98,7 +98,6 @@ public function login():void
 	//construction de la fenêtre d'édition
 	var twLog:twLogin= twLogin(
 	PopUpManager.createPopUp(this, twLogin, true));
-	twLog.endPoint=ENDPOINT_SERVICE;
 	twLog.callback = init;
 	PopUpManager.centerPopUp(twLog);
 	//init();
