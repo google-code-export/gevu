@@ -1,3 +1,6 @@
+//include the constant definition of the server endpoint URL
+include "grillesconfig.as";
+
 import com.adobe.serialization.json.JSON;
 
 import compo.*;
@@ -11,30 +14,34 @@ import flash.net.navigateToURL;
 import mx.collections.ArrayCollection;
 import mx.controls.Alert;
 import mx.events.DropdownEvent;
+import mx.events.ListEvent;
+import mx.events.TreeEvent;
 import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 
-//include the constant definition of the server endpoint URL
-include "grillesconfig.as";
 
-[Bindable]
-public var dataArr:ArrayCollection = new ArrayCollection();
-[Bindable]
-public var exi:Object;
-[Bindable]
-public var idExi:String = "1";
+[Bindable][Embed("images/voie.png")]public var voieIcon:Class;
 
+[Bindable]public var dataArr:ArrayCollection = new ArrayCollection();
+[Bindable]public var exi:Object;
+[Bindable]public var idExi:String = "1";
+
+[Bindable] private var rsSolu:Array;
+[Bindable] private var rsProd:Array;
+[Bindable] private var rsCout:Array;
+[Bindable] private var rsDiag:Array;
 [Bindable] private var rsBD:Array;
-[Bindable] public var selectedBD:Object;
-[Bindable] private var rsEtab:Object;
-[Bindable] public var selectedEtab:Object;
+[Bindable] public var idBase:String;
+[Bindable] public var idLieu:int=-1;
+private var libLieu:String;
+private var xmlTree:XML
 
-public function init():void
+
+public function login():void
 {
 	var twLog:twLogin= twLogin(
         PopUpManager.createPopUp(this, twLogin, true));
-	twLog.endPoint=ENDPOINT_SERVICE;
 	twLog.callback = setBD;
     PopUpManager.centerPopUp(twLog);
 	    	
@@ -42,90 +49,100 @@ public function init():void
 
 public function setBD():void{
 	//initialise la liste des bases de données suivant un utilisateur
-	rsBD = JSON.decode(this.exi.droit_1);
-	//mise au format de l'identifiant du site
-	for each(var bdd:Object in rsBD){
-		var idSite:String = bdd.id; 
-		bdd.id = idSite.substr(2);
-	}
+	rsBD = JSON.decode(exi.droit_3);
+	/*
+	roSolus.getAll();
+	roProd.getAll();
+	roCout.getAll();
+	*/
 }
 
-public function readXmlEtab(event:ResultEvent):void{
-	var arr:Object = event.result.grilles;
-	if(arr){
-	    rsEtab = arr.terre;	
+private function treeItemOpened(event:TreeEvent) : void {
+	if (event.item.node.attribute("fake")==1)
+	{
+		var i:int = event.item.attribute("idLieu");
+		roDiagnostique.getXmlNode(i, idBase);
 	}
+}
+private function treeItemClicked(event:ListEvent) : void {
+	idLieu = event.currentTarget.selectedItem.attribute("idLieu");
+	libLieu = event.currentTarget.selectedItem.attribute("lib");
+	getSolusProb();
 }
 
 
-public function readXmlSolus(event:ResultEvent):void{
-	var arr:Object = event.result.solus;
+private function updateTreeStructure(event:ResultEvent) : void {
+	
+	if(!event.result) return;
+	
+	/* get the id of the node */
+	var x:XML = <root></root>;
+	x.appendChild(event.result);
+	var idnoeud:int;
+	idnoeud = x.node.attribute("idLieu");
+	
+	//vérifie si le noeud existe
+	var objTree:XMLList = treeTree.dataProvider[0].descendants().(@idLieu == idnoeud);
+	if(objTree.length()){
+		/* add the new real node */
+		objTree[0].appendChild(x.node.node);
+				
+		/* delete the old fake one */
+		delete  treeTree.dataProvider[0].descendants().(@idLieu==idnoeud)[0].children()[0];
+		
+		//conserve les data du tree complet
+		xmlTree = treeTree.dataProvider[0] as XML;
+	}	
+}
+
+
+protected function getSolusProb_resultHandler(event:ResultEvent):void
+{
+	rsDiag = event.result as Array;
 	pSolusProb.removeAllChildren();
-	if(arr){
-        for each (var prob:Object in arr.prob)
-        {
-        	var p:hbSolusProb=new hbSolusProb();
-        	p.name = prob.idRub+"_"+prob.idDon
-        	p.prob = prob;
-			pSolusProb.addChild(p);			
-        }
+	if(rsDiag){
+		var nb:int = rsDiag.length;
+		for (var i:Number=0; i < nb;i++){
+			var prob:Object = rsDiag[i];
+			var p:hbProb=new hbProb();
+			p.name = prob.diagIdLieu+"_"+prob.id_diag;
+			p.prob = prob;
+			pSolusProb.addChild(p);
+		}
 	}
+	
 }
+
 
 public function choixBD(event:DropdownEvent):void{
 	
-	selectedBD = this.cbBD.selectedItem;
-	
-	srvEtab.cancel();
-	srvEtab.url = ENDPOINT_EXECARTO
-	var params:Object = new Object();
-	params.f = "get_arbo_grille";
-	params.site = selectedBD.id;
-	params.idGrille = 55;
-	trace ("choixBD:srvEtab.url="+ENDPOINT_EXECARTO+"?f="+params.f+"&site="+params.site+"&idGrille="+params.idGrille);
-	srvEtab.send(params);
-	
+	idBase = this.cbBD.selectedItem["id"];
+	idBase = idBase.substr(idBase.indexOf("_")+1);	
+	initTree();
+
 }
 
-public function selectEtab(event:Event):void {
-	selectedEtab = event.currentTarget.selectedItem;
-	if(selectedEtab){
-		boxEtab.visible=true;
-		nomEtab.text = selectedEtab.titreRub;
-		pSolusProb.removeAllChildren(); 		
-		selectCout.removeAllChildren();
-		showSolusProbEtab();
-		cbSelection.init(); 		
-	}
+public function initTree():void{
+	//construction du tree des territoires
+	xmlTree = 
+		<node idLieu="-1" lib="root" fake="0">
+			<node idLieu="1" lib="univers" fake="0">
+				<node idLieu="-10"  fake="1" />
+			</node>
+		</node>;
+	treeTree.dataProvider=xmlTree;
+	roDiagnostique.getXmlNode(1,idBase);
+	treeTree.showRoot=false;	
 }
 
-public function showSolusProbEtab():void {
-	if(selectedEtab){
-		srvSolus.cancel();
-		srvSolus.url = ENDPOINT_EXEAJAX;
-		var params:Object = new Object();
-		params.f = "GetSolusProbEtab";
-		params.site = selectedBD.id;
-		params.idEtab = selectedEtab.idRub;
-		trace ("showSolusProbEtab:srvSolus.url="+ENDPOINT_EXEAJAX+"?f="+params.f+"&site="+params.site+"&idEtab="+params.idEtab);
-		srvSolus.send(params);		
-	}
+public function getSolusProb():void {
+	nomEtab.text = this.libLieu;
+	pSolusProb.removeAllChildren(); 		
+	selectCout.removeAllChildren();
+	RORapport.getSolusProb(idLieu, idBase);
+	cbSelection.init(); 		
 }
-public function ForceCalcul():void{
-	srvFC.cancel();
-	srvFC.url = ENDPOINT_EXEAJAX;
-	var params:Object = new Object();
-	params.f = "SetChoixAffichage";
-	params.idXul = 'ForceCalcul';
-	if(cbForceCalcul.selected){
-		params.valeur = "true";		
-	}else{
-		params.valeur = "false";				
-	}
-	trace ("ForceCalcul:srvFC.url="+ENDPOINT_EXEAJAX+"?f="+params.f+"&idXul="+params.idXul+"&valeur="+params.valeur);
-	srvFC.send(params);			
-		
-}
+
 
 public function calculerCout():void {
 	var sols:Array = selectCout.getChildren();
@@ -149,7 +166,7 @@ public function calculerCout():void {
 				if(ctP.n_achat.value !=0) c += int(ctP.achat.text)*ctP.n_achat.value;
 				if(ctP.n_pose.value !=0) c += int(ctP.pose.text)*ctP.n_pose.value;
 			}				
-			if(ct.prob.reglementaire)cReg+=c; else cSou+=c;
+			//if(ct.prob.reglementaire)cReg+=c; else cSou+=c;
 		}
 	}
 	coutReg.text = cReg + " € H.T.";
@@ -172,7 +189,7 @@ public function calculerRapport(send:Boolean):*{
 	
 	//récupération des données sélectionnnées
 	for each(var sol:hbSelectSolus in SelSols){
-		idSolus = sol.cout.id_solution;
+		idSolus = sol.solus.id_solution;
 		couts = sol.selectProb.getChildren();
 		pProb = new Array;
 		for each(var ct:hbCout in couts){
@@ -187,8 +204,8 @@ public function calculerRapport(send:Boolean):*{
 	var request:URLRequest = new URLRequest(ENDPOINT_RAPPORT);
 	var variables:URLVariables = new URLVariables();
 	variables.pxml=pxml;
-	variables.site=selectedBD.id;
-	variables.id=selectedEtab.idRub;
+	variables.site=idBase;
+	variables.id= idLieu;
 	variables.model=cbModel.cb.selectedItem["id_doc"];
 	request.data = variables;
 	request.method = URLRequestMethod.POST;
@@ -205,9 +222,9 @@ public function GetArrCout(ct:hbCout):Array{
 	pProb = new Array;
 	pCout = new Array;
 	pSousCout = new Array;
-	idRub = ct.prob.idRub;
-	idDon = ct.prob.idDon;
-	regle = ct.prob.reglementaire != null;
+	//idRub = ct.prob.idRub;
+	//idDon = ct.prob.idDon;
+	//regle = ct.prob.reglementaire != null;
 	idSol = ct.cout.id_solution;		
 	idCrit = ct.cout.id_critere;		
 	idCout = ct.cout.id_cout;
@@ -239,11 +256,11 @@ public function GetArrCout(ct:hbCout):Array{
 
 public function decocheCout():void {
 	var Probs:Array = pSolusProb.getChildren();
-	for each(var Prob:hbSolusProb in Probs){
-		var Sols:Array = Prob.couts.getChildren();
-		for each(var Sol:hbSolusCout in Sols){
-			var Prods:Array = Sol.couts.getChildren();
-			for each(var Prod:hbProdCout in Prods){
+	for each(var Prob:hbProb in Probs){
+		var Sols:Array = Prob.solutions.getChildren();
+		for each(var Sol:hbSolus in Sols){
+			var Prods:Array = Sol.produits.getChildren();
+			for each(var Prod:hbProd in Prods){
 				if(Prod.cbRef.selected){
 					Prod.cbRef.selected=false;
 					Prod.garde();					
@@ -259,18 +276,16 @@ public function decocheCout():void {
 
 private function SauveSelection():void{
 	
-	if(selectedEtab){
 		var pxml:String = calculerRapport(false);
 		if(pxml){
 			var pArr:Array = new Array;
 			var idRapport:String = cbSelection.cb.selectedItem["id_rapport"];
-			pArr["site"]=selectedBD.id;
+			pArr["id_base"]= idBase;
 			pArr["id_exi"]=idExi;
 			pArr["selection"]=pxml;
-			pArr["id_lieu"]=selectedEtab.idRub;		
+			pArr["id_lieu"]=idLieu;		
 			ROS.edit(idRapport,pArr);
 		}
-	}
 }
 
 public function ShowSelection(pxml:String):void{
@@ -281,9 +296,9 @@ public function ShowSelection(pxml:String):void{
 			//décoche toute les solutions
 			decocheCout();
         	var name:String="";
-        	var c:hbSolusCout;
-        	var p:hbSolusProb;
-        	var sc:hbProdCout;
+        	var c:hbSolus;
+        	var p:hbProb;
+        	var sc:hbProd;
 	        for each (var solus:Object in pArr)
 	        {
 		        for each (var couts:Object in solus.couts)
@@ -292,11 +307,11 @@ public function ShowSelection(pxml:String):void{
 			        {
 			        	//récupère le problème
 			        	name = cout.idRub+"_"+cout.idDon;
-			        	p=hbSolusProb(this.pSolusProb.getChildByName(name));
+			        	p=hbProb(this.pSolusProb.getChildByName(name));
 			        	if(p){
 				        	name = "crit:"+cout.idCrit+"_cout:"+cout.idCout;
 				        	//récupère la solution
-				        	c=hbSolusCout(p.couts.getChildByName(name));
+				        	c=hbSolus(p.solutions.getChildByName(name));
 				        	if(c){				        		
 						        for each (var SousCouts:Object in cout.SousCouts)
 						        {
@@ -304,16 +319,16 @@ public function ShowSelection(pxml:String):void{
 							        {
 							        	//récupère le produit
 							        	name = "cout:"+souscout.idCout+"_prod:"+souscout.idProd;
-							        	sc=hbProdCout(c.couts.getChildByName(name));
+							        	sc=hbProd(c.produits.getChildByName(name));
 							        	if(sc){
 							        		sc.cbRef.selected = true;
-							        		sc.cout.save = souscout.Couts;
+							        		sc.produit.cout.save = souscout.Couts;
 							        		sc.garde();
 							        	}			        		
 							        }			        	
 						        }
 				        		c.cbRef.selected = true;
-				        		c.cout.save = cout.Couts;
+				        		c.solution.cout.save = cout.Couts;
 				        		c.garde();				        			
 				        	}			        		
 			        	}
@@ -326,12 +341,31 @@ public function ShowSelection(pxml:String):void{
 
 }
 
-	public function faultHandlerService(fault:FaultEvent):void
-	{
-		Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
-	}
-	private function fillHandler(e:Object):void
+private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+	var str:String;
+	str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+		"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+		"String: "+fault.fault.faultString.toString()+"\n";
+	
+	if (os!="")
+		os = " - "+os;
+	Alert.show(str, "FaultHandlerService"+os);
+}
+
+private function fillHandler(e:Object):void
 	{
 		if(!e)return;
 		this.cbSelection.init();
 	}
+protected function roSolusGetAll_resultHandler(event:ResultEvent):void
+{
+	this.rsSolu = event.result as Array;
+}
+protected function roProdGetAll_resultHandler(event:ResultEvent):void
+{
+	this.rsProd = event.result as Array;
+}
+protected function roCoutGetAll_resultHandler(event:ResultEvent):void
+{
+	this.rsCout = event.result as Array;
+}
