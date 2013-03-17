@@ -6,32 +6,33 @@
 
 	<mx:Script>
 		<![CDATA[
+			public var solus:Object;
+			public var probs:Array=[];
 			public var cout:Object;
-		 	public var probs:Array=[];
 			public function init():void{
 				if(cout){
 					ref.text=cout.ref; 
 					lib.text=cout.lib;
-					for each(var p:Object in probs){						 
+					for each(var p:Object in probs){                                                 
 						addProb(p);
-						for each(var pd:Object in p.prods){						 
+						for each(var pd:Object in p.prods){                                              
 							addProd(pd, p, true)
 						}
 					}
-				}				
+				}                               
 			}
 			public function addProb(p:Object):hbCout{
 				var ct:hbCout= new hbCout();
 				ct.name = "prob_"+p.idDon;
 				ct.cout = cout;
-				ct.prob = p;
+				//ct.prob = p;
 				ct.bgColor = 0xff0000;
 				selectProb.addChild(ct);
-				return ct;				
+				return ct;                              
 			}
 			
 			public function addProd(c:Object, p:Object, init:Boolean):void{
-				var ct:hbCout = hbCout(selectProb.getChildByName("prob_"+p.idDon));
+				var ct:hbCout = hbCout(selectProb.getChildByName("prob_"+p.id_critere));
 				if(!init){
 					//vérifie si le problème a été ajouté
 					if(!ct){
@@ -40,12 +41,12 @@
 						pds.push(cout);
 						p.prods = pds;
 						probs.push(p);
-						ct = addProb(p);														
+						ct = addProb(p);                                                                                                                
 					}else{
 						//on ajoute les datas du produit
 						for each(var prob:Object in probs){
 							if(prob.idDon==p.idDon){
-								prob.prods.push(c);						
+								prob.prods.push(c);                                             
 							}
 						}
 					}
@@ -53,9 +54,9 @@
 				var ctP:hbCout= new hbCout();
 				ctP.name = "prod_"+c.id_cout;
 				ctP.cout = c;
-				ctP.prob = p;
+				//ctP.prob = p;
 				ctP.bgColor = 0xff0000;
-				ct.sousCout.addChild(ctP);				
+				ct.sousCout.addChild(ctP);                              
 			}
 			public function delProb(p:Object):void{
 				var i:int=0;

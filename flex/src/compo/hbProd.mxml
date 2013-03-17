@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	 creationComplete="init()"
+	  backgroundColor="#FA12A0" backgroundAlpha="0.3"
+	>
+	<mx:Script>
+		<![CDATA[
+			public var produit:Object;
+
+			public function init():void{
+				if(produit){
+					/*
+					var ct:hbCout=new hbCout();
+					ct.cout = cout;
+					ct.bgColor = 0x3366F;
+					detailCout.addChild(ct);
+					*/
+					cbRef.label = produit.ref;
+					marque.text=produit.marque;
+					modele.text=produit.modele;
+					description.text=produit.description;
+				}				
+			}
+			
+			public function garde():void{
+				
+				//récupère la solution lié au produit
+				var sol:hbSolus = hbSolus(this.parent.parent);
+				var solSel:hbSelectSolus = hbSelectSolus(this.parentApplication.selectCout.getChildByName("so_"+sol.cbRef.label));					
+				var p:hbProb;
+				if(cbRef.selected){
+					this.setStyle("backgroundColor","green");
+					p = hbProb(sol.parent.parent);
+					//vérifie si la solution a déjà été sélectionnée
+					if(solSel){
+						//on ajoute le produit
+						solSel.addProd(produit,p.prob, false);							
+					}else{
+						//on crée la solution sélectionné
+						sol.cbRef.selected=true;
+						solSel = new hbSelectSolus();
+						solSel.name = "so_"+sol.cbRef.label;						
+						solSel.cout = sol.produits;
+						var pds:Array=[];
+						pds.push(produit);
+						p.prob.prods = pds;
+						solSel.probs.push(p.prob);						
+						this.parentApplication.selectCout.addChild(solSel);
+					}
+				}else{
+					this.setStyle("backgroundColor","#FA2812");
+					//supprime le problème
+					p = hbProb(sol.parent.parent);
+					solSel.delProd(p.prob,produit);
+					//vérifie s'il faut supprimer la solution
+					if(solSel.probs.length==0){
+						this.parentApplication.selectCout.removeChild(solSel);						
+					}
+				}	
+			}
+			
+			
+		]]>
+	</mx:Script>
+
+	<mx:HRule width="25%" strokeColor="#FA12A0"/>
+	<mx:Text id="description" width="600" fontSize="12" />
+	<mx:HBox width="100%" height="100%" paddingBottom="2" paddingLeft="2" paddingRight="2" paddingTop="2" >		
+		<mx:CheckBox id="cbRef" label="" change="garde();" selected="false" toolTip="Cocher pour garder la solution" />
+		<mx:VRule height="10" strokeColor="#FA12A0" />
+		<mx:Label text="marque : "/>
+		<mx:Label text="" id="marque"/>			
+		<mx:VRule height="10" strokeColor="#FA12A0" />
+		<mx:Label text="modèle : "/>
+		<mx:Label text="" id="modele"/>			
+	</mx:HBox>
+	<mx:HBox width="100%" height="100%" id="detailCout" >		
+	</mx:HBox>
+	<mx:VBox id="couts" width="100%" height="100%">
+	</mx:VBox>
+	<mx:HRule width="25%"  strokeColor="#FA12A0"/>	
+</mx:VBox>

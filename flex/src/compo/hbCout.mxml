@@ -6,8 +6,9 @@
 
 	<mx:Script>
 		<![CDATA[
-			public var cout:Object;
-			[Bindable]	public var prob:Object;
+			[Bindable]	public var cout:Object;
+			[Bindable]	public var produit:Object;
+			[Bindable]	public var solution:Object;
 			public var bgColor=0x3366F;
 			public function init():void{
 				if(cout){
@@ -26,15 +27,15 @@
 					pose.text=cout.pose;
 					if(int(cout.pose)==0)v_pose.width=0;
 										
-					if(this.name.substr(0,5)=="prob_"){
-						ref.text=prob.lieu; 
-						lib.text=prob.texte;				
+					if(solution){
+						ref.text=solution.ref; 
+						lib.text=solution.lib;				
 					}
-					if(this.name.substr(0,5)=="prod_"){
-						ref.text=cout.ref; 
-						lib.text=cout.marque+" - "+cout.modele;
+					if(produit){
+						ref.text=produit.ref; 
+						lib.text=produit.marque+" - "+produit.modele;
 					}
-					majQuantite();
+					//majQuantite();
 					garde();
 				}				
 			}
@@ -67,7 +68,7 @@
 		<mx:VBox styleName="ligneCout" id="v_unite" >
 			<mx:Label text="unité" />
 			<mx:HBox>
-				<mx:Label text="" id="unite"/><mx:Label text="x"/>
+				<mx:Label text="{cout.unite}" id="unite"/><mx:Label text="x"/>
 				<mx:NumericStepper change="garde();" id="n_unite" minimum="0" maximum="1000" width="48"/>							
 			</mx:HBox>
 		</mx:VBox>
@@ -75,7 +76,7 @@
 		<mx:VBox styleName="ligneCout" id="v_metre_lineaire" >
 			<mx:Label text="m. liné." />
 			<mx:HBox>
-				<mx:Label text="" id="metre_lineaire"/><mx:Label text="x"/>
+				<mx:Label text="{cout.metre_lineaire}" id="metre_lineaire"/><mx:Label text="x"/>
 				<mx:NumericStepper change="garde();" id="n_metre_lineaire" minimum="0" maximum="1000" width="48"/>							
 			</mx:HBox>
 		</mx:VBox>
@@ -83,7 +84,7 @@
 		<mx:VBox styleName="ligneCout"  id="v_metre_carre">
 			<mx:Label text="mètre carré" />
 			<mx:HBox>
-				<mx:Label text="" id="metre_carre"/><mx:Label text="x"/>
+				<mx:Label text="{cout.metre_carre}" id="metre_carre"/><mx:Label text="x"/>
 				<mx:NumericStepper change="garde();" id="n_metre_carre" minimum="0" maximum="1000" width="48"/>							
 			</mx:HBox>
 		</mx:VBox>
@@ -91,7 +92,7 @@
 		<mx:VBox styleName="ligneCout"  id="v_achat" >
 			<mx:Label text="achat" />
 			<mx:HBox>
-				<mx:Label text="" id="achat"/><mx:Label text="x"/>
+				<mx:Label text="{cout.achat}" id="achat"/><mx:Label text="x"/>
 				<mx:NumericStepper change="garde();" id="n_achat" minimum="0" maximum="1000" width="48"/>							
 			</mx:HBox>
 		</mx:VBox>
@@ -99,8 +100,14 @@
 		<mx:VBox styleName="ligneCout" id="v_pose" >
 			<mx:Label text="pose" />
 			<mx:HBox>
-				<mx:Label text="" id="pose"/><mx:Label text="x"/>
+				<mx:Label text="{cout.pose}" id="pose"/><mx:Label text="x"/>
 				<mx:NumericStepper change="garde();" id="n_pose" minimum="0" maximum="1000" width="48"/>							
+			</mx:HBox>
+		</mx:VBox>
+		<mx:VBox styleName="ligneCout" color="red" >
+			<mx:Label text="COUT TOTAL" />
+			<mx:HBox>
+				<mx:Label text="" id="coutTotal"/><mx:Label text="€ H.T."/>
 			</mx:HBox>
 		</mx:VBox>
 	</mx:HBox>

@@ -124,7 +124,12 @@
 
 	public function faultHandlerService(fault:FaultEvent):void
 	{
-		Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+		var str:String;
+		str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+			"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+			"String: "+fault.fault.faultString.toString()+"\n";
+		
+		Alert.show(str, "ERREUR");
 	}
 
     public function onChange():void 

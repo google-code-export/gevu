@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	 creationComplete="init()"
+	>
+	<mx:Script>
+		<![CDATA[
+			public var prob:Object;
+
+			public function init():void{
+				if(prob){
+		        	lieu.text=prob.lib;
+		        	texte.text=prob.affirmation;
+		        	titre.text=prob.controle;
+		        	reponse.text = prob.reponse;
+					if(prob.idtype_critere=="1")
+						regle.selected=true;
+					else
+						souha.selected=true;
+
+		        	if(prob.solutions){
+				    	//bug dans le cas où il n'y a qu'un élément
+				    	var nb:int = prob.solutions.length;
+						for (var i:Number=0; i < nb;i++){
+							var solution:Object = prob.solutions[i];
+							var c:hbSolus=new hbSolus();
+							c.name="crit:"+prob.id_critere+"_solu:"+solution.id_solution;
+							c.solution=solution;
+							solutions.addChild(c);							
+						}
+		        	}
+				}				
+			}
+		]]>
+	</mx:Script>
+
+	<mx:HRule width="100%" strokeColor="#EBB807" strokeWidth="3"/>
+	<mx:HBox width="100%" height="100%" fontSize="12" >
+		<mx:Label text="" id="titre"/>
+		<mx:Label text="" id="lieu"/>
+	</mx:HBox>
+	<mx:HBox width="100%" height="100%" >
+		<mx:CheckBox label="réglementaire" id="regle" enabled="false" selected="false"/>
+		<mx:CheckBox label="souhaitable" id="souha" enabled="false" selected="false"/>
+		<mx:Label text="Réponse : " />			
+		<mx:Label text="" id="reponse"/>			
+	</mx:HBox>
+	<mx:Text id="texte" width="600" fontSize="12" />
+	<mx:VBox id="solutions" width="100%" height="100%" paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3" >
+	</mx:VBox>
+	<mx:HRule width="100%" strokeColor="#EBB807" strokeWidth="3"/>	
+</mx:VBox>
