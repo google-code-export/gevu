@@ -18,77 +18,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		
     }
 	
-
-    /**
-     * Recherche un contacts avec la valeur spécifiée
-     * et retourne cette entrée.
-     *
-     * @param string $idBase
-     * @param string $obj
-     * @param array $params
-     *
-     * @return array
-     */
-    public function getContact($idBase, $obj, $params)
-    {
-    	//initialise les gestionnaires de base de données
-    	$this->getDb($idBase);
-    	$o = new $obj($this->db);
-    	$clef = $o->info(Zend_Db_Table_Abstract::PRIMARY);
-    	$clef = $clef[1];
-    	$table = $o->info(Zend_Db_Table_Abstract::NAME);
-    	 
-    	$query = $o->select()
-    	->from( array("t" => $table), array($params['type']))
-    	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
-    	->joinInner(array('c' => 'gevu_contacts'),
-    			't.'.$params['type'].' = c.id_contact',array('id_contact','nom','prenom','fixe','mobile','fax','mail'))
-    			->where( "t.".$clef." = ?", $params['id']);
     
-    	return $o->fetchAll($query)->toArray();
-    }
-    
-    /**
-     * Ajoute un contacts avec la valeur spécifiée
-     *
-     * @param string $idBase
-     * @param string $obj
-     * @param array $params
-     *
-     */
-    public function ajouterContact($idBase, $obj, $params)
-    {
-    	//initialise les gestionnaires de base de données
-    	$this->getDb($idBase);
-    	$o = new $obj($this->db);
-    	$clef = $o->info(Zend_Db_Table_Abstract::PRIMARY);
-    	$clef = $clef[1];
-    	$table = $o->info(Zend_Db_Table_Abstract::NAME);
-    	    	 
-    	$data = array($params['type']=>$params['idCtc']);
-    	$o->update($data, $table.'.'.$clef.' = ' . $params['idLien']);
-    }
-    
-    /**
-     * Supprime un contact avec la valeur spécifiée
-     *
-     * @param string $idBase
-     * @param string $obj
-     * @param array $params
-
-     */
-    public function removeContact($idBase, $obj, $params)
-    {
-    	//initialise les gestionnaires de base de données
-    	$this->getDb($idBase);
-    	$o = new $obj($this->db);
-    	$clef = $o->info(Zend_Db_Table_Abstract::PRIMARY);
-    	$clef = $clef[1];
-    	$table = $o->info(Zend_Db_Table_Abstract::NAME);
-    	    	 
-    	$data = array($params['type']=>-1);
-    	$o->update($data, $table.'.'.$clef.' = ' . $params['idLien']);
-    }    
 	/**
 	* copie et colle un lieu
     * @param int $idLieu
@@ -476,7 +406,7 @@ class GEVU_Diagnostique extends GEVU_Site{
     */
 	public function calculDiagForLieu($idLieu, $idInstant=-1, $idBase=false){
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".md5($idInstant)."_".$idBase; 
-	   	$r = false;//$this->cache->load($c);
+	   	$r = $this->cache->load($c);
         if(!$r){
 			
 			//initialise les gestionnaires de base de données
@@ -606,7 +536,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 	        $nb = count($r);
 	        for ($i = 0; $i < $nb; $i++) {        	
 		        //récupère les diags 
-		        $r[$i]['diag'] = $this->calculDiagForLieu($idLieu, $r[$i]["id_instant"], $idBase);
+		        $r[$i]['diag'] = $this->calculDiagForLieu($idLieu, $r[$i]["id_instant"]);
 	        }
 	        
 	        $this->cache->save($r, $c);
@@ -788,7 +718,7 @@ class GEVU_Diagnostique extends GEVU_Site{
      */
     public function getDiagComplet($idLieu=0, $idBase=false, $idInst=-1){
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
-	   	$rs = false;//$this->cache->load($c);
+	   	$rs = $this->cache->load($c);
         if(!$rs){           
 			//initialise les gestionnaires de base de données
 			$this->getDb($idBase);
@@ -814,7 +744,7 @@ class GEVU_Diagnostique extends GEVU_Site{
      */
     public function getDiagListe($params, $idBase=false){
 		$c = str_replace("::", "_", __METHOD__)."_".$idBase."_".$params['idLieu']."_".$params['handi']."_".$params['niv']; 
-	   	$rs = false;//$this->cache->load($c);
+	   	$rs = $this->cache->load($c);
         if(!$rs){           
 			//initialise les gestionnaires de base de données
 			$this->getDb($idBase);
