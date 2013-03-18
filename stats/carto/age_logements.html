@@ -18,16 +18,17 @@
 		for(var i=0;i<nb;i++){
 			var item = json.children[i];
 			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.value});
-		}
+		} // Création fonction json qui prend comme valeur nb avec le total de toutes les données. On créer une boucle qui va de i = 0 jusqu'à la fin du json où l'on créer une variable item. On affiche ensuite pour chaque valeur i sa latitude et sa longitude suivant la Valeur qu'elles prennent à cet endroit.
 		
         var mapOptions = {
           zoom: 11,
           center: new google.maps.LatLng(49.54403690, 0.13247040),
           mapTypeId: google.maps.MapTypeId.SATELLITE
-        };
+        }; //On créer la carte avec le centre qui sont nos coordonnées et le zoom situé à 11. 
+		//mapTypeId affiche des images sattelites de google Earth.
 
         map = new google.maps.Map(document.getElementById('map_canvas'),
-            mapOptions);
+            mapOptions); // On créer une variable map qui créer un div 'map_canvas' qui a un arrière plan, sa position, sa largeur, sa longueur.
 
         /*
         google.maps.event.addListener(map, 'click', function() {
@@ -37,15 +38,15 @@
         geocoder = new GClientGeocoder();
 		*/
 		
-        pointArray = new google.maps.MVCArray(Logements);
+        pointArray = new google.maps.MVCArray(Logements); //On créer une variable de pointArray dans lequel on prend les coordonnées de Logements.
 
         heatmap = new google.maps.visualization.HeatmapLayer({
         	data: pointArray
-        });
+        }); //Variable heatmap (carte de chaleur) qui prend comme données les coordonnées lat et lng
 
         heatmap.setMap(map);
      	
-        getLegende();
+        getLegende(); //On exécute la fonction getLegende où l'on créer les carrés de couleur et le texte
         
 	  });
 	  
@@ -148,7 +149,7 @@ function getzip (response)
 
       function toggleHeatmap() {
         heatmap.setMap(heatmap.getMap() ? null : map);
-      }
+      } // Fonction de bascule de la carte de chaleur. Qd on clique, les couleurs disparaissent.
 
     /*  function changeGradient() {
         var gradient = [
@@ -178,7 +179,7 @@ function getzip (response)
 
       function changeOpacity() {
         heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
-      }	  
+      }	  // On créer une fonction où l'on change l'opacité des couleurs.
     </script>
   </head>
   <body>
