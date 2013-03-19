@@ -9,6 +9,7 @@
     <script type="text/javascript" src="../js/d3.v2.js"></script>
     <script type="text/javascript" src="../carto/legende_age.js"></script>    
     <link type="text/css" rel="stylesheet" href="../css/style_balise.css"/>
+
     <script>
     var n, map, pointarray, heatmap, geocoder, adress;
 	var Logements = [];
@@ -49,133 +50,10 @@
         getLegende(); //On exécute la fonction getLegende où l'on créer les carrés de couleur et le texte
         
 	  });
-	  
-	//affichage données	 
-/*	function getAddress(overlay, latlng) {
-	  if (latlng != null) {
-	    address = latlng;
-	    geocoder.getLocations(latlng, showAddress);
-	  }
-	} 
-
-//affichage données	
-/*function getAddress(latLng) {
-    geocoder.geocode( {'latLng': latLng},
-      function(results, status) {
-        if(status == google.maps.GeocoderStatus.OK) {
-          if(results[0]) {
-            document.getElementById("address").value = results[0].formatted_address;
-          }
-          else {
-            document.getElementById("address").value = "No results";
-          }
-        }
-        else {
-          document.getElementById("address").value = status;
-        }
-      });
-    }*/
-	
-	//affichage données
-/*	function showAddress(response) {
-	  map.clearOverlays();
-	  if (!response || response.Status.code != 200) {
-	    alert("Status Code:" + response.Status.code);
-	  } else {
-	    place = response.Placemark[0];
-	    point = new GLatLng(place.Point.coordinates[1],
-	                        place.Point.coordinates[0]);
-	    marker = new GMarker(point);
-	    map.addOverlay(marker);
-	    marker.openInfoWindowHtml(
-	    '<b>orig latlng:</b>' + response.name + '<br/>' + 
-	    '<b>Latitude-Longitude:</b>' + place.Point.coordinates[1] + "," + place.Point.coordinates[0] + '<br>' +
-	    '<b>Addresse:</b>' + place.address + '<br>' +
-	    '<b>Code du Pays:</b> ' + place.AddressDetails.Country.CountryNameCode);
-	  }
-	}
-*/
-
-/*function showAddress(address) {
-var zipcodex = 0;
-if(geocoder)
-{
-    geocoder.getLocations(address, getzip); 
-
-function getzip (response) 
-    {
-    if (!response || response.Status.code != 200)
-        {
-        alert("Sorry, we were unable to geocode the first address");
-        }
-    else
-        {
-        if(response.Placemark[0].AddressDetails.Country.AdministrativeArea.
-        Locality.PostalCode.PostalCodeNumber)
-            {
-            zipcodex = response.Placemark[0].AddressDetails.Country.AdministrativeArea.
-            Locality.PostalCode.PostalCodeNumber;
-            } 
-
-        }
-
-    }
-}
-
-  if (geocoder) {
-    geocoder.getLatLng(
-      address,
-      function(point) {
-        if (!point) {
-          alert(address + " not found");
-        } else {
-          map.setCenter(point, 13);
-          var marker = new GMarker(point);
-          map.addOverlay(marker);
-    if(zipcode)
-    {
-    marker.openInfoWindowHtml('Zipcode:'+zipcodex);
-    }
-    else
-    {
-        marker.openInfoWindowHtml(address);
-    }
-        }
-      }
-    );
-
-  }
-}    */
 
       function toggleHeatmap() {
         heatmap.setMap(heatmap.getMap() ? null : map);
       } // Fonction de bascule de la carte de chaleur. Qd on clique, les couleurs disparaissent.
-
-    /*  function changeGradient() {
-        var gradient = [
-          'rgba(0, 255, 255, 0)',
-          'rgba(0, 255, 255, 1)',
-          'rgba(0, 191, 255, 1)',
-          'rgba(0, 127, 255, 1)',
-          'rgba(0, 63, 255, 1)',
-          'rgba(0, 0, 255, 1)',
-          'rgba(0, 0, 223, 1)',
-          'rgba(0, 0, 191, 1)',
-          'rgba(0, 0, 159, 1)',
-          'rgba(0, 0, 127, 1)',
-          'rgba(63, 0, 91, 1)',
-          'rgba(127, 0, 63, 1)',
-          'rgba(191, 0, 31, 1)',
-          'rgba(255, 0, 0, 1)'
-        ]
-        heatmap.setOptions({
-          gradient: heatmap.get('gradient') ? null : gradient
-        });
-      }*/
-
-    /*  function changeRadius() {
-        heatmap.setOptions({radius: heatmap.get('radius') ? null : 8});
-      } */
 
       function changeOpacity() {
         heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
@@ -183,12 +61,47 @@ function getzip (response)
     </script>
   </head>
   <body>
- 	<big><b>Age des logements à la ville du Havre</b>
-    <div id="map_canvas" class="bas"></div><br><br>
+ 	<big><b>Age des logements à la ville du Havre</b><br>
+    <div>
+		<button id='A' class='first'>Logements jeunes</button><button id='B' class='first'>Logements moins jeunes</button><button id='C' class='first'>Logements anciens</button><button id='D' class='first'>Logements très anciens</button>
+    </div>
+    <div id="map_canvas" class="bas"></div><br>
     <button onclick="toggleHeatmap()">Toggle Heatmap</button>
     <button onclick="changeOpacity()">Change opacity</button>
     <div align="absolute" id="legendeCarto"></div><br>
+   <script type="text/javascript" >
+	d3.select("#A").on("click", function() {
+		   			getTypeLog("A");
+				d3.select("#A").classed("active", true);
+					d3.select("#B").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					 });
+					
+	d3.select("#B").on("click", function() {
+		   			getTypeLog("B");
+				d3.select("#B").classed("active", true);
+					d3.select("#A").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#D").classed("active", false);
+					 });	
+					 
+	d3.select("#C").on("click", function() {
+		   			getTypeLog("C");
+				d3.select("#C").classed("active", true);
+					d3.select("#B").classed("active", false);
+					d3.select("#A").classed("active", false);
+					d3.select("#D").classed("active", false);
+					 });
 
+	d3.select("#D").on("click", function() {
+		   			getTypeLog("D");
+				d3.select("#D").classed("active", true);
+					d3.select("#B").classed("active", false);
+					d3.select("#C").classed("active", false);
+					d3.select("#A").classed("active", false);
+					 });						 
+	</script>
   </body>
 </html>
 

@@ -1,9 +1,83 @@
+var text, click;
 //légende
 var colors = []; //On créer une variable colors qui est un tableau
 colors['UN'] = ["#A2FF00", "#00FF22"]; // La variable colors prend la valeur UN avec la couleur verte
 colors['DEUX'] = ["#EEFF00", "#FCEB00"]; // La variable colors prend la valeur DEUX avec la couleur jaune
 colors['TROIS'] = ["#FCD200", "#FFB300"];// La variable colors prend la valeur TROIS avec la couleur orange
 colors['QUATRE'] = ["#F14C40", "#FF0000"];// La variable colors prend la valeur QUATRE avec la couleur rouge
+
+	var dataTexte = [{"id":"0","name":"Logements jeunes"},{"id":"1","name":"Logements moins jeunes"},{"id":"2","name":"Logements anciens"},{"id":"3","name":"Logements très anciens"}];
+	var dataCarre = [1,33,66,100];
+	var dataCouleur = [{"id":"1","ref":"UN","name":"Logements jeunes","value":dataCarre},{"id":"2","ref":"DEUX","name":"Logements moins jeunes","value":dataCarre},{"id":"3","ref":"TROIS","name":"Logements anciens","value":dataCarre},{"id":"4","ref":"QUATRE","name":"Logements très anciens","value":dataCarre}];
+	  
+function getTypeLog(typeLog){
+
+		z = []; //On créer un tableau z
+	for(var i=0; i < dataCouleur.length; i++){ //Pour chaque valeur allant de i=0 à la totalité des valeurs de dataCouleur, on prend la couleur de la référence sité précédemment
+		z[dataCouleur[i].ref]=d3.scale.log().domain([1, 100]).range(colors[dataCouleur[i].ref]);
+	}	
+
+	var vis = d3.select("#map_canvas").append("svg")
+		.attr("width", 800)
+		.attr("height", 600)
+		.append("g")
+		.attr("id","gVis");
+		//.attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
+	
+	d3.json("../donnees_tables/gevulieux.json", function(json) {
+		//suprime l'ancien graphique
+		if(path)path.remove();
+		if(text)text.remove();
+				
+	var	path = vis.selectAll("path")
+		      .attr("fill-rule", "evenodd")
+		      .style("stroke", "#fff") //sroke=contour de la forme
+		      .on("click", click)
+		      .attr("id", function(d, i) { 
+		    	  return "path-" + i; 
+		    	  })
+		      .style("fill", function(d) {
+		    	  var i = (d.children ? d : d.parent);
+		    	  if(i.valeur){
+		    		  var color = z[i.valeur]; 
+		    		  return color(i.valeur);		    		  
+		    	  }else 
+		    		  return "white";
+		    	  }) //si d.children renvoit trop alors d, sinon d.parent. fill ds sp�cification du svg = remplissage.
+		      ;
+		    	//  .each(stash);
+			  
+
+		/*var titre = path.append("svg:title")
+		  .text(function(d) { 
+		  	return d.lat + d.lng + " : " + d.value; 
+		  });
+		  
+	//	var text = vis.selectAll("g").data(nodes);
+		var text = vis.selectAll("g").data(Logements);
+	
+		/*var textEnter = text.enter().append("svg:g")
+	    .attr("fill", "navy")
+	    .append("text")
+	    	.attr("class", "txtLeg")
+	    	.attr("font-size", "10")
+	    	.style("fill", "white")
+	    	.append("textPath")
+	         	.attr("xlink:href", function(d, i) { 
+				  	return "#" + "path-" + i; 
+	         	})
+			  	.text(function(d) { 
+				  	return d.valeur; 
+			  	});*/
+	
+	
+			function click(d) {
+			    path.transition()
+			      .duration(duration);
+			    //  .attrTween("d", arcTween(d));
+			  }
+	});
+}  
 	  
 var wL = 1200, hL = 1200; //On créer un div legendecarto qui prend comme hauteur et largeur 1200.
 		
@@ -18,10 +92,7 @@ function getLegende(){ //On créer une fonction GetLegende
 		.attr("id","gLeg")
 		.attr("transform", "translate(" + wL + "," + hL + ")");
 	
-	var dataTexte = [{"id":"0","name":"Logements jeunes"},{"id":"1","name":"Logements moins jeunes"},{"id":"2","name":"Logements anciens"},{"id":"3","name":"Logements très anciens"}];
-	var dataCarre = [1,33,66,100];
-	var dataCouleur = [{"id":"1","ref":"UN","name":"Logements jeunes","value":dataCarre},{"id":"2","ref":"DEUX","name":"Logements moins jeunes","value":dataCarre},{"id":"3","ref":"TROIS","name":"Logements anciens","value":dataCarre},{"id":"4","ref":"QUATRE","name":"Logements très anciens","value":dataCarre}];
-	
+
 	z = []; //On créer un tableau z
 	for(var i=0; i < dataCouleur.length; i++){ //Pour chaque valeur allant de i=0 à la totalité des valeurs de dataCouleur, on prend la couleur de la référence sité précédemment
 		z[dataCouleur[i].ref]=d3.scale.log().domain([1, 100]).range(colors[dataCouleur[i].ref]);

@@ -17,3 +17,9 @@
    top: 100%;
    margin:-200px auto 0 auto;
 }
+
+#legendeCarto1 {
+	float : right;
+	height : 50px;
+	width : 50px;
+}
