@@ -12,23 +12,52 @@ colors['QUATRE'] = ["#F14C40", "#FF0000"];// La variable colors prend la valeur 
 	  
 function getTypeLog(typeLog){
 
-		z = []; //On créer un tableau z
-	for(var i=0; i < dataCouleur.length; i++){ //Pour chaque valeur allant de i=0 à la totalité des valeurs de dataCouleur, on prend la couleur de la référence sité précédemment
-		z[dataCouleur[i].ref]=d3.scale.log().domain([1, 100]).range(colors[dataCouleur[i].ref]);
-	}	
+   var n, map, pointarray, heatmap, geocoder, adress;
+	var Logements = [];
 
-	var vis = d3.select("#map_canvas").append("svg")
+	d3.json("../donnees_tables/gevulieux.json", function(json) {
+		var nb = json.children.length
+		for(var i=0;i<nb;i++){
+			var item = json.children[i];
+			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.value});
+		}	// Création fonction json qui prend comme valeur nb avec le total de toutes les données. On créer une boucle qui va de i = 0 jusqu'à la fin du json où l'on créer une variable item. On affiche ensuite pour chaque valeur i sa latitude et sa longitude suivant la Valeur qu'elles prennent à cet endroit.
+		z = []; //On créer un tableau z
+			for(var i=0; i < dataCouleur.length; i++){ //Pour chaque valeur allant de i=0 à la totalité des valeurs de dataCouleur, on prend la couleur de la référence sité précédemment
+				z[dataCouleur[i].ref]=d3.scale.log().domain([1, 100]).range(colors[dataCouleur[i].ref]);	
+			}
+			
+        var mapOptions = {
+          zoom: 11,
+          center: new google.maps.LatLng(49.54403690, 0.13247040),
+          mapTypeId: google.maps.MapTypeId.SATELLITE
+        }; //On créer la carte avec le centre qui sont nos coordonnées et le zoom situé à 11. 
+		//mapTypeId affiche des images sattelites de google Earth.
+
+        map = new google.maps.Map(document.getElementById('map_canvas'),
+            mapOptions); // On créer une variable map qui créer un div 'map_canvas' qui a un arrière plan, sa position, sa largeur, sa longueur.
+
+        /*
+        google.maps.event.addListener(map, 'click', function() {
+        	getAddress();
+          });
+
+        geocoder = new GClientGeocoder();
+		*/
+		
+        pointArray = new google.maps.MVCArray(Logements); //On créer une variable de pointArray dans lequel on prend les coordonnées de Logements.
+
+        heatmap = new google.maps.visualization.HeatmapLayer({
+        	data: pointArray
+        }); //Variable heatmap (carte de chaleur) qui prend comme données les coordonnées lat et lng
+
+        heatmap.setMap(map);
+
+	var vis = d3.select("#map_canvas").append("svg") //ajoute un svg de 800*600
 		.attr("width", 800)
 		.attr("height", 600)
 		.append("g")
 		.attr("id","gVis");
-		//.attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
-	
-	d3.json("../donnees_tables/gevulieux.json", function(json) {
-		//suprime l'ancien graphique
-		if(path)path.remove();
-		if(text)text.remove();
-				
+
 	var	path = vis.selectAll("path")
 		      .attr("fill-rule", "evenodd")
 		      .style("stroke", "#fff") //sroke=contour de la forme
@@ -45,31 +74,6 @@ function getTypeLog(typeLog){
 		    		  return "white";
 		    	  }) //si d.children renvoit trop alors d, sinon d.parent. fill ds sp�cification du svg = remplissage.
 		      ;
-		    	//  .each(stash);
-			  
-
-		/*var titre = path.append("svg:title")
-		  .text(function(d) { 
-		  	return d.lat + d.lng + " : " + d.value; 
-		  });
-		  
-	//	var text = vis.selectAll("g").data(nodes);
-		var text = vis.selectAll("g").data(Logements);
-	
-		/*var textEnter = text.enter().append("svg:g")
-	    .attr("fill", "navy")
-	    .append("text")
-	    	.attr("class", "txtLeg")
-	    	.attr("font-size", "10")
-	    	.style("fill", "white")
-	    	.append("textPath")
-	         	.attr("xlink:href", function(d, i) { 
-				  	return "#" + "path-" + i; 
-	         	})
-			  	.text(function(d) { 
-				  	return d.valeur; 
-			  	});*/
-	
 	
 			function click(d) {
 			    path.transition()
