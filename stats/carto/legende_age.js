@@ -1,4 +1,4 @@
-var text, click;
+var click;
 //légende
 var colors = []; //On créer une variable colors qui est un tableau
 colors['UN'] = ["#A2FF00", "#00FF22"]; // La variable colors prend la valeur UN avec la couleur verte
@@ -12,7 +12,6 @@ colors['QUATRE'] = ["#F14C40", "#FF0000"];// La variable colors prend la valeur 
 	  
 function getTypeLog(typeLog){
 
-   var n, map, pointarray, heatmap, geocoder, adress;
 	var Logements = [];
 
 	d3.json("../donnees_tables/gevulieux.json", function(json) {
@@ -21,38 +20,13 @@ function getTypeLog(typeLog){
 			var item = json.children[i];
 			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.value});
 		}	// Création fonction json qui prend comme valeur nb avec le total de toutes les données. On créer une boucle qui va de i = 0 jusqu'à la fin du json où l'on créer une variable item. On affiche ensuite pour chaque valeur i sa latitude et sa longitude suivant la Valeur qu'elles prennent à cet endroit.
+		
 		z = []; //On créer un tableau z
 			for(var i=0; i < dataCouleur.length; i++){ //Pour chaque valeur allant de i=0 à la totalité des valeurs de dataCouleur, on prend la couleur de la référence sité précédemment
 				z[dataCouleur[i].ref]=d3.scale.log().domain([1, 100]).range(colors[dataCouleur[i].ref]);	
 			}
-			
-        var mapOptions = {
-          zoom: 11,
-          center: new google.maps.LatLng(49.54403690, 0.13247040),
-          mapTypeId: google.maps.MapTypeId.SATELLITE
-        }; //On créer la carte avec le centre qui sont nos coordonnées et le zoom situé à 11. 
-		//mapTypeId affiche des images sattelites de google Earth.
 
-        map = new google.maps.Map(document.getElementById('map_canvas'),
-            mapOptions); // On créer une variable map qui créer un div 'map_canvas' qui a un arrière plan, sa position, sa largeur, sa longueur.
-
-        /*
-        google.maps.event.addListener(map, 'click', function() {
-        	getAddress();
-          });
-
-        geocoder = new GClientGeocoder();
-		*/
-		
-        pointArray = new google.maps.MVCArray(Logements); //On créer une variable de pointArray dans lequel on prend les coordonnées de Logements.
-
-        heatmap = new google.maps.visualization.HeatmapLayer({
-        	data: pointArray
-        }); //Variable heatmap (carte de chaleur) qui prend comme données les coordonnées lat et lng
-
-        heatmap.setMap(map);
-
-	var vis = d3.select("#map_canvas").append("svg") //ajoute un svg de 800*600
+  	var vis = d3.select("#map_canvas").append("svg") //ajoute un svg de 800*600
 		.attr("width", 800)
 		.attr("height", 600)
 		.append("g")
