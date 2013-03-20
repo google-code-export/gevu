@@ -1,13 +1,12 @@
 #legendeCarto {
-	float : right;
 	height : 100%;
 	width : 100%;
+   margin:-400px auto 0 auto;
 }
 
 #map_canvas {
-	float : center;
-	height : 600px;
-	width : 800px;	
+	height : 400px;
+	width : 600px;	
 }
 
 .bas {
@@ -15,11 +14,5 @@
    height:200px;
    position:absolute;
    top: 100%;
-   margin:-200px auto 0 auto;
-}
-
-#legendeCarto1 {
-	float : right;
-	height : 50px;
-	width : 50px;
+   margin:-700px auto 0 auto;
 }
