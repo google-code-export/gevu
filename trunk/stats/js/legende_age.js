@@ -9,26 +9,21 @@ colors['QUATRE'] = ["#F14C40", "#FF0000"];// La variable colors prend la valeur 
 	var dataTexte = [{"id":"0","name":"Logements jeunes"},{"id":"1","name":"Logements moins jeunes"},{"id":"2","name":"Logements anciens"},{"id":"3","name":"Logements très anciens"}];
 	var dataCarre = [1,33,66,100];
 	var dataCouleur = [{"id":"1","ref":"UN","name":"Logements jeunes","value":dataCarre},{"id":"2","ref":"DEUX","name":"Logements moins jeunes","value":dataCarre},{"id":"3","ref":"TROIS","name":"Logements anciens","value":dataCarre},{"id":"4","ref":"QUATRE","name":"Logements très anciens","value":dataCarre}];
-	  
+
 function getTypeLog(typeLog){
 
 	var Logements = [];
-
+	
 	d3.json("../donnees_tables/gevulieux.json", function(json) {
 		var nb = json.children.length
 		for(var i=0;i<nb;i++){
 			var item = json.children[i];
-			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.value});
-		}	// Création fonction json qui prend comme valeur nb avec le total de toutes les données. On créer une boucle qui va de i = 0 jusqu'à la fin du json où l'on créer une variable item. On affiche ensuite pour chaque valeur i sa latitude et sa longitude suivant la Valeur qu'elles prennent à cet endroit.
-		
-		z = []; //On créer un tableau z
-			for(var i=0; i < dataCouleur.length; i++){ //Pour chaque valeur allant de i=0 à la totalité des valeurs de dataCouleur, on prend la couleur de la référence sité précédemment
-				z[dataCouleur[i].ref]=d3.scale.log().domain([1, 100]).range(colors[dataCouleur[i].ref]);	
-			}
+			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.valeur});
+		} // Création fonction json qui prend comme valeur nb avec le total de toutes les données. On créer une boucle qui va de i = 0 jusqu'à la fin du json où l'on créer une variable item. On affiche ensuite pour chaque valeur i sa latitude et sa longitude suivant la Valeur qu'elles prennent à cet endroit.
 
-  	var vis = d3.select("#map_canvas").append("svg") //ajoute un svg de 800*600
-		.attr("width", 800)
-		.attr("height", 600)
+	var vis = d3.select("#map_canvas").append("svg") //ajoute un svg de 800*600
+		.attr("width", 400)
+		.attr("height", 300)
 		.append("g")
 		.attr("id","gVis");
 
@@ -55,9 +50,9 @@ function getTypeLog(typeLog){
 			    //  .attrTween("d", arcTween(d));
 			  }
 	});
-}  
-	  
-var wL = 1200, hL = 1200; //On créer un div legendecarto qui prend comme hauteur et largeur 1200.
+}	
+	
+var wL = 1000, hL = 1000; //On créer un div legendecarto qui prend comme hauteur et largeur 1200.
 		
 function getLegende(){ //On créer une fonction GetLegende
 
@@ -66,7 +61,7 @@ function getLegende(){ //On créer une fonction GetLegende
 	.attr("height", hL)
 	.attr("viewBox", "0 0 2000 1500")
 	.attr("preserveAspectRatio", "xMidYMid meet")
-	.append("g") //On créer une balise g qui prend comme id:gleg avec un cadre de 1200 * 1200
+	.append("g") //On créer une balise g qui prend comme id:gleg avec un cadre de 1000 * 1000
 		.attr("id","gLeg")
 		.attr("transform", "translate(" + wL + "," + hL + ")");
 	
@@ -132,7 +127,14 @@ function getLegende(){ //On créer une fonction GetLegende
 	         	})
 			  	.text(function(d) { 
 				  	return d.name; 
-			  	});
+			  	});		
 }
-	
+
+function cliquer(){
+	for(var i=0;i<carrLeg;i++){
+			var item = json.children[i];
+			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.valeur});
+		}
+	}
+
 	
