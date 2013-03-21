@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Carte sur l'âge des bâtiments au Havre</title>
+	<link rel="stylesheet" href="../css/colorbrewer.css" />
+    <link type="text/css" rel="stylesheet" href="../css/button.css"/>
+    <script type="text/javascript" src="../js/colorbrewer.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
+    <script type="text/javascript" src="../js/d3.v2.js"></script>
+    <script type="text/javascript" src="../js/legende_age.js"></script>    
+    <link type="text/css" rel="stylesheet" href="../css/style_balise.css"/>
+	<script type="text/javascript" src="../js/coors.js"></script>
+	<script type="text/javascript" src="../data/testcarto.js"></script>
+    <script>
+    var color, n, map, pointarray, heatmap, geocoder, adress;
+	var Logements = [];
+var geocoder = new google.maps.Geocoder();
+var map;
+var markersArray = [];
+var kmlArray = [];
+var polyArray = [];
+var mt = new Array(google.maps.MapTypeId.HYBRID,google.maps.MapTypeId.ROADMAP,google.maps.MapTypeId.SATELLITE,google.maps.MapTypeId.TERRAIN);
+var lstKML = d3.select('#listeKML');
+var z;
+
+	function initialize(){
+        var mapOptions = {
+          zoom: 11,
+          center: new google.maps.LatLng(49.5493690, 0.13747540),
+          mapTypeId: google.maps.MapTypeId.TERRAIN,
+		streetViewControl: true,
+		mapTypeControlOptions: {
+			mapTypeIds:mt 
+		}
+        }; //On créer la carte avec le centre qui sont nos coordonnées et le zoom situé à 11. 
+		//mapTypeId affiche des images sattelites de google Earth.
+
+        map = new google.maps.Map(document.getElementById('map_canvas'),
+            mapOptions); // On créer une variable map qui créer un div 'map_canvas' qui a un arrière plan, sa position, sa largeur, sa longueur.
+
+	d3.json("../data/testcarto.js", function(json) {
+		
+		z = [];
+		for(var i=0; i < json.length; i++){
+			var max = parseInt(json[i].occupe+json[i].vacant);
+			var rng = ["#54f708","#f7081c"];
+			z[json[i].ref]=d3.scale.log().domain([1, max]).range(rng);
+			var fctColor = z[json[i].ref]; 
+			var color = fctColor(json[i].vacant);
+			addPolygoneByCoor(coors[json[i].ref], color);
+		}
+		
+	});	
+
+}
+
+function addPolygoneByCoor(coor, couleur) {
+	
+	var arrCoor = coor.split(" ");
+	var planCoor = [], posi;
+	for (i in arrCoor) {
+		posi = $.trim(arrCoor[i]);
+		if(posi!=""){
+			posi = posi.split(",");
+			planCoor.push(new google.maps.LatLng(posi[1], posi[0]));			
+		}
+	}
+
+	var planPath = new google.maps.Polygon({
+		    paths: planCoor,
+		    strokeColor: "#FF0000",
+		    strokeOpacity: 0.2,
+		    strokeWeight: 2,
+			fillColor: couleur,
+		    //fillColor: "#FF0000",
+		    fillOpacity: 0.8
+		  });	
+
+	planPath.setMap(map);
+		  
+	return planPath;
+}
+
+
+function addPolygone(kml) {
+	
+	var xml = getCoor(kml);
+	 
+	var coor = xmlDoc.getElementsByTagName("coordinates")[0].textContent;
+
+	var arrCoor = coor.split(" ");
+	 
+	var planCoor = [], posi;
+	for (i in arrCoor) {
+		posi = $.trim(arrCoor[i]);
+		if(posi!=""){
+			posi = posi.split(",");
+			planCoor.push(new google.maps.LatLng(posi[1], posi[0]));			
+		}
+	}
+
+	var planPath = new google.maps.Polygon({
+		    paths: planCoor,
+		    strokeColor: "#FF0000",
+		    strokeOpacity: 0.8,
+		    strokeWeight: 2,
+		    fillColor: "#FF0000",
+		    fillOpacity: 0.35
+		  });	
+
+	planPath.setMap(map);
+		  
+	return planPath;
+}
+    </script>
+  </head>
+  <body onload="initialize()">
+    <div id="map_canvas" class="bas"></div><br>
+    <div id="legendeCarto" onclick="alert('test de clic sur la légende');"></div><br>
+  </body>
+</html>

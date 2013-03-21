@@ -9,17 +9,24 @@
     <script type="text/javascript" src="../js/d3.v2.js"></script>
     <script type="text/javascript" src="../js/legende_age.js"></script>    
     <link type="text/css" rel="stylesheet" href="../css/style_balise.css"/>
-
+	<script type="text/javascript" src="../js/coors.js"></script>
     <script>
-    var n, map, pointarray, heatmap, geocoder, adress;
+    var color, n, map, pointarray, heatmap, geocoder, adress;
 	var Logements = [];
 
 	d3.json("../donnees_tables/gevulieux.json", function(json) {
 		var nb = json.children.length
 		for(var i=0;i<nb;i++){
 			var item = json.children[i];
+			
+			/*function filtrage(){
+			if (item.valeur<42){
+			return Logements.push(new google.maps.LatLng(item.lat, item.lng))
+			}}*/
+				
 			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.valeur});
-		} // Création fonction json qui prend comme valeur nb avec le total de toutes les données. On créer une boucle qui va de i = 0 jusqu'à la fin du json où l'on créer une variable item. On affiche ensuite pour chaque valeur i sa latitude et sa longitude suivant la Valeur qu'elles prennent à cet endroit.
+		}
+	// Création fonction json qui prend comme valeur nb avec le total de toutes les données. On créer une boucle qui va de i = 0 jusqu'à la fin du json où l'on créer une variable item. On affiche ensuite pour chaque valeur i sa latitude et sa longitude suivant la Valeur qu'elles prennent à cet endroit.
 		
         var mapOptions = {
           zoom: 11,
@@ -41,6 +48,7 @@
      	
         getLegende(); //On exécute la fonction getLegende où l'on créer les carrés de couleur et le texte
        // cliquer();
+	   //filtrage();
 	  });
     </script>
   </head>
