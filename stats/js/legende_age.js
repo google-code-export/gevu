@@ -130,11 +130,11 @@ function getLegende(){ //On créer une fonction GetLegende
 			  	});		
 }
 
-function cliquer(){
+/*function cliquer(){
 	for(var i=0;i<carrLeg;i++){
 			var item = json.children[i];
 			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.valeur});
 		}
-	}
+	}*/
 
 	
