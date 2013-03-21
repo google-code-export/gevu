@@ -11,7 +11,7 @@
     <link type="text/css" rel="stylesheet" href="../css/style_balise.css"/>
 
     <script>
-    var n, map, pointarray, heatmap, geocoder, adress;
+    var map, rectangle, adress, heatmap;
 	var Logements = [];
 
 	d3.json("../donnees_tables/gevulieux.json", function(json) {
@@ -31,23 +31,35 @@
         map = new google.maps.Map(document.getElementById('map_canvas'),
             mapOptions); // On créer une variable map qui créer un div 'map_canvas' qui a un arrière plan, sa position, sa largeur, sa longueur.
 
-        pointArray = new google.maps.MVCArray(Logements); //On créer une variable de pointArray dans lequel on prend les coordonnées de Logements.
+		rectangle = new google.maps.Rectangle();
 
-        heatmap = new google.maps.visualization.HeatmapLayer({
-        	data: pointArray
-        }); //Variable heatmap (carte de chaleur) qui prend comme données les coordonnées lat et lng
+		google.maps.event.addListener(map, 'zoom_changed', function() {
 
-        heatmap.setMap(map);
-     	
+    // Get the current bounds, which reflect the bounds before the zoom.
+		var rectOptions = {
+			strokeColor: "#FF0000",
+			strokeOpacity: 0.8,
+			strokeWeight: 2,
+			fillColor: "#FF0000",
+			fillOpacity: 0.35,
+			map: map,
+			bounds: map.getBounds()
+		};
+		
+      /* var rectangle1 = new google.maps.visualization({
+        	data: Logements
+        });*/
+		
+		rectangle.setOptions(rectOptions);
+  });
+ 
         getLegende(); //On exécute la fonction getLegende où l'on créer les carrés de couleur et le texte
-       // cliquer();
 	  });
     </script>
   </head>
   <body>
- 	<big><b>Age des logements à la ville du Havre</b><br><br>
+ 	<big><b>Essai d'affichage des rectangles</b><br><br>
     <div id="map_canvas" class="bas"></div><br>
     <div id="legendeCarto" onclick="alert('test de clic sur la légende');"></div><br>
   </body>
 </html>
-
