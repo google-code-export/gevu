@@ -543,14 +543,15 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
     /*
      * Recherche la liste des diagnostics pour un lieu et des contraintes supplémentaires
      *
-     * @param int $idLieu
+     * @param string $idLieu
      * @param int $last
      * @param string $handi
      * @param int $niv
+     * @param string $idCrit
      * 
      * @return array
      */
-    public function getDiagliste($idLieu, $last=-1, $handi="", $niv=-1)
+    public function getDiagliste($idLieu, $last=-1, $handi="", $niv=-1, $idCrit="")
     {
         $query = $this->select()
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
@@ -567,12 +568,16 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
             	'diag.id_instant = inst.id_instant',array('instant'=>"DATE_FORMAT(maintenant,'%W %d %M %Y')",'nom'))
         	->joinInner(array('exi' => 'gevu_exis'),
             	'inst.id_exi = exi.id_exi',array('exis'=>'nom'))
-        	->where( "l.id_lieu = ?", $idLieu)
+        	->where( "l.id_lieu IN (".$idLieu.")")
         	->order(array('diag.id_lieu'));
         
         //vérifie si on ajoute d'autres conditions
         //les derniers diagnostics
-        if($last)$query->where("diag.last = 1");        
+        if($last)$query->where("diag.last = 1");
+
+        //vérifie s'il faut ajouter un filtre sur les critères
+        if($idCrit)$query->where("crit.id_critere IN (".$idCrit.")");
+        
         //un niveau de handicap
         if($niv!=-1){
         	if($niv==0){

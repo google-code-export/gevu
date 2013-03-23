@@ -115,21 +115,7 @@ class Models_DbTable_Gevu_docsxproduits extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
 
-    /**
-     * Récupère les spécifications des colonnes Gevu_docsxproduits 
-     */
-    public function getCols(){
 
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_doc","champ"=>"id_doc","visible"=>true),
-    	array("titre"=>"id_produit","champ"=>"id_produit","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
-    
     /*
      * Recherche une entrée Gevu_docsxproduits avec la valeur spécifiée
      * et retourne cette entrée.
