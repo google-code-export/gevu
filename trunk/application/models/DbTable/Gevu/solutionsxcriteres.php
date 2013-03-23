@@ -143,31 +143,37 @@ class Models_DbTable_Gevu_solutionsxcriteres extends Zend_Db_Table_Abstract
      * Recherche une entrée Gevu_solutionsxcriteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
-     * @param int $id_critere
+     * @param int $idsCritere
      * @param boolean $bRetObj
      * 
      * @return array
      */
-    public function findByIdCritere($id_critere, $bRetObj=false)
+    public function findByIdCritere($idsCritere, $bRetObj=false)
     {
         $query = "SELECT
 	        s.id_solution, s.lib AS solution, s.ref AS refSolu
-	        , cS.id_cout, cS.unite, cS.metre_lineaire, cS.metre_carre, cS.achat, cS.pose
+        	, d.url SDurl, d.id_doc SDid_doc, d.titre SDtitre, d.content_type SDcontent_type
+	        , cS.id_cout Sid_cout, cS.unite Sunite, cS.metre_lineaire Smetre_lineaire, cS.metre_carre Smetre_carre, cS.achat Sachat, cS.pose Spose
 	        , p.id_produit, p.ref AS refProd, p.description, p.marque, p.modele
 	        , cP.id_cout, cP.unite, cP.metre_lineaire, cP.metre_carre, cP.achat, cP.pose
+        	, dprod.url PDurl, dprod.id_doc PDid_doc, dprod.titre PDtitre, dprod.content_type PDcontent_type
         FROM gevu_solutions AS s
-	        INNER JOIN gevu_solutionsxcriteres as sc ON s.id_solution = sc.id_solution AND sc.id_critere = ".$id_critere."
+	        INNER JOIN gevu_solutionsxcriteres as sc ON s.id_solution = sc.id_solution AND sc.id_critere IN (".$idsCritere.")
 	        INNER JOIN gevu_solutionsxcouts as sco ON sco.id_solution = s.id_solution
 	        INNER JOIN gevu_couts as cS ON cS.id_cout = sco.id_cout
+	        LEFT JOIN gevu_docsxsolutions as ds ON ds.id_solution = s.id_solution
+	        LEFT JOIN gevu_docs as d ON d.id_doc = ds.id_doc 
 	        LEFT JOIN gevu_solutionsxproduits as sp ON sp.id_solution = sc.id_solution
 	        LEFT JOIN gevu_produits as p ON p.id_produit = sp.id_produit
 	        LEFT JOIN gevu_produitsxcouts as pc ON pc.id_produit = p.id_produit
-	        LEFT JOIN gevu_couts as cP ON cP.id_cout = pc.id_cout";
-
+	        LEFT JOIN gevu_couts as cP ON cP.id_cout = pc.id_cout
+	        LEFT JOIN gevu_docsxproduits as dp ON dp.id_produit = p.id_produit
+	        LEFT JOIN gevu_docs as dprod ON dprod.id_doc = dp.id_doc";
+	        
     	$adpt = $this->getAdapter();
     	$result = $adpt->query($query);
     	$arr = $result->fetchAll();
-    	
+    	$arrR = array();
     	if($bRetObj){
     		$idSolus=-1;$j=-1;$idProd = -1;$k=-1;
     		foreach ($arr as $d) {
@@ -176,6 +182,7 @@ class Models_DbTable_Gevu_solutionsxcriteres extends Zend_Db_Table_Abstract
 					$idSolus = $d['id_solution'];
 					$arrR[$j] = array("id_solution"=>$d['id_solution'],"solution"=>$d['solution'], "ref"=>$d['refSolu']);
 					$idProd = -1;
+					$arrR[$j]["produits"] = array();
 					$k=-1;
 				}
 				if($d['id_produit'] && $idProd != $d['id_produit']){
@@ -183,18 +190,24 @@ class Models_DbTable_Gevu_solutionsxcriteres extends Zend_Db_Table_Abstract
 					$idProd = $d['id_produit'];
 					$arrR[$j]["produits"][$k] = array("id_produit"=>$d['id_produit'],"ref"=>$d['refProd'],"description"=>$d['description'], "marque"=>$d['marque'], "modele"=>$d['modele']);
 				}
+    			if($d['SDid_doc']){
+					$arrR[$j]["docs"][] = array("id_doc"=>$d['SDid_doc'],"url"=>$d['SDurl'],"titre"=>$d['SDtitre'],"content_type"=>$d['SDcontent_type']);
+				}						
+    		    if($d['PDid_doc']){
+					$arrR[$j]["produits"][$k]["docs"][] = array("id_doc"=>$d['PDid_doc'],"url"=>$d['PDurl'],"titre"=>$d['PDtitre'],"content_type"=>$d['PDcontent_type']);
+				}						
 				if($d['id_cout']){
-					$arrR[$j]["produits"][$k]["cout"][] = array("id_cout"=>$d['id_cout'],"unite"=>$d['unite'],"metre_lineaire"=>$d['metre_lineaire'],"metre_carre"=>$d['metre_carre'],"achat"=>$d['achat'],"pose"=>$d['pose'],"solution"=>$d['solution']);
+					$arrR[$j]["produits"][$k]["cout"] = array("id_cout"=>$d['id_cout'],"unite"=>$d['unite'],"metre_lineaire"=>$d['metre_lineaire'],"metre_carre"=>$d['metre_carre'],"achat"=>$d['achat'],"pose"=>$d['pose'],"solution"=>$d['solution']);
 				}						
 				if($d['Sid_cout']){
-					$arrR[$j]["cout"][] = array("id_cout"=>$d['Sid_cout'],"unite"=>$d['Sunite'],"metre_lineaire"=>$d['Smetre_lineaire'],"metre_carre"=>$d['Smetre_carre'],"achat"=>$d['Sachat'],"pose"=>$d['Spose'],"solution"=>$d['Ssolution']);
+					$arrR[$j]["cout"] = array("id_cout"=>$d['Sid_cout'],"unite"=>$d['Sunite'],"metre_lineaire"=>$d['Smetre_lineaire'],"metre_carre"=>$d['Smetre_carre'],"achat"=>$d['Sachat'],"pose"=>$d['Spose'],"solution"=>$d['solution']);
 				}						
     		}
     	}else{
-    		$arrResult = $arr;
+    		$arrR = $arr;
     	}
     	
-    	return $arrResult;
+    	return $arrR;
         
     }
     
