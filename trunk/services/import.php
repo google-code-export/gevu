@@ -1,7 +1,8 @@
 <?php
 try {
-	require_once( "../param/ParamAppli.php" );
-
+	require_once( "../application/configs/config.php" );
+	$application->bootstrap();
+	
 	$imp = new GEVU_Import();
 	//$imp->addScenario("C:/wamp/www/gevu/param/scenarisation.xml");
 	//$imp->addScenario("C:/wamp/www/gevu/param/logementV3.xml");
