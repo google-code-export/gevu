@@ -11,17 +11,24 @@
 			import mx.collections.ArrayCollection;
 			import mx.containers.HBox;
 			import mx.controls.Alert;
+			import mx.controls.CheckBox;
 			import mx.controls.HRule;
 			import mx.controls.Image;
+			import mx.controls.Text;
 			import mx.managers.CursorManager;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-            private var titreListeDiag:String;
+			
+			[Bindable] public var titre:String="";
 			public var params:Array;
 			public var mainCtrlWidth:int;
+			public var bForSolus:Boolean=false;
+			public var bCheckLieu:Boolean=false;
+			public var arrSelectLieu:Array;
 
 			private function init():void{
+				if(!params["idCrit"])params["idCrit"]="";
 				roDiag.getDiagListe(params,this.parentApplication.idBase);
 				setStyleListeDiag();
 				if(mainCtrlWidth)mainCtrl.width = mainCtrlWidth;
@@ -72,23 +79,63 @@
 			protected function getDiagListe_resultHandler(event:ResultEvent):void
 			{
 				var rsListe:Object = event.result;
-								
+				var first:Boolean = true;
+				
 				//boucle sur les critères
 				for each (var rLieu:Object in rsListe)
 				{
+					//création du conteneur
 					var vb:VBox = new VBox;
 					//vb.percentHeight = 100;
 					vb.percentWidth = 100;
-					var ar:ariane = new ariane;
-					ar.NodeData = rLieu["ariane"]["id"][0]["ariane"];
-					vb.addChild(ar);
-					for each (var crit:Object in rLieu)
-					{
-						if(crit.affirmation){
-							vb.addChild(addCritere(crit));													
+
+					//vérifie si on affiche pour les solutions
+					if(bForSolus && first){
+						arrSelectLieu = new Array;
+						for each (var crit:Object in rsListe[0])
+						{
+							if(crit.affirmation && first){
+								vb.addChild(addCritere(crit));
+								if(bCheckLieu){
+									var cb:CheckBox = new CheckBox;
+									cb.label = "Appliquer la solution à tous les lieux ?"
+									cb.addEventListener(MouseEvent.CLICK,selectAllLieu);	
+									vb.addChild(cb);
+								}
+								first = false;
+							}
 						}
 					}
+
+					//création du fil d'ariane
+					var ar:ariane = new ariane;
+					ar.NodeData = rLieu["ariane"]["id"][0]["ariane"];
 					
+					if(bForSolus){
+						var hb:HBox = new HBox;
+						hb.percentWidth = 100;
+						if(bCheckLieu){
+							//pour la solution on ajoute une case à cocher
+							var cbL:CheckBox = new CheckBox;
+							cbL.id = "cbl_"+rLieu[0]["id_diag"];
+							arrSelectLieu.push(cbL);
+							hb.addChild(cbL);
+						}
+						hb.addChild(ar);
+						vb.addChild(hb);
+					}else{
+						vb.addChild(ar);	
+					}
+					
+					//affiche les critère si ce n'est pas pour une solution
+					if(!bForSolus){
+						for each (var crit:Object in rLieu)
+						{
+							if(crit.affirmation){
+								vb.addChild(addCritere(crit));													
+							}
+						}
+					}					
 					/*
 					var af:affirmations = new affirmations;
 					af.NodeData = rLieu;
@@ -98,14 +145,24 @@
 				}
 			}
 			
+			function selectAllLieu(e:Object):void{
+				for each (var cb:CheckBox in arrSelectLieu)
+				{
+					cb.selected = true;
+				}
+			}
+			
 			function addCritere(crit:Object):VBox
 			{
 				var larg:int = 20;
 
 				var vb:VBox = new VBox();
-				var lbl:Label = new Label();
-				lbl.text = crit.affirmation;
-				vb.addChild(lbl);
+				vb.percentWidth = 100;
+				
+				var txt:Text = new Text();
+				txt.text = crit.affirmation;
+				txt.percentWidth = 100;
+				vb.addChild(txt);
 				
 				var hb:HBox = new HBox();
 				var lblCtrl:Label = new Label();
@@ -158,7 +215,7 @@
 		<mx:method name="getDiagListe" result="getDiagListe_resultHandler(event)" />
 	</mx:RemoteObject>	
 
-	<mx:Label id="lblTitre" fontSize="18"/>
+	<mx:Label id="lblTitre" fontSize="18" text="{titre}"/>
 	<mx:VBox id="mainCtrl" width="100%" height="100%" minHeight="0" borderStyle="solid" paddingTop="3" paddingBottom="3" paddingLeft="3" paddingRight="3">
 	</mx:VBox>
 </mx:VBox>

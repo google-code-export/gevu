@@ -444,7 +444,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 					break;
 				case "interventions":
 					place = -1;
-					if(obj[item]!="no_product"){
+					if(obj[item]!="no_product" && obj[item].length > 0){
 						instance.produitsData = obj[item];
 						instance.idLieu = idLieu;
 						place = 1;
@@ -642,6 +642,10 @@ protected function tnDiagChange():void
 	if(id==1){
 		stat.idLieu = this.idLieu;
 		stat.init();
+	}
+	if(id==3){
+		cRapports.idLieu = this.idLieu;
+		cRapports.init();
 	}
 }
 

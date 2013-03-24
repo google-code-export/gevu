@@ -35,7 +35,7 @@
 		annonce="Choisissez "+titre;
 		if(objMethode!="getAll"){
 			if(objMethode=="findByTronc"){
-			    ROS.findByTronc(objParam);
+			    ROS.findByTronc(objParam, this.parentApplication.idBase);
 			}			
 			if(objMethode=="findByIdLieu"){
 				if(!objParam)return;

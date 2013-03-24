@@ -103,7 +103,7 @@
 			
 			private function initSolutions():void
 			{
-				if(formSolus){
+				if(formSolus && selectDiag){
 					formSolus.idDiag = selectDiag.id_diag;
 					formSolus.idCrit = selectDiag.id_critere;
 					formSolus.init();
@@ -114,7 +114,7 @@
 			{
 				formProbs.idDiag = idDiag;
 				formProbs.init();
-				formProbs.txtCrit.text = txtDiag;				
+				txtCrit.text = txtDiag;				
 			}
 			
 			private function sortDiag(item:*, index:int, array:Array):Boolean
@@ -137,6 +137,7 @@
 			}
 			
 			private function showQuestion():void{
+				if(!scrDescData)return;
 				var key:String;
 				var myQuery:XPathQuery;
 				var params:Object = JSON.decode(scrDescData["etapes"][0]["paramsCrit"]);
@@ -454,71 +455,72 @@
 			<mx:LinkButton click="{roDiag.getDiagForLieu(idLieu, this.parentApplication.idExi, this.parentApplication.idBase)}" icon="@Embed('images/eye.png')" height="18" width="18" toolTip="Voir les diagnostics" />			
 			<mx:LinkButton id="btnAjout" click="btnAjout_clickHandler(event)" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un diagnostic" />			
 		</mx:HBox>
-		<mx:ViewStack id="vs" width="100%" height="100%" >			
-			<mx:HBox id="lecture" width="100%" height="100%">
-				<mx:AdvancedDataGrid id="adgCrit"  width="100%" height="100%" color="0x323232"
-									 initialize="gcCrit.refresh();"
-									 itemClick="adgCrit_itemClickHandler(event)"
-									 >
-					<mx:dataProvider>
-						<mx:GroupingCollection id="gcCrit" source="{NodeData}">
-							<mx:grouping>
-								<mx:Grouping>
-									<mx:GroupingField name="controle" />
-								</mx:Grouping>
-							</mx:grouping>
-						</mx:GroupingCollection>
-					</mx:dataProvider>        		
-					<mx:columns>
-						<mx:AdvancedDataGridColumn dataField="exis" headerText="Diagnostics" />
-						<mx:AdvancedDataGridColumn dataField="commentaires" headerText="Commentaires" />
-						<mx:AdvancedDataGridColumn dataField="instant" headerText="Date"  />
-					</mx:columns>
-				</mx:AdvancedDataGrid>
-				<mx:DataGrid id="dgQuestions" height="100%" width="100%"
-							 itemClick="dgQuestions_itemClickHandler(event)"  
-							 >
-					<mx:columns>
-						<mx:DataGridColumn dataField="id_diag" visible="false" />
-						<mx:DataGridColumn dataField="ref" width="110" />
-						<mx:DataGridColumn dataField="criteres" />
-						<mx:DataGridColumn dataField="reponse" width="60" />
-					</mx:columns>
-				</mx:DataGrid>
-			</mx:HBox>
-			<mx:VBox id="ajout" width="100%" height="100%" creationComplete="ajout_creationCompleteHandler(event)" >
-				<mx:HBox verticalAlign="middle">
-					<compo:hbControle id="hbCtl" />
-					<mx:Label text="Questions : " />
-					<mx:Button styleName="leftArrowButton" id="btnPrevQuestion" click="btnPrevQuest_clickHandler(event)" toolTip="Passe à la question précédente" enabled="{int(lblQuestionNum.text) > 1}" />
-					<mx:Label id="lblQuestionNum" text="1" /><mx:Label id="lblQuestionInter" text="" /><mx:Label text=" sur " /><mx:Label id="lblQuestionTot" text="{totQestion}" />
-					<mx:Button styleName="rightArrowButton" id="btnNextQuestion" click="btnNextQuestion_clickHandler(event)" toolTip="Passe à la question suivante" enabled="{lblQuestionNum.text != lblQuestionTot.text}" />
+		<mx:VDividedBox width="100%" height="100%">
+			<mx:ViewStack id="vs" width="100%" height="100%" >			
+				<mx:HBox id="lecture" width="100%" height="100%">
+					<mx:AdvancedDataGrid id="adgCrit"  width="100%" height="100%" color="0x323232"
+										 initialize="gcCrit.refresh();"
+										 itemClick="adgCrit_itemClickHandler(event)"
+										 >
+						<mx:dataProvider>
+							<mx:GroupingCollection id="gcCrit" source="{NodeData}">
+								<mx:grouping>
+									<mx:Grouping>
+										<mx:GroupingField name="controle" />
+									</mx:Grouping>
+								</mx:grouping>
+							</mx:GroupingCollection>
+						</mx:dataProvider>        		
+						<mx:columns>
+							<mx:AdvancedDataGridColumn dataField="exis" headerText="Diagnostics" />
+							<mx:AdvancedDataGridColumn dataField="commentaires" headerText="Commentaires" />
+							<mx:AdvancedDataGridColumn dataField="instant" headerText="Date"  />
+						</mx:columns>
+					</mx:AdvancedDataGrid>
+					<mx:DataGrid id="dgQuestions" height="100%" width="100%"
+								 itemClick="dgQuestions_itemClickHandler(event)"  
+								 >
+						<mx:columns>
+							<mx:DataGridColumn dataField="id_diag" visible="false" />
+							<mx:DataGridColumn dataField="ref" width="110" />
+							<mx:DataGridColumn dataField="criteres" />
+							<mx:DataGridColumn dataField="reponse" width="60" />
+						</mx:columns>
+					</mx:DataGrid>
 				</mx:HBox>
-				<mx:HBox width="100%" >
-					<mx:VBox>
-						<mx:Label id="refCtl" text="" />
-						<mx:Label id="typeCtl" text="" />
-						<mx:HBox id="iconCtl">
-							
-						</mx:HBox>
-					</mx:VBox>				
-					<form:repType2 id="ckReponse" lblQ="" Q="reponse_1" fnct="{this.chkReponse}" />
-				</mx:HBox>	
-				<mx:HBox width="100%">
-					<!-- <mx:Button id="btnSaveChoix" label="enregistrer" click="btnSaveChoix_clickHandler(event)" toolTip="Enregistre les réponses" /> -->
-					<mx:Label text="Commentaires :" />
-					<mx:TextInput id="txtComment" width="100%" />					
-				</mx:HBox>
+				<mx:VBox id="ajout" width="100%" height="100%" creationComplete="ajout_creationCompleteHandler(event)" >
+					<mx:HBox verticalAlign="middle">
+						<compo:hbControle id="hbCtl" />
+						<mx:Label text="Questions : " />
+						<mx:Button styleName="leftArrowButton" id="btnPrevQuestion" click="btnPrevQuest_clickHandler(event)" toolTip="Passe à la question précédente" enabled="{int(lblQuestionNum.text) > 1}" />
+						<mx:Label id="lblQuestionNum" text="1" /><mx:Label id="lblQuestionInter" text="" /><mx:Label text=" sur " /><mx:Label id="lblQuestionTot" text="{totQestion}" />
+						<mx:Button styleName="rightArrowButton" id="btnNextQuestion" click="btnNextQuestion_clickHandler(event)" toolTip="Passe à la question suivante" enabled="{lblQuestionNum.text != lblQuestionTot.text}" />
+					</mx:HBox>
+					<mx:HBox width="100%" >
+						<mx:VBox>
+							<mx:Label id="refCtl" text="" />
+							<mx:Label id="typeCtl" text="" />
+							<mx:HBox id="iconCtl">
+								
+							</mx:HBox>
+						</mx:VBox>				
+						<form:repType2 id="ckReponse" lblQ="" Q="reponse_1" fnct="{this.chkReponse}" />
+					</mx:HBox>	
+					<mx:HBox width="100%">
+						<!-- <mx:Button id="btnSaveChoix" label="enregistrer" click="btnSaveChoix_clickHandler(event)" toolTip="Enregistre les réponses" /> -->
+						<mx:Label text="Commentaires :" />
+						<mx:TextInput id="txtComment" width="100%" />					
+					</mx:HBox>
+				</mx:VBox>
+			</mx:ViewStack>
+			<mx:VBox width="100%" height="100%" >
+				<mx:TextArea id="txtCrit" height="40" width="100%"  editable="false" />
+				<mx:TabNavigator id="tn"  width="100%" height="100%" >
+					<form:problemes id="formProbs" />
+					<form:solutions id="formSolus" creationComplete="initSolutions()" />
+				</mx:TabNavigator>		
 			</mx:VBox>
-		</mx:ViewStack>
-		<mx:TabNavigator id="tn"  width="100%" height="100%" >
-			<s:NavigatorContent label="Problèmes">
-				<form:problemes id="formProbs" />
-			</s:NavigatorContent>
-			<s:NavigatorContent label="Solutions" >
-				<form:solutions id="formSolus" creationComplete="initSolutions()" />
-			</s:NavigatorContent>
-		</mx:TabNavigator>		
+		</mx:VDividedBox>
 	</mx:VBox>
 
 </mx:Canvas>
