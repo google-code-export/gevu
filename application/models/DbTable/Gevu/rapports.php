@@ -140,8 +140,13 @@ class Models_DbTable_Gevu_rapports extends Zend_Db_Table_Abstract
     public function findByIdLieu($id_lieu)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_rapports") )                           
-                    ->where( "g.id_lieu = ?", $id_lieu );
+            ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+        	->from( array("r" => "gevu_rapports") )                           
+            	->joinInner(array('dr' => 'gevu_docsxrapports'),
+                	'dr.id_rapport = r.id_rapport',array())
+            	->joinInner(array('d' => 'gevu_docs'),
+                	'd.id_doc = dr.id_doc',array("url","id_doc","titre","content_type"))
+            ->where( "r.id_lieu = ?", $id_lieu );
 
         return $this->fetchAll($query)->toArray(); 
     }

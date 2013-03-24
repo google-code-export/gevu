@@ -34,6 +34,24 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
        ,"Models_DbTable_Gevu_docsxproduits"
        ,"Models_DbTable_Gevu_docsxsolutions"
        );
+
+    /**
+     * retourne une connexion à une base de donnée suivant son nom
+     * @param string $idBase
+     * @return Zend_Db_Adapter_Abstract
+     */
+    public function setDb($idBase){
+    
+    	$db = Zend_Db_Table::getDefaultAdapter();
+    	if($idBase){
+    		//change la connexion à la base
+    		$arr = $db->getConfig();
+    		$arr['dbname']=$idBase;
+    		$db = Zend_Db::factory('PDO_MYSQL', $arr);
+    	}
+    	$this->_db = self::_setupAdapter($db);
+    }
+    
     
     /**
      * Vérifie si une entrée Gevu_docs existe.
@@ -196,14 +214,19 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_docs avec la valeur spécifiée
      * et retourne cette entrée.
      *
      * @param varchar $tronc
+     * @param varchar $idBase
+     * 
+     * @return array
      */
-    public function findByTronc($tronc)
+    public function findByTronc($tronc, $idBase=false)
     {
+    	if($idBase)$this->setDb($idBase);
+    	 
         $query = $this->select()
                     ->from( array("g" => "gevu_docs") )                           
                     ->where( "g.tronc = ?",$tronc );
