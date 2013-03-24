@@ -821,7 +821,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         	if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
 
 	        //récupère les campagnes pour le lieu
-	        $rs = $this->dbD->getDiagliste($params['idLieu'], 1, $params['handi'], $params['niv']);
+	        $rs = $this->dbD->getDiagliste($params['idLieu'], 1, $params['handi'], $params['niv'], $params['idCrit']);
 	        $nb = count($rs);
 	        $oLieu = -1;
 	        for ($i = 0; $i < $nb; $i++) {

@@ -1,7 +1,25 @@
 <?php
-class GEVU_Rapport{
+class GEVU_Rapport extends GEVU_Site{
 
-    /**
+	/**
+	 * récupère la liste des diagnostics pour un lieu
+	 *
+	 * @param int $idLieu
+	 * @param string $idBase
+	 *
+	 * @return array
+	 */
+	public function getRapportFait($idLieu, $idBase){
+		
+		$this->getDb($idBase);
+		
+		$dbR = new Models_DbTable_Gevu_rapports($this->db);
+		return $dbR->findByIdLieu($idLieu);
+		
+	}
+	
+	
+	/**
      * récupère la liste des diagnostics pour un lieu
      *
      * @param int $idLieu
