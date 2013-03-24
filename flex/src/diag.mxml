@@ -155,6 +155,10 @@ todo :
 						<mx:Canvas width="100%" height="100%" label="Accessibilité">
 							<stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
 						</mx:Canvas>
+						<mx:Canvas width="100%" height="100%" label="Rapports">
+							<ns2:cnvRapports id="cRapports" idLieu="{idLieu}" />
+						</mx:Canvas>
+
 						<!--
 						<mx:Canvas width="100%" height="100%" label="Statistiques" >
 							<flexiframe:IFrame id="statIFrame"

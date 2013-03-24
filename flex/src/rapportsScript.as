@@ -158,7 +158,7 @@ public function calculerCout():void {
 			if(ct.n_metre_carre.value !=0) c += int(ct.metre_carre.text)*ct.n_metre_carre.value;
 			if(ct.n_achat.value !=0) c += int(ct.achat.text)*ct.n_achat.value;
 			if(ct.n_pose.value !=0) c += int(ct.pose.text)*ct.n_pose.value;
-			var coutsP:Array = ct.sousCout.getChildren();
+			var coutsP:Array = null;//ct.sousCout.getChildren();
 			for each(var ctP:hbCout in coutsP){
 				if(ctP.n_unite.value !=0) c += int(ctP.unite.text)*ctP.n_unite.value;
 				if(ctP.n_metre_lineaire.value !=0) c += int(ctP.metre_lineaire.text)*ctP.n_metre_lineaire.value;
@@ -243,7 +243,7 @@ public function GetArrCout(ct:hbCout):Array{
 	//if(ct.n_pose.value !=0) 
 	pCout.push({"type":"pose","val":ct.pose.text, "q":ct.n_pose.value});
 
-	var coutsP:Array = ct.sousCout.getChildren();
+	var coutsP:Array = null;//ct.sousCout.getChildren();
 	for each(var ctP:hbCout in coutsP){
 		pSousCout.push(GetArrCout(ctP));
 	}

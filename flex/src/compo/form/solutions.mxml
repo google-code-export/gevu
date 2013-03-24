@@ -3,24 +3,34 @@
 		   xmlns:compo="compo.*"
 		   width="100%" height="100%"
 		   creationComplete="init()"
+		   label="Solutions"
 		   >
 	
 	<mx:Script>
 		<![CDATA[
+			import compo.cnvDiagListe;
+			
 			import mx.controls.Alert;
+			import mx.controls.CheckBox;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			[Bindable] public var NodeData : Object;
+			[Bindable] public var NodeData:Array;
 			[Bindable] public var idSelect:int=-1; 
+			[Bindable] public var idLieu:int; 
 			[Bindable] public var idDiag:int; 
 			[Bindable] public var idCrit:int; 
 			[Bindable] public var idBase:String; 
 			[Bindable] public var arrSolus:Array;
 			[Bindable] public var arrProduit:Array;
+			[Bindable] public var bAjout:Boolean = true;
+			[Bindable] public var bSupp:Boolean = true;
+			[Bindable] public var sMethode:String;
+			[Bindable] public var solusLieuxFait:solutions;
+			public var cnvListe:cnvDiagListe;
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -33,7 +43,35 @@
 				Alert.show(str, "FaultHandlerService"+os);
 			}
 			
-			protected function btnAjouter_clickHandler(event:MouseEvent):void
+			public function btnAjouterClick():void
+			{
+				var vn:Array = getValeurs();
+				//vérifie si on fait un ajout multiple
+				if(cnvListe){
+					var arrDiag:Array = new Array;
+					//récupère les lieux sélectionnés
+					for each (var cb:CheckBox in cnvListe.arrSelectLieu)
+					{
+						if(cb.selected = true){
+							var id:Array = cb.id.split("_");
+							arrDiag.push(id[1]);
+						}
+					}
+					if(arrDiag.length>0){
+						ro.ajouterDiags(arrDiag,vn,this.parentApplication.idExi,this.parentApplication.idBase);						
+					}
+				}else{
+					ro.ajouter(vn,this.parentApplication.idExi,this.parentApplication.idBase);
+				}
+			}
+
+			public function btnModifierClick():void
+			{
+				var vn:Array = getValeurs();
+				ro.edit(idSelect, vn,this.parentApplication.idBase);
+			}
+			
+			protected function getValeurs():Array
 			{
 				//création du tableau de valeur
 				var vn:Array = new Array();				
@@ -41,7 +79,7 @@
 				if(hbCout.solution)
 					vn["id_solution"] = hbCout.solution.id_solution;
 				if(hbCout.produit)
-					vn["id_produit"] = hbCout.solution.id_produit;
+					vn["id_produit"] = hbCout.produit.id_produit;
 				vn["id_cout"] = hbCout.cout.id_cout;				
 				vn["unite"] = hbCout.n_unite.value;				
 				vn["pose"] = hbCout.n_pose.value;				
@@ -49,7 +87,8 @@
 				vn["metre_carre"] = hbCout.n_metre_carre.value;				
 				vn["achat"] = hbCout.n_achat.value;				
 				vn["cout"] = hbCout.coutTotal.text;				
-				ro.ajouter(vn,this.parentApplication.idExi,this.parentApplication.idBase);
+				
+				return vn;
 			}
 			
 			private function deleteItem():void {
@@ -66,77 +105,205 @@
 			{
 				if (event.detail == Alert.YES) 
 				{
-					ro.remove(idSelect);
+					ro.remove(idSelect, this.parentApplication.idBase);
 				}
 			}
-						
+			
 			private function selectItem(event:Event):void {
 				var item:Object=event.currentTarget.selectedItem;
 				if(item){
 					idSelect = item.id_diagsolus;
+					idDiag = item.id_diag;
+					hbCout.cout = {"id_cout":item.id_cout, "unite":item.unite, "metre_lineaire":item.metre_lineaire, "metre_carre":item.metre_carre, "achat":item.achat, "pose":item.pose};
+					hbCout.coutSolus = {"unite":item.dsunite, "pose":item.dspose, "metre_lineaire":item.dsmetre_lineaire, "metre_carre":item.dsmetre_carre, "achat":item.dsachat, "cout":item.dscout};
+
+					if(item.id_produit){
+						hbCout.produit = {"id_produit":item.id_produit, "ref":item.refProd, "marque":item.marque, "modele":item.modele};
+					}else{
+						hbCout.produit = null;						
+					}
+					hbCout.solution = {"id_solution":item.id_solution, "ref":item.refSolu, "solution":item.solution};
+					hbCout.init();
+					
+					if(sMethode=="findByIdLieuFait")
+						ajoutDiagListe(item.id_lieu,item.id_critere, false, "Lieux de la solution");
+
 				}
 			}			
 			
 			protected function method_resultHandler(event:ResultEvent):void
 			{
 				init();
+				if(sMethode=="findByIdLieuAFaire"){
+					solusLieuxFait.init();
+				}
 			}
 			
 			public function init():void
 			{
-				if(!arrSolus){
-					roSolus.findByIdCritere(idCrit); 
-				}				
-				if(idDiag && idDiag!=-1){
-					ro.findByIdDiag(idDiag);
-					btnAjout.enabled = true;
-					btnDelete.enabled = true;
-				}else{
-					btnAjout.enabled = false;
-					btnDelete.enabled = false;
-					txtCrit.text = "";
+				arrSolus = new Array();
+				arrProduit = new Array();
+
+				//vérifie s'il faut charger le critere
+				if(idCrit)
+					roSolus.findByIdCritere(idCrit, true); 
+				
+				//vérifie s'il faut charger les lieux
+				if(idLieu && idLieu!=-1){
+					if(sMethode=="findByIdLieuAFaire"){
+						vs.selectedChild = ajout;
+						ro.findByIdLieuAFaire(idLieu, this.parentApplication.idBase); 
+					}
+					if(sMethode=="findByIdLieuFait"){
+						ro.findByIdLieuFait(idLieu, this.parentApplication.idBase);
+						bAjout = false;
+					}
+				}	
+				
+				//vérifie s'il faut charger les diags
+				if(idDiag && idDiag!=-1 && !sMethode){
+					ro.findByIdDiag(idDiag, this.parentApplication.idBase);
 				}
+				
+				if(hbCout){
+					hbCout.cout = false;
+					hbCout.init();
+					hbCout.docs.initDoc(null);
+				}
+				
+				//réinitialise la liste des lieux
+				diagSelect.removeAllChildren();
 			}
 						
+			protected function dgLieuxAFaire_clickHandler(event:MouseEvent):void
+			{
+				var item:Object=event.currentTarget.selectedItem;
+				if(!item)return;
+				roSolus.findByIdCritere(item.id_critere, true); 
+
+				arrProduit = null;
+				hbCout.solution = null;
+				hbCout.cout = null;
+				hbCout.coutSolus = null;
+				hbCout.produit = null;
+				hbCout.init();
+				ajoutDiagListe(item.lieux,item.id_critere, true, "Liste des lieux sans solution");
+				
+			}
+			
+			protected function ajoutDiagListe(lieux:String, critere:String, bCheckLieu:Boolean, titre:String):void
+			{
+				var vn:Array = new Array();
+				vn["niv"] = -1;
+				vn["handi"] = "";
+				vn["idLieu"] = lieux;
+				vn["idCrit"] = critere;
+				diagSelect.removeAllChildren();
+				cnvListe = new cnvDiagListe();
+				cnvListe.params = vn;
+				cnvListe.bForSolus = true;
+				cnvListe.bCheckLieu = bCheckLieu;
+				cnvListe.titre = titre;
+
+				//cnvListe.mainCtrlWidth = 100;
+				diagSelect.addChild(cnvListe);
+				
+			}
+
+			
 			protected function dgSolution_clickHandler(event:MouseEvent):void
 			{
 				var item:Object=event.currentTarget.selectedItem;
+				if(!item)return;
 				arrProduit = item.produits;
 				hbCout.solution = item;
-				hbCout.cout = item.cout;				
+				hbCout.cout = item.cout;
+				hbCout.coutSolus = null;
+				hbCout.produit = null;
+				hbCout.init();
+				if(item.docs)hbCout.docs.initDoc(item.docs);
 			}
 			
 			protected function dgProduit_clickHandler(event:MouseEvent):void
 			{
 				var item:Object=event.currentTarget.selectedItem;
+				if(!item)return;
 				hbCout.produit = item;
 				hbCout.cout = item.cout;				
+				hbCout.coutSolus = null;
+				hbCout.init();
+				if(item.docs)hbCout.docs.initDoc(item.docs);
+			}
+
+			protected function calculerCout():void
+			{
+				var cg:int = 0;
+				for each (var c:Object in NodeData)
+				{
+					cg += int(c.dscout);
+				}
+				this.coutGlobal.text = cg.toString();
 				
 			}
 			
 			protected function findByIdDiag_resultHandler(event:ResultEvent):void
 			{
 				NodeData = event.result as Array;
-				vs.selectedChild = lecture;				
+				if(!vs)return;
+				
+				if(NodeData.length > 0)
+					vs.selectedChild = lecture;
+				else
+					vs.selectedChild = ajout;
+			
+				calculerCout();
+			
 			}
+
+			protected function findByIdLieuFait_resultHandler(event:ResultEvent):void
+			{
+				NodeData = event.result as Array;
+				
+				if(NodeData.length > 0)
+					vs.selectedChild = lecture;
+				else
+					vs.selectedChild = rien;
+
+				calculerCout();
+
+			}
+			
+			protected function findByIdLieuAFaire_resultHandler(event:ResultEvent):void
+			{
+				NodeData = event.result as Array;
+				dgLieuxAFaire.percentHeight = 100;
+				dgLieuxAFaire.percentWidth = 100;
+				
+			}
+			
 			
 			protected function findByIdCritere_resultHandler(event:ResultEvent):void
 			{
 				arrSolus = event.result as Array;
 			}
 			
+			
 		]]>
 	</mx:Script>
 	
 	<mx:RemoteObject id="ro"
 					 destination="zend"
-					 source="Model_DbTable_Gevu_diagnosticsxsolutions"
+					 source="Models_DbTable_Gevu_diagnosticsxsolutions"
 					 fault="faultHandlerService(event);"
 					 showBusyCursor="true" 
 					 >
 		<mx:method name="ajouter" result="method_resultHandler(event)"	/>
+		<mx:method name="ajouterDiags" result="method_resultHandler(event)"	/>
+		<mx:method name="edit" result="method_resultHandler(event)"	/>
 		<mx:method name="remove" result="method_resultHandler(event)" />
-		<mx:method name="findByIdDiag" result="findByIdDiag_resultHandler(event)" />		
+		<mx:method name="findByIdDiag" result="findByIdDiag_resultHandler(event)" />
+		<mx:method name="findByIdLieuFait" result="findByIdLieuFait_resultHandler(event)"  />
+		<mx:method name="findByIdLieuAFaire" result="findByIdLieuAFaire_resultHandler(event)" />
 	</mx:RemoteObject>
 	<mx:RemoteObject id="roSolus"
 					 destination="zend"
@@ -147,60 +314,74 @@
 		<mx:method name="findByIdCritere" result="findByIdCritere_resultHandler(event)" />		
 	</mx:RemoteObject>
 		
-	<mx:ViewStack id="vs" width="100%" height="100%">
-		<mx:VBox id="lecture" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-			<mx:HBox width="100%" >
-				<mx:LinkButton id="btnAjout" click="vs.selectedChild = ajout;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une solution" enabled="false" />
-				<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une solution" enabled="false" />							
-				<mx:TextArea id="txtCrit" height="40" width="100%"  editable="false" />
-			</mx:HBox>							
-			<mx:HBox width="100%" height="100%" >
-				<mx:DataGrid width="100%" height="100%" id="dataGrid"
-							 click="selectItem(event);"
+	<mx:HBox width="100%" height="100%">
+		<mx:ViewStack id="vs" width="100%" height="100%">
+			<mx:VBox id="lecture" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+				<mx:HBox width="100%" >
+					<mx:LinkButton id="btnAjout" visible="{bAjout}" click="vs.selectedChild = ajout;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une solution" enabled="false" />
+					<mx:LinkButton id="btnDelete" visible="{bSupp}" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une solution" enabled="false" />	
+					<mx:Label text="Coût global :" color="red" /><mx:Label color="red" text="0" id="coutGlobal"/><mx:Label color="red" text="€ H.T."/>
+				</mx:HBox>							
+				<mx:HBox width="100%" height="100%" >
+					<mx:DataGrid width="100%" height="100%" id="dataGrid"
+								 click="selectItem(event);"
+								 dataProvider="{NodeData}">
+						<mx:columns>
+							<mx:DataGridColumn dataField="critRef" headerText="Critère" />
+							<mx:DataGridColumn dataField="solution" headerText="Solution" />
+							<mx:DataGridColumn dataField="produit" headerText="Produit" />
+							<mx:DataGridColumn dataField="dsunite" headerText="nb. d'unité" />
+							<mx:DataGridColumn dataField="dsmetre_lineaire" headerText="nb. mètre linéaire"  />
+							<mx:DataGridColumn dataField="dsmetre_carre" headerText="nb. mètre carré" />
+							<mx:DataGridColumn dataField="dsachat" headerText="nb. d'achat" />
+							<mx:DataGridColumn dataField="dspose" headerText="nb de pose" />
+							<mx:DataGridColumn dataField="dscout" headerText="Coût" color="red"  />
+						</mx:columns>
+					</mx:DataGrid>					
+				</mx:HBox>							
+			</mx:VBox>
+			<mx:HBox id="ajout" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+				<mx:DataGrid width="0" height="0" id="dgLieuxAFaire"
+							 click="dgLieuxAFaire_clickHandler(event)"
 							 dataProvider="{NodeData}">
 					<mx:columns>
-						<mx:DataGridColumn dataField="detailSolution" headerText="Solution" />
-						<mx:DataGridColumn dataField="detailProduit" headerText="Produit" />
-						<mx:DataGridColumn dataField="detailCout" headerText="Cout" />
-						<mx:DataGridColumn dataField="unite" headerText="nb. d'unité" />
-						<mx:DataGridColumn dataField="metre_lineaire" headerText="nb. mètre linéaire"  />
-						<mx:DataGridColumn dataField="metre_carre" headerText="nb. mètre carré" />
-						<mx:DataGridColumn dataField="achat" headerText="nb. d'achat" />
-						<mx:DataGridColumn dataField="pose" headerText="nb de pose" />
-						<mx:DataGridColumn dataField="cout" headerText="TOTAL COUT" color="red"  />
+						<mx:DataGridColumn dataField="nbDiag" headerText="Nombre de Diag." />
+						<mx:DataGridColumn dataField="ref" headerText="Ref. Critère" width="110" />
 					</mx:columns>
-				</mx:DataGrid>					
-			</mx:HBox>							
-		</mx:VBox>
-		<mx:VBox id="ajout" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-			<mx:HBox>
-				<mx:Label text="Choisissez votre solution ou votre produit et la quantité souhaitée :"/> 
-				<mx:Button id="btnAjouter" label="Enregistrer" click="btnAjouter_clickHandler(event)" />
-				<mx:Button id="btnAnnuler" label="Annuler" click="vs.selectedChild = lecture;" />				
+				</mx:DataGrid>
+				<mx:VBox width="100%" height="100%">					
+					<mx:DataGrid width="100%" height="100%" id="dgSolution"
+								 click="dgSolution_clickHandler(event)"
+								 dataProvider="{arrSolus}">
+						<mx:columns>
+							<mx:DataGridColumn dataField="id_solution" visible="false"/>
+							<mx:DataGridColumn dataField="ref" headerText="Ref." width="110" />
+							<mx:DataGridColumn dataField="solution" headerText="Détail" />
+						</mx:columns>
+					</mx:DataGrid>									
+					<mx:DataGrid width="100%" height="100%" id="dgProduit"
+								 click="dgProduit_clickHandler(event)"
+								 dataProvider="{arrProduit}">
+						<mx:columns>
+							<mx:DataGridColumn dataField="id_produit" visible="false"/>
+							<mx:DataGridColumn dataField="ref" headerText="Ref." width="110" />
+							<mx:DataGridColumn dataField="description" headerText="Détail" />
+							<mx:DataGridColumn dataField="marque" headerText="Marque" width="110" />
+							<mx:DataGridColumn dataField="modele" headerText="Modèle" width="110" />
+						</mx:columns>
+					</mx:DataGrid>									
+				</mx:VBox>
 			</mx:HBox>
-			<mx:HBox>
-				<mx:DataGrid width="100%" height="100%" id="dgSolution"
-							  click="dgSolution_clickHandler(event)"
-							 dataProvider="{arrSolus}">
-					<mx:columns>
-						<mx:DataGridColumn dataField="id_solution" visible="false"/>
-						<mx:DataGridColumn dataField="ref" headerText="Ref." />
-						<mx:DataGridColumn dataField="lib" headerText="Détail" />
-					</mx:columns>
-				</mx:DataGrid>									
-				<mx:DataGrid width="100%" height="100%" id="dgProduit"
-							  click="dgProduit_clickHandler(event)"
-							 dataProvider="{arrProduit}">
-					<mx:columns>
-						<mx:DataGridColumn dataField="id_produit" visible="false"/>
-						<mx:DataGridColumn dataField="ref" headerText="Ref." />
-						<mx:DataGridColumn dataField="description" headerText="Détail" />
-						<mx:DataGridColumn dataField="marque" headerText="Marque" />
-						<mx:DataGridColumn dataField="modele" headerText="Modèle" />
-					</mx:columns>
-				</mx:DataGrid>									
-			</mx:HBox>
-			<compo:hbCout id="hbCout" />
+			<mx:VBox id="rien" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+				
+			</mx:VBox>			
+		</mx:ViewStack>
+		<mx:VBox width="100%" height="100%" paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2" verticalAlign="top">
+			<compo:hbCout id="hbCout" bAjout="{vs.selectedChild == ajout}" bModif="{vs.selectedChild == lecture}" functionAjout="btnAjouterClick" functionModif="btnModifierClick" />
+			<mx:VBox id="diagSelect" width="100%" height="100%" >
+				
+			</mx:VBox>
 		</mx:VBox>
-	</mx:ViewStack>											
+	</mx:HBox>
+
 </mx:Canvas>

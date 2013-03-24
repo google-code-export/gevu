@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
-	 creationComplete="init()"
-	 backgroundColor="{bgColor}" backgroundAlpha="0.1"
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 creationComplete="init()" width="100%"
+	 backgroundColor="{bgColor}" backgroundAlpha="0.1" xmlns:compo="compo.*"
 	>
 
 	<mx:Script>
 		<![CDATA[
 			[Bindable]	public var cout:Object;
+			[Bindable]	public var coutSolus:Object;
 			[Bindable]	public var produit:Object;
 			[Bindable]	public var solution:Object;
+			[Bindable]	public var bAjout:Boolean=true;
+			[Bindable]	public var bModif:Boolean=true;
+			[Bindable]	public var functionAjout:Function;
+			[Bindable]	public var functionModif:Function;
+
 			public var bgColor=0x3366F;
-			public function init():void{
+			
+			public function init():void
+			{
+				if(coutSolus){
+					coutTotal.text = coutSolus.cout;
+					n_unite.value = Number(coutSolus.unite);
+					n_metre_lineaire.value = Number(coutSolus.metre_lineaire);
+					n_metre_carre.value = Number(coutSolus.metre_carre);
+					n_achat.value = Number(coutSolus.achat);
+					n_pose.value = Number(coutSolus.pose);									
+				}else{
+					coutTotal.text = "";
+					n_unite.value=0;
+					n_metre_lineaire.value=0;
+					n_metre_carre.value=0;
+					n_achat.value=0;
+					n_pose.value=0;									
+				}
+
 				if(cout){
+					this.visible = true;
 					unite.text=cout.unite; 
 					if(int(cout.unite)==0)v_unite.width=0;
 					
@@ -28,24 +53,34 @@
 					if(int(cout.pose)==0)v_pose.width=0;
 										
 					if(solution){
-						ref.text=solution.ref; 
-						lib.text=solution.lib;				
+						refSolus.text=solution.ref; 
+						libSolus.text=solution.solution;				
 					}
 					if(produit){
-						ref.text=produit.ref; 
-						lib.text=produit.marque+" - "+produit.modele;
+						refProd.text=produit.ref; 
+						libProd.text=produit.marque+" - "+produit.modele;
+					}else{
+						refProd.text=""; 
+						libProd.text="";						
 					}
 					//majQuantite();
 					garde();
-				}				
+				}else{
+					this.visible = false;
+				}
 			}
 			private function garde():void{
 				
 				if(n_achat.value != 0  || n_unite.value != 0  || n_metre_lineaire.value != 0 || n_metre_carre.value != 0 || n_pose.value != 0 ){
 					this.setStyle("backgroundColor","green");
-					//création de la solution à ajouter
-					//ajoute une solution à la sélection
-					//this.parentApplication.contains()					
+					if(coutTotal.text=="0"){
+						//calcule le cout total
+						if(n_achat.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(achat.text)*n_achat.value));
+						if(n_unite.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(unite.text)*n_unite.value));
+						if(n_metre_lineaire.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(metre_lineaire.text)*n_metre_lineaire.value));
+						if(n_metre_carre.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(metre_carre.text)*n_metre_carre.value));
+						if(n_pose.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(pose.text)*n_pose.value));
+					}
 				}else{
 					this.setStyle("backgroundColor",bgColor);
 				}	
@@ -62,8 +97,16 @@
 			}
 		]]>
 	</mx:Script>
-	<mx:Label text="" id="ref"/>			
-	<mx:Text id="lib" fontSize="12" width="400" />
+	<mx:VBox width="100%">
+		<mx:HBox width="100%">
+			<mx:Label text="" id="refSolus"/>
+			<mx:Text id="libSolus" fontSize="12" width="100%" />			
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label text="" id="refProd"/>
+			<mx:Text id="libProd" fontSize="12" width="100%" />			
+		</mx:HBox>		
+	</mx:VBox>
 	<mx:HBox>        
 		<mx:VBox styleName="ligneCout" id="v_unite" >
 			<mx:Label text="unité" />
@@ -107,11 +150,13 @@
 		<mx:VBox styleName="ligneCout" color="red" >
 			<mx:Label text="COUT TOTAL" />
 			<mx:HBox>
-				<mx:Label text="" id="coutTotal"/><mx:Label text="€ H.T."/>
+				<mx:TextInput text="0" id="coutTotal"/><mx:Label text="€ H.T."/>
 			</mx:HBox>
 		</mx:VBox>
 	</mx:HBox>
-	<mx:VBox id="sousCout" >
-		
-	</mx:VBox>
+	<compo:hbIcoMultimedia id="docs" nbColo="4" bAjout="false" bSupp="false" />
+	<mx:HBox horizontalAlign="center" verticalAlign="top">
+		<mx:Button id="btnAjouter" label="Ajouter" click="{functionAjout()}" visible="{bAjout}" />
+		<mx:Button id="btnModifier" label="Modifier" click="{functionModif()}" visible="{bModif}" />				
+	</mx:HBox>
 </mx:VBox>

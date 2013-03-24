@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:compo="compo.*"
+	label="Rapports"
+	width="100%" height="100%"	
+	 creationComplete="creationCompleteHandler(event)" xmlns:form="compo.form.*"
+	>	
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable] public var idLieu:int; 
+			public var arrRapport:Array;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				roRapport.getRapportFait(idLieu, this.parentApplication.idBase);
+			}
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			public function calculerRapport(send:Boolean):*{
+				
+				/*
+				var SelSols:Array = selectCout.getChildren();
+				
+				if(SelSols.length == 0){
+				Alert.show("Merci de sélectionner au moins une solution ou un produit.");
+				return;
+				}
+				
+				var pArr:Array = new Array; var pProb:Array; var couts:Array;
+				var idSolus:int; var libSolus:String;
+				
+				//récupération des données sélectionnnées
+				for each(var sol:hbSelectSolus in SelSols){
+				idSolus = sol.solus.id_solution;
+				couts = sol.selectProb.getChildren();
+				pProb = new Array;
+				for each(var ct:hbCout in couts){
+				pProb.push(GetArrCout(ct));
+				}
+				pArr.push({"idSolus":idSolus, "couts":pProb});
+				}	
+				var pxml:String = JSON.encode(pArr);
+				trace(pxml);    
+				if(!send) return pxml;
+				
+				var request:URLRequest = new URLRequest(ENDPOINT_RAPPORT);
+				var variables:URLVariables = new URLVariables();
+				variables.pxml=pxml;
+				variables.site=idBase;
+				variables.id= idLieu;
+				variables.model=cbModel.cb.selectedItem["id_doc"];
+				request.data = variables;
+				request.method = URLRequestMethod.POST;
+				navigateToURL(request,"_blank");
+				*/
+			}			
+			
+			protected function getRapportFait_resultHandler(event:ResultEvent):void
+			{
+				arrRapport = event.result as Array;
+				
+				docs.initDoc(arrRapport);
+				
+				
+			}
+						
+			public function init():void{
+				if(idLieu && idLieu != -1){
+					formSolusFait.idLieu = idLieu;
+					formSolusFait.init();
+					formSolusAFaire.idLieu = idLieu;
+					formSolusAFaire.init();
+				}
+			}
+
+			protected function creerRapport_clickHandler(event:MouseEvent):void
+			{
+				var item:Object = cbModel.cb.selectedItem;
+				if(!item){
+					Alert.show("Veuillez sélectionner un modèle");
+					return
+				}
+	
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="roRapport"
+					 destination="zend"
+					 source="GEVU_Rapport"
+					 fault="faultHandlerService(event);"
+					 showBusyCursor="true" 
+					 >
+		<mx:method name="getRapportFait" result="getRapportFait_resultHandler(event)" />		
+	</mx:RemoteObject>
+	    
+	<mx:VBox id="boxGen" width="100%" height="100%" >
+		<mx:HBox width="100%" >
+			<compo:hbIcoMultimedia id="docs" nbColo="4" bAjout="false" bSupp="false" />
+			<mx:VBox>
+				<mx:Label text="Modèles de rapport" />
+				<mx:HBox>
+					<compo:cUploadFile x="-100" id="ufModel" iconBtn="@Embed('images/AddRecord.png')" idExi="{this.parentApplication.idExi}" objName="model_rapport" ttBtn="Ajouter un modèle" ctlBind="{this}" wf="models" typeFic="models" />								
+					<compo:cbGroupeMot labelName="titre" bRemove="true" bAjout="false" titre="un modèle" keyName="id_doc" id="cbModel" objName="Models_DbTable_Gevu_docs" objMethode="findByTronc"  objParam="model_rapport" />
+				</mx:HBox>
+				<mx:Button label="Créer un nouveau rapport" click="creerRapport_clickHandler(event)" />
+			</mx:VBox>
+		</mx:HBox>
+		<mx:Panel title="Solutions renseignées" width="100%" height="100%" >
+			<form:solutions id="formSolusFait" bAjout="false" sMethode="findByIdLieuFait" />			
+		</mx:Panel>
+		<mx:Panel title="Solutions à renseigner" width="100%" height="100%" >
+			<form:solutions id="formSolusAFaire"  sMethode="findByIdLieuAFaire" solusLieuxFait="{formSolusFait}" />			
+		</mx:Panel>
+	</mx:VBox>
+	
+</mx:Canvas>

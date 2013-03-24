@@ -56,7 +56,7 @@
 				ctP.cout = c;
 				//ctP.prob = p;
 				ctP.bgColor = 0xff0000;
-				ct.sousCout.addChild(ctP);                              
+				//ct.sousCout.addChild(ctP);                              
 			}
 			public function delProb(p:Object):void{
 				var i:int=0;
@@ -76,8 +76,8 @@
 						if(prod.id_cout==c.id_cout){
 							prob.prods.splice(i,1);
 							var ct:hbCout = hbCout(selectProb.getChildByName("prob_"+prob.idDon));					
-							var souCt:hbCout = hbCout(ct.sousCout.getChildByName("prod_"+c.id_cout));					
-							ct.sousCout.removeChild(souCt);
+							//var souCt:hbCout = hbCout(ct.sousCout.getChildByName("prod_"+c.id_cout));					
+							//ct.sousCout.removeChild(souCt);
 						}
 						i++;
 					}
