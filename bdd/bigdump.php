@@ -35,16 +35,10 @@
 // *** Accurate filename handling and urlencode in URLs
 // *** Add Paypal button
 
-// Database configuration
-require_once ("../param/Constantes.php");
-// Database configuration
-if(isset($_GET['site'])){
-	$idSite = $_GET['site'];
-	$db_server   = $SITES[$idSite]["SQL_HOST"];
-	$db_name     = $SITES[$idSite]["SQL_DB"];
-	$db_username = $SITES[$idSite]["SQL_LOGIN"];
-	$db_password = $SITES[$idSite]["SQL_PWD"];
-}
+$db_server   = "localhost";
+$db_name     = "gevu_trouville";
+$db_username = "root";
+$db_password = "";
 
 //construction du choix des sites
 $fSite = "<form action='bigdump.php' method='get'>
@@ -790,7 +784,7 @@ else if ($file && $gzipmode) gzclose($file);
 
 ?>
 
-<p class="centr">© 2003-2008 <a href="mailto:alexey@ozerov.de">Alexey Ozerov</a> - <a href="http://www.ozerov.de/bigdump.php" target="_blank">BigDump Home</a></p>
+<p class="centr">ï¿½ 2003-2008 <a href="mailto:alexey@ozerov.de">Alexey Ozerov</a> - <a href="http://www.ozerov.de/bigdump.php" target="_blank">BigDump Home</a></p>
 
 </td></tr></table>
 
