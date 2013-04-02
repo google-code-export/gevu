@@ -52,7 +52,7 @@ function getTypeLog(typeLog){
 	});
 }	
 	
-var wL = 1000, hL = 1000; //On créer un div legendecarto qui prend comme hauteur et largeur 1200.
+var wL = 700, hL = 700; //On créer un div legendecarto qui prend comme hauteur et largeur 1200.
 		
 function getLegende(){ //On créer une fonction GetLegende
 
