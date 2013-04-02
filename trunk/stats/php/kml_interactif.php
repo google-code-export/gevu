@@ -1,5 +1,5 @@
 <?php
-require('phpsqlajax_dbinfo.php');
+require('codes.php');
 
 // Ouvre connexion MySQL
 $connection=mysql_connect ($server, $username, $password);
@@ -33,28 +33,6 @@ $parNode = $dom->append_child($node);
 $dnode = $dom->create_element('Document');
 $docNode = $parNode->append_child($dnode);
  
-/*Création du style
-$restStyleNode = $dom->create_element('Style');
-$restStyleNode->set_attribute('id', 'restaurantStyle');
-$restIconstyleNode = $dom->create_element('IconStyle');
-$restIconstyleNode->set_attribute('id', 'restaurantIcon');
-$restIconNode = $dom->create_element('Icon');
-$restHref = $dom->create_element('href', 'http://maps.google.com/mapfiles/kml/pal2/icon63.png');
-$restIconNode->append_child($restHref);
-$restIconstyleNode->append_child($restIconNode);
-$restStyleNode->append_child($restIconstyleNode);
-$docNode->append_child($restStyleNode);
-$barStyleNode = $dom->create_element('Style');
-$barStyleNode->set_attribute('id', 'barStyle');
-$barIconstyleNode = $dom->create_element('IconStyle');
-$barIconstyleNode->set_attribute('id', 'barIcon');
-$barIconNode = $dom->create_element('Icon');
-$barHref = $dom->create_element('href', 'http://maps.google.com/mapfiles/kml/pal2/icon27.png');
-$barIconNode->append_child($barHref);
-$barIconstyleNode->append_child($barIconNode);
-$barStyleNode->append_child($barIconstyleNode);
-$docNode->append_child($barStyleNode);*/
-
 // Parcourt les résultats de MySQL, créer un repère pour chaque ligne.
 while ($row = @mysql_fetch_assoc($result))
 {
@@ -74,11 +52,19 @@ while ($row = @mysql_fetch_assoc($result))
  // Créer un point
   $pointNode = $dom->create_element('Point');
   $placeNode->append_child($pointNode);
+ //Créer lignes
+	$lineNode = $dom->createElement('LineString');
+	$placeNode->appendChild($lineNode);
+	$exnode = $dom->createElement('extrude', '1');
+	$lineNode->appendChild($exnode);
+	$almodenode =$dom->createElement(altitudeMode,'relativeToGround');
+	$lineNode->appendChild($almodenode);
    
   // Créer des coordonnées en donnant latitude et longitude
   $coorStr = $row['lng'] . ','  . $row['lat'];
   $coorNode = $dom->create_element('coordinates', $coorStr);
   $pointNode->append_child($coorNode);
+  $lineNode->appendChild($coorNode);
 }
 
 $kmlOutput = $dom->dump_mem(TRUE, 'UTF-8');

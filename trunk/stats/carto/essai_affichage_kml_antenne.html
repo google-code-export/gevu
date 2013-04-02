@@ -1,42 +1,54 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<!DOCTYPE html>
+<html>
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title>Google Maps API Sample</title>
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAuPsJpk3MBtDpJ4G8cqBnjRRaGTYH6UMl8mADNa0YKuWNNa8VNxQCzVBXTx2DYyXGsTOxpWhvIG7Djw" type="text/javascript"></script>
-    <script type="text/javascript">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Google Maps JavaScript API v3 Example: KmlLayer KML</title>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <!--  
+    <script type="text/javascript" src="../js/geoxml3.js"></script>
+    <script type="text/javascript" src="../js/ProjectedOverlay.js"></script>
+    -->
+    
+    <script>
+      function initialize() {
+        var centre = new google.maps.LatLng(49.5493690, 0.13747540);
+        var mapOptions = {
+          zoom: 11,
+          center: centre,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
 
-    var map;
-var geoXml; 
-var toggleState = 1;
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-function initialize() {
-  if (GBrowserIsCompatible()) {
-    geoXml = new GGeoXml("../donnees_tables/coordonnees_antennes_kml.kml");
-    map = new GMap2(document.getElementById("map_canvas"));
-    map.setCenter(new GLatLng(49.5493690, 0.13747540), 11);
-    map.addControl(new GLargeMapControl());
-    map.addControl(new GLargeMapControl());
-    map.addOverlay(geoXml);
-  }
-} 
-
-function toggleMyKml() {
-  if (toggleState == 1) {
-    map.removeOverlay(geoXml);
-    toggleState = 0;
-  } else {
-    map.addOverlay(geoXml);
-    toggleState = 1;
-  }
-}
-
+        var ctaLayer = new google.maps.KmlLayer('../php/kml_interactif.php');
+        ctaLayer.setMap(map);
+        //
+      }
     </script>
+    <style type="text/css">
+		html, body {
+		  height: 100%;
+		  margin: 0;
+		  padding: 0;
+		}
+		
+		#map-canvas, #map_canvas {
+		  height: 100%;
+		}
+		
+		@media print {
+		  html, body {
+		    height: auto;
+		  }
+		
+		  #map_canvas {
+		    height: 650px;
+		  }
+		}
+    </style>
   </head>
-  <body onload="initialize()" onunload="GUnload()" style="font-family: Arial;border: 0 none;">
-    <div id="map_canvas" style="width: 640px; height: 480px; float:left; border: 1px solid black;"></div>
-  </div>
-  <br clear="all"/>
-  <br/>
-  <input type="button" value="Toggle KML" onClick="toggleMyKml();"/>
+  <body onload="initialize()">
+    <div id="map-canvas"></div>
   </body>
 </html>
