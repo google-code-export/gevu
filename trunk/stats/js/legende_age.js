@@ -52,14 +52,14 @@ function getTypeLog(typeLog){
 	});
 }	
 	
-var wL = 700, hL = 700; //On créer un div legendecarto qui prend comme hauteur et largeur 1200.
+var wL = 300, hL = 300; //On créer un div legendecarto qui prend comme hauteur et largeur 1200.
 		
 function getLegende(){ //On créer une fonction GetLegende
 
 	var visLeg = d3.select("#legendeCarto").append("svg") //On créer une variable visLeg dans laquel on ajoute un svg à legendeCarto. A ce svg on lui met la hauteur et la largeur, un encadré.
 	.attr("width", wL)
 	.attr("height", hL)
-	.attr("viewBox", "0 0 2000 1500")
+	.attr("viewBox", "0 0 1000 1000")
 	.attr("preserveAspectRatio", "xMidYMid meet")
 	.append("g") //On créer une balise g qui prend comme id:gleg avec un cadre de 1000 * 1000
 		.attr("id","gLeg")
