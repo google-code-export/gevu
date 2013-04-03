@@ -27,7 +27,7 @@
 
 	 	d3.json("../donnees_tables/gevulieux.json", function(json) {
 			
-			var nb = 100;//json.children.length
+			var nb = 9000;//json.children.length
 			var arrDoublons;//json.children.length
 			for(var i=0;i<nb;i++){
 				var item = json.children[i];
@@ -95,7 +95,8 @@
     </script>
   </head>
   <body>
- 	<b>Essai d'affichage des rectangles</b><br><br>
+ 	<b>Logements marqués par un cercle</b><br><br>
+	Patienter le temps que les logements s'affichent
     <div id="map_canvas" class="bas"></div><br>
     <div id="legendeCarto" onclick="alert('test de clic sur la légende');"></div><br>
   </body>

@@ -52,13 +52,19 @@
 	  });
 	  
 	  // onclick="alert('test de clic sur la légende');"
+
+      function changeRadius() {
+        heatmap.setOptions({radius: heatmap.get('radius') ? null : 17});
+        heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 700});
+      }
     </script>
   </head>
   <body>
- 	<big><b>Age des logements à la ville du Havre</b><br><br>
-    <div id="map_canvas" class="bas"></div><br>
-    <div id="legendeCarto"></div><br>
+ 	<big id="big"><b>Age des logements à la ville du Havre</b><br><br>
+    <table align="left"><div id="map_canvas" class="bas"></div></table><br>
+    <table align="right"><div id="legendeCarto"></div></table><br>
 	<div id="container"></div>
+    <button onclick="changeRadius()">Changement d'opacité</button>
   </body>
 </html>
 
