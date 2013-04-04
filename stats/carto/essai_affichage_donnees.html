@@ -23,6 +23,23 @@ function getAddress(overlay, latlng) {
     geocoder.getLocations(latlng, showAddress);
   }
 }
+//Fonction getAdress en API3
+/*function getAddress(latLng) {
+    geocoder.geocode( {'latLng': latLng},
+      function(results, status) {
+        if(status == google.maps.GeocoderStatus.OK) {
+          if(results[0]) {
+            document.getElementById("address").value = results[0].formatted_address;
+          }
+          else {
+            document.getElementById("address").value = "No results";
+          }
+        }
+        else {
+          document.getElementById("address").value = status;
+        }
+      });
+    }*/
 
 function showAddress(response) {
   map.clearOverlays();
