@@ -1,8 +1,14 @@
 <?php
-require('codes.php');
+ $username = 'username';
+ $password = 'password';
+ $database = 'gevu_new';
+ $server = 'server';
+
+
+//require('codes.php');
 
 // Ouvre connexion MySQL
-$connection=mysql_connect ($server, $username, $password);
+$connection=mysql_connect ('127.0.0.1', $username, $password);
 if (!$connection) 
 {
   die('Not connected : ' . mysql_error());
@@ -21,6 +27,8 @@ if (!$result)
 {
   die('Invalid query: ' . mysql_error());
 }
+
+//mysql_query("SELECT id_lieu, lat, lng, adresse, kml FROM gevu_geos WHERE id_lieu = 3 AND id_geo = 2", $connection);
 
 // Création document
 $dom = new domxml_new_doc('1.0');
