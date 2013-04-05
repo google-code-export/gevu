@@ -5,6 +5,14 @@
     <meta charset="utf-8">
     <title>Google Maps JavaScript API v3 Example: KmlLayer KML</title>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+
+	<?php 
+	$name1 = 'Antenne Bléville';
+	$name2 = 'Antenne Caucriauville';
+	$name3 = 'Antenne Centre Ville';
+	$name4 = 'Antenne Mare Rouge';
+	$name5 = 'Antenne Quartier Sud'
+?>	
     <!--  
     <script type="text/javascript" src="../js/geoxml3.js"></script>
     <script type="text/javascript" src="../js/ProjectedOverlay.js"></script>
@@ -29,7 +37,7 @@
         var ctaLayer = new google.maps.KmlLayer('http://www.gevu.org/carto/coordonnees_antennes_kml.kml');
         ctaLayer.setMap(map);
       }
-	  
+ 
     </script>
     <style type="text/css">
 		html, body {
