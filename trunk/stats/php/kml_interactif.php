@@ -76,6 +76,6 @@ while ($row = @mysql_fetch_assoc($result))
 }
 
 $kmlOutput = $dom->saveXML();
-header('Content-type: application/vnd.google-earth.kml+xml');
+//header('Content-type: application/vnd.google-earth.kml+xml'); //mon Php a comme header un content-type. Ce qu'on génère comme xml est du kml.
 echo $kmlOutput;
 ?>
