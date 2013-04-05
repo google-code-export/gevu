@@ -44,12 +44,20 @@ $docNode = $parNode->appendChild($dnode);
 // Parcourt les résultats de MySQL, créer un repère pour chaque ligne.
 while ($row = @mysql_fetch_assoc($result))
 {
+
+  if($row['kml']){
+	  $xmlPlacemark = simplexml_load_string($row['kml']);
+	  $result = $xmlPlacemark->xpath('//coordinates');
+	  $coorStr = $result[0]."";
+  }else{
+  	$coorStr = $row['lng'] . ','  . $row['lat'];
+  }
   // Crée un repère Placemark et l'ajouter au document.
   $node = $dom->createElement('Placemark');
   $placeNode = $docNode->appendChild($node);
   // Crée un attribut id et attribuez-lui la valeur de la colonne id.
   $placeNode->setAttribute('id_lieu', 'placemark' . $row['id_lieu']);
-
+  
   // Créer nom, éléments de description, attributs, et adresse
   $nameNode = $dom->createElement('name',htmlentities($row['name']));
   $placeNode->appendChild($nameNode);
@@ -69,13 +77,12 @@ while ($row = @mysql_fetch_assoc($result))
 	$lineNode->appendChild($almodenode);
    
   // Créer des coordonnées en donnant latitude et longitude
-  $coorStr = $row['lng'] . ','  . $row['lat'];
   $coorNode = $dom->createElement('coordinates', $coorStr);
   $pointNode->appendChild($coorNode);
   $lineNode->appendChild($coorNode);
 }
 
 $kmlOutput = $dom->saveXML();
-//header('Content-type: application/vnd.google-earth.kml+xml'); //mon Php a comme header un content-type. Ce qu'on génère comme xml est du kml.
+header('Content-type: application/vnd.google-earth.kml+xml'); //mon Php a comme header un content-type. Ce qu'on génère comme xml est du kml.
 echo $kmlOutput;
 ?>
