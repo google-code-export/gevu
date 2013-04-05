@@ -5,6 +5,7 @@
     <script type="text/javascript" src="../js/d3.v2.js"></script>
 		<script>
 // Create an object containing LatLng, population.
+var color;
 var citymap = {};
 citymap['chicago'] = {
   center: new google.maps.LatLng(41.878113, -87.629798),
@@ -43,6 +44,30 @@ function initialize() {
       radius: citymap[city].population / 20
     };
     cityCircle = new google.maps.Circle(populationOptions);
+	
+	/*if (population < 3000000) {
+		color = "blue";
+	}
+	
+	if (3000000 < population < 6000000) {
+		color = "green";
+	}
+	
+	if (6000000 < population < 9000000) {
+		color = "red";
+	}*/
+
+for each population
+	{
+		var x = citymap[city];
+		for(var i=0; i < x.lenght; i++){
+			if(x[i].population!="")
+				[x[i].population]=d3.scale.log().domain([x[i].min, x[i].population]).range(colors[x[i].population]);
+		}		
+	}
+
+
+		
   }
 }
 		</script>

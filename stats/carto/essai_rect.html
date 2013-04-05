@@ -36,6 +36,11 @@
 		google.maps.event.addListener(map, 'zoom_changed', function() {
 
     // Get the current bounds, which reflect the bounds before the zoom.
+	function getRect(latlng, poids){
+	var lngRect = 0.01;
+        var sw = latlng;    
+        var ne = new google.maps.LatLng(latlng.lat+lngRect, latlng.lng+lngRect);    
+		var coord = new google.maps.LatLngBounds(sw, ne);  
 		var rectOptions = {
 			strokeColor: "#FF0000",
 			strokeOpacity: 0.8,
@@ -43,7 +48,7 @@
 			fillColor: "#FF0000",
 			fillOpacity: 0.35,
 			map: map,
-			bounds: map.getBounds()
+			bounds: coord
 //			bounds: panToBounds(latLngBounds:LatLngBounds)
 //var latLngBounds = (sw:49, ne:0.13);			
 		};
@@ -53,7 +58,8 @@
         });*/
 		
 		rectangle.setOptions(rectOptions);
-  });
+		return rectangle
+  }});
  
         getLegende(); //On exécute la fonction getLegende où l'on créer les carrés de couleur et le texte
 	  });
