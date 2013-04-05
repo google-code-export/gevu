@@ -21,7 +21,7 @@ citymap['losangeles'] = {
 }
 var cityCircle;
 
-function initialize() {
+
   var mapOptions = {
     zoom: 4,
     center: new google.maps.LatLng(37.09024, -95.712891),
@@ -57,20 +57,19 @@ function initialize() {
 		color = "red";
 	}*/
 
-for each population
-	{
+//for each population
+	//{
 		var x = citymap[city];
 		for(var i=0; i < x.lenght; i++){
 			if(x[i].population!="")
 				[x[i].population]=d3.scale.log().domain([x[i].min, x[i].population]).range(colors[x[i].population]);
 		}		
-	}
+	//}
 
 
 		
   }
-}
 		</script>
 	</head>
-	<body onload="initialize()"></body>
+	<body></body>
 </html>
