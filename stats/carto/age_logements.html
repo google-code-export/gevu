@@ -38,6 +38,18 @@
         map = new google.maps.Map(document.getElementById('map_canvas'),
             mapOptions); // On créer une variable map qui créer un div 'map_canvas' qui a un arrière plan, sa position, sa largeur, sa longueur.
 
+
+/*var panoramaOptions ={
+		position : new google.maps.LatLng(49.5493690, 0.13747540),
+		pov: {
+			heading : 34,
+			pitch: 10
+		}
+	};
+var panorama = new google.maps.StreetViewPanorama(document.getElementById("essai"), panoramaOptions);
+map.setStreetView(panorama);*/
+		
+		
         pointArray = new google.maps.MVCArray(Logements); //On créer une variable de pointArray dans lequel on prend les coordonnées de Logements.
 
         heatmap = new google.maps.visualization.HeatmapLayer({
@@ -65,6 +77,7 @@
     <table align="right"><div id="legendeCarto"></div></table><br>
 	<div id="container"></div>
     <button onclick="changeRadius()">Changement d'opacité</button>
+    <div id="pano" style="position:absolute; left:410px; top: 8px; width: 400px; height: 300px;"></div>
   </body>
 </html>
 
