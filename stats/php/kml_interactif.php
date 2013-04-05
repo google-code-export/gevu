@@ -1,19 +1,20 @@
 <?php
- $username = 'root';
- $password = '';
+ $username = 'username';
+ $password = 'password';
  $database = 'gevu_new';
- $server = 'localhost';
+ $server = '127.0.0.1';
 
 
 //require('codes.php');
-
 // Ouvre connexion MySQL
 $connection=mysql_connect ($server, $username, $password);
 if (!$connection) 
 {
   die('Not connected : ' . mysql_error());
 }
+
 // Définit la BDD active
+
 $db_selected = mysql_select_db($database, $connection);
 if (!$db_selected) 
 {
@@ -44,13 +45,17 @@ $docNode = $parNode->appendChild($dnode);
 // Parcourt les résultats de MySQL, créer un repère pour chaque ligne.
 while ($row = @mysql_fetch_assoc($result))
 {
-
-  if($row['kml']){
-	  $xmlPlacemark = simplexml_load_string($row['kml']);
-	  $result = $xmlPlacemark->xpath('//coordinates');
-	  $coorStr = $result[0]."";
+if (false){
+ // if($row['kml']){ //vérifie si kml. Si oui on charge l'objet dans un placemark. Cette requête récupère les coordonnées où y'a le kml dans la base. Coordonnées string c'est ce qu'il y a dans résult. géénrère kml
+	//  $xmlPlacemark = simplexml_load_string($row['kml']);
+	//  if($xmlPlacemark){
+           //      $result = $xmlPlacemark->xpath('//coordinates');                  
+              //   $coorStr = $result[0]."";
+         
+	 // $result = $xmlPlacemark->xpath('//coordinates');
+	//  $coorStr = $result[0]."";
   }else{
-  	$coorStr = $row['lng'] . ','  . $row['lat'];
+  	$coorStr = $row['lng'] . ','  . $row['lat'] . ',' . $row['lng']+0.6 . ',' . $row['lat']+6;
   }
   // Crée un repère Placemark et l'ajouter au document.
   $node = $dom->createElement('Placemark');
@@ -59,9 +64,9 @@ while ($row = @mysql_fetch_assoc($result))
   $placeNode->setAttribute('id_lieu', 'placemark' . $row['id_lieu']);
   
   // Créer nom, éléments de description, attributs, et adresse
-  $nameNode = $dom->createElement('name',htmlentities($row['name']));
+  $nameNode = $dom->createElement('name',htmlentities($row['id_lieu']));
   $placeNode->appendChild($nameNode);
-  $descNode = $dom-> createElement('description', $row['address']);
+  $descNode = $dom-> createElement('description', $row['adresse']);
   $placeNode->appendChild($descNode);
   $styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'Style');
   $placeNode->appendChild($styleUrl);
@@ -69,6 +74,17 @@ while ($row = @mysql_fetch_assoc($result))
   $pointNode = $dom->createElement('Point');
   $placeNode->appendChild($pointNode);
  //Créer lignes
+ 	/*$Style = $dom->createElement('LineStyle');
+	$placeNode->appendChild($Style);
+	$Style1 = $dom->createElement('PolyStyle');
+	$Style->appendChild($Style1);
+	
+	$Polygone = $dom->createElement('Polygon');
+	$Poly->appendChild($Polygone);
+	$tess = $dom->createElement('tesselate', '1');
+	$Polygone->appendChild($tess); */
+ 
+ 
 	$lineNode = $dom->createElement('LineString');
 	$placeNode->appendChild($lineNode);
 	$exnode = $dom->createElement('extrude', '1');
@@ -85,4 +101,5 @@ while ($row = @mysql_fetch_assoc($result))
 $kmlOutput = $dom->saveXML();
 header('Content-type: application/vnd.google-earth.kml+xml'); //mon Php a comme header un content-type. Ce qu'on génère comme xml est du kml.
 echo $kmlOutput;
+
 ?>
