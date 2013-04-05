@@ -1,14 +1,14 @@
 <?php
- $username = 'username';
- $password = 'password';
+ $username = 'root';
+ $password = '';
  $database = 'gevu_new';
- $server = 'server';
+ $server = 'localhost';
 
 
 //require('codes.php');
 
 // Ouvre connexion MySQL
-$connection=mysql_connect ('127.0.0.1', $username, $password);
+$connection=mysql_connect ($server, $username, $password);
 if (!$connection) 
 {
   die('Not connected : ' . mysql_error());
@@ -31,35 +31,35 @@ if (!$result)
 //mysql_query("SELECT id_lieu, lat, lng, adresse, kml FROM gevu_geos WHERE id_lieu = 3 AND id_geo = 2", $connection);
 
 // Création document
-$dom = new domxml_new_doc('1.0');
+$dom = new DOMDocument('1.0', 'UTF-8');
 
 // Créer l'élément KML et l'ajoute à la racine du document
-$node = $dom->create_element_ns('http://earth.google.com/kml/2.1', 'kml');
-$parNode = $dom->append_child($node);
+$node = $dom->createElementNS('http://earth.google.com/kml/2.1', 'kml');
+$parNode = $dom->appendChild($node);
 
 // Crée un élément du document KML et l'ajouter à l'élément KML.
-$dnode = $dom->create_element('Document');
-$docNode = $parNode->append_child($dnode);
+$dnode = $dom->createElement('Document');
+$docNode = $parNode->appendChild($dnode);
  
 // Parcourt les résultats de MySQL, créer un repère pour chaque ligne.
 while ($row = @mysql_fetch_assoc($result))
 {
   // Crée un repère Placemark et l'ajouter au document.
-  $node = $dom->create_element('Placemark');
-  $placeNode = $docNode->append_child($node);
+  $node = $dom->createElement('Placemark');
+  $placeNode = $docNode->appendChild($node);
   // Crée un attribut id et attribuez-lui la valeur de la colonne id.
-  $placeNode->set_attribute('id_lieu', 'placemark' . $row['id_lieu']);
+  $placeNode->setAttribute('id_lieu', 'placemark' . $row['id_lieu']);
 
   // Créer nom, éléments de description, attributs, et adresse
-  $nameNode = $dom->create_element('name',htmlentities($row['name']));
-  $placeNode->append_child($nameNode);
-  $descNode = $dom->  create_element('description', $row['address']);
-  $placeNode->append_child($descNode);
-  $styleUrl = $dom->create_element('styleUrl', '#' . $row['type'] . 'Style');
-  $placeNode->append_child($styleUrl);
+  $nameNode = $dom->createElement('name',htmlentities($row['name']));
+  $placeNode->appendChild($nameNode);
+  $descNode = $dom-> createElement('description', $row['address']);
+  $placeNode->appendChild($descNode);
+  $styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'Style');
+  $placeNode->appendChild($styleUrl);
  // Créer un point
-  $pointNode = $dom->create_element('Point');
-  $placeNode->append_child($pointNode);
+  $pointNode = $dom->createElement('Point');
+  $placeNode->appendChild($pointNode);
  //Créer lignes
 	$lineNode = $dom->createElement('LineString');
 	$placeNode->appendChild($lineNode);
@@ -70,12 +70,12 @@ while ($row = @mysql_fetch_assoc($result))
    
   // Créer des coordonnées en donnant latitude et longitude
   $coorStr = $row['lng'] . ','  . $row['lat'];
-  $coorNode = $dom->create_element('coordinates', $coorStr);
-  $pointNode->append_child($coorNode);
+  $coorNode = $dom->createElement('coordinates', $coorStr);
+  $pointNode->appendChild($coorNode);
   $lineNode->appendChild($coorNode);
 }
 
-$kmlOutput = $dom->dump_mem(TRUE, 'UTF-8');
+$kmlOutput = $dom->saveXML();
 header('Content-type: application/vnd.google-earth.kml+xml');
 echo $kmlOutput;
 ?>
