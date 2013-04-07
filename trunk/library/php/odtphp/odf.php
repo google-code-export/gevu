@@ -14,11 +14,14 @@ class OdfException extends Exception
  * SVN Revision - $Rev: 42 $
  * Id : $Id: odf.php 42 2009-06-17 09:11:57Z neveldo $
  *
+ * modifié par samszo : 07/04/2013
+
  * @copyright  GPL License 2008 - Julien Pauli - Cyril PIERRE de GEYER - Anaska (http://www.anaska.com)
  * @license    http://www.gnu.org/copyleft/gpl.html  GPL License
  * @version 1.3
+ * 
  */
-class Odf
+class Odf 
 {
     protected $config = array(
     	'ZIP_PROXY' => 'PclZipProxy',
@@ -29,19 +32,36 @@ class Odf
     protected $file;
     protected $contentXml;
     protected $tmpfile;
-    protected $images = array();
+    public $images = array();
     protected $vars = array();
     protected $segments = array();
     protected $manifestXml;
     const PIXEL_TO_CM = 0.026458333;
+    
+    //ajout samszo pour optimiser le traitement des images
+    public $imagesVerif = array();
+    public $oSite;
+    
+    /**
+     * renvoie le contentXml pour debugger
+     *
+     * @throws OdfException
+     */
+    public function getContentXml()
+    {
+    	return $this->contentXml;
+    }
+    //fin ajout samszo
+    
     /**
      * Class constructor
      *
      * @param string $filename the name of the odt file
      * @throws OdfException
      */
-    public function __construct($filename, $config = array())
+    public function __construct($filename, $config = array(), $oSite=false)
     {
+    	$this->oSite = $oSite;
     	if (! is_array($config)) {
     		throw new OdfException('Configuration data must be provided as array');
     	}
@@ -87,9 +107,17 @@ class Odf
         if (strpos($this->contentXml, $this->config['DELIMITER_LEFT'] . $key . $this->config['DELIMITER_RIGHT']) === false) {
             throw new OdfException("var $key not found in the document");
         }
+        if($this->oSite)$this->oSite->trace($key." setVars 1");
+        
         $value = $encode ? htmlspecialchars($value) : $value;
+        if($this->oSite)$this->oSite->trace($key." setVars 2");
+        
         $value = ($charset == 'ISO-8859') ? utf8_encode($value) : $value;
+        if($this->oSite)$this->oSite->trace($key." setVars 3");
+        
         $this->vars[$this->config['DELIMITER_LEFT'] . $key . $this->config['DELIMITER_RIGHT']] = str_replace("\n", "<text:line-break/>", $value);
+        if($this->oSite)$this->oSite->trace($key." setVars 4");
+        
         return $this;
     }
     /**
@@ -104,41 +132,49 @@ public function setImage($key, $value, $width=0, $height=0)
     {
         $filename = strtok(strrchr($value, '/'), '/.');
         $file = substr(strrchr($value, '/'), 1);
-        $size = @getimagesize($value);
-        if ($size === false) {
-            throw new OdfException("Invalid image");
-        }
-        if (($width==0)&&($height==0)){
-            list ($width, $height) = $size;
-            $width *= Odf::PIXEL_TO_CM;
-            $height *= Odf::PIXEL_TO_CM;
-        } else {
-            list ($owidth, $oheight) = $size;
-            if (($width > 0) && ($height == 0)){
-                $height = $width * ($oheight/$owidth);
-            }
-            if (($width == 0) && ($height > 0)){
-                $width = $height * ($owidth/$oheight);
-            }
-            /*Remove this section if no GD/temp directory
-            $widthp = round($width / Odf::PIXEL_TO_CM, 0);
-            $heightp = round($height / Odf::PIXEL_TO_CM, 0);
-            $save = $yourtempdirectory . date("Y-m-d_H-i-s") . rand() . '.jpg';
-            $tn = imagecreatetruecolor($widthp, $heightp) ;   
-            $image = imagecreatefromjpeg($value);
-            imagecopyresampled($tn, $image, 0, 0, 0, 0, $widthp, $heightp, $owidth, $oheight) ;
-            imagejpeg($tn, $save, 100);
-            $value = $save;
-            $filename = strtok(strrchr($value, '/'), '/.');
-            $file = substr(strrchr($value, '/'), 1);
-           Remove to here*/
-        }
-       
-        $xml = <<<IMG
+        //modif samszo pour optimiser l'ajout multiple d'une même image
+        if(!isset($this->imagesVerif[$file])){
+	        $size = @getimagesize($value);
+	        if ($size === false) {
+	            throw new OdfException("Invalid image");
+	        }
+	        if (($width==0)&&($height==0)){
+	            list ($width, $height) = $size;
+	            $width *= Odf::PIXEL_TO_CM;
+	            $height *= Odf::PIXEL_TO_CM;
+	        } else {
+	            list ($owidth, $oheight) = $size;
+	            if (($width > 0) && ($height == 0)){
+	                $height = $width * ($oheight/$owidth);
+	            }
+	            if (($width == 0) && ($height > 0)){
+	                $width = $height * ($owidth/$oheight);
+	            }
+	            /*Remove this section if no GD/temp directory
+	            $widthp = round($width / Odf::PIXEL_TO_CM, 0);
+	            $heightp = round($height / Odf::PIXEL_TO_CM, 0);
+	            $save = $yourtempdirectory . date("Y-m-d_H-i-s") . rand() . '.jpg';
+	            $tn = imagecreatetruecolor($widthp, $heightp) ;   
+	            $image = imagecreatefromjpeg($value);
+	            imagecopyresampled($tn, $image, 0, 0, 0, 0, $widthp, $heightp, $owidth, $oheight) ;
+	            imagejpeg($tn, $save, 100);
+	            $value = $save;
+	            $filename = strtok(strrchr($value, '/'), '/.');
+	            $file = substr(strrchr($value, '/'), 1);
+	           Remove to here*/
+	        }
+	       
+        	$xml = <<<IMG
 <draw:frame draw:style-name="fr1" draw:name="$filename" text:anchor-type="as-char" svg:width="{$width}cm" svg:height="{$height}cm" draw:z-index="3"><draw:image xlink:href="Pictures/$file" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>
 IMG;
-        $this->images[$value] = $file;
-        $this->setVars($key, $xml, false);
+	        $this->imagesVerif[$file]=$xml;
+	    	$this->images[$value] = $file;
+        	if($this->oSite)$this->oSite->trace($key.":".$file." size");
+        }else{
+			$xml = $this->imagesVerif[$file];
+        	if($this->oSite)$this->oSite->trace($key.":".$file." direct");
+        }
+	    $this->setVars($key, $xml, false);
         return $this;
     }    
     
@@ -281,7 +317,7 @@ IMG;
             foreach ($this->images as $imageKey => $imageValue) {
                 $this->file->addFile($imageKey, 'Pictures/' . $imageValue);
                 $this->addImageToManifest($imageValue);
-            }
+            }            
             if (! $this->file->addFromString('META-INF/manifest.xml', $this->manifestXml)) {
                 throw new OdfException('Error during file export: manifest.xml');
             }
@@ -306,7 +342,7 @@ IMG;
             $this->vars[$key] = $file;
             return $this;
         }            
-    /**
+     /**
      * Export the file as attached file by HTTP
      *
      * @param string $name (optionnal)

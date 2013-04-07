@@ -472,9 +472,11 @@ class GEVU_Diagnostique extends GEVU_Site{
     * @param string $idLieu
     * @param int $idExi
     * @param string $idBase
+    * @param boolean $bRegSou
+    * 
     * @return Array
     */
-	public function calculDiagForLieu($idLieu, $idInstant=-1, $idBase=false){
+	public function calculDiagForLieu($idLieu, $idInstant=-1, $idBase=false, $bRegSou=true){
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".md5($idInstant)."_".$idBase; 
 	   	$r = false;//$this->cache->load($c);
         if(!$r){
@@ -500,10 +502,44 @@ class GEVU_Diagnostique extends GEVU_Site{
 			$r['handicateur']['cognitif'] = $this->getHandicateur("cognitif",$r);
 			$r['handicateur']['moteur'] = $this->getHandicateur("moteur",$r);
 			$r['handicateur']['visuel'] = $this->getHandicateur("visuel",$r);	        
-	        
+	        			
+			//calcule les diag souhaitable et réglementaire
+			if($bRegSou){
+				//calcule les indicateurs réglemenentaires
+				$reg = 1;
+				//récupère les diags oui
+				$r['DiagOui'.$reg] = $this->dbD->getDiagReponse($idLieu, $idInstant, 1, $reg);
+				//récupère les diags non
+				$r['DiagNon'.$reg] = $this->dbD->getDiagReponse($idLieu, $idInstant, 2, $reg);
+				//récupère tous les diags
+				$r['DiagTot'.$reg] = $this->dbD->getDiagReponse($idLieu, $idInstant, $reg);
+				
+				//calcule les handicateurs
+				$r['handicateur'.$reg]['auditif'] = $this->getHandicateur("auditif", $r, $reg);
+				$r['handicateur'.$reg]['cognitif'] = $this->getHandicateur("cognitif", $r, $reg);
+				$r['handicateur'.$reg]['moteur'] = $this->getHandicateur("moteur", $r, $reg);
+				$r['handicateur'.$reg]['visuel'] = $this->getHandicateur("visuel", $r, $reg);
+				
+				//calcule les indicateurs souhaitable
+				$reg = 3;
+				//récupère les diags oui
+				$r['DiagOui'.$reg] = $this->dbD->getDiagReponse($idLieu, $idInstant, 1, $reg);
+				//récupère les diags non
+				$r['DiagNon'.$reg] = $this->dbD->getDiagReponse($idLieu, $idInstant, 2, $reg);
+				//récupère tous les diags
+				$r['DiagTot'.$reg] = $this->dbD->getDiagReponse($idLieu, $idInstant, $reg);
+				
+				//calcule les handicateurs
+				$r['handicateur'.$reg]['auditif'] = $this->getHandicateur("auditif", $r, $reg);
+				$r['handicateur'.$reg]['cognitif'] = $this->getHandicateur("cognitif", $r, $reg);
+				$r['handicateur'.$reg]['moteur'] = $this->getHandicateur("moteur", $r, $reg);
+				$r['handicateur'.$reg]['visuel'] = $this->getHandicateur("visuel", $r, $reg);
+				
+			}
+			
 			//calcul les stats
 			$r['stat'] = $this->getArrStat($idLieu, $r);
-			
+				
 	        $this->cache->save($r, $c);
         }        
 	        
@@ -539,6 +575,12 @@ class GEVU_Diagnostique extends GEVU_Site{
 		foreach ($r['handicateur'] as $k=>$v) {
 			$arr['EtatDiag'][] = array('id'=>$k,'niv0'=>$v['applicable'],'niv1'=>$r['DiagNon'][0][$k."_1"],'niv2'=>$r['DiagNon'][0][$k."_2"],'niv3'=>$r['DiagNon'][0][$k."_3"],'handi'=>$v[0]);
 		}
+		foreach ($r['handicateur1'] as $k=>$v) {
+			$arr['EtatDiag1'][] = array('id'=>$k,'niv0'=>$v['applicable'],'niv1'=>$r['DiagNon'][0][$k."_1"],'niv2'=>$r['DiagNon'][0][$k."_2"],'niv3'=>$r['DiagNon'][0][$k."_3"],'handi'=>$v[0]);
+		}
+		foreach ($r['handicateur3'] as $k=>$v) {
+			$arr['EtatDiag3'][] = array('id'=>$k,'niv0'=>$v['applicable'],'niv1'=>$r['DiagNon'][0][$k."_1"],'niv2'=>$r['DiagNon'][0][$k."_2"],'niv3'=>$r['DiagNon'][0][$k."_3"],'handi'=>$v[0]);
+		}
 		return $arr;
 	}
 	
@@ -547,19 +589,21 @@ class GEVU_Diagnostique extends GEVU_Site{
 	* 
     * @param string $typeDef
     * @param array $arrDiag
+    * @param string $reg
+    * 
     * @return array
     */
-	function getHandicateur($typeDef, $arrDiag){
+	function getHandicateur($typeDef, $arrDiag, $reg=""){
 		
-		$HandiObst = $arrDiag['DiagNon'][0][$typeDef."_1"]
-			+($arrDiag['DiagNon'][0][$typeDef."_2"]*2)
-			+($arrDiag['DiagNon'][0][$typeDef."_3"]*3);
+		$HandiObst = $arrDiag['DiagNon'.$reg][0][$typeDef."_1"]
+			+($arrDiag['DiagNon'.$reg][0][$typeDef."_2"]*2)
+			+($arrDiag['DiagNon'.$reg][0][$typeDef."_3"]*3);
 			  
-		$HandiAppli = $arrDiag['DiagOui'][0][$typeDef."_1"]
-			+($arrDiag['DiagOui'][0][$typeDef."_2"])
-			+($arrDiag['DiagOui'][0][$typeDef."_3"]);
+		$HandiAppli = $arrDiag['DiagOui'.$reg][0][$typeDef."_1"]
+			+($arrDiag['DiagOui'.$reg][0][$typeDef."_2"])
+			+($arrDiag['DiagOui'.$reg][0][$typeDef."_3"]);
 		
-		$Handi3 = $arrDiag['DiagNon'][0][$typeDef."_3"];
+		$Handi3 = $arrDiag['DiagNon'.$reg][0][$typeDef."_3"];
 					
 		if($HandiAppli==0)
 			return array("A","obstacle"=>$HandiObst,"applicable"=>$HandiAppli,"coef"=>0);	
