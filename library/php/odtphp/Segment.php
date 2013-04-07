@@ -137,9 +137,17 @@ class Segment implements IteratorAggregate, Countable
         if (strpos($this->xml, $this->odf->getConfig('DELIMITER_LEFT') . $key . $this->odf->getConfig('DELIMITER_RIGHT')) === false) {
             throw new SegmentException("var $key not found in {$this->getName()}");
         }
-		$value = $encode ? htmlspecialchars($value) : $value;
-		$value = ($charset == 'ISO-8859') ? utf8_encode($value) : $value;
+        if($this->odf->oSite)$this->odf->oSite->trace($key." setVars 1");
+        
+        $value = $encode ? htmlspecialchars($value) : $value;
+        if($this->odf->oSite)$this->odf->oSite->trace($key." setVars 2");
+        
+        $value = ($charset == 'ISO-8859') ? utf8_encode($value) : $value;
+        if($this->odf->oSite)$this->odf->oSite->trace($key." setVars 3");
+        
         $this->vars[$this->odf->getConfig('DELIMITER_LEFT') . $key . $this->odf->getConfig('DELIMITER_RIGHT')] = str_replace("\n", "<text:line-break/>", $value);
+        if($this->odf->oSite)$this->odf->oSite->trace($key." setVars 4");
+        
         return $this;
     }
     /**
@@ -155,40 +163,48 @@ class Segment implements IteratorAggregate, Countable
 
         $filename = strtok(strrchr($value, '/'), '/.');
         $file = substr(strrchr($value, '/'), 1);
-        $size = @getimagesize($value);
-        if ($size === false) {
-            throw new SegmentException("Invalid image");
-        }
-        if (($width==0)&&($height==0)){
-            list ($width, $height) = $size;
-            $width *= Odf::PIXEL_TO_CM;
-            $height *= Odf::PIXEL_TO_CM;
-        } else {
-            list ($owidth, $oheight) = $size;
-            if (($width > 0) && ($height == 0)){
-                $height = $width * ($oheight/$owidth);
-            }
-            if (($width == 0) && ($height > 0)){
-                $width = $height * ($owidth/$oheight);
-            }
-            /*Remove this section if no GD/temp directory
-            $widthp = round($width / Odf::PIXEL_TO_CM, 0);
-            $heightp = round($height / Odf::PIXEL_TO_CM, 0);
-            $save = $yourtempdirectory . date("Y-m-d_H-i-s") . rand() . '.jpg';
-            $tn = imagecreatetruecolor($widthp, $heightp) ;   
-            $image = imagecreatefromjpeg($value);
-            imagecopyresampled($tn, $image, 0, 0, 0, 0, $widthp, $heightp, $owidth, $oheight) ;
-            imagejpeg($tn, $save, 100);
-            $value = $save;
-            $filename = strtok(strrchr($value, '/'), '/.');
-            $file = substr(strrchr($value, '/'), 1);
-           Remove to here*/
-        }
-       
-        $xml = <<<IMG
+        //modif samszo pour optimiser l'ajout multiple d'une même image
+        if(!isset($this->odf->imagesVerif[$file])){
+	        $size = @getimagesize($value);
+	        if ($size === false) {
+	            throw new SegmentException("Invalid image");
+	        }
+	        if (($width==0)&&($height==0)){
+	            list ($width, $height) = $size;
+	            $width *= Odf::PIXEL_TO_CM;
+	            $height *= Odf::PIXEL_TO_CM;
+	        } else {
+	            list ($owidth, $oheight) = $size;
+	            if (($width > 0) && ($height == 0)){
+	                $height = $width * ($oheight/$owidth);
+	            }
+	            if (($width == 0) && ($height > 0)){
+	                $width = $height * ($owidth/$oheight);
+	            }
+	            /*Remove this section if no GD/temp directory
+	            $widthp = round($width / Odf::PIXEL_TO_CM, 0);
+	            $heightp = round($height / Odf::PIXEL_TO_CM, 0);
+	            $save = $yourtempdirectory . date("Y-m-d_H-i-s") . rand() . '.jpg';
+	            $tn = imagecreatetruecolor($widthp, $heightp) ;   
+	            $image = imagecreatefromjpeg($value);
+	            imagecopyresampled($tn, $image, 0, 0, 0, 0, $widthp, $heightp, $owidth, $oheight) ;
+	            imagejpeg($tn, $save, 100);
+	            $value = $save;
+	            $filename = strtok(strrchr($value, '/'), '/.');
+	            $file = substr(strrchr($value, '/'), 1);
+	           Remove to here*/
+	        }
+	       
+	        $xml = <<<IMG
 <draw:frame draw:style-name="fr1" draw:name="$filename" text:anchor-type="as-char" svg:width="{$width}cm" svg:height="{$height}cm" draw:z-index="3"><draw:image xlink:href="Pictures/$file" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>
 IMG;
-        $this->images[$value] = $file;
+			$this->odf->imagesVerif[$file] = $xml;
+	    	$this->odf->images[$value] = $file;
+        	if($this->odf->oSite)$this->odf->oSite->trace($key.":".$file." size");
+        }else{
+        	$xml = $this->odf->imagesVerif[$file];
+        	if($this->odf->oSite)$this->odf->oSite->trace($key.":".$file." direct");	 
+        }	         
         $this->setVars($key, $xml, false);
         return $this;
         

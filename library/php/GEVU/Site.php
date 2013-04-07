@@ -35,6 +35,11 @@ class GEVU_Site{
     var $dbSta;
     var $dbTypCtl;
     var $db;
+    //pour l'optimisation
+    var $bTrace = false;
+    var $temps_debut;
+    var $temps_inter;
+    var $temps_nb=0;
     
 	/**
 	* constructeur de la class
@@ -70,6 +75,18 @@ class GEVU_Site{
 		}
 	}
 
+	public function trace($message){
+		if($this->bTrace){
+			$temps_fin = microtime(true);
+			$tG = str_replace(".",",",round($temps_fin - $this->temps_debut, 4));
+			$tI = str_replace(".",",",round($temps_fin - $this->temps_inter, 4));
+			echo $this->temps_nb." | ".$message." |".$tG."|".$tI."<br/>";
+			$this->temps_inter = $temps_fin;
+			$this->temps_nb ++;
+		}		
+	}
+	
+	
     /**
     * @param string $c
     */
