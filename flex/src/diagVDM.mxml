@@ -147,7 +147,7 @@ todo :
 							</mx:Panel>
 						</mx:Canvas>
 						<mx:Canvas width="100%" height="100%" label="Rapports">
-							<ns2:cnvRapports id="cRapports" idLieu="{idLieu}" />
+							<ns2:cnvRapports id="cRapports" idLieu="{idLieu}" urlRapport="{ENDPOINT_RAPPORT}" />
 						</mx:Canvas>
 
 						<!--

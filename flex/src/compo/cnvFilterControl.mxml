@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" 
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="42" 
 	xmlns:ns2="compo.*"
 	>
 	<mx:Script>
@@ -68,8 +68,8 @@
 		<mx:HBox width="100%">
 			<mx:Label text="Filtre:"/>
 			<mx:TextInput id="keyword" width="100%"/>
-			<mx:ComboBox id="cmbCol" dataProvider="{dpColumns}"/>
-			<mx:Button label="Filtrer" id="btnFilter" click="filterResults()" width="150"/>
-			<mx:Button label="Effacer" click="resetFilter()" width="150"/>
+			<mx:ComboBox id="cmbCol" dataProvider="{dpColumns}" width="100%"/>
+			<mx:Button label="Filtrer" id="btnFilter" click="filterResults()" />
+			<mx:Button label="Effacer" click="resetFilter()" />
 		</mx:HBox>	
 </mx:Canvas>
