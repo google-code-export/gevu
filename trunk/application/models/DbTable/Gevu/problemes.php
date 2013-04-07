@@ -171,8 +171,8 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
     public function findById_probleme($id_probleme)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_problemes") )                           
-                    ->where( "g.id_probleme = ?", $id_probleme );
+		->from( array("g" => "gevu_problemes") )                           
+        ->where( "g.id_probleme IN (".$id_probleme.")");
 
         return $this->fetchAll($query)->toArray(); 
     }

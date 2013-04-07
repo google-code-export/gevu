@@ -66,19 +66,22 @@ class Models_DbTable_Gevu_docsxlieux extends Zend_Db_Table_Abstract
      * et retourne cette entrée.
      *
      * @param int $idLieu
+     * @param string $type
      * 
      * return array
      */
-    public function findByIdLieu($idLieu)
+    public function findByIdLieu($idLieu, $types="")
     {
     	$query = $this->select()
         	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->from( array("dl" => "gevu_docsxlieux") )                           
         	->joinInner(array('d' => 'gevu_docs'),
-            	'd.id_doc = dl.id_doc',array('titre','content_type','url'))
+            	'd.id_doc = dl.id_doc',array('titre','content_type','url','path_source'))
         	->where( "dl.id_lieu = ?", $idLieu)
         	->group("d.id_doc");
-                    
+        if($types){
+        	$query->where( "d.content_type IN (".$types.")");
+        }            
                     
         return $this->fetchAll($query)->toArray(); 
     }

@@ -412,6 +412,30 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
 
+    /**
+     * Recherche l'arboressence des noeuds entre deux lieux
+     *
+     * @param integer $idLieuEnf
+     * @param integer $idLieuPar
+     * 
+     * 
+     * @return array
+     */
+    public function getPathBetweenNode($idLieuEnf, $idLieuPar)
+    {
+    	$query = $this->select()
+    	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+    	->from(array('node' => 'gevu_lieux'),array("parLib"=>"lib"))
+    	->joinInner(array('parent' => 'gevu_lieux'),
+    			'node.lft BETWEEN parent.lft AND parent.rgt',array('lib', 'id_lieu', 'niv'))
+    	->joinInner(array('lh' => 'gevu_lieux'),
+    			'lh.id_lieu = ".$idLieuPar." AND lh.niv < parent.niv',array())
+		->where( "node.id_lieu = ?", $idLieuEnf);
+    	$result = $this->fetchAll($query);
+
+    	return $result->toArray();
+    }
+        
      /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne la liste de tous ses enfants
@@ -433,6 +457,27 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         return $result->toArray(); 
     }
 
+    /**
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne la liste de tous ses enfants
+     *
+     * @param integer $idLieu
+     * @param integer $idTypeControle
+     * @return array
+     */
+    public function getChildForTypeControle($idLieu, $idTypeControle)
+    {
+    	$query = $this->select()
+    	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+    	->from(array('node' => 'gevu_lieux'),array('libO'=>'lib', 'id_lieu0'=>'id_lieu'))
+    	->joinInner(array('enfants' => 'gevu_lieux'),
+    			'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu', 'lieu_parent', 'niv', 'id_type_controle'))
+		->where( "node.id_lieu = ?", $idLieu)
+		->where( "enfants.id_type_controle = ?", $idTypeControle);
+    	$result = $this->fetchAll($query);
+    	return $result->toArray();
+    }
+    
     /**
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne la liste de tous ses enfants au format csv
