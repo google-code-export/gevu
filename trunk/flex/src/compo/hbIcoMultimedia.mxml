@@ -158,6 +158,10 @@
 				if(d.content_type == "text/xml" && ext=="kml"){
 					kml = true;
 				}
+				if(d.content_type == "application/vnd.oasis.opendocument.text"){
+					d.vignette = OdtIcon;
+					dataIcons.addItem(d);							
+				}
 				if(kml){
 					d.vignette = KmlIcon;
 					dataIcons.addItem(d);

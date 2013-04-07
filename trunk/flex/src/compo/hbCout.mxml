@@ -97,16 +97,14 @@
 			}
 		]]>
 	</mx:Script>
-	<mx:VBox width="100%">
-		<mx:HBox width="100%">
-			<mx:Label text="" id="refSolus"/>
-			<mx:Text id="libSolus" fontSize="12" width="100%" />			
-		</mx:HBox>
-		<mx:HBox width="100%">
-			<mx:Label text="" id="refProd"/>
-			<mx:Text id="libProd" fontSize="12" width="100%" />			
-		</mx:HBox>		
-	</mx:VBox>
+	<mx:HBox width="100%">
+		<mx:Label text="" id="refSolus"/>
+		<mx:Text id="libSolus" fontSize="12" width="100%" />			
+	</mx:HBox>
+	<mx:HBox width="100%">
+		<mx:Label text="" id="refProd"/>
+		<mx:Text id="libProd" fontSize="12" width="100%" />			
+	</mx:HBox>		
 	<mx:HBox>        
 		<mx:VBox styleName="ligneCout" id="v_unite" >
 			<mx:Label text="unité" />
@@ -147,16 +145,16 @@
 				<mx:NumericStepper change="garde();" id="n_pose" minimum="0" maximum="1000" width="48"/>							
 			</mx:HBox>
 		</mx:VBox>
-		<mx:VBox styleName="ligneCout" color="red" >
+		<mx:VBox styleName="ligneCout" >
 			<mx:Label text="COUT TOTAL" />
 			<mx:HBox>
-				<mx:TextInput text="0" id="coutTotal"/><mx:Label text="€ H.T."/>
+				<mx:TextInput text="0" id="coutTotal" color="red" /><mx:Label text="€ H.T."/>
+			</mx:HBox>
+			<mx:HBox horizontalAlign="center" verticalAlign="top">
+				<mx:Button id="btnAjouter" label="Ajouter" click="{functionAjout()}" visible="{bAjout}" />
+				<mx:Button id="btnModifier" label="Modifier" click="{functionModif()}" visible="{bModif}" />				
 			</mx:HBox>
 		</mx:VBox>
-	</mx:HBox>
-	<compo:hbIcoMultimedia id="docs" nbColo="4" bAjout="false" bSupp="false" />
-	<mx:HBox horizontalAlign="center" verticalAlign="top">
-		<mx:Button id="btnAjouter" label="Ajouter" click="{functionAjout()}" visible="{bAjout}" />
-		<mx:Button id="btnModifier" label="Modifier" click="{functionModif()}" visible="{bModif}" />				
+		<compo:hbIcoMultimedia id="docs" nbColo="2" bAjout="false" bSupp="false" />
 	</mx:HBox>
 </mx:VBox>

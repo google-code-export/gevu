@@ -86,7 +86,6 @@
 				{
 					//création du conteneur
 					var vb:VBox = new VBox;
-					//vb.percentHeight = 100;
 					vb.percentWidth = 100;
 
 					//vérifie si on affiche pour les solutions
@@ -100,6 +99,7 @@
 									var cb:CheckBox = new CheckBox;
 									cb.label = "Appliquer la solution à tous les lieux ?"
 									cb.addEventListener(MouseEvent.CLICK,selectAllLieu);	
+									//vb.percentHeight = 100;
 									vb.addChild(cb);
 								}
 								first = false;
