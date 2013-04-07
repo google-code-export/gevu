@@ -319,6 +319,100 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
     
     }
     
+    
+    /**
+     * Recherche les couts des solutions pour un lieu
+     *
+     * @param int $id_lieu
+     *
+     * @return array
+     */
+    public function getCoutsByIdLieu($id_lieu)
+    {
+        
+    	//on ne récupère que les réponses NON et N-A du dernier diag
+    	$query = "SELECT
+		    ds.cout
+		    , d.id_diag, d.id_critere
+		    , tcR.id_type_critere reg
+		    , tcS.id_type_critere sou
+	    FROM gevu_diagnosticsxsolutions ds
+			    INNER JOIN gevu_diagnostics d ON ds.id_diag = d.id_diag
+			    INNER JOIN gevu_lieux ld ON d.id_lieu = ld.id_lieu
+			    INNER JOIN gevu_lieux ls ON ld.lft BETWEEN ls.lft AND ls.rgt AND ls.id_lieu = ".$id_lieu."
+			    LEFT JOIN gevu_criteresxtypesxcriteres tcR ON d.id_critere = tcR.id_critere AND tcR.id_type_critere = 1
+			    LEFT JOIN gevu_criteresxtypesxcriteres tcS ON d.id_critere = tcS.id_critere AND tcS.id_type_critere = 3";
+    
+    	$adpt = $this->getAdapter();
+    	$result = $adpt->query($query);
+    	$arr = $result->fetchAll();
+    	
+    	//calcule les sommes
+    	$sou = 0;
+    	$reg = 0;
+    	foreach ($arr as $r) {
+    		if($r['reg'])$reg+=$r['cout'];
+    		if($r['sou'])$sou+=$r['cout'];
+    	}
+    
+    	return array("data"=>$arr,"reg"=>$reg,"sou"=>$sou);
+    
+    }
+    
+    
+    /**
+     * Recherche les problème d'un lieu pour éditer le rapport
+     *
+     * @param int $id_lieu
+     * @param string $idBase
+     *
+     * @return array
+     */
+    public function getProblemesForLieu($id_lieu, $idBase)
+    {
+    	//Récupère la configuration de la base de ref
+    	$arrDB = Zend_Db_Table::getDefaultAdapter()->getConfig();
+    	
+    
+		//on ne récupère que les réponses NON et N-A du dernier diag
+    	$query = "SELECT
+		    ld.id_lieu
+		    , d.id_diag
+		    , crit.ref critRef, crit.id_critere, crit.affirmation, crit.handicateur_moteur, crit.handicateur_auditif, crit.handicateur_visuel, crit.handicateur_cognitif
+		    , GROUP_CONCAT(DISTINCT doc.id_doc) idsDoc
+      		, GROUP_CONCAT(DISTINCT prob.id_probleme) idsProb	
+    		, GROUP_CONCAT(DISTINCT tc.id_type_critere) typeCrit
+		    , GROUP_CONCAT(DISTINCT dc.id_type_droit ORDER BY dc.id_type_droit SEPARATOR '-') droitCrit
+		    , s.id_solution, s.lib AS solution, s.ref AS refSolu
+	        , GROUP_CONCAT(DISTINCT docs.id_doc) idsDocSolus
+		    , p.id_produit, p.ref AS refProd, p.description produit, p.marque, p.modele
+    	    , GROUP_CONCAT(DISTINCT docp.id_doc) idsDocProd
+		    , ds.unite dsunite, ds.pose dspose, ds.metre_lineaire dsmetre_lineaire, ds.metre_carre dsmetre_carre, ds.achat dsachat, ds.cout dscout
+		    FROM ".$idBase.".gevu_lieux as ld
+			    INNER JOIN ".$idBase.".gevu_lieux as l ON l.id_lieu = ".$id_lieu." AND ld.lft BETWEEN l.lft AND l.rgt
+			    INNER JOIN ".$idBase.".gevu_diagnostics as d ON d.id_lieu = ld.id_lieu AND d.id_reponse IN (124,2) AND d.last = 1
+			    INNER JOIN ".$arrDB['dbname'].".gevu_criteres as crit ON crit.id_critere = d.id_critere AND crit.affirmation != ''
+	    		INNER JOIN ".$arrDB['dbname'].".gevu_criteresxtypesxcriteres as tc ON tc.id_critere = crit.id_critere
+	    		INNER JOIN ".$arrDB['dbname'].".gevu_criteresxtypesxdroits as dc ON dc.id_critere = crit.id_critere
+				LEFT JOIN ".$idBase.".gevu_docsxlieux as doc ON doc.id_lieu = ld.id_lieu 
+				LEFT JOIN ".$idBase.".gevu_problemes as prob ON prob.id_lieu = ld.id_lieu AND crit.id_critere = prob.id_critere
+	    		LEFT JOIN ".$idBase.".gevu_diagnosticsxsolutions ds ON ds.id_diag = d.id_diag
+	    		LEFT JOIN ".$arrDB['dbname'].".gevu_solutions AS s ON s.id_solution = ds.id_solution
+	    		LEFT JOIN ".$arrDB['dbname'].".gevu_produits as p ON p.id_produit = ds.id_produit
+	    		LEFT JOIN ".$arrDB['dbname'].".gevu_docsxsolutions AS docs ON docs.id_solution = ds.id_solution
+	    		LEFT JOIN ".$arrDB['dbname'].".gevu_docsxproduits AS docp ON docp.id_produit = ds.id_produit
+			GROUP BY d.id_diag
+    		ORDER BY ld.id_lieu, crit.ref";
+    
+    	$adpt = $this->getAdapter();
+    	$result = $adpt->query($query);
+    
+    	return $result->fetchAll();
+    
+    }		
+    
+    
+    
     /**
      * Recherche une entrée Gevu_diagnosticsxsolutions avec la valeur spécifiée
      * et retourne cette entrée.

@@ -406,13 +406,15 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->from(array('d' => 'gevu_diagnostics'),array('id_lieu'))                      
         	->joinInner(array('i' => 'gevu_instants'),
-            	'd.id_instant = i.id_instant',array('lastinstant'=>"MAX(i.id_instant)"))
+            	'd.id_instant = i.id_instant',array('lastinstant'=>"MAX(i.id_instant)",'maintenant'))
+        	->joinInner(array('e' => 'gevu_exis'),
+            	'e.id_exi = i.id_exi',array('nom'))
             ->joinInner(array('le' => 'gevu_lieux'),
-                'le.id_lieu = d.id_lieu',array('lib'))
+                'le.id_lieu = d.id_lieu',array("NbDiag"=>'COUNT(DISTINCT(le.id_lieu))'))
             ->joinInner(array('l' => 'gevu_lieux'),
                 'le.lft BETWEEN l.lft AND l.rgt',array('lib'))
             ->where('l.id_lieu = ? ',$idLieu)
-       		->group("d.id_lieu");
+       		->group("l.id_lieu");
         return $this->fetchAll($query)->toArray(); 
     }
     
@@ -475,10 +477,11 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      *
      * @param integer $idLieu
      * @param integer $idReponse
+     * @param string $reg
      * 
      * @return array
      */
-    public function getDiagReponse($idLieu, $idInstant=-1, $idReponse="")
+    public function getDiagReponse($idLieu, $idInstant=-1, $idReponse="", $reg="")
     {
         $query = $this->select()
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
@@ -525,7 +528,13 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
                 'c4_3.id_critere = d.id_critere  AND c4_3.handicateur_visuel = 3',array('visuel_3'=>'COUNT(c4_3.id_critere)'))
             
             ->where( "l.id_lieu = ?", $idLieu);
-
+		
+            //ajoute la contrainte réglementaire souhaitable
+            if($reg){
+            	$query->joinInner(array('ct' => 'gevu_criteresxtypesxcriteres'),'d.id_critere = ct.id_critere AND ct.id_type_critere = '.$reg,array());
+            }
+            
+            
         if ($idInstant!=-1){
             $query->where( "d.id_instant = ?", $idInstant);
         }else{
