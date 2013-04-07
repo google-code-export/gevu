@@ -36,7 +36,7 @@ class GEVU_Rapport extends GEVU_Site{
 	public function creaRapport($idModele, $idLieu, $idExi, $idBase){
 	
 		try{
-		set_time_limit(3000);		
+		set_time_limit(30000);		
 		$this->bTrace = false;		
 		$this->temps_debut = microtime(true);
 				
@@ -49,6 +49,10 @@ class GEVU_Rapport extends GEVU_Site{
 		$dbCnt = new Models_DbTable_Gevu_contacts($this->db);
 		$dbDS = new Models_DbTable_Gevu_diagnosticsxsolutions($this->db);
 		$dbProb = new Models_DbTable_Gevu_problemes($this->db);
+		$dbInst = new Models_DbTable_Gevu_instants($this->db);
+		$dbRapport = new Models_DbTable_Gevu_rapports($this->db);
+		$dbRapport = new Models_DbTable_Gevu_rapports($this->db);
+		$dbDocRapport = new Models_DbTable_Gevu_docsxrapports($this->db);
 		$oDiag = new GEVU_Diagnostique($this->db);
 		
 		//récupère l'auteur 
@@ -78,8 +82,8 @@ class GEVU_Rapport extends GEVU_Site{
 		$this->trace($ariane);
 		
 		$this->odf->setVars('commune', $ariane);
-		
-		$this->odf->setVars('etablissement', $arrAriane[0]['parLib']);
+		$nomEtab = $arrAriane[0]['parLib'];
+		$this->odf->setVars('etablissement', $nomEtab);
 		
 		//récupération des images
 		$arrDocs = $arrEtatLieux["Models_DbTable_Gevu_docsxlieux"];
@@ -206,7 +210,10 @@ class GEVU_Rapport extends GEVU_Site{
 		foreach($arrEleDiag as $r){
 
 			//récupération de l'identifiant de lieu
-			$idLieuDiag = $r["Models_DbTable_Gevu_geos"][0]["id_lieu"];
+			if(isset($r["Models_DbTable_Gevu_parcelles"]))
+				$idLieuDiag = $r["Models_DbTable_Gevu_parcelles"][0]["id_lieu"];
+			else
+				$idLieuDiag = $r["Models_DbTable_Gevu_geos"][0]["id_lieu"];
 			
 			//récupération des images
 			$arrDocs = $r["Models_DbTable_Gevu_docsxlieux"];
@@ -272,7 +279,11 @@ class GEVU_Rapport extends GEVU_Site{
 		foreach($arrEleDiag as $r){
 		
 			//récupération de l'identifiant de lieu
-			$idLieuDiag = $r["Models_DbTable_Gevu_geos"][0]["id_lieu"];
+			if(isset($r["Models_DbTable_Gevu_parcelles"]))
+				$idLieuDiag = $r["Models_DbTable_Gevu_parcelles"][0]["id_lieu"];
+			else
+				$idLieuDiag = $r["Models_DbTable_Gevu_geos"][0]["id_lieu"];
+				
 			$this->trace($j."/".count($arrEleDiag)." - Identifiant du lieu : ".$idLieuDiag);
 						
 			//récupère les problèmes
@@ -383,7 +394,22 @@ class GEVU_Rapport extends GEVU_Site{
 		//header("Content-Type:text/xml");
 		//echo $this->odf->getContentXml();
 		
-		$this->odf->exportAsAttachedFile();
+		//on enregistre le fichier
+		$idInst = $dbInst->ajouter(array("id_exi"=>$idExi,"nom"=>"Création rapport"));
+		
+		$nomFic = preg_replace('/[^a-zA-Z0-9-_\.]/','', $nomEtab);
+		$nomFic = $idModele."_".$idLieu."_".$nomFic."_".$idInst.".odt";
+		//copie le fichier dans le répertoire data
+		$newfile = ROOT_PATH."/data/rapports/documents/".$nomFic;
+		copy($this->odf->tmpfile, $newfile);
+		
+		//on enregistre le doc dans la base
+		$idDoc = $dbDoc->ajouter(array("id_instant"=>$idInst,"url"=>WEB_ROOT."/data/rapports/documents/".$nomFic,"titre"=>$nomFic,"path_source"=>$newfile,"content_type"=>"application/vnd.oasis.opendocument.text"));
+		$idRap = $dbRapport->ajouter(array("id_lieu"=>$idLieu, "id_exi"=>$idExi, "lib"=>$nomFic));
+		$dbDocRapport->ajouter(array("id_doc"=>$idDoc,"id_rapport"=>$idRap));
+		
+		//on propose de télécharger le rapport
+		$this->odf->exportAsAttachedFile($nomFic);
 		
 		$this->trace("FIN");
 		

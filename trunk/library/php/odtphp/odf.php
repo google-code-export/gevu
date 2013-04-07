@@ -31,7 +31,7 @@ class Odf
    	);
     protected $file;
     protected $contentXml;
-    protected $tmpfile;
+    public $tmpfile;
     public $images = array();
     protected $vars = array();
     protected $segments = array();
@@ -360,7 +360,7 @@ IMG;
         {
         		$name = md5(uniqid()) . ".odt";
         }
-        
+                
         header('Content-type: application/vnd.oasis.opendocument.text');
         header('Content-Disposition: attachment; filename="'.$name.'"');
         readfile($this->tmpfile);
