@@ -56,6 +56,8 @@ if (false){
 	//  $coorStr = $result[0]."";
   }else{
   	$coorStr = $row['lng'] . ','  . $row['lat'] . ',' . $row['lng']-0.00027169 . ',' . $row['lat']+0.000486  . ',' . $row['lng']-0.00056495 . ',' . $row['lat']-0.000054  . ',' . $row['lng'] . ','  . $row['lat'];
+  	//$coorStr = '0.1105855171821202,49.52564189740646,0 0.1103138214001675,49.52612762237801,0 0.1100205604428695,49.52558762241633,0 0.1105855171821202,49.52564189740646,0'
+  
   }
   
   
@@ -69,78 +71,92 @@ if (false){
   $nameNode = $dom->createElement('name',htmlentities($row['id_lieu']));
   $placeNode->appendChild($nameNode);
   
+//Créer première balise style
   $node = $dom->createElement('Style');
   $placeNode = $docNode->appendChild($node);
   $placeNode->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
+  
+ 	$LineStyle = $dom->createElement('LineStyle');
+	$placeNode = $docNode->appendChild($LineStyle);
+	
+	$color = $dom->createElement('color', 'ff0000ff');
+	$placeNode->appendChild($color);
+	
+	$PolyStyle = $dom->createElement('PolyStyle');
+	$placeNode = $docNode->appendChild($PolyStyle);
 
+	$color = $dom->createElement('color', 'ff0000ff');
+	$placeNode->appendChild($color);
+	
+//Créer deuxième balise style
   $node = $dom->createElement('Style');
   $placeNode = $docNode->appendChild($node);
   $placeNode->setAttribute('id', 's_ylw-pushpin' . $row['id']);
 
+ 	$LineStyle = $dom->createElement('LineStyle');
+	$placeNode = $docNode->appendChild($LineStyle);
+	
+	$color = $dom->createElement('color', 'ff0000ff');
+	$placeNode->appendChild($color);
+	
+	$PolyStyle = $dom->createElement('PolyStyle');
+	$placeNode = $docNode->appendChild($PolyStyle);
+
+	$color = $dom->createElement('color', 'ff0000ff');
+	$placeNode->appendChild($color);
+	
+
+//Créer balise style de carte	
   $node = $dom->createElement('StyleMap');
   $placeNode = $docNode->appendChild($node);
   $placeNode->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
   
-  $descNode = $dom-> createElement('description', $row['adresse']);
-  $placeNode->appendChild($descNode);
-  $styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'm_ylw-pushpin');
-  $placeNode->appendChild($styleUrl);
- // Créer un polygone
-  $pointNode = $dom->createElement('Polygon');
-  $placeNode->appendChild($pointNode);
- //Créer lignes
- 	$LineStyle = $dom->createElement('LineStyle');
-	$placeNode->appendChild($LineStyle);
-	
-	$color = $dom->createElement('color', 'ff0000ff');
-	$placeNode->appendChild($color);
-	
-	$PolyStyle = $dom->createElement('PolyStyle');
-	$placeNode->appendChild($PolyStyle);
-
-	$color = $dom->createElement('color', 'ff0000ff');
-	$placeNode->appendChild($color);
-	
-	
- 	$LineStyle = $dom->createElement('LineStyle');
-	$placeNode->appendChild($LineStyle);
-	
-	$color = $dom->createElement('color', 'ff0000ff');
-	$placeNode->appendChild($color);
-	
-	$PolyStyle = $dom->createElement('PolyStyle');
-	$placeNode->appendChild($PolyStyle);
-
-	$color = $dom->createElement('color', 'ff0000ff');
-	$placeNode->appendChild($color);
-	
- 	$pair = $dom->createElement('pair');
-	$placeNode->appendChild($pair);
+	$pair = $dom->createElement('pair');
+	$placeNode = $docNode->appendChild($pair);
 	
 	$key = $dom->createElement('key', 'normal');
 	$placeNode->appendChild($key);
-
-  $styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . '#s_ylw-pushpin');
-  $placeNode->appendChild($styleUrl);
 	
+	$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin');
+	$placeNode->appendChild($styleUrl);
 	
  	$pair = $dom->createElement('pair');
-	$placeNode->appendChild($pair);
+	$placeNode = $docNode->appendChild($pair);
 	
 	$key = $dom->createElement('key', '#s_ylw-pushpin_hl');
 	$placeNode->appendChild($key);
 	
+	$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin_hl');
+	$placeNode->appendChild($styleUrl);
 
+
+//Créer Placemark	
+  $node = $dom->createElement('Placemark');
+  $placeNode = $docNode->appendChild($node);
+  $placeNode->setAttribute('id', 'Placemark' . $row['id']);
+  
+  $descNode = $dom-> createElement('description', $row['adresse']);
+  $placeNode->appendChild($descNode);
+  
+  $styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'm_ylw-pushpin');
+  $placeNode->appendChild($styleUrl);
+
+  $pointNode = $dom->createElement('Polygon');
+  $placeNode->appendChild($pointNode);
+
+	$exnode = $dom->createElement('tessellate', '1');
+	$placeNode->appendChild($exnode);
+
+	$outer = $dom->createElement('OunterBoundaryIs');
+	$placeNode->appendChild($outer); 
 	
 	$lineNode = $dom->createElement('LinearRing');
 	$placeNode->appendChild($lineNode);
-	$outer = $dom->createElement('OunterBoundaryIs');
-	$placeNode->appendChild($outer); 
+
  
-	$exnode = $dom->createElement('tessellate', '1');
-	$lineNode->appendChild($exnode);
-	$almodenode =$dom->createElement(altitudeMode,'relativeToGround');
-	$lineNode->appendChild($almodenode);
+
+	/*$almodenode =$dom->createElement(altitudeMode,'relativeToGround');
+	$lineNode->appendChild($almodenode);*/
    
   // Créer des coordonnées en donnant latitude et longitude
   $coorNode = $dom->createElement('coordinates', $coorStr);
