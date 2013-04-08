@@ -97,13 +97,13 @@ if (false){
 	$placeNode = $docNode->appendChild($LineStyle);
 	
 	$color = $dom->createElement('color', 'ff0000ff');
-	$placeNode->appendChild($color);
+	$LineStyle->appendChild($color);
 	
 	$PolyStyle = $dom->createElement('PolyStyle');
 	$placeNode = $docNode->appendChild($PolyStyle);
 
 	$color = $dom->createElement('color', 'ff0000ff');
-	$placeNode->appendChild($color);
+	$PolyStyle->appendChild($color);
 	
 
 //Créer balise style de carte	
@@ -115,19 +115,19 @@ if (false){
 	$placeNode = $docNode->appendChild($pair);
 	
 	$key = $dom->createElement('key', 'normal');
-	$placeNode->appendChild($key);
+	$pair->appendChild($key);
 	
 	$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin');
-	$placeNode->appendChild($styleUrl);
+	$pair->appendChild($styleUrl);
 	
  	$pair = $dom->createElement('pair');
 	$placeNode = $docNode->appendChild($pair);
 	
 	$key = $dom->createElement('key', '#s_ylw-pushpin_hl');
-	$placeNode->appendChild($key);
+	$pair->appendChild($key);
 	
 	$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin_hl');
-	$placeNode->appendChild($styleUrl);
+	$pair->appendChild($styleUrl);
 
 
 //Créer Placemark	
@@ -145,13 +145,13 @@ if (false){
   $placeNode->appendChild($pointNode);
 
 	$exnode = $dom->createElement('tessellate', '1');
-	$placeNode->appendChild($exnode);
+	$pointNode->appendChild($exnode);
 
 	$outer = $dom->createElement('OunterBoundaryIs');
-	$placeNode->appendChild($outer); 
+	$pointNode->appendChild($outer); 
 	
 	$lineNode = $dom->createElement('LinearRing');
-	$placeNode->appendChild($lineNode);
+	$outer->appendChild($lineNode);
 
  
 
