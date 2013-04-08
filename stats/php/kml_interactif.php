@@ -80,13 +80,13 @@ if (false){
 	$placeNode = $docNode->appendChild($LineStyle);
 	
 	$color = $dom->createElement('color', 'ff0000ff');
-	$placeNode->appendChild($color);
+	$LineStyle->appendChild($color);
 	
 	$PolyStyle = $dom->createElement('PolyStyle');
 	$placeNode = $docNode->appendChild($PolyStyle);
 
 	$color = $dom->createElement('color', 'ff0000ff');
-	$placeNode->appendChild($color);
+	$PolyStyle->appendChild($color);
 	
 //Créer deuxième balise style
   $node = $dom->createElement('Style');
