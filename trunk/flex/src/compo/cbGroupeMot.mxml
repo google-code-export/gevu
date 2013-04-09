@@ -35,7 +35,8 @@
 		annonce="Choisissez "+titre;
 		if(objMethode!="getAll"){
 			if(objMethode=="findByTronc"){
-			    ROS.findByTronc(objParam, this.parentApplication.idBase);
+				//les modèle de rapport sont conservés dans la base de référence
+			    ROS.findByTronc(objParam, false);
 			}			
 			if(objMethode=="findByIdLieu"){
 				if(!objParam)return;

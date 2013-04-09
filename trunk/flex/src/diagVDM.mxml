@@ -132,9 +132,6 @@ todo :
 										</mx:VBox>
 									</mx:HBox>
 								</mx:VBox>
-								<mx:VBox>
-									<mx:Image id="imgLieux" click="imgLieux.source='';" verticalAlign="top" horizontalAlign="left" source="" width="100%" />
-								</mx:VBox>
 						</mx:HBox>
 						<mx:Canvas width="100%" height="100%" label="Accessibilité">
 							<stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
@@ -165,6 +162,9 @@ todo :
 						</mx:Canvas>
 						-->
 					</mx:TabNavigator>					
+				</mx:VBox>
+				<mx:VBox>
+					<mx:Image id="imgLieux" click="imgLieux.source='';" verticalAlign="top" horizontalAlign="left" source="" width="100%" />								
 				</mx:VBox>
 		</mx:HDividedBox> 
 	 </mx:VBox>
