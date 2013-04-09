@@ -22,7 +22,13 @@ if (!$db_selected)
 }
 
 // Sélectionne la requête que l'on veut
-$query = 'SELECT id_lieu, lat, lng, adresse, kml FROM gevu_geos WHERE id_lieu = 3 AND id_geo = 2';
+$query = 'SELECT  `id_lieu` ,  `lat` ,  `lng` ,  `adresse` ,  `kml` 
+FROM  `gevu_geos` 
+WHERE id_lieu = 3
+OR id_lieu = 3530
+OR id_lieu = 8404
+OR id_lieu = 13311
+OR id_lieu = 17062';
 $result = mysql_query($query);
 if (!$result) 
 {
