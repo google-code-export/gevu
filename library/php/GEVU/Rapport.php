@@ -3,7 +3,8 @@ class GEVU_Rapport extends GEVU_Site{
 
 	var $arrMC;
 	var $odf;
-	var $pathDebug="C:\wamp\www\gevu\data\lieux";
+	var $pathDebug="C:\wamp\www\gevu/";
+	var $arrCoutSolus;
 	
 	/**
 	 * récupère la liste des diagnostics pour un lieu
@@ -22,7 +23,101 @@ class GEVU_Rapport extends GEVU_Site{
 		
 	}
 	
+	/**
+	 * ajoute les solutions par defaut
+	 *
+	 * @param int $idLieu
+	 * @param string $idBase
+	 *
+	 * @return string 
+	 */
+	public function setSolusDefaut($idLieu, $idExi, $idBase){
+		
+		$this->getDb($idBase);
+		
+		$dbDS = new Models_DbTable_Gevu_diagnosticsxsolutions($this->db);
+		$dbS = new Models_DbTable_Gevu_solutionsxcriteres();
+		
+		$arrDiags = $dbDS->findByIdLieuAFaire($idLieu);
+		foreach ($arrDiags as $diag) {
+			//vérifie si le côut est déjà calculé
+			if(!isset($this->arrCoutSolus[$diag['id_critere']])){
+				//récupère les solutions
+				$arrCrit = $dbS->findByIdCritere($diag['id_critere']);
+				//calcule le cout par defaut
+				$this->arrCoutSolus[$diag['id_critere']]=$this->calculDefautCout($arrCrit[0]);				
+			}
+			$dbDS->ajouterDiags(explode(",", $diag['diags']), $this->arrCoutSolus[$diag['id_critere']], $idExi);	
+		}
+		return "OK";
+		
+	}
 
+    /**
+     * Calcul le cout par defaut d'une solution
+     *
+     * @param array 	$arrCS
+     *
+     * @array
+     */
+    public function calculDefautCout($arrCS){
+    	
+		//calcul le cout par defaut
+		$coutSymbolique = 1;    	
+		$coutTotal = 0;    	
+		if($arrCS['id_solution']){
+			$vn["id_solution"] = $arrCS["id_solution"];				
+			$vn["id_cout"] = $arrCS["Sid_cout"];
+			if($arrCS["Sunite"]){
+				$vn["unite"] = $coutSymbolique;				
+				$coutTotal += $arrCS["Sunite"]*$coutSymbolique;
+			}				
+			if($arrCS["Spose"]){
+				$vn["pose"] = $coutSymbolique;				
+				$coutTotal += $arrCS["Spose"]*$coutSymbolique;					
+			}
+			if($arrCS["Smetre_lineaire"]){
+				$vn["metre_lineaire"] = $coutSymbolique;				
+				$coutTotal += $arrCS["Smetre_lineaire"]*$coutSymbolique;					
+			}
+			if($arrCS["Smetre_carre"]){
+				$vn["metre_carre"] = $coutSymbolique;				
+				$coutTotal += $arrCS["Smetre_carre"]*$coutSymbolique;					
+			}
+			if($arrCS["Sachat"]){
+				$vn["achat"] = $coutSymbolique;				
+				$coutTotal += $arrCS["Sachat"]*$coutSymbolique;					
+			}
+			$vn["cout"] = $coutTotal;				
+		}
+		if($arrCS["id_produit"]){
+			$vn["id_produit"] = $arrCS["id_produit"];				
+			$vn["id_cout"] = $arrCS["Sid_cout"];
+			if($arrCS["unite"]){
+				$vn["unite"] = $coutSymbolique;				
+				$coutTotal += $arrCS["unite"]*$coutSymbolique;
+			}				
+			if($arrCS["pose"]){
+				$vn["pose"] = $coutSymbolique;				
+				$coutTotal += $arrCS["pose"]*$coutSymbolique;					
+			}
+			if($arrCS["metre_lineaire"]){
+				$vn["metre_lineaire"] = $coutSymbolique;				
+				$coutTotal += $arrCS["metre_lineaire"]*$coutSymbolique;					
+			}
+			if($arrCS["metre_carre"]){
+				$vn["metre_carre"] = $coutSymbolique;				
+				$coutTotal += $arrCS["metre_carre"]*$coutSymbolique;					
+			}
+			if($arrCS["achat"]){
+				$vn["achat"] = $coutSymbolique;				
+				$coutTotal += $arrCS["achat"]*$coutSymbolique;					
+			}
+			$vn["cout"] = $coutTotal;								
+		}
+		return $vn;   	
+    }
+    	
 	/**
 	 * création d'un rapport pour un lieu et un modèle
 	 *
@@ -43,7 +138,7 @@ class GEVU_Rapport extends GEVU_Site{
 		//initialisation des objets	
 		$this->getDb($idBase);
 		$dbE = new Models_DbTable_Gevu_exis();
-		$dbDoc = new Models_DbTable_Gevu_docs($this->db);
+		$dbDoc = new Models_DbTable_Gevu_docs();
 		$dbMC = new Models_DbTable_Gevu_motsclefs($this->db);
 		$dbL = new Models_DbTable_Gevu_lieux($this->db);
 		$dbCnt = new Models_DbTable_Gevu_contacts($this->db);
@@ -58,16 +153,18 @@ class GEVU_Rapport extends GEVU_Site{
 		//récupère l'auteur 
 		$arrExi = $dbE->findById_exi($idExi);
 				
-		//récupère le Modele
+		//récupère le Modele dans la base de référence
 		$rm = $dbDoc->findByIdDoc($idModele);
-
+		//recharge le gestionnaire de la table gevu_doc pour correspondre à la base de travail
+		$dbDoc = new Models_DbTable_Gevu_docs($this->db);
+		
 		//récupère les mots clefs
-		$this->arrMC = $dbDoc->getAll();
+		$this->arrMC = $dbMC->getAll();
 		
 		//charge le modèle
 		//pour le debugage
-		//$ps = str_replace("/home/gevu/www/", "C:/wamp/www/gevu/", $rm['path_source']);
-		$ps = $rm['path_source'];
+		$ps = str_replace("/home/gevu/www/", $this->pathDebug, $rm['path_source']);
+		//$ps = $rm['path_source'];
 		$this->odf = new odf($ps);		
 		
 		//récupération de l'état des lieux
@@ -243,11 +340,7 @@ class GEVU_Rapport extends GEVU_Site{
 				$bats->nivs->niv_cout_tot($arrCoutNiv["reg"]+$arrCoutNiv["sou"]);
 				$cReg+=$arrCoutNiv["reg"]; 
 				$cSou+=$arrCoutNiv["sou"];
-				if($this->trace){
-					echo $niv["lib"]."<br/>";
-					$temps_fin = microtime(true);
-					echo 'Temps : '.round($temps_fin - $this->temps_debut, 4)." s. <br/>";
-				}
+				$this->trace($niv["lib"]);
 				
 				/*
 				$arrEtatNiv = $oDiag->getNodeRelatedData($niv['id_lieu'], $idExi, $idBase);				
@@ -485,7 +578,7 @@ class GEVU_Rapport extends GEVU_Site{
 			$doc = $arrDocs[0];
 			if($doc["content-type"]='image/gif' || $doc["content-type"]='image/jpeg' || $doc["content-type"]='image/png'){
 				//récupère la taille de l'image
-				if($this->pathDebug)$path = str_replace("/home/gevu/www/data/lieux",$this->pathDebug, $doc['path_source']);
+				if($this->pathDebug)$path = str_replace("/home/gevu/www/data/lieux",$this->pathDebug."data/lieux", $doc['path_source']);
 				else $path = $doc['path_source'];
 				/*
 				$size = getimagesize($doc['url']);
