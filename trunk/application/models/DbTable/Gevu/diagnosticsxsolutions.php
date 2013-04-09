@@ -8,6 +8,7 @@
 class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
 {
     
+	
     /**
      * Nom de la table.
      */
@@ -121,7 +122,7 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
      *
      * @return integer
      */
-    public function ajouterDiags($diags, $data, $idExi, $idBase)
+    public function ajouterDiags($diags, $data, $idExi, $idBase=false)
     {
     	if($idBase)$this->setDb($idBase);
     
@@ -136,6 +137,7 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
     	return $id;
     }
     
+
     /**
      * Recherche une entrée Gevu_diagnosticsxsolutions avec la clef primaire spécifiée
      * et modifie cette entrée avec les nouvelles données.
