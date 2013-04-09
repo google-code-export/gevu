@@ -133,7 +133,7 @@ if (false){
 //Créer Placemark	
   $node = $dom->createElement('Placemark');
   $placeNode = $docNode->appendChild($node);
-  $placeNode->setAttribute('id', 'Placemark' . $row['id']);
+  $placeNode->setAttribute('id_lieu', 'Placemark' . $row['id_lieu']);
   
   $descNode = $dom-> createElement('description', $row['adresse']);
   $placeNode->appendChild($descNode);
