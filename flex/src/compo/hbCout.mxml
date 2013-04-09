@@ -27,7 +27,7 @@
 					n_achat.value = Number(coutSolus.achat);
 					n_pose.value = Number(coutSolus.pose);									
 				}else{
-					coutTotal.text = "";
+					coutTotal.text = String(0);
 					n_unite.value=0;
 					n_metre_lineaire.value=0;
 					n_metre_carre.value=0;
@@ -73,14 +73,12 @@
 				
 				if(n_achat.value != 0  || n_unite.value != 0  || n_metre_lineaire.value != 0 || n_metre_carre.value != 0 || n_pose.value != 0 ){
 					this.setStyle("backgroundColor","green");
-					if(coutTotal.text=="0"){
-						//calcule le cout total
-						if(n_achat.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(achat.text)*n_achat.value));
-						if(n_unite.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(unite.text)*n_unite.value));
-						if(n_metre_lineaire.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(metre_lineaire.text)*n_metre_lineaire.value));
-						if(n_metre_carre.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(metre_carre.text)*n_metre_carre.value));
-						if(n_pose.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(pose.text)*n_pose.value));
-					}
+					//calcule le cout total
+					if(n_achat.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(achat.text)*n_achat.value));
+					if(n_unite.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(unite.text)*n_unite.value));
+					if(n_metre_lineaire.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(metre_lineaire.text)*n_metre_lineaire.value));
+					if(n_metre_carre.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(metre_carre.text)*n_metre_carre.value));
+					if(n_pose.value != 0)coutTotal.text = String(int(coutTotal.text)+(int(pose.text)*n_pose.value));
 				}else{
 					this.setStyle("backgroundColor",bgColor);
 				}	

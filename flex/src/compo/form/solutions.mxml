@@ -223,7 +223,7 @@
 				hbCout.coutSolus = null;
 				hbCout.produit = null;
 				hbCout.init();
-				if(item.docs)hbCout.docs.initDoc(item.docs);
+				hbCout.docs.initDoc(item.docs);
 			}
 			
 			protected function dgProduit_clickHandler(event:MouseEvent):void
@@ -234,7 +234,7 @@
 				hbCout.cout = item.cout;				
 				hbCout.coutSolus = null;
 				hbCout.init();
-				if(item.docs)hbCout.docs.initDoc(item.docs);
+				hbCout.docs.initDoc(item.docs);
 			}
 
 			protected function calculerCout():void

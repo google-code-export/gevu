@@ -31,46 +31,7 @@
 				if (os!="")
 					os = " - "+os;
 				Alert.show(str, "FaultHandlerService"+os);
-			}
-			
-			public function calculerRapport(send:Boolean):*{
-				
-				/*
-				var SelSols:Array = selectCout.getChildren();
-				
-				if(SelSols.length == 0){
-				Alert.show("Merci de sélectionner au moins une solution ou un produit.");
-				return;
-				}
-				
-				var pArr:Array = new Array; var pProb:Array; var couts:Array;
-				var idSolus:int; var libSolus:String;
-				
-				//récupération des données sélectionnnées
-				for each(var sol:hbSelectSolus in SelSols){
-				idSolus = sol.solus.id_solution;
-				couts = sol.selectProb.getChildren();
-				pProb = new Array;
-				for each(var ct:hbCout in couts){
-				pProb.push(GetArrCout(ct));
-				}
-				pArr.push({"idSolus":idSolus, "couts":pProb});
-				}	
-				var pxml:String = JSON.encode(pArr);
-				trace(pxml);    
-				if(!send) return pxml;
-				
-				var request:URLRequest = new URLRequest(ENDPOINT_RAPPORT);
-				var variables:URLVariables = new URLVariables();
-				variables.pxml=pxml;
-				variables.site=idBase;
-				variables.id= idLieu;
-				variables.model=cbModel.cb.selectedItem["id_doc"];
-				request.data = variables;
-				request.method = URLRequestMethod.POST;
-				navigateToURL(request,"_blank");
-				*/
-			}			
+			}	
 			
 			protected function getRapportFait_resultHandler(event:ResultEvent):void
 			{
@@ -115,6 +76,17 @@
 				roRapport.getRapportFait(idLieu, this.parentApplication.idBase);
 			}
 			
+			protected function genereAllSolus_clickHandler(event:MouseEvent):void
+			{
+				roRapport.setSolusDefaut(idLieu, this.parentApplication.idExi, this.parentApplication.idBase);
+			}
+			
+			protected function setSolusDefaut_resultHandler(event:ResultEvent):void
+			{
+				formSolusFait.init();
+				formSolusAFaire.init();
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:RemoteObject id="roRapport"
@@ -124,6 +96,7 @@
 					 showBusyCursor="true" 
 					 >
 		<mx:method name="getRapportFait" result="getRapportFait_resultHandler(event)" />
+		<mx:method name="setSolusDefaut" result="setSolusDefaut_resultHandler(event)"  />
 		<mx:method name="creaRapport" result="creaRapport_resultHandler(event)" />
 		
 	</mx:RemoteObject>
@@ -137,15 +110,20 @@
 					<compo:cUploadFile x="-100" id="ufModel" iconBtn="@Embed('images/AddRecord.png')" idExi="{this.parentApplication.idExi}" objName="model_rapport" ttBtn="Ajouter un modèle" ctlBind="{this}" wf="models" typeFic="models" />								
 					<compo:cbGroupeMot labelName="titre" bRemove="true" bAjout="false" titre="un modèle" keyName="id_doc" id="cbModel" objName="Models_DbTable_Gevu_docs" objMethode="findByTronc"  objParam="model_rapport" />
 				</mx:HBox>
-				<mx:Button label="Créer un nouveau rapport" click="creerRapport_clickHandler(event)" />
 			</mx:VBox>
+			<mx:Button label="Créer un nouveau rapport" click="creerRapport_clickHandler(event)" />
 		</mx:HBox>
-		<mx:Panel title="Solutions renseignées" width="100%" height="100%" >
-			<form:solutions id="formSolusFait" bAjout="false" sMethode="findByIdLieuFait" />			
-		</mx:Panel>
-		<mx:Panel title="Solutions à renseigner" width="100%" height="100%" >
-			<form:solutions id="formSolusAFaire"  sMethode="findByIdLieuAFaire" solusLieuxFait="{formSolusFait}" />			
-		</mx:Panel>
+		<mx:VDividedBox width="100%" height="100%">
+			
+			<mx:Panel title="Solutions renseignées" width="100%" height="100%" >
+				<form:solutions id="formSolusFait" bAjout="false" sMethode="findByIdLieuFait" />			
+			</mx:Panel>
+			<mx:Panel title="Solutions à renseigner" width="100%" height="100%" paddingBottom="2" paddingLeft="2" paddingRight="2" paddingTop="2"  >
+				<mx:Button x="4" label="Appliquer la première solution trouvée à tous les problèmes sans solution" click="genereAllSolus_clickHandler(event)" />
+				<form:solutions id="formSolusAFaire"  sMethode="findByIdLieuAFaire" solusLieuxFait="{formSolusFait}" />			
+			</mx:Panel>
+			
+		</mx:VDividedBox>
 	</mx:VBox>
 	
 </mx:Canvas>
