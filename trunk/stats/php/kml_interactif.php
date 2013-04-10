@@ -3,6 +3,10 @@
  $password = 'password';
  $database = 'gevu_new';
  $server = '127.0.0.1';
+ 
+<?php
+   $couleur='#ff0000ff';
+?> 
 
 
 //require('codes.php');
@@ -78,47 +82,47 @@ if (false){
   $placeNode->appendChild($nameNode);
   
 //Créer première balise style
-  $node = $dom->createElement('Style');
-  $placeNode = $docNode->appendChild($node);
-  $placeNode->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
+  $Stylenode = $dom->createElement('Style');
+  $placeNode1 = $docNode->appendChild($Stylenode);
+  $placeNode1->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
   
  	$LineStyle = $dom->createElement('LineStyle');
-	$placeNode = $docNode->appendChild($LineStyle);
+	$placeNode1 = $docNode->appendChild($LineStyle);
 	
 	$color = $dom->createElement('color', 'ff0000ff');
 	$LineStyle->appendChild($color);
 	
 	$PolyStyle = $dom->createElement('PolyStyle');
-	$placeNode = $docNode->appendChild($PolyStyle);
+	$placeNode1 = $docNode->appendChild($PolyStyle);
 
 	$color = $dom->createElement('color', 'ff0000ff');
 	$PolyStyle->appendChild($color);
 	
 //Créer deuxième balise style
-  $node = $dom->createElement('Style');
-  $placeNode = $docNode->appendChild($node);
-  $placeNode->setAttribute('id', 's_ylw-pushpin' . $row['id']);
+  $Stylenode1 = $dom->createElement('Style');
+  $placeNode2 = $docNode->appendChild($Stylenode1);
+  $placeNode2->setAttribute('id', 's_ylw-pushpin' . $row['id']);
 
- 	$LineStyle = $dom->createElement('LineStyle');
-	$placeNode = $docNode->appendChild($LineStyle);
+ 	$LineStyle1 = $dom->createElement('LineStyle');
+	$placeNode2 = $docNode->appendChild($LineStyle1);
 	
-	$color = $dom->createElement('color', 'ff0000ff');
-	$LineStyle->appendChild($color);
+	$color1 = $dom->createElement('color', 'ff0000ff');
+	$LineStyle1->appendChild($color1);
 	
-	$PolyStyle = $dom->createElement('PolyStyle');
-	$placeNode = $docNode->appendChild($PolyStyle);
+	$PolyStyle1 = $dom->createElement('PolyStyle');
+	$placeNode2 = $docNode->appendChild($PolyStyle1);
 
-	$color = $dom->createElement('color', 'ff0000ff');
-	$PolyStyle->appendChild($color);
+	$color1 = $dom->createElement('color', 'ff0000ff');
+	$PolyStyle1->appendChild($color1);
 	
 
 //Créer balise style de carte	
-  $node = $dom->createElement('StyleMap');
-  $placeNode = $docNode->appendChild($node);
-  $placeNode->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
+  $StyleMapnode = $dom->createElement('StyleMap');
+  $placeNode3 = $docNode->appendChild($StyleMapnode);
+  $placeNode3->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
   
 	$pair = $dom->createElement('pair');
-	$placeNode = $docNode->appendChild($pair);
+	$placeNode3 = $docNode->appendChild($pair);
 	
 	$key = $dom->createElement('key', 'normal');
 	$pair->appendChild($key);
@@ -127,7 +131,7 @@ if (false){
 	$pair->appendChild($styleUrl);
 	
  	$pair = $dom->createElement('pair');
-	$placeNode = $docNode->appendChild($pair);
+	$placeNode3 = $docNode->appendChild($pair);
 	
 	$key = $dom->createElement('key', '#s_ylw-pushpin_hl');
 	$pair->appendChild($key);
@@ -137,18 +141,18 @@ if (false){
 
 
 //Créer Placemark	
-  $node = $dom->createElement('Placemark');
-  $placeNode = $docNode->appendChild($node);
-  $placeNode->setAttribute('id_lieu', 'Placemark' . $row['id_lieu']);
+  $Placemarknode = $dom->createElement('Placemark');
+  $placeNode4 = $docNode->appendChild($Placemarknode);
+  $placeNode4->setAttribute('id_lieu', 'Placemark' . $row['id_lieu']);
   
   $descNode = $dom-> createElement('description', $row['adresse']);
-  $placeNode->appendChild($descNode);
+  $placeNode4->appendChild($descNode);
   
-  $styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'm_ylw-pushpin');
-  $placeNode->appendChild($styleUrl);
+  $styleUrl1 = $dom->createElement('styleUrl', '#' . $row['type'] . 'm_ylw-pushpin');
+  $placeNode4->appendChild($styleUrl1);
 
   $pointNode = $dom->createElement('Polygon');
-  $placeNode->appendChild($pointNode);
+  $placeNode4->appendChild($pointNode);
 
 	$exnode = $dom->createElement('tessellate', '1');
 	$pointNode->appendChild($exnode);
