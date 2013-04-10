@@ -6,10 +6,11 @@
  
  //$couleur = '#ff0000ff'
 
-$Style = echo "<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><color>ff0000ff</color></PolyStyle></Style>";
-$StyleMap = echo "<StyleMap><pair><key>normal</key><styleUrl>#s_ylw-pushpin</styleUrl></pair><pair><key>#s_ylw-pushpin_hl</key><styleUrl>#s_ylw-pushpin_hl</styleUrl></pair></StyleMap>";
+//echo "<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><color>ff0000ff</color></PolyStyle></Style>";
+//echo "<StyleMap><pair><key>normal</key><styleUrl>#s_ylw-pushpin</styleUrl></pair><pair><key>#s_ylw-pushpin_hl</key><styleUrl>#s_ylw-pushpin_hl</styleUrl></pair></StyleMap>";
+
  
- 
+
  /* function Style(){
 	 $Stylenode = $dom->createElement('Style');
   $placeNode = $docNode->appendChild($Stylenode);
