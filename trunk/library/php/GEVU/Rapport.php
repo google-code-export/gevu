@@ -3,7 +3,8 @@ class GEVU_Rapport extends GEVU_Site{
 
 	var $arrMC;
 	var $odf;
-	var $pathDebug="C:\wamp\www\gevu/";
+	//var $pathDebug="C:\wamp\www\gevu/";
+	var $pathDebug;
 	var $arrCoutSolus;
 	
 	/**
@@ -163,8 +164,8 @@ class GEVU_Rapport extends GEVU_Site{
 		
 		//charge le modèle
 		//pour le debugage
-		$ps = str_replace("/home/gevu/www/", $this->pathDebug, $rm['path_source']);
-		//$ps = $rm['path_source'];
+		if($this->pathDebug)$ps = str_replace("/home/gevu/www/", $this->pathDebug, $rm['path_source']);
+		else $ps = $rm['path_source'];
 		$this->odf = new odf($ps);		
 		
 		//récupération de l'état des lieux
