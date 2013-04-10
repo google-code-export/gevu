@@ -4,9 +4,72 @@
  $database = 'gevu_new';
  $server = '127.0.0.1';
  
-<?php
-   $couleur='#ff0000ff';
-?> 
+ //$couleur = '#ff0000ff'
+
+ /* function Style(){
+	 $Stylenode = $dom->createElement('Style');
+  $placeNode = $docNode->appendChild($Stylenode);
+  $placeNode->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
+  
+ 	$LineStyle = $dom->createElement('LineStyle');
+	$placeNode = $docNode->appendChild($LineStyle);
+	
+	$color = $dom->createElement('color', 'ff0000ff');
+	$LineStyle->appendChild($color);
+	
+	$PolyStyle = $dom->createElement('PolyStyle');
+	$placeNode = $docNode->appendChild($PolyStyle);
+
+	$color = $dom->createElement('color', 'ff0000ff');
+	$PolyStyle->appendChild($color);
+  }
+  
+function StyleMap(){
+  $StyleMapnode = $dom->createElement('StyleMap');
+  $placeNode3 = $docNode->appendChild($StyleMapnode);
+  $placeNode3->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
+  
+	$pair = $dom->createElement('pair');
+	$placeNode3 = $docNode->appendChild($pair);
+	
+	$key = $dom->createElement('key', 'normal');
+	$pair->appendChild($key);
+	
+	$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin');
+	$pair->appendChild($styleUrl);
+	
+ 	$pair = $dom->createElement('pair');
+	$placeNode3 = $docNode->appendChild($pair);
+	
+	$key = $dom->createElement('key', '#s_ylw-pushpin_hl');
+	$pair->appendChild($key);
+	
+	$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin_hl');
+	$pair->appendChild($styleUrl);
+}
+function Placemark(){
+ $Placemarknode = $dom->createElement('Placemark');
+  $placeNode4 = $docNode->appendChild($Placemarknode);
+  $placeNode4->setAttribute('id_lieu', 'Placemark' . $row['id_lieu']);
+  
+  $descNode = $dom-> createElement('description', $row['adresse']);
+  $placeNode4->appendChild($descNode);
+  
+  $styleUrl1 = $dom->createElement('styleUrl', '#' . $row['type'] . 'm_ylw-pushpin');
+  $placeNode4->appendChild($styleUrl1);
+
+  $pointNode = $dom->createElement('Polygon');
+  $placeNode4->appendChild($pointNode);
+
+	$exnode = $dom->createElement('tessellate', '1');
+	$pointNode->appendChild($exnode);
+
+	$outer = $dom->createElement('OunterBoundaryIs');
+	$pointNode->appendChild($outer); 
+	
+	$lineNode = $dom->createElement('LinearRing');
+	$outer->appendChild($lineNode);
+}*/
 
 
 //require('codes.php');
@@ -82,6 +145,9 @@ if (false){
   $placeNode->appendChild($nameNode);
   
 //Créer première balise style
+
+	//return Style;
+	
   $Stylenode = $dom->createElement('Style');
   $placeNode1 = $docNode->appendChild($Stylenode);
   $placeNode1->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
@@ -99,6 +165,8 @@ if (false){
 	$PolyStyle->appendChild($color);
 	
 //Créer deuxième balise style
+
+	//return Style;
   $Stylenode1 = $dom->createElement('Style');
   $placeNode2 = $docNode->appendChild($Stylenode1);
   $placeNode2->setAttribute('id', 's_ylw-pushpin' . $row['id']);
@@ -117,6 +185,9 @@ if (false){
 	
 
 //Créer balise style de carte	
+
+	//return StyleMap;
+	
   $StyleMapnode = $dom->createElement('StyleMap');
   $placeNode3 = $docNode->appendChild($StyleMapnode);
   $placeNode3->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
@@ -141,6 +212,9 @@ if (false){
 
 
 //Créer Placemark	
+
+	//return Placemark;
+	
   $Placemarknode = $dom->createElement('Placemark');
   $placeNode4 = $docNode->appendChild($Placemarknode);
   $placeNode4->setAttribute('id_lieu', 'Placemark' . $row['id_lieu']);
