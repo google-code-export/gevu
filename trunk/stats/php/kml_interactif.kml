@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1"><Document>
+	<Placemark><name>3</name>
+		<description>83-97 Rue de la Bigne Fosse, 76620 Le Havre, France</description>
+		<styleUrl>#m_ylw-pushpin</styleUrl>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<ounterBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						0.3193091876022725,49.68021538086115,0 0.3501487546617232,49.68444831680213,0 0.3254699013786988,49.69459561625012,0 0.3193091876022725,49.68021538086115,0 
+					</coordinates>
+				</LinearRing>
+			</ounterBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark>
+		<name>gevu</name>
+		<visibility>0</visibility>
+		<styleUrl>#msn_ylw-pushpin</styleUrl>
+		<Polygon>
+			<tessellate>1</tessellate>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						0.3193091876022725,49.68021538086115,0 0.3501487546617232,49.68444831680213,0 0.3254699013786988,49.69459561625012,0 0.3193091876022725,49.68021538086115,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+
+</Document></kml>
