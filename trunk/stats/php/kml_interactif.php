@@ -6,7 +6,7 @@ require_once 'codes.php';
 $query = 'SELECT  ref, g.id_lieu, lat,  lng, adresse, kml 
 FROM  gevu_geos g
 INNER JOIN  gevu_antennes a ON g.id_lieu = a.id_lieu
-WHERE a.id_lieu IN (3, 3530, 8404, 13311, 17062)';
+WHERE a.id_lieu IN ('.$_GET['ids'].')';
 $result = mysql_query($query);
 if (!$result) 
 {
