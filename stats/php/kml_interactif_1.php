@@ -7,13 +7,6 @@
  $database = 'gevu_new';
  $server = '127.0.0.1';
  
- //$couleur = '#ff0000ff'
-
-//echo "<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><color>ff0000ff</color></PolyStyle></Style>";
-//echo "<StyleMap><pair><key>normal</key><styleUrl>#s_ylw-pushpin</styleUrl></pair><pair><key>#s_ylw-pushpin_hl</key><styleUrl>#s_ylw-pushpin_hl</styleUrl></pair></StyleMap>";
-
- 
-
   function Style(){
 	 $Stylenode = $dom->createElement('Style');
   $placeNode = $docNode->appendChild($Stylenode);
@@ -55,6 +48,7 @@ function StyleMap(){
 	$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin_hl');
 	$pair->appendChild($styleUrl);
 }
+
 function Placemark(){
  $Placemarknode = $dom->createElement('Placemark');
   $placeNode4 = $docNode->appendChild($Placemarknode);
