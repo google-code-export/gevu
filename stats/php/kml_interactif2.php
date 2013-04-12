@@ -6,9 +6,6 @@
  
  //$couleur = '#ff0000ff'
 
-//echo "<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><color>ff0000ff</color></PolyStyle></Style>";
-//echo "<StyleMap><pair><key>normal</key><styleUrl>#s_ylw-pushpin</styleUrl></pair><pair><key>#s_ylw-pushpin_hl</key><styleUrl>#s_ylw-pushpin_hl</styleUrl></pair></StyleMap>";
-
  //require('codes.php');
 // Ouvre connexion MySQL
 $connection=mysql_connect ($server, $username, $password);
@@ -56,14 +53,6 @@ $docNode = $parNode->appendChild($dnode);
 while ($row = @mysql_fetch_assoc($result))
 {
 if (false){
- // if($row['kml']){ //vérifie si kml. Si oui on charge l'objet dans un placemark. Cette requête récupère les coordonnées où y'a le kml dans la base. Coordonnées string c'est ce qu'il y a dans résult. géénrère kml
-	//  $xmlPlacemark = simplexml_load_string($row['kml']);
-	//  if($xmlPlacemark){
-           //      $result = $xmlPlacemark->xpath('//coordinates');                  
-              //   $coorStr = $result[0]."";
-         
-	 // $result = $xmlPlacemark->xpath('//coordinates');
-	//  $coorStr = $result[0]."";
   }else{
   	$coorStr = $row['lng'] . ','  . $row['lat'] . ',' . $row['lng']-0.00027169 . ',' . $row['lat']+0.000486  . ',' . $row['lng']-0.00056495 . ',' . $row['lat']-0.000054  . ',' . $row['lng'] . ','  . $row['lat'];
   	//$coorStr = '0.1105855171821202,49.52564189740646,0 0.1103138214001675,49.52612762237801,0 0.1100205604428695,49.52558762241633,0 0.1105855171821202,49.52564189740646,0'
@@ -82,70 +71,17 @@ if (false){
   $placeNode->appendChild($nameNode);
   
 //Créer première balise style
-
-  $Stylenode = $dom->createElement('Style');
-  $placeNode1 = $docNode->appendChild($Stylenode);
-  $placeNode1->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
-  
- 	$LineStyle = $dom->createElement('LineStyle');
-	$placeNode1 = $docNode->appendChild($LineStyle);
-	
-	$color = $dom->createElement('color', 'ff0000ff');
-	$LineStyle->appendChild($color);
-	
-	$PolyStyle = $dom->createElement('PolyStyle');
-	$placeNode1 = $docNode->appendChild($PolyStyle);
-
-	$color = $dom->createElement('color', 'ff0000ff');
-	$PolyStyle->appendChild($color);
+echo "<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><color>ff0000ff</color></PolyStyle></Style>";
 	
 //Créer deuxième balise style
-
-  $Stylenode1 = $dom->createElement('Style');
-  $placeNode2 = $docNode->appendChild($Stylenode1);
-  $placeNode2->setAttribute('id', 's_ylw-pushpin' . $row['id']);
-
- 	$LineStyle1 = $dom->createElement('LineStyle');
-	$placeNode2 = $docNode->appendChild($LineStyle1);
-	
-	$color1 = $dom->createElement('color', 'ff0000ff');
-	$LineStyle1->appendChild($color1);
-	
-	$PolyStyle1 = $dom->createElement('PolyStyle');
-	$placeNode2 = $docNode->appendChild($PolyStyle1);
-
-	$color1 = $dom->createElement('color', 'ff0000ff');
-	$PolyStyle1->appendChild($color1);
+echo "<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><color>ff0000ff</color></PolyStyle></Style>";
 	
 
 //Créer balise style de carte	
-
-  $StyleMapnode = $dom->createElement('StyleMap');
-  $placeNode3 = $docNode->appendChild($StyleMapnode);
-  $placeNode3->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
-  
-	$pair = $dom->createElement('pair');
-	$placeNode3 = $docNode->appendChild($pair);
-	
-	$key = $dom->createElement('key', 'normal');
-	$pair->appendChild($key);
-	
-	$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin');
-	$pair->appendChild($styleUrl);
-	
- 	$pair = $dom->createElement('pair');
-	$placeNode3 = $docNode->appendChild($pair);
-	
-	$key = $dom->createElement('key', '#s_ylw-pushpin_hl');
-	$pair->appendChild($key);
-	
-	$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin_hl');
-	$pair->appendChild($styleUrl);
-
+//echo "<StyleMap><pair><key>normal</key><styleUrl>#s_ylw-pushpin</styleUrl></pair><pair><key>#s_ylw-pushpin_hl</key><styleUrl>#s_ylw-pushpin_hl</styleUrl></pair></StyleMap>";
+echo "<StyleMap><pair><key>normal</key><styleUrl></styleUrl></pair><pair><key></key><styleUrl></styleUrl></pair></StyleMap>";
 
 //Créer Placemark	
-
-	//return Placemark;
 	
   $Placemarknode = $dom->createElement('Placemark');
   $placeNode4 = $docNode->appendChild($Placemarknode);
@@ -154,7 +90,7 @@ if (false){
   $descNode = $dom-> createElement('description', $row['adresse']);
   $placeNode4->appendChild($descNode);
   
-  $styleUrl1 = $dom->createElement('styleUrl', '#' . $row['type'] . 'm_ylw-pushpin');
+  $styleUrl1 = $dom->createElement('styleUrl', '#' . $row['type'] /*. 'm_ylw-pushpin'*/);
   $placeNode4->appendChild($styleUrl1);
 
   $pointNode = $dom->createElement('Polygon');
