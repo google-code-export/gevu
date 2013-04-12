@@ -81,7 +81,7 @@ function getKMLPlacemark($dom, $row){
 
 	$nodePoly = $dom->createElement('Polygon');
 		$nodeTessa = $dom->createElement('tessellate', '1');
-		$nodeOuter = $dom->createElement('ounterBoundaryIs');
+		$nodeOuter = $dom->createElement('outerBoundaryIs');
 			$nodeLineRing = $dom->createElement('LinearRing');
 				$nodeCoor = $dom->createElement('coordinates', $coorStr);
 			$nodeLineRing->appendChild($nodeCoor);
