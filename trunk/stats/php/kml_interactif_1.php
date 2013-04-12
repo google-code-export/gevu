@@ -1,4 +1,7 @@
 <?php
+
+//Fichier avec création des différentes fonctions
+
  $username = 'username';
  $password = 'password';
  $database = 'gevu_new';

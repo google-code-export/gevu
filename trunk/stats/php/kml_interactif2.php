@@ -1,4 +1,7 @@
 <?php
+
+//Fichier avec des echo. Marche bien, mais mal placé.
+
  $username = 'username';
  $password = 'password';
  $database = 'gevu_new';
