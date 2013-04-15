@@ -37,7 +37,24 @@ while ($row = @mysql_fetch_assoc($result))
 	$nodeDoc1->appendChild($nodeP1);
 	
 	//Créer première balise style
-function getKMLStyle($row, $dom, $docNode){
+	
+  $Stylenode = $dom->createElement('Style');
+  $placeNode1 = $docNode->appendChild($Stylenode);
+  $placeNode1->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
+  
+ 	$LineStyle = $dom->createElement('LineStyle');
+	$placeNode1 = $docNode->appendChild($LineStyle);
+	
+	$color = $dom->createElement('color', 'ff0000ff');
+	$LineStyle->appendChild($color);
+	
+	$PolyStyle = $dom->createElement('PolyStyle');
+	$placeNode1 = $docNode->appendChild($PolyStyle);
+
+	$color = $dom->createElement('color', 'ff0000ff');
+	$PolyStyle->appendChild($color);
+	
+/*function getKMLStyle($row, $dom){
 	$styleNode = $dom->createElement('Style');
 	$styleNode->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
 	$docNode->appendChild($styleNode);
@@ -50,13 +67,13 @@ function getKMLStyle($row, $dom, $docNode){
 	$PolyStyleNode->appendChild($nodePolyColor);	
 
 	$styleNode->appendChild($LineStyleNode);
-	$placeNode = $docNode->appendChild($PolyStyleNode);
+	$placeNode->appendChild($PolyStyleNode);
 
 	return $styleNode;
 }
 	
 	//Créer deuxième balise style
-function getKMLStyle1($row, $dom, $docNode){
+function getKMLStyle1($row, $dom){
 	$styleNode1 = $dom->createElement('Style');
 	$styleNode1->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
 	$docNode1->appendChild($styleNode1);
@@ -69,32 +86,30 @@ function getKMLStyle1($row, $dom, $docNode){
 	$PolyStyleNode1->appendChild($nodePolyColor1);	
 
 	$styleNode1->appendChild($LineStyleNode1);
-	$placeNode1 = $docNode->appendChild($PolyStyleNode1);
+	$placeNode1->appendChild($PolyStyleNode1);
 
 	return $styleNode1;
 }
 	//Créer balise style de carte	
-function getMapStyle($row, $dom, $docNode){
+function getMapStyle($row, $dom){
 	$StyleMapnode = $dom->createElement('StyleMap');
-	$placeNode3->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
-	$placeNode3 = $docNode->appendChild($StyleMapnode);
+	$StyleMapnode->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
 
-
-	$pair = $dom->createElement('pair');
+	$nodePair = $dom->createElement('pair');
 		$key = $dom->createElement('key', 'normal');
 		$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin');
-	$pair->appendChild($styleUrl);
-	$pair->appendChild($key);
-	$pair = $dom->createElement('pair');	
-		$key = $dom->createElement('key', '#s_ylw-pushpin_hl');
-		$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin_hl');	
-	$pair->appendChild($styleUrl);
-	$pair->appendChild($key);
+	$nodePair->appendChild($styleUrl);
+	$nodePair->appendChild($key);
+	$nodePair = $dom->createElement('pair');	
+		$nodeKey = $dom->createElement('key', '#s_ylw-pushpin_hl');
+		$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin_hl');	
+	$nodePair->appendChild($nodeStyleUrl);
+	$nodePair->appendChild($nodeKey);
 	
-	$StyleMapnode = $docNode->appendChild($pair);
+	$StyleMapnode->appendChild($nodePair);
 	
 	return $StyleMapnode;
-}
+}*/
 
 function getKMLPlacemark($dom, $row){
 
