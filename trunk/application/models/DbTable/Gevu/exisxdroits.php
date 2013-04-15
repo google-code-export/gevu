@@ -133,7 +133,7 @@ class Models_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_exisxdroits avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -142,11 +142,35 @@ class Models_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
     public function findById_droit($id_droit)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_exisxdroits") )                           
-                    ->where( "g.id_droit = ?", $id_droit );
+        	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+        	->from( array("ed" => "gevu_exisxdroits") )                           
+            ->joinInner(array('e' => 'gevu_exis'),
+            	'e.id_exi = ed.id_exi',array("nom"))
+        	->where( "ed.id_droit = ?", $id_droit );
 
         return $this->fetchAll($query)->toArray(); 
     }
+    /**
+     * récupère la liste des utilisateur autorisé à faire un diagnostic dans une base
+     * @param string $droit
+     * @param string $valeur
+     *
+     */
+    public function getUtiDroit($droit, $valeur){
+    	$arrD = $this->findById_droit($droit);
+    	$result = array();
+    	foreach ($arrD as $ed) {
+    		$oD = json_decode($ed["params"]);
+    		foreach ($oD as $d) {
+    			if($d->id==$droit."_".$valeur){
+    				$result[]= array("nom"=>$ed["nom"],"idExi"=>$ed["id_exi"]);
+    			}
+    		}
+    	}
+    	return $result;
+    }
+    
+    
     /*
      * Recherche une entrée Gevu_exisxdroits avec la valeur spécifiée
      * et retourne cette entrée.
