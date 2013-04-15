@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Liste des lieux" creationComplete="creationCompleteHandler(event)">		
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+		<s:RemoteObject id="roDiagnostique"
+						 destination="zend"
+						 source="GEVU_Diagnostique"
+						 fault="faultHandlerService(event, 'GEVU - Diagnostic');"
+						 showBusyCursor="true"
+						 >
+			<s:method name="getXmlNode"				result="updateTreeStructure(event);" />
+			<!--
+			<s:method name="getNodeRelatedData"		result="displayNodeProperties(event);" />
+			<s:method name="findLieu"				result="displayReponse(event);" />
+			<s:method name="editLieu"				result="lieuxEdit_resultHandler(event);" />
+			<s:method name="ajoutLieu"				result="lieuxAjout_resultHandler(event);" />
+			<s:method name="deleteLieu" />
+			<s:method name="getLieuDocs"	 		result="getDocs_resultHandler(event)" />
+			<s:method name="deleteDoc"				result="roDiagnostique.getLieuDocs(idLieu, idBase);" />
+			<s:method name="getLieuCtl"				result="fillCtlListe(event);" />
+			<s:method name="ajoutCtlLieu"			result="roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);" />
+			<s:method name="copiecolleLieu"			result="copiecolle_resultHandler(event)" />
+			-->
+		</s:RemoteObject>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import cpnt.alert;
+			import cpnt.calloutLieu;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				//roDiagnostique.getXmlNode(1);
+				
+			}
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				var a:alert = new alert;
+				a.mess = str;
+				if(os)a.titre = os;
+				a.open(this, false);
+			}
+			
+			private function updateTreeStructure(event:ResultEvent) : void {
+				
+				bi.visible = false;
+								
+				if(!event.result) return;
+				var x:XML = event.result as XML;
+				
+				var col:calloutLieu=new calloutLieu;
+				col.xmlLieu = x;
+				this.addElement(col);
+								
+			}
+						
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout paddingTop="3" paddingBottom="3" paddingLeft="3" paddingRight="3" gap="4" horizontalAlign="left" verticalAlign="top"/>
+	</s:layout>
+	<s:BusyIndicator id="bi" visible="false" symbolColor="blue" rotationInterval="200"/>
+	
+</s:View>
