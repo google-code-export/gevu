@@ -26,7 +26,139 @@ class GEVU_Migration extends GEVU_Site{
 		
     }
 	
-	/**
+    /**
+     * migre les données de référence du serveur vers la tablette
+     *
+     * ATTENTION les références de la tablette sont supprimée
+     * merci à 
+     * http://forum.phpfrance.com/vos-contributions/copie-tables-serveur-distant-t7994.html pour le script
+     * http://wiki.gandi.net/fr/hosting/using-linux/tutorials/ubuntu/remote-mysql pour la connexion distante
+     */
+    public function migreRefServeurToLocal(){
+
+    	 
+    	// paramètres de configuration    	
+    	$this->bTrace = true;								// pour afficher le nombre de lignes importées et le timing    	
+    	$this->echoTrace = "migreRefServeurToLocal<br/>";	//pour stocker les traces
+    	$this->temps_debut = microtime(true);
+    	$timeLimit          = 30;                			// en sec. Au cas où une connexion distante bloquerait...
+    	$ecraser            = true;            				// true on écrase la table cible si elle existe (ATTENTION ! 	   	
+    														// ne pas se tromper de nom de table cible sinon... zap!)
+
+    	// paramètres de connexion source
+    	$hostSource         = '188.165.235.55';		// adresse IP du serveur Source    	
+    	$portSource         = '3306';           	// port serveur MySql (3306 par défaut)
+    	$userSource         = 'remoteuser';         // utilisateur
+    	$mdpSource          = 'Samszo2013' ;      	// mot de passe    	
+    	$bddSource          = 'gevu_new';       	// base de donnée Source
+    	// tables Sources = 27
+    	$tablesSources = array('gevu_contacts','gevu_couts','gevu_criteres','gevu_criteresxtypesxcriteres','gevu_criteresxtypesxdeficiences','gevu_criteresxtypesxdroits'
+    			,'gevu_droits','gevu_exis','gevu_exisxdroits','gevu_motsclefs','gevu_produits','gevu_produitsxcouts','gevu_roles','gevu_scenario','gevu_scenes'
+    			,'gevu_solutions','gevu_solutionsxcouts','gevu_solutionsxcriteres','gevu_solutionsxmetiers','gevu_solutionsxproduits'
+    			,'gevu_typesxcontroles','gevu_typesxcriteres','gevu_typesxdeficiences','gevu_typesxdroits','gevu_typesxsolutions','gevu_typexmotsclefs');
+    	    	
+  	
+    	// paramètres de connexion cible   	
+    	$hostCible          = 'localhost';      // adr. IP du serveur Cible (ici localhost pour l'exemple)
+    	$portCible          = '3306';           // port serveur MySql (3306 par défaut)
+    	$userCible          = 'root';           // utilisateur
+    	$mdpCible           = '';    			// mot de passe
+    	$bddCible           = 'gevu_vide';      // base de donnée Cible
+    	   	
+    	// texte d'erreur de connexion
+    	$errConnexion = "Impossible d'établir une connexion au port <b>%1\$s</b> du host <u>%2\$s</u> <b>%3\$s</b> dans la limite du temps imparti (%4\$s secondes). <br />Vérifiez l'adresse du host et le numéro de port du serveur %2\$s MySQL.<br />S'ils vous semblent corrects, essayez en changeant la valeur de <b>\$timeLimit</b>.";
+    	
+    	
+    	// CONNEXION - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    	// test d'ouverture du port MySQL sur les serveurs
+    	if (!@fsockopen($hostSource, $portSource, $errno, $errstr, $timeLimit)){
+    		printf($errConnexion, $portSource, 'source', $hostSource,  $timeLimit);
+    		exit;
+    	}
+    	$this->trace('connexion_serveur_source');
+    	 
+    	if (!@fsockopen($hostCible, $portCible, $errno, $errstr, $timeLimit)){
+    		printf($errConnexion, $portCible, 'cible', $hostCible,  $timeLimit);
+    		exit;
+    	}
+    	$this->trace('connexion_serveur_cible');
+    	 
+    	// connexion aux deux serveurs MySql
+    	$linkSource = mysql_connect($hostSource.':'.$portSource, $userSource, $mdpSource)
+    	or die (mysql_error());
+    	$this->trace('connexion_bdd_source');
+
+    	$linkCible = mysql_connect($hostCible.':'.$portCible, $userCible, $mdpCible)    	
+    	or die (mysql_error());
+    	$this->trace('connexion_bdd_cible');
+    	
+    	// SERVEUR SOURCE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    	// sélection de la bdd source
+    	mysql_select_db($bddSource, $linkSource)
+    	or die (mysql_error($linkSource));
+    	$this->trace('selection de la bdd source');
+    	 
+    	foreach ($tablesSources as $table) {
+    		/* importation de la structure de la table source
+    		 $qry_import_structure = 'SHOW CREATE TABLE '.$tableSource;
+    		$result = mysql_query($qry_import_structure, $linkSource)
+    		or die (mysql_error($linkSource));
+    		$row = mysql_fetch_row($result);
+    		$qry_create = str_replace ('CREATE TABLE `'.$tableSource.'`', 'CREATE TABLE `'.$tableCible.'`', $row[1]);
+    		*/
+    		
+	    	// importation des lignes de la table source et construction de l'INSERT   	
+	    	$qry_import_lignes = 'SELECT * FROM '.$table;
+	    	$result = mysql_query($qry_import_lignes, $linkSource)
+	    	or die (mysql_error($linkSource));    	    	
+	    	while ($row = mysql_fetch_row($result)){
+	    		$values = '(\''.implode("','", array_map('addslashes', $row)).'\')';
+	    		$qry_insert[] = 'INSERT INTO '.$table.' VALUES '.$values;
+	    	}
+	    	$this->trace('requête : '.$table);
+		}
+	    	
+    	// SERVEUR CIBLE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    	// sélection de la bdd cible
+    	mysql_select_db($bddCible, $linkCible)
+    	or die (mysql_error($linkCible));
+    	$this->trace('selection de la bdd cible');
+    	 
+    	foreach ($tablesSources as $table) {
+	    	// suppression de la table cible si elle existe déjà
+	    	if ($ecraser){
+	    		$qry_drop = 'TRUNCATE TABLE '.$table;
+	    		mysql_query($qry_drop, $linkCible)
+	    		or die (mysql_error($linkCible));
+	    		$this->trace('supression données table : '.$table);
+	    	}
+	    	
+	    	/* création de la structure de la table cible
+	    	mysql_query($qry_create, $linkCible)
+	    	or die (mysql_error($linkCible));
+	    	*/	    	
+    	}
+    	// insertion des lignes dans la table-cible
+    	$i=0;
+	    $this->trace('données à insérer : '.count($qry_insert));
+    	foreach ($qry_insert as $v){
+    		mysql_query($v, $linkCible)
+    		or die (mysql_error($linkCible));
+	    	$this->trace('insertion données : '.$i);
+	    	$i++;
+    	}
+    	
+    	// FERMETURE DES SESSIONS SERVEURS - - - - - - - - - - - - - - - - - - - - - - - - -
+	    $this->trace('fermeture des connexions');
+    	mysql_close($linkSource);
+    	mysql_close($linkCible);    	    	
+
+    	$this->trace('fin de la migration des références');
+
+    	return $this->echoTrace;
+    }
+    
+    /**
 	* migre un lieu d'une base source vers une base de destination 
 	* 
 	* ATTENTION le lieu source et ses enfant écrasent les information de destination

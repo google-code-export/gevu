@@ -37,6 +37,7 @@ class GEVU_Site{
     var $db;
     //pour l'optimisation
     var $bTrace = false;
+    var $echoTrace = false;
     var $temps_debut;
     var $temps_inter;
     var $temps_nb=0;
@@ -80,7 +81,11 @@ class GEVU_Site{
 			$temps_fin = microtime(true);
 			$tG = str_replace(".",",",round($temps_fin - $this->temps_debut, 4));
 			$tI = str_replace(".",",",round($temps_fin - $this->temps_inter, 4));
-			echo $this->temps_nb." | ".$message." |".$tG."|".$tI."<br/>";
+			$mess = $this->temps_nb." | ".$message." |".$tG."|".$tI."<br/>";
+			if($this->echoTrace)
+				$this->echoTrace .= $mess;
+			else
+				echo $mess;
 			$this->temps_inter = $temps_fin;
 			$this->temps_nb ++;
 		}		
