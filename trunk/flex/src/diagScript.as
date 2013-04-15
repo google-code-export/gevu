@@ -49,8 +49,14 @@ import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 
 
+//icones pour le tree
+[Bindable][Embed("images/web.png")]public var iconGeo:Class;
+[Bindable][Embed("images/sync.gif")]public var iconCharge:Class;
+[Bindable][Embed("images/ajoutUtiM.png")]public var iconAjoutUtiM:Class;
+[Bindable][Embed("images/ajoutUtiP.png")]public var iconAjoutUtiP:Class;
+[Bindable][Embed("images/etablissementP.png")]public var iconEtab:Class;
+[Bindable][Embed("images/batimentP.png")]public var iconBat:Class;
 
-[Bindable][Embed("images/voie.png")]public var voieIcon:Class;
 [Bindable] public var exi:Object;
 [Bindable] public var idExi:String = "";
 [Bindable] public var dataGeo:Object;
@@ -62,6 +68,7 @@ public var idLieu:int=-1;
 public var idLieuCopie:int=-1;
 public var idLieuColle:int=-1;
 private var libLieu:String;
+private var lockLieu:String;
 public var idBase:String;
 public var idScenar:String;
 private var arrSelect:Array;
@@ -242,6 +249,36 @@ protected function treeTree_itemEditEndHandler(event:ListEvent):void
 	roDiagnostique.editLieu(i,arr,idBase);	
 }
 
+private function treeIconFunc(item:Object):Class {
+	var iconClass:Class = iconGeo;
+	if(item.@fake=="1")iconClass = iconCharge;
+
+	//vérification du type de lieu
+	var tc:String = item.@typeControle;
+	switch (tc) {
+		case "44":
+			iconClass = iconEtab;
+			break;
+		case "45":
+			iconClass = iconBat;
+			break;
+	}
+	
+	//vérification du lock
+	var ld:String = item.@lockDiag;
+	ld = ld.substr(0,1);
+	switch (ld) {
+		case "-":
+			iconClass = iconAjoutUtiM;
+			break;
+		case "+":
+			iconClass = iconAjoutUtiP;
+			break;
+	}
+
+	return iconClass;
+}
+
 protected function lieuxEdit_resultHandler(event:ResultEvent):void
 {
 	// TODO Auto-generated method stub
@@ -351,8 +388,10 @@ private function treeSelectFind(type:String) : void {
 }
 
 private function treeItemClicked(event:ListEvent) : void {
-	idLieu = event.currentTarget.selectedItem.attribute("idLieu");
-	libLieu = event.currentTarget.selectedItem.attribute("lib");
+	var i:Object = event.currentTarget.selectedItem;
+	idLieu = i.attribute("idLieu");
+	libLieu = i.attribute("lib");
+	lockLieu  = i.attribute("lockDiag");
 	if(libLieu=="univers")return;
 	if(idLieu>0) roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase, idScenar);
 	
@@ -599,10 +638,11 @@ protected function getDocs_resultHandler(event:ResultEvent):void
 private function updateTreeStructure(event:ResultEvent) : void {
 	
 	if(!event.result) return;
-	
+
 	/* get the id of the node */
 	var x:XML = <root></root>;
-	x.appendChild(event.result);
+	x.appendChild(event.result);		
+	
 	var idnoeud:int;
 	idnoeud = x.node.attribute("idLieu");
 	
@@ -648,10 +688,61 @@ protected function tnDiagChange():void
 		cRapports.init();
 	}
 }
-
-protected function synchBase():void
+protected function ajoutUtiDiag_clickHandler(event:MouseEvent):void
 {
-	vbBasesSync.percentHeight = 100;
-	vbBasesSync.percentWidth = 100;
+	/* vérifie si le lieu est déjà 
+	attribué => 1er caractère == "-"	
+	pris => 1er caractère == "+"
+	*/
+	if(lockLieu.substr(0,1)=="-"){
+		Alert.show("Le lieu est ces composants sont déjà attribués à "+lockLieu.substr(1)+".\n" +
+			"Confirmez-vous le changement d'utilisateur ?",
+			"Vérification changement d'attribution", 3, this, ajoutUtiDiagConfirmation);
+	}else if(lockLieu.substr(0,1)=="+"){
+		Alert.show(lockLieu.substr(1)+" est déjà en cours de diagnostic.\n" +
+			"Impossible de changer l'attribution","Vérification changement d'attribution");
+	}else{
+		showChoixUti();
+	}
 }
 
+private function ajoutUtiDiagConfirmation(event:CloseEvent):void
+{
+	if (event.detail == Alert.YES) 
+	{
+		showChoixUti();
+	}
+}
+
+public function ajoutUtiDiag(item:Object):void
+{
+	if(item.idExi){
+		roDiagnostique.ajoutUtiDiag(idLieu, item.nom, idBase);			
+	}
+}
+
+protected function ajoutUtiDiag_resultHandler(event:ResultEvent):void
+{
+	if(typeof event.result=="xml"){
+		//suprime les enfant du noeuds
+		var lEnfs:XMLList = treeTree.dataProvider[0].descendants().(@idLieu == idLieu).children();
+		for(var i:Number=0; i < lEnfs.length(); i++) {
+			delete lEnfs[i];
+		}
+		updateTreeStructure(event);
+	}else{
+		var arr:Array = event.result as Array;
+		Alert.show("Des composants du lieu sont déjà en cours de diagnostic.\n" +
+			"Verifier l'arboressence.","Vérification changement d'attribution");
+	}
+	
+}
+
+private function showChoixUti():void
+{
+	var tw:twChoixUti= twChoixUti(
+		PopUpManager.createPopUp(this, twChoixUti, true));
+	tw.callback = ajoutUtiDiag;
+	PopUpManager.centerPopUp(tw);
+
+}
