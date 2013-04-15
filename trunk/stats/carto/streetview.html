@@ -1,64 +1,54 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title>Streetview</title>
-    <script src="http://maps.google.com/maps?file=api&amp;v=3&amp;sensor=false&amp;key=ABQIAAAAuPsJpk3MBtDpJ4G8cqBnjRRaGTYH6UMl8mADNa0YKuWNNa8VNxQCzVBXTx2DYyXGsTOxpWhvIG7Djw" type="text/javascript"></script>
-    <script type="text/javascript">
-
-    var map;
-var geocoder;
-
-function initialize() {
- map = new GMap2(document.getElementById("map_canvas"));
- map.setCenter(new GLatLng(34, 0), 1);
- geocoder = new GClientGeocoder();
-}
-
-// addAddressToMap() is called when the geocoder returns an
-// answer.  It adds a marker to the map with an open info window
-// showing the nicely formatted version of the address and the country code.
-function addAddressToMap(response) {
- map.clearOverlays();
- if (!response || response.Status.code != 200) {
-   alert("Sorry, we were unable to geocode that address");
- } else {
-   place = response.Placemark[0];
-   point = new GLatLng(place.Point.coordinates[1],
-                       place.Point.coordinates[0]);
-   marker = new GMarker(point);
-   map.addOverlay(marker);
-   marker.openInfoWindowHtml(place.address + '<br>' +
-     '<b>Pays :</b> ' + place.AddressDetails.Country.CountryNameCode);
- }
-}
-
-// showLocation() is called when you click on the Search button
-// in the form.  It geocodes the address entered into the form
-// and adds a marker to the map at that location.
-function showLocation() {
- var address = document.forms[0].q.value;
- geocoder.getLocations(address, addAddressToMap);
-}
-
-// findLocation() is used to enter the sample addresses into the form.
-function findLocation(address) {
- document.forms[0].q.value = address;
- showLocation();
-}
-
-    </script>
-  </head>
-  <body onload="initialize()" onunload="GUnload()" style="font-family: Arial;border: 0 none;">
-    <!-- Creates a simple input box where you can enter an address
-         and a Search button that submits the form. //-->
-    <form action="#" onsubmit="showLocation(); return false;">
-      <p>
+﻿<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+		<meta charset="UTF-8" />
+		<title>Streetview</title>
+		<style type="text/css">
+			html {
+				height: 100%
+			}
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0
+			}
+			#EmplacementDeMaCarte, #EmplacementPanoramiqueStreetView {
+				height: 50%
+			}
+		</style>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+		<script type="text/javascript">
+			function initialisation(){
+				var centreCarte = new google.maps.LatLng(49.489982, 0.159880);
+				var optionsCarte = {
+					zoom: 8,
+					center: centreCarte,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				}
+				var maCarte = new google.maps.Map(document.getElementById("EmplacementDeMaCarte"), optionsCarte);
+				var optionsPanoramiqueStreetView = {
+					position: centreCarte,
+					pov: {
+						heading: 34,
+						pitch: 10,
+						zoom: 0.2
+					}
+				};
+				var panoramiqueStreetView = new google.maps.StreetViewPanorama(document.getElementById('EmplacementPanoramiqueStreetView'), optionsPanoramiqueStreetView);
+				maCarte.setStreetView(panoramiqueStreetView);
+			 }
+			 google.maps.event.addDomListener(window, 'load', initialisation);
+		</script>
+	</head>
+	
+	<body>
+ <!--     <p>
         <b>Coordonnées ou adresse :</b>
         <input type="text" name="q" value="" class="address_input" size="40" />
         <input type="submit" name="find" value="Search" />
-
-      </p>
-    </form>
-    <div id="map_canvas" style="width: 700px; height: 410px"></div>
-  </body>
+      </p> -->
+		<div id="EmplacementDeMaCarte"></div>
+		<div id="EmplacementPanoramiqueStreetView"></div>
+	</body>
 </html>
