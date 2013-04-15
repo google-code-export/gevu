@@ -182,7 +182,41 @@ class GEVU_Diagnostique extends GEVU_Site{
 	}
 	
     
-    
+	/**
+	* ajoute un utilisateur pour le diagnostic d'un lieu et de ses enfants
+    * @param int $idLieu
+    * @param string $login
+    * @param string $idBase
+    * 
+    * @return array
+    */
+	public function ajoutUtiDiag($idLieu, $login, $idBase){
+		$this->getDb($idBase);
+		if(!$this->dbL) $this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		
+		//vérifie que le le lieu et ses enfants ne sont pas déjà attribué ou pris
+		$arr = $this->dbL->getEnfantsLockDiag($idLieu);
+		$result = "";
+		foreach ($arr as $lock) {
+			//vérifie si le lieu est déjà en diag
+			if(substr($lock["lock_diag"],0,1)=="+"){
+				//récupère la lsite des attributions
+				$result[] = array("login"=>substr($lock["lock_diag"],1), "lockDiag"=>substr($lock["lock_diag"],0,1));
+			}
+		}
+		if($result){
+			//on retroune la liste des attribution
+			return array("KO"=>$result);
+		}
+		//on lock tous les enfants du lieu
+		$idsLieu = $this->dbL->getFullChildIds($idLieu); 
+		$this->dbL->setIdsLockDiag($idsLieu[0]["ids"], "-".$login);
+		
+		//on retroune le xml des enfants du lieu
+		return $this->getXmlNode($idLieu,$idBase);
+		
+	}
+	
 	/**
 	* ajoute un contrôle pour le lieu 
     * @param int $idLieu
@@ -792,7 +826,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		    	//récupère le xml des enfants
 	    		$xml .= $this->getXmlEnfant($v['id_lieu'], $nivMax, $niv+1);
         	}else{
-    			$xml .="<node idLieu=\"-10\" lib=\"loading...\" fake=\"1\" icon=\"voieIcon\" />";
+    			$xml .="<node idLieu=\"-10\" lib=\"chargement...\" fake=\"1\" icon=\"iconCharge\" lockDiag=\"\" />";
 	    	}
 		    $xml .= "</node>\n";				
         }
@@ -816,7 +850,12 @@ class GEVU_Diagnostique extends GEVU_Site{
      * @return string
      */
     public function getXmlLieu($rLieu, $end=false){
-    	$xml = "<node idLieu=\"".$rLieu['id_lieu']."\" lib=\"".htmlspecialchars($rLieu['lib'])."\" niv=\"".$rLieu['niv']."\" fake=\"0\" >";
+    	//précision de l'icon
+    	if(!$rLieu['lock_diag'])$icon = "";
+    	if(substr($rLieu['lock_diag'],0,1)=="-")$icon = " icon='iconAjoutUtiM' ";
+    	if(substr($rLieu['lock_diag'],0,1)=="+")$icon = " icon='iconAjoutUtiP' ";
+    	 
+    	$xml = "<node idLieu=\"".$rLieu['id_lieu']."\" lib=\"".htmlspecialchars($rLieu['lib'])."\" niv=\"".$rLieu['niv']."\" fake=\"0\" ".$icon." lockDiag=\"".$rLieu['lock_diag']."\" typeControle=\"".$rLieu['id_type_controle']."\" >";
     	if($end)$xml .= "</node>";
     	return $xml;
     }
