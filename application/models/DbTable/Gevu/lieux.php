@@ -405,13 +405,49 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->from(array('node' => 'gevu_lieux'),array("parLib"=>"lib"))
             ->joinInner(array('parent' => 'gevu_lieux'),
-                'node.lft BETWEEN parent.lft AND parent.rgt',array('lib', 'id_lieu', 'niv'))
+                'node.lft BETWEEN parent.lft AND parent.rgt',array('lib', 'id_lieu', 'niv', 'id_type_controle', 'lock_diag'))
             ->where( "node.id_lieu = ?", $idLieu)
                         ->order("parent.".$order);        
                 $result = $this->fetchAll($query);
         return $result->toArray(); 
     }
 
+    /**
+     * Recherche les lieux déjà lock_diag dans une hiérarchie
+     * et retourne la liste
+     *
+     * @param integer $idLieu
+     * @return array
+     */
+    public function getEnfantsLockDiag($idLieu)
+    {
+        $query = $this->select()
+                ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->from(array('node' => 'gevu_lieux'),array('lib0'=>'lib', 'id_lieu0'=>'id_lieu'))
+            ->joinInner(array('enfants' => 'gevu_lieux'),
+                'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu', 'lieu_parent', 'niv', 'id_type_controle', 'lock_diag'))
+            ->where( "node.id_lieu = ?", $idLieu)
+            ->where( "node.lock_diag != ''");        
+      	$result = $this->fetchAll($query);
+    	return $result->toArray();
+    }
+
+    /**
+     * lock_diag les lieux dans une hiérarchie
+     * et retourne la liste
+     *
+     * @param string $idLieu
+     * @param string $lockDiag
+     * 
+     * @return array
+     */
+    public function setIdsLockDiag($idsLieu, $lockDiag)
+    {
+    	$sql = 'UPDATE gevu_lieux SET lock_diag = "'.$lockDiag.'" 
+    			WHERE id_lieu IN ('.$idsLieu.')';
+    	$stmt = $this->_db->query($sql);   	 
+    }
+    
     /**
      * Recherche l'arboressence des noeuds entre deux lieux
      *
@@ -427,7 +463,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
     	->from(array('node' => 'gevu_lieux'),array("parLib"=>"lib"))
     	->joinInner(array('parent' => 'gevu_lieux'),
-    			'node.lft BETWEEN parent.lft AND parent.rgt',array('lib', 'id_lieu', 'niv'))
+    			'node.lft BETWEEN parent.lft AND parent.rgt',array('lib', 'id_lieu', 'niv', 'lock_diag'))
     	->joinInner(array('lh' => 'gevu_lieux'),
     			'lh.id_lieu = ".$idLieuPar." AND lh.niv < parent.niv',array())
 		->where( "node.id_lieu = ?", $idLieuEnf);
@@ -450,7 +486,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->from(array('node' => 'gevu_lieux'),array('libO'=>'lib', 'id_lieu0'=>'id_lieu'))
             ->joinInner(array('enfants' => 'gevu_lieux'),
-                'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu', 'lieu_parent', 'niv', 'id_type_controle'))
+                'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu', 'lieu_parent', 'niv', 'id_type_controle', 'lock_diag'))
             ->where( "node.id_lieu = ?", $idLieu)
            	->order("enfants.".$order);        
                 $result = $this->fetchAll($query);
@@ -471,7 +507,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
     	->from(array('node' => 'gevu_lieux'),array('libO'=>'lib', 'id_lieu0'=>'id_lieu'))
     	->joinInner(array('enfants' => 'gevu_lieux'),
-    			'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu', 'lieu_parent', 'niv', 'id_type_controle'))
+    			'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu', 'lieu_parent', 'niv', 'id_type_controle', 'lock_diag'))
 		->where( "node.id_lieu = ?", $idLieu)
 		->where( "enfants.id_type_controle = ?", $idTypeControle);
     	$result = $this->fetchAll($query);
@@ -490,7 +526,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
-            ->from(array('node' => 'gevu_lieux'),array("ids"=>"GROUP_CONCAT(enfants.id_lieu)"))
+            ->from(array('node' => 'gevu_lieux'),array("ids"=>"GROUP_CONCAT(enfants.id_lieu  ORDER BY enfants.rgt DESC)"))
             ->joinInner(array('enfants' => 'gevu_lieux'),
                 'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu'))
             ->where( "node.id_lieu = ?", $idLieu)
@@ -503,7 +539,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      * Recherche une entrée Gevu_lieux correspondant à l'enfant d'un lieu pour un type de controle
      * création de ce lieu s'il n'exite pas  
      * et retourne cette entrée.
-     *
+     * 
      * @param integer $idLieu
      * @param integer $idTypeControle
      * @param integer $idInst
