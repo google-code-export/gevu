@@ -45,7 +45,16 @@ $lng = 0.159880;
 				};
 				var panoramiqueStreetView = new google.maps.StreetViewPanorama(document.getElementById('EmplacementPanoramiqueStreetView'), optionsPanoramiqueStreetView);
 				maCarte.setStreetView(panoramiqueStreetView);
-			 }
+
+				//https://google-developers.appspot.com/maps/documentation/javascript/examples/streetview-events
+				google.maps.event.addListener(panoramiqueStreetView, 'pov_changed', function() {
+				      var headingCell = document.getElementById('heading_cell');
+				      var pitchCell = document.getElementById('pitch_cell');
+				      headingCell.value = panoramiqueStreetView.getPov().heading;
+				      pitchCell.value = panoramiqueStreetView.getPov().pitch;
+				  });
+
+			}
 			 google.maps.event.addDomListener(window, 'load', initialisation);
 			 
 /*function addAddressToMap(response) {
@@ -81,6 +90,10 @@ function findLocation(address) {
         <b>Coordonnées ou adresse :<?php echo $idLieu;?></b>
         <input type="text" name="q" value="" class="address_input" size="40" />
         <input type="submit" name="find" value="Search" />
+      </p>
+      <p>
+        <input type="text" id="heading_cell" value="" />
+        <input type="text" id="pitch_cell" value="" />
       </p>
 		<div id="EmplacementDeMaCarte"></div>
 		<div id="EmplacementPanoramiqueStreetView"></div>
