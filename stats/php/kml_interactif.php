@@ -1,17 +1,9 @@
 <?php
 //include('style_kml_interactif.php');
-// ou
-
-/*$age=date("10","20","30","40","50","60","70","80");
-$Couleur=array("#A2FF00", "#00FF22", "#EEFF00", "#FCEB00", "#FCD200", "#FFB300", "#F14C40", "#FF0000");
-echo "<body style='styleNode, styleNode1, StyleMapnode, nodestyleUrl:".$Couleur[age].";' >";*/
-
-
 require_once 'codes.php';
 
 
 // Sélectionne la requête que l'on veut
-
 $query = 'SELECT  ref, g.id_lieu, lat,  lng, adresse, kml 
 FROM  gevu_geos g
 INNER JOIN  gevu_antennes a ON g.id_lieu = a.id_lieu
@@ -38,20 +30,20 @@ $nodeKML->appendChild($nodeDoc);
 // Parcourt les résultats de MySQL, créer un repère pour chaque ligne.
 while ($row = @mysql_fetch_assoc($result))
 {
-    
-  	// Crée un repère Placemark et l'ajouter au document.
+  	// Crée un style  et l'ajouter au document.
+	$nodeS = getKMLStyle($dom, $row);
+	$nodeDoc->appendChild($nodeS);
+	$nodeMS = getMapStyle($dom, $row);
+	$nodeDoc->appendChild($nodeMS);
+	// Crée un repère Placemark et l'ajouter au document.
 	$nodeP = getKMLPlacemark($dom, $row);
 	$nodeDoc->appendChild($nodeP);
-	$nodeP1 = getKMLPlacemark($dom, $row);
-	$nodeDoc1->appendChild($nodeP1);
-	
-	//Créer première balise style
+}	
 
-function getKMLStyle($row, $dom){
+function getKMLStyle($dom, $row){
 	$styleNode = $dom->createElement('Style');
 	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
 	$styleNode->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
-	$docNode->appendChild($styleNode);
 
 	$LineStyleNode = $dom->createElement('LineStyle');
 		$nodeLineColor = $dom->createElement('color', 'ff0000ff');
@@ -61,31 +53,13 @@ function getKMLStyle($row, $dom){
 	$PolyStyleNode->appendChild($nodePolyColor);	
 
 	$styleNode->appendChild($LineStyleNode);
-	$placeNode->appendChild($PolyStyleNode);
+	$styleNode->appendChild($PolyStyleNode);
 
 	return $styleNode;
 }
 	
-	//Créer deuxième balise style
-function getKMLStyle1($row, $dom){
-	$styleNode1 = $dom->createElement('Style');
-	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
-	$styleNode1->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
-	$docNode1->appendChild($styleNode1);
 
-	$LineStyleNode1 = $dom->createElement('LineStyle');
-		$nodeLineColor1 = $dom->createElement('color', 'ff0000ff');
-	$LineStyleNode1->appendChild($nodeLineColor);
-	$PolyStyleNode1 = $dom->createElement('PolyStyle');
-		$nodePolyColor1 = $dom->createElement('color', 'ff0000ff');	
-	$PolyStyleNode1->appendChild($nodePolyColor1);	
-
-	$styleNode1->appendChild($LineStyleNode1);
-	$placeNode1->appendChild($PolyStyleNode1);
-
-	return $styleNode1;
-}
-	//Créer balise style de carte	
+//Créer balise style de carte	
 function getMapStyle($row, $dom){
 	$StyleMapnode = $dom->createElement('StyleMap');
 	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
@@ -164,12 +138,5 @@ echo $kmlOutput;
 			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.valeur});
 		}
 )*/
-
-
-
-
-
-}
-
 
 ?>
