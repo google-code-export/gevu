@@ -4,7 +4,7 @@
 
 /*$age=date("10","20","30","40","50","60","70","80");
 $Couleur=array("#A2FF00", "#00FF22", "#EEFF00", "#FCEB00", "#FCD200", "#FFB300", "#F14C40", "#FF0000");
-echo "<body style='point:".$Couleur[age].";' >";*/
+echo "<body style='styleNode, styleNode1, StyleMapnode, nodestyleUrl:".$Couleur[age].";' >";*/
 
 
 require_once 'codes.php';
