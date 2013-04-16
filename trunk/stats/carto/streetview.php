@@ -2,7 +2,9 @@
 $idLieu = $_GET["idLieu"];
 
 //emplacement pour la requête sql
-// 
+$lat = 49.489982;
+$lng = 0.159880;
+
 
 ?>
 <html>
@@ -26,7 +28,7 @@ $idLieu = $_GET["idLieu"];
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript">
 			function initialisation(){
-				var centreCarte = new google.maps.LatLng(49.489982, 0.159880);
+				var centreCarte = new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lng;?>);
 				var optionsCarte = {
 					zoom: 8,
 					center: centreCarte,
