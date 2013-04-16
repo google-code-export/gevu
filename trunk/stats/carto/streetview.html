@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="fr">
+﻿<html>
 	<head>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
 		<meta charset="UTF-8" />
@@ -39,11 +38,37 @@
 				maCarte.setStreetView(panoramiqueStreetView);
 			 }
 			 google.maps.event.addDomListener(window, 'load', initialisation);
+			 
+/*function addAddressToMap(response) {
+ maCarte.clearOverlays();
+ if (!response || response.Status.code != 200) {
+   alert("Sorry, we were unable to geocode that address");
+ } else {
+   place = response.Placemark[0];
+   point = new GLatLng(place.Point.coordinates[1],
+                       place.Point.coordinates[0]);
+   //marker = new GMarker(point);
+   //maCarte.addOverlay(marker);
+   //marker.openInfoWindowHtml(place.address + '<br>' +
+     //'<b>Pays :</b> ' + place.AddressDetails.Country.CountryNameCode);
+ }
+}
+
+function showLocation() {
+ var address = document.forms[0].q.value;
+ geocoder.getLocations(address, addAddressToMap);
+}
+
+function findLocation(address) {
+ document.forms[0].q.value = address;
+ showLocation();
+}*/
 		</script>
 	</head>
 	
 	<body>
- <!--     <p>
+	<!--	<form action="#" onsubmit="showLocation(); return false;">
+      <p>
         <b>Coordonnées ou adresse :</b>
         <input type="text" name="q" value="" class="address_input" size="40" />
         <input type="submit" name="find" value="Search" />

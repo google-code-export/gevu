@@ -1,4 +1,5 @@
 <?php
+//include('style_kml_interactif.php');
 require_once 'codes.php';
 
 
@@ -37,25 +38,10 @@ while ($row = @mysql_fetch_assoc($result))
 	$nodeDoc1->appendChild($nodeP1);
 	
 	//Créer première balise style
-	
-  $Stylenode = $dom->createElement('Style');
-  $placeNode1 = $docNode->appendChild($Stylenode);
-  $placeNode1->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
-  
- 	$LineStyle = $dom->createElement('LineStyle');
-	$placeNode1 = $docNode->appendChild($LineStyle);
-	
-	$color = $dom->createElement('color', 'ff0000ff');
-	$LineStyle->appendChild($color);
-	
-	$PolyStyle = $dom->createElement('PolyStyle');
-	$placeNode1 = $docNode->appendChild($PolyStyle);
 
-	$color = $dom->createElement('color', 'ff0000ff');
-	$PolyStyle->appendChild($color);
-	
-/*function getKMLStyle($row, $dom){
+function getKMLStyle($row, $dom){
 	$styleNode = $dom->createElement('Style');
+	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
 	$styleNode->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
 	$docNode->appendChild($styleNode);
 
@@ -75,6 +61,7 @@ while ($row = @mysql_fetch_assoc($result))
 	//Créer deuxième balise style
 function getKMLStyle1($row, $dom){
 	$styleNode1 = $dom->createElement('Style');
+	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
 	$styleNode1->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
 	$docNode1->appendChild($styleNode1);
 
@@ -93,14 +80,17 @@ function getKMLStyle1($row, $dom){
 	//Créer balise style de carte	
 function getMapStyle($row, $dom){
 	$StyleMapnode = $dom->createElement('StyleMap');
+	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
 	$StyleMapnode->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
 
 	$nodePair = $dom->createElement('pair');
 		$key = $dom->createElement('key', 'normal');
+		//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
 		$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin');
 	$nodePair->appendChild($styleUrl);
 	$nodePair->appendChild($key);
-	$nodePair = $dom->createElement('pair');	
+	$nodePair = $dom->createElement('pair');
+	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
 		$nodeKey = $dom->createElement('key', '#s_ylw-pushpin_hl');
 		$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin_hl');	
 	$nodePair->appendChild($nodeStyleUrl);
@@ -109,7 +99,7 @@ function getMapStyle($row, $dom){
 	$StyleMapnode->appendChild($nodePair);
 	
 	return $StyleMapnode;
-}*/
+}
 
 function getKMLPlacemark($dom, $row){
 
@@ -135,6 +125,7 @@ function getKMLPlacemark($dom, $row){
 	$nodePlace->appendChild($nodeDesc);
 
 	$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'm_ylw-pushpin');
+	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');
 	$nodePlace->appendChild($nodeStyleUrl);
 
 	$nodePoly = $dom->createElement('Polygon');
@@ -152,9 +143,19 @@ function getKMLPlacemark($dom, $row){
 	return $nodePlace;
 }
 
+
 $kmlOutput = $dom->saveXML();
 header('Content-type: application/vnd.google-earth.kml+xml'); //mon Php a comme header un content-type. Ce qu'on génère comme xml est du kml.
 echo $kmlOutput;
+
+//Création échelle couleur
+/*header(
+		var nb = json.children.length
+		for(var i=0;i<nb;i++){
+			var item = json.children[i];
+			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.valeur});
+		}
+)*/
 
 
 
