@@ -10,6 +10,14 @@ from gevu_geos g
 inner join gevu_lieux l ON g.id_lieu = l.id_lieu
 where l.id_lieu IN ('.$_GET['idLieu'].')';*/
 
+/*Requête pour voir si heading_cell.... sont bien enregistrés dans gevu_geos
+SELECT g.id_lieu, lib, lat, lng, heading_cell, pitch_cell, zoom_cell
+FROM gevu_geos g
+INNER JOIN gevu_lieux l ON g.id_lieu = l.id_lieu
+WHERE heading_cell != 0
+AND pitch_cell != 0
+AND zoom_cell != 0 */
+
 ?>
 <html>
 	<head>
