@@ -8,7 +8,7 @@ $lng = 0.159880;
 /*$query = 'Select lib, lat, lng
 from gevu_geos g
 inner join gevu_lieux l ON g.id_lieu = l.id_lieu
-where l.id_lieu IN ('.$_GET['ids'].')';*/
+where l.id_lieu IN ('.$_GET['idLieu'].')';*/
 
 ?>
 <html>
