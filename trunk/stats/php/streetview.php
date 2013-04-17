@@ -112,15 +112,15 @@ AND zoom_cell != 0 */
  }
 }*/
 
-/*function showLocation() {
+function showLocation() {
  var address = document.forms[0].q.value;
  geocoder.getLocations(address, addAddressToMap);
-}*/
+}
 
-/*function findLocation(address) {
+function findLocation(address) {
  document.forms[0].q.value = address;
  showLocation();
-}*/
+}
 		</script>
 	</head>
 	
