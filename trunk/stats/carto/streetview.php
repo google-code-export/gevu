@@ -5,6 +5,10 @@ $idLieu = $_GET["idLieu"];
 $lat = 49.489982;
 $lng = 0.159880;
 
+/*$query = 'Select lib, lat, lng
+from gevu_geos g
+inner join gevu_lieux l ON g.id_lieu = l.id_lieu
+where l.id_lieu IN ('.$_GET['ids'].')';*/
 
 ?>
 <html>
@@ -14,7 +18,8 @@ $lng = 0.159880;
 		<title>Streetview</title>
 		<style type="text/css">
 			html {
-				height: 100%
+				height: 100%;
+				width: 100%
 			}
 			body {
 				height: 100%;
@@ -22,12 +27,27 @@ $lng = 0.159880;
 				padding: 0
 			}
 			#EmplacementDeMaCarte, #EmplacementPanoramiqueStreetView {
-				height: 50%
+				height: 50%;
+				width: 50%
+			}
+			#EmplacementDeMaCarte {
+				align:left;
+				position: absolute
+			}
+			#EmplacementPanoramiqueStreetView {
+				margin:00px auto 0 auto;
+				position: relative;
+				float:right;
+				width:100%
+				margin-left:500px;
+				margin-right:-5px;
 			}
 		</style>
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript">
 			function initialisation(){
+				//var centreCarte = new google.maps.LatLng(<?php echo $query;?>);
+				//ou var centreCarte = new google.maps.LatLng(<?php echo $query.lat;?>, <?php echo $query.lng;?>);
 				var centreCarte = new google.maps.LatLng(<?php echo $lat;?>, <?php echo $lng;?>);
 				var optionsCarte = {
 					zoom: 8,
@@ -50,9 +70,21 @@ $lng = 0.159880;
 				google.maps.event.addListener(panoramiqueStreetView, 'pov_changed', function() {
 				      var headingCell = document.getElementById('heading_cell');
 				      var pitchCell = document.getElementById('pitch_cell');
+					  var zoomCell = document.getElementById('zoom_cell');
 				      headingCell.value = panoramiqueStreetView.getPov().heading;
 				      pitchCell.value = panoramiqueStreetView.getPov().pitch;
+				      zoomCell.value = panoramiqueStreetView.getPov().zoom;
 				  });
+				  
+				/*function valider(){
+					if{
+						(headingCell.value = panoramiqueStreetView.getPov().heading)
+							and (pitchCell.value = panoramiqueStreetView.getPov().pitch)
+								and (zoomCell.value = panoramiqueStreetView.getPov().zoom)
+									!= 0
+					  }
+					UPDATE gevu_geos;
+				}*/
 
 			}
 			 google.maps.event.addDomListener(window, 'load', initialisation);
@@ -70,14 +102,14 @@ $lng = 0.159880;
    //marker.openInfoWindowHtml(place.address + '<br>' +
      //'<b>Pays :</b> ' + place.AddressDetails.Country.CountryNameCode);
  }
-}
+}*/
 
-function showLocation() {
+/*function showLocation() {
  var address = document.forms[0].q.value;
  geocoder.getLocations(address, addAddressToMap);
-}
+}*/
 
-function findLocation(address) {
+/*function findLocation(address) {
  document.forms[0].q.value = address;
  showLocation();
 }*/
@@ -89,13 +121,15 @@ function findLocation(address) {
       <p>
         <b>Coordonnées ou adresse :<?php echo $idLieu;?></b>
         <input type="text" name="q" value="" class="address_input" size="40" />
-        <input type="submit" name="find" value="Search" />
+        <input type="submit" name="find" value="Rechercher" />
       </p>
       <p>
         <input type="text" id="heading_cell" value="" />
         <input type="text" id="pitch_cell" value="" />
+        <input type="text" id="zoom_cell" value="" />
+        <input type="submit" name="valider" value="Valider" />
       </p>
-		<div id="EmplacementDeMaCarte"></div>
-		<div id="EmplacementPanoramiqueStreetView"></div>
+		<table align="left"><div id="EmplacementDeMaCarte"></div></table>
+		<table align="right"><div id="EmplacementPanoramiqueStreetView"></div></table>
 	</body>
 </html>
