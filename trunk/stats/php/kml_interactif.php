@@ -1,10 +1,10 @@
 <?php
 //include('style_kml_interactif.php');
-// ou
-
+//ou
 /*$age=date("10","20","30","40","50","60","70","80");
 $Couleur=array("#A2FF00", "#00FF22", "#EEFF00", "#FCEB00", "#FCD200", "#FFB300", "#F14C40", "#FF0000");
 echo "<body style='styleNode, styleNode1, StyleMapnode, nodestyleUrl:".$Couleur[age].";' >";*/
+
 
 //Création échelle couleur
 /*header(

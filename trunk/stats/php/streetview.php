@@ -1,4 +1,28 @@
 <?php
+
+//function stock() {
+ $username = 'username';
+ $password = 'password';
+ $database = 'gevu_new';
+ $server = '127.0.0.1';
+
+ 
+ // Ouvre connexion MySQL
+ $connection = mysql_connect ($server, $username, $password);
+ if (!$connection)
+ {
+ 	die('Not connected : ' . mysql_error());
+ }
+ 
+ // Définit la BDD active
+ 
+ $db_selected = mysql_select_db($database, $connection);
+ if (!$db_selected)
+ {
+ 	die ('Can\'t use db : ' . mysql_error());
+ }
+  
+
 $idLieu = $_GET["idLieu"];
 
 //emplacement pour la requête sql
@@ -18,6 +42,7 @@ WHERE heading_cell != 0
 AND pitch_cell != 0
 AND zoom_cell != 0 */
 
+//}
 ?>
 <html>
 	<head>
@@ -86,6 +111,15 @@ AND zoom_cell != 0 */
 				  
 				/*function valider(){
 					if{
+						($_POST[headingCell])
+							and($_POST[pitchCell])
+								and($_POST[zoomCell])
+									!= 0
+					  }
+					  UPDATE gevu_geos;
+					  
+					  ou
+					if{  
 						(headingCell.value = panoramiqueStreetView.getPov().heading)
 							and (pitchCell.value = panoramiqueStreetView.getPov().pitch)
 								and (zoomCell.value = panoramiqueStreetView.getPov().zoom)
@@ -93,6 +127,12 @@ AND zoom_cell != 0 */
 					  }
 					UPDATE gevu_geos;
 				}*/
+
+	/*if ( isset($_POST[valide]) )  	//Test si validation
+ 	{
+ 	stock();
+	}*/
+	
 
 			}
 			 google.maps.event.addDomListener(window, 'load', initialisation);
@@ -135,6 +175,7 @@ function findLocation(address) {
         <input type="text" id="heading_cell" value="" />
         <input type="text" id="pitch_cell" value="" />
         <input type="text" id="zoom_cell" value="" />
+		<input type='hidden' name='valide' value='test'>
         <input type="submit" name="valider" value="Valider" />
       </p>
 		<table align="left"><div id="EmplacementDeMaCarte"></div></table>
