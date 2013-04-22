@@ -1,0 +1,135 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Carte sur l'âge des bâtiments au Havre</title>
+	<link rel="stylesheet" href="../css/colorbrewer.css" />
+    <link type="text/css" rel="stylesheet" href="../css/button.css"/>
+    <script type="text/javascript" src="../js/colorbrewer.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
+    <script type="text/javascript" src="../js/d3.v2.js"></script>
+    <script type="text/javascript" src="../js/legende_age.js"></script>    
+    <link type="text/css" rel="stylesheet" href="../css/style_balise.css"/>
+<div>
+<button id='JEUNES' class='first'>0-10 ANS</button><button id='MOYEN' class='first'>11-17 ANS</button><button id='AGES' class='first'>18 ANS ET PLUS</button>
+</div>
+    <script>
+d3.select("#JEUNES").on("click", function() {
+	getDonnees("../donnees_tables/moins10ans.csv");
+	d3.select("#JEUNES").classed("active", true);
+	d3.select("#MOYEN").classed("active", false);
+	d3.select("#AGES").classed("active", false);
+});
+
+d3.select("#MOYEN").on("click", function() {
+	getDonnees("../donnees_tables/moins17ans.csv");
+	d3.select("#MOYEN").classed("active", true);
+	d3.select("#JEUNES").classed("active", false);
+	d3.select("#AGES").classed("active", false);
+});
+	 
+d3.select("#AGES").on("click", function() {
+	getDonnees("../donnees_tables/plus18ans.csv");
+	d3.select("#AGES").classed("active", true);
+	d3.select("#JEUNES").classed("active", false);
+	d3.select("#MOYEN").classed("active", false);
+});	
+
+
+    var map, adress, heatmap;
+	var Logements = [];
+
+	function initialize(){
+	    var mapOptions = {
+	            zoom: 11,
+	            center: new google.maps.LatLng(49.5493690, 0.13747540),
+	            mapTypeId: google.maps.MapTypeId.SATELLITE
+	          }; //On créer la carte avec le centre qui sont nos coordonnées et le zoom situé à 11. 
+	  		//mapTypeId affiche des images sattelites de google Earth.
+
+	     map = new google.maps.Map(document.getElementById('map_canvas'),
+	         mapOptions); // On créer une variable map qui créer un div 'map_canvas' qui a un arrière plan, sa position, sa largeur, sa longueur.
+
+function getDonnees(url, statut){
+
+			 d3.csv(url, function(csv) {
+			
+		var familleO = [], o=0;
+		for(var i=0; i < json.length; i++){	
+			if(json[i].nbEnfants=!"0"){
+				if(familleO[json[i].ref]) familleO[json[i].ref]=familleO[json[i].ref]+1; else familleO[json[i].ref]=1;
+				o++;
+			}			                                
+		}
+		
+		//ajoute les cercles
+		var z = [];
+		for(var i=0; i < json.length; i++){
+
+			var colorCircle;
+		colorCircle = "#F70101";
+			addCircleByCoor(json[i].lat, json[i].lng, colorCircle);
+			
+		}
+			 
+		  });
+	         
+	}
+}
+
+
+function addCircleByCoor(lat, lng, colorCircle){
+	console.log("addCircleByCoor "+lat+", "+lng);
+	var p = new google.maps.LatLng (lat, lng);
+	var optionsCircle = { 
+		center: p,
+		fillOpacity: 1,
+		fillColor: colorCircle,
+		strokeOpacity: 0,
+		radius: 60,
+		map: map
+		}
+		
+	var circle = new google.maps.Circle(optionsCircle);
+}
+
+	function getRect(latlng, poids){
+		rectangle = new google.maps.Rectangle();
+        var lngRect = 0.001;
+        var sw = latlng;    
+        var ne = new google.maps.LatLng(latlng.lat+lngRect, latlng.lng+lngRect);    
+		var llb = new google.maps.LatLngBounds(sw, ne);    
+		var rectOptions = {
+			strokeColor: "#FF0000",
+			strokeOpacity: 0.8,
+			strokeWeight: 2,
+			fillColor: "#FF0000",
+			fillOpacity: 0.35,
+			map: map,
+			bounds: llb
+		};		
+		rectangle.setOptions(rectOptions);
+		return rectangle; 
+	}
+	
+	function getCircle(latlng, poids){
+	    var circleOptions = {
+	            strokeColor: '#FF0000',
+	            strokeOpacity: 0.8,
+	            strokeWeight: 2,
+	            fillColor: '#FF0000',
+	            fillOpacity: 0.35,
+	            map: map,
+	            center: latlng,
+	            radius: 20
+	          };
+	    return new google.maps.Circle(circleOptions);			
+	}
+	google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+ 	<b>Logements suivant les âges des enfants</b><br><br>
+    <div id="map_canvas" class="bas"></div><br>
+    <div id="legendeCarto" onclick="alert('test de clic sur la légende');"></div><br>
+  </body>
+</html>
