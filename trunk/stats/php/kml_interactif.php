@@ -15,6 +15,19 @@ echo "<body style='styleNode, styleNode1, StyleMapnode, nodestyleUrl:".$Couleur[
 		}
 )*/
 
+/*$StyleCarte = Style($age, $couleur);
+
+function Style(){
+	if (age<10){couleur="#A2FF00"}
+	elseif (10<age<20){couleur="#00FF22"}
+	elseif (20<age<30){couleur="#EEFF00"}
+	elseif (30<age<40){couleur="#FCEB00"}
+	elseif (40<age<50){couleur="#FCD200"}
+	elseif (50<age<60){couleur="#FFB300"}
+	elseif (60<age<70){couleur="#F14C40"}
+	elseif (age>70){couleur="#FF0000"}
+}*/
+
 require_once 'codes.php';
 
 
