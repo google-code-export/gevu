@@ -5,16 +5,6 @@
 $Couleur=array("#A2FF00", "#00FF22", "#EEFF00", "#FCEB00", "#FCD200", "#FFB300", "#F14C40", "#FF0000");
 echo "<body style='styleNode, styleNode1, StyleMapnode, nodestyleUrl:".$Couleur[age].";' >";*/
 
-
-//Création échelle couleur
-/*header(
-		var nb = json.children.length
-		for(var i=0;i<nb;i++){
-			var item = json.children[i];
-			Logements.push({location: new google.maps.LatLng(item.lat, item.lng), weight: item.valeur});
-		}
-)*/
-
 /*$StyleCarte = Style($age, $couleur);
 
 function Style(){
