@@ -46,23 +46,31 @@ $nodeKML->appendChild($nodeDoc);
 // Parcourt les résultats de MySQL, créer un repère pour chaque ligne.
 while ($row = @mysql_fetch_assoc($result))
 {
-  	// Crée un style  et l'ajouter au document.
+  	//Crée un style  et l'ajouter au document.
 	$nodeS = getKMLStyle($dom, $row);
 	$nodeDoc->appendChild($nodeS);
+	/*
 	$nodeMS = getMapStyle($dom, $row);
 	$nodeDoc->appendChild($nodeMS);
+	*/
 	// Crée un repère Placemark et l'ajouter au document.
 	$nodeP = getKMLPlacemark($dom, $row);
 	$nodeDoc->appendChild($nodeP);
 }	
 
+
+$kmlOutput = $dom->saveXML();
+header('Content-type: application/vnd.google-earth.kml+xml'); //mon Php a comme header un content-type. Ce qu'on génère comme xml est du kml.
+echo $kmlOutput;
+
+
 function getKMLStyle($dom, $row){
 	$styleNode = $dom->createElement('Style');
 	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
-	$styleNode->setAttribute('id', 's_ylw-pushpin_hl' . $row['id']);
+	$styleNode->setAttribute('id', 's_' . $row['id_lieu']);
 
 	$LineStyleNode = $dom->createElement('LineStyle');
-		$nodeLineColor = $dom->createElement('color', 'ff0000ff');
+		$nodeLineColor = $dom->createElement('color', 'ffff0000');
 	$LineStyleNode->appendChild($nodeLineColor);
 	$PolyStyleNode = $dom->createElement('PolyStyle');
 		$nodePolyColor = $dom->createElement('color', 'ff0000ff');	
@@ -76,24 +84,17 @@ function getKMLStyle($dom, $row){
 	
 
 //Créer balise style de carte	
-function getMapStyle($row, $dom){
+function getMapStyle($dom, $row){
 	$StyleMapnode = $dom->createElement('StyleMap');
 	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
-	$StyleMapnode->setAttribute('id', 'm_ylw-pushpin' . $row['id']);
+	$StyleMapnode->setAttribute('id', 'm_' . $row['id_lieu']);
 
 	$nodePair = $dom->createElement('pair');
 		$key = $dom->createElement('key', 'normal');
 		//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
-		$styleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin');
+		$styleUrl = $dom->createElement('styleUrl', '#'.'s_'.$row['id_lieu']);
 	$nodePair->appendChild($styleUrl);
 	$nodePair->appendChild($key);
-	$nodePair = $dom->createElement('pair');
-	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');	
-		$nodeKey = $dom->createElement('key', '#s_ylw-pushpin_hl');
-		$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 's_ylw-pushpin_hl');	
-	$nodePair->appendChild($nodeStyleUrl);
-	$nodePair->appendChild($nodeKey);
-	
 	$StyleMapnode->appendChild($nodePair);
 	
 	return $StyleMapnode;
@@ -102,7 +103,12 @@ function getMapStyle($row, $dom){
 function getKMLPlacemark($dom, $row){
 
 	// Créer des coordonnées en donnant latitude et longitude
-	if (false){
+	if ($row['kml']){
+		//charge le kml dans un objet xml
+		$xml = simplexml_load_string($row['kml']);
+		//récupère les coordonnées de la surface
+		$result = $xml->xpath('//coordinates');
+		$coorStr = $result[0]."";
 	}else{
 		$coorStr = $row['lng'].','.$row['lat'].',0 '
 				.($row['lng']-0.00027169).','.($row['lat']+0.000486).',0 '
@@ -116,13 +122,13 @@ function getKMLPlacemark($dom, $row){
 	// Crée un attribut id et attribuez-lui la valeur de la colonne id.
 	$nodePlace->setAttribute('id_lieu', 'placemark' . $row['id_lieu']);
 	// Créer nom, éléments de description, attributs, et adresse
-	$nodeName = $dom->createElement('name',htmlentities($row['id_lieu']));
+	$nodeName = $dom->createElement('name',htmlentities('Antenne '.$row['ref']));
 	$nodePlace->appendChild($nodeName);
 
 	$nodeDesc = $dom->createElement('description', $row['adresse']);
 	$nodePlace->appendChild($nodeDesc);
 
-	$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'm_ylw-pushpin');
+	$nodeStyleUrl = $dom->createElement('styleUrl', '#'.'s_'.$row['id_lieu']);
 	//$nodeStyleUrl = $dom->createElement('styleUrl', '#' . $row['type'] . 'COLOR[].value');
 	$nodePlace->appendChild($nodeStyleUrl);
 
@@ -140,11 +146,6 @@ function getKMLPlacemark($dom, $row){
 
 	return $nodePlace;
 }
-
-
-$kmlOutput = $dom->saveXML();
-header('Content-type: application/vnd.google-earth.kml+xml'); //mon Php a comme header un content-type. Ce qu'on génère comme xml est du kml.
-echo $kmlOutput;
 
 //Création échelle couleur
 /*header(
