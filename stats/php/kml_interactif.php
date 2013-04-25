@@ -20,10 +20,20 @@ require_once 'codes.php';
 
 
 // Sélectionne la requête que l'on veut
-$query = 'SELECT  ref, g.id_lieu, lat,  lng, adresse, kml 
-FROM  gevu_geos g
-INNER JOIN  gevu_antennes a ON g.id_lieu = a.id_lieu
-WHERE a.id_lieu IN ('.$_GET['ids'].')';
+$query = 'SELECT a.id_lieu, a.ref
+, la.lib, la.lft, la.rgt
+, COUNT(DISTINCT s.id_stat) nbLog, SUM(2013-Annee_Construction)
+sumAge, SUM(2013-Annee_Construction)/COUNT(DISTINCT s.id_stat) moyAge
+, lat, lng, kml
+FROM gevu_antennes a
+INNER JOIN gevu_geos g ON g.id_lieu = a.id_lieu
+  INNER JOIN gevu_lieux la ON la.id_lieu = a.id_lieu
+  INNER JOIN gevu_lieux lg ON lg.lft BETWEEN la.lft AND la.rgt
+  INNER JOIN gevu_stats s ON s.id_lieu = lg.id_lieu AND
+s.Categorie_Module = "L" AND s.Annee_construction != ""
+WHERE a.ref != ""
+GROUP BY a.id_lieu
+ORDER BY ref;';
 $result = mysql_query($query);
 if (!$result) 
 {
@@ -103,7 +113,7 @@ function getMapStyle($dom, $row){
 function getKMLPlacemark($dom, $row){
 
 	// Créer des coordonnées en donnant latitude et longitude
-	if ($row['kml']){
+	if (false){
 		//charge le kml dans un objet xml
 		$xml = simplexml_load_string($row['kml']);
 		//récupère les coordonnées de la surface
