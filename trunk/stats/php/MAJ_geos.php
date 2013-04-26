@@ -2,12 +2,8 @@
 
 require_once 'codes.php';
 
-
-$query = 'UPDATE gevu_geos SET  pitch = 0.00000000000, heading = 0.000000000000, zoom_cell = 0.00 WHERE gevu_geos.id_lieu = '.$_GET['idLieu']
-AND isset(.$_GET['pitch'])
-AND isset(.$_GET['heading'])
-AND isset(.$_GET['zoom_cell'])
- ;
-
-
+if(isset($_GET['idLieu'])){
+	$query = 'UPDATE gevu_geos SET  pitch = '.$_GET['pitch'].', heading = '.$_GET['heading'].', zoom_cell = '.$_GET['zoom_cell'].' WHERE gevu_geos.id_lieu = '.$_GET['idLieu'];
+}
+echo $query;
 
