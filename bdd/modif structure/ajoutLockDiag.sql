@@ -1,0 +1,1 @@
+ALTER TABLE  `gevu_lieux` CHANGE  `lock`  `lock_diag` VARCHAR( 10 );
