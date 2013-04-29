@@ -82,13 +82,13 @@ if(isset($_GET["idLieu"])){
 				      var headingCell = document.getElementById('heading_cell');
 				      var pitchCell = document.getElementById('pitch_cell');
 					  var zoomCell = document.getElementById('zoom_cell');
-				      var latCell = document.getElementById('lat_cell');
-				      var lngCell = document.getElementById('lng_cell');
+				      var lat = document.getElementById('lat');
+					  var lng = document.getElementById('lng');
 				      headingCell.value = panoramiqueStreetView.getPov().heading;
 				      pitchCell.value = panoramiqueStreetView.getPov().pitch;
 				      zoomCell.value = panoramiqueStreetView.getPov().zoom;
-				      latCell.value = panoramiqueStreetView.getPov().lat;
-				      lngCell.value = panoramiqueStreetView.getPov().lng;
+				      lat.value = panoramiqueStreetView.getPov().lat;
+				      lng.value = panoramiqueStreetView.getPov().lng;
 				  });	
 
 			}
@@ -123,9 +123,9 @@ if(isset($_GET["idLieu"])){
 		   	var headingCell = document.getElementById('heading_cell');
 		   	var pitchCell = document.getElementById('pitch_cell');
 		   	var zoomCell = document.getElementById('zoom_cell');
-		   	var latCell = document.getElementById('lat_cell');
-		   	var lngCell = document.getElementById('lng_cell');
-			var p = {"lat":latCell.value, "lng":lngCell.value,"pitch":pitchCell.value, "heading":headingCell.value, "zoom_cell":zoomCell.value, "idLieu":idLieu};
+		   	var lat = document.getElementById('lat');
+		   	var lng = document.getElementById('lng');
+			var p = {"lat":lat.value, "lng":lng.value, "pitch":pitchCell.value, "heading":headingCell.value, "zoom_cell":zoomCell.value, "idLieu":idLieu};
 			$.get("MAJ_geos.php", p,
 				 function(data){
 					result = data;
@@ -142,8 +142,8 @@ if(isset($_GET["idLieu"])){
         <input type="submit" name="find" value="Rechercher" />
       </p>
       <p>
-        <label>lat</label><input type="text" id="lat_cell" value="<?php echo $rGeo["lat"];?>" />
-        <label>lng</label><input type="text" id="lng_cell" value="<?php echo $rGeo["lng"];?>" />
+        <label>lat</label><input type="text" id="lat" value="<?php echo $rGeo["lat"];?>" />
+        <label>lng</label><input type="text" id="lng" value="<?php echo $rGeo["lng"];?>" />
         <label>heading</label><input type="text" id="heading_cell" value="<?php echo $rGeo["heading"];?>" />
         <label>pitch</label><input type="text" id="pitch_cell" value="<?php echo $rGeo["pitch"];?>" />
         <label>zoom</label><input type="text" id="zoom_cell" value="<?php echo $rGeo["zoom_cell"];?>" />
