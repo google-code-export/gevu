@@ -3,6 +3,7 @@
 //ou
 /*$age=date("10","20","30","40","50","60","70","80");
 $Couleur=array("#A2FF00", "#00FF22", "#EEFF00", "#FCEB00", "#FCD200", "#FFB300", "#F14C40", "#FF0000");
+fusion = array array_merge ( array $Couleur, array $age );
 echo "<body style='styleNode, styleNode1, StyleMapnode, nodestyleUrl:".$Couleur[age].";' >";*/
 
 /*$StyleCarte = Style($moyAge, $couleur);
