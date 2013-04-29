@@ -5,7 +5,7 @@
 $Couleur=array("#A2FF00", "#00FF22", "#EEFF00", "#FCEB00", "#FCD200", "#FFB300", "#F14C40", "#FF0000");
 echo "<body style='styleNode, styleNode1, StyleMapnode, nodestyleUrl:".$Couleur[age].";' >";*/
 
-/*$StyleCarte = Style($age, $couleur);
+/*$StyleCarte = Style($moyAge, $couleur);
 
 function Style(){
 	if (moyAge<10){couleur="#A2FF00"}
