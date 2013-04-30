@@ -16,21 +16,21 @@
 </div>
     <script>
 d3.select("#JEUNES").on("click", function() {
-	getDonnees("../donnees_tables/moins10ans.csv");
+	getDonnees("../donnees_tables/moinsdixans.csv");
 	d3.select("#JEUNES").classed("active", true);
 	d3.select("#MOYEN").classed("active", false);
 	d3.select("#AGES").classed("active", false);
 });
 
 d3.select("#MOYEN").on("click", function() {
-	getDonnees("../donnees_tables/moins17ans.csv");
+	getDonnees("../donnees_tables/moinsdixseptans.csv");
 	d3.select("#MOYEN").classed("active", true);
 	d3.select("#JEUNES").classed("active", false);
 	d3.select("#AGES").classed("active", false);
 });
 	 
 d3.select("#AGES").on("click", function() {
-	getDonnees("../donnees_tables/plus18ans.csv");
+	getDonnees("../donnees_tables/plusdixhuitans.csv");
 	d3.select("#AGES").classed("active", true);
 	d3.select("#JEUNES").classed("active", false);
 	d3.select("#MOYEN").classed("active", false);
@@ -51,25 +51,25 @@ d3.select("#AGES").on("click", function() {
 	     map = new google.maps.Map(document.getElementById('map_canvas'),
 	         mapOptions); // On créer une variable map qui créer un div 'map_canvas' qui a un arrière plan, sa position, sa largeur, sa longueur.
 
-function getDonnees(url, statut){
+function getDonnees(url, nbEnfants){
 
-			 d3.csv(url, function(json) {
+			 d3.csv(url, function(csv) {
 			
 		var enfantsO = [], o=0;
-		for(var i=0; i < json.length; i++){	
-			if(json[i].nbEnfants=!"0"){
-				if(enfantsO[json[i].ref]) enfantsO[json[i].ref]=enfantsO[json[i].ref]+1; else enfantsO[json[i].ref]=1;
+		for(var i=0; i < csv.length; i++){	
+			if(csv[i].nbEnfants=!"0"){
+				if(enfantsO[csv[i].idLieu]) enfantsO[csv[i].idLieu]=enfantsO[csv[i].idLieu]+1; else enfantsO[csv[i].idLieu]=1;
 				o++;
 			}			                                
 		}
 		
 		//ajoute les cercles
 		var z = [];
-		for(var i=0; i < json.length; i++){
+		for(var i=0; i < csv.length; i++){
 
 			var colorCircle;
 		colorCircle = "#F70101";
-			addCircleByCoor(json[i].lat, json[i].lng, colorCircle);
+			addCircleByCoor(csv[i].lat, csv[i].lng, colorCircle);
 			
 		}
 			 
