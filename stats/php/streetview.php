@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once 'codes.php';
 $_GET["idLieu"]=3;
@@ -25,6 +25,10 @@ if(isset($_GET["idLieu"])){
 <html>
 	<head>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+		<link type="text/css" rel="stylesheet" href="../css/button.css"/>
+		<link type="text/css" rel="stylesheet" href="../css/arriere_plan.css"/>
+		<script type="text/javascript" src="../js/colorbrewer.js"></script>
+		<link rel="stylesheet" href="../css/colorbrewer.css" />
 		<meta charset="UTF-8" />
 		<title>Streetview</title>
 		<style type="text/css">
@@ -43,7 +47,8 @@ if(isset($_GET["idLieu"])){
 			}
 			#EmplacementDeMaCarte {
 				align:left;
-				position: absolute
+				position: absolute;
+				border-style : solid;
 			}
 			#EmplacementPanoramiqueStreetView {
 				margin:00px auto 0 auto;
@@ -52,6 +57,7 @@ if(isset($_GET["idLieu"])){
 				width:100%
 				margin-left:500px;
 				margin-right:-5px;
+				border-style : solid;
 			}
 		</style>
 		<script type="text/javascript" src="../js/jquery.min.js"></script>
