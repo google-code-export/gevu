@@ -18,7 +18,7 @@
 <script type="text/javascript">
 	   
 d3.select("#VLO").on("click", function() {
-	getDataGeo("../data/vacances_logements_occupes.csv");
+	getDataGeo("../data_antenne/vacances_logements_occupes.csv");
 	d3.select("#VLO").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VGO").classed("active", false);
@@ -28,7 +28,7 @@ d3.select("#VLO").on("click", function() {
 });
 
 d3.select("#VLV").on("click", function() {
-	getDataGeo("../data/vacances_logements_vacants.csv");
+	getDataGeo("../data_antenne/vacances_logements_vacants.csv");
 	d3.select("#VLV").classed("active", true);
 	d3.select("#VLO").classed("active", false);
 	d3.select("#VGO").classed("active", false);
@@ -38,7 +38,7 @@ d3.select("#VLV").on("click", function() {
 });
 	 
 d3.select("#VGO").on("click", function() {
-	getDataGeo("../data/vacances_garages_occupes.csv");
+	getDataGeo("../data_antenne/vacances_garages_occupes.csv");
 	d3.select("#VGO").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VLO").classed("active", false);
@@ -48,7 +48,7 @@ d3.select("#VGO").on("click", function() {
 });	
 
 d3.select("#VGV").on("click", function() {
-	getDataGeo("../data/vacances_garages_vacants.csv");
+	getDataGeo("../data_antenne/vacances_garages_vacants.csv");
 	d3.select("#VGV").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VLO").classed("active", false);
@@ -58,7 +58,7 @@ d3.select("#VGV").on("click", function() {
 });
 
 d3.select("#VCO").on("click", function() {
-	getDataGeo("../data/vacances_commerces_occupes.csv");
+	getDataGeo("../data_antenne/vacances_commerces_occupes.csv");
 	d3.select("#VCO").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VLO").classed("active", false);
@@ -68,7 +68,7 @@ d3.select("#VCO").on("click", function() {
 });
 
  d3.select("#VCV").on("click", function() {
-	getDataGeo("../data/vacances_commerces_vacants.csv");
+	getDataGeo("../data_antenne/vacances_commerces_vacants.csv");
 	d3.select("#VCV").classed("active", true);
 	d3.select("#VLV").classed("active", false);
 	d3.select("#VLO").classed("active", false);
