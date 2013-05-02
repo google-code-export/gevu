@@ -14,7 +14,7 @@ function getTypeLog(typeLog){
 
 	var Logements = [];
 	
-	d3.json("../donnees_tables/gevulieux.json", function(json) {
+	d3.json("../data_tables/gevulieux.json", function(json) {
 		var nb = json.children.length
 		for(var i=0;i<nb;i++){
 			var item = json.children[i];

@@ -37,7 +37,7 @@
         var ctaLayer = new google.maps.KmlLayer('http://www.gevu.org/carto/coordonnees_antennes_kml.kml');
         ctaLayer.setMap(map);
 		
-		d3.json("../donnees_tables/moy_age.json", function(json) {
+		d3.json("../data_tables/moy_age.json", function(json) {
 		
 		z = [];
 		for(var i=0; i < json.length; i++){

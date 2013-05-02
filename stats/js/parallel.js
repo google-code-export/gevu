@@ -70,7 +70,7 @@ var svg = d3.select("svg")
   .append("svg:g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-d3.csv("../data/caracteristiques_logements.csv", function(raw) {
+d3.csv("../data_antenne/caracteristiques_logements.csv", function(raw) {
   //console.log(data);
 
   // Convert quantitative scales to floats

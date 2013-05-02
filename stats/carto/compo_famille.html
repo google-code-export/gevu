@@ -18,21 +18,21 @@
 <script type="text/javascript">
 	   
 d3.select("#MONOP").on("click", function() {
-	getDataGeo("../donnees_tables/familles_monoparentales.csv");
+	getDataGeo("../data_tables/familles_monoparentales.csv");
 	d3.select("#MONOP").classed("active", true);
 	d3.select("#NOMBREUSES").classed("active", false);
 	d3.select("#CELIB").classed("active", false);
 });
 
 d3.select("#NOMBREUSES").on("click", function() {
-	getDataGeo("../donnees_tables/familles_nombreuses.csv");
+	getDataGeo("../data_tables/familles_nombreuses.csv");
 	d3.select("#NOMBREUSES").classed("active", true);
 	d3.select("#MONOP").classed("active", false);
 	d3.select("#CELIB").classed("active", false);
 });
 	 
 d3.select("#CELIB").on("click", function() {
-	getDataGeo("../donnees_tables/celib.csv");
+	getDataGeo("../data_tables/celib.csv");
 	d3.select("#CELIB").classed("active", true);
 	d3.select("#MONOP").classed("active", false);
 	d3.select("#NOMBREUSES").classed("active", false);
