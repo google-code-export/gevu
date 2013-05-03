@@ -1,3 +1,8 @@
+<?php
+require_once 'codes.php';
+
+	$antenne = getAntenne($idLieu, $arbre/*Statistique*/);
+?>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
