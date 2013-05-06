@@ -1,0 +1,14 @@
+background: rgb(252,8,0); /* Old browsers */
+background: -moz-linear-gradient(left, rgb(252,8,0) 0%, rgb(196,76,60) 51%, rgb(3,224,0) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgb(252,8,0)), color-stop(51%,rgb(196,76,60)), color-stop(100%,rgb(3,224,0))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(left, rgb(252,8,0) 0%,rgb(196,76,60) 51%,rgb(3,224,0) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(left, rgb(252,8,0) 0%,rgb(196,76,60) 51%,rgb(3,224,0) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(left, rgb(252,8,0) 0%,rgb(196,76,60) 51%,rgb(3,224,0) 100%); /* IE10+ */
+background: linear-gradient(to right, rgb(252,8,0) 0%,rgb(196,76,60) 51%,rgb(3,224,0) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fc0800', endColorstr='#03e000',GradientType=1 ); /* IE6-9 */
+
+.Degrade {
+background:linear-gradient(to right, rgb(252,8,0) 0%,rgb(196,76,60) 51%,rgb(3,224,0) 100%);
+}
+
+background-image:-moz-linear-gradient(left, red, green);

@@ -144,15 +144,15 @@ if(isset($_GET["idLieu"])){
 	<body>
       <p>
         <b>Coordonnées ou adresse :</b>
-        <input type="text" name="q" value="<?php echo $rGeo["adresse"];?>" class="address_input" size="40" />
+        <input type="text" name="q" value="<?php echo $rGeo["adresse"];?>" class="address_input" size="56" />
         <input type="submit" name="find" value="Rechercher" />
       </p>
       <p>
-        <label>lat</label><input type="text" id="lat_cell" value="<?php echo $rGeo["lat"];?>" />
-        <label>lng</label><input type="text" id="lng_cell" value="<?php echo $rGeo["lng"];?>" />
-        <label>heading</label><input type="text" id="heading_cell" value="<?php echo $rGeo["heading"];?>" />
-        <label>pitch</label><input type="text" id="pitch_cell" value="<?php echo $rGeo["pitch"];?>" />
-        <label>zoom</label><input type="text" id="zoom_cell" value="<?php echo $rGeo["zoom_cell"];?>" />
+        <label>lat : </label><input type="text" id="lat_cell" value="<?php echo $rGeo["lat"];?>" size="18"/>
+        <label>lng : </label><input type="text" id="lng_cell" value="<?php echo $rGeo["lng"];?>" size="18"/>
+        <label>heading : </label><input type="text" id="heading_cell" value="<?php echo $rGeo["heading"];?>" size="18"/>
+        <label>pitch : </label><input type="text" id="pitch_cell" value="<?php echo $rGeo["pitch"];?>"size="18" />
+        <label>zoom : </label><input type="text" id="zoom_cell" value="<?php echo $rGeo["zoom_cell"];?>" size="18" />
         <input type="submit" name="valider" value="Valider" onclick="modifBase()" />
       </p>
 		<table align="left"><div id="EmplacementDeMaCarte"></div></table>
