@@ -1,10 +1,12 @@
-
+﻿
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>Données des antennes</title>
     <script type="text/javascript" src="../js/d3.v2.js"></script>
     <link type="text/css" rel="stylesheet" href="../css/button.css"/>
+    <link type="text/css" rel="stylesheet" href="../css/frise_arbre_antenne.css"/>
+	<img src="../images/degrade.png">
     <style type="text/css">
 
 .node circle {
@@ -27,9 +29,6 @@ path.link {
     </style>
   </head>
   <body>
-    <div>
-	<button id='BL' class='first'>ANTENNE BLÉVILLE</button><button id='CA' class='first'>ANTENNE CAUCRIAUVILLE</button><button id='CV' class='first'>ANTENNE CENTRE VILLE</button><button id='MR' class='first'>ANTENNE MARE ROUGE</button><button id='QS' class='first'>ANTENNE QS</button>
-    </div>
     <div id="chart"></div>
     <script type="text/javascript">
 
@@ -53,7 +52,7 @@ var vis = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-function getAntenne(Antenne){	
+
 d3.json("../data_antenne/donnees.json", function(json) {
   root = json;
   root.x0 = h / 2;
@@ -169,54 +168,40 @@ function click(d) {
   }
   update(d);
 }
-}
-
-				d3.select("#BL").on("click", function() {
-		   			getAntenne("BL");
-				d3.select("#BL").classed("active", true);
-					d3.select("#CA").classed("active", false);
-					d3.select("#CV").classed("active", false);
-					d3.select("#MR").classed("active", false);
-					d3.select("#QS").classed("active", false);
-					 });
-		    	
-				d3.select("#CA").on("click", function() {
-		   			getAntenne("CA");
-				d3.select("#CA").classed("active", true);
-					d3.select("#BL").classed("active", false);
-					d3.select("#CV").classed("active", false);
-					d3.select("#MR").classed("active", false);
-					d3.select("#QS").classed("active", false);
-					 });
-		    	
-				d3.select("#CV").on("click", function() {
-		   			getAntenne("CV");
-				d3.select("#CV").classed("active", true);
-					d3.select("#CA").classed("active", false);
-					d3.select("#BL").classed("active", false);
-					d3.select("#MR").classed("active", false);
-					d3.select("#QS").classed("active", false);
-					 });
-
-				d3.select("#MR").on("click", function() {
-		   			getAntenne("MR");
-				d3.select("#MR").classed("active", true);
-					d3.select("#CA").classed("active", false);
-					d3.select("#CV").classed("active", false);
-					d3.select("#BL").classed("active", false);
-					d3.select("#QS").classed("active", false);
-					 });
-
-				d3.select("#QS").on("click", function() {
-		   			getAntenne("QS");
-				d3.select("#QS").classed("active", true);
-					d3.select("#CA").classed("active", false);
-					d3.select("#CV").classed("active", false);
-					d3.select("#MR").classed("active", false);
-					d3.select("#BL").classed("active", false);
-					 });
-
 
     </script>
+<!--http://logiciels.meteo-mc.fr/degrade-couleur-php.php-->
+<?php
+header("Content-type: text/html");
+
+require_once "colorlib.php";
+
+$colors = array(
+"0"=>"198,9,120",
+"100"=>"34,43,221",
+"200"=>"101,247,232",
+"300"=>"255,255,0",
+"400"=>"255, 0 , 0",
+"500"=>"176, 80, 21"
+);
+
+$image = imagecreatetruecolor("500","20");
+
+for ($i=0;$i<501;$i++){
+$color_rgb = getColor($i,$colors);
+$color_rgb = explode(",",$color_rgb);
+$color_image = imagecolorallocate($image,$color_rgb[0],$color_rgb[1],$color_rgb[2]);
+for ($j=0;$j<21;$j++){
+imagesetpixel($image,$i,$j,$color_image);
+}
+}
+
+imagegif($image);
+imagedestroy($image);
+?>
+
   </body>
+	<div class="Degrade">
+		<p>Dégradé [Rouge/Vert]</p>
+	</div>
 </html>
