@@ -6,6 +6,7 @@
     <script type="text/javascript" src="../js/d3.v2.js"></script>
     <link type="text/css" rel="stylesheet" href="../css/button.css"/>
     <link type="text/css" rel="stylesheet" href="../css/frise_arbre_antenne.css"/>
+    <script type="text/javascript" src="../js/degrade.js"></script> 
 	<img src="../images/degrade.png">
     <style type="text/css">
 
@@ -52,6 +53,21 @@ var vis = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
+/*function addMarker(d.children) {
+  if (d.children) {
+    d._children = d.children;
+    d.children = null;
+  } else {
+	  var point = d._children = d.children;
+      var point = d._children.forEach(collapse);
+      var point = d.children = null;
+	  var marker = new GMarker(point);
+	  vis.addOverlay(marker);
+      marker.openInfoWindowHtml(
+    '<b>Nom antenne:</b>' + d.children.name + '<br/>' + 
+    '<b>Country code:</b> ' + d.children.children.name);
+  }
+ }*/
 
 d3.json("../data_antenne/donnees.json", function(json) {
   root = json;
@@ -69,6 +85,8 @@ d3.json("../data_antenne/donnees.json", function(json) {
 
   root.children.forEach(collapse);
   update(root);
+  
+  getLegende();
 });
 
 function update(source) {
@@ -169,10 +187,11 @@ function click(d) {
   update(d);
 }
 
+
     </script>
 <!--http://logiciels.meteo-mc.fr/degrade-couleur-php.php-->
 <?php
-header("Content-type: text/html");
+/*header("Content-type: text/html");
 
 require_once "colorlib.php";
 
@@ -197,11 +216,12 @@ imagesetpixel($image,$i,$j,$color_image);
 }
 
 imagegif($image);
-imagedestroy($image);
+imagedestroy($image);*/
 ?>
 
   </body>
-	<div class="Degrade">
+	<!--<div class="Degrade">
 		<p>Dégradé [Rouge/Vert]</p>
-	</div>
+	</div>-->
+    <table align="left"><div id="degrade"></div></table><br>
 </html>
