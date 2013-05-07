@@ -1,5 +1,5 @@
 var colors = [];
-colors['UN'] = ["#FB0000", /*"#F81D1D", "#F85C5C", "#FB8B8B", "#FBB5B5", "#FCD4D4", "#D4FCD4", "#AAFCAA", "#7FFE7F", "#56FF56", "#28FF28", "#00FF22",*/ "#007D00"];
+colors['UN'] = ["#FB0000", "#007D00"];
 
 	var dataTexte = [{"id":"0","name":"Occupés - Vacants"}];
 	var dataCarre = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
@@ -58,7 +58,9 @@ var wL = 500, hL = 500;
 		       .attr("fill", function(d) {
 		    	   var ref = d3.select(this);
 		    	   ref = ref[0][0].parentNode.id;
-		    	   return z[ref](d);
+		    	   var fctC = z[ref];
+		    	   var c = fctC(d) 
+		    	   return c;
 		    	   })
 		       .attr("y", "60")
 		       .attr("x", function(d, i) { 
