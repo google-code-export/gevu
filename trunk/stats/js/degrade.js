@@ -1,5 +1,7 @@
 var colors = [];
 colors['UN'] = ["#FB0000", "#007D00"];
+//"#FB0000"=100;
+//"#007D00"=0;
 
 	var dataTexte = [{"id":"0","name":"Occupés - Vacants"}];
 	var dataCarre = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
@@ -20,7 +22,7 @@ var wL = 500, hL = 500;
 
 	z = [];
 	for(var i=0; i < dataCouleur.length; i++){
-		z[dataCouleur[i].ref]=d3.scale.log().domain([1, 100]).range(colors[dataCouleur[i].ref]);
+		z[dataCouleur[i].ref]=d3.scale.linear().domain([1, 100]).range(colors[dataCouleur[i].ref]);
 	}		
 	
 	var degradeAntenne = visLeg.selectAll("text").data(dataCouleur).enter()

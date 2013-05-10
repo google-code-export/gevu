@@ -115,7 +115,10 @@ function update(source) {
       .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-      .text(function(d) { return d.name; })
+      .text(function(d) { 
+	  return d.name; })
+      .style("fill", function(d) { return ((d.size/d.total)*100) ? "color" : "#007D00"})
+      //.style("fill", "#00FEDC")	  
       .style("fill-opacity", 1e-6);
 
   // Noeud de transition à la nouvelle position
