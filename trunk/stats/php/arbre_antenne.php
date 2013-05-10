@@ -119,10 +119,14 @@ function update(source) {
       .text(function(d) { 
 	  return d.name; })
       .style("fill", function(d) {
-          var pct = (d.size/d.total)*100;
-   	   	  var fctC = z["UN"];
-	      var c = fctC(pct);                     
-          return (d.depth==3) ? c : "black";
+          if(d.depth==3){
+	          var pct = (d.size/d.total)*100;
+   		   	  var fctC = z["UN"];
+	    	  var c = fctC(pct);
+          }else{
+        	  c = "black";
+          }                     
+          return c; 
               })
       //.style("fill", "#00FEDC")	  
       .style("fill-opacity", 1e-6);
