@@ -1,4 +1,4 @@
-var colors = [];
+var colors = [], z = [];
 colors['UN'] = ["#FB0000", "#007D00"];
 //"#FB0000"=100;
 //"#007D00"=0;
@@ -20,7 +20,6 @@ var wL = 500, hL = 500;
 		.attr("transform", "translate(" + wL + "," + hL + ")");
 	
 
-	z = [];
 	for(var i=0; i < dataCouleur.length; i++){
 		z[dataCouleur[i].ref]=d3.scale.linear().domain([1, 100]).range(colors[dataCouleur[i].ref]);
 	}		
