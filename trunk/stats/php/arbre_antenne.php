@@ -4,9 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>Données des antennes</title>
     <script type="text/javascript" src="../js/d3.v2.js"></script>
+    <script type="text/javascript" src="../js/degrade.js"></script> 
     <link type="text/css" rel="stylesheet" href="../css/button.css"/>
     <link type="text/css" rel="stylesheet" href="../css/frise_arbre_antenne.css"/>
-    <script type="text/javascript" src="../js/degrade.js"></script> 
 	<img src="../images/degrade.png">
     <style type="text/css">
 
@@ -69,6 +69,8 @@ var vis = d3.select("#chart").append("svg")
   }
  }*/
 
+getLegende();
+ 
 d3.json("../data_antenne/donnees.json", function(json) {
   root = json;
   root.x0 = h / 2;
@@ -86,7 +88,6 @@ d3.json("../data_antenne/donnees.json", function(json) {
   root.children.forEach(collapse);
   update(root);
   
-  getLegende();
 });
 
 function update(source) {
@@ -117,7 +118,12 @@ function update(source) {
       .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
       .text(function(d) { 
 	  return d.name; })
-      .style("fill", function(d) { return ((d.size/d.total)*100) ? "color" : "#007D00"})
+      .style("fill", function(d) {
+          var pct = (d.size/d.total)*100;
+   	   	  var fctC = z["UN"];
+	      var c = fctC(pct);                     
+          return (d.depth==3) ? c : "black";
+              })
       //.style("fill", "#00FEDC")	  
       .style("fill-opacity", 1e-6);
 
