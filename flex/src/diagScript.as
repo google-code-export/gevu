@@ -56,6 +56,22 @@ import mx.rpc.events.ResultEvent;
 [Bindable][Embed("images/ajoutUtiP.png")]public var iconAjoutUtiP:Class;
 [Bindable][Embed("images/etablissementP.png")]public var iconEtab:Class;
 [Bindable][Embed("images/batimentP.png")]public var iconBat:Class;
+[Bindable][Embed("images/niveauP.png")]public var iconNiv:Class;
+[Bindable][Embed("images/voirieP.png")]public var iconVoirie:Class;
+[Bindable][Embed("images/voie.png")]public var iconVoie:Class;
+[Bindable][Embed("images/segment.png")]public var iconSeg:Class;
+[Bindable][Embed("images/porteP.jpg")]public var iconPorte:Class;
+[Bindable][Embed("images/parkingP.jpg")]public var iconPark:Class;
+[Bindable][Embed("images/parcelle_exterieureP.png")]public var iconParcExt:Class;
+[Bindable][Embed("images/objetP.png")]public var iconObj:Class;
+[Bindable][Embed("images/espace_interieurP.png")]public var iconEspExt:Class;
+[Bindable][Embed("images/espace_exterieurP.png")]public var iconEspInt:Class;
+[Bindable][Embed("images/escalierP.jpg")]public var iconEsca:Class;
+[Bindable][Embed("images/escaliermecaP.jpg")]public var iconEscaMeca:Class;
+[Bindable][Embed("images/eclairageP.jpg")]public var iconEcl:Class;
+[Bindable][Embed("images/chaine_de_deplacementP.png")]public var iconChaine:Class;
+[Bindable][Embed("images/entreeP.jpg")]public var iconEntree:Class;
+
 
 [Bindable] public var exi:Object;
 [Bindable] public var idExi:String = "";
@@ -262,7 +278,52 @@ private function treeIconFunc(item:Object):Class {
 		case "45":
 			iconClass = iconBat;
 			break;
-	}
+		case "46":
+			iconClass = iconNiv;
+			break;
+		case "53":
+			iconClass = iconVoirie;
+			break;
+		case "55":
+			iconClass = iconVoie;
+			break;
+		case "56":
+			iconClass = iconSeg;
+			break;
+		case "18":
+			iconClass = iconPorte;
+			break;
+		case "17":
+			iconClass = iconPark;
+			break;
+		case "51":
+			iconClass = iconParcExt;
+			break;
+		case "47":
+			iconClass = iconObj;
+			break;
+		case "50":
+			iconClass = iconEspExt;
+			break;
+		case "49":
+			iconClass = iconEspInt;
+			break;
+		case "11":
+			iconClass = iconEsca;
+			break;
+		case "13":
+			iconClass = iconEscaMeca;
+			break;
+		case "7":
+			iconClass = iconEcl;
+			break;
+		case "53":
+			iconClass = iconChaine;
+			break;
+		case "53":
+			iconClass = iconEntree;
+			break;		
+	}	
 	
 	//vérification du lock
 	var ld:String = item.@lockDiag;
