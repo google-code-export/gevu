@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <title>Handicateurs Visuel</title>
+	<link rel="stylesheet" href="../css/colorbrewer.css" />
+    <script type="text/javascript" src="../js/libtype.js"></script>
+    <script type="text/javascript" src="../js/d3.v2.js"></script>
+    <script type="text/javascript" src="../js/colorbrewer.js"></script>
+    <style type="text/css">
+
+body {
+  text-align: center;
+}
+
+svg {
+  font: 10px sans-serif;
+}
+
+    </style>
+  </head>
+   <big> <b><p align="left"><a href="http://www.gevu.org/public/graph">Statistiques disponibles</a></p></b></big><br><br>
+	
+  <body>
+  <u><big>Handicateurs Visuel</big></u><br><br>
+  
+    <script type="text/javascript">
+
+d3.json("../documents/handicateurs.json", function(data) {
+
+	var handicateurs = d3.nest()
+      .key(function(d) { return d.id_critere; })
+      .entries(data);
+
+  var m = 10,
+      r = 100,
+	  z = d3.scale.ordinal()
+		.domain(handicateurs)
+	  	.range(colorbrewer.Greens[9]);
+
+  var pie = d3.layout.pie()
+      .value(function(d) { 
+    	  return +d.handicateur_visuel; 
+    	  })
+      .sort(function(a, b) { return b.handicateur_visuel - a.handicateur_visuel; });
+
+  var arc = d3.svg.arc()
+      .innerRadius(r / 2)
+      .outerRadius(r);
+
+  var antennes = d3.nest()
+      .key(function(d) { return "Handicateur Visuel"; })
+      .entries(data);
+
+  var svg = d3.select("body").selectAll("div")
+      .data(antennes)
+    .enter().append("div")
+      .style("display", "inline-block")
+      .style("width", (r + m) * 2 + "px")
+      .style("height", (r + m) * 2 + "px")
+    .append("svg:svg")
+      .attr("width", (r + m) * 2)
+      .attr("height", (r + m) * 2)
+    .append("svg:g")
+      .attr("transform", "translate(" + (r + m) + "," + (r + m) + ")");
+
+  svg.append("svg:text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .text(function(d) { return d.key; });
+
+  var g = svg.selectAll("g")
+      .data(function(d) { 
+    	  return pie(d.values); 
+    	  })
+    .enter().append("svg:g");
+
+  g.append("svg:path")
+      .attr("d", arc)
+      .style("fill", function(d) { return z(d.data.id_critere); })
+    .append("svg:title")
+      .text(function(d) { 
+    	  return [d.data.id_critere] + " : " + d.data.handicateur_visuel; 
+    	  });
+
+  g.filter(function(d) { return d.endAngle - d.startAngle > .2; }).append("svg:text")
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")rotate(" + angle(d) + ")"; })
+      .text(function(d) { return d.data.Annee_Construction; });
+
+  function angle(d) {
+    var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+    return a > 90 ? a - 180 : a;
+  }
+});
+    </script>
+  </body>
+</html>
