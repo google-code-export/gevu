@@ -4,10 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>Données des antennes</title>
     <script type="text/javascript" src="../js/d3.v2.js"></script>
-    <script type="text/javascript" src="../js/degrade.js"></script> 
     <link type="text/css" rel="stylesheet" href="../css/button.css"/>
     <link type="text/css" rel="stylesheet" href="../css/frise_arbre_antenne.css"/>
-	<img src="../images/degrade.png">
+    <script type="text/javascript" src="../js/degrade.js"></script>
+		<Big><b> Données des antennes par rapport aux autres antennes</b></big>
+		<link type="text/css" rel="stylesheet" href="../css/arriere_plan.css"/>
     <style type="text/css">
 
 .node circle {
@@ -53,24 +54,6 @@ var vis = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
-/*function addMarker(d.children) {
-  if (d.children) {
-    d._children = d.children;
-    d.children = null;
-  } else {
-	  var point = d._children = d.children;
-      var point = d._children.forEach(collapse);
-      var point = d.children = null;
-	  var marker = new GMarker(point);
-	  vis.addOverlay(marker);
-      marker.openInfoWindowHtml(
-    '<b>Nom antenne:</b>' + d.children.name + '<br/>' + 
-    '<b>Country code:</b> ' + d.children.children.name);
-  }
- }*/
-
-getLegende();
- 
 d3.json("../data_antenne/donnees.json", function(json) {
   root = json;
   root.x0 = h / 2;
@@ -88,6 +71,7 @@ d3.json("../data_antenne/donnees.json", function(json) {
   root.children.forEach(collapse);
   update(root);
   
+  getLegende();
 });
 
 function update(source) {
@@ -116,8 +100,14 @@ function update(source) {
       .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-      .text(function(d) { 
-	  return d.name; })
+    .text(function(d) {
+          if(d.depth==1){	
+	return d.name;}
+          if(d.depth==2){	
+	return d.name;}
+          if(d.depth==3){
+	          var pct1 = ((d.size/d.total)*100).toFixed(2);
+	  return d.name + " " + "(" + pct1 + "%" + ")"; }})
       .style("fill", function(d) {
           if(d.depth==3){
 	          var pct = (d.size/d.total)*100;
@@ -202,39 +192,6 @@ function click(d) {
 
 
     </script>
-<!--http://logiciels.meteo-mc.fr/degrade-couleur-php.php-->
-<?php
-/*header("Content-type: text/html");
-
-require_once "colorlib.php";
-
-$colors = array(
-"0"=>"198,9,120",
-"100"=>"34,43,221",
-"200"=>"101,247,232",
-"300"=>"255,255,0",
-"400"=>"255, 0 , 0",
-"500"=>"176, 80, 21"
-);
-
-$image = imagecreatetruecolor("500","20");
-
-for ($i=0;$i<501;$i++){
-$color_rgb = getColor($i,$colors);
-$color_rgb = explode(",",$color_rgb);
-$color_image = imagecolorallocate($image,$color_rgb[0],$color_rgb[1],$color_rgb[2]);
-for ($j=0;$j<21;$j++){
-imagesetpixel($image,$i,$j,$color_image);
-}
-}
-
-imagegif($image);
-imagedestroy($image);*/
-?>
-
   </body>
-	<!--<div class="Degrade">
-		<p>Dégradé [Rouge/Vert]</p>
-	</div>-->
     <table align="left"><div id="degrade"></div></table><br>
 </html>

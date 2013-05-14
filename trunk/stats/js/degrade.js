@@ -3,9 +3,9 @@ colors['UN'] = ["#FB0000", "#007D00"];
 //"#FB0000"=100;
 //"#007D00"=0;
 
-	var dataTexte = [{"id":"0","name":"Occupés - Vacants"}];
+	var dataTexte = [{"id":"0","name":"0      -      100 %"}];
 	var dataCarre = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
-	var dataCouleur = [{"id":"1","ref":"UN","name":"Occupés - Vacants","value":dataCarre}]
+	var dataCouleur = [{"id":"1","ref":"UN","name":"0      -      100 %","value":dataCarre}]
 
 function getLegende(){
 
