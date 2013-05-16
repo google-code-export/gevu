@@ -1,13 +1,11 @@
-var colors = [], z = [];
-colors['UN'] = ["#FB0000", "#007D00"];
-//"#FB0000"=100;
-//"#007D00"=0;
+var colors = [], z = []; //On créer 2 tableaux colors et z
+colors['UN'] = ["#FB0000", "#007D00"]; //La valeur UN de colors prend un min et un max
 
 	var dataTexte = [{"id":"0","name":"0      -      100 %"}];
 	var dataCarre = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
-	var dataCouleur = [{"id":"1","ref":"UN","name":"0      -      100 %","value":dataCarre}]
+	var dataCouleur = [{"id":"1","ref":"UN","name":"0      -      100 %","value":dataCarre}] //On créer 3 variables dataTexte, dataCarre, dataCouleur 
 
-function getLegende(){
+function getLegende(){ //On créer une fonction getLegende qui prend une hauteur et une largeur de 500 px. A cette légende, on lui ajoute un dégradé linéaire qui prend le min et le max
 
 var wL = 500, hL = 500;
 	var visLeg = d3.select("#degrade").append("svg")
@@ -42,7 +40,7 @@ var wL = 500, hL = 500;
 	   });
 
 
-	var wh = 50, ec=0;
+	var wh = 50, ec=0; //On créer les carrés permettant de réaliser cette légende
 	var carreAntenne = visLeg.selectAll(".carrLeg").data(dataCouleur).enter() 
 		.append("g")
 			.attr("class","carrLeg")
@@ -69,7 +67,7 @@ var wL = 500, hL = 500;
 			   })
 			  .attr("transform", "translate(320,-250)");
 	
-	var textAntenne = visLeg.selectAll(".textLeg").data(dataTexte).enter().append("svg:g")
+	var textAntenne = visLeg.selectAll(".textLeg").data(dataTexte).enter().append("svg:g") //On créer le texte que nous allons indiquer sur la légende
 	    .attr("class", "textLeg")
 	    .attr("transform", "rotate(164)")
 	    .append("text")
