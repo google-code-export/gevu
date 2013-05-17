@@ -50,7 +50,7 @@
 			{"name": "Pavillons 7 pièces = 3", "size":3, "total":4},
 			{"name": "Pavillons 8 pièces = 0", "size":0, "total":1},
 			{"name": "Quatre pièces = 711", "size":711, "total":4184},
-			{"name": "Quatres pièces duplex = 10", "size":10},
+			{"name": "Quatres pièces duplex = 10", "size":10, "total":53},
 			{"name": "Sept pièces = 0", "size":0, "total":3},
 			{"name": "Sept pièces duplex = 0", "size":0, "total":4},
 			{"name": "Six pièces = 43", "size":43, "total":188},

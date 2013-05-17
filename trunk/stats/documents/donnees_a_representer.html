@@ -1,0 +1,80 @@
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no"></meta>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/d3.v2.js"></script>
+<link type="text/css" rel="stylesheet" href="../css/button.css"/>
+<link type="text/css" rel="stylesheet" href="../css/arriere_plan.css"/>
+	
+<div>
+<button id='ANNEE' class='first'>ANNEE CONSTRUCTION</button><button id='CATMOD' class='first'>CATEGORIES MODULES</button><button id='NBPIECE' class='first'>NOMBRE PIECES</button><button id='PEUPLCSP' class='first'>PEUPLEMENT CSP</button><button id='FINANCEMENT' class='first'>TYPE FINANCEMENT</button><button id='LOGEMENT' class='first'>TYPE LOGEMENT</button>
+</div>
+	
+<script type="text/javascript">
+function getData(url){	   
+d3.select("#ANNEE").on("click", function() {
+	getData("../antenne/annee_construction.html");
+	d3.select("#ANNEE").classed("active", true);
+	d3.select("#CATMOD").classed("active", false);
+	d3.select("#NBPIECE").classed("active", false);
+	d3.select("#PEUPLCSP").classed("active", false);
+	d3.select("#FINANCEMENT").classed("active", false);
+	d3.select("#LOGEMENT").classed("active", false);
+});
+
+d3.select("#CATMOD").on("click", function() {
+	getData("../antenne/categories_modules.html");
+	d3.select("#CATMOD").classed("active", true);
+	d3.select("#ANNEE").classed("active", false);
+	d3.select("#NBPIECE").classed("active", false);
+	d3.select("#PEUPLCSP").classed("active", false);
+	d3.select("#FINANCEMENT").classed("active", false);
+	d3.select("#LOGEMENT").classed("active", false);
+});
+	 
+d3.select("#NBPIECE").on("click", function() {
+	getData("../antenne/nb_pieces.html");
+	d3.select("#NBPIECE").classed("active", true);
+	d3.select("#ANNEE").classed("active", false);
+	d3.select("#CATMOD").classed("active", false);
+	d3.select("#PEUPLCSP").classed("active", false);
+	d3.select("#FINANCEMENT").classed("active", false);
+	d3.select("#LOGEMENT").classed("active", false);
+});	
+
+d3.select("#PEUPLCSP").on("click", function() {
+	getData("../antenne/pleuplement_csp.html");
+	d3.select("#PEUPLCSP").classed("active", true);
+	d3.select("#ANNEE").classed("active", false);
+	d3.select("#CATMOD").classed("active", false);
+	d3.select("#NBPIECE").classed("active", false);
+	d3.select("#FINANCEMENT").classed("active", false);
+	d3.select("#LOGEMENT").classed("active", false);
+});	
+
+d3.select("#FINANCEMENT").on("click", function() {
+	getData("../antenne/type_financement.html");
+	d3.select("#FINANCEMENT").classed("active", true);
+	d3.select("#ANNEE").classed("active", false);
+	d3.select("#CATMOD").classed("active", false);
+	d3.select("#NBPIECE").classed("active", false);
+	d3.select("#PEUPLCSP").classed("active", false);
+	d3.select("#LOGEMENT").classed("active", false);
+});	
+
+d3.select("#LOGEMENT").on("click", function() {
+	getData("../antenne/type_logements.html");
+	d3.select("#LOGEMENT").classed("active", true);
+	d3.select("#ANNEE").classed("active", false);
+	d3.select("#CATMOD").classed("active", false);
+	d3.select("#NBPIECE").classed("active", false);
+	d3.select("#PEUPLCSP").classed("active", false);
+	d3.select("#FINANCEMENT").classed("active", false);
+});	
+}
+</script>
+</head>
+<body>
+</body>
+</html>
