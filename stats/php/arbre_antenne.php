@@ -40,10 +40,10 @@ var m = [20, 120, 20, 120],
     h = 600 - m[0] - m[2],
     i = 0,
     duration = 500,
-    root;
+    root; //On créer différentes variables pour les hauteurs, largeurs, temps de transition...
 
 var tree = d3.layout.tree()
-    .size([h, w]);
+    .size([h, w]); //On créer un arbre qui prend la hauteur et la largeur comme valeur
 
 var diagonal = d3.svg.diagonal()
     .projection(function(d) { return [d.y, d.x]; });
@@ -52,9 +52,9 @@ var vis = d3.select("#chart").append("svg")
     .attr("width", w + m[1] + m[3])
     .attr("height", h + m[0] + m[2])
   .append("g")
-    .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+    .attr("transform", "translate(" + m[3] + "," + m[0] + ")"); //On créer une variable vis à laquelle on sélectionne un graphique où l'on ajoute un svg qui prend les hauteurs et largeurs affichées
 
-d3.json("../data_antenne/donnees.json", function(json) {
+d3.json("../data_antenne/donnees.json", function(json) { //On créer une fonction json qui prend les données d'un fichier json
   root = json;
   root.x0 = h / 2;
   root.y0 = 0;
