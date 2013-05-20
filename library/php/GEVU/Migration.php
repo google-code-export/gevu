@@ -46,11 +46,11 @@ class GEVU_Migration extends GEVU_Site{
     														// ne pas se tromper de nom de table cible sinon... zap!)
 
     	// paramètres de connexion source
-    	$hostSource         = 'localhoszt';		// adresse IP du serveur Source    	
+    	$hostSource         = '188.165.235.55';		// adresse IP du serveur Source    	
     	$portSource         = '3306';           	// port serveur MySql (3306 par défaut)
-    	$userSource         = 'machin';         // utilisateur
-    	$mdpSource          = 'truc' ;      	// mot de passe    	
-    	$bddSource          = 'bidule';       	// base de donnée Source
+    	$userSource         = 'remoteuser';         // utilisateur
+    	$mdpSource          = 'Samszo2013' ;      	// mot de passe    	
+    	$bddSource          = 'gevu_new';       	// base de donnée Source
     	// tables Sources = 27
     	$tablesSources = array('gevu_contacts','gevu_couts','gevu_criteres','gevu_criteresxtypesxcriteres','gevu_criteresxtypesxdeficiences','gevu_criteresxtypesxdroits'
     			,'gevu_droits','gevu_exis','gevu_exisxdroits','gevu_motsclefs','gevu_produits','gevu_produitsxcouts','gevu_roles','gevu_scenario','gevu_scenes'
