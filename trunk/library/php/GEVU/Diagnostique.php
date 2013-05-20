@@ -944,7 +944,7 @@ class GEVU_Diagnostique extends GEVU_Site{
             $this->idExi = $idExi;
             
 			//initialise les gestionnaires de base de données
-			$this->getDb($idBase);
+			if($idBase)$this->getDb($idBase);
         	if(!$this->dbL) $this->dbL = new Models_DbTable_Gevu_lieux($this->db);
 	        if(!$this->dbD) $this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
         	
@@ -1194,6 +1194,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         return array("idInst"=>$idInst,"idDiag"=>$idDiag);
     }
     
+    
     /**
      * Création d'un nouvel instant
      *
@@ -1250,6 +1251,24 @@ class GEVU_Diagnostique extends GEVU_Site{
         $o = new $obj($this->db);
     	    	
         return $o->edit($id, $data);
+    }
+    
+    /**
+     * Ajoute un diagnostic extérieur
+     *
+     * @param array $data
+     * @param int $idExi
+     * @param string $idBase
+     *
+     * @return integer
+     */
+    public function ajoutDiagExt($data, $idExi, $idBase=false){
+    	$c = str_replace("::", "_", __METHOD__);
+		$this->getDb($idBase);
+    	if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+    	if(!$this->dbDE)$this->dbDE = new Models_DbTable_Gevu_diagext($this->db);
+    	$data["id_instant"] = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+    	return $this->dbDE->ajouter($data);
     }
     
     /**
