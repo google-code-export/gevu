@@ -77,6 +77,7 @@ import mx.rpc.events.ResultEvent;
 [Bindable] public var idExi:String = "";
 [Bindable] public var dataGeo:Object;
 [Bindable] public var dataStat:Object;
+[Bindable] public var dataDiagExt:Object;
 
 private var TreeObject:XML;
 private var xmlTree:XML
@@ -481,10 +482,12 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		var place:int;
 		//vérifie si on traite un objet du modele
 		if(arr.length == 4 && arr[3] != "lieuxchainedeplacements"){
-			//création dynamique de l'objet
-			className="compo.form."+arr[3];
-			ClassReference = getDefinitionByName(className) as Class;			
-			instance = new ClassReference();
+			if(arr[3] != "diagext"){
+				//création dynamique de l'objet
+				className="compo.form."+arr[3];
+				ClassReference = getDefinitionByName(className) as Class;			
+				instance = new ClassReference();
+			}
 			//gestion des cas particuliers
 			place = -1;
 			switch (arr[3]) {
@@ -501,6 +504,8 @@ private function displayNodeProperties(event:ResultEvent) : void {
 					}
 					this.dataStat = obj[item].diag.stat.EtatDiag 
 					break;
+				case "diagext":
+					this.dataDiagExt = obj["Models_DbTable_Gevu_diagext"][0];
 				case "geos":
 					dataGeo = obj["Models_DbTable_Gevu_geos"][0];
 					//ajoute le nom et l'identifiant

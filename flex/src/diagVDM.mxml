@@ -132,7 +132,7 @@ todo :
 								</mx:VBox>
 						</mx:HBox>
 						<mx:Canvas width="100%" height="100%" label="Accessibilité">
-							<stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" />
+							<stat:cnvStatDiag id="stat" rsEtatDiag="{dataStat}" rsDiagExt="{dataDiagExt}" />
 						</mx:Canvas>
 						<mx:Canvas label="Géographie" id="tbCarto" width="100%" height="100%"  >
 							<mx:Panel width="100%" height="100%" cornerRadius="0"

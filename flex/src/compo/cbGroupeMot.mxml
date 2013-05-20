@@ -173,7 +173,6 @@
     </mx:Script>
 	<mx:RemoteObject id="ROS"
 	    	source="{objName}" destination="zend" 
-	    	endpoint="{endPoint}"
 	    	showBusyCursor="true"
 	    	fault="faultHandlerService(event)">
 	 	<mx:method name="getAll"  result="fillHandler(event)"/>  	
