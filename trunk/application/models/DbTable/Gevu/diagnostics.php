@@ -573,10 +573,15 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
             	'diag.id_critere = crit.id_critere',array('ref','handicateur_moteur','handicateur_auditif','handicateur_visuel','handicateur_cognitif','affirmation','criteres'))
         	->joinInner(array('tc' => 'gevu_typesxcontroles'),
             	'tc.id_type_controle = crit.id_type_controle',array('controle'=>'lib','icone'))
+        	->joinInner(array('tcrit' => 'gevu_criteresxtypesxcriteres'),
+            	'tcrit.id_critere = crit.id_critere',array('typeCrit'=>new Zend_Db_Expr("GROUP_CONCAT(DISTINCT tcrit.id_type_critere)")))
+        	->joinInner(array('dc' => 'gevu_criteresxtypesxdroits'),
+            	'dc.id_critere = crit.id_critere',array('droitCrit'=>new Zend_Db_Expr("GROUP_CONCAT(DISTINCT dc.id_type_droit ORDER BY dc.id_type_droit SEPARATOR '-')")))
         	->joinInner(array('inst' => 'gevu_instants'),
             	'diag.id_instant = inst.id_instant',array('instant'=>"DATE_FORMAT(maintenant,'%W %d %M %Y')",'nom'))
         	->joinInner(array('exi' => 'gevu_exis'),
             	'inst.id_exi = exi.id_exi',array('exis'=>'nom'))
+            ->group("diag.id_diag")
         	->where( "l.id_lieu IN (".$idLieu.")")
         	->order(array('diag.id_lieu'));
         
