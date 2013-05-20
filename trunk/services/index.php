@@ -3,6 +3,17 @@ require_once( "../application/configs/config.php" );
 
 
 try {
+	
+	/*
+	$mig = new GEVU_Migration();
+	$mig->migreRefServeurToLocal();
+	*/
+	
+	/*
+	$dbED = new Models_DbTable_Gevu_exisxdroits();
+	$arr = $dbED->getUtiDroit(3, "gevu_trouville");
+	*/
+	
 	/*
 	$rapport = new GEVU_Rapport();
 	$rapport->setSolusDefaut(6671,1,"gevu_trouville");
@@ -17,12 +28,13 @@ try {
 	*/
 	
 	/*
-	$idBase = "gevu_new";	
+	$idBase = "gevu_trouville";	
 	$idExi = 1;
 	$idLieu = 23053;
 	$idScenario = 13;
 
 	$d = new GEVU_Diagnostique();
+	$d->ajoutUtiDiag(6671, 1, $idBase);
 	$d->getDiagListe(array("handi"=>"moteur","idLieu"=>23198,"niv"=>0),$idBase);
 	//$d->ajoutLieu(1,$idExi,$idBase);
 	$d->edit(3142,array("ref"=>"machn"),"Models_DbTable_Gevu_espacesxinterieurs",$idBase);
