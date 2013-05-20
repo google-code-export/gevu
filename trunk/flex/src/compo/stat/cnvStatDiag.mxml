@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas label="Statistiques de diagnostic" xmlns:mx="http://www.adobe.com/2006/mxml" 
 	creationComplete="init()" 
-	width="100%" height="100%" 
+	width="100%" height="100%" xmlns:form="compo.form.*" xmlns:compo="compo.*" 
 	>
 	<mx:Script><![CDATA[
 		import compo.cnvDiagListe;
@@ -11,6 +11,7 @@
 		import mx.charts.events.ChartEvent;
 		import mx.charts.series.ColumnSeries;
 		import mx.charts.series.items.ColumnSeriesItem;
+		import mx.collections.ArrayCollection;
 		import mx.controls.Alert;
 		import mx.events.IndexChangedEvent;
 		import mx.managers.PopUpManager;
@@ -52,15 +53,42 @@
 			};
 
 		[Bindable]	public var rsEtatDiag:Object;
+		[Bindable]	public var rsDiagExt:Object;
 		[Bindable]	public var idLieu:int;
+		[Bindable]	public var idDiagExt:int;
 		public var selectHandi:String;
 		public var selectNiv:String;
+		[Bindable]	public var rsAuditif:ArrayCollection;
+		[Bindable]	public var rsCognitif:ArrayCollection;
+		[Bindable]	public var rsMoteur:ArrayCollection;
+		[Bindable]	public var rsVisuel:ArrayCollection;		
 		
 		public function init():void {
 			details.removeAllChildren();
-			TraiteEtatDiag();
+			if(rsDiagExt){
+				idDiagExt = rsDiagExt.id_diagext;
+				gmEnt.keyValue = rsDiagExt.id_entreprise;
+				gmEnt.init();
+				tiSource.text=rsDiagExt.source;
+				cbAuditif.selectedIndex = getLettreIndex(rsDiagExt.auditif);
+				cbCognitif.selectedIndex = getLettreIndex(rsDiagExt.cognitif);
+				cbMoteur.selectedIndex = getLettreIndex(rsDiagExt.moteur);
+				cbVisuel.selectedIndex = getLettreIndex(rsDiagExt.visuel);				
+				
+			}
+			TraiteEtatDiag();		
 		}
 		
+		public function getLettreIndex(lettre:String):int
+		{
+			var i:int = 0;
+			for each (var l:String in acLettre)
+			{
+				if(l==lettre)return i;
+				i++;
+			}
+			return i;	
+		}
 
 		public function TraiteEtatDiag():void {
 			
@@ -70,14 +98,42 @@
 			//mise à jour des icones handicateur
 			for each (var obs:Object in rsEtatDiag)
 			{
-				if(obs.id=="moteur")
+				if(obs.id=="moteur"){
 					imgAlphaMoteur.source=handi[obs.handi].icon;
-				if(obs.id=="auditif")
+					rsMoteur = new ArrayCollection([
+						{label:"Critères valides", value:obs.niv0, niv:0},
+						{label:"Obstacles niveau 1", value:obs.niv1, niv:1},
+						{label:"Obstacles niveau 2", value:obs.niv2, niv:2},
+						{label:"Obstacles niveau 3", value:obs.niv3, niv:3},
+					]);
+				}
+				if(obs.id=="auditif"){
 					imgAlphaAudio.source=handi[obs.handi].icon;
-				if(obs.id=="cognitif")
+					rsAuditif = new ArrayCollection([
+						{label:"Critères valides", value:obs.niv0, niv:0},
+						{label:"Obstacles niveau 1", value:obs.niv1, niv:1},
+						{label:"Obstacles niveau 2", value:obs.niv2, niv:2},
+						{label:"Obstacles niveau 3", value:obs.niv3, niv:3},
+					]);
+				}
+				if(obs.id=="cognitif"){
 					imgAlphaCog.source=handi[obs.handi].icon;
-				if(obs.id=="visuel")
+					rsCognitif = new ArrayCollection([
+						{label:"Critères valides", value:obs.niv0, niv:0},
+						{label:"Obstacles niveau 1", value:obs.niv1, niv:1},
+						{label:"Obstacles niveau 2", value:obs.niv2, niv:2},
+						{label:"Obstacles niveau 3", value:obs.niv3, niv:3},
+					]);
+				}
+				if(obs.id=="visuel"){
 					imgAlphaVisu.source=handi[obs.handi].icon;
+					rsVisuel = new ArrayCollection([
+						{label:"Critères valides", value:obs.niv0, niv:0},
+						{label:"Obstacles niveau 1", value:obs.niv1, niv:1},
+						{label:"Obstacles niveau 2", value:obs.niv2, niv:2},
+						{label:"Obstacles niveau 3", value:obs.niv3, niv:3},
+						]);
+				}
 			}
 
 		}
@@ -86,51 +142,9 @@
 		{
 			try 
 			{
-				/*
-				var allSeries:Array = event.currentTarget.series;
-				var strHandi:String = "";
-				var niv:String = "";
-				var titreSelect:String = "";
-				//construction de la requête
-				for (var i:int=0; i<allSeries.length; i++) {
-					//le type de handicap
-					switch (allSeries[i].selectedIndices[0]) {
-						case 0:
-							strHandi = "auditif";
-							break;
-						case 1:
-							strHandi = "cognitif";
-							break;
-						case 2:
-							strHandi = "moteur";
-							break;
-						case 3:
-							strHandi = "visuel";
-							break;
-					}				    
-					//le niveau seulemet si on a récupéré  l'indice
-					if(strHandi!="" && niv==""){
-						switch (allSeries[i].id) {
-							case "_cnvStatDiag_ColumnSeries1":
-								niv = "0";
-								break;
-							case "_cnvStatDiag_ColumnSeries2":
-								niv = "1";
-								break;
-							case "_cnvStatDiag_ColumnSeries3":
-								niv = "2";
-								break;
-							case "_cnvStatDiag_ColumnSeries4":
-								niv = "3";
-								break;
-						}
-						//création du titre de la sélection
-						titreSelect = allSeries[i].legendData[0].label;	
-					}
-				}
-				*/
+
 				var vn:Array = new Array();
-				vn["niv"] = this.selectNiv.substr(3);
+				vn["niv"] = this.selectNiv;
 				vn["handi"] = this.selectHandi;
 				vn["idLieu"] = this.idLieu;
 				
@@ -140,12 +154,6 @@
 				//cnvListe.mainCtrlWidth = 100;
 				details.addChild(cnvListe);
 				
-				/*affiche la liste des diag dans une fenêtre
-				var twDL:twDiagListe = twDiagListe(
-				PopUpManager.createPopUp(this, twDiagListe));
-				twDL.params = vn;
-				PopUpManager.centerPopUp(twDL);
-				*/
 				
 				/** il y a avait un bug à cause de la propagation de l'événement au canvas
 				 * merci à http://riaflex.blogspot.fr/2008/02/chartitemeventchange-in-conflict-with.html
@@ -159,28 +167,100 @@
 			
 		}
 		
-		public function dtFunc(e:HitData):String {
-			
-			selectHandi = e.item.id;
-			selectNiv = ColumnSeries(e.element).yField;
-			var nb:Number = Number(e.item[selectNiv]);
-			var tot:Number = Number(e.item.niv0)+Number(e.item.niv1)+Number(e.item.niv2)+Number(e.item.niv3);
-			var pourcent:Number =  Math.round((100/tot)*nb);
-			var s:String;
-			s = "<FONT COLOR='#050505'>" +e.item.id+" : "+e.item.handi+"</FONT>\n";
-			s += "<FONT COLOR='#050505'>" +ColumnSeries(e.element).displayName+" : "+nb+" ("+pourcent+" %)</FONT>\n";
-			s += "<FONT COLOR='#050505'>TOTAL = "+tot+"</FONT>";
+		public function dtFuncA(e:HitData):String {			
+			selectHandi = "auditif";
+			selectNiv = e.item.niv;
+			return getOverString(e.item.label, e.item.value, rsAuditif);
+		}
 
-			return s;
+		public function dtFuncC(e:HitData):String {			
+			selectHandi = "cognitif";
+			selectNiv = e.item.niv;
+			return getOverString(e.item.label, e.item.value, rsCognitif);
+		}
+
+		public function dtFuncM(e:HitData):String {			
+			selectHandi = "moteur";
+			selectNiv = e.item.niv;
+			return getOverString(e.item.label, e.item.value, rsMoteur);
+		}
+
+		public function dtFuncV(e:HitData):String {			
+			selectHandi = "visuel";
+			selectNiv = e.item.niv;
+			return getOverString(e.item.label, e.item.value, rsVisuel);
 		}
 		
-		protected function chart_chartClickHandler(event:ChartEvent):void
+		protected function getOverString(label:String, nb:Number, rs:ArrayCollection):String
+		{
+			var tot:Number = Number(rs[0].value)+Number(rs[1].value)+Number(rs[2].value)+Number(rs[3].value);
+			var pourcent:Number =  Math.round((100/tot)*nb);
+			var s:String;
+			s = "<FONT COLOR='#050505'>"+selectHandi+"</FONT>\n";
+			s += "<FONT COLOR='#050505'>" +label+" : "+nb+" ("+pourcent+" %)</FONT>\n";
+			s += "<FONT COLOR='#050505'>TOTAL = "+tot+"</FONT>";
+			return s;			
+		}
+		
+		
+		protected function enrDiagExt_clickHandler(event:MouseEvent):void
+		{
+			var arrParams:Array = new Array();
+			arrParams["id_entreprise"]=gmEnt.cb.selectedItem.id_entreprise;
+			arrParams["source"]=tiSource.text;
+			arrParams["auditif"]=cbAuditif.selectedLabel;
+			arrParams["cognitif"]=cbCognitif.selectedLabel;
+			arrParams["moteur"]=cbMoteur.selectedLabel;
+			arrParams["visuel"]=cbVisuel.selectedLabel;				
+			if(idDiagExt){
+				ro.edit(idDiagExt, arrParams, "Models_DbTable_Gevu_diagext",this.parentApplication.idBase);
+			}else{
+				arrParams["id_lieu"]=idLieu;				
+				ro.ajoutDiagExt(arrParams, this.parentApplication.idExi, this.parentApplication.idBase);					
+			}
+		}
+		
+		protected function saveDiagExt_resultHandler(event:ResultEvent):void
+		{
+			idDiagExt = event.result as int;
+			
+		}
+
+		private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+			var str:String;
+			str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+				"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+				"String: "+fault.fault.faultString.toString()+"\n";
+			
+			if (os!="")
+				os = " - "+os;
+			Alert.show(str, "FaultHandlerService"+os);
+		}
+		
+		protected function edit_resultHandler(event:ResultEvent):void
 		{
 			// TODO Auto-generated method stub
 			
 		}
 		
 	]]></mx:Script>
+	<mx:RemoteObject id="ro"
+					 source="GEVU_Diagnostique" destination="zend" 
+					 showBusyCursor="true"
+					 fault="faultHandlerService(event, this.label);"			
+					 >
+		<mx:method name="ajoutDiagExt" result="saveDiagExt_resultHandler(event)" />
+		<mx:method name="edit" result="edit_resultHandler(event)" />
+	</mx:RemoteObject>
+
+	
+	<mx:ArrayCollection id="acLettre">
+		<mx:String>-</mx:String>
+		<mx:String>A</mx:String>
+		<mx:String>B</mx:String>
+		<mx:String>C</mx:String>
+		<mx:String>D</mx:String>
+	</mx:ArrayCollection>
 	
 	<!-- Define custom colors for use as fills. -->
 	<mx:SolidColor id="sc0" color="green" alpha=".8"/>
@@ -195,69 +275,121 @@
 	<mx:Stroke id="s3" color="red" weight="2"/>
 
 	<mx:HBox height="100%" width="100%" >
-		<mx:VBox label="Diagnostic" height="320" >
-			<mx:HBox>
-				<mx:Label text="Diag. performance accessibilité :" /><mx:TextInput text=""/>
+		<mx:VBox label="Diagnostic" height="100%" >
+			<mx:HBox paddingLeft="6" >
+				<mx:VBox horizontalAlign="center" >
+					<mx:Label text="Auditif" />
+					<mx:Image id="imgAlphaAudio" source="{BIcon}" width="60" />
+					<mx:PieChart id="graphAuditif"
+								 dataProvider="{rsAuditif}"
+								 showDataTips="true"
+								 height="100" width="100"
+								 color="black"
+								 click="chart_changeHandler(event)"
+								 dataTipFunction="dtFuncA"
+								 >
+						<mx:series>
+							<mx:PieSeries
+								selectable="true"
+								field="value"
+								nameField="label"
+								labelPosition="inside"
+								fills="{[sc0, sc1, sc2, sc3]}"
+								/>
+						</mx:series>
+					</mx:PieChart>
+				</mx:VBox>
+				<mx:VBox horizontalAlign="center" >
+					<mx:Label text="Cognitif" />
+					<mx:Image id="imgAlphaCog" source="{BIcon}" width="60" />
+					<mx:PieChart id="graphCognitif"
+								 dataProvider="{rsCognitif}"
+								 showDataTips="true"
+								 height="100" width="100"
+								 color="black"
+								 click="chart_changeHandler(event)"
+								 dataTipFunction="dtFuncC"
+								 >
+						<mx:series>
+							<mx:PieSeries
+								selectable="true"
+								field="value"
+								nameField="label"
+								labelPosition="inside"
+								fills="{[sc0, sc1, sc2, sc3]}"
+								/>
+						</mx:series>
+					</mx:PieChart>
+				</mx:VBox>
+				<mx:VBox horizontalAlign="center" >
+					<mx:Label text="Moteur" />
+					<mx:Image id="imgAlphaMoteur" source="{BIcon}" width="60" />
+					<mx:PieChart id="graphMoteur"
+								 dataProvider="{rsMoteur}"
+								 showDataTips="true"
+								 height="100" width="100"
+								 color="black"
+								 click="chart_changeHandler(event)"
+								 dataTipFunction="dtFuncM"
+								 >
+						<mx:series>
+							<mx:PieSeries
+								selectable="true"
+								field="value"
+								nameField="label"
+								labelPosition="inside"
+								fills="{[sc0, sc1, sc2, sc3]}"
+								/>
+						</mx:series>
+					</mx:PieChart>
+				</mx:VBox>
+				<mx:VBox horizontalAlign="center" >
+					<mx:Label text="Visuel" />
+					<mx:Image id="imgAlphaVisu" source="{BIcon}" width="60" />
+					<mx:PieChart id="graphVisuel"
+								 dataProvider="{rsVisuel}"
+								 showDataTips="true"
+								 height="100" width="100"
+								 color="black"
+								 click="chart_changeHandler(event)"
+								 dataTipFunction="dtFuncV"
+								 >
+						<mx:series>
+							<mx:PieSeries
+								selectable="true"
+								field="value"
+								nameField="label"
+								labelPosition="inside"
+								fills="{[sc0, sc1, sc2, sc3]}"
+								/>
+						</mx:series>
+					</mx:PieChart>
+				</mx:VBox>
 			</mx:HBox>
-			<mx:HBox paddingLeft="70" visible="false" height="0" >
-				<mx:Label id="TauxCalc" />
-				<mx:Image id="imgAudio" source="{AudioIcon}" width="60" />
-				<mx:Image id="imgCog" source="{CogIcon}" width="60" />
-				<mx:Image id="imgMoteur" source="{MoteurIcon}" width="60" />
-				<mx:Image id="imgVisu" source="{VisuIcon}" width="60" />
-			</mx:HBox>
+			<mx:Panel id="pDiagExt" title="Diagnotics extérieur" width="100%">
+				<mx:VBox paddingLeft="6" paddingBottom="3" paddingTop="3" paddingRight="6" width="100%">
+					<mx:HBox verticalAlign="middle" width="100%" >
+						<mx:VBox horizontalAlign="center" width="100%" >							
+							<mx:Label text="auditif" /><mx:ComboBox id="cbAuditif" dataProvider="{acLettre}" />
+						</mx:VBox>
+						<mx:VBox horizontalAlign="center" width="100%" >							
+							<mx:Label text="cognitif" /><mx:ComboBox id="cbCognitif" dataProvider="{acLettre}" />
+						</mx:VBox>
+						<mx:VBox horizontalAlign="center" width="100%" >							
+							<mx:Label text="moteur" /><mx:ComboBox id="cbMoteur" dataProvider="{acLettre}" />
+						</mx:VBox>
+						<mx:VBox horizontalAlign="center" width="100%" >							
+							<mx:Label text="visuel" /><mx:ComboBox id="cbVisuel" dataProvider="{acLettre}" />						
+						</mx:VBox>
+					</mx:HBox>
+					<mx:HBox verticalAlign="middle" width="100%" >
+						<mx:Label text="source :" /><mx:TextInput id="tiSource" text="" width="100%"/>
+					</mx:HBox>
+					<compo:cbGroupeMot id="gmEnt" width="100%" labelName="nom" titre="une entreprise" keyName="id_entreprise" bAjout="false"  objName="Models_DbTable_Gevu_entreprises" />												
+					<mx:Button label="Enregistrer" click="enrDiagExt_clickHandler(event)" />
+				</mx:VBox>
+			</mx:Panel>
 			
-			<mx:ColumnChart id="chart" 
-							dataProvider="{rsEtatDiag}" 
-							type="stacked"
-							showDataTips="true"
-							dataTipFunction="dtFunc"
-							 change="chart_changeHandler(event)"
-							
-							selectionMode="single"
-							width="320" height="200"
-							>
-				<mx:horizontalAxis>
-					<mx:CategoryAxis id="h1" categoryField="id" />
-				</mx:horizontalAxis>
-				<mx:series>
-					<mx:ColumnSeries 
-						xField="id" 
-						yField="niv0" 
-						displayName="Critères valides"
-						fill="{sc0}"
-						stroke="{s0}"
-						selectable="true"
-						/>
-					<mx:ColumnSeries 
-						xField="id" 
-						yField="niv1" 
-						displayName="Obstacles niveau 1"
-						fill="{sc1}"
-						stroke="{s1}"
-						/>
-					<mx:ColumnSeries 
-						xField="id" 
-						yField="niv2" 
-						displayName="Obstacles niveau 2"
-						fill="{sc2}"
-						stroke="{s2}"
-						/>
-					<mx:ColumnSeries 
-						xField="id" 
-						yField="niv3" 
-						displayName="Obstacles niveau 3"
-						fill="{sc3}"
-						stroke="{s3}"
-						/>
-				</mx:series>
-			</mx:ColumnChart>
-			<mx:HBox paddingLeft="54" >
-				<mx:Image id="imgAlphaAudio" source="{BIcon}" width="60" />
-				<mx:Image id="imgAlphaCog" source="{CIcon}" width="60" />
-				<mx:Image id="imgAlphaMoteur" source="{AIcon}" width="60" />
-				<mx:Image id="imgAlphaVisu" source="{DIcon}" width="60" />		
-			</mx:HBox>
 		</mx:VBox>
 		<mx:VBox id="details" height="100%" width="100%">
 		</mx:VBox>

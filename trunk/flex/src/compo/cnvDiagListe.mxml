@@ -196,13 +196,70 @@
 				imaVi.autoLoad = true;
 				hb.addChild(imaVi);
 				vb.addChild(hb);
-				
+
+				//ajout les droits
+				var imaDr:Image = new Image;
+				imaDr.source= getImgReg(crit.typeCrit, crit.droitCrit);
+				imaDr.autoLoad = true;
+				hb.addChild(imaDr);
+
+				vb.addChild(hb);
 				var t:HRule = new HRule();
 				vb.addChild(t);
 				
 				return vb;
 				
 			}
+
+			function getImgReg(type:String, regle:String):String
+			{
+				/**
+				 1	Réglementaire
+				 3	Souhaitable
+				 **/		
+				if(type=="3"){
+					type="S";
+				}else{
+					type="R";
+				}
+				var path:String = '';
+				/**
+				 2	ERP_IOP
+				 3	ERP_IOP existant
+				 4	Travail
+				 5	Voirie
+				 6	Modalité particulière
+				 7	Logement
+				 **/
+				if(regle=="2"){
+					path = type+'ERP.png';
+				}
+				if(regle=="3"){
+					path = type+'ERPexistant.png';
+				}
+				if(regle=="5"){
+					path = type+'VOIRIE.png';
+				}
+				if(regle=="7"){
+					path = type+'LOGEMENT.png';
+				}
+				if(regle=="4"){
+					path = type+'CT.png';
+				}
+				if(regle=="6"){
+					path = type+'MODPART.png';
+				}
+				if(regle=="2-3" || regle=="2-3-6" || regle=="2-3-6-7" || regle=="2-3-7" || regle=="2-6-7" || regle=="2-7" || regle=="3-6" || regle=="3-6-7"){
+					path = type+regle+'.png';
+				}		
+				if(path==''){
+					path = 'check_no.png';
+				}
+				
+				return 'images/'+path;
+				//return WEB_ROOT.$path;
+				
+			}				
 			
         ]]>
     </mx:Script>

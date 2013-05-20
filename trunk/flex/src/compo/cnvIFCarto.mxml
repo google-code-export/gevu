@@ -9,7 +9,7 @@
 		import mx.controls.Alert;
 		
 		[Bindable]	public var rsCarto:Object;
-		[Bindable]	public var urlCarto:String="carto.html";
+		[Bindable]	public var urlCarto:String="cartoIGN.html";
 		
 		public function callChangeGeo():void {		
 			cartoIFrame.callIFrameFunction('addMarker', [rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib, rsCarto.sw, rsCarto.ne], handleChangeGeo);
