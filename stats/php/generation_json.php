@@ -11,12 +11,11 @@ GROUP BY Type_Logement';
 		{
 			die('Invalid query: ' . mysql_error());
 		}
+	$rs = @mysql_fetch_assoc($result);
 		
-$dom = new DOMDocument('1.0', 'UTF-8'); //On créer un nouveau document en utf8
+	$jsonOutput = json_encode($rs,JSON_FORCE_OBJECT); //JSON_FORCE_OBJECT pour tableau non associatif sous forme d'objet.
 
-echo json_encode($query,JSON_FORCE_OBJECT); //JSON_FORCE_OBJECT pour tableau non associatif sous forme d'objet.
+	header('Content-type: application/json');
+	echo $jsonOutput; //Pour sortir le fichier en json
 
-$jsonOutput = $dom->saveJSON(); 
-header('Content-type: application/json');
-echo $jsonOutput; //Pour sortir le fichier en json
 ?>
