@@ -11,12 +11,13 @@ GROUP BY Type_Logement';
 		{
 			die('Invalid query: ' . mysql_error());
 		}
+	$rs["name"] = "Alcéane";
 	while ($row = @mysql_fetch_assoc($result))
 	{
-		$rs[] = $row;		
+		$rs["children"][] = array("name"=>"Antenne - BL","ref"=>"BL","children"=>$row);		
 	}
 		
-	$jsonOutput = json_encode($rs,JSON_FORCE_OBJECT); //JSON_FORCE_OBJECT pour tableau non associatif sous forme d'objet.
+	$jsonOutput = json_encode($rs); //JSON_FORCE_OBJECT pour tableau non associatif sous forme d'objet.
 
 	header('Content-type: application/json');
 	echo $jsonOutput; //Pour sortir le fichier en json
