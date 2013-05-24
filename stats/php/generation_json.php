@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 
 require_once 'codes.php';
 
-	$query = 'SELECT Type_Logement, COUNT(Type_Logement) 
+	$query = 'SELECT Type_Logement, COUNT(Type_Logement) as size
 FROM gevu_stats
 GROUP BY Type_Logement';
 
