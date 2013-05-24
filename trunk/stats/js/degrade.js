@@ -1,17 +1,17 @@
 var colors = [], z = []; //On créer 2 tableaux colors et z
 colors['UN'] = ["#FB0000", "#007D00"]; //La valeur UN de colors prend un min et un max
 
-	var dataTexte = [{"id":"0","name":"0      -      100 %"}];
+	var dataTexte = [{"id":"0","name":"0 - 100 %"}];
 	var dataCarre = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
-	var dataCouleur = [{"id":"1","ref":"UN","name":"0      -      100 %","value":dataCarre}] //On créer 3 variables dataTexte, dataCarre, dataCouleur 
+	var dataCouleur = [{"id":"1","ref":"UN","name":"0 - 100 %","value":dataCarre}] //On créer 3 variables dataTexte, dataCarre, dataCouleur 
 
 function getLegende(){ //On créer une fonction getLegende qui prend une hauteur et une largeur de 500 px. A cette légende, on lui ajoute un dégradé linéaire qui prend le min et le max
 
-var wL = 500, hL = 500;
+var wL = 200, hL = 200;
 	var visLeg = d3.select("#degrade").append("svg")
 	.attr("width", wL)
 	.attr("height", hL)
-	.attr("viewBox", "0 0 1860 1700")
+	.attr("viewBox", "0 0 1900 1700")
 	.attr("preserveAspectRatio", "xMidYMid meet")
 	.append("g")
 		.attr("id","gLeg")
@@ -74,6 +74,7 @@ var wL = 500, hL = 500;
 	    	.attr("transform", "translate(0,-30)")
 	    	.attr("class", "txtLeg")
 	    	.attr("font-size", "30")
+	    	.attr("font", "black")
 	    	.append("textPath")
 	         	.attr("xlink:href", function(d) { 
 				  	return "#" + d.id; 

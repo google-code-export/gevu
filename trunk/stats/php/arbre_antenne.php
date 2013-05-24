@@ -7,8 +7,9 @@
     <link type="text/css" rel="stylesheet" href="../css/button.css"/>
     <link type="text/css" rel="stylesheet" href="../css/frise_arbre_antenne.css"/>
     <script type="text/javascript" src="../js/degrade.js"></script>
-		<Big><b> Données des antennes par rapport aux autres antennes</b></big>
-		<link type="text/css" rel="stylesheet" href="../css/arriere_plan.css"/>
+		<Big><b>Données générales sur le patrimoine par antenne</b></big>
+		<h5><i>La couleur du texte correspond au rapport avec les autres antennes et suit l'échelle suivante :</i></h1>
+		<link type="text/css" rel="stylesheet" href="../css/arriere_plan_arbre_antenne.css"/>
     <style type="text/css">
 
 .node circle {
@@ -31,7 +32,9 @@ path.link {
     </style>
   </head>
   <body>
+  	<div id="degrade" align="center"></div>
     <div id="chart"></div>
+
     <script type="text/javascript">
 
 
@@ -193,5 +196,4 @@ function click(d) {
 
     </script>
   </body>
-    <table align="left"><div id="degrade"></div></table><br>
 </html>
