@@ -11,7 +11,10 @@ GROUP BY Type_Logement';
 		{
 			die('Invalid query: ' . mysql_error());
 		}
-	$rs = @mysql_fetch_assoc($result);
+	while ($row = @mysql_fetch_assoc($result))
+	{
+		$rs[] = $row;		
+	}
 		
 	$jsonOutput = json_encode($rs,JSON_FORCE_OBJECT); //JSON_FORCE_OBJECT pour tableau non associatif sous forme d'objet.
 
