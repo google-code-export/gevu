@@ -79,7 +79,7 @@ GROUP BY Occupation, Categorie_Module';
 			//on ajoute les donnée dans le tableau
 			$data["children"][] = array("name"=>$row["name"],"size"=>$row["size"]);
 			//on calcule la somme de la caractéristique
-			if(isset($row["name"]))$rsTotal[$row["name"]] += $row["size"];
+			if(isset($rsTotal[$row["name"]]))$rsTotal[$row["name"]] += $row["size"];
 			else $rsTotal[$row["name"]] = $row["size"];
 		}
 		//on ajoute le tableau dans le tableau global
