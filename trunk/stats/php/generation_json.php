@@ -65,17 +65,18 @@ GROUP BY Occupation, Categorie_Module';
 		{
 			if($refA != $row["ref"])
 				if($refA != ""){
-				//on ajoute le tableau dans le tableau global
-				for ($i = 0; $i < count($rs["children"]); $i++) {
-					if($rs["children"][$i]["ref"]==$refA){
-						$rs["children"][$i]["children"] = $data;
-					}						
+					//on ajoute le tableau dans le tableau global
+					for ($i = 0; $i < count($rs["children"]); $i++) {
+						if($rs["children"][$i]["ref"]==$refA){
+							$rs["children"][$i]["children"] = $data;
+						}						
+					}
+				}else{
+					//on crée le tableau correspondant à l'antenne
+					$data = array("name"=>$nom, "children"=>array());
 				}
 				$refA = $row["ref"];
-			}else{
-				//on crée le tableau correspondant à l'antenne
-				$data = array("name"=>$nom, "children"=>array());
-			}
+			}	
 			//on ajoute les donnée dans le tableau
 			$data["children"][] = array("name"=>$row["name"],"size"=>$row["size"]);
 			//on calcule la somme de la caractéristique
