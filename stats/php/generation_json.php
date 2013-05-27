@@ -63,7 +63,7 @@ GROUP BY Occupation, Categorie_Module';
 		$refA = "";
 		while ($row = @mysql_fetch_assoc($result))
 		{
-			if($refA != $row["ref"])
+			if($refA != $row["ref"]){
 				if($refA != ""){
 					//on ajoute le tableau dans le tableau global
 					for ($i = 0; $i < count($rs["children"]); $i++) {
@@ -71,10 +71,9 @@ GROUP BY Occupation, Categorie_Module';
 							$rs["children"][$i]["children"] = $data;
 						}						
 					}
-				}else{
-					//on crée le tableau correspondant à l'antenne
-					$data = array("name"=>$nom, "children"=>array());
 				}
+				//on crée le tableau correspondant à l'antenne
+				$data = array("name"=>$nom, "children"=>array());
 				$refA = $row["ref"];
 			}	
 			//on ajoute les donnée dans le tableau
