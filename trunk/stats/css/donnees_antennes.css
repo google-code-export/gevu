@@ -1,0 +1,15 @@
+body { 
+    background-color:#FCC212;
+    font-size:15px;
+    text-align:center;
+	font-family:cursive;
+	font-weight: bold;
+}
+
+text {
+    font-size:22px;
+    text-align:center;
+	font-family:cursive;
+	font-weight: bold;
+	color:red;
+}
