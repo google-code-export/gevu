@@ -7,17 +7,20 @@ FROM gevu_stats
 GROUP BY Type_Logement, Type_financement, Occupation';*/
 //WHERE id_lieu in (3,3520,8404,13311,17064)
 
-	$query = 'SELECT id_lieu, Type_Logement as "Name : Type Logement", COUNT(Type_Logement) as size
+	$query = 'SELECT Type_Logement as "Name : Type Logement", COUNT(Type_Logement) as size
 FROM gevu_stats
 GROUP BY Type_Logement';
+/*SELECT ref, Type_Logement as "Name : Type Logement", COUNT(Type_Logement) as size
+FROM gevu_stats s inner join gevu_antennes a on a.id_lieu = s.id_lieu
+GROUP BY Type_Logement*/
 
-	$query1 = 'SELECT id_lieu, Type_financement as "Name : Type Financement", count(Type_financement) as size
+	$query1 = 'SELECT Type_financement as "Name : Type Financement", count(Type_financement) as size
 FROM gevu_stats
 GROUP BY Type_financement';
 
-	$query2 = 'SELECT id_lieu Occupation as "Name : Occupation", count(Occupation) as size
+	$query2 = 'SELECT Categorie_Module, Occupation AS  "Name : Occupation", COUNT( Occupation ) AS size
 FROM gevu_stats
-GROUP BY Occupation';
+GROUP BY Occupation, Categorie_Module';
 
 	$result = mysql_query($query);
 		if (!$result) 
