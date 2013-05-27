@@ -39,7 +39,6 @@ if(isset($_GET["idLieu"])){
 		<title>Streetview + kml</title>
 		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 		<script type="text/javascript" src="../js/jquery.min.js"></script>
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript" src="../js/d3.v2.js"></script>
 		<u><text>Surface des antennes</text></u><br><br>
 		<style type="text/css">
@@ -195,10 +194,6 @@ function addPolygoneByCoor(ctaLayer, couleur) {
 		   place = response.Placemark[0];
 		   point = new GLatLng(place.Point.coordinates[1],
 		                       place.Point.coordinates[0]);
-		   //marker = new GMarker(point);
-		   //maCarte.addOverlay(marker);
-		   //marker.openInfoWindowHtml(place.address + '<br>' +
-		     //'<b>Pays :</b> ' + place.AddressDetails.Country.CountryNameCode);
 		 }
 		}
 
