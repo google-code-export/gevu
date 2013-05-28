@@ -57,7 +57,7 @@ var vis = d3.select("#chart").append("svg")
   .append("g")
     .attr("transform", "translate(" + m[3] + "," + m[0] + ")"); //On créer une variable vis à laquelle on sélectionne un graphique où l'on ajoute un svg qui prend les hauteurs et largeurs affichées
 
-d3.json("../data_antenne/donnees.json", function(json) { //On créer une fonction json qui prend les données d'un fichier json
+d3.json("../php/generation_json.php", function(json) { //On créer une fonction json qui prend les données d'un fichier json
   root = json;
   root.x0 = h / 2;
   root.y0 = 0;
