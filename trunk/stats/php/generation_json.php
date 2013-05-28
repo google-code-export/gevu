@@ -33,7 +33,7 @@ GROUP BY Type_Logement*/
 	$nom = "Types et nombres de logements";
 	getData($query, $nom);
 	
-	/*$query1 = 'SELECT a.id_lieu, a.ref, la.lib, la.lft, la.rgt, COUNT( DISTINCT s.id_stat ) AS size, s.Type_financement AS name
+	$query1 = 'SELECT a.id_lieu, a.ref, la.lib, la.lft, la.rgt, COUNT( DISTINCT s.id_stat ) AS size, s.Type_financement AS name
 FROM gevu_antennes a
 INNER JOIN gevu_lieux la ON la.id_lieu = a.id_lieu
 INNER JOIN gevu_lieux lg ON lg.lft
@@ -44,7 +44,7 @@ WHERE a.ref !=  ""
 GROUP BY a.id_lieu, s.Type_financement
 ORDER BY ref';
 	$nom1 = "Types de financement";
-	getData1($query1, $nom1);
+	financement($query1, $nom1);
 	
 	$query2 = 'SELECT a.id_lieu, a.ref, la.lib, la.lft, la.rgt, COUNT( DISTINCT s.id_stat ) AS size, s.Occupation AS name
 FROM gevu_antennes a
@@ -57,7 +57,7 @@ WHERE a.ref !=  ""
 GROUP BY a.id_lieu, s.Occupation
 ORDER BY ref';
 	$nom2 = "Occupation";
-	getData2($query2, $nom2);*/
+	occupation($query2, $nom2);
 	
 	/*
 	$query = 'SELECT Type_financement as "Name : Type Financement", count(Type_financement) as size
@@ -102,7 +102,7 @@ GROUP BY Occupation, Categorie_Module';
 				$data = array("name"=>$nom, "children"=>array());
 				$refA = $row["ref"];
 			}	
-			//on ajoute les donnée dans le tableau
+			//on ajoute les données dans le tableau
 			$data["children"][] = array("name"=>$row["name"],"size"=>$row["size"]);
 			//on calcule la somme de la caractéristique
 			if(isset($rsTotal[$row["name"]]))$rsTotal[$row["name"]] += $row["size"];
@@ -118,7 +118,7 @@ GROUP BY Occupation, Categorie_Module';
 	
 	}
 	
-	/*function getData1($query1, $nom1){
+	function financement($query1, $nom1){
 		global $rs;
 		$rsTotal = array();		
 		$result = mysql_query($query1);
@@ -140,7 +140,7 @@ GROUP BY Occupation, Categorie_Module';
 					}
 				}
 				//on crée le tableau correspondant à l'antenne
-				$data = array("name"=>$nom, "children"=>array());
+				$data = array("name"=>$nom1, "children"=>array());
 				$refA = $row["ref"];
 			}	
 			//on ajoute les donnée dans le tableau
@@ -157,5 +157,46 @@ GROUP BY Occupation, Categorie_Module';
 		}
 		//on ajoute la somme dans le tableau
 	
-	}	*/
+	}
+
+	function occupation($query2, $nom2){
+		global $rs;
+		$rsTotal = array();		
+		$result = mysql_query($query2);
+		if (!$result)
+		{
+			die('Invalid query: ' . mysql_error());
+		}
+	
+		$refA = "";
+		while ($row = @mysql_fetch_assoc($result))
+		{
+			if($refA != $row["ref"]){
+				if($refA != ""){
+					//on ajoute le tableau dans le tableau global
+					for ($i = 0; $i < count($rs["children"]); $i++) {
+						if($rs["children"][$i]["ref"]==$refA){
+							$rs["children"][$i]["children"] = $data;
+						}						
+					}
+				}
+				//on crée le tableau correspondant à l'antenne
+				$data = array("name"=>$nom2, "children"=>array());
+				$refA = $row["ref"];
+			}	
+			//on ajoute les donnée dans le tableau
+			$data["children"][] = array("name"=>$row["name"],"size"=>$row["size"]);
+			//on calcule la somme de la caractéristique
+			if(isset($rsTotal[$row["name"]]))$rsTotal[$row["name"]] += $row["size"];
+			else $rsTotal[$row["name"]] = $row["size"];
+		}
+		//on ajoute le tableau dans le tableau global
+		for ($i = 0; $i < count($rs["children"]); $i++) {
+			if($rs["children"][$i]["ref"]==$refA){
+				$rs["children"][$i]["children"] = $data;
+			}
+		}
+		//on ajoute la somme dans le tableau
+	
+	}		
 ?>
