@@ -144,7 +144,7 @@ GROUP BY Occupation, Categorie_Module';
 				$refB = $row1["ref"];
 			}	
 			//on ajoute les donnée dans le tableau
-			$data["children"][] = array("name"=>$row1["name"],"size"=>$row1["size"]);
+			$data["children"][] = array("name"=>$row1["name"],"size"=>$row1["size"],"total"=>$row["ref"].$row["size"]+$row["size"]+$row["size"]+$row["size"]+$row["size"]);
 			//on calcule la somme de la caractéristique
 			if(isset($rsTotal1[$row1["name"]]))$rsTotal1[$row1["name"]] += $row1["size"];
 			else $rsTotal1[$row1["name"]] = $row1["size"];
@@ -185,7 +185,7 @@ GROUP BY Occupation, Categorie_Module';
 				$refC = $row2["ref"];
 			}	
 			//on ajoute les donnée dans le tableau
-			$data["children"][] = array("name"=>$row2["name"],"size"=>$row2["size"]);
+			$data["children"][] = array("name"=>$row2["name"],"size"=>$row2["size"],"total"=>$row["ref"].$row["size"]+$row["size"]+$row["size"]+$row["size"]+$row["size"]);
 			//on calcule la somme de la caractéristique
 			if(isset($rsTotal2[$row2["name"]]))$rsTotal2[$row2["name"]] += $row2["size"];
 			else $rsTotal2[$row2["name"]] = $row2["size"];
