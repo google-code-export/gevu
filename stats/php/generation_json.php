@@ -2,16 +2,6 @@
 
 require_once 'codes.php';
 
-	/*$query = 'SELECT id_lieu, Type_Logement, COUNT(Type_Logement) as size, Type_financement, count(Type_financement) as size,Occupation, count(Occupation) as size
-FROM gevu_stats
-GROUP BY Type_Logement, Type_financement, Occupation';*/
-//WHERE id_lieu in (3,3520,8404,13311,17064)
-
-/*SELECT ref, Type_Logement as "Name : Type Logement", COUNT(Type_Logement) as size
-FROM gevu_stats s inner join gevu_antennes a on a.id_lieu = s.id_lieu
-GROUP BY Type_Logement*/
-
-
 	$rs["name"] = "Alcéane";
 	$rs["children"][] = array("name"=>"Antenne - BL","ref"=>"BL","children"=>array());
 	$rs["children"][] = array("name"=>"Antenne - CA","ref"=>"CA","children"=>array());
@@ -33,7 +23,7 @@ GROUP BY Type_Logement*/
 	$nom = "Types et nombres de logements";
 	getData($query, $nom);
 	
-/*	$query1 = 'SELECT a.id_lieu, a.ref, la.lib, la.lft, la.rgt, COUNT( DISTINCT s.id_stat ) AS size, s.Type_financement AS name
+	$query1 = 'SELECT a.id_lieu, a.ref, la.lib, la.lft, la.rgt, COUNT( DISTINCT s.id_stat ) AS size, s.Type_financement AS name
 FROM gevu_antennes a
 INNER JOIN gevu_lieux la ON la.id_lieu = a.id_lieu
 INNER JOIN gevu_lieux lg ON lg.lft
@@ -57,19 +47,7 @@ WHERE a.ref !=  ""
 GROUP BY a.id_lieu, s.Occupation
 ORDER BY ref';
 	$nom2 = "Occupation";
-	occupation($query2, $nom2);*/
-	
-	/*
-	$query = 'SELECT Type_financement as "Name : Type Financement", count(Type_financement) as size
-FROM gevu_stats
-GROUP BY Type_financement';
-	getData($query);
-	
-	$query = 'SELECT Categorie_Module, Occupation AS  "Name : Occupation", COUNT( Occupation ) AS size
-FROM gevu_stats
-GROUP BY Occupation, Categorie_Module';
-	getData($query);
-	*/
+	occupation($query2, $nom2);
 	
 	$jsonOutput = json_encode($rs); //JSON_FORCE_OBJECT pour tableau non associatif sous forme d'objet.
 
@@ -118,7 +96,7 @@ GROUP BY Occupation, Categorie_Module';
 			//voir ajout des données dans tableau
 	}
 	
-/*	function financement($query1, $nom1){
+	function financement($query1, $nom1){
 		global $rs;
 		$rsTotal1 = array();		
 		$result1 = mysql_query($query1);
@@ -144,7 +122,7 @@ GROUP BY Occupation, Categorie_Module';
 				$refB = $row1["ref"];
 			}	
 			//on ajoute les donnée dans le tableau
-			$data["children"][] = array("name"=>$row1["name"],"size"=>$row1["size"],"total"=>$row["ref"].$row["size"]+$row["size"]+$row["size"]+$row["size"]+$row["size"]);
+			$data["children"][] = array("name"=>$row1["name"],"size"=>$row1["size"],"total"=>$row["size"]+$row["size"]+$row["size"]+$row["size"]+$row["size"]);
 			//on calcule la somme de la caractéristique
 			if(isset($rsTotal1[$row1["name"]]))$rsTotal1[$row1["name"]] += $row1["size"];
 			else $rsTotal1[$row1["name"]] = $row1["size"];
@@ -185,7 +163,7 @@ GROUP BY Occupation, Categorie_Module';
 				$refC = $row2["ref"];
 			}	
 			//on ajoute les donnée dans le tableau
-			$data["children"][] = array("name"=>$row2["name"],"size"=>$row2["size"],"total"=>$row["ref"].$row["size"]+$row["size"]+$row["size"]+$row["size"]+$row["size"]);
+			$data["children"][] = array("name"=>$row2["name"],"size"=>$row2["size"],"total"=>$row["size"]+$row["size"]+$row["size"]+$row["size"]+$row["size"]);
 			//on calcule la somme de la caractéristique
 			if(isset($rsTotal2[$row2["name"]]))$rsTotal2[$row2["name"]] += $row2["size"];
 			else $rsTotal2[$row2["name"]] = $row2["size"];
@@ -198,5 +176,10 @@ GROUP BY Occupation, Categorie_Module';
 		}
 		//on ajoute la somme dans le tableau
 	
-	}	*/
+	}	
+	
+	function document(){
+	$doc = array (getData+financement+occupation);
+	}
+	document();
 ?>
