@@ -19,10 +19,10 @@ include "grillesconfig.as";
 
 [Bindable]
 public var dataArr:ArrayCollection = new ArrayCollection();
-[Bindable]
-public var exi:Object;
+[Bindable] public var exi:Object;
 [Bindable] public var idExi:String = "";
 [Bindable] public var idScenar:int;
+[Bindable] public var idBase:String = "gevu_new";
 
 public var uidCopie:String;
 

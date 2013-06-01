@@ -27,6 +27,10 @@
 						<ns2:dgExis id="dgExis" bInsert="false" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
 					</mx:Canvas>
 					
+					<mx:Canvas id="tabCont" label="Contrôles" width="100%" height="100%" activate="true">
+						<ns2:dgControles id="dgCont" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
+					</mx:Canvas>
+
 					<mx:Canvas id="tabCrit" label="Critères" width="100%" height="100%" activate="true">
 						<ns2:dgCriteres id="dgCritere" endPoint="{ENDPOINT_SERVICE}" width="100%" height="100%" />										
 					</mx:Canvas>

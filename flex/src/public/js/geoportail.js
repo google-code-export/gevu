@@ -30,6 +30,10 @@ function ajoutMarker(){
             'description': "",
             externalGraphic:urlPicto	
         };
+    var center = new OpenLayers.LonLat(0.112063743398919, 49.52400026608731).transform(
+            new OpenLayers.Projection("EPSG:4326"),
+            viewer.getProjectionObject()
+        );
     var geo = new OpenLayers.Geometry.Point(0.112063743398919, 49.52400026608731);
 	var feature = new OpenLayers.Feature.Vector(geo, attributes);
 	vectorLayer.addFeatures(feature);
