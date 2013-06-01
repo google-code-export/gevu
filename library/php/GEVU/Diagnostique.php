@@ -610,10 +610,10 @@ class GEVU_Diagnostique extends GEVU_Site{
 			$arr['EtatDiag'][] = array('id'=>$k,'niv0'=>$v['applicable'],'niv1'=>$r['DiagNon'][0][$k."_1"],'niv2'=>$r['DiagNon'][0][$k."_2"],'niv3'=>$r['DiagNon'][0][$k."_3"],'handi'=>$v[0]);
 		}
 		foreach ($r['handicateur1'] as $k=>$v) {
-			$arr['EtatDiag1'][] = array('id'=>$k,'niv0'=>$v['applicable'],'niv1'=>$r['DiagNon'][0][$k."_1"],'niv2'=>$r['DiagNon'][0][$k."_2"],'niv3'=>$r['DiagNon'][0][$k."_3"],'handi'=>$v[0]);
+			$arr['EtatDiag1'][] = array('id'=>$k,'niv0'=>$v['applicable'],'niv1'=>$r['DiagNon1'][0][$k."_1"],'niv2'=>$r['DiagNon1'][0][$k."_2"],'niv3'=>$r['DiagNon1'][0][$k."_3"],'handi'=>$v[0]);
 		}
 		foreach ($r['handicateur3'] as $k=>$v) {
-			$arr['EtatDiag3'][] = array('id'=>$k,'niv0'=>$v['applicable'],'niv1'=>$r['DiagNon'][0][$k."_1"],'niv2'=>$r['DiagNon'][0][$k."_2"],'niv3'=>$r['DiagNon'][0][$k."_3"],'handi'=>$v[0]);
+			$arr['EtatDiag3'][] = array('id'=>$k,'niv0'=>$v['applicable'],'niv1'=>$r['DiagNon3'][0][$k."_1"],'niv2'=>$r['DiagNon3'][0][$k."_2"],'niv3'=>$r['DiagNon3'][0][$k."_3"],'handi'=>$v[0]);
 		}
 		return $arr;
 	}
@@ -903,8 +903,10 @@ class GEVU_Diagnostique extends GEVU_Site{
 			$this->getDb($idBase);
         	if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
 
+        	if(!isset($params['reg']))$params['reg']=0;
+        	
 	        //récupère les campagnes pour le lieu
-	        $rs = $this->dbD->getDiagliste($params['idLieu'], 1, $params['handi'], $params['niv'], $params['idCrit']);
+	        $rs = $this->dbD->getDiagliste($params['idLieu'], 1, $params['handi'], $params['niv'], $params['idCrit'], $params['reg']);
 	        $nb = count($rs);
 	        $oLieu = -1;
 	        for ($i = 0; $i < $nb; $i++) {
