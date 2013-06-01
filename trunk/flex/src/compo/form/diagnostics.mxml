@@ -362,6 +362,7 @@
 						var dt:Object = new Object;
 						dt.icone = cri.icone;
 						dt.lib = cri.lib;
+						dt.aide = cri.aide;
 						hbCtl.dt = dt;
 						hbCtl.init();
 						return cri;

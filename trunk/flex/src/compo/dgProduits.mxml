@@ -162,6 +162,22 @@ private function fillGridHandler(e:Object, dg:DataGrid):void
 {
 	if(!e)return;
     dg.dataProvider = e.result as Array;
+	
+	var dpCol:ArrayCollection = new ArrayCollection();
+	dpCol.addItem({data:'any', label:'Tout'});
+	dpCol.addItem({data:'ref', label:'Référence'});
+	dpCol.addItem({data:'description', label:'Description'});
+	dpCol.addItem({data:'technique', label:'Technique'});
+	dpCol.addItem({data:'preconisation', label:'Préconisation'});
+	dpCol.addItem({data:'marque', label:'Marque'});
+	dpCol.addItem({data:'LibEntreprise', label:'Entreprise'});
+	dpCol.addItem({data:'url', label:'Site'});
+	dpCol.addItem({data:'modele', label:'Modèle'});
+	dgFilter.dpColumns = dpCol;
+	dgFilter.dpRows = e.result as Array;
+	dg.dataProvider = dgFilter.dpRows;
+	dgFilter.dg = dg;
+	
 }
 
 private function deleteItem():void {
@@ -316,16 +332,23 @@ protected function ajoutInterv_clickHandler(event:MouseEvent):void
 			protected function dgInterv_itemEditEndHandler(event:DataGridEvent):void
 			{
 				var newValue:Number;
-				if(newValue = Number(event.currentTarget.itemEditorInstance.text))
+				if(!Number(event.currentTarget.itemEditorInstance.text) && event.currentTarget.itemEditorInstance.text != "0")
 				{
+					// Prevent the user from removing focus, 
+					// and leave the cell editor open.
+					event.preventDefault();
+					// Write a message to the errorString property. 
+					// This message appears when the user 
+					// mouses over the editor.
+					TextInput(dgInterv.itemEditorInstance).errorString=	"La nouvelle valeur n'est pas un nombre.\nMerci de corriger.";
+					return;					
+				}else{
+					newValue = Number(event.currentTarget.itemEditorInstance.text)
 					var field:String = event.dataField;
 					var selectedID:String = event.currentTarget.selectedItem.id_interv.toString();
 					var vn:Array = new Array();		
 					vn[field] = newValue;
 					ROINT.edit(selectedID, vn);
-				}else{
-					Alert.show("La nouvelle valeur n'est pas un nombre.\nMerci de corriger.","Confirmation Suppression");
-					return;					
 				}
 				
 			}
@@ -394,9 +417,7 @@ protected function ajoutInterv_clickHandler(event:MouseEvent):void
 					<mx:LinkButton id="btnAddNew" click="this.selectedChild = insert;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un produit" />
 					<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un produit" />
 				</mx:HBox>
-				<mx:VBox id="fiche" width="100%" >
-					<mx:HRule/>				
-				</mx:VBox>
+				<ns2:cnvFilterControl id="dgFilter" />
 				<mx:DataGrid 
 					id="dataGrid"
 					editable="false"

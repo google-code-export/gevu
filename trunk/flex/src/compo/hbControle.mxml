@@ -9,6 +9,7 @@
 	>
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.Label;
 			import mx.controls.Text;
 			[Bindable] public var dt:Object;
 			[Bindable] public var imgSrc:String;
@@ -25,8 +26,20 @@
 					imgSrc="images/interrogation.gif";
 				}
 				txt.text = dt.lib;
-				lbl = dt.lib;					
+				lbl = dt.lib;
+				//ajout du bouton d'aide quand c'est nécessaire
+				if(dt.aide!="" && hbTxt.numChildren == 1){
+					var lblAide:Label = new Label;
+					lblAide.text = "(aide)";
+					lblAide.addEventListener(MouseEvent.MOUSE_OVER, showAide);
+					hbTxt.addChild(lblAide);
+				}
 			}
+			public function showAide(event:MouseEvent):void
+			{
+				this.parentApplication.imgLieux.source = "images/"+dt.aide;
+			}
+			
 			public function DoDrag(event:MouseEvent):void{
 				if(bDoDrag){
 					parentApplication.dgScen.beginDragAndDrop(event);
@@ -41,5 +54,7 @@
 		]]>
 	</mx:Script>
 	<mx:Image source="{imgSrc}" toolTip="{lbl}" />
-	<mx:Text id="txt" text="" />
+	<mx:HBox id="hbTxt">
+		<mx:Text id="txt" text="" />		
+	</mx:HBox>
 </mx:VBox>
