@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas label="Statistiques de diagnostic" xmlns:mx="http://www.adobe.com/2006/mxml" 
 	creationComplete="init()" 
-	width="100%" height="100%" xmlns:form="compo.form.*" xmlns:compo="compo.*" 
+	width="100%" height="100%" xmlns:form="compo.form.*" xmlns:compo="compo.*" xmlns:tc="tagcloud.*" xmlns:ns="http://code.google.com/p/flex-iframe/" 
 	>
 	<mx:Script><![CDATA[
 		import compo.cnvDiagListe;
@@ -64,7 +64,7 @@
 		[Bindable]	public var rsVisuel:ArrayCollection;		
 		
 		public function init():void {
-			details.removeAllChildren();
+			//details.removeAllChildren();
 			if(rsDiagExt){
 				idDiagExt = rsDiagExt.id_diagext;
 				gmEnt.keyValue = rsDiagExt.id_entreprise;
@@ -73,10 +73,18 @@
 				cbAuditif.selectedIndex = getLettreIndex(rsDiagExt.auditif);
 				cbCognitif.selectedIndex = getLettreIndex(rsDiagExt.cognitif);
 				cbMoteur.selectedIndex = getLettreIndex(rsDiagExt.moteur);
-				cbVisuel.selectedIndex = getLettreIndex(rsDiagExt.visuel);				
-				
+				cbVisuel.selectedIndex = getLettreIndex(rsDiagExt.visuel);								
+			}else{
+				tiSource.text="";
+				cbAuditif.selectedIndex = 0;
+				cbCognitif.selectedIndex = 0;
+				cbMoteur.selectedIndex = 0;
+				cbVisuel.selectedIndex = 0;								
+				gmEnt.cb.selectedIndex = -1;
 			}
-			TraiteEtatDiag();		
+			//tc.goTagGo();
+			callChangeGeo("");
+			TraiteEtatDiag();
 		}
 		
 		public function getLettreIndex(lettre:String):int
@@ -94,9 +102,20 @@
 			
 			//mise à jour du taux de calcul
 			//TauxCalc.text = "Taux de calcul : "+rsEtatDiag.EtatDiag.TauxCalc;
+			var rs:Array = new Array;
+			statGevu.visible = true;
+			if(cbSou.selected && cbReg.selected)
+				rs = rsEtatDiag.EtatDiag;
+			else if(cbReg.selected)
+				rs = rsEtatDiag.EtatDiag1;
+			else if(cbSou.selected)
+				rs = rsEtatDiag.EtatDiag3;
+			else if(!cbSou.selected && !cbReg.selected)
+				statGevu.visible = false;
+			
 			
 			//mise à jour des icones handicateur
-			for each (var obs:Object in rsEtatDiag)
+			for each (var obs:Object in rs)
 			{
 				if(obs.id=="moteur"){
 					imgAlphaMoteur.source=handi[obs.handi].icon;
@@ -147,10 +166,16 @@
 				vn["niv"] = this.selectNiv;
 				vn["handi"] = this.selectHandi;
 				vn["idLieu"] = this.idLieu;
+				vn["reg"] = 0;
+				if(cbReg.selected)
+					vn["reg"] = 1;
+				else if(cbSou.selected)
+					vn["reg"] = 3;
 				
 				details.removeAllChildren();
 				var cnvListe:cnvDiagListe = new cnvDiagListe();
 				cnvListe.params = vn;
+				cnvListe.tcFunction = callChangeGeo;
 				//cnvListe.mainCtrlWidth = 100;
 				details.addChild(cnvListe);
 				
@@ -242,6 +267,14 @@
 			// TODO Auto-generated method stub
 			
 		}
+		protected function filtreSouReg_changeHandler(event:Event):void
+		{
+			TraiteEtatDiag();	
+		}
+
+		public function callChangeGeo(txt:String):void {		
+			tcIFrame.callIFrameFunction('changeTagCloud', [txt]);
+		}
 		
 	]]></mx:Script>
 	<mx:RemoteObject id="ro"
@@ -276,96 +309,102 @@
 
 	<mx:HBox height="100%" width="100%" >
 		<mx:VBox label="Diagnostic" height="100%" >
-			<mx:HBox paddingLeft="6" >
-				<mx:VBox horizontalAlign="center" >
-					<mx:Label text="Auditif" />
-					<mx:Image id="imgAlphaAudio" source="{BIcon}" width="60" />
-					<mx:PieChart id="graphAuditif"
-								 dataProvider="{rsAuditif}"
-								 showDataTips="true"
-								 height="100" width="100"
-								 color="black"
-								 click="chart_changeHandler(event)"
-								 dataTipFunction="dtFuncA"
-								 >
-						<mx:series>
-							<mx:PieSeries
-								selectable="true"
-								field="value"
-								nameField="label"
-								labelPosition="inside"
-								fills="{[sc0, sc1, sc2, sc3]}"
-								/>
-						</mx:series>
-					</mx:PieChart>
-				</mx:VBox>
-				<mx:VBox horizontalAlign="center" >
-					<mx:Label text="Cognitif" />
-					<mx:Image id="imgAlphaCog" source="{BIcon}" width="60" />
-					<mx:PieChart id="graphCognitif"
-								 dataProvider="{rsCognitif}"
-								 showDataTips="true"
-								 height="100" width="100"
-								 color="black"
-								 click="chart_changeHandler(event)"
-								 dataTipFunction="dtFuncC"
-								 >
-						<mx:series>
-							<mx:PieSeries
-								selectable="true"
-								field="value"
-								nameField="label"
-								labelPosition="inside"
-								fills="{[sc0, sc1, sc2, sc3]}"
-								/>
-						</mx:series>
-					</mx:PieChart>
-				</mx:VBox>
-				<mx:VBox horizontalAlign="center" >
-					<mx:Label text="Moteur" />
-					<mx:Image id="imgAlphaMoteur" source="{BIcon}" width="60" />
-					<mx:PieChart id="graphMoteur"
-								 dataProvider="{rsMoteur}"
-								 showDataTips="true"
-								 height="100" width="100"
-								 color="black"
-								 click="chart_changeHandler(event)"
-								 dataTipFunction="dtFuncM"
-								 >
-						<mx:series>
-							<mx:PieSeries
-								selectable="true"
-								field="value"
-								nameField="label"
-								labelPosition="inside"
-								fills="{[sc0, sc1, sc2, sc3]}"
-								/>
-						</mx:series>
-					</mx:PieChart>
-				</mx:VBox>
-				<mx:VBox horizontalAlign="center" >
-					<mx:Label text="Visuel" />
-					<mx:Image id="imgAlphaVisu" source="{BIcon}" width="60" />
-					<mx:PieChart id="graphVisuel"
-								 dataProvider="{rsVisuel}"
-								 showDataTips="true"
-								 height="100" width="100"
-								 color="black"
-								 click="chart_changeHandler(event)"
-								 dataTipFunction="dtFuncV"
-								 >
-						<mx:series>
-							<mx:PieSeries
-								selectable="true"
-								field="value"
-								nameField="label"
-								labelPosition="inside"
-								fills="{[sc0, sc1, sc2, sc3]}"
-								/>
-						</mx:series>
-					</mx:PieChart>
-				</mx:VBox>
-			</mx:HBox>
+			<mx:Panel title="Diagnotics GEVU" width="100%">
+				<mx:HBox verticalAlign="middle" paddingLeft="6" >
+					<mx:CheckBox id="cbSou" label="Souhaitable" selected="true" change="filtreSouReg_changeHandler(event)" />		
+					<mx:CheckBox id="cbReg" label="Réglementaire" selected="true" change="filtreSouReg_changeHandler(event)" />		
+				</mx:HBox>				
+				<mx:HBox paddingLeft="6" id="statGevu" >
+					<mx:VBox horizontalAlign="center" >
+						<mx:Label text="Auditif" />
+						<mx:Image id="imgAlphaAudio" source="{BIcon}" width="60" />
+						<mx:PieChart id="graphAuditif"
+									 dataProvider="{rsAuditif}"
+									 showDataTips="true"
+									 height="100" width="100"
+									 color="black"
+									 click="chart_changeHandler(event)"
+									 dataTipFunction="dtFuncA"
+									 >
+							<mx:series>
+								<mx:PieSeries
+									selectable="true"
+									field="value"
+									nameField="label"
+									labelPosition="inside"
+									fills="{[sc0, sc1, sc2, sc3]}"
+									/>
+							</mx:series>
+						</mx:PieChart>
+					</mx:VBox>
+					<mx:VBox horizontalAlign="center" >
+						<mx:Label text="Cognitif" />
+						<mx:Image id="imgAlphaCog" source="{BIcon}" width="60" />
+						<mx:PieChart id="graphCognitif"
+									 dataProvider="{rsCognitif}"
+									 showDataTips="true"
+									 height="100" width="100"
+									 color="black"
+									 click="chart_changeHandler(event)"
+									 dataTipFunction="dtFuncC"
+									 >
+							<mx:series>
+								<mx:PieSeries
+									selectable="true"
+									field="value"
+									nameField="label"
+									labelPosition="inside"
+									fills="{[sc0, sc1, sc2, sc3]}"
+									/>
+							</mx:series>
+						</mx:PieChart>
+					</mx:VBox>
+					<mx:VBox horizontalAlign="center" >
+						<mx:Label text="Moteur" />
+						<mx:Image id="imgAlphaMoteur" source="{BIcon}" width="60" />
+						<mx:PieChart id="graphMoteur"
+									 dataProvider="{rsMoteur}"
+									 showDataTips="true"
+									 height="100" width="100"
+									 color="black"
+									 click="chart_changeHandler(event)"
+									 dataTipFunction="dtFuncM"
+									 >
+							<mx:series>
+								<mx:PieSeries
+									selectable="true"
+									field="value"
+									nameField="label"
+									labelPosition="inside"
+									fills="{[sc0, sc1, sc2, sc3]}"
+									/>
+							</mx:series>
+						</mx:PieChart>
+					</mx:VBox>
+					<mx:VBox horizontalAlign="center" >
+						<mx:Label text="Visuel" />
+						<mx:Image id="imgAlphaVisu" source="{BIcon}" width="60" />
+						<mx:PieChart id="graphVisuel"
+									 dataProvider="{rsVisuel}"
+									 showDataTips="true"
+									 height="100" width="100"
+									 color="black"
+									 click="chart_changeHandler(event)"
+									 dataTipFunction="dtFuncV"
+									 >
+							<mx:series>
+								<mx:PieSeries
+									selectable="true"
+									field="value"
+									nameField="label"
+									labelPosition="inside"
+									fills="{[sc0, sc1, sc2, sc3]}"
+									/>
+							</mx:series>
+						</mx:PieChart>
+					</mx:VBox>
+				</mx:HBox>
+			</mx:Panel>				
 			<mx:Panel id="pDiagExt" title="Diagnotics extérieur" width="100%">
 				<mx:VBox paddingLeft="6" paddingBottom="3" paddingTop="3" paddingRight="6" width="100%">
 					<mx:HBox verticalAlign="middle" width="100%" >
@@ -389,9 +428,24 @@
 					<mx:Button label="Enregistrer" click="enrDiagExt_clickHandler(event)" />
 				</mx:VBox>
 			</mx:Panel>
+			<mx:Panel id="pTC" title="Nuage des mots les plus employés dans les critères" width="100%" height="100%" 
+					  horizontalAlign="center" verticalAlign="middle">
+				<mx:Canvas id="posixTag" 
+						   verticalScrollPolicy="off" horizontalScrollPolicy="off" 
+						   width="100%" height="100%">
+					<!--
+					<tc:TagCloud id="tc"
+								 width="{posixTag.width -30}" height="{posixTag.height - 15}"
+								 verticalScrollPolicy="off" horizontalScrollPolicy="off"
+								 includeInLayout="true" clipContent="true" />
+					-->
+					<ns:IFrame id="tcIFrame" verticalScrollPolicy="off" horizontalScrollPolicy="off" width="100%" height="100%" 
+							   source="tagcloud.html" overlayDetection="true" />	
+				</mx:Canvas>
+			</mx:Panel>
 			
 		</mx:VBox>
-		<mx:VBox id="details" height="100%" width="100%">
+		<mx:VBox id="details" height="100%" width="100%">			
 		</mx:VBox>
 	</mx:HBox>	
 

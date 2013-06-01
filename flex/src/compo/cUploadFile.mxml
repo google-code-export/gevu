@@ -35,6 +35,7 @@
 			[Bindable]public var wf:String;
 			[Bindable]public var idExi:String;
 			[Bindable]public var objName:String;
+			[Bindable]public var objProp:String;
 			[Bindable]public var lblBtn:String;
            	[Bindable]public var iconBtn:Class;
            	[Bindable]public var ttBtn:String;            	 
@@ -209,6 +210,10 @@
 					if(objName=='Models_DbTable_Gevu_docsxlieux'){
 						sendVars.objId = ctlBind.idLieu;
 					}
+					if(objName=='Models_DbTable_Gevu_typesxcontroles'){
+						sendVars.objId = ctlBind.idCtrl;
+						sendVars.objProp = objProp; 
+					}
 					
                     
                     var request:URLRequest = new URLRequest();
@@ -246,6 +251,9 @@
 							}
 							if(objName=='Models_DbTable_Gevu_docsxlieux'){
 								ctlBind.roDiagnostique.getLieuDocs(ctlBind.idLieu, ctlBind.idBase);
+							}
+							if(objName=='Models_DbTable_Gevu_typesxcontroles'){
+								ctlBind.Init();
 							}							
 						}
 						if(wf=="impCsv"){

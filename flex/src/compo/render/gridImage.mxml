@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+		 horizontalAlign="center">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.events.FlexEvent;
+			
+			override public function set data(value:Object):void {      
+				if(value != null)  {
+					super.data = value;
+					var imgSrc:String;
+					if(value.icone!=""){
+						imgSrc="images/"+value.icone;
+					}else{
+						imgSrc="images/interrogation.gif";
+					}
+					ima.source=imgSrc;
+				}   
+				// Dispatch the dataChange event.
+				dispatchEvent(new FlexEvent(FlexEvent.DATA_CHANGE));
+			}   
+		]]>
+	</mx:Script>
+	
+	<mx:Image id="ima" height="80"/>
+</mx:HBox>

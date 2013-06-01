@@ -26,8 +26,17 @@
 			public var bForSolus:Boolean=false;
 			public var bCheckLieu:Boolean=false;
 			public var arrSelectLieu:Array;
+			public var totAffirmation:String;
+			public var tcFunction:Function;
 
 			private function init():void{
+				if(params["reg"]==1){
+					cbSou.selected = false;
+				}
+				if(params["reg"]==3){
+					cbReg.selected = false;
+				}
+				
 				if(!params["idCrit"])params["idCrit"]="";
 				roDiag.getDiagListe(params,this.parentApplication.idBase);
 				setStyleListeDiag();
@@ -80,6 +89,7 @@
 			{
 				var rsListe:Object = event.result;
 				var first:Boolean = true;
+				totAffirmation = " "; 						
 				
 				//boucle sur les critères
 				for each (var rLieu:Object in rsListe)
@@ -132,6 +142,7 @@
 						for each (var crit:Object in rLieu)
 						{
 							if(crit.affirmation){
+								totAffirmation += crit.affirmation+" "; 
 								vb.addChild(addCritere(crit));													
 							}
 						}
@@ -143,6 +154,8 @@
 					*/
 					mainCtrl.addChild(vb);
 				}
+				//construction du tagcloud
+				if(tcFunction)tcFunction(totAffirmation);
 			}
 			
 			function selectAllLieu(e:Object):void{
@@ -158,6 +171,7 @@
 
 				var vb:VBox = new VBox();
 				vb.percentWidth = 100;
+				vb.id = crit.typeCrit+"_"+crit.dLieu;
 				
 				var txt:Text = new Text();
 				txt.text = crit.affirmation;
@@ -200,6 +214,7 @@
 				//ajout les droits
 				var imaDr:Image = new Image;
 				imaDr.source= getImgReg(crit.typeCrit, crit.droitCrit);
+				imaDr.id = crit.typeCrit+"_"+crit.droitCrit;
 				imaDr.autoLoad = true;
 				hb.addChild(imaDr);
 
@@ -261,7 +276,56 @@
 				
 			}				
 			
-        ]]>
+			protected function filtreSouReg_changeHandler(event:Event):void
+			{
+				/**
+				 1	Réglementaire
+				 3	Souhaitable
+				 **/	
+				var cb:CheckBox = event.target as CheckBox;
+				var filtre:String="";
+				if(cbSou.selected)
+					filtre += "3";
+				if(cbReg.selected)
+					filtre += "1";
+				//on boucle sur les lieux
+				var arrLieu:Array = mainCtrl.getChildren();
+				for each (var lieu:VBox in arrLieu)
+				{
+					//on boucle sur les critères 
+					var arr:Array = lieu.getChildren();
+					var i:int;
+					var nbVisible:int = 0;
+					//on commence à 1 car 0 = fil d'ariane
+					for (i = 1; i < arr.length; i++)
+					{
+						var vb:VBox = arr[i] as VBox;
+						if(filtre=="31"){
+							vb.visible=true;
+							vb.percentHeight = 100;
+							nbVisible ++;
+						}else if(filtre==""){
+							vb.visible=false;
+							vb.height = 0;
+						}else if(vb.id.substr(0,1)==filtre){
+							vb.visible=true;							
+							vb.percentHeight = 100;
+							nbVisible ++;
+						}else{
+							vb.visible=false;
+							vb.height = 0;
+						}
+					}
+					if(nbVisible>0){
+						lieu.percentHeight = 100;
+					}else{
+						lieu.height = 0;
+					}
+				}
+				
+			}
+			
+		]]>
     </mx:Script>
 	<mx:RemoteObject id="roDiag"
 					 destination="zend"
@@ -271,8 +335,11 @@
 					 >
 		<mx:method name="getDiagListe" result="getDiagListe_resultHandler(event)" />
 	</mx:RemoteObject>	
-
-	<mx:Label id="lblTitre" fontSize="18" text="{titre}"/>
+	<mx:HBox verticalAlign="middle">
+		<mx:Label id="lblTitre" fontSize="18" text="{titre}"/>
+		<mx:CheckBox id="cbSou" label="Souhaitable" selected="true" change="filtreSouReg_changeHandler(event)" />		
+		<mx:CheckBox id="cbReg" label="Réglementaire" selected="true" change="filtreSouReg_changeHandler(event)" />		
+	</mx:HBox>
 	<mx:VBox id="mainCtrl" width="100%" height="100%" minHeight="0" borderStyle="solid" paddingTop="3" paddingBottom="3" paddingLeft="3" paddingRight="3">
 	</mx:VBox>
 </mx:VBox>

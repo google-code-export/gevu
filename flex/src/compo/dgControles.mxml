@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ViewStack xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns2="compo.*"
+	creationComplete="Init()"
+	width="100%" height="100%">
+	<mx:Script>
+        <![CDATA[
+import compo.*;
+
+import mx.collections.ArrayCollection;
+import mx.collections.IViewCursor;
+import mx.collections.Sort;
+import mx.collections.SortField;
+import mx.containers.Form;
+import mx.containers.FormItem;
+import mx.containers.TitleWindow;
+import mx.controls.Alert;
+import mx.controls.CheckBox;
+import mx.controls.ComboBox;
+import mx.controls.DataGrid;
+import mx.controls.dataGridClasses.DataGridColumn;
+import mx.controls.listClasses.IDropInListItemRenderer;
+import mx.events.CloseEvent;
+import mx.events.DataGridEvent;
+import mx.events.FlexEvent;
+import mx.managers.CursorManager;
+import mx.managers.PopUpManager;
+import mx.rpc.AsyncToken;
+import mx.rpc.events.FaultEvent;
+import mx.rpc.events.ResultEvent;
+import mx.rpc.http.HTTPService;
+
+/**
+ * paramétrage de l'objet
+ */
+[Bindable] public var endPoint:String;
+[Bindable] public var bInit:Boolean=true;
+[Bindable] public var idExi:String;
+[Bindable] public var idCtrl:int;	
+
+
+private function selectItem(event:Event):void {
+	var item:Object=event.currentTarget.selectedItem;
+	if(item){
+		idCtrl = item.id_type_controle;
+		UpdLib.text = item.lib;
+		if(item.icone)updIcone.source='images/'+item.icone; else updIcone.source='images/interrogation.gif';
+		if(item.aide)updAide.source='images/'+item.aide; else updAide.source='images/interrogation.gif';
+
+	}
+}
+
+public function Init():void 
+{
+    //chargement des données
+    RO.getAll();        
+}
+
+private function updateItem():void
+{
+	//création du tableau de valeur
+	var vn:Array = new Array();
+	vn["lib"] = UpdLib.text;
+
+	RO.edit(idCtrl,vn);	
+
+}
+
+private function insertItem():void {
+
+	//création du tableau de param
+	var pArr:Array = new Array;
+	pArr["lib"] = ajLib.text;
+   	
+	RO.ajouter(pArr);
+	
+}
+
+
+private function insertItemHandler(e:Object):void
+{
+    this.selectedChild = view;
+    RO.getAll();
+}
+
+
+private function fillGridHandler(e:Object, dg:DataGrid):void
+{
+	if(!e)return;
+    //dg.dataProvider = e.result as Array;
+	
+	var dpCol:ArrayCollection = new ArrayCollection();
+	dpCol.addItem({data:'any', label:'Tout'});
+	dpCol.addItem({data:'lib', label:'Libellé'});
+	dgFilter.dpColumns = dpCol;
+	dgFilter.dpRows = e.result as Array;
+	dg.dataProvider = dgFilter.dpRows;
+	dgFilter.dg = dg;
+	
+}
+
+private function deleteItem():void {
+    
+    if (dataGrid.selectedItem)
+    {
+        Alert.show("Confirmez-vous la suppression de cet élément ?",
+        "Confirmation Suppression", 3, this, deleteClickHandler);
+    }
+   
+}
+
+private function deleteClickHandler(event:CloseEvent):void
+{
+    if (event.detail == Alert.YES) 
+    {
+		RO.remove(idCtrl);
+    }
+}
+
+public function faultHandlerService(fault:FaultEvent):void
+{
+	Alert.show(fault.fault.faultCode.toString(), "FaultHandlerService");
+}
+ 
+public function resultHandlerService(result:ResultEvent):void
+{
+	RO.getAll();
+}
+
+
+        ]]>
+    </mx:Script>
+    
+	<mx:RemoteObject id="RO"
+	    	source="Models_DbTable_Gevu_typesxcontroles" destination="zend" 
+	    	endpoint="{endPoint}"
+	    	showBusyCursor="true"
+	    	fault="faultHandlerService(event)">
+	 	<mx:method name="getAll"  result="fillGridHandler(event,dataGrid)"/>  	
+	 	<mx:method name="edit"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="remove"  result="resultHandlerService(event)"/>  	
+	 	<mx:method name="ajouter"  result="insertItemHandler(event)"/>  	
+	</mx:RemoteObject>
+
+	<mx:Canvas id="view" width="100%" height="100%">
+		<mx:VBox width="100%" height="100%" >		
+			<mx:HBox id="AddDelete" >		
+				<mx:LinkButton id="btnAddNew" click="this.selectedChild = insert;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un critère" />
+				<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un critère" />
+			</mx:HBox>
+			<ns2:cnvFilterControl id="dgFilter" />
+			<mx:DataGrid 
+				id="dataGrid"
+				editable="false"
+				resizableColumns="true" 
+				click="selectItem(event);"
+				textAlign="left"
+				width="100%" height="100%"
+				rowHeight="100"
+				>			
+				<mx:columns>
+					<mx:DataGridColumn visible="false"  dataField="id_type_controle" />
+					<mx:DataGridColumn headerText="Libellé" dataField="lib" />
+					<mx:DataGridColumn dataField="icone" headerText="aide" editable="false"> 
+						<mx:itemRenderer> 
+							<mx:Component> 
+								<mx:HBox horizontalAlign="center"> 
+									<mx:Image source="{data.icone ? 'images/'+data.icone : 'images/interrogation.gif'}"/> 
+								</mx:HBox> 
+							</mx:Component> 
+						</mx:itemRenderer> 
+					</mx:DataGridColumn> 
+					<mx:DataGridColumn dataField="aide" headerText="aide" editable="false"> 
+						<mx:itemRenderer> 
+							<mx:Component> 
+								<mx:HBox horizontalAlign="center"> 
+									<mx:Image source="{data.aide ? 'images/'+data.aide : 'images/interrogation.gif'}"/> 
+								</mx:HBox> 
+							</mx:Component> 
+						</mx:itemRenderer> 
+					</mx:DataGridColumn> 
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:HBox verticalAlign="middle" fontSize="16" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  backgroundColor="#1D6E12" backgroundAlpha="0.32">
+				<mx:Label text="Libellé :" />
+				<mx:TextArea id="UpdLib" />
+				<mx:Button label="Enregistrer" click="updateItem()" />					
+				<mx:Label text="Icone :" />
+				<mx:Image id="updIcone" /> 
+				<ns2:cUploadFile id="ufIcone" iconBtn="@Embed('images/AddRecord.png')" idExi="{this.parentApplication.idExi}" objName="Models_DbTable_Gevu_typesxcontroles" objProp="icone" ttBtn="Modifier l'image" ctlBind="{this}" wf="auton" typeFic="images" />				
+				<mx:Label text="Aide :" />
+				<mx:Image id="updAide" height="100%" /> 
+				<ns2:cUploadFile id="ufAide" iconBtn="@Embed('images/AddRecord.png')" idExi="{this.parentApplication.idExi}" objName="Models_DbTable_Gevu_typesxcontroles" objProp="aide" ttBtn="Modifier l'image" ctlBind="{this}" wf="auton" typeFic="images" />				
+			</mx:HBox>
+		</mx:VBox>
+	</mx:Canvas>
+	<mx:Canvas id="insert" width="100%" height="100%" >
+		<mx:HBox verticalAlign="middle" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6" >
+			<mx:Label text="Libellé" />	            	
+			<mx:TextArea id="ajLib" />
+			<mx:Button label="Enregistrer" click="insertItem()" />
+			<mx:Button label="Annuler" click="this.selectedChild = view;" />				
+		</mx:HBox>
+	</mx:Canvas>
+
+	 
+</mx:ViewStack>
