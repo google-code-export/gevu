@@ -126,6 +126,10 @@ class GEVU_Import extends GEVU_Site{
                 }
                 //initialisation du préfixe
                 $prefix = "lieux_".$data['objId']."_";
+			}elseif($data['objName']=='Models_DbTable_Gevu_typesxcontroles'){
+				$rep = SEP_PATH.'images'.SEP_PATH;
+                //initialisation du préfixe
+                $prefix = "typesxcontroles_".$data['objProp']."_".$data['objId']."_";
 			}else{
 				$rep = SEP_PATH.'data'.SEP_PATH.'upload';    
 			}
@@ -190,10 +194,17 @@ class GEVU_Import extends GEVU_Site{
     	
     	$site = new GEVU_Site($data['idBase']);
     	
+    	
+    	if($data['objName']=='Models_DbTable_Gevu_typesxcontroles'){
+    		$doc_obj = new Models_DbTable_Gevu_typesxcontroles($site->db);
+    		$doc_obj->edit($data['objId'], array($data['objProp']=>$data['new_name']));
+    		return;
+    	}
+    		 
 		$ins = new Models_DbTable_Gevu_instants($site->db);
 		$idIns = $ins->ajouter(array("nom"=>$nom."_addDoc","id_exi"=>$data['idExi']));
 
-		$dataDoc["id_instant"] = $idIns;
+		$dataDoc["id_instant"] = $idIns;		
 		
 		$doc = new Models_DbTable_Gevu_docs($site->db);
 		$idDoc = $doc->ajouter($dataDoc,false);
@@ -221,7 +232,8 @@ class GEVU_Import extends GEVU_Site{
 				$doc_obj = new Models_DbTable_Gevu_docsxlieux($site->db);
 				$doc_obj->ajouter(array("id_doc"=>$idDoc,"id_instant"=>$idIns,"id_lieu"=>$data['objId']));
 			}		
-		}		
+		}
+			
     }
 
     public function traiteDoc($idDoc, $creerModele=false){
