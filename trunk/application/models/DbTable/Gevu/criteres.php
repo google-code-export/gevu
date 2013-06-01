@@ -157,7 +157,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
         	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->from( array("c" => "gevu_criteres"))
             ->joinInner(array('tc' => 'gevu_typesxcontroles'),
-            	'tc.id_type_controle = c.id_type_controle',array('icone','lib'))                                   
+            	'tc.id_type_controle = c.id_type_controle',array('icone','lib','aide'))                                   
             ->joinInner(array('tcri' => 'gevu_criteresxtypesxcriteres'),
             	'tcri.id_critere = c.id_critere',array('id_type_critere'))                                   
 			->where( "c.id_type_controle = " . $id_type_controle );

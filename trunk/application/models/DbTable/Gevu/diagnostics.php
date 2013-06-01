@@ -557,10 +557,11 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * @param string $handi
      * @param int $niv
      * @param string $idCrit
+     * @param string $reg
      * 
      * @return array
      */
-    public function getDiagliste($idLieu, $last=-1, $handi="", $niv=-1, $idCrit="")
+    public function getDiagliste($idLieu, $last=-1, $handi="", $niv=-1, $idCrit="", $reg=0)
     {
         $query = $this->select()
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
@@ -611,6 +612,10 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         //un type de handicap
         if($handi)$query->where("crit.handicateur_".$handi.$nivW);
 
+        //ajoute la contrainte réglementaire souhaitable
+        if($reg) $query->where("tcrit.id_type_critere =".$reg);
+        
+        
         $result = $this->fetchAll($query);
         return $result->toArray(); 
     }
