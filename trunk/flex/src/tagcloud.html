@@ -1,0 +1,69 @@
+<html><head><meta charset="utf-8">
+<title>Word Cloud Generator</title>
+
+<link href="public/css/cloud.css" rel="stylesheet">
+</head>
+<body >
+<div id="vis"></div>
+<div>Copyright © <a href="http://www.jasondavies.com/">Jason Davies</a> 2012.</div>
+<div id="status"></div>
+
+<form id="form" style="display:none;">
+
+
+  <div style="text-align: center">
+    <div id="presets"><a class="first active" href="#http%3A%2F%2Fsearch.twitter.com%2Fsearch.json%3Frpp%3D100%26q%3D%7Bword%7D">Twitter</a><a href="#http%3A%2F%2Fapi.twitter.com%2F1%2Fstatuses%2Fuser_timeline.json%3Fscreen_name%3D%7Bword%7D%26count%3D200%26trim_user%3D1">Tweeps</a><a href="#http%3A%2F%2Fen.wikipedia.org%2Fwiki%2F%7Bword%7D">Wikipedia</a><a id="custom" href="#">Custom</a></div>
+    <p><label for="keyword">Keyword:</label>
+      <input type="text" id="keyword" value="">
+      <button id="go" type="submit">Go!</button>
+    </p><div id="custom-area" style="display: none;">
+      <p><label for="text">Enter a URL below, or paste some text. If the URL
+        contains <code>{word}</code>, it will automatically be replaced with
+        the current keyword.</label>
+      </p><p><textarea id="text"></textarea>
+    </p></div>
+  </div>
+
+<hr>
+
+<div style="float: right; text-align: right">
+  <p><label for="max">Number of words:</label> <input type="number" value="250" min="1" id="max">
+  <!--<p><label for="colours">Colours:</label> <a href="#" id="random-palette">get random palette</a>-->
+  </p><p><label>Download:</label>
+    <a id="download-svg" href="#" target="_blank">SVG</a> |
+    <a id="download-png" href="#" target="_blank">PNG</a>
+</p></div>
+
+<div style="float: left">
+  <p><label>Spiral:</label>
+    <label for="archimedean"><input type="radio" name="spiral" id="archimedean" value="archimedean" checked="checked"> Archimedean</label>
+    <label for="rectangular"><input type="radio" name="spiral" id="rectangular" value="rectangular"> Rectangular</label>
+  </p><p><label for="scale">Scale:</label>
+    <label for="scale-log"><input type="radio" name="scale" id="scale-log" value="log" > log n</label>
+    <label for="scale-sqrt"><input type="radio" name="scale" id="scale-sqrt" value="sqrt"> √n</label>
+    <label for="scale-linear"><input type="radio" name="scale" id="scale-linear" value="linear" checked="checked"> n</label>
+  </p><p><label for="font">Font:</label> <input type="text" id="font" value="Impact">
+</p></div>
+
+<div id="angles">
+  <p><input type="number" id="angle-count" value="5" min="1"> <label for="angle-count">orientations</label>
+    <label for="angle-from">from</label> <input type="number" id="angle-from" value="0" min="-90" max="90"> °
+    <label for="angle-to">to</label> <input type="number" id="angle-to" value="0" min="-90" max="90"> °
+</p><svg width="151" height="70.5"><g transform="translate(75.5,60.5)"><path d="M -40.5 0 A 40.5 40.5 0 0 1 40.5 0" style="fill: none;"></path><line x1="-47.5" x2="47.5"></line><line y2="-47.5"></line><text dy=".3em" text-anchor="end" transform="rotate(0)translate(-50.5)rotate(0)translate(2)">-90°</text><text text-anchor="middle" transform="rotate(90)translate(-50.5)rotate(-90)translate(2)">0°</text><text dy=".3em" text-anchor="start" transform="rotate(180)translate(-50.5)rotate(-180)translate(2)">90°</text><path class="angle" d="M2.479827866490314e-15,-40.5A40.5,40.5 0 0,1 2.479827866490314e-15,-40.5L0,0Z" style="fill: #ffcc00;"></path><line class="angle" transform="rotate(90)" x2="-45.5"></line><line class="angle" transform="rotate(90)" x2="-40.5"></line><line class="angle" transform="rotate(90)" x2="-40.5"></line><line class="angle" transform="rotate(90)" x2="-40.5"></line><line class="angle" transform="rotate(90)" x2="-45.5"></line><path class="drag" d="M-9.5,0L-3,3.5L-3,-3.5Z" transform="rotate(90)translate(-40.5)"></path><path class="drag" d="M-9.5,0L-3,3.5L-3,-3.5Z" transform="rotate(90)translate(-40.5)"></path></g></svg></div>
+
+<hr style="clear: both">
+
+<p style="float: right"><a href="about/">How the Word Cloud Generator Works</a>.
+</p><p>Copyright © <a href="http://www.jasondavies.com/">Jason Davies</a> 2012.
+</p></form>
+<script src="public/js/d3.min.js"></script>
+<script src="public/js/d3.layout.cloud.js"></script>
+<script src="public/js/cloud.js"></script>
+<script type="text/javascript">
+document.changeTagCloud = function(params){
+	parseText(params[0]);
+}
+//parseText("0 12 36 vide");
+</script>
+</body>
+</html>

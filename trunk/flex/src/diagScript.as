@@ -48,6 +48,8 @@ import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 
+import tagcloud.TagCloud;
+
 
 //icones pour le tree
 [Bindable][Embed("images/web.png")]public var iconGeo:Class;
@@ -150,7 +152,7 @@ protected function cbBases_changeHandler(event:ListEvent):void
 	idBase = idBase.substr(idBase.indexOf("_")+1);
 	if(idScenar){
 		cnvTerre.enabled = true;
-		initTreeTerre();
+		initTreeTerre();	
 	}
 }
 
@@ -175,7 +177,7 @@ public function initTreeTerre():void{
 		</node>;
 	treeTree.dataProvider=xmlTree;
 	roDiagnostique.getXmlNode(1,idBase);
-	treeTree.showRoot=false;	
+	treeTree.showRoot=false;
 }
 
 public function ForceCalcul():void{
@@ -475,7 +477,9 @@ private function displayNodeProperties(event:ResultEvent) : void {
 	//pour cacher l'ajout de nouveaux controle
 	var aDiag:Boolean=false;	
 	//pour le type de controle parent d'un diag
-	var typeCtrlParent:String ="";	
+	var typeCtrlParent:String ="";
+	//pour les diagnostic extérieurs
+	this.dataDiagExt = "";
 	for(var item:String in obj){
 		var arr:Array = item.split("_");
 		var className:String;
@@ -502,7 +506,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 						instance.idTypeCtlParent = typeCtrlParent;
 						aDiag = true;
 					}
-					this.dataStat = obj[item].diag.stat.EtatDiag 
+					this.dataStat = obj[item].diag.stat; 
 					break;
 				case "diagext":
 					this.dataDiagExt = obj["Models_DbTable_Gevu_diagext"][0];
