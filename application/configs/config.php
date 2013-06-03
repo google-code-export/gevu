@@ -26,6 +26,10 @@ set_include_path(ROOT_PATH.'/library/php');
 set_include_path(get_include_path().PATH_SEPARATOR.$www."/Zend/library");
 set_include_path(get_include_path().PATH_SEPARATOR.$www."/Zend/extras/library");
 
+//ajout de librairie supplémentaires
+require_once(ROOT_PATH.'/library/php/odtphp/odf.php');
+
+
 /** Zend_Application */
 require_once 'Zend/Application.php';
 
@@ -34,5 +38,7 @@ $application = new Zend_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
 );
+
+$application->bootstrap();
 
 ?>
