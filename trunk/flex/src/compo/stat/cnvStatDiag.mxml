@@ -302,10 +302,10 @@
 	<mx:SolidColor id="sc3" color="red" alpha=".6"/>
 	
 	<!-- Define custom Strokes for the columns. -->
-	<mx:Stroke id="s0" color="green" weight="2"/>
-	<mx:Stroke id="s1" color="yellow" weight="2"/>
-	<mx:Stroke id="s2" color="#ffa200" weight="2"/>
-	<mx:Stroke id="s3" color="red" weight="2"/>
+	<mx:SolidColorStroke id="s0" color="green" weight="2"/>
+	<mx:SolidColorStroke id="s1" color="yellow" weight="2"/>
+	<mx:SolidColorStroke id="s2" color="#ffa200" weight="2"/>
+	<mx:SolidColorStroke id="s3" color="red" weight="2"/>
 
 	<mx:HBox height="100%" width="100%" >
 		<mx:VBox label="Diagnostic" height="100%" >
