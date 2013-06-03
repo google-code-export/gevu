@@ -48,9 +48,6 @@ import mx.managers.PopUpManager;
 import mx.rpc.events.FaultEvent;
 import mx.rpc.events.ResultEvent;
 
-import tagcloud.TagCloud;
-
-
 //icones pour le tree
 [Bindable][Embed("images/web.png")]public var iconGeo:Class;
 [Bindable][Embed("images/sync.gif")]public var iconCharge:Class;
