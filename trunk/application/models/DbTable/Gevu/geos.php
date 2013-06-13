@@ -41,7 +41,8 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
      */
 	var $selectFields = array("id_geo", "id_instant", "id_lieu", "lat", "lng"
 		, "latlng"=>"CONCAT('(',X(latlng),',',Y(latlng),')')", "sw"=>"CONCAT('(',X(sw),',',Y(sw),')')", "ne"=>"CONCAT('(',X(ne),',',Y(ne),')')"
-		, "zoom_min", "zoom_max", "adresse", "codepostal", "ville", "pays", "kml", "type_carte", "maj", "data");
+		, "zoom_min", "zoom_max", "adresse", "codepostal", "ville", "pays", "kml", "type_carte", "maj", "data"
+		,"lat_sv", "lng_sv", "zoom_sv", "heading", "pitch");
 
     /**
      * Vérifie la valeur des données géographiques et de date
