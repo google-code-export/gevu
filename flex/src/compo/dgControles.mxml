@@ -189,7 +189,7 @@ public function resultHandlerService(result:ResultEvent):void
 				<mx:Image id="updIcone" /> 
 				<ns2:cUploadFile id="ufIcone" iconBtn="@Embed('images/AddRecord.png')" idExi="{this.parentApplication.idExi}" objName="Models_DbTable_Gevu_typesxcontroles" objProp="icone" ttBtn="Modifier l'image" ctlBind="{this}" wf="auton" typeFic="images" />				
 				<mx:Label text="Aide :" />
-				<mx:Image id="updAide" height="100%" /> 
+				<mx:Image id="updAide" /> 
 				<ns2:cUploadFile id="ufAide" iconBtn="@Embed('images/AddRecord.png')" idExi="{this.parentApplication.idExi}" objName="Models_DbTable_Gevu_typesxcontroles" objProp="aide" ttBtn="Modifier l'image" ctlBind="{this}" wf="auton" typeFic="images" />				
 			</mx:HBox>
 		</mx:VBox>

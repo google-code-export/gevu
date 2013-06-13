@@ -9,10 +9,10 @@
 		import mx.controls.Alert;
 		
 		[Bindable]	public var rsCarto:Object;
-		[Bindable]	public var urlCarto:String="cartoIGN.html";
+		[Bindable]	public var urlCarto:String="carto.html";
 		
 		public function callChangeGeo():void {		
-			cartoIFrame.callIFrameFunction('addMarker', [rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib, rsCarto.sw, rsCarto.ne], handleChangeGeo);
+			cartoIFrame.callIFrameFunction('addMarker', [rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib, rsCarto.sw, rsCarto.ne, rsCarto.lat_sv, rsCarto.lng_sv , rsCarto.heading, rsCarto.pitch, rsCarto.zoom_sv], handleChangeGeo);
 		}
 
 		public function callChargeKml(params:Array):void {

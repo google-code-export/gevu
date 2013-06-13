@@ -310,7 +310,7 @@ private function deleteDeficiClickHandler(event:CloseEvent):void
 	</mx:RemoteObject>
 
 	<mx:Canvas id="view" width="100%" height="100%">
-		<mx:HBox width="100%" height="100%">
+		<mx:HDividedBox width="100%" height="100%">
 			<mx:VBox width="100%" height="100%" >		
 				<mx:HBox id="AddDelete" >		
 					<mx:LinkButton id="btnAddNew" click="this.selectedChild = insert;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un critère" />
@@ -327,12 +327,12 @@ private function deleteDeficiClickHandler(event:CloseEvent):void
 					>			
 					<mx:columns>
 						<mx:DataGridColumn visible="false" headerText="id_critere" dataField="id_critere" />
-						<mx:DataGridColumn headerText="Référence" dataField="ref" />   					
-	   					<mx:DataGridColumn headerText="Type contrôle"  dataField="LibTypControle" />
-						<mx:DataGridColumn headerText="H moteur" dataField="handicateur_moteur" />   					
-						<mx:DataGridColumn headerText="H auditif" dataField="handicateur_auditif" />   					
-						<mx:DataGridColumn headerText="H cognitif" dataField="handicateur_cognitif" />   					
-						<mx:DataGridColumn headerText="H visuel" dataField="handicateur_visuel" />   					
+						<mx:DataGridColumn headerText="Référence" dataField="ref" width="100"/>   					
+	   					<mx:DataGridColumn headerText="Type contrôle"  dataField="LibTypControle" width="100"/>
+						<mx:DataGridColumn headerText="H moteur" dataField="handicateur_moteur" width="70" />   					
+						<mx:DataGridColumn headerText="H auditif" dataField="handicateur_auditif" width="70"/>   					
+						<mx:DataGridColumn headerText="H cognitif" dataField="handicateur_cognitif" width="70"/>   					
+						<mx:DataGridColumn headerText="H visuel" dataField="handicateur_visuel" width="70"/>   					
 	   					<mx:DataGridColumn headerText="Libellé"  dataField="criteres" />
 						<mx:DataGridColumn headerText="Affirmation" dataField="affirmation" />									
  					</mx:columns>
@@ -461,7 +461,7 @@ private function deleteDeficiClickHandler(event:CloseEvent):void
 					
 				</mx:HBox>						
 			</mx:VBox>		
-		</mx:HBox>
+		</mx:HDividedBox>
 
 	</mx:Canvas>
 	<mx:Canvas id="insert" width="100%" height="100%" >
