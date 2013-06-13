@@ -31,8 +31,6 @@
 								   minimum="0" maximum="20"
 								   data="{NodeData.zoom_min}" enabled="{Modif}" />
 				-->
-			</mx:HBox>
-			<mx:HBox>
 				<mx:Label text="fond carto." />
 				<mx:ComboBox id="cbTypeCarte" selectedIndex="{getIndex(NodeData.type_carte)}" enabled="{Modif}" >
 					<mx:ArrayCollection>
@@ -54,6 +52,18 @@
 			<mx:HBox width="0" height="0">
 				<mx:Label text="Coin Sud-Ouest :" />
 				<mx:Label id="sw" text=""/>
+			</mx:HBox>
+			<mx:HBox width="0" height="0" >
+				<mx:Label text="Lat. SV :" />
+				<mx:Label id="lat_sv" text=""/>
+				<mx:Label text="Lng. SV :" />
+				<mx:Label id="lng_sv" text=""/>
+				<mx:Label text="Heading :" />
+				<mx:Label id="heading" text=""/>
+				<mx:Label text="Pitch :" />
+				<mx:Label id="pitch" text=""/>
+				<mx:Label text="Zoom SV :" />
+				<mx:Label id="zoom_sv" text=""/>
 			</mx:HBox>
 			<mx:Button id="save" label="enregistrer" click="saveModifications();"/>
 		</mx:VBox>
@@ -93,6 +103,11 @@
 				ne.text = NodeData["ne"];
 				sw.text = NodeData["sw"];
 				setMapType(NodeData["type_carte"]);
+				lat_sv.text = NodeData["lat_sv"];
+				lng_sv.text = NodeData["lng_sv"];
+				zoom_sv.text = NodeData["zoom_sv"];
+				heading.text = NodeData["heading"];
+				pitch.text = NodeData["pitch"];
 
 			}
 			
@@ -118,6 +133,11 @@
 				arr["type_carte"]=cbTypeCarte.selectedItem["data"];
 				arr["ne"] = ne.text;
 				arr["sw"]= sw.text;
+				arr["lat_sv"]=lat_sv.text;
+				arr["lng_sv"]=lng_sv.text;
+				arr["zoom_sv"]=zoom_sv.text;
+				arr["heading"]=heading.text;
+				arr["pitch"]=pitch.text;
 				
 				roModifBase.edit(NodeData.id_geo, arr, obj, this.parentApplication.idBase);
 			}			

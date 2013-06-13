@@ -139,6 +139,7 @@ public function init():void
 	cbScenar.dataProvider = dataScenar;
 	ExternalInterface.addCallback("modifLieu",modifLieu);	
 	ExternalInterface.addCallback("setIti",setIti);	
+	ExternalInterface.addCallback("modifSV",modifSV);	
 
 	//roDiagnostique.getTablesNames();
 }
@@ -663,6 +664,15 @@ public function modifLieu(params:String):void{
 	geo.sw.text = objParams[0].sw;
 	geo.ne.text = objParams[0].ne;
 	geo.setMapType(objParams[0].mapType);
+}
+
+public function modifSV(params:String):void{
+	var objParams:Object = JSON.decode(params);
+	geo.lat_sv.text = objParams.lat;
+	geo.lng_sv.text = objParams.lng;
+	geo.zoom_sv.text = objParams.zoom;
+	geo.heading.text = objParams.heading;
+	geo.pitch.text = objParams.pitch;
 }
 
 public function setIti(params:Object):void{
