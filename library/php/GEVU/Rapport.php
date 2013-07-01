@@ -577,7 +577,7 @@ class GEVU_Rapport extends GEVU_Site{
 	
 		if(count($arrDocs)>0){
 			$doc = $arrDocs[0];
-			if($doc["content-type"]='image/gif' || $doc["content-type"]='image/jpeg' || $doc["content-type"]='image/png'){
+			if($doc["content-type"]=='image/gif' || $doc["content-type"]=='image/jpeg' || $doc["content-type"]=='image/png'){
 				//récupère la taille de l'image
 				if($this->pathDebug)$path = str_replace("/home/gevu/www/data/lieux",$this->pathDebug."data/lieux", $doc['path_source']);
 				else $path = $doc['path_source'];
