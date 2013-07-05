@@ -443,7 +443,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         
        	//initialise le tag des lieux
        	if($ids){
-	    	$where = $this->getAdapter()->quoteInto('id_lieu IN ('.$ids.')');
+	    	$where = $this->getAdapter()->quoteInto('id_lieu IN (?)',$ids);
 	    	$query = $this->update(array('last'=>0), $where);       		
        	}    	
     	
@@ -465,7 +465,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         
        	//met à jour le tag qui indique les derniers    	
        	if($ids){
-	        $where = $this->getAdapter()->quoteInto('id_lieu IN ('.$ids.')');
+	        $where = $this->getAdapter()->quoteInto('id_lieu IN (?)',$ids);
 	    	$query = $this->update(array('last'=>1), $where);       		
        	}
         
@@ -651,7 +651,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
 			 INNER JOIN ".$dbRef.".gevu_criteres AS crit ON diag.id_critere = crit.id_critere
 			 INNER JOIN ".$dbRef.".gevu_typesxcontroles AS tc ON tc.id_type_controle = crit.id_type_controle
  			INNER JOIN ".$dbRef.".gevu_criteresxtypesxcriteres AS typc ON crit.id_critere = typc.id_critere  
-    		INNER JOIN ".$dbRef.".gevu_motsclefs AS mc ON mc.id_motclef = diag.id_reponse AND diag.id_reponse IN (124,2)
+    		INNER JOIN ".$dbRef.".gevu_motsclefs AS mc ON mc.id_motclef = diag.id_reponse AND diag.id_reponse IN (141,2)
 			 LEFT JOIN ".$dbRef.".gevu_solutionsxcriteres as sc ON sc.id_critere = crit.id_critere
 			 LEFT JOIN ".$dbRef.".gevu_solutions as s ON s.id_solution = sc.id_solution
 			 LEFT JOIN ".$dbRef.".gevu_solutionsxcouts as sco ON sco.id_solution = s.id_solution

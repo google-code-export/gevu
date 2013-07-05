@@ -169,8 +169,8 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
         $query = $this->select()
         ->from( array("g" => "gevu_docs") )                           
         ->where( "g.id_doc IN (".$id_doc.")");
-
-        return $this->fetchRow($query)->toArray(); 
+		$r = $this->fetchRow($query);
+		if($r)return $r->toArray(); 
     }
     /*
      * Recherche une entrée Gevu_docs avec la valeur spécifiée

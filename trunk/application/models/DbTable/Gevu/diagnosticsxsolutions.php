@@ -259,7 +259,7 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
     	//Récupère la configuration de la base de ref
     	$arrDB = $this->_db->getConfig();
     
-		//on ne récupère que les réponses NON et N-A du dernier diag
+		//on ne récupère que les réponses NON et Sous réserve du dernier diag
     	$query = "SELECT
       		ld.id_lieu 
 		  , ds.id_diagsolus, ds.id_diag, ds.unite dsunite, ds.pose dspose, ds.metre_lineaire dsmetre_lineaire, ds.metre_carre dsmetre_carre, ds.achat dsachat, ds.cout dscout
@@ -269,7 +269,7 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
 		  , p.id_produit, p.ref AS refProd, p.description produit, p.marque, p.modele
 		FROM ".$idBase.".gevu_lieux as ld 
 			INNER JOIN ".$idBase.".gevu_lieux as l ON l.id_lieu = ".$id_lieu."	AND ld.lft BETWEEN l.lft AND l.rgt 				
-			INNER JOIN ".$idBase.".gevu_diagnostics as d ON d.id_lieu = ld.id_lieu AND d.id_reponse IN (124,2) AND d.last = 1
+			INNER JOIN ".$idBase.".gevu_diagnostics as d ON d.id_lieu = ld.id_lieu AND d.id_reponse IN (141,2) AND d.last = 1
 			INNER JOIN ".$arrDB['dbname'].".gevu_criteres as crit ON crit.id_critere = d.id_critere AND crit.affirmation != ''
 			INNER JOIN ".$idBase.".gevu_diagnosticsxsolutions ds ON ds.id_diag = d.id_diag
 			INNER JOIN ".$arrDB['dbname'].".gevu_couts as c ON c.id_cout = ds.id_cout
@@ -298,7 +298,7 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
     
     	if($idBase)$this->setDb($idBase);
     	 
-		//on ne récupère que les réponses NON et N-A du dernier diag
+		//on ne récupère que les réponses NON et sous réserve du dernier diag
     	$query = "SELECT
 	    	 GROUP_CONCAT(DISTINCT d.id_diag) diags
 	    	, GROUP_CONCAT(DISTINCT ld.id_lieu) lieux
@@ -308,7 +308,7 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
 	      	, ds.id_solution
     	FROM gevu_lieux as ld
     	INNER JOIN gevu_lieux as l ON l.id_lieu = ".$id_lieu." AND ld.lft BETWEEN l.lft AND l.rgt
-    	INNER JOIN gevu_diagnostics as d ON d.id_lieu = ld.id_lieu AND d.id_reponse IN (124,2) AND d.last = 1
+    	INNER JOIN gevu_diagnostics as d ON d.id_lieu = ld.id_lieu AND d.id_reponse IN (141,2) AND d.last = 1
     	INNER JOIN gevu_criteres as c ON c.id_critere = d.id_critere AND c.affirmation != ''
 		LEFT JOIN gevu_diagnosticsxsolutions ds ON ds.id_diag = d.id_diag
     	WHERE ds.id_solution is null
@@ -376,7 +376,7 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
     	$arrDB = Zend_Db_Table::getDefaultAdapter()->getConfig();
     	
     
-		//on ne récupère que les réponses NON et N-A du dernier diag
+		//on ne récupère que les réponses NON et sous réserve du dernier diag
     	$query = "SELECT
 		    ld.id_lieu
 		    , d.id_diag
@@ -392,7 +392,7 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
 		    , ds.unite dsunite, ds.pose dspose, ds.metre_lineaire dsmetre_lineaire, ds.metre_carre dsmetre_carre, ds.achat dsachat, ds.cout dscout
 		    FROM ".$idBase.".gevu_lieux as ld
 			    INNER JOIN ".$idBase.".gevu_lieux as l ON l.id_lieu = ".$id_lieu." AND ld.lft BETWEEN l.lft AND l.rgt
-			    INNER JOIN ".$idBase.".gevu_diagnostics as d ON d.id_lieu = ld.id_lieu AND d.id_reponse IN (124,2) AND d.last = 1
+			    INNER JOIN ".$idBase.".gevu_diagnostics as d ON d.id_lieu = ld.id_lieu AND d.id_reponse IN (141,2) AND d.last = 1
 			    INNER JOIN ".$arrDB['dbname'].".gevu_criteres as crit ON crit.id_critere = d.id_critere AND crit.affirmation != ''
 	    		INNER JOIN ".$arrDB['dbname'].".gevu_criteresxtypesxcriteres as tc ON tc.id_critere = crit.id_critere
 	    		INNER JOIN ".$arrDB['dbname'].".gevu_criteresxtypesxdroits as dc ON dc.id_critere = crit.id_critere
