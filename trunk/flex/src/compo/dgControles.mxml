@@ -161,7 +161,7 @@ public function resultHandlerService(result:ResultEvent):void
 				<mx:columns>
 					<mx:DataGridColumn visible="false"  dataField="id_type_controle" />
 					<mx:DataGridColumn headerText="Libellé" dataField="lib" />
-					<mx:DataGridColumn dataField="icone" headerText="aide" editable="false"> 
+					<mx:DataGridColumn dataField="icone" headerText="icone" editable="false"> 
 						<mx:itemRenderer> 
 							<mx:Component> 
 								<mx:HBox horizontalAlign="center"> 

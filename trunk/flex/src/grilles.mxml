@@ -10,7 +10,7 @@
 		<mx:HBox>
 			<mx:Image source="@Embed('images/logo.png')" />
 			<mx:VBox>
-				<mx:Label text="V 0.799" />
+				<mx:Label text="V 0.1034" />
 				<mx:Label fontSize="16" text="Grilles de paramétrages de l'application GEVU"/>		
 			</mx:VBox>
 		</mx:HBox>
