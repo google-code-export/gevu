@@ -168,16 +168,16 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         if($hierarchie){
 	    	//récupère tous les enfants
 	    	$ids = $this->getFullChildIds($id);
-			$ids = $ids[0]['ids'];
-			if($ids) $ids.=','.$id;
+			$strIds = $ids[0]['ids'].$id;
+			echo $strIds;
         }
 		//suppression des données lieés
         $dt = $this->getDependentTables();
         foreach($dt as $t){
         	$dbT = new $t($this->_db);
-        	$dbT->delete('id_lieu IN ('.$ids.')');
+        	$dbT->delete('id_lieu IN ('.$strIds.')');
         }        
-        $this->delete('id_lieu IN ('.$ids.')');
+        $this->delete('id_lieu IN ('.$strIds.')');
         
         /** TODO
          * supprimer les documents sur le serveur
