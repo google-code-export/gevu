@@ -31,6 +31,7 @@
 			[Bindable] public var bSupp:Boolean = true;
 			[Bindable] public var sMethode:String;
 			[Bindable] public var solusLieuxFait:solutions;
+			[Bindable] public var solusLieuxAFaire:solutions;
 			public var cnvListe:cnvDiagListe;
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
@@ -305,6 +306,15 @@
 			}
 			
 			
+			protected function remove_resultHandler(event:ResultEvent):void
+			{
+				init();
+				if(sMethode=="findByIdLieuFait"){
+					solusLieuxAFaire.init();
+				}
+				
+			}
+			
 		]]>
 	</mx:Script>
 	
@@ -317,7 +327,7 @@
 		<mx:method name="ajouter" result="method_resultHandler(event)"	/>
 		<mx:method name="ajouterDiags" result="method_resultHandler(event)"	/>
 		<mx:method name="edit" result="method_resultHandler(event)"	/>
-		<mx:method name="remove" result="method_resultHandler(event)" />
+		<mx:method name="remove" result="remove_resultHandler(event)" />
 		<mx:method name="findByIdDiag" result="findByIdDiag_resultHandler(event)" />
 		<mx:method name="findByIdLieuFait" result="findByIdLieuFait_resultHandler(event)"  />
 		<mx:method name="findByIdLieuAFaire" result="findByIdLieuAFaire_resultHandler(event)" />
@@ -335,8 +345,8 @@
 		<mx:ViewStack id="vs" width="100%" height="100%">
 			<mx:VBox id="lecture" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 				<mx:HBox width="100%" >
-					<mx:LinkButton id="btnAjout" visible="{bAjout}" click="vs.selectedChild = ajout;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une solution" enabled="false" />
-					<mx:LinkButton id="btnDelete" visible="{bSupp}" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une solution" enabled="false" />	
+					<mx:LinkButton id="btnAjout" visible="{bAjout}" click="vs.selectedChild = ajout;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une solution" enabled="{bSupp}" />
+					<mx:LinkButton id="btnDelete" visible="{bSupp}" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une solution" enabled="{bSupp}" />	
 					<mx:Label text="Coût global :" color="red" /><mx:Label color="red" text="0" id="coutGlobal"/><mx:Label color="red" text="€ H.T."/>
 				</mx:HBox>
 				<compo:cnvFilterControl id="dgFilter" />
