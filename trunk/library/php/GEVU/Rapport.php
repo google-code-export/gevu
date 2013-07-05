@@ -3,7 +3,7 @@ class GEVU_Rapport extends GEVU_Site{
 
 	var $arrMC;
 	var $odf;
-	//var $pathDebug="C:\wamp\www\gevu/";
+	//var $pathDebug= ROOT_PATH;		
 	var $pathDebug;
 	var $arrCoutSolus;
 	
@@ -133,7 +133,7 @@ class GEVU_Rapport extends GEVU_Site{
 	
 		try{
 		set_time_limit(30000);		
-		$this->bTrace = false;		
+		$this->bTrace = false;
 		$this->temps_debut = microtime(true);
 				
 		//initialisation des objets	
@@ -164,7 +164,7 @@ class GEVU_Rapport extends GEVU_Site{
 		
 		//charge le modèle
 		//pour le debugage
-		if($this->pathDebug)$ps = str_replace("/home/gevu/www/", $this->pathDebug, $rm['path_source']);
+		if($this->pathDebug)$ps = str_replace("/home/gevu/www", $this->pathDebug, $rm['path_source']);
 		else $ps = $rm['path_source'];
 		$this->odf = new odf($ps);		
 		
@@ -314,11 +314,13 @@ class GEVU_Rapport extends GEVU_Site{
 				$idLieuDiag = $r["Models_DbTable_Gevu_geos"][0]["id_lieu"];
 			
 			//récupération des images
-			$arrDocs = $r["Models_DbTable_Gevu_docsxlieux"];
-			//ajout des images au modèle
-			$plans = $this->setImage($plans, 'plan_bat_img', $arrDocs);
-			if(count($arrDocs)>0){
-				$plans->setVars('plan_bat_nom', 'Plan : ' . $arrDocs[0]['titre']);
+			if(isset($r["Models_DbTable_Gevu_docsxlieux"])){
+				$arrDocs = $r["Models_DbTable_Gevu_docsxlieux"];
+				//ajout des images au modèle
+				$plans = $this->setImage($plans, 'plan_bat_img', $arrDocs);
+				if(count($arrDocs)>0){
+					$plans->setVars('plan_bat_nom', 'Plan : ' . $arrDocs[0]['titre']);
+				}				
 			}
 			 	
 			//calcul le cout pour le batiments
@@ -333,6 +335,7 @@ class GEVU_Rapport extends GEVU_Site{
 				
 			//récupère les niveaux
 			$arrNivs = 	$dbL->getChildForTypeControle($idLieuDiag, 46);
+			$cReg="";$cSou="";
 			foreach($arrNivs as $niv){
 				$bats->nivs->niv_nom($niv["lib"]);
 				$arrCoutNiv = $dbDS->getCoutsByIdLieu($niv['id_lieu']);
@@ -575,9 +578,9 @@ class GEVU_Rapport extends GEVU_Site{
 	 */
 	public function setImage($oOdf, $balise, $arrDocs){
 	
-		if(count($arrDocs)>0){
+		if(isset($arrDocs[0])){
 			$doc = $arrDocs[0];
-			if($doc["content-type"]=='image/gif' || $doc["content-type"]=='image/jpeg' || $doc["content-type"]=='image/png'){
+			if($doc["content_type"]=='image/gif' || $doc["content_type"]=='image/jpeg' || $doc["content_type"]=='image/png'){
 				//récupère la taille de l'image
 				if($this->pathDebug)$path = str_replace("/home/gevu/www/data/lieux",$this->pathDebug."data/lieux", $doc['path_source']);
 				else $path = $doc['path_source'];
@@ -587,9 +590,9 @@ class GEVU_Rapport extends GEVU_Site{
 					$oOdf->setImage($balise, $path, 0, 9);						
 				else
 				*/
-					$oOdf->setImage($balise, $path, 9, 0);
+				$oOdf->setImage($balise, $path, 9, 0);
+				$this->trace("setImage : ".$path);
 			}
-			$this->trace("setImage : ".$path);
 		}else{
 			//sans image on en met une par defaut
 			$oOdf->setImage($balise, '../images/check_no.png');
