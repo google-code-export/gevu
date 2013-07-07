@@ -4,8 +4,8 @@ require_once( "../application/configs/config.php" );
 
 try {
 	
-	/*
 	$mig = new GEVU_Migration();
+	/*
 	$mig->migreRefServeurToLocal();
 	*/
 	
@@ -28,12 +28,13 @@ try {
 	*/
 	
 	/*
-	$idBase = "gevu_trouville";	
+	$idBase = "gevu_clrp";	
 	$idExi = 1;
-	$idLieu = 23053;
+	$idLieu = 16;
 	$idScenario = 13;
 
 	$d = new GEVU_Diagnostique();
+	//$d->deleteLieu($idLieu, $idExi, $idBase);
 	$d->ajoutUtiDiag(6671, 1, $idBase);
 	$d->getDiagListe(array("handi"=>"moteur","idLieu"=>23198,"niv"=>0),$idBase);
 	//$d->ajoutLieu(1,$idExi,$idBase);
