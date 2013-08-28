@@ -1,5 +1,12 @@
 <?php
-
+/*
+* LoginManager
+*
+* Verify's the users login credentials and
+checks the users role against the ACL for access rights.
+*
+* @return GEVU Migration
+*/
 class GEVU_Migration extends GEVU_Site{
 
 	var $idBaseSrc;
@@ -12,7 +19,8 @@ class GEVU_Migration extends GEVU_Site{
 	/**
 	* constructeur de la class
 	*
-    * @param string $idBase
+    * @param string $idBaseSrc
+    * @param string $idBaseDst
     * 
     */
 	public function __construct($idBaseSrc=false, $idBaseDst=false)
@@ -25,7 +33,7 @@ class GEVU_Migration extends GEVU_Site{
 		$this->dbDst = $this->getDb($idBaseDst);
 		
     }
-	
+
     /**
      * migre les données de référence du serveur vers la tablette
      *
@@ -33,38 +41,53 @@ class GEVU_Migration extends GEVU_Site{
      * merci à 
      * http://forum.phpfrance.com/vos-contributions/copie-tables-serveur-distant-t7994.html pour le script
      * http://wiki.gandi.net/fr/hosting/using-linux/tutorials/ubuntu/remote-mysql pour la connexion distante
+     * 
+     * @param string $idBaseSrc
+     * @param string $idBaseDst
+     * 
      */
-    public function migreRefServeurToLocal(){
+    public function migreRefServeurToLocal($idBaseSrc, $idBaseDst){
 
     	 
-    	// paramètres de configuration    	
+	try {
+    	
+		// paramètres de configuration    	
     	$this->bTrace = true;								// pour afficher le nombre de lignes importées et le timing    	
-    	$this->echoTrace = "migreRefServeurToLocal<br/>";	//pour stocker les traces
+    	$this->echoTrace = "Migration des références du serveur sur la base locale<br/>";	//pour stocker les traces
     	$this->temps_debut = microtime(true);
     	$timeLimit          = 30;                			// en sec. Au cas où une connexion distante bloquerait...
-    	$ecraser            = true;            				// true on écrase la table cible si elle existe (ATTENTION ! 	   	
-    														// ne pas se tromper de nom de table cible sinon... zap!)
-
+    	//(ATTENTION ! ne pas se tromper de nom de table cible sinon... zap!)
+    	$ecraser            = false;            				// true on écrase la table cible si elle existe 
+    	$supprimer          = true;            				// true on supprime la table cible si elle existe 
+    	
     	// paramètres de connexion source
-    	$hostSource         = '188.165.235.55';		// adresse IP du serveur Source    	
+    	$hostSource         = '100.100.200.00';		// adresse IP du serveur Source    	
     	$portSource         = '3306';           	// port serveur MySql (3306 par défaut)
-    	$userSource         = 'remoteuser';         // utilisateur
-    	$mdpSource          = 'Samszo2013' ;      	// mot de passe    	
-    	$bddSource          = 'gevu_new';       	// base de donnée Source
+    	$userSource         = 're';         // utilisateur
+    	$mdpSource          = 'Sa3' ;      	// mot de passe    	
+    	$bddSource          = $idBaseSrc;       	// base de donnée Source
     	// tables Sources = 27
     	$tablesSources = array('gevu_contacts','gevu_couts','gevu_criteres','gevu_criteresxtypesxcriteres','gevu_criteresxtypesxdeficiences','gevu_criteresxtypesxdroits'
     			,'gevu_droits','gevu_exis','gevu_exisxdroits','gevu_motsclefs','gevu_produits','gevu_produitsxcouts','gevu_roles','gevu_scenario','gevu_scenes'
-    			,'gevu_solutions','gevu_solutionsxcouts','gevu_solutionsxcriteres','gevu_solutionsxmetiers','gevu_solutionsxproduits'
-    			,'gevu_typesxcontroles','gevu_typesxcriteres','gevu_typesxdeficiences','gevu_typesxdroits','gevu_typesxsolutions','gevu_typexmotsclefs');
+    			,'gevu_solutions','gevu_solutionsxcouts','gevu_solutionsxcriteres','gevu_solutionsxmetiers','gevu_solutionsxproduits', 'gevu_interventions'
+    			,'gevu_typesxcontroles','gevu_typesxcriteres','gevu_typesxdeficiences','gevu_typesxdroits','gevu_typesxsolutions','gevu_typexmotsclefs'
+    			,'gevu_motsclefs');
     	    	
-  	
-    	// paramètres de connexion cible   	
+    	/* paramètres de connexion cible tablette  	
+    	$hostCible          = '127.0.0.1';      // adr. IP du serveur Cible (ici localhost pour l'exemple)
+    	$portCible          = '3306';           // port serveur MySql (3306 par défaut)
+    	$userCible          = 'root';           // utilisateur
+    	$mdpCible           = '';    			// mot de passe
+    	$bddCible           = $idBaseDst;      // base de donnée Cible
+    	*/
+    	
+    	// paramètres de connexion cible local 	
     	$hostCible          = 'localhost';      // adr. IP du serveur Cible (ici localhost pour l'exemple)
     	$portCible          = '3306';           // port serveur MySql (3306 par défaut)
     	$userCible          = 'root';           // utilisateur
     	$mdpCible           = '';    			// mot de passe
-    	$bddCible           = 'gevu_vide';      // base de donnée Cible
-    	   	
+    	$bddCible           = $idBaseDst;   // base de donnée Cible
+    	
     	// texte d'erreur de connexion
     	$errConnexion = "Impossible d'établir une connexion au port <b>%1\$s</b> du host <u>%2\$s</u> <b>%3\$s</b> dans la limite du temps imparti (%4\$s secondes). <br />Vérifiez l'adresse du host et le numéro de port du serveur %2\$s MySQL.<br />S'ils vous semblent corrects, essayez en changeant la valeur de <b>\$timeLimit</b>.";
     	
@@ -98,14 +121,19 @@ class GEVU_Migration extends GEVU_Site{
     	or die (mysql_error($linkSource));
     	$this->trace('selection de la bdd source');
     	 
+    	/* comparaison des structures de table
+    	 * voir Toad for Mysql
+    	 */
+    	
     	foreach ($tablesSources as $table) {
-    		/* importation de la structure de la table source
-    		 $qry_import_structure = 'SHOW CREATE TABLE '.$tableSource;
+    		/* importation de la structure de la table source*/
+    		$qry_import_structure = 'SHOW CREATE TABLE '.$table;
     		$result = mysql_query($qry_import_structure, $linkSource)
     		or die (mysql_error($linkSource));
     		$row = mysql_fetch_row($result);
-    		$qry_create = str_replace ('CREATE TABLE `'.$tableSource.'`', 'CREATE TABLE `'.$tableCible.'`', $row[1]);
-    		*/
+    		$qry[$table]["drop"] = "DROP TABLE IF EXISTS ".$table;
+    		$qry[$table]["create"] = $row[1];
+    		$qry[$table]["truncate"] = 'TRUNCATE TABLE '.$table;    		    		
     		
 	    	// importation des lignes de la table source et construction de l'INSERT   	
 	    	$qry_import_lignes = 'SELECT * FROM '.$table;
@@ -113,7 +141,7 @@ class GEVU_Migration extends GEVU_Site{
 	    	or die (mysql_error($linkSource));    	    	
 	    	while ($row = mysql_fetch_row($result)){
 	    		$values = '(\''.implode("','", array_map('addslashes', $row)).'\')';
-	    		$qry_insert[] = 'INSERT INTO '.$table.' VALUES '.$values;
+	    		$qry[$table]["insert"][] = 'INSERT INTO '.$table.' VALUES '.$values;
 	    	}
 	    	$this->trace('requête : '.$table);
 		}
@@ -127,25 +155,33 @@ class GEVU_Migration extends GEVU_Site{
     	foreach ($tablesSources as $table) {
 	    	// suppression de la table cible si elle existe déjà
 	    	if ($ecraser){
-	    		$qry_drop = 'TRUNCATE TABLE '.$table;
-	    		mysql_query($qry_drop, $linkCible)
+	    		mysql_query($qry[$table]["truncate"], $linkCible)
 	    		or die (mysql_error($linkCible));
 	    		$this->trace('supression données table : '.$table);
 	    	}
 	    	
-	    	/* création de la structure de la table cible
-	    	mysql_query($qry_create, $linkCible)
-	    	or die (mysql_error($linkCible));
-	    	*/	    	
-    	}
-    	// insertion des lignes dans la table-cible
-    	$i=0;
-	    $this->trace('données à insérer : '.count($qry_insert));
-    	foreach ($qry_insert as $v){
-    		mysql_query($v, $linkCible)
-    		or die (mysql_error($linkCible));
-	    	$this->trace('insertion données : '.$i);
-	    	$i++;
+	    	if($supprimer){
+		    	/* suppression de la table cible */
+		    	mysql_query($qry[$table]["drop"], $linkCible)
+		    	or die (mysql_error($linkCible));
+	    		$this->trace('supression table : '.$table);
+		    	/* suppression et création de la structure de la table cible */
+		    	mysql_query($qry[$table]["create"], $linkCible)
+		    	or die (mysql_error($linkCible));
+	    		$this->trace('création table : '.$table);
+	    	}
+
+	    	// insertion des lignes dans la table-cible
+	    	$i=0;
+		    $this->trace('données à insérer '.$table. ' : '.count($qry_insert));
+		    foreach ($qry[$table]["insert"] as $v){
+	    		mysql_query($v, $linkCible)
+	    		or die (mysql_error($linkCible));
+		    	//$this->trace('insertion données '.$table. ' : '.$i);
+		    	$i++;
+	    	}
+	    	
+	    	
     	}
     	
     	// FERMETURE DES SESSIONS SERVEURS - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -155,6 +191,10 @@ class GEVU_Migration extends GEVU_Site{
 
     	$this->trace('fin de la migration des références');
 
+	}catch (Zend_Exception $e) {
+		echo "Récupère exception: " . get_class($e) . "\n";
+	    echo "Message: " . $e->getMessage() . "\n";
+	}
     	return $this->echoTrace;
     }
     
@@ -165,6 +205,7 @@ class GEVU_Migration extends GEVU_Site{
 	* 
     * @param int $idLieuSrc
     * @param int $idLieuDst
+    * @param int $idExi
     * 
     */
 	public function migreLieu($idLieuSrc, $idLieuDst, $idExi){
@@ -385,6 +426,14 @@ class GEVU_Migration extends GEVU_Site{
 		}
 	}	
 	
+	/**
+	 * migre leun lieu enfant
+	 *
+	 * @param int $idLieuDst
+	 * @param int $idLieuDst
+	 * @param int $i
+	 *
+	 */
 	function migreLieuEnfant($idLieuSrc, $idLieuDst, $i){
 
 		try {
@@ -428,6 +477,8 @@ class GEVU_Migration extends GEVU_Site{
 	 *
 	 * @param array $data
 	 * @param Zend_Db_Table_Abstract $db
+	 * @param int $id
+	 * @param string $keyName
 	 *
 	 * @return integer
 	 */
@@ -476,7 +527,18 @@ class GEVU_Migration extends GEVU_Site{
 			echo "Message: " . $e->getMessage() . "\n";
 		}
 		
-	}	
+	}
+		
+	/**
+	 * récupère les références
+	 *
+	 * @param int $i
+	 * @param Zend_Db_Table_Abstract $db
+	 * @param array $r
+	 * @param int $idDst
+	 *
+	 * @return string
+	 */
 	function getRef($i, $db, $r, $idDst){
 		//recherche la référence si le lieu est la cible de destination
 		if($i==0){
@@ -488,6 +550,18 @@ class GEVU_Migration extends GEVU_Site{
 		return $ref;
 	}
 
+	/**
+	 * récupère le lieu de destination
+	 *
+	 * @param int $i
+	 * @param Zend_Db_Table_Abstract $dbSrc
+	 * @param int $idSrc
+	 * @param Zend_Db_Table_Abstract $dbDst
+	 * @param int $idDst
+	 * @param string $libDst
+	 *
+	 * @return integer
+	 */
 	function getLieuDst($i, $dbSrc, $idSrc, $dbDst, $idDst, $libDst){
 		//récupère les infos de la source
 		$rs = $dbSrc->findById_lieu($idSrc);
