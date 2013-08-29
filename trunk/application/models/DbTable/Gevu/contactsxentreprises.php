@@ -26,7 +26,7 @@ class Models_DbTable_Gevu_contactsxentreprises extends Zend_Db_Table_Abstract
     /*
      * Clef primaire de la table.
      */
-    protected $_primary = 'id_contact';
+    protected $_primary =  array('id_entreprise','id_contact');
 
     
     /**
@@ -92,6 +92,18 @@ class Models_DbTable_Gevu_contactsxentreprises extends Zend_Db_Table_Abstract
     {
         $this->delete('gevu_contactsxentreprises.id_contact = ' . $id);
     }
+    
+    /**
+     * Recherche une entrée  avec la valeur spécifiée
+     * et supprime cette entrée.
+     *
+     * @param array $params
+     */
+    public function removeContact($params)
+    {
+        $this->delete('id_contact = ' . $params["idCtc"].' AND id_entreprise = ' . $params["idLien"]);
+    }
+    
     
     /**
      * Récupère toutes les entrées Gevu_contactsxentreprises avec certains critères

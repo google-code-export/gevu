@@ -26,7 +26,7 @@ class Models_DbTable_Gevu_contactsxantennes extends Zend_Db_Table_Abstract
     /*
      * Clef primaire de la table.
      */
-    protected $_primary = 'id_contact';
+    protected $_primary = array('id_antenne','id_contact');
 
     
     /**
@@ -55,9 +55,8 @@ class Models_DbTable_Gevu_contactsxantennes extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function ajouterContact($params, $existe=true)
+    public function ajouter($data, $existe=true)
     {
-    	$data = array("id_contact"=>$params['idCtc'], "id_antenne"=>$params['idLien']);
     	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
