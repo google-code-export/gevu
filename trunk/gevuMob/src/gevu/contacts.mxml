@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:cpnt="cpnt.*"
+		title="Contact" 
+		width="100%" height="100%" 
+		creationComplete="creationCompleteHandler(event)" 
+		stateChangeComplete="stateChangeCompleteHandler(event)" 
+		>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			
+			import cpnt.alert;
+			
+			import skin.btnAjout;
+			import skin.btnSupp;
+			
+			/**
+			 * paramétrage de l'objet
+			 */
+			[Bindable] public var idExi:String;
+			[Bindable] public var bInit:Boolean=true;
+			[Bindable] public var bInsert:Boolean=true;
+			
+			/**ATTENTION
+			 * le premier paramètre de paramsLien est toujours l'idendifiant de la table liée
+			 */
+			[Bindable] public var paramsLien:Array;
+			[Bindable] public var objLien:String;
+			[Bindable] public var methoLien:String;
+			
+			[Bindable] public var unique:Boolean=false;
+			[Bindable] public var arrData:Array;			
+			[Bindable] public var idContact:int;			
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				var a:alert = new alert;
+				a.mess = str;
+				if(os)a.titre = os;
+				a.open(this, false);
+			}
+			
+			private function ContactHandler(e:Object):void
+			{
+				ro.getContact(this.parentApplication.idBase,objLien,paramsLien);
+			}
+			
+			private function deleteContact():void {
+				
+				var a:alert = new alert();
+				a.mess = "Confirmez-vous la suppression du contact ?";
+				a.titre = 'Confirmation suppression';
+				a.fct1 = removeContact;
+				a.open(this, true);
+				PopUpManager.centerPopUp(a);					
+				
+			}
+			public function removeContact():void
+			{
+				var arrParams:Array = new Array();
+				arrParams["idLien"] = paramsLien['id'];
+				if(unique)
+					arrParams["idCtc"]= idContact;
+				else
+					arrParams["idCtc"]= list.selectedItem['id_contact'];
+				ro.removeContact(this.parentApplication.idBase,objLien,arrParams);
+			}
+			
+			private function fillHandler(e:Object):void
+			{
+				if(!e)return;
+				arrData = e.result as Array;
+				if(arrData.length==0){
+					currentState = 'ecriture';
+					return;
+				}
+				btnSuppListe.visible = true; 
+				btnSuppUnique.visible = true; 
+				if(unique){
+					var item:Object=arrData[0];
+					UpdNom.text=item.nom;
+					UpdPrenom.text=item.prenom;
+					UpdFixe.text=item.fixe;
+					UpdMobile.text=item.mobile;
+					idContact = item.id_contact
+				}else{
+					list.dataProvider = new ArrayCollection(arrData);					
+				}
+				
+			}
+			
+			private function AjoutLienContact():void
+			{
+				var arrParams:Array = new Array();
+				arrParams["idCtc"]=slcContact.sl.selectedItem['id_contact'];
+				arrParams["idLien"]=paramsLien['id'];
+				if(paramsLien["type"]) arrParams["type"] = paramsLien["type"];
+				//on affiche la vue avant d'envoyer la requête
+				init();
+				if(this.methoLien=="modifier")
+					ro.modifierContact(this.parentApplication.idBase,objLien,arrParams);
+				else
+					ro.ajouterContact(this.parentApplication.idBase,objLien,arrParams);
+			}
+
+			
+			private function AjoutNewContact():void
+			{
+				var arrParams:Array = new Array();
+				arrParams["idLien"]=paramsLien['id'];
+				if(paramsLien["type"]) arrParams["type"] = paramsLien["type"];
+				var arrData:Array = new Array();
+				arrData["prenom"]=aPrenom.text;
+				arrData["nom"]=aNom.text;
+				arrData["mail"]=aMail.text;
+				arrData["fixe"]=aFixe.text;
+				arrData["mobile"]=aMobile.text;				
+				//on affiche la vue avant d'envoyer la requête
+				init();
+				if(this.methoLien=="modifier")
+					ro.modifierContact(this.parentApplication.idBase,objLien,arrParams,arrData);
+				else
+					ro.ajouterContact(this.parentApplication.idBase,objLien,arrParams,arrData);
+			}
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				init();
+				getData();
+			}
+			
+			public function getData():void
+			{
+				//chargement des données
+				if(paramsLien!=null)ro.getContact(this.parentApplication.idBase,objLien,paramsLien);				
+			}
+			
+			public function init():void
+			{
+				if(unique)
+					currentState = 'unique';
+				else
+					currentState = 'liste';
+			}
+			
+			protected function stateChangeCompleteHandler(event:FlexEvent):void
+			{
+				if(currentState == 'ecriture' && slcContact.sl.dataProvider == null)
+					slcContact.ro.getAll(this.parentApplication.idBase);
+
+			}
+			
+			protected function list_clickHandler(event:MouseEvent):void
+			{
+				var oItem:Object = event.currentTarget.selectedItem;
+				ctcSelect.text = oItem.prenom + " " + oItem.nom;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RemoteObject
+			id="ro"
+			source="GEVU_Diagnostique" destination="zend" 
+			showBusyCursor="true"
+			fault="faultHandlerService(event, this.title);"			
+			>
+			<s:method name="getContact"  result="fillHandler(event)"/>
+			<s:method name="removeContact"  result="ContactHandler(event)"/>  	
+			<s:method name="ajouterContact"  result="ContactHandler(event)"/>
+			<s:method name="modifierContact"  result="ContactHandler(event)"/>
+			
+		</s:RemoteObject>
+	</fx:Declarations>
+	<s:states>
+		<s:State name="liste"/>
+		<s:State name="unique"/>
+		<s:State name="ecriture"/>
+		<s:State name="ajout"/>
+	</s:states>	
+
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+	
+	<s:Panel title="{this.title}" height="100%" width="100%" >
+				
+		<s:VGroup includeIn="liste" id="viewContact" width="100%" height="100%" 
+				  paddingBottom="6"
+				  paddingLeft="6" 
+				  paddingRight="6"
+				  paddingTop="6"
+		  >
+			<s:HGroup>
+				<s:Button skinClass="skin.btnAjout" click="{currentState = 'ecriture'}" />
+				<s:Button id="btnSuppListe" skinClass="skin.btnSupp" click="deleteContact()" visible="false" />
+				<s:Label id="ctcSelect" text="" />
+			</s:HGroup>
+			<s:List id="list" width="100%" height="100%" itemRenderer="cpnt.irListContact" click="list_clickHandler(event)"  />		
+		</s:VGroup>
+		<s:VGroup includeIn="unique" id="viewContactUnique" width="100%" height="100%"  
+				  paddingBottom="6"
+				  paddingLeft="6" 
+				  paddingRight="6"
+				  paddingTop="6"
+				  >
+			<s:HGroup>
+				<s:Button skinClass="skin.btnAjout" click="{currentState = 'ecriture'}" />
+				<s:Button id="btnSuppUnique" skinClass="skin.btnSupp" click="deleteContact()" visible="false" />							
+			</s:HGroup>							
+			<s:HGroup >
+				<s:Label id="UpdPrenom" />							
+				<s:Label id="UpdNom" />							
+			</s:HGroup>			
+			<s:HGroup >
+				<s:VGroup>
+					<s:Label text="Tél. fixe:" />
+					<s:Label id="UpdFixe" />							
+				</s:VGroup>
+				<s:VGroup>
+					<s:Label text="Tel. mobile:" />
+					<s:Label id="UpdMobile" />							
+				</s:VGroup>
+			</s:HGroup>			
+		</s:VGroup>
+		<s:VGroup includeIn="ecriture" id="insertContact" width="100%" height="100%"  
+				  paddingBottom="6"
+				  paddingLeft="6" 
+				  paddingRight="6"
+				  paddingTop="6"
+				  >
+			<s:Button skinClass="skin.btnAjout" click="{currentState = 'ajout'}" />
+			<s:Label text="Choisissez un contact :"/>
+			<cpnt:slcRefDyna id="slcContact" objName="Models_DbTable_Gevu_contacts" irName="cpnt.irListContact" />
+			<s:HGroup>
+				<s:Button label="Enregistrer" click="AjoutLienContact()" />
+				<s:Button label="Annuler" click="init()"  />				
+			</s:HGroup>							
+		</s:VGroup>
+		<s:VGroup includeIn="ajout" width="100%" height="100%"  
+				  paddingBottom="6"
+				  paddingLeft="6" 
+				  paddingRight="6"
+				  paddingTop="6"
+				  >
+			<s:Form id="myForm" width="100%" height="100%">
+				<s:FormHeading label="Formulaire pour l'ajout d'un contact" />
+				<s:FormItem label="Prénom :">
+					<s:TextInput id="aPrenom" />
+				</s:FormItem>			
+				<s:FormItem label="Nom :" required="true">
+					<s:TextInput id="aNom" />
+				</s:FormItem>			
+				<s:FormItem label="eMail :">
+					<s:TextInput id="aMail" />
+				</s:FormItem>
+				<s:FormItem label="Téléphone fixe :" >
+						<s:TextInput id="aFixe" />
+				</s:FormItem>
+				<s:FormItem label="Téléphone mobile :" >
+					<s:TextInput id="aMobile" />
+				</s:FormItem>
+			</s:Form>
+			<s:HGroup>
+				<s:Button label="Enregistrer" click="AjoutNewContact()" />
+				<s:Button label="Annuler" click="init()"  />				
+			</s:HGroup>
+		</s:VGroup>
+	</s:Panel>
+	
+</s:View>

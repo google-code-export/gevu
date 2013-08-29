@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<s:SkinnablePopUpContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						   xmlns:s="library://ns.adobe.com/flex/spark" 
+						   xmlns:mx="library://ns.adobe.com/flex/mx" 
+						   creationComplete="creationCompleteHandler(event)"
+						   >	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import cpnt.alert;
+
+			[Bindable] public var callback:Function;
+			
+			
+			// Handle the OK button.
+			private function processLogin():void {
+				var p:Object=new Object;
+				p['username']=log.text;
+				p['password']=mdp.text;
+				LoginService.verifyUser(p);								
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				callback = this.parentApplication.init;
+			}
+
+			public function resultHandlerService(result:ResultEvent):void
+			{
+				
+				if(result.result == "FAILURE_CREDENTIAL_INVALID") {
+					showAlert("Ce n'est pas le bon mot de passe", 'Vérification mot de passe');
+					return;
+				}
+				if(result.result.idExi==null){
+					showAlert("Ce login n'est pas dans la base.\nVous ne pouvez pas être connecté comme invité.", 'Vérification authentification');
+				}else{
+					var droit:String = result.result.droit_2 as String;
+					var arrApp:Object = JSON.parse(droit);
+					if(isAuthApp(arrApp, this.parentApplication.name)){
+						this.callback(result.result);
+						PopUpManager.removePopUp(this);
+					}else{
+						showAlert("Vous n'êtes pas autorisé à utiliser cette application.", 'Vérification authentification');
+					}
+				}
+			}
+			private function showAlert(mess:String, titre:String):void{
+				var a:alert = new alert;
+				PopUpManager.addPopUp(a,this,true);
+				PopUpManager.centerPopUp(a);					
+				a.mess = mess;
+				a.titre = titre;
+				a.open(this, true);
+				
+			}
+			private function isAuthApp(arr:Object, appName:String):Boolean {
+				for each(var app:Object in arr){
+					if(app.lib == appName) return true;
+				}
+				return false;
+			}
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				var a:alert = new alert;
+				a.mess = str;
+				if(os)a.titre = os;
+				a.open(this, false);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RemoteObject
+			id="LoginService"
+			destination="zend"
+			fault="faultHandlerService(event)"
+			source="AUTH_LoginManager" showBusyCursor="true">
+			<s:method name="verifyUser" result="resultHandlerService(event)" />
+		</s:RemoteObject>		
+	</fx:Declarations>
+	
+	<s:Panel title="Authentification">
+		<s:VGroup width="100%" height="100%" paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4" >
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Login :" width="140" />
+				<s:TextInput id="log" width="100%"/>		
+			</s:HGroup> 
+			<s:HGroup verticalAlign="middle" >
+				<s:Label text="Mot de passe :" width="140" />
+				<s:TextInput id="mdp" displayAsPassword="true" width="100%"/>
+			</s:HGroup> 
+			<s:HGroup horizontalAlign="center"> 
+				<s:Button label="OK" click="processLogin();" /> 
+			</s:HGroup> 		
+		</s:VGroup>	
+	</s:Panel>
+</s:SkinnablePopUpContainer>	

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	title="Interventions" 
+	width="100%" height="100%" minHeight="140"
+	creationComplete="creationCompleteHandler(event)"
+	>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.components.calendarClasses.DateSelectorDisplayMode;
+			
+			import cpnt.alert;
+			import cpnt.irListLieu;
+			
+			import skin.btnAjout;
+			import skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin;
+			
+			[Bindable] public var produitsData:ArrayCollection
+			[Bindable] public var itemSelect:Object; 
+			[Bindable] public var idLieu:int; 
+
+			public var oItem:Object;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+
+				var a:alert = new alert;
+				a.mess = str;
+				if(os)a.titre = os;
+				a.open(this, false);
+			}
+			
+			protected function btnAjouter_clickHandler(event:MouseEvent):void
+			{
+				//création du tableau de valeur
+				//id_lieuinterv 	id_lieu 	id_interv 	 	maj
+				var vn:Array = new Array();
+				vn["id_lieu"] = idLieu;
+				vn["id_interv"] = cbType.selectedItem.id_interv;
+				vn["quantite"] = quantiteA.value;
+				//calcule le cout
+				vn["cout"] = quantiteA.value*cbType.selectedItem.cout;
+				//calcule les dates
+				var fait:Date = dfFaitLe.selectedDate;
+				var afaire:Date = new Date();
+				afaire.setFullYear(int(fait.getFullYear())+int(cbType.selectedItem.frequence));
+				vn["fait"] = fait.fullYear+"-"+fait.month+"-"+fait.day;
+				vn["afaire"] = afaire.fullYear+"-"+afaire.month+"-"+afaire.day;
+				ro.ajouter(vn, this.parentApplication.idExi, this.parentApplication.idBase);
+			}
+			
+			private function deleteItem():void {
+				
+				if (list.selectedItem)
+				{
+					var a:alert = new alert;
+					a.mess = "Confirmez-vous la suppression de cet élément ?";
+					a.titre = "Confirmation Suppression";
+					a.fct1 = deleteClickHandler
+					a.open(this, false);
+				}
+				
+			}
+			
+			private function deleteClickHandler():void
+			{
+				ro.remove(oItem.id_lieuinterv, this.parentApplication.idBase);
+			}
+			
+			protected function ro_resultHandler(event:ResultEvent):void
+			{
+				list.dataProvider = new ArrayCollection(event.result as Array);					
+			}
+						
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if(data!=null){
+					produitsData = new ArrayCollection(data as Array);
+				}
+				idLieu = this.parentApplication.oLieu.id_lieu;
+				if(idLieu){
+					ro.findByIdLieu(idLieu, this.parentApplication.idBase);
+				}
+			}
+			
+			protected function list_clickHandler(event:MouseEvent):void
+			{
+				oItem = event.currentTarget.selectedItem;
+				btnEdit.visible=false;
+				intervention.text = oItem.libInterv+" "+oItem.description;
+				quantite.text = oItem.quantite;
+				fait.text = oItem.fait;
+				afaire.text = oItem.afaire;
+				cout.text = oItem.cout;				
+			}
+			
+			protected function btnEdit_clickHandler(event:MouseEvent):void
+			{
+				var newValue:Number;
+				if(newValue = Number(cout.text))
+				{
+					var vn:Array = new Array();		
+					vn["cout"] = newValue;
+					ro.edit(oItem.id_lieuinterv, vn, this.parentApplication.idBase);
+				}else{
+					var a:alert = new alert;
+					a.mess = "La nouvelle valeur n'est pas un nombre.\nMerci de corriger.";
+					a.titre = "Confirmation Suppression";
+					a.open(this, false);
+					return;					
+				}
+				
+			}
+			
+			protected function modif_resultHandler(event:ResultEvent):void
+			{
+				currentState = "lecture";
+				list.dataProvider = null;					
+				ro.findByIdLieu(idLieu, this.parentApplication.idBase);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>		
+		<s:RemoteObject id="ro"
+					 destination="zend"
+					 source="Models_DbTable_Gevu_lieuxinterventions"
+					 fault="faultHandlerService(event, this.title);"
+					 showBusyCursor="true" 
+						 >
+			<s:method name="findByIdLieu" result="ro_resultHandler(event)" />
+			<s:method name="edit" result="modif_resultHandler(event)" />
+			<s:method name="ajouter" result="modif_resultHandler(event)" />
+			<s:method name="remove" result="modif_resultHandler(event)"  />		
+		</s:RemoteObject>
+	</fx:Declarations>
+	<s:states>
+		<s:State name="lecture"/>
+		<s:State name="ajout"/>
+	</s:states>	
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+	
+	<s:HGroup includeIn="lecture" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+		<s:VGroup width="100%" height="100%" >
+			<s:HGroup>
+				<s:Button id="btnAjout" click="{currentState = 'ajout'}" skinClass="skin.btnAjout" />
+				<s:Button id="btnDelete" click="deleteItem()" skinClass="skin.btnSupp" />							
+			</s:HGroup>
+			<s:List id="list" width="100%" height="100%" click="list_clickHandler(event)" itemRenderer="cpnt.irListInterv"  />
+		</s:VGroup>
+		<s:VGroup height="100%" >			
+			<s:Label text="Intervention : " /><s:TextInput id="intervention" height="46" editable="false" />
+			<s:Label text="quantité : " /><s:TextInput id="quantite" editable="false" />
+			<s:Label text="fait le : " /><s:TextInput id="fait" editable="false" />
+			<s:Label text="à faire le : " /><s:TextInput id="afaire" editable="false" />
+			<s:Label text="Coût : " /><s:TextInput id="cout" change="{btnEdit.visible=true}" />
+			<s:Button id="btnEdit" label="Enregistrer" click="btnEdit_clickHandler(event)" visible="false" />
+		</s:VGroup>	
+	</s:HGroup>
+	<s:VGroup includeIn="ajout" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+		<s:Label text="Saisissez votre intervention :"/> 
+		<s:Form width="100%" height="100%" id="insertForm">			                    		
+			<s:FormItem label="type d'intervention : " >
+				<s:SpinnerListContainer height="56" >
+					<s:SpinnerList id="cbType" dataProvider="{produitsData}" labelField="lib"/>
+				</s:SpinnerListContainer>				
+			</s:FormItem>
+			<s:FormItem label="quantité : " >
+				<s:NumericStepper id="quantiteA" stepSize="1" maximum="1000000" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin"  />
+			</s:FormItem>
+			<s:FormItem label="fait le : " >
+				<s:DateSpinner id="dfFaitLe" displayMode="{DateSelectorDisplayMode.DATE}" locale="'fr-FR'" height="60" />
+			</s:FormItem>
+		</s:Form>		
+		<s:HGroup>
+			<s:Button id="btnAjouter" label="Enregistrer" click="btnAjouter_clickHandler(event)" />
+			<s:Button id="btnAnnuler" label="Annuler" click="{currentState = 'lecture'}" />				
+		</s:HGroup>
+	</s:VGroup>
+</s:View>

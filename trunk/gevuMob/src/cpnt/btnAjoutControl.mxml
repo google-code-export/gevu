@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		creationComplete="creationCompleteHandler(event)"
+		>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			[Bindable] public var btnLbl:String;
+			public var dt:Object;
+			public var idTypeControle:int;
+			public var fctn:Function;
+			
+			
+			protected function btn_clickHandler(event:MouseEvent):void
+			{
+				fctn(dt);
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				btn.label = dt.lib;				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<s:Button id="btn" label="{btnLbl}" click="btn_clickHandler(event)" />
+</s:Group>

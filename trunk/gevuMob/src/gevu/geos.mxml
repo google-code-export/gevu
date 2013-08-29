@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Géographie" 
+		  width="100%"
+		  height="120"
+		  creationComplete="creationCompleteHandler(event)"		  
+		  >	
+	<fx:Script>
+		<![CDATA[
+			import flash.sensors.Geolocation;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.events.ViewNavigatorEvent;			
+			
+			protected var g:Geolocation = new Geolocation();			
+			private var obj:String = "Models_DbTable_Gevu_geos";
+			
+			[Bindable] public var Modif:Boolean=false;
+						
+			public function saveModifications() : void {
+				var arr:Array = new Array();
+				arr["adresse"]=adresse.text;
+				arr["lat"]=lat.value;
+				arr["lng"]=lng.value;
+				arr["zoom_min"]=0;//F04.data;
+				arr["zoom_max"]=zoom_max.value;
+				arr["kml"]=kml.text;
+				arr["type_carte"]=cbTypeCarte.selectedItem["data"];
+				arr["ne"] = ne.text;
+				arr["sw"]= sw.text;
+				arr["lat_sv"]=lat_sv.text;
+				arr["lng_sv"]=lng_sv.text;
+				arr["zoom_sv"]=zoom_sv.text;
+				arr["heading"]=heading.text;
+				arr["pitch"]=pitch.text;
+				arr["id_lieu"]=data.id_lieu;
+				
+				this.parentApplication.roDiag.edit(data.id_geo, arr, obj, this.parentApplication.idBase);
+			}			
+						
+			public function getIndex(label:String):int
+			{
+				var i:int
+				for each(var row:Object in cbTypeCarte.dataProvider){
+					if(row["data"]==label){
+						return i;
+					}
+					i++;
+				}
+				return 0;
+			}			
+			
+			public function setMapType(label:String):void{
+				cbTypeCarte.selectedIndex = getIndex(label);				
+			}
+						
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if (Geolocation.isSupported)
+				{
+					log.text = "Recherche de la géolocalisation...";
+					g.addEventListener(GeolocationEvent.UPDATE, onUpdate);
+					addEventListener(ViewNavigatorEvent.REMOVING,onRemove);
+				}else{
+					currentState = "unsupported";
+					lblSupport.text = "La géolocation n'est pas supportée sur ce matériel.";
+				}
+				//initialisation des valeurs
+				kml.text=data.kml;
+				adresse.text=data.adresse;
+				lat.value=data.lat;
+				lng.value=data.lng;
+				cbTypeCarte.selectedIndex = getIndex(data.type_carte);				
+				zoom_max.value=data.zoom_max;
+				kml.text=data.kml;
+				ne.text=data.kml;
+				sw.text=data.sw;
+				lat_sv.text=data.lat_sv;
+				lng_sv.text=data.lng_sv;
+				zoom_sv.text=data.zoom_sv;
+				heading.text=data.heading;
+				pitch.text=data.pitch;
+				
+			}
+			protected function onUpdate(event:GeolocationEvent):void
+			{
+				trace("Update event called");
+				latGPS.text = event.latitude as String;
+				lngGPS.text = event.longitude as String;
+				log.text = "latitude = " + event.latitude + 
+					"\nlongitude = " + event.longitude +
+					"\naltitude = " + event.altitude +
+					"\nverticalAccuracy = " + event.verticalAccuracy +
+					"\nhorizontalAccuracy = " + event.horizontalAccuracy +
+					"\nspeed = " + event.speed +
+					"\nheading = " + event.heading +
+					"\ntimestamp = " + event.timestamp;        
+			}
+			
+			protected function onRemove(event:ViewNavigatorEvent):void
+			{
+				g.removeEventListener(GeolocationEvent.UPDATE, onUpdate);                
+			}			
+		]]>
+	</fx:Script>	
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="unsupported"/>
+	</s:states>	
+	<s:layout>
+		<s:HorizontalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+	<s:VGroup width="100%" height="100%" >
+		<s:VGroup width="100%" >
+			
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="adresse" />
+				<s:TextInput id="adresse" width="100%" />
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle" >
+				<s:Label text="lat."/>
+				<s:NumericStepper id="lat" 
+								   minimum="-90" maximum="90"
+								   stepSize="0.000001"  enabled="{Modif}" />
+		
+				<s:Label text="lat. GPS"/>
+				<s:Label id="latGPS" text="inconnue" />
+				<s:Label text="lng." />
+				<s:NumericStepper id="lng"
+								   minimum="-180" maximum="180"
+								   stepSize="0.000001"
+								   enabled="{Modif}" />
+				<s:Label text="lng. GPS"/>
+				<s:Label id="lngGPS" text="inconnue" />
+				<!--
+				<s:Label text="zoom min." />
+				<s:NumericStepper id="F04" 
+								   minimum="0" maximum="20"
+								   data="{data.zoom_min}" enabled="{Modif}" />
+				-->
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle" >
+				<s:Label text="fond carto." />
+				<s:ComboBox id="cbTypeCarte"  enabled="{Modif}" >
+					<s:ArrayCollection>
+						<fx:Object label="terrain" data="terrain"/>
+						<fx:Object label="hybride" data="hybrid"/>
+						<fx:Object label="routier" data="roadmap"/>
+						<fx:Object label="satellite" data="satellite"/>
+					</s:ArrayCollection>
+				</s:ComboBox>	
+				<s:Label text="zoom max." />
+				<s:NumericStepper id="zoom_max" enabled="true" 
+								   minimum="0" maximum="30" />
+			</s:HGroup>
+			<s:HGroup width="0" height="0">
+				<s:Label text="Coin Nord-Est :"/>
+				<s:Label id="ne" text=""/>
+			</s:HGroup>
+			<s:HGroup width="0" height="0">
+				<s:Label text="Coin Sud-Ouest :" />
+				<s:Label id="sw" text=""/>
+			</s:HGroup>
+			<s:HGroup width="0" height="0" >
+				<s:Label text="Lat. SV :" />
+				<s:Label id="lat_sv" text=""/>
+				<s:Label text="Lng. SV :" />
+				<s:Label id="lng_sv" text=""/>
+				<s:Label text="Heading :" />
+				<s:Label id="heading" text=""/>
+				<s:Label text="Pitch :" />
+				<s:Label id="pitch" text=""/>
+				<s:Label text="Zoom SV :" />
+				<s:Label id="zoom_sv" text=""/>
+			</s:HGroup>
+			<s:Button id="save" label="enregistrer" click="saveModifications();"/>
+		</s:VGroup>
+		<s:Label text="kml" />
+		<s:TextArea id="kml" editable="true" height="100%" width="100%" />
+		<s:Label id="lblSupport" includeIn="unsupported" width="95%"/>
+		<s:VGroup width="100%" includeIn="normal">
+			<s:Label text="GPS Log : "/>
+			<s:TextArea id="log" editable="false" width="100%"/>
+		</s:VGroup>	
+		
+	</s:VGroup>
+	
+
+</s:View>

@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:cpnt="cpnt.*"
+		title="Logement" 
+		width="100%" height="100%" minHeight="140"
+		creationComplete="creationCompleteHandler(event)"
+		stateChangeComplete="stateChangeCompleteHandler(event)" xmlns:gevu="gevu.*"
+		>
+	<fx:Script source="../includes/util.as"/>	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.ItemClickEvent;
+			
+			import spark.components.calendarClasses.DateSelectorDisplayMode;
+			
+			import skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin;
+			
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			private var obj:String = "Models_DbTable_Gevu_logements";
+			
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				ref.text = data.ref;
+				Code_Escalier.text = data.Code_Escalier;
+				Etage.value= data.Etage; 				
+				Exposition.text=data.Exposition;
+				Nombre_pieces.value=data.Nombre_pieces;
+				Surface_Reelle.value=data.Surface_Reelle;
+				Surface_Appliquee.value=data.Surface_Appliquee;
+				if(data.Type_Reception_TV=="Herztien") Herztien.selected=true;
+				if(data.Type_Reception_TV=="Cable") Cable.selected=true;
+				
+				if(data.Type_Logement){
+					var t:String = String(data.Type_Logement);
+					t = t.substr(0,1);
+					if(t=="D")duplex.selected = true;					
+					if(t=="P")pavillon.selected = true;					
+					if(t=="T")appartement.selected = true;					
+				}
+				if(data.Categorie_Module){
+					if(data.Categorie_Module=="C")commerce.selected = true;					
+					if(data.Categorie_Module=="A")assos.selected = true;					
+				}
+
+				
+			}
+			
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+				if(nom=="DPE_emissions_GES" && val!=0)showCatGES(int(val));
+				if(nom=="DPE_consommation_reelle" && val!=0){
+					DPE_Date.visible = true;
+					DPE_Date.selectedDate = new Date();
+					showCatDPE(int(val));
+				}
+			}
+			
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				isChange = false;
+				this.parentApplication.roDiag.edit(data.id_logement, modifData, obj, this.parentApplication.idBase);
+			}
+						
+			protected function stateChangeCompleteHandler(event:FlexEvent):void
+			{
+				if(this.currentState=="diag"){
+					CREP_Date.setStyle('locale','fr-FR');
+					if(data.CREP_Date != "0000-00-00 00:00:00")CREP_Date.selectedDate = stringToDate(data.CREP_Date) else CREP_Date.visible = false;
+					DTA_Date.setStyle('locale','fr-FR');
+					if(data.DTA_Date != "0000-00-00 00:00:00")DTA_Date.selectedDate = stringToDate(data.DTA_Date) else DTA_Date.visible = false;
+					DTA_Date_Travaux.setStyle('locale','fr-FR');
+					if(data.DTA_Date_Travaux != "0000-00-00 00:00:00"){
+						DTA_Date_Travaux.selectedDate = stringToDate(data.DTA_Date_Travaux);
+						cbDTA_Travaux.selected = true;	
+					}
+					DPE_Date.setStyle('locale','fr-FR');
+					if(data.DPE_Date != "")DPE_Date.selectedDate = stringToDate(data.DPE_Date) else DPE_Date.visible = false;
+					
+					if(data.CREP_presence_Plomb){
+						if(data.CREP_presence_Plomb=="O")DTA_Presence_Amiante_0.selected = true;
+						else DTA_Presence_Amiante_N.selected = true;					
+					}
+					if(data.CREP_Seuil_Plomb_depasse){
+						if(data.CREP_Seuil_Plomb_depasse=="O")CREP_Seuil_Plomb_depasse_0.selected = true;
+						else CREP_Seuil_Plomb_depasse_N.selected = true;					
+					}
+					if(data.DTA_Presence_Amiante){
+						if(data.DTA_Presence_Amiante=="O")DTA_Presence_Amiante_0.selected = true;
+						else DTA_Presence_Amiante_N.selected = true;					
+					}
+					if(data.DTA_Presence_Amiante_Degradee){
+						if(data.DTA_Presence_Amiante_Degradee=="O")DTA_Presence_Amiante_Degradee_0.selected = true;
+						else DTA_Presence_Amiante_Degradee_N.selected = true;					
+					}
+					if(data.DTA_Mesure_Conservatoire){
+						if(data.DTA_Mesure_Conservatoire=="Confinement")DTA_Mesure_Conservatoire_conf.selected = true;
+						if(data.DTA_Mesure_Conservatoire=="Elimination")DTA_Mesure_Conservatoire_elim.selected = true;
+					}
+					
+					DPE_emissions_GES.value=data.DPE_emissions_GES;
+					if(data.DPE_Categorie_Consommation=="")DPE_Categorie_Consommation.visible=false else DPE_Categorie_Consommation.selectedItem =data.DPE_Categorie_Consommation;
+					DPE_consommation_reelle.value=data.DPE_consommation_reelle;
+					if(data.DPE_Categorie_Emissions_GES=="")DPE_Categorie_Emissions_GES.visible=false else DPE_Categorie_Emissions_GES.selectedItem = data.DPE_Categorie_Emissions_GES;
+
+				}
+				
+			}
+			
+			protected function ButtonGroup_itemClickHandler(event:ItemClickEvent):void
+			{
+				var rb:RadioButton = event.relatedObject as RadioButton;
+				var v:String = rb.value as String;
+				switch (rb.groupName) {
+					case "Type_Logement":
+						modifData[rb.groupName]=v+Nombre_pieces.value;
+						break;
+					case "CREP_presence_Plomb":
+						CREP_Date.visible=true;
+						CREP_Date.selectedDate = new Date();
+						break;
+					case "DTA_Presence_Amiante":
+						DTA_Date.visible=true;
+						DTA_Date.selectedDate = new Date();
+						break;
+					default:
+						modifData[rb.groupName]=rb.value;
+				}
+				
+				modifData[rb.groupName]=v;
+				isChange = true;
+
+			}
+
+			protected function showCatDPE(conso:int):void
+			{
+				DPE_Categorie_Consommation.visible = true;
+				if(conso <= 50){
+					DPE_Categorie_Consommation.selectedItem = "A";
+				}
+				if(conso >= 51 && conso <= 90 ){
+					DPE_Categorie_Consommation.selectedItem = "B";
+				}
+				if(conso >= 91 && conso <= 150 ){
+					DPE_Categorie_Consommation.selectedItem = "C";
+				}
+				if(conso >= 151 && conso <= 230 ){
+					DPE_Categorie_Consommation.selectedItem = "D";
+				}
+				if(conso >= 231 && conso <= 330 ){
+					DPE_Categorie_Consommation.selectedItem = "E";
+				}
+				if(conso >= 331 && conso <= 450 ){
+					DPE_Categorie_Consommation.selectedItem = "F";
+				}
+				if(conso > 450){
+					DPE_Categorie_Consommation.selectedItem = "G";
+				}
+				editModif('DPE_Categorie_Consommation', DPE_Categorie_Consommation.selectedItem);				
+				
+			}
+			protected function showCatGES(co2:int):void
+			{
+				DPE_Categorie_Emissions_GES.visible = true;
+				if(co2 <= 5){
+					DPE_Categorie_Emissions_GES.selectedItem = "A";
+				}
+				if(co2 >= 6 && co2 <= 10 ){
+					DPE_Categorie_Emissions_GES.selectedItem = "B";
+				}
+				if(co2 >= 11 && co2 <= 20 ){
+					DPE_Categorie_Emissions_GES.selectedItem = "C";
+				}
+				if(co2 >= 21 && co2 <= 35 ){
+					DPE_Categorie_Emissions_GES.selectedItem = "D";
+				}
+				if(co2 >= 36 && co2 <= 55 ){
+					DPE_Categorie_Emissions_GES.selectedItem = "E";
+				}
+				if(co2 >= 56 && co2 <= 80 ){
+					DPE_Categorie_Emissions_GES.selectedItem = "F";
+				}
+				if(co2 > 80){
+					DPE_Categorie_Emissions_GES.selectedItem = "G";
+				}
+				editModif('DPE_Categorie_Emissions_GES', DPE_Categorie_Emissions_GES.selectedItem);
+			}	
+		]]>			
+	</fx:Script>
+	<fx:Declarations>
+		<s:RadioButtonGroup id="Type_Logement" itemClick="ButtonGroup_itemClickHandler(event)"/>		
+		<s:RadioButtonGroup id="Categorie_Module" itemClick="ButtonGroup_itemClickHandler(event)" />		
+		<s:RadioButtonGroup id="CREP_presence_Plomb" itemClick="ButtonGroup_itemClickHandler(event)"  />		
+		<s:RadioButtonGroup id="CREP_Seuil_Plomb_depasse" itemClick="ButtonGroup_itemClickHandler(event)"  />		
+		<s:RadioButtonGroup id="DTA_Presence_Amiante" itemClick="ButtonGroup_itemClickHandler(event)"  />		
+		<s:RadioButtonGroup id="DTA_Presence_Amiante_Degradee" itemClick="ButtonGroup_itemClickHandler(event)"  />		
+		<s:RadioButtonGroup id="DTA_Mesure_Conservatoire" itemClick="ButtonGroup_itemClickHandler(event)"   />
+		<s:RadioButtonGroup id="Type_Reception_TV" itemClick="ButtonGroup_itemClickHandler(event)"   />
+		
+		<s:ArrayList id="arrCat">
+			<fx:String>A</fx:String>
+			<fx:String>B</fx:String>
+			<fx:String>C</fx:String>
+			<fx:String>D</fx:String>
+			<fx:String>E</fx:String>
+			<fx:String>F</fx:String>
+			<fx:String>G</fx:String>
+		</s:ArrayList>	
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+	<s:states>
+		<s:State name="info"/>
+		<s:State name="diag"/>
+		<s:State name="immopep"/>
+	</s:states>	
+	<s:actionContent>
+		<s:Button label="Informations générales" click="{currentState = 'info'}" />
+		<s:Button label="Diagnostics" click="{currentState = 'diag'}" />
+		<s:Button label="Immopep" click="{currentState = 'immopep'}" />
+	</s:actionContent>
+		
+	<s:HGroup includeIn="info" width="100%" >
+		<s:VGroup width="100%" >
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="Identifiant :" width="140"/>
+				<s:TextInput id="ref" change="editModif('ref', ref.text)" />
+			</s:HGroup>
+			
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="Escalier :" width="140"/>
+				<s:TextInput id="Code_Escalier" change="editModif('Code_Escalier', Code_Escalier.text)"  />
+			</s:HGroup>
+						
+			<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Exposition : " width="140"/>
+					<s:TextInput id="Exposition" change="editModif('Exposition', Exposition.text)" />
+			</s:HGroup>
+			
+			<s:Label text="Raccordement :" width="140"/>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:RadioButton groupName="Type_Reception_TV" id="Herztien" value="Herztien" label="Herztien" /> 
+				<s:RadioButton groupName="Type_Reception_TV" id="Cable" value="Cable" label="Câble" />
+			</s:HGroup>
+			
+			<s:Label text="Activitée(s) :" width="140"/>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:RadioButton groupName="Categorie_Module" id="commerce" value="C" label="Commerce" /> 
+				<s:RadioButton groupName="Categorie_Module" id="assos" value="A" label="Association" />
+			</s:HGroup>
+			
+			<s:Label text="Type de logement :" width="140" />
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:RadioButton groupName="Type_Logement" id="duplex" value="D" label="Duplex"  /> 
+				<s:RadioButton groupName="Type_Logement" id="pavillon" value="P" label="Pavillon"  />
+				<s:RadioButton groupName="Type_Logement" id="appartement" value="A" label="Appartement" />
+			</s:HGroup>
+		</s:VGroup>
+		<s:VGroup width="100%" >
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="Etage :" width="140" />
+				<s:NumericStepper id="Etage" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" change="editModif('Etage', Etage.value)"/>
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="Nombre de pièce :" width="140" />
+				<s:NumericStepper id="Nombre_pieces" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" change="editModif('Nombre_pieces', Nombre_pieces.value)"/>
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="Surface réelle :" width="140"/>
+				<s:NumericStepper id="Surface_Reelle" maximum="1000" stepSize="0.01" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" 
+								  valueFormatFunction="formatFunction" valueParseFunction="parseFunction" 
+								  change="editModif('Surface_Reelle', Surface_Reelle.value)"/>
+			</s:HGroup>
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:Label text="Surface appliquée :" width="140"/>
+				<s:NumericStepper id="Surface_Appliquee" maximum="1000" minimum="0" stepSize="0.01" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" 
+								  valueFormatFunction="formatFunction" valueParseFunction="parseFunction" 
+								  change="editModif('Surface_Appliquee', Surface_Appliquee.value)"/>
+			</s:HGroup>
+		</s:VGroup>
+	</s:HGroup>
+	<s:HGroup includeIn="diag" width="100%" >
+		<s:VGroup width="100%" >
+			<s:Panel title="Diag. plomb" width="100%" >
+				<s:layout>
+					<s:VerticalLayout
+						paddingBottom="6"
+						paddingLeft="6" 
+						paddingRight="6"
+						paddingTop="6"
+						gap="6"/>                
+				</s:layout>	
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Date :" width="120"/>
+					<s:DateSpinner id="CREP_Date" displayMode="{DateSelectorDisplayMode.DATE}" height="60" change="editModif('CREP_Date', dateToString(CREP_Date.selectedDate))" />			
+				</s:HGroup>			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Présence :" width="120"/>
+					<s:RadioButton groupName="CREP_presence_Plomb" id="CREP_presence_Plomb_0" value="O" label="Oui" /> 
+					<s:RadioButton groupName="CREP_presence_Plomb" id="CREP_presence_Plomb_N" value="" label="Non" />
+				</s:HGroup>			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Seuil dépassé :" width="120" />
+					<s:RadioButton groupName="CREP_Seuil_Plomb_depasse" id="CREP_Seuil_Plomb_depasse_0" value="O" label="Oui" /> 
+					<s:RadioButton groupName="CREP_Seuil_Plomb_depasse" id="CREP_Seuil_Plomb_depasse_N" value="" label="Non" />
+				</s:HGroup>
+				
+			</s:Panel>
+			
+			<s:Panel title="Diag. amiante" width="100%" >
+				<s:layout>
+					<s:VerticalLayout
+						paddingBottom="6"
+						paddingLeft="6" 
+						paddingRight="6"
+						paddingTop="6"
+						gap="6"/>                
+				</s:layout>	
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Date :" width="120"/><s:DateSpinner id="DTA_Date" displayMode="{DateSelectorDisplayMode.DATE}" height="60" change="editModif('DTA_Date', dateToString(DTA_Date.selectedDate))" />
+				</s:HGroup>			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Présence :" width="120" />
+					<s:RadioButton groupName="DTA_Presence_Amiante" id="DTA_Presence_Amiante_0" value="O" label="Oui" /> 
+					<s:RadioButton groupName="DTA_Presence_Amiante" id="DTA_Presence_Amiante_N" value="" label="Non" />
+				</s:HGroup>			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Dégradée :" width="120" />
+					<s:RadioButton groupName="DTA_Presence_Amiante_Degradee" id="DTA_Presence_Amiante_Degradee_0" value="O" label="Oui" /> 
+					<s:RadioButton groupName="DTA_Presence_Amiante_Degradee" id="DTA_Presence_Amiante_Degradee_N" value="" label="Non" />
+				</s:HGroup>
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Mesure conservatoire :" />
+					<s:RadioButton groupName="DTA_Mesure_Conservatoire" id="DTA_Mesure_Conservatoire_conf" value="Confinement" label="Confinement" /> 
+					<s:RadioButton groupName="DTA_Mesure_Conservatoire" id="DTA_Mesure_Conservatoire_elim" value="Elimination" label="Elimination" />
+				</s:HGroup>
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:CheckBox label="Travaux programmé : " id="cbDTA_Travaux" />
+					<s:DateSpinner id="DTA_Date_Travaux" displayMode="{DateSelectorDisplayMode.DATE}" height="60" visible="{cbDTA_Travaux.selected}" change="editModif('DTA_Date_Travaux', dateToString(DTA_Date_Travaux.selectedDate))" />
+				</s:HGroup>
+				
+			</s:Panel>
+		</s:VGroup>
+		<s:VGroup width="100%" >
+			<s:Panel title="Diag. performance énergétique (DPE)" width="100%" >
+				<s:layout>
+					<s:VerticalLayout
+						paddingBottom="6"
+						paddingLeft="6" 
+						paddingRight="6"
+						paddingTop="6"
+						gap="6"/>                
+				</s:layout>	
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Date :" width="120"/><s:DateSpinner id="DPE_Date" displayMode="{DateSelectorDisplayMode.DATE}" height="60" change="editModif('DPE_Date', dateToString(DPE_Date.selectedDate))" />
+				</s:HGroup>			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Consommation réelle :" />
+					<s:NumericStepper id="DPE_consommation_reelle" maximum="1000" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" 
+									  change="editModif('DPE_consommation_reelle', DPE_consommation_reelle.value)"/>
+				</s:HGroup>			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Catégorie :" />
+					<s:SpinnerListContainer height="56" >
+						<s:SpinnerList id="DPE_Categorie_Consommation" dataProvider="{arrCat}" change="editModif('DPE_Categorie_Consommation', DPE_Categorie_Consommation.selectedItem)"  />
+					</s:SpinnerListContainer>				
+				</s:HGroup>				
+			</s:Panel>
+			<s:Panel title="Diag. émission gaz à effet de serre (GES)" width="100%" >
+				<s:layout>
+					<s:VerticalLayout
+						paddingBottom="6"
+						paddingLeft="6" 
+						paddingRight="6"
+						paddingTop="6"
+						gap="6"/>                
+				</s:layout>	
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Emission de GES :"  />
+					<s:NumericStepper id="DPE_emissions_GES" maximum="1000" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" change="editModif('DPE_emissions_GES', DPE_emissions_GES.value)"/>
+				</s:HGroup>			
+				<s:HGroup width="100%" verticalAlign="middle">
+					<s:Label text="Catégorie :" />
+					<s:SpinnerListContainer height="56" >
+						<s:SpinnerList id="DPE_Categorie_Emissions_GES" dataProvider="{arrCat}" change="editModif('DPE_Categorie_Emissions_GES', DPE_Categorie_Emissions_GES.selectedItem)" />
+					</s:SpinnerListContainer>				
+				</s:HGroup>				
+			</s:Panel>
+		</s:VGroup>
+	</s:HGroup>
+	<s:Panel includeIn="immopep" title="Carte d'identité Immopep" height="100%" width="100%" >
+		<s:layout>
+			<s:VerticalLayout
+				paddingBottom="6"
+				paddingLeft="6" 
+				paddingRight="6"
+				paddingTop="6"
+				gap="6"/>                
+		</s:layout>	
+		<gevu:interventions id="vInter" />		
+	</s:Panel>
+	<s:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+</s:View>

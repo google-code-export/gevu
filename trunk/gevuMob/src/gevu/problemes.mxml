@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:cpnt="cpnt.*"
+		title="Problèmes" 
+		width="100%" height="100%" minHeight="140"
+		 creationComplete="creationCompleteHandler(event)"
+		>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import cpnt.alert;
+			import cpnt.irListLieu;
+			
+			import skin.btnAjout;
+			import skin.btnSupp;
+			
+			[Bindable] public var idSelect:int=-1; 
+			[Bindable] public var idDiag:int; 
+			[Bindable] public var idBase:String; 
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				idDiag = data as int;
+				init();				
+			}
+
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				var a:alert = new alert;
+				a.mess = str;
+				if(os)a.titre = os;
+				a.open(this, false);
+			}
+			
+			protected function btnAjouter_clickHandler(event:MouseEvent):void
+			{
+				//création du tableau de valeur
+				var vn:Array = new Array();
+				vn["num_marker"] = num_marker.text;
+				vn["mesure"] = mesure.text;
+				vn["observations"] = observations.text;
+				vn["id_diag"] = idDiag;				
+				ro.ajouter(vn,this.parentApplication.idExi,this.parentApplication.idBase);
+			}
+			
+			private function deleteItem():void {
+				
+				if (list.selectedItem)
+				{
+					var aProcess:alert = new alert();
+					aProcess.mess = "Confirmez-vous la suppression de cet élément ?";
+					aProcess.titre = 'Confirmation suppression';
+					aProcess.fct1 = deleteClickHandler;
+					aProcess.open(this, true);
+					PopUpManager.centerPopUp(aProcess);					
+				}
+				
+			}
+			
+			private function deleteClickHandler():void
+			{
+				ro.remove(idSelect,this.parentApplication.idBase);
+			}
+			
+			protected function ro_resultHandler(event:ResultEvent):void
+			{
+				data = event.result as Object;
+				currentState = 'lecture';
+			}
+						
+			protected function method_resultHandler(event:ResultEvent):void
+			{
+				init();
+			}
+			
+			public function init():void
+			{
+				if(idDiag && idDiag!=-1){
+					ro.findByIdDiag(idDiag, this.parentApplication.idBase);
+					btnAjout.enabled = true;
+					btnDelete.enabled = true;
+				}else{
+					btnAjout.enabled = false;
+					btnDelete.enabled = false;
+				}
+			}
+			
+			
+			protected function list_clickHandler(event:MouseEvent):void
+			{
+				var item:Object=event.currentTarget.selectedItem;
+				if(item){
+					idSelect = item.id_probleme;
+				}
+				
+			}
+			
+			protected function findByIdDiag_resultHandler(event:ResultEvent):void
+			{
+				list.dataProvider =  new ArrayCollection(event.result as Array);				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RemoteObject id="ro"
+						destination="zend"
+						source="Models_DbTable_Gevu_problemes"
+						fault="faultHandlerService(event);"
+						result="ro_resultHandler(event)"
+						showBusyCursor="true" 
+						>
+			<s:method name="ajouter" result="method_resultHandler(event)"	/>
+			<s:method name="remove" result="method_resultHandler(event)" />
+			<s:method name="findByIdDiag" result="findByIdDiag_resultHandler(event)" />
+		</s:RemoteObject>
+	</fx:Declarations>	
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+	<s:states>
+		<s:State name="lecture"/>
+		<s:State name="ajout"/>
+	</s:states>	
+		
+	<s:VGroup includeIn="lecture" width="100%" height="100%" >
+		<s:HGroup width="100%" >
+			<s:Button skinClass="skin.btnAjout" id="btnAjout" click="{currentState = 'ajout'}" />
+			<s:Button skinClass="skin.btnSupp" id="btnDelete" click="deleteItem()"  />
+		</s:HGroup>							
+		<s:HGroup width="100%" height="100%" >
+			<s:List id="list" width="100%" height="100%" click="list_clickHandler(event)" itemRenderer="cpnt.irListProb"  />
+		</s:HGroup>							
+	</s:VGroup>
+	<s:VGroup includeIn="ajout" width="100%" height="100%"  >
+		<s:HGroup verticalAlign="middle" >
+			<s:Label text="mesure :" /><s:TextInput id="mesure" width="100%" />
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" >
+			<s:Label text="N° de marker :" /><s:TextInput id="num_marker" width="100%" />
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" >
+			<s:Label text="Observations :" /><s:TextInput id="observations" width="100%" />
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle" >
+			<s:Button id="btnAjouter" label="Enregistrer" click="btnAjouter_clickHandler(event)" />
+			<s:Button id="btnAnnuler" label="Annuler" click="{currentState = 'lecture'}" />				
+		</s:HGroup>
+	</s:VGroup>
+</s:View>

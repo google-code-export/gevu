@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:cpnt="cpnt.*"
+		title="Parties communes" 
+		width="100%" height="100%" minHeight="140"
+		creationComplete="creationCompleteHandler(event)"
+		>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			private var obj:String = "Models_DbTable_Gevu_partiescommunes";
+								
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				data[nom]=val;
+				isChange = true;
+			}
+			
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				isChange = false;
+				this.parentApplication.roDiag.edit(data.id_part_commu, modifData, obj, this.parentApplication.idBase);
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				ref.text=data.ref; 				
+			}
+			
+			
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+
+	<s:VGroup>
+
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="Identifiant de la parties commune :" />
+			<s:TextInput id="ref" width="100%" change="editModif('ref', ref.text)" />
+		</s:HGroup>
+		<s:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+		
+	</s:VGroup>
+	
+	
+</s:View>

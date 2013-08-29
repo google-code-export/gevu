@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:cpnt="cpnt.*"
+		xmlns:gevu="gevu.*"
+		title="Diagnostics accessibilité" 
+		width="100%" height="100%" 
+		creationComplete="creationCompleteHandler(event)"
+		stateChangeComplete="stateChangeCompleteHandler(event)" 
+		>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.UIDUtil;
+			
+			import spark.components.Image;
+			import spark.events.ListEvent;
+			
+			import cpnt.alert;
+			
+			import views.htmlArea;
+			
+			[Bindable] public var diagData:Array;
+			[Bindable] public var scenarData:Array;
+			[Bindable] public var scrDescData:Array;
+			[Bindable] public var sceneData:XML;
+			[Bindable] public var reponseData:Array;
+			[Bindable] public var choixData:Array = new Array;
+			[Bindable] public var xlmScene:XML;
+			[Bindable] public var selectDiag:Object;			
+			[Bindable] public var idLieu:int;
+			[Bindable] public var idTypeCtlParent:String;
+			[Bindable] public var totQestion:int=0;
+			[Bindable] public var bAjout:Boolean=false;			
+			private var numEtape:int;
+			private var numQuestion:int;
+			private var numPrevQuestion:int;
+			private var nodeQuestion:XML;
+			private var nodeQuestionPrev:XML;
+			private var idTypeControle:String;
+			private var idCritere:String;
+			private var totQestionInter:int=-1;
+			private var numQestionInter:int;
+			private var arrQuestion:Array = new Array;
+			private var idInstant:int=-1;
+						
+			protected function stateChangeCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				//roScena.findByExiDroit(this.parentApplication.idExi);
+				if(data!=null){
+					bAjout = data.bAjout;
+					scrDescData = data.scrDescData;
+					idLieu = data.idLieu;
+				}
+				roMC.getAllByType(2);
+				if(bAjout){
+					currentState = 'ajout';
+					if(idTypeCtlParent)
+						roDiag.getScenarioComplet(this.parentApplication.idScenar, idLieu, idTypeCtlParent);
+				}
+				if(data.diag){
+					listDiag.dataProvider = new ArrayCollection(data.diag as Array);
+				}
+				
+			}
+						
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				var a:alert = new alert;
+				a.mess = str;
+				if(os)a.titre = os;
+				a.open(this, false);
+				
+			}
+			
+			protected function getDiagComplet_resultHandler(event:ResultEvent):void
+			{
+				diagData = event.result as Array;
+				listRep.dataProvider = new ArrayCollection(diagData['questions']);
+			}
+						
+			private function initSolutions():void
+			{
+				vnSolus.pushView(gevu.solutions,selectDiag);
+			}
+			
+			private function initProblemes(idDiag:int, txtDiag:String):void
+			{
+				vnProbs.pushView(gevu.problemes,idDiag);
+				txtCritProb.text = txtDiag;				
+			}
+			
+			private function sortDiag(item:*, index:int, array:Array):Boolean
+			{
+				if(item.id_diag == selectDiag.id_diag)
+					return true;
+				else
+					return false;
+				
+			}
+			
+			protected function getScenarioComplet_resultHandler(event:ResultEvent):void
+			{
+				scrDescData = event.result as Array;
+				if(scrDescData){
+					showQuestion();
+				}
+				
+			}
+			
+			private function showQuestion():void{
+				if(!scrDescData)return;
+				var key:String;
+				var params:Object = JSON.parse(scrDescData["etapes"][0]["paramsCrit"]);
+				xlmScene = XML(params[0]["idCritSE"]);
+				setKeyQuestion(xlmScene);
+				
+				getNextQuestion();				
+			}
+			
+			private function getPrevQuestion():void
+			{
+				if(arrQuestion.length>0){
+					nodeQuestion = arrQuestion.pop();
+					showCritere();
+				}
+			}
+			
+			
+			private function getNextQuestion():void
+			{
+				
+				//calcule la prochaine question
+				if(!nodeQuestion){
+					//on prend la première question
+					nodeQuestion = xlmScene.children()[0];
+				}else{
+					verifRepCond(nodeQuestion);
+				}
+				arrQuestion.push(nodeQuestion);
+				showCritere();
+			}			
+			
+			private function showCritere():void
+			{
+				//vérifie s'il faut charger une réponse 
+				if(nodeQuestion.@["val"]){
+					ckReponse.setVal(nodeQuestion.@["val"]);
+				}									
+				idTypeControle = nodeQuestion.@["idCtrl"];
+				ckReponse.lblQ = nodeQuestion.@["lib"];
+				ckReponse.decocheVals();
+				lblQuestionNum.text = nodeQuestion.@["num"];
+				refCtl.text = nodeQuestion.@["ref"];
+				typeCtl.text = nodeQuestion.@["type"];
+				//ajoute les icones de critères
+				addIconesCritere(nodeQuestion);
+
+				btnPrevQuestion.enabled = int(lblQuestionNum.text) > 1;
+				btnNextQuestion.enabled= lblQuestionNum.text != lblQuestionTot.text;
+				
+				//charge les problèmes
+				initProblemes(nodeQuestion.@["idDiag"], nodeQuestion.@["lib"]+" : "+nodeQuestion.@["val"]);				
+			}
+			
+			private function addIconesCritere(node:XML):void
+			{
+				var larg:int = 20;
+				iconCtl.removeAllElements();
+				
+				var imaMo:Image = new Image;
+				imaMo.source = "assets/moteur"+node.@["moteur"]+".jpg";
+				imaMo.width = larg;
+				iconCtl.addElement(imaMo);
+				
+				var imaAu:Image = new Image;
+				imaAu.source="assets/audio"+node.@["auditif"]+".jpg";
+				imaAu.width = larg;
+				iconCtl.addElement(imaAu);
+				
+				var imaVi:Image = new Image;
+				imaVi.source="assets/visu"+node.@["visuel"]+".jpg";
+				imaVi.width = larg;
+				iconCtl.addElement(imaVi);
+				
+				var imaCo:Image = new Image;
+				imaCo.source="assets/cog"+node.@["cognitif"]+".jpg";
+				imaCo.width = larg;
+				iconCtl.addElement(imaCo);
+				
+			}
+			
+			private function verifRepCond(node:XML):void
+			{
+				
+				//charge la question
+				var parent:XML = node.parent();
+				var nbEnfant:int = node.children().length();
+				//vérifie s' il y a des questions enfants 
+				if(nbEnfant > 0){
+					//on vérifie s'il existe une condition
+					var cr:String = nodeQuestion.@["CondRep"]+"";
+					var val:String = nodeQuestion.@["val"]+"";					
+					if(cr){							
+						if(cr=="2_"+val){								
+							//on passe à la première question de l'enfant
+							nodeQuestion = node.children()[0];							
+						}else{
+							//on passe à la question frère
+							getNextQuestionFrere(parent, node);
+						}
+					}else{
+						//on passe à la première question de l'enfant
+						nodeQuestion = node.children()[0];							
+					}
+				}else{
+					//on passe à la question frère
+					getNextQuestionFrere(parent, node);
+				}
+				
+				
+			}
+			
+			private function getNextQuestionFrere(parent:XML, node:XML):void
+			{
+				var nbFrere:int = parent.children().length();
+				var nodeIndex:int = node.childIndex();
+				
+				//vérifie s'il reste des questions frères
+				if(nodeIndex==(nbFrere-1)){
+					//on arrète s'il n'y a pas de parent
+					if(parent.parent()==null) return;
+					//on recherche le premier frère du parent
+					getNextQuestionFrere(parent.parent(), parent);
+				}else{
+					//on passe à la question frère
+					var nodeQuestionFrere:XML = parent.children()[nodeIndex+1];
+					//on vérifie si la question frère porte sur le même critère
+					if(nodeQuestionFrere.@["ref"]==node.@["ref"]){
+						//on passe à la question suivante
+						nodeQuestionFrere.@["val"] = nodeQuestion.@["val"];
+						nodeQuestion = nodeQuestionFrere;
+						getNextQuestion();
+					}else{
+						nodeQuestion = nodeQuestionFrere;
+					}					
+				}
+				
+			}
+			
+			
+			private function setKeyQuestion(node:XML):void
+			{
+				var crit:Object;
+				for each (var q:XML in node.children()){
+					//vérifie si la question à une clef
+					if(q.@["uid"]==""){
+						q.@["uid"] = UIDUtil.createUID();
+					}
+					totQestion++;
+					q.@["num"] = totQestion;
+					
+					crit = getCrit(scrDescData["etapes"][0]["idCtrl"], q.@["id_critere"]);
+					q.@["lib"] = crit.criteres;
+					q.@["moteur"] = crit.handicateur_moteur;
+					q.@["auditif"] = crit.handicateur_auditif;
+					q.@["visuel"] = crit.handicateur_visuel;
+					q.@["cognitif"] = crit.handicateur_cognitif;
+					q.@["type"] = "";
+					if(crit.id_type_critere==1)q.@["type"] = "Réglementaire";;
+					if(crit.id_type_critere==3)q.@["type"] = "Souhaitable";
+					q.@["idDiag"] = -1;
+					q.@["idCtrl"] = scrDescData["etapes"][0]["idCtrl"];
+					
+					setKeyQuestion(q);
+				}
+			}
+			
+			protected function chkReponse(nom:String, val:Object):void
+			{
+				
+				//stocke la réponse
+				var vn:Array = new Array();
+				vn["id_critere"] = nodeQuestion.@["id_critere"]+"";
+				vn["id_reponse"] = val;	
+				vn["id_type_controle"] = nodeQuestion.@["idCtrl"]+"";
+				if(idInstant==-1){
+					creaChoix(vn);
+				}else{
+					var idDiag:String = nodeQuestion.@["idDiag"]+"";
+					if(idDiag!="-1")vn["id_diag"] = idDiag;
+					setChoix(vn);
+				}
+				nodeQuestion.@["val"] = val;
+				
+			}
+			
+			protected function creaChoix(vn:Object):void
+			{
+				vgAjout.enabled = false
+				roDiag.creaChoix(this.parentApplication.idExi, idLieu, txtComment.text, vn, this.parentApplication.idBase);
+			}
+			
+			protected function setChoix(vn:Object):void
+			{
+				vgAjout.enabled = false
+				var choix:Array= new Array;
+				choix.push(vn);
+				roDiag.setChoix(this.parentApplication.idExi, idLieu, txtComment.text, choix, this.parentApplication.idBase, idInstant);
+			}
+			protected function roDiagSetChoix_resultHandler(event:ResultEvent):void
+			{
+				var arr:Array = event.result as Array;
+				nodeQuestion.@["idDiag"] = arr.idDiags[0];
+				getNextQuestion();
+				vgAjout.enabled = true;
+			}
+			protected function roDiagCreaChoix_resultHandler(event:ResultEvent):void
+			{
+				var arr:Array = event.result as Array;
+				this.idInstant = arr.idInst;
+				nodeQuestion.@["idDiag"] = arr.idDiag;
+				getNextQuestion();
+				vgAjout.enabled = true;
+			}
+			
+			private function getCrit(idTypeControle:String, idCrit:String):Object
+			{
+				for each (var cri:Object in scrDescData["criteres"]["ctrl_"+idTypeControle]){
+					if(cri.id_critere==idCrit){
+						//affiche l'icone
+						var dt:Object = new Object;
+						dt.icone = cri.icone;
+						dt.lib = cri.lib;
+						dt.aide = cri.aide;
+						return cri;
+					}
+				}
+				var def:Object = new Object;
+				def.lib = "";
+				def.ref = ""
+				return def;				
+			}
+			
+			
+			protected function btnPrevQuest_clickHandler(event:MouseEvent):void
+			{
+				getPrevQuestion();
+			}
+			
+			protected function btnNextQuestion_clickHandler(event:MouseEvent):void
+			{
+				getNextQuestion();
+			}
+			
+			protected function roMC_resultHandler(e:ResultEvent):void
+			{
+				if(!e || !e.result)return;
+				reponseData = e.result as Array;
+			}			
+			
+			protected function method3_resultHandler(event:ResultEvent):void
+			{
+				if(!event || !event.result)return;
+				scenarData = event.result as Array;
+			}
+			
+			protected function ajout_creationCompleteHandler(event:FlexEvent):void
+			{
+				showQuestion();
+			}
+			
+			protected function btnAjout_clickHandler(event:MouseEvent):void
+			{				
+				currentState = 'ajout';
+			}
+			
+			protected function roInstAjout_resultHandler(event:ResultEvent):void
+			{
+				if(!event.result)return;
+				idInstant = event.result as int;
+			}
+			
+			
+			protected function getDiagForLieu_resultHandler(event:ResultEvent):void
+			{
+				listDiag.dataProvider = new ArrayCollection(event.result as Array);
+				currentState = 'archive';
+			}			
+						
+			protected function listDiag_clickHandler(event:MouseEvent):void
+			{
+				listRep.dataProvider = null;
+				var s:Object=event.currentTarget.selectedItem;
+				if(s.id_lieu){
+					// récupère les données du diagnostic
+					roDiag.getDiagComplet(s.id_lieu,this.parentApplication.idBase,s.id_instant);					
+				}				
+			}
+			
+			protected function listRep_clickHandler(event:MouseEvent):void
+			{
+				selectDiag = event.currentTarget.selectedItem;
+				if(selectDiag){
+					initProblemes(selectDiag.id_diag, selectDiag.criteres+" : "+selectDiag.reponse);
+					initSolutions();
+				}				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RemoteObject id="roDiag"
+						 destination="zend"
+						 source="GEVU_Diagnostique"
+						 fault="faultHandlerService(event, 'GEVU - Diagnostic');"
+						 showBusyCursor="true" 
+						 >
+			<s:method name="getDiagComplet" result="getDiagComplet_resultHandler(event)" />
+			<s:method name="getScenarioComplet" result="getScenarioComplet_resultHandler(event)" />
+			<s:method name="setChoix" result="roDiagSetChoix_resultHandler(event)" />
+			<s:method name="setInstant" result="roInstAjout_resultHandler(event)" />
+			<s:method name="creaChoix" result="roDiagCreaChoix_resultHandler(event)" />
+			<s:method name="getDiagForLieu" result="getDiagForLieu_resultHandler(event)" />
+		</s:RemoteObject>
+		<s:RemoteObject id="roScena"
+						 destination="zend"
+						 source="Models_DbTable_Gevu_scenario"
+						 fault="faultHandlerService(event, 'GEVU - Diagnostic - Scenario');"
+						 showBusyCursor="true"
+						 >
+			<s:method name="findByExiDroit" result="method3_resultHandler(event)" />
+		</s:RemoteObject>
+		<s:RemoteObject id="roMC"
+						 source="Models_DbTable_Gevu_motsclefs" destination="zend" 
+						 showBusyCursor="true"
+						 fault="faultHandlerService(event, 'GEVU - Diagnostic - Mot-clef')">
+			<s:method name="getAllByType" result="roMC_resultHandler(event)"/>  	
+		</s:RemoteObject>
+		
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+	<s:states>
+		<s:State name="archive"/>
+		<s:State name="ajout"/>
+	</s:states>	
+	<s:actionContent>
+		<s:Button label="Diag. faits" click="{currentState = 'archive';roDiag.getDiagForLieu(idLieu, this.parentApplication.idExi, this.parentApplication.idBase);}" />
+		<s:Button label="Ajouter un diag." click="{currentState = 'ajout';showQuestion();}" />
+	</s:actionContent>
+		
+	<s:VGroup includeIn="archive" width="100%" height="100%">
+		<s:HGroup verticalAlign="middle" width="100%" height="100%" >
+			<s:List id="listDiag" width="50%" height="100%" click="listDiag_clickHandler(event)"  itemRenderer="cpnt.irListDiag"  />
+			<s:List id="listRep" width="100%" height="100%"  click="listRep_clickHandler(event)" itemRenderer="cpnt.irListRep"  />
+		</s:HGroup>		
+	</s:VGroup>
+	<s:VGroup includeIn="ajout" id="vgAjout" width="100%" creationComplete="ajout_creationCompleteHandler(event)" >
+		<s:HGroup verticalAlign="middle">
+			<s:Label text="Questions : " />
+			<s:Button icon="@Embed('assets/prev.png')"  id="btnPrevQuestion" click="btnPrevQuest_clickHandler(event)" toolTip="Passe à la question précédente" />
+			<s:Label id="lblQuestionNum" text="1" /><s:Label id="lblQuestionInter" text="" /><s:Label text=" sur " /><s:Label id="lblQuestionTot" text="{totQestion}" />
+			<s:Button icon="@Embed('assets/next.png')"  id="btnNextQuestion" click="btnNextQuestion_clickHandler(event)" toolTip="Passe à la question suivante" />
+			<s:Label id="refCtl" text="" />
+			<s:Label id="typeCtl" text="" />
+			<s:HGroup id="iconCtl" />
+		</s:HGroup>
+		<cpnt:repType width="100%" id="ckReponse" lblQ="" Q="reponse_1" fnct="{this.chkReponse}" />
+		<s:HGroup width="0">
+			<s:Label text="Commentaires :" />
+			<s:TextInput id="txtComment" width="100%" height="100%" />					
+		</s:HGroup>
+	</s:VGroup>
+	<s:VGroup width="100%" height="100%" >
+		<s:TextArea id="txtCritProb" height="60" width="100%"  editable="false" />
+		<s:HGroup width="100%" height="100%" verticalAlign="middle" >
+			<s:ViewNavigator  id="vnProbs" width="100%" height="100%" firstView="views.htmlArea" />
+			<s:ViewNavigator  id="vnSolus" width="100%" height="100%" firstView="views.htmlArea" />			
+		</s:HGroup> 
+	</s:VGroup>
+
+</s:View>

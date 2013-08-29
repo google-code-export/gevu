@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:cpnt="cpnt.*"
+		xmlns:gevu="gevu.*"
+		title="Bâtiment" 
+		width="100%" height="100%" 
+		creationComplete="creationCompleteHandler(event)" 
+		stateChangeComplete="stateChangeCompleteHandler(event)"
+		>
+	<fx:Script source="../includes/util.as"/>	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.components.calendarClasses.DateSelectorDisplayMode;
+			
+			import skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin;
+			
+			private var obj:String = "Models_DbTable_Gevu_batiments";
+			
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+					
+			private function GetParamContact(ctc:contacts, type:String):void
+			{
+				var arrParams:Array = new Array();
+				arrParams["id"]=data.id_batiment;
+				arrParams["type"]=type;
+				ctc.paramsLien = arrParams;
+				ctc.getData();
+			}	
+			
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true; 
+			}
+						
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				isChange = false;
+				this.parentApplication.roDiag.edit(data.id_batiment, modifData, obj, this.parentApplication.idBase);
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if(data==null)return;
+				
+				ref.text=data.ref; 
+				superficie_parcelle.value = data.superficie_parcelle;
+				superficie_batiment.value = data.superficie_batiment;
+				
+				date_achevement.setStyle('locale','fr-FR');
+				if(data.date_achevement != "0000-00-00")date_achevement.selectedDate = stringToDate(data.date_achevement) else date_achevement.visible = false;
+				date_depot_permis.setStyle('locale','fr-FR');
+				if(data.date_depot_permis != "0000-00-00")date_depot_permis.selectedDate = stringToDate(data.date_depot_permis) else date_depot_permis.visible = false;
+				date_reha.setStyle('locale','fr-FR');
+				if(data.date_reha != "0000-00-00")date_reha.selectedDate = stringToDate(data.date_reha) else date_reha.visible = false;
+				
+				reponse_10.value = data.reponse_10;
+				reponse_11.value = data.reponse_11;
+				reponse_12.value = data.reponse_12;
+				reponse_13.val = data.reponse_13;
+				reponse_14.val = data.reponse_14;
+			}
+			
+			protected function stateChangeCompleteHandler(event:FlexEvent):void
+			{
+				if(this.currentState=="infos"){
+					
+				}
+				if(this.currentState=="contacts"){
+					if(ctcPro.data==null)GetParamContact(ctcPro, "contact_proprietaire");
+					if(ctcDel.data==null)GetParamContact(ctcDel, "contact_delegataire");
+					if(ctcGar.data==null)GetParamContact(ctcGar, "contact_gardien");
+					horaires_gardien.text = data.horaires_gardien;				
+					horaires_batiment.text = data.horaires_batiment;				
+				}				
+				if(this.currentState=="questions"){
+					reponse_1.val = data.reponse_1;
+					reponse_2.val = data.reponse_2;
+					reponse_3.val = data.reponse_3;
+					reponse_4.val = data.reponse_4;
+					reponse_5.val = data.reponse_5;
+					reponse_6.val = data.reponse_6;
+					reponse_7.value = data.reponse_7;
+					reponse_8.value = data.reponse_8;
+					reponse_9.value = data.reponse_9;
+				}				
+			}
+			
+			protected function setDateNow(ds:DateSpinner):void
+			{
+				ds.visible=true;
+				ds.selectedDate = new Date();				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+	<s:states>
+		<s:State name="infos"/>
+		<s:State name="questions"/>
+		<s:State name="contacts"/>
+	</s:states>	
+	<s:actionContent>
+		<s:Button label="Informations générales" click="{currentState = 'infos'}" />
+		<s:Button label="Questions supplémentaires" click="{currentState = 'questions'}" />
+		<s:Button label="Contacts" click="{currentState = 'contacts'}" />
+	</s:actionContent>
+	
+	<s:VGroup includeIn="infos" width="100%" height="100%" >
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="Identifiant du bâtiment : " />
+			<s:TextInput id="ref" width="100%" change="editModif('ref', ref.text)" />
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:VGroup>
+				<s:Label text="Superficie de la parcelle (m2) : "/>
+				<s:NumericStepper id="superficie_parcelle" maximum="10000" stepSize="1" change="editModif('superficie_parcelle', superficie_parcelle.value)" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" />
+			</s:VGroup>
+			<s:VGroup>
+				<s:Label text="Superficie du bâtiment (m2) : " />
+				<s:NumericStepper id="superficie_batiment" maximum="10000" stepSize="1" change="editModif('superficie_batiment', superficie_batiment.value)" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" />
+			</s:VGroup>
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:VGroup>
+				<s:HGroup verticalAlign="middle">
+					<s:Label text="Date d'achèvement : " /><s:Image source="@Embed('assets/Calendar.png')" click="setDateNow(date_achevement)" />
+				</s:HGroup>
+				<s:DateSpinner id="date_achevement" displayMode="{DateSelectorDisplayMode.DATE}" height="60" change="editModif('date_achevement', dateToString(date_achevement.selectedDate))" />						
+			</s:VGroup>
+			<s:VGroup>
+				<s:HGroup verticalAlign="middle">
+					<s:Label text="Date du dépot de permis : " /><s:Image source="@Embed('assets/Calendar.png')" click="setDateNow(date_depot_permis)" />
+				</s:HGroup>
+				<s:DateSpinner id="date_depot_permis" displayMode="{DateSelectorDisplayMode.DATE}" height="60" change="editModif('date_depot_permis', dateToString(date_depot_permis.selectedDate))" />						
+			</s:VGroup>
+			<s:VGroup>
+				<s:HGroup verticalAlign="middle">
+					<s:Label text="Date de la dernière réhabilitation : " /><s:Image source="@Embed('assets/Calendar.png')" click="setDateNow(date_reha)" />
+				</s:HGroup>
+				<s:DateSpinner id="date_reha" displayMode="{DateSelectorDisplayMode.DATE}" height="60" change="editModif('date_reha', dateToString(date_reha.selectedDate))" />						
+			</s:VGroup>
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:VGroup>
+				<s:Label text="Nombre d'entrée(s) principale(s) : "/>
+				<s:NumericStepper id="reponse_10" maximum="100" stepSize="1" change="editModif('reponse_10', reponse_10.value)" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" />
+			</s:VGroup>
+			<s:VGroup>
+				<s:Label text="Nombre d'ascenseur(s) : "/>
+				<s:NumericStepper id="reponse_11" maximum="100" stepSize="1" change="editModif('reponse_11', reponse_11.value)" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" />
+			</s:VGroup>
+			<s:VGroup>
+				<s:Label text="Nombre d'escalier(s) : "/>
+				<s:NumericStepper id="reponse_12" maximum="100" stepSize="1" change="editModif('reponse_12', reponse_12.value)" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" />
+			</s:VGroup>
+		</s:HGroup>		
+		
+		<cpnt:repType lblQ="Présence d'aire(s) de stationnement(s), à l'intérieur du bâtiment ?" Q="reponse_13" id="reponse_13" fnct="{this.editModif}" />
+		<cpnt:repType lblQ="Présence d'aire(s) de stationnement(s), à l'extérieur du bâtiment ?" Q="reponse_14" id="reponse_14" fnct="{this.editModif}" />		
+		
+	</s:VGroup>
+		
+	<s:VGroup includeIn="questions" width="100%" height="100%" >
+		<cpnt:repType lblQ="Le bâtiment est-il uniquement un lieu de travail ?" Q="reponse_1" id="reponse_1" fnct="{this.editModif}" />
+		<cpnt:repType lblQ="Si le bâtiment est un lieu de travail, compte-t-il plus de 20 salariés ?" Q="reponse_2" id="reponse_2" fnct="{this.editModif}" />
+		<s:HGroup width="100%" verticalAlign="middle">
+			<cpnt:repType lblQ="S'agit-il d'un bâtiment de grande hauteur ?" Q="reponse_3" id="reponse_3"  fnct="{this.editModif}" />
+			<cpnt:repType lblQ="Le bâtiment est t-il en ZPPAUP ?" Q="reponse_4" id="reponse_4"  fnct="{this.editModif}" />
+		</s:HGroup>		
+		<s:HGroup width="100%" verticalAlign="middle">
+			<cpnt:repType lblQ="Le bâtiment est-il inscrit au Monument Historique ?" Q="reponse_5" id="reponse_5"  fnct="{this.editModif}" />
+			<cpnt:repType lblQ="Le bâtiment est-il classé au Monument Historique ?" Q="reponse_6" id="reponse_6"  fnct="{this.editModif}" />
+		</s:HGroup>		
+		<s:HGroup width="100%" verticalAlign="middle" >
+			<s:VGroup width="100%" >
+				<s:Label text="Nombre de niveaux avec RDC : "/>
+				<s:NumericStepper id="reponse_7" maximum="100" stepSize="1" change="editModif('reponse_7', reponse_7.value)" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" />
+			</s:VGroup>
+			<s:VGroup width="100%" >
+				<s:Label text="Nombre de niveaux au dessus du RDC : "/>
+				<s:NumericStepper id="reponse_8" maximum="100" stepSize="1" change="editModif('reponse_8', reponse_8.value)" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" />
+			</s:VGroup>
+			<s:VGroup width="100%" >
+				<s:Label text="Nombre de niveaux en dessous du RDC : "/>
+				<s:NumericStepper id="reponse_9" maximum="100" stepSize="1" change="editModif('reponse_9', reponse_9.value)" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" />
+			</s:VGroup>
+		</s:HGroup>		
+
+	</s:VGroup>
+	<s:VGroup includeIn="contacts" width="100%" height="100%" verticalAlign="middle">
+		<s:HGroup width="100%" height="100%" verticalAlign="middle">
+			<gevu:contacts title="Contact propriétaire" id="ctcPro" unique="true" objLien="Models_DbTable_Gevu_batiments" methoLien="modifier"/>		
+			<gevu:contacts title="Contact délégataire" id="ctcDel" unique="true" objLien="Models_DbTable_Gevu_batiments" methoLien="modifier"/>		
+			<gevu:contacts title="Contact gardien" id="ctcGar" unique="true" objLien="Models_DbTable_Gevu_batiments" methoLien="modifier"/>		
+		</s:HGroup>		
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="Horaires du gardien : " />
+			<s:TextArea id="horaires_gardien" width="100%" height="100%" change="editModif('horaires_gardien', horaires_gardien.text)" />				
+			<s:Label text="Horaires du bâtiment : " />
+			<s:TextArea id="horaires_batiment" width="100%" height="100%" change="editModif('horaires_batiment', horaires_batiment.text)" />				
+		</s:HGroup>		
+	</s:VGroup>
+	<s:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+	
+
+</s:View>
