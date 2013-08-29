@@ -203,7 +203,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
             ->joinInner(array('crit' => 'gevu_criteres'),
             	'diag.id_critere = crit.id_critere',array('id_type_controle'))
         	->joinInner(array('inst' => 'gevu_instants'),
-            	'diag.id_instant = inst.id_instant',array('instant'=>"DATE_FORMAT(maintenant,'%W %d %M %Y')",'ici','nom','commentaires'))
+            	'diag.id_instant = inst.id_instant',array('instant'=>"DATE_FORMAT(maintenant,'%d %c %Y')",'ici','nom','commentaires'))
         	->joinInner(array('tc' => 'gevu_typesxcontroles'),
             	'tc.id_type_controle = crit.id_type_controle',array('controle'=>'lib','icone'))
         	->joinInner(array('exi' => 'gevu_exis'),

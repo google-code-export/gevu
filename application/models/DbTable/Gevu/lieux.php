@@ -168,8 +168,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
         if($hierarchie){
 	    	//récupère tous les enfants
 	    	$ids = $this->getFullChildIds($id);
-			$strIds = $ids[0]['ids'].$id;
-			echo $strIds;
+			$strIds = $ids[0]['ids'];
+			//echo $strIds;
         }
 		//suppression des données lieés
         $dt = $this->getDependentTables();
@@ -648,5 +648,49 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     			$stmt = $this->_db->query($sql);
 
     			return $stmt->fetch();
+    }     
+
+    /**
+     * récupère les lieux locké pour l'utilisateur
+     *
+     * @param int $idExi
+     * @param string $lock
+     * @param int $idLieu
+     *  
+     * @return integer
+     */
+    public function getUtiLieuLock($idExi, $lock="", $idLieu="")
+    {
+    	if($lock)$lock = " = "."'".$lock.$idExi."'";
+    	else $lock = " != ''";
+    	$sqlLieu = "";
+    	if($idLieu){
+    		$sqlLieuParent = " INNER JOIN gevu_lieux lp ON lp.id_lieu =".$idLieu." AND l.lft BETWEEN lp.lft AND lp.rgt";
+    	}
+    	$sql = 'SELECT 
+    			l.lib, l.id_lieu, l.lock_diag, SUBSTRING(l.lock_diag, 2) idExi, SUBSTRING(l.lock_diag, 1, 1) tLock, l.niv, l.lft, l.rgt
+				, tc.lib tc, tc.icone
+    		FROM gevu_lieux l
+				INNER JOIN gevu_exis e ON e.id_exi = SUBSTRING(l.lock_diag, 2) AND e.id_exi = '.$idExi.'
+ 				'.$sqlLieuParent.'
+				LEFT JOIN gevu_typesxcontroles tc ON tc.id_type_controle = l.id_type_controle
+			WHERE l.lock_diag '.$lock.'
+			ORDER BY l.lft' ;
+   			$stmt = $this->_db->query($sql);
+
+    		return $stmt->fetchAll();
+    }     
+
+    /**
+     * met à jour les lieux locké pour l'utilisateur
+     *
+     * @param string $oLock
+     * @param string $nLock
+     *  
+     */
+    public function setUtiLieuLock($oLock, $nLock)
+    {
+    	$sql = 'UPDATE gevu_lieux SET lock_diag = "'.$nLock.'" WHERE lock_diag LIKE "'.$oLock.'"'; 
+		$stmt = $this->_db->query($sql);
     }     
 }

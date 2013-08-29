@@ -66,7 +66,7 @@ class Models_DbTable_Gevu_lieuxinterventions extends Zend_Db_Table_Abstract
      */
     public function ajouter($data, $idExi=false, $idBase=false)
     { 
-    	if(!$idBase){
+    	if($idBase){
     		$s = new GEVU_Site($idBase);
     		$this->_db = $s->db;
     	}
