@@ -16,20 +16,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 						
 	    return $moduleLoader;
 	}
-	/*merci à http://jameshd.wordpress.com/2010/09/27/zend-multi-db/
-	protected function _initDbAdaptersToRegistry()
+
+	public function _initDbRegistry()
 	{
-		$this->bootstrap('multidb');
-		$resource = $this->getPluginResource('multidb');
-		$resource->init();
-				
-		$Adapter1 = $resource->getDb('bd1');
-		$Adapter2 = $resource->getDb('bd2');		
-		Zend_Registry::set('gevu_new_alceane', $Adapter1);
-		Zend_Registry::set('gevu',$Adapter2);
-		
-	}
-	*/
 	
+		$this->bootstrap('multidb');
+	    
+		$resource = $this->getPluginResource('multidb');         
+	
+	    Zend_Registry::set("multidb", $resource);         
+	    Zend_Registry::set("serveur",$resource->getDb('serveur'));     
+	    Zend_Registry::set("android",$resource->getDb('android'));     
+	    Zend_Registry::set("local",$resource->getDb('local'));     
+	    
+	    
+	}
+
 }
 
