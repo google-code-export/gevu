@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" applicationDPI="160" backgroundColor="black" 
+			   creationComplete="creationCompleteHandler(event)" 
+			   name="GEVU Android"
+			   >
+	<fx:Script>
+		<![CDATA[
+			import flash.events.StatusEvent;
+			import flash.net.URLRequest;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			import air.net.URLMonitor;
+			
+			import cpnt.alert;
+			import cpnt.btnViewNavig;
+			import cpnt.login;
+			
+			import gevu.diagnostics;
+			import gevu.geos;
+			import gevu.interventions;
+			import gevu.niveaux;
+			
+			import skin.btnAjout;
+			import skin.btnColle;
+			import skin.btnCopie;
+			import skin.btnSupp;
+			
+			import views.htmlArea;
+			import views.listeLieux;
+			
+			private var o2:gevu.batiments;
+			private var o3:gevu.diagnostics;
+			private var o5:gevu.espaces;
+			/*
+			private var o1:gevu.ariane;
+			private var o4:gevu.docsxlieux;
+			private var o6:gevu.espacesxexterieurs;
+			private var o7:gevu.espacesxinterieurs;
+			private var o8:gevu.etablissements;
+			private var o9:gevu.georss;
+			*/
+			private var o10:gevu.geos;
+			private var o11:gevu.niveaux;
+			/*
+			private var o12:gevu.objetsxexterieurs;
+			private var o13:gevu.objetsxinterieurs;
+			private var o14:gevu.objetsxvoiries;
+			private var o15:gevu.observations;
+			private var o17:gevu.problemes;
+			*/
+			private var o16:gevu.parcelles;
+			private var o18:gevu.antennes;
+			private var o19:gevu.groupes;
+			private var o20:gevu.logements;
+			private var o21:gevu.partiescommunes;
+			private var o22:gevu.locaux;
+			private var o23:gevu.interventions;
+
+			public var exi:Object;
+			public var idExi:String = "";
+			public var idBase:String = "gevu_android";
+			public var idBaseSrc:String = "gevu_alceane";
+			public var idBaseRef:String = "gevu_ref";
+			public var srvSrc:String = "local";
+			public var srvDst:String = "local";
+			public var idLieuChange:String;
+			public var arrLieuChange:Array;
+			public var idLieuCopie:String;
+			public var idScenar:String;
+			public var oLieu:Object;
+			public var dataLieu:Object;
+			[Bindable] public var lstScenar:ArrayCollection;
+			[Bindable] public var isLog:Boolean=false;
+			[Bindable] public var isConnect:Boolean;
+			
+			private var aProcess:alert;
+			private var puLogin:login;
+			private var monitor:URLMonitor;
+			private var arrLieuView:Array = new Array;
+			private var bAjoutCtl:Boolean = false;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				verifConnexion();
+				//roMig.migreRefServeurToLocal(1);
+				//showLogin();
+				//
+				var r:Object = {idExi:1,droit_4:'[{"lib":"ERP-IOP","id":"4_13"},{"lib":"loge","id":"4_12"},{"lib":"Logement V3","id":"4_18"}]'};				
+				init(r)
+				//
+			}
+			
+			protected function verifConnexion():void {
+				monitor = new URLMonitor(new URLRequest('http://www.gevu.org'));
+				monitor.addEventListener(StatusEvent.STATUS, announceStatus);
+				monitor.start();
+			}
+			
+			protected function announceStatus(e:StatusEvent):void {
+				isConnect = monitor.available;
+			}			
+			
+			
+			// Open the pop-up window.
+			private function showLogin():void 
+			{
+				puLogin = new login();
+				puLogin.open(this, true);   
+				PopUpManager.centerPopUp(puLogin);
+			}
+			
+			public function init(result:Object):void
+			{
+				exi = result;
+				idExi = result.idExi;
+				isLog = true;
+				setLstScenar(result.droit_4);
+				roDiag.getUtiLieuLock(idExi, false, false, idBase, srvDst);
+				
+			}
+			protected function setLstScenar(js:String):void
+			{
+				var o:Object = JSON.parse(js);
+				lstScenar = new ArrayCollection;
+				for each (var oScenar:Object in o){
+					lstScenar.addItem(oScenar);
+				}
+				
+			}
+			
+			protected function getBase_clickHandler(event:MouseEvent):void
+			{
+				if(isConnect){
+					roMig.migreRefServeurToLocal(idBaseRef, idBase);
+				}else{
+					aProcess = new alert();
+					aProcess.mess = "Vous n'êtes pas connecté.\nImpossible de récupérer les données.";
+					aProcess.titre = 'Pas de connexion';
+					aProcess.btn2 = false;
+					aProcess.open(this, true);
+					PopUpManager.centerPopUp(aProcess);					
+					
+				}
+			}
+
+			protected function sendBase_clickHandler(event:MouseEvent):void
+			{
+				//roMig.migreRefServeurToLocal(idBaseRef, idBase);
+			}
+			
+			protected function migreRefServeurToLocal_resultHandler(event:ResultEvent):void
+			{
+				//aProcess.close();
+				rightNav.activeView.data=event.result as String;
+				roDiag.getUtiLieuLock(idExi, idBaseSrc, srvSrc, idBase, srvDst);
+
+			}
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				//aProcess.close();
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				var a:alert = new alert;
+				a.mess = str;
+				if(os)a.titre = os;
+				a.open(this, false);
+								
+			}
+			protected function exit_clickHandler(event:MouseEvent):void
+			{
+				aProcess = new alert();
+				aProcess.mess = "ATTENTION : l'application va se fermer";
+				aProcess.titre = 'Confirmation fermeture';
+				aProcess.fct1 = NativeApplication.nativeApplication.exit;
+				aProcess.open(this, true);
+				PopUpManager.centerPopUp(aProcess);					
+					
+			}
+			protected function showProcess():void
+			{
+				/*problème de fermeture
+				aProcess = new alert();
+				aProcess.mess = "Veuillez patienter";
+				aProcess.titre = 'Processus en cours...';
+				aProcess.bProcess = true;
+				aProcess.open(this, true);
+				PopUpManager.centerPopUp(aProcess);
+				*/
+			}
+						
+			protected function getUtiLieuLock_resultHandler(event:ResultEvent):void
+			{
+				////aProcess.close();
+				
+				if(event.result != null){
+					var arr:Array = event.result as Array;
+					var ll:listeLieux =	leftNav.activeView as listeLieux;
+					var oData:Object = {"ariane":"","lieu":arr,"liste":new ArrayCollection(arr.children)};
+					lblAriane.text= oData.ariane+' / '+oData.lieu.nom;
+					ll.list.dataProvider = oData.liste;
+					ll.data = oData;
+					ll.bPrev.visible = false;
+					ll.init();
+					bSupp.visible = false;
+					
+				}
+			}
+			
+			protected function bSupp_clickHandler(event:MouseEvent):void
+			{
+				aProcess = new alert();
+				aProcess.mess = "ATTENTION : le lieu et tous ces composants vont être supprimés";
+				aProcess.titre = 'Confirmation suppression';
+				aProcess.fct1 = removeLieu;
+				aProcess.open(this, true);
+				PopUpManager.centerPopUp(aProcess);					
+			}
+			
+			public function removeLieu():void
+			{
+				//récupère le lieu sélectionné
+				var ll:listeLieux =	leftNav.activeView as listeLieux;
+				roDiag.deleteLieu(oLieu.id_lieu, idExi, idBase);
+
+				if(ll.oItem==null)	ll.goBack();
+					
+			}
+			
+			protected function deleteLieu_resultHandler(event:ResultEvent):void
+			{
+				////aProcess.close();
+				initDetail();
+				var idLieuSupp:String = event.result as String;
+				var ll:listeLieux =	leftNav.activeView as listeLieux;
+				ll.suppItem(idLieuSupp);
+				editLock(ll.data.lieu.id_lieu);
+			}
+			
+			protected function editLock(idLieu:String):void
+			{
+				//tag le parent comme modifié
+				var vn:Array = new Array();				
+				vn["lock_diag"] = "+"+idExi;
+				roDiag.edit(idLieu, vn, "Models_DbTable_Gevu_lieux", idBase);
+				oLieu.tLock="+";
+				idLieuChange = idLieu;
+				arrLieuChange = vn;
+				
+			}
+						
+			protected function edit_resultHandler(event:ResultEvent):void
+			{
+				////aProcess.close();
+				if(oLieu.tLock=="-")editLock(oLieu.id_lieu);
+
+			}
+
+			protected function bCopie_clickHandler(event:MouseEvent):void
+			{
+				bCopie.enabled = false;
+				bColle.visible = true;
+				
+				idLieuCopie = oLieu.id_lieu;
+				
+			}
+			
+			protected function bColle_clickHandler(event:MouseEvent):void
+			{
+				if(oLieu.id_lieu == idLieuCopie){
+					aProcess = new alert();
+					aProcess.mess = "La destination et le source ne peuvent pas être le même lieu.\nVeuillez sélectionner un autre lieu.";
+					aProcess.titre = 'Copier-coller un lieu';
+					aProcess.btn2 = false;
+					aProcess.open(this, true);
+					PopUpManager.centerPopUp(aProcess);					
+					return;
+				}
+				roDiag.copiecolleLieu(idLieuCopie, oLieu.id_lieu, idExi, idBase);	
+			}
+			
+			protected function copiecolleLieu_resultHandler(event:ResultEvent):void
+			{
+				////aProcess.close();
+				roDiag.getUtiIdLieuLock(idExi, oLieu.id_lieu, idBase);
+				
+			}
+			
+			public function getDataLieu():void
+			{
+				initDetail();
+				//vérifie si le lieu n'est pas bloqué
+				if(oLieu.tLock!="x"){
+					if(arrLieuView[oLieu.id_lieu]){
+						//récupère les boutons enregistrés
+						if(arrLieuView[oLieu.id_lieu][0].length>0){
+							hgBarButton.visible = true;
+							slBarButton.dataProvider = new ArrayCollection(arrLieuView[oLieu.id_lieu][0]);
+						}
+						if(arrLieuView[oLieu.id_lieu][1].length>0){
+							hgBarCtl.visible = true;						
+							slAjoutCtl.dataProvider = new ArrayCollection(arrLieuView[oLieu.id_lieu][1]);
+						}
+					}else{
+						getScenarSelect();
+						roDiag.getNodeRelatedData(oLieu.id_lieu, idExi, idBase, idScenar);
+					}	
+				}
+			}
+			
+			protected function getScenarSelect():void
+			{
+				idScenar = slScenar.selectedItem.id;
+				idScenar = idScenar.substr(2);
+			}
+
+			protected function getNodeRelatedData_resultHandler(event:ResultEvent):void
+			{
+				////aProcess.close();
+				dataLieu = event.result;
+				setDatalieu();
+			}
+			
+			private function setDatalieu() : void {
+
+				var ClassReference:Class;
+				var docsxlieux:Object;
+
+				//tableau pour conserver les boutons
+				arrLieuView[oLieu.id_lieu]=new Array;
+				arrLieuView[oLieu.id_lieu][0]=new Array;
+				arrLieuView[oLieu.id_lieu][1]=new Array;
+				arrLieuView[oLieu.id_lieu][2]=new Array;
+				
+				//pour le type de controle parent d'un diag
+				var typeCtrlParent:String ="";
+				for(var item:String in dataLieu){
+					var arr:Array = item.split("_");
+					var className:String="gevu."+arr[3];					
+					if(
+						className == 'gevu.antennes'  ||
+						className == 'gevu.batiments' ||
+						className == 'gevu.docsxlieux' ||
+						className == 'gevu.diagnostics' ||						
+						className == 'gevu.espaces' ||
+						className == 'gevu.espacesxexterieurs' ||
+						className == 'gevu.espacesxinterieurs' ||
+						className == 'gevu.etablissements' ||
+						className == 'gevu.geos' ||
+						className == 'gevu.niveaux' ||
+						className == 'gevu.objetsxexterieurs' ||
+						className == 'gevu.objetsxinterieurs' ||
+						className == 'gevu.objetsxvoiries' ||
+						className == 'gevu.observations' ||
+						className == 'gevu.parcelles' ||
+						className == 'gevu.problemes' ||
+						className == 'gevu.groupes' ||
+						className == 'gevu.logements' ||
+						className == 'gevu.locaux' ||
+						className == 'gevu.partiescommunes' ||
+						className == 'gevu.interventions')
+					{
+						//création de la vue
+						ClassReference = getDefinitionByName(className) as Class;
+						var instance:Object = new ClassReference();
+						//création du bouton de navigation						
+						var btnVN:btnViewNavig = new btnViewNavig();
+						btnVN.clsView = ClassReference;
+						btnVN.btnLbl = instance.title;
+						btnVN.vn = rightNav;
+						switch (arr[3]) {
+							case "interventions":
+								if(dataLieu[item]!="no_product" && dataLieu[item].length > 0){
+									btnVN.dataView = dataLieu[item];
+									arrLieuView[oLieu.id_lieu][0].push(btnVN);
+								}
+								break;
+							case "diagnostics":
+								if(dataLieu[item].self){
+									//récupère le type de contrôle
+									typeCtrlParent = getTypeControle(dataLieu);
+									btnVN.dataView = {idLieu:oLieu.id_lieu, idTypeCtlParent:typeCtrlParent, diag:dataLieu[item].self};
+									arrLieuView[oLieu.id_lieu][0].push(btnVN);
+								}
+								break;							
+							default:
+								btnVN.dataView = dataLieu[item][0];
+								arrLieuView[oLieu.id_lieu][0].push(btnVN);
+						}
+					}					
+
+				}
+				
+				if(arrLieuView[oLieu.id_lieu][0].length>0){
+					hgBarButton.visible = true;
+					slBarButton.dataProvider = new ArrayCollection(arrLieuView[oLieu.id_lieu][0]);
+				}				
+				
+				//ajoute les controles disponibles
+				roDiag.getLieuCtl(oLieu.id_lieu, idScenar, idBase);
+				
+				//ajoute les documents
+				//docs.initDoc(docsxlieux);
+				
+			}			
+
+			private function getTypeControle(obj:Object):String{
+				
+				//recherche le type de controle
+				var typeCtrl:String;
+				if(obj["Models_DbTable_Gevu_espacesxinterieurs"]) typeCtrl= obj["Models_DbTable_Gevu_espacesxinterieurs"][0]["id_type_specifique_int"];
+				if(obj["Models_DbTable_Gevu_objetsxinterieurs"]) typeCtrl= obj["Models_DbTable_Gevu_objetsxinterieurs"][0]["id_type_objet"];
+				if(obj["Models_DbTable_Gevu_espacesxexterieurs"]) typeCtrl= obj["Models_DbTable_Gevu_espacesxexterieurs"][0]["id_type_specifique_ext"];
+				if(obj["Models_DbTable_Gevu_objetsxexterieurs"]) typeCtrl= obj["Models_DbTable_Gevu_objetsxexterieurs"][0]["id_type_objet_ext"];
+				
+				return typeCtrl;
+			}
+			
+			public function initDetail():void
+			{
+				//efface la barre de bouton
+				hgBarCtl.visible = false;
+				hgBarButton.visible = false;
+				//hgBarButton.removeAllElements();
+				//hgBarCtl.removeAllElements();
+				rightNav.pushView(views.htmlArea);
+			}
+
+			
+			protected function getLieuCtl_resultHandler(event:ResultEvent):void
+			{
+				////aProcess.close();
+				
+				if(bAjoutCtl){
+					bAjoutCtl = false;
+					roDiag.getUtiIdLieuLock(idExi, oLieu.id_lieu, idBase);
+				}
+				
+				var rs:Object = event.result;
+				if(rs===""){
+					return;
+				}
+				if(rs.ctrl.length>0){
+					hgBarCtl.visible = true;
+					arrLieuView[oLieu.id_lieu][1] = rs.ctrl;
+					slAjoutCtl.dataProvider = new ArrayCollection(arrLieuView[oLieu.id_lieu][1]);
+				}
+				if(rs.crit){
+					//ajoute la vue de diagnostic dans la liste
+					slBarButton.dataProvider = null;
+					setLieuViewData("diagnostics", {idLieu:oLieu.id_lieu, idTypeCtlParent:"", diag:"", scrDescData:rs.crit, bAjout:true});
+					slBarButton.dataProvider = new ArrayCollection(arrLieuView[oLieu.id_lieu][0]);					
+				}
+				
+			}
+			
+			protected function setLieuViewData(strClass:String, dv:Object):void
+			{
+				var bFind:Boolean = false;
+				for each (var btnVN:btnViewNavig in arrLieuView[oLieu.id_lieu][0]){
+					var clsName:String = getQualifiedClassName(btnVN.clsView);
+					if(clsName=="gevu::"+strClass){
+						btnVN.dataView.scrDescData=dv.scrDescData;
+						bFind=true;
+					}
+				}
+				if(!bFind){
+					var ClassReference:Class = getDefinitionByName("gevu."+strClass) as Class;
+					var instance:Object = new ClassReference();
+					//création du bouton de navigation						
+					var nBtnVN:btnViewNavig = new btnViewNavig();
+					nBtnVN.clsView = ClassReference;
+					nBtnVN.btnLbl = instance.title;
+					nBtnVN.vn = rightNav;
+					nBtnVN.dataView = dv;
+					arrLieuView[oLieu.id_lieu][0].push(nBtnVN);					
+				}
+			}
+			
+			protected function btnCtl_clickHandler(dt:Object):void
+			{
+				//ajoute un nouveau contrôle au lieu
+				roDiag.ajoutCtlLieu(oLieu.id_lieu, dt, idExi, idBase);
+			}
+			
+			protected function ajoutCtlLieu_resultHandler(event:ResultEvent):void
+			{
+				////aProcess.close();
+				initDetail();
+				bAjoutCtl = true;
+				roDiag.getLieuCtl(oLieu.id_lieu, idScenar, idBase);				
+			}
+			
+			protected function slScenar_changeHandler(event:IndexChangeEvent):void
+			{
+				//on remet à jour les tableaux de bouton
+				arrLieuView = new Array;
+			}
+			
+			protected function bAjout_clickHandler(event:MouseEvent):void
+			{
+				var vn:Array = new Array();				
+				vn["lock_diag"] = "+"+idExi;				
+				roDiag.ajoutLieu(oLieu.id_lieu, idExi, idBase, "Nouveau lieu", false, false, vn);
+				
+			}
+			
+			protected function ajoutLieu_resultHandler(event:ResultEvent):void
+			{
+				////aProcess.close();
+				var id:String = event.result as String;
+				//on recharge le lieu ou son parent
+				if(oLieu.children.length > 0)
+					roDiag.getUtiIdLieuLock(idExi, id, idBase);
+				else
+					roDiag.getUtiIdLieuLock(idExi, oLieu.id_lieu, idBase);
+					
+			}
+			
+			protected function getUtiIdLieuLock_resultHandler(event:ResultEvent):void
+			{
+				////aProcess.close();
+				
+				var arr:Array = event.result as Array;
+				var ll:listeLieux =	leftNav.activeView as listeLieux;
+				var o:Object = arr[0];
+				//on ajoute ou on change l'item
+				ll.addItem(o);
+				editLock(ll.data.lieu.id_lieu);
+				
+			}
+			
+			protected function slAjoutCtl_clickHandler(event:MouseEvent):void
+			{
+				var o:Object = event.currentTarget.selectedItem;
+				roDiag.ajoutCtlLieu(oLieu.id_lieu, o, idExi, idBase);
+			}
+			
+			protected function slBarButton_clickHandler(event:MouseEvent):void
+			{
+				var o:Object = event.currentTarget.selectedItem;
+				rightNav.pushView(o.clsView, o.dataView);
+			}
+			
+			public function changeLieuNom(arr:Array):void
+			{
+				this.idLieuChange = oLieu.id_lieu;
+				this.arrLieuChange = arr;
+				var ll:listeLieux =	leftNav.activeView as listeLieux;
+				ll.goBack();
+				roDiag.edit(oLieu.id_lieu, arr, "Models_DbTable_Gevu_lieux", idBase);
+			}
+			
+			protected function bAccess_clickHandler(event:MouseEvent):void
+			{
+				rightNav.pushView(gevu.diagnostics, arrLieuView[oLieu.id_lieu][2]);
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<!--
+	<fx:Style>
+		global { 
+			color:           #ffffff;
+			backgroundColor: #000000;
+		}
+	</fx:Style>
+	-->
+	<fx:Declarations>
+		<s:RemoteObject id="roMig"
+			destination="zend"
+			source="GEVU_Migration"
+			fault="faultHandlerService(event, 'GEVU - Synchronisation');"
+			showBusyCursor="true" invoke="showProcess()" 
+			>
+			<s:method name="migreRefServeurToLocal" result="migreRefServeurToLocal_resultHandler(event)"/>
+		</s:RemoteObject>
+		<s:RemoteObject id="roDiag"
+						destination="zend"
+						source="GEVU_Diagnostique"
+						fault="faultHandlerService(event, 'GEVU - Diagnostique');"
+						showBusyCursor="true" 
+						>
+			<s:method name="getUtiLieuLock" result="getUtiLieuLock_resultHandler(event)"/>
+			<s:method name="getUtiIdLieuLock" result="getUtiIdLieuLock_resultHandler(event)" />
+			<s:method name="deleteLieu" result="deleteLieu_resultHandler(event)"/>
+			<s:method name="edit" result="edit_resultHandler(event)"/>
+			<s:method name="copiecolleLieu" result="copiecolleLieu_resultHandler(event)" />
+			<s:method name="getNodeRelatedData" result="getNodeRelatedData_resultHandler(event)"  />
+			<s:method name="getLieuCtl" result="getLieuCtl_resultHandler(event)"   />
+			<s:method name="ajoutCtlLieu" result="ajoutCtlLieu_resultHandler(event)"  />
+			<s:method name="ajoutLieu" result="ajoutLieu_resultHandler(event)" />
+		</s:RemoteObject>
+	</fx:Declarations>
+	<s:VGroup id="main" width="100%" height="100%" paddingBottom="2" paddingLeft="2" paddingRight="2" paddingTop="2" >
+		<s:HGroup verticalAlign="middle" width="100%" >
+			<s:Image source="@Embed('assets/logo.png')" />
+			<s:VGroup >
+				<s:SpinnerListContainer height="56" >
+					<s:SpinnerList id="slScenar" dataProvider="{lstScenar}" labelField="lib" width="160" change="slScenar_changeHandler(event)" />
+				</s:SpinnerListContainer>				
+			</s:VGroup>			
+			<s:Label id="lblAriane" text="" color="white" width="100%" />
+			<s:HGroup horizontalAlign="right" >
+				<s:Image source="@Embed('assets/Shutdown.png')" width="32" height="32" click="exit_clickHandler(event)" toolTip="Fermer l'application" horizontalAlign="right" />
+			</s:HGroup>			
+		</s:HGroup>
+		<s:HGroup gap="3" visible="{isLog}" height="40" width="100%" verticalAlign="middle" >
+			<s:Image source="@Embed('assets/get_srv.png')" click="getBase_clickHandler(event)" visible="{isConnect}" />
+			<s:Image source="@Embed('assets/send_srv.png')" id="bSend" click="sendBase_clickHandler(event)" visible="{isConnect}" />
+			<s:Button skinClass="skin.btnAjout" id="bAjout" click="bAjout_clickHandler(event)" />
+			<s:Button skinClass="skin.btnSupp" id="bSupp" click="bSupp_clickHandler(event)" />
+			<s:Button skinClass="skin.btnCopie" id="bCopie" click="bCopie_clickHandler(event)" visible="false" />
+			<s:Button skinClass="skin.btnColle" id="bColle" visible="false" click="bColle_clickHandler(event)" />
+			<s:HGroup id="hgBarCtl" visible="false" verticalAlign="middle" width="100%" horizontalAlign="left">
+				<s:Label id="lblAjoutCtl" text="Ajouter un contrôle :" color="white" />
+				<s:SpinnerListContainer height="56" width="100%" >
+					<s:SpinnerList id="slAjoutCtl" labelField="lib" width="100%" click="slAjoutCtl_clickHandler(event)" />
+				</s:SpinnerListContainer>				
+			</s:HGroup>		
+			<s:HGroup id="hgBarButton" visible="false" width="100%" height="40" verticalAlign="middle" horizontalAlign="left">
+				<s:Label text="Vues :" color="white" />
+				<s:SpinnerListContainer height="56" width="100%" >
+					<s:SpinnerList id="slBarButton" labelField="btnLbl" width="100%" click="slBarButton_clickHandler(event)" />
+				</s:SpinnerListContainer>				
+			</s:HGroup>
+		</s:HGroup>		
+		<s:SplitViewNavigator id="svn" width="100%" height="100%" visible="{isLog}" >
+			<s:ViewNavigator id="leftNav" width="30%" height="100%" firstView="views.listeLieux"/>
+			<s:ViewNavigator  id="rightNav" width="70%" height="100%" firstView="views.htmlArea" />
+		</s:SplitViewNavigator>		
+	</s:VGroup>
+
+</s:Application>

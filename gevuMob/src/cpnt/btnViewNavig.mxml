@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" >
+	<fx:Script>
+		<![CDATA[
+			import spark.components.ViewNavigator;
+			
+			[Bindable] public var btnLbl:String;
+			public var clsView:Class;
+			public var dataView:Object;
+			public var vn:ViewNavigator;
+			
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				vn.pushView(clsView, dataView);
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	<s:Button label="{btnLbl}" click="button1_clickHandler(event)" />
+</s:Group>

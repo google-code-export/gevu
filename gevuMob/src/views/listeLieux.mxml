@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="" creationComplete="creationCompleteHandler(event)" 
+		>		
+	<fx:Declarations>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			import mx.events.FlexEvent;
+			
+			import spark.transitions.ZoomViewTransition;
+			import spark.transitions.ZoomViewTransitionMode;			
+						
+			public var zoomTrans:ZoomViewTransition = new ZoomViewTransition();	
+			private var durTrans:int = 500;
+
+			public var oItem:Object;
+			
+			protected function goUnivers():void 
+			{
+				bPrev.visible = false;
+				zoomTrans.mode = ZoomViewTransitionMode.OUT;
+				navigator.popToFirstView(zoomTrans);
+				
+			}
+			
+			public function goBack():void 
+			{
+				if(data.lieu.lib!="Univers"){
+					zoomTrans.duration = durTrans;
+					zoomTrans.mode = ZoomViewTransitionMode.IN;
+					navigator.popView(zoomTrans);					
+				}
+				this.parentApplication.initDetail();
+			}
+
+			public function suppItem(id:String):void 
+			{
+				list.dataProvider.removeItemAt(list.dataProvider.getItemIndex(findItem(id,list.dataProvider)));
+			}
+
+			public function addItem(item:Object):void 
+			{
+				var o:Object = findItem(item.id_lieu,list.dataProvider);
+				if(o!=null){
+					var i:int = list.dataProvider.getItemIndex(o);
+					list.dataProvider[i]=item;
+				}else{
+					list.dataProvider.addItem(item);
+				}
+				oItem = item;
+				showItem();
+				
+			}
+			
+			public function findItem(id:String, lst:IList):Object
+			{
+				for each (var i:Object in lst){
+					if(i.id_lieu==id)return i;
+				}
+				return null;
+			}
+
+			public function editItem(id:String, key:String, value:String, lst:IList):IList
+			{
+				for each (var i:Object in lst){
+					if(i.id_lieu==id){
+						i[key]=value;
+					}
+				}
+				return lst;
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				//roDiagnostique.getXmlNode(1);
+				//if(data==null)data={"libLieuParent":"","libLieu":""};
+				if(data!=null){
+					init();
+				}
+				zoomTrans.duration = durTrans;
+			}
+			
+			public function init():void
+			{
+				//affiche le fil d'ariane
+				this.title = data.lieu.lib;
+				tiNom.text = data.lieu.lib;
+				this.parentApplication.lblAriane.text= data.ariane+' / '+data.lieu.lib;
+				this.parentApplication.oLieu = data.lieu;
+				//vérifie si un des enfants n'a pas changé
+				if(this.parentApplication.idLieuChange){
+					for(var k:String in this.parentApplication.arrLieuChange){
+						data.liste = editItem(this.parentApplication.idLieuChange,k,this.parentApplication.arrLieuChange[k],data.liste);
+					}					
+					this.parentApplication.idLieuChange = "";
+				}
+				
+				//charge la liste
+				list.dataProvider = data.liste;
+				showButton();
+				if(data.lieu.tLock != "x"){
+					this.parentApplication.getDataLieu();
+				}
+				
+			}
+			
+			protected function list_clickHandler(event:MouseEvent):void
+			{
+				bPrev.visible = true;
+				oItem = event.currentTarget.selectedItem;
+				if(oItem==null)return;
+				showItem();
+			}
+			
+			protected function showItem():void
+			{
+				this.parentApplication.oLieu = oItem;
+				//vérifie s'il faut charger les enfants du lieu
+				if(oItem.children.length > 0){
+					zoomTrans.mode = ZoomViewTransitionMode.IN;
+					var oData:Object = {"ariane":this.parentApplication.lblAriane.text,"lieu":oItem,"liste":new ArrayCollection(oItem.children)};
+					navigator.pushView(views.listeLieux, oData, zoomTrans);									
+				}else{
+					this.title = oItem.lib;
+					tiNom.text = oItem.lib;
+					this.parentApplication.lblAriane.text = data.ariane+" / "+oItem.lib;
+					//charge les infos liées
+					this.parentApplication.getDataLieu();					
+				}
+				
+			}
+			
+			protected function showButton():void
+			{
+				if(data.lieu.lib == "univers")bPrev.visible = false;
+				else bPrev.visible = true;
+				if(data.lieu.tLock == "x"){
+					this.parentApplication.bCopie.visible = false;
+					this.parentApplication.bSupp.visible = false;
+					this.parentApplication.bAjout.visible = false;
+					this.parentApplication.bColle.visible = false;
+					hgModifNom.visible = false;
+				}else{
+					this.parentApplication.bCopie.visible = true;
+					this.parentApplication.bSupp.visible = true;
+					this.parentApplication.bAjout.visible = true;
+				}
+
+			}
+			
+			protected function modifier_clickHandler(event:MouseEvent):void
+			{
+				if(tiNom.text=="")return;
+				var modifData:Array = new Array();
+				modifData["lib"]=tiNom.text;
+				this.parentApplication.changeLieuNom(modifData);
+				this.title = tiNom.text;
+			}
+			
+		]]>
+	</fx:Script>	
+	<s:navigationContent>
+		<s:Button label="Univers" click="goUnivers()"/>
+	</s:navigationContent>
+	<s:actionContent>
+		<s:Button id="bPrev" label="Retour" click="goBack()" skinClass="skin.btnPrev" />
+	</s:actionContent>
+	
+	<s:VGroup width="100%" height="100%" paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4">
+		<s:HGroup verticalAlign="middle" width="100%" id="hgModifNom">
+			<s:TextInput id="tiNom" width="100%" /><s:Button label="Modifier" click="modifier_clickHandler(event)" />			
+		</s:HGroup>
+		<s:List id="list" width="100%" height="100%" click="list_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListLieu"  />
+	</s:VGroup>  
+</s:View>

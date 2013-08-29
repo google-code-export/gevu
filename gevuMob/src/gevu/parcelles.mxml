@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:cpnt="cpnt.*"
+		title="Parcelle" 
+		width="100%" height="100%" 
+	    creationComplete="creationCompleteHandler(event)" xmlns:gevu="gevu.*"	
+		>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin;
+			
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			private var obj:String = "Models_DbTable_Gevu_parcelles";
+			[Bindable] public var idTypeCtrl:String;
+			
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
+			
+			private function GetParamContact(ctc:contacts, type:String):void
+			{
+				var arrParams:Array = new Array();
+				arrParams["id"]=data.id_parcelle;
+				arrParams["type"]=type;
+				ctc.paramsLien = arrParams;
+				ctc.getData();
+			}	
+			
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				isChange = false;
+				this.parentApplication.roDiag.edit(data.id_parcelle, modifData, obj, this.parentApplication.idBase);
+			}
+			
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				ref.text = data.ref;
+				ref_cadastre.text = data.ref_cadastre;
+				superficie.value = data.superficie;
+				if(ctcPro.data==null)GetParamContact(ctcPro, "contact_proprietaire");
+			}
+			
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+		
+	<s:VGroup >
+		<s:HGroup width="100%" verticalAlign="middle" >
+			<s:Label text="identifiant" />
+			<s:TextInput id="ref" width="100%" change="editModif('ref', ref.text)" />
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle" >
+			<s:Label text="Référence cadastre : " />
+			<s:TextInput id="ref_cadastre" width="100%" change="editModif('ref_cadastre', ref_cadastre.text)" />
+		</s:HGroup>
+		<gevu:contacts title="Contact propriétaire" id="ctcPro" unique="true" objLien="Models_DbTable_Gevu_parcelles" methoLien="modifier"/>			
+		<s:VGroup>
+			<s:Label text="Superficie de la parcelle extérieure (m²) :"/>
+			<s:NumericStepper id="superficie" stepSize="1" change="editModif('superficie', superficie.value)" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin" />
+		</s:VGroup>
+		<cpnt:repType lblQ="La parcelle extérieure est-elle cloturée ?" Q="cloture" id="cloture"  fnct="{this.editModif}" />
+		<s:Button id="saveModif" label="Enregistrer" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+		
+	</s:VGroup>
+</s:View>

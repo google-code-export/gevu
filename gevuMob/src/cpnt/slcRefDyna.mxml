@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SpinnerListContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	width="100%"
+	creationComplete="creationCompleteHandler(event)"
+	>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			
+			private var aProcess:alert;
+			[Bindable] public var objName:String;
+			[Bindable] public var objMethode:String="getAll";
+			[Bindable] public var labelName:String;
+			[Bindable] public var irName:String;
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				aProcess.close();
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				var a:alert = new alert;
+				a.mess = str;
+				if(os)a.titre = os;
+				a.open(this, false);
+				
+			}
+			protected function showProcess():void
+			{				
+				aProcess = new alert();
+				aProcess.mess = "Veuillez patienter";
+				aProcess.titre = 'Processus en cours...';
+				aProcess.bProcess = true;
+				aProcess.open(this, true);
+				PopUpManager.centerPopUp(aProcess);					
+			}
+
+			private function fillHandler(e:Object):void
+			{
+				aProcess.close();
+				if(!e)return;
+				var arr:ArrayCollection = new ArrayCollection();
+				for each (var c:Object in e.result){
+					c.lib =  c.prenom+" "+c.nom;
+					arr.addItem(c);
+				}
+				sl.dataProvider = arr;
+				sl.labelField = "lib";
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RemoteObject id="ro"
+						destination="zend"
+						source="{objName}"
+						fault="faultHandlerService(event, 'GEVU - Contact');"
+						showBusyCursor="true" invoke="showProcess()" 
+						>
+			<s:method name="getAll" result="fillHandler(event)" />
+		</s:RemoteObject>
+	</fx:Declarations>
+		<s:SpinnerList id="sl" width="100%" />
+	
+</s:SpinnerListContainer>

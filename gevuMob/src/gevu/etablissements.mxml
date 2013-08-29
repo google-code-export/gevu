@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		  xmlns:compo="compo.*" xmlns:form="compo.form.*"
+		  title="Etablissement" creationComplete="init()" 
+		  width="100%" height="100%"
+		  paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"
+		  >
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+
+			private var obj:String = "Models_DbTable_Gevu_etablissements";
+			
+			[Bindable] public var NodeData:Object;
+			public var valChanged:Boolean;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			private function init():void{
+				valChanged = false;
+				if(NodeData){
+					vs.selectedChild = view;
+					F9.setListType(2);
+					F10.setListType(23);
+					F11.setListType(24);
+					F12.setListType(2);
+					F13.setListType(2);
+				}else{
+					//this.selectedChild = insert;
+				}
+				ctcPro.paramsLien = GetParamContact("contact_proprietaire");
+				ctcPro.Init();
+				ctcDel.paramsLien = GetParamContact("contact_delegataire");
+				ctcDel.Init();
+				
+			}
+
+			private function GetParamContact(type:String):Array
+			{
+				var arrParams:Array = new Array();
+				arrParams["id"]=NodeData.id_etablissement;
+				arrParams["type"]=type;
+				
+				return arrParams;
+			}	
+			
+			public function saveModifications() : void {
+				var arr:Array = new Array();
+				arr["nom"]=F1.text;
+				arr["ref"]=F2.text;
+				arr["reponse_1"]=F9.acualId;
+				arr["reponse_2"]=F10.acualId;
+				arr["reponse_3"]=F11.acualId;
+				arr["reponse_4"]=F12.acualId;
+				arr["reponse_5"]=F13.acualId;
+				roModifBase.edit(NodeData.id_etablissement, arr, obj, this.parentApplication.idBase);
+				valChanged = false;
+			}
+			
+			public function deleteData():void{
+				roModifBase.remove(NodeData.id_etablissement);
+			}
+			protected function resultHandler(event:ResultEvent):void
+			{
+				Alert.show("Les modifications sont enregistrées", "Modifications");
+			}
+			
+			protected function remove_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("L'établissement est supprimé", "Suppression");
+				
+			}
+			
+			public function insertItem():void{
+				
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:RemoteObject id="roModifBase"
+					 destination="zend"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, 'Remote Object');">
+		<mx:method name="edit" result="resultHandler(event)" />
+	</mx:RemoteObject>
+	<mx:ViewStack id="vs" >
+
+		<mx:Canvas id="view" width="100%" height="100%">
+			
+			<mx:VBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="Nom : " />
+					<mx:TextInput id="F1" width="100%" data="{NodeData.nom}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="Ref :" />
+					<mx:TextInput id="F2" width="100%" data="{NodeData.ref}" change="valChanged=true;" />
+				</mx:HBox>
+				<mx:HBox width="100%" height="100%">
+					<form:contacts title="Contact propriétaire" id="ctcPro" unique="true" objLien="Models_DbTable_Gevu_etablissements" />		
+					<form:contacts title="Contact délégataire" id="ctcDel" unique="true" objLien="Models_DbTable_Gevu_etablissements" />		
+				</mx:HBox>
+					
+				<mx:HBox width="100%">
+					<mx:Label text="ERP :" />
+					<compo:KeywordsList id="F9" width="100%" acualId="{NodeData.reponse_1}" change="valChanged=true;" />
+					<mx:Label text="Type d'ERP spécifique :" />
+					<compo:KeywordsList id="F10" width="100%" acualId="{NodeData.reponse_2}" change="valChanged=true;" />
+					<mx:Label text="Catégorie d'ERP : " />
+					<compo:KeywordsList id="F11" width="100%" acualId="{NodeData.reponse_3}" change="valChanged=true;" />
+				</mx:HBox>
+	
+				<mx:HBox width="100%">
+					<mx:Label text="L'établissement est-il uniquement un lieu de travail ?" />
+					<compo:KeywordsList id="F12" width="100%" selectedIndex="{F12.setKeyword(NodeData.reponse_4)}" change="valChanged=true;" />
+					<mx:Label text="Si l'établissement est un lieu de travail, compte t-il plus de 20 salariés ?" />
+					<compo:KeywordsList id="F13" width="100%" acualId="{NodeData.reponse_5}" change="valChanged=true;" />
+				</mx:HBox>
+	
+			</mx:VBox>
+		</mx:Canvas>
+		<mx:Canvas id="insert" width="100%" height="100%">
+			<mx:VBox>			
+				<mx:HBox width="100%">
+					<mx:Label text="Nom:" />
+					<mx:TextInput id="insNom" width="100%" />
+				</mx:HBox>
+				<mx:HBox>
+					<mx:Button label="Enregistrer" click="insertItem()" />
+				</mx:HBox>
+			</mx:VBox>
+		</mx:Canvas>	
+	</mx:ViewStack>
+</mx:Panel>	
+

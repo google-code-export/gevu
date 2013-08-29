@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:composants="compo.*"
+		   title="Espace extérieur"
+		   width="100%" height="100%"
+		   paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"
+		   >
+		<mx:VBox>
+			<mx:HBox width="100%">
+				<mx:Label text="Identifiant : " />
+				<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
+			</mx:HBox>
+
+			<mx:HBox width="100%">
+				<mx:Label text="fonction" />
+				<mx:TextInput id="F3" text="{NodeData.fonction}" change="editModif('fonction', F3.text)" />
+			</mx:HBox>
+
+			<mx:HBox width="100%" >
+				<mx:Label text="Type social d'espace : " />
+				<mx:RadioButton groupName="type" id="reponse_1" label="Lieu de Travail" change="editModif('id_type_espace',reponse_1.label)" /> 
+				<mx:RadioButton groupName="type" id="reponse_2" label="Public" change="editModif('id_type_espace', reponse_2.label)" />
+				<mx:RadioButton groupName="type" id="reponse_3" label="Mixte" change="editModif('id_type_espace', reponse_3.label)" />
+			</mx:HBox>
+
+			<mx:HBox width="100%" visible="false" >
+				<mx:Label text="Type d'espace spécifique" />
+				<mx:ComboBox id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez" change="cbType_changeHandler(event)" />				
+			</mx:HBox>
+
+			<mx:HBox width="100%" >
+				<mx:Button id="saveModif" label="Enregistrer" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+				<mx:Button id="ajoutDiag" visible="false" label="Ajouter des diagnostics" click="ajoutDiag_clickHandler(event)"/>			
+			</mx:HBox>
+
+		</mx:VBox>
+	
+	<mx:RemoteObject id="ro"
+					 destination="zend"
+					 source="GEVU_Diagnostique"
+					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
+		<mx:method name="edit" result="method1_resultHandler(event)"  />
+		<mx:method name="getTypeControle" result="method2_resultHandler(event)"  />
+		<mx:method name="ajoutDiag" result="method3_resultHandler(event)" />
+	</mx:RemoteObject>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			private var obj:String = "Models_DbTable_Gevu_espacesxexterieurs";
+			
+			
+			[Bindable] public var NodeData:Object;
+			[Bindable] public var isChange:Boolean=false;
+			[Bindable] public var modifData:Array = new Array;
+			[Bindable] public var idTypeCtrl:String;
+			
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			
+			protected function panel1_creationCompleteHandler(event:FlexEvent):void
+			{
+				if(NodeData.length<=0)return;
+
+				ro.getTypeControle(this.parentApplication.idScenar, NodeData.id_lieu);
+				if(NodeData.id_type_espace=="Lieu de Travail") reponse_1.selected=true;
+				if(NodeData.id_type_espace=="Public") reponse_2.selected=true;
+				if(NodeData.id_type_espace=="Mixte") reponse_3.selected=true;				
+			}
+			
+			protected function cbType_changeHandler(event:ListEvent):void
+			{
+				idTypeCtrl = cbType.selectedItem["id_type_controle"];
+				modifData["id_type_specifique_ext"]=idTypeCtrl;
+				isChange = true;
+			}
+
+			protected function method1_resultHandler(event:ResultEvent):void
+			{
+				isChange = false;
+			}
+			
+			protected function method2_resultHandler(event:ResultEvent):void
+			{
+				cbType.dataProvider = event.result as Array;
+				if(!NodeData.id_type_specifique_ext || NodeData.id_type_specifique_ext!="0"){
+					for each(var row:Object in cbType.dataProvider){
+						if(row["id_type_controle"]==NodeData.id_type_specifique_ext){
+							cbType.selectedItem=row;
+							cbType.enabled = false;
+							idTypeCtrl = NodeData.id_type_specifique_ext;
+						}
+					}
+				}				
+			}
+
+			protected function SaveModif_clickHandler(event:MouseEvent):void
+			{
+				ro.edit(NodeData.id_espace_ext, modifData, obj, this.parentApplication.idBase);				
+			}
+
+			public function editModif(nom:String, val:Object) : void {
+				modifData[nom]=val;
+				isChange = true;
+			}
+			protected function ajoutDiag_clickHandler(event:MouseEvent):void
+			{
+				if(!cbType.selectedItem){
+					Alert.show("Veuillez sélectionner un type d'espace", "Ajout de diagnostics");
+					return;
+				}
+				ro.ajoutDiag(this.parentApplication.idExi, this.parentApplication.idScenar, NodeData.id_lieu, cbType.selectedItem["id_type_controle"])
+			}
+
+			protected function method3_resultHandler(event:ResultEvent):void
+			{
+				//on vérifie si le parent a déjà un composant diagnostic
+				var td:HBox = this.parentApplication.tabDiag;
+				var df:diagnostics = td.getChildByName("formDiag") as diagnostics;
+				if(df){
+					df.vs.selectedChild = df.ajout;
+				}else{
+					df = new diagnostics();
+					df.NodeData = event.result;
+					df.idLieu = NodeData.id_lieu;
+					df.bAjout = true;
+					df.idTypeCtlParent = cbType.selectedItem["id_type_controle"];
+					td.addChild(df);
+				}
+				
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Panel>
