@@ -102,12 +102,17 @@ class GEVU_Site{
     /**
      * retourne une connexion à une base de donnée suivant son nom
     * @param string $idBase
+    * @param string $idReg
+    * 
     * @return Zend_Db_Adapter_Abstract
     */
-    public function getDb($idBase){
-    	
+    public function getDb($idBase, $idReg=""){
+
 		$this->idBase = $idBase;			
-    	$db = Zend_Db_Table::getDefaultAdapter();
+    	$db = Zend_Db_Table::getDefaultAdapter();    	
+    	if($idReg){
+	    	$db = Zend_Registry::get($idReg);	
+    	}    	
     	if($idBase){
     		//change la connexion à la base
 			$arr = $db->getConfig();
