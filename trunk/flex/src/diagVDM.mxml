@@ -34,10 +34,8 @@ todo :
 		<mx:method name="ajoutCtlLieu"			result="roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);" />
 		<mx:method name="copiecolleLieu"		result="copiecolle_resultHandler(event)" />
 		<mx:method name="ajoutUtiDiag"			result="ajoutUtiDiag_resultHandler(event)"/>
-		
-		
 	</mx:RemoteObject>
-		
+	
 	<mx:VBox id="boxGen" visible="false" width="100%" height="100%"  >
 		<mx:HBox width="100%" >
 			<mx:Image source="@Embed('images/logo.png')" />

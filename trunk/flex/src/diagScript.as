@@ -116,6 +116,7 @@ private var o22:compo.form.locaux;
 private var o23:compo.form.interventions;
 private var oChDep:compo.form.chainesdeplacements;
 
+
 public function login():void
 {
 	//construction de la fenêtre d'édition
@@ -794,7 +795,7 @@ private function ajoutUtiDiagConfirmation(event:CloseEvent):void
 public function ajoutUtiDiag(item:Object):void
 {
 	if(item.idExi){
-		roDiagnostique.ajoutUtiDiag(idLieu, item.nom, idBase);			
+		roDiagnostique.ajoutUtiDiag(idLieu, item.idExi, idBase);			
 	}
 }
 
