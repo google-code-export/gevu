@@ -100,7 +100,7 @@
 			
 			private function initProblemes(idDiag:int, txtDiag:String):void
 			{
-				vnProbs.pushView(gevu.problemes,idDiag);
+				vnProbs.pushView(gevu.problemes,{"idDiag":idDiag,"idLieu":idLieu});
 				txtCritProb.text = txtDiag;				
 			}
 			
