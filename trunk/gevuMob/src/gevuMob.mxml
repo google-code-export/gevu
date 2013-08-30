@@ -67,10 +67,10 @@
 			public var exi:Object;
 			public var idExi:String = "";
 			public var idBase:String = "gevu_android";
-			public var idBaseSrc:String = "gevu_alceane";
+			public var idBaseSrc:String = "gevu_new";
 			public var idBaseRef:String = "gevu_ref";
-			public var srvSrc:String = "local";
-			public var srvDst:String = "local";
+			public var srvSrc:String = "serveur";
+			public var srvDst:String = "android";
 			public var idLieuChange:String;
 			public var arrLieuChange:Array;
 			public var idLieuCopie:String;
@@ -91,11 +91,11 @@
 			{
 				verifConnexion();
 				//roMig.migreRefServeurToLocal(1);
-				//showLogin();
-				//
+				showLogin();
+				/*
 				var r:Object = {idExi:1,droit_4:'[{"lib":"ERP-IOP","id":"4_13"},{"lib":"loge","id":"4_12"},{"lib":"Logement V3","id":"4_18"}]'};				
 				init(r)
-				//
+				*/
 			}
 			
 			protected function verifConnexion():void {
@@ -153,7 +153,17 @@
 
 			protected function sendBase_clickHandler(event:MouseEvent):void
 			{
-				//roMig.migreRefServeurToLocal(idBaseRef, idBase);
+				if(isConnect){
+					roDiag.setUtiLieuLock(idExi, idBase, srvDst, idBaseSrc, srvSrc);
+				}else{
+					aProcess = new alert();
+					aProcess.mess = "Vous n'êtes pas connecté.\nImpossible d'envoyer les données.";
+					aProcess.titre = 'Pas de connexion';
+					aProcess.btn2 = false;
+					aProcess.open(this, true);
+					PopUpManager.centerPopUp(aProcess);					
+					
+				}
 			}
 			
 			protected function migreRefServeurToLocal_resultHandler(event:ResultEvent):void
@@ -248,7 +258,7 @@
 				editLock(ll.data.lieu.id_lieu);
 			}
 			
-			protected function editLock(idLieu:String):void
+			public function editLock(idLieu:String):void
 			{
 				//tag le parent comme modifié
 				var vn:Array = new Array();				
@@ -293,6 +303,8 @@
 			protected function copiecolleLieu_resultHandler(event:ResultEvent):void
 			{
 				////aProcess.close();
+				editLock(oLieu.id_lieu);
+
 				roDiag.getUtiIdLieuLock(idExi, oLieu.id_lieu, idBase);
 				
 			}
@@ -498,6 +510,7 @@
 			{
 				////aProcess.close();
 				initDetail();
+				editLock(oLieu.id_lieu);
 				bAjoutCtl = true;
 				roDiag.getLieuCtl(oLieu.id_lieu, idScenar, idBase);				
 			}
@@ -519,6 +532,7 @@
 			protected function ajoutLieu_resultHandler(event:ResultEvent):void
 			{
 				////aProcess.close();
+				editLock(oLieu.id_lieu);
 				var id:String = event.result as String;
 				//on recharge le lieu ou son parent
 				if(oLieu.children.length > 0)
@@ -568,6 +582,11 @@
 				
 			}
 			
+			protected function setUtiLieuLock_resultHandler(event:ResultEvent):void
+			{
+				roMig.migreRefServeurToLocal(idBaseRef, idBase);
+			}
+			
 		]]>
 	</fx:Script>
 	<!--
@@ -594,6 +613,7 @@
 						showBusyCursor="true" 
 						>
 			<s:method name="getUtiLieuLock" result="getUtiLieuLock_resultHandler(event)"/>
+			<s:method name="setUtiLieuLock" result="setUtiLieuLock_resultHandler(event)" />			
 			<s:method name="getUtiIdLieuLock" result="getUtiIdLieuLock_resultHandler(event)" />
 			<s:method name="deleteLieu" result="deleteLieu_resultHandler(event)"/>
 			<s:method name="edit" result="edit_resultHandler(event)"/>

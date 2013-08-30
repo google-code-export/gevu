@@ -22,11 +22,13 @@
 			
 			[Bindable] public var idSelect:int=-1; 
 			[Bindable] public var idDiag:int; 
+			[Bindable] public var idLieu:int; 
 			[Bindable] public var idBase:String; 
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
-				idDiag = data as int;
+				idDiag = data.idDiag as int;
+				idLieu = data.idLieu as int;
 				init();				
 			}
 
@@ -51,7 +53,9 @@
 				vn["num_marker"] = num_marker.text;
 				vn["mesure"] = mesure.text;
 				vn["observations"] = observations.text;
-				vn["id_diag"] = idDiag;				
+				vn["id_diag"] = idDiag;
+				vn["id_lieu"] = idLieu;
+				
 				ro.ajouter(vn,this.parentApplication.idExi,this.parentApplication.idBase);
 			}
 			
@@ -82,6 +86,8 @@
 						
 			protected function method_resultHandler(event:ResultEvent):void
 			{
+				this.parentApplication.editLock(idLieu);
+
 				init();
 			}
 			

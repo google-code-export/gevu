@@ -100,7 +100,7 @@
 				
 				//charge la liste
 				list.dataProvider = data.liste;
-				showButton();
+				showButton(data.lieu.tLock);
 				if(data.lieu.tLock != "x"){
 					this.parentApplication.getDataLieu();
 				}
@@ -127,17 +127,18 @@
 					this.title = oItem.lib;
 					tiNom.text = oItem.lib;
 					this.parentApplication.lblAriane.text = data.ariane+" / "+oItem.lib;
+					showButton(oItem.tLock);
 					//charge les infos liées
 					this.parentApplication.getDataLieu();					
 				}
 				
 			}
 			
-			protected function showButton():void
+			protected function showButton(tLock:String):void
 			{
 				if(data.lieu.lib == "univers")bPrev.visible = false;
 				else bPrev.visible = true;
-				if(data.lieu.tLock == "x"){
+				if(tLock == "x"){
 					this.parentApplication.bCopie.visible = false;
 					this.parentApplication.bSupp.visible = false;
 					this.parentApplication.bAjout.visible = false;
