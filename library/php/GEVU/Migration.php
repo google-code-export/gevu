@@ -61,33 +61,33 @@ class GEVU_Migration extends GEVU_Site{
     	$supprimer          = true;            				// true on supprime la table cible si elle existe 
     	
     	// paramètres de connexion source
-    	$hostSource         = '100.100.200.00';		// adresse IP du serveur Source    	
+    	$hostSource         = '188.165.235.55';		// adresse IP du serveur Source    	
     	$portSource         = '3306';           	// port serveur MySql (3306 par défaut)
-    	$userSource         = 're';         // utilisateur
-    	$mdpSource          = 'Sa3' ;      	// mot de passe    	
+    	$userSource         = 'remoteuser';         // utilisateur
+    	$mdpSource          = 'Samszo2013' ;      	// mot de passe    	
     	$bddSource          = $idBaseSrc;       	// base de donnée Source
     	// tables Sources = 27
     	$tablesSources = array('gevu_contacts','gevu_couts','gevu_criteres','gevu_criteresxtypesxcriteres','gevu_criteresxtypesxdeficiences','gevu_criteresxtypesxdroits'
     			,'gevu_droits','gevu_exis','gevu_exisxdroits','gevu_motsclefs','gevu_produits','gevu_produitsxcouts','gevu_roles','gevu_scenario','gevu_scenes'
     			,'gevu_solutions','gevu_solutionsxcouts','gevu_solutionsxcriteres','gevu_solutionsxmetiers','gevu_solutionsxproduits', 'gevu_interventions'
-    			,'gevu_typesxcontroles','gevu_typesxcriteres','gevu_typesxdeficiences','gevu_typesxdroits','gevu_typesxsolutions','gevu_typexmotsclefs'
-    			,'gevu_motsclefs');
+    			,'gevu_typesxcontroles','gevu_typesxcriteres','gevu_typesxdeficiences','gevu_typesxdroits','gevu_typesxsolutions','gevu_typexmotsclefs');
     	    	
-    	/* paramètres de connexion cible tablette  	
+    	// paramètres de connexion cible tablette  	
     	$hostCible          = '127.0.0.1';      // adr. IP du serveur Cible (ici localhost pour l'exemple)
     	$portCible          = '3306';           // port serveur MySql (3306 par défaut)
     	$userCible          = 'root';           // utilisateur
     	$mdpCible           = '';    			// mot de passe
     	$bddCible           = $idBaseDst;      // base de donnée Cible
-    	*/
+    	//
     	
-    	// paramètres de connexion cible local 	
+    	/* paramètres de connexion cible local 	
     	$hostCible          = 'localhost';      // adr. IP du serveur Cible (ici localhost pour l'exemple)
     	$portCible          = '3306';           // port serveur MySql (3306 par défaut)
     	$userCible          = 'root';           // utilisateur
     	$mdpCible           = '';    			// mot de passe
     	$bddCible           = $idBaseDst;   // base de donnée Cible
-    	
+    	*/
+    			
     	// texte d'erreur de connexion
     	$errConnexion = "Impossible d'établir une connexion au port <b>%1\$s</b> du host <u>%2\$s</u> <b>%3\$s</b> dans la limite du temps imparti (%4\$s secondes). <br />Vérifiez l'adresse du host et le numéro de port du serveur %2\$s MySQL.<br />S'ils vous semblent corrects, essayez en changeant la valeur de <b>\$timeLimit</b>.";
     	
