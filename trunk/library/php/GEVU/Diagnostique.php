@@ -819,7 +819,48 @@ class GEVU_Diagnostique extends GEVU_Site{
 		return $result;
 	}
 	
-	
+	/**
+	 * récupère les lieux lockés pour un utilisateur
+    * @param integer $idExi 
+    * @param string $idBaseSrc
+    * @param string $idRegSrc
+    * @param string $idBaseDst
+    * @param string $idRegDst
+    * 
+    * @return array
+    */
+	public function setUtiLieuLock($idExi, $idBaseSrc=false, $idRegSrc=false, $idBaseDst=false, $idRegDst=false){
+		
+		//augmente le temps d'exécution
+		set_time_limit(100);
+		
+		//initialise les gestionnaires de base de données
+		$dbDst = $this->getDb($idBaseDst, $idRegDst);
+		$dbLdst = new Models_DbTable_Gevu_lieux($dbDst);
+		$dbSrc = $this->getDb($idBaseSrc, $idRegSrc);
+		$dbLsrc = new Models_DbTable_Gevu_lieux($dbSrc);
+		
+		//on récupère les lieux sources modifié par l'utilisateur
+		$arr = $dbLsrc->getUtiLieuLock($idExi,"+");
+		
+		//création du tableau hiérarchique
+        $result = $this->getHierachieLieu($arr, count($arr), 0);
+        
+        //on copie-colle les premiers enfants 
+        foreach ($result[1] as $lieu) {
+        	//change le tLock de destination
+			$dbLsrc->setUtiIdLieuLock($lieu["id_lieu"], "+".$idExi, "");        		
+        	//récupère les infos du lieu de destination
+        	$arrLdst = $dbLdst->findById_lieu($lieu["lieu_copie"]);
+	        //copie le lieu
+        	$this->copiecolleLieu($lieu["id_lieu"], $arrLdst[0]["lieu_parent"], $idExi, $idBaseSrc, array($idBaseSrc, $idRegSrc, $idBaseDst, $idRegDst));
+        	//supprime les lieux sources
+        	$dbLsrc->remove($lieu["id_lieu"]);
+        	// et destination
+        	//$dbLdst->remove($lieu["lieu_copie"]);
+        }			
+	}
+		
 	/**
 	 * récupère les lieux lockés pour un utilisateur
     * @param integer $idExi 
@@ -861,7 +902,9 @@ class GEVU_Diagnostique extends GEVU_Site{
 	        	$idLieuPar = -1;
 	        	foreach ($arrParent as $l) {
 	        		if($l["id_lieu"]!=$lieu["id_lieu"] && $l["lib"] != "univers"){
-		        		$idLieuPar = $dbLdst->ajouter(array("lieu_copie"=>$l["id_lieu"],"lieu_parent"=>$idLieuPar,"lib"=>$l["lib"],"id_type_controle"=>$l["id_type_controle"],"lock_diag"=>"x".$idExi));	        			
+		        		//on ajoute le lieu
+	        			$idLieuPar = $dbLdst->ajouter(array("lieu_copie"=>$l["id_lieu"],"lieu_parent"=>$idLieuPar,"lib"=>$l["lib"],"id_type_controle"=>$l["id_type_controle"],"lock_diag"=>"x".$idExi));
+						$this->copieTableLie($dbLsrc, $l["id_lieu"], $dbLdst, $dbDst, $idLieuPar);
 	        		}
 	        	}
 		        $this->copiecolleLieu($lieu["id_lieu"], $idLieuPar, $idExi, $idBaseSrc, array($idBaseSrc, $idRegSrc, $idBaseDst, $idRegDst));
@@ -881,6 +924,34 @@ class GEVU_Diagnostique extends GEVU_Site{
         return $result[1][0];
 	}
 
+	private function copieTableLie($dbLsrc, $idLsrc, $dbLDst, $dbDst, $ibLdst){
+        //et les tables liées
+        $Rowset = $dbLsrc->find($idLsrc);
+		$lieuSrc = $Rowset->current();
+		//récupération des données lieés
+		$dt = $dbLDst->getDependentTables();							
+		foreach($dt as $t){
+			$items = $lieuSrc->findDependentRowset($t);
+			if($items->count()){
+				//vérifie si on traite une des tables qu'on ne copie pas
+				// $t!="Models_DbTable_Gevu_diagnostics" && 
+				// && $t!="Models_DbTable_Gevu_lieuxinterventions"
+				// && $t!="Models_DbTable_Gevu_problemes" && 
+            	if($t!="Models_DbTable_Gevu_stats" && $t!="Models_DbTable_Gevu_observations" && $t!="Models_DbTable_Gevu_docsxlieux"){
+					$dbT = new $t($dbDst);							
+            	 	foreach ($items as $row) {
+            	 		$d = $row->toArray();
+            	 		$d["id_lieu"] = $ibLdst;		            	 		
+            	 		$k = $dbT->info('primary');
+            	 		unset($d[$k[1]]);
+            	 		$dbT->ajouter($d);
+            	 	}
+            	}
+            }
+		}
+		
+	}
+	
 	/**
 	 * récupère les lieux lockés pour un utilisateur
     * @param integer $idExi 
@@ -919,7 +990,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 	    	$r = $arr[$j];
 	    	if($k==0)$niv=$r["niv"]; 
 			if($niv == $r["niv"]){
-				$rs[$k] = array("lib"=>$r["lib"],"id_lieu"=>$r["id_lieu"],"niv"=>$r["niv"],"tLock"=>$r["tLock"],"tc"=>$r["tc"],"icone"=>$r["icone"],"children"=>array());				
+				$rs[$k] = array("lib"=>$r["lib"],"id_lieu"=>$r["id_lieu"],"niv"=>$r["niv"],"tLock"=>$r["tLock"],"tc"=>$r["tc"],"icone"=>$r["icone"],"lieu_copie"=>$r["lieu_copie"],"children"=>array());				
 		    	$niv = $r["niv"];		    	
 				$k ++;			
 			}
