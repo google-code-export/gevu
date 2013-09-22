@@ -83,15 +83,14 @@ class Models_DbTable_Gevu_objetsxexterieurs extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function getByRef($ref, $idInst, $idLieuParent, $lib="")
+    public function getByRef($ref, $idInst, $idLieuParent, $lib="", $data=array())
     {    	
 		//vérification de l'existence de l'antenne
 	    $arr = $this->findByRef($ref);
 	    if(count($arr)==0){
 	    	if($lib=="")$lib="Obj. Ext. - ".$ref;
 			$diag = new GEVU_Diagnostique();
-	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
-	    	unset($data["id_objet_ext"]);	  	
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false, $data);
 		    $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "ref"=> $ref));
 		    $arr = $this->findByRef($ref);
 	    }

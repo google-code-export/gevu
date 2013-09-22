@@ -82,14 +82,14 @@ class Models_DbTable_Gevu_antennes extends Zend_Db_Table_Abstract
      *  
      * @return integer
      */
-    public function getByRef($ref, $idInst, $idLieuParent, $lib="")
+    public function getByRef($ref, $idInst, $idLieuParent, $lib="",$idBase)
     {    	
 		//vérification de l'existence de l'antenne
 	    $arr = $this->findByRef($ref);
 	    if(count($arr)==0){
 	    	if($lib=="")$lib="Antenne - ".$ref;
-			$diag = new GEVU_Diagnostique();
-	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
+			$diag = new GEVU_Diagnostique($idBase);
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, $idBase, $lib, true, false, array("id_type_controle"=>60));
 		    $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "ref"=> $ref));
 		    $arr = $this->findByRef($ref);
 	    }
