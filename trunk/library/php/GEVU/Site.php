@@ -6,6 +6,7 @@ class GEVU_Site{
 	var $idBase;
     var $idExi;
     var $idInst;
+    var $diag;
     var $dbAnt;
     var $dbBat;
     var $dbC;
