@@ -1,12 +1,15 @@
 <?php
-require_once( "../application/configs/config.php" );
-
-
 try {
-	
-	$mig = new GEVU_Migration();
+	require_once( "../application/configs/config.php" );
+
 	/*
-	$mig->migreRefServeurToLocal();
+	$s = new GEVU_Site();
+	$arr = $s->getDb("","");
+	*/
+	
+	/*
+	$mig = new GEVU_Migration();
+	echo $mig->migreRefServeurToLocal("gevu_ref", "gevu_android");
 	*/
 	
 	/*
@@ -25,34 +28,39 @@ try {
 	$user->username='samszo';
 	$user->password='samszo';
 	$r = $a->verifyUser($user);
+	print_r($r);
 	*/
 	
 	/*
-	$idBase = "gevu_clrp";	
+	$idBase = "gevu_android";	
 	$idExi = 1;
-	$idLieu = 16;
-	$idScenario = 13;
+	$idLieu = 113;
+	$idScenario = 18;
 
 	$d = new GEVU_Diagnostique();
+	//$d->getContact($idBase,"Models_DbTable_Gevu_batiments",array("id"=>1,"type"=>"contact_proprietaire"));
+	$arr = $d->setUtiLieuLock($idExi, "gevu_android", "local", "gevu_new", "local");
+	$arr = $d->getUtiIdLieuLock($idExi, $idLieu, $idBase);
+	//$d->ajouterContact($idBase, "Models_DbTable_Gevu_batiments", array("idCtc"=>"11","idLien"=>"1","type"=>"contact_gardien"));
+	//$arr = $d->getUtiLieuLock($idExi, "gevu_new", "serveur", "gevu_android", "local");
 	//$d->deleteLieu($idLieu, $idExi, $idBase);
-	$d->ajoutUtiDiag(6671, 1, $idBase);
-	$d->getDiagListe(array("handi"=>"moteur","idLieu"=>23198,"niv"=>0),$idBase);
+	//$d->ajoutUtiDiag($idLieu, 1, $idBase);
+	//$d->getDiagListe(array("handi"=>"moteur","idLieu"=>23198,"niv"=>0),$idBase);
 	//$d->ajoutLieu(1,$idExi,$idBase);
-	$d->edit(3142,array("ref"=>"machn"),"Models_DbTable_Gevu_espacesxinterieurs",$idBase);
+	//$d->edit(3142,array("ref"=>"machn"),"Models_DbTable_Gevu_espacesxinterieurs",$idBase);
 	//$arr = $d->getChaineDepla(1,$idBase);
 	//$d->genereDiagWithIti(1,$idBase);	
-	//$arr = $d->getNodeRelatedData(6, $idExi, $idBase, $idScenario);
-	//$arr = $d->getLieuCtl(6, $idScenario, $idBase);	
-	*/
-	
+	//$arr = $d->getNodeRelatedData($idLieu, $idExi, $idBase, $idScenario);
+	//$arr = $d->getLieuCtl(170, $idScenario, $idBase);	//23427
 	//$arr = $d->copiecolleLieu(22992, 22991, $idExi, $idBase);	
 	//$arr = $d->getLieuCtl($idLieu, $idScenario, $idBase);	
-	//$arr = $d->getXmlNode($idLieu, $idBase);
+	$arr = $d->getXmlNode(1, $idBase);
 	//$arr = $d->getNodeRelatedData($idLieu, $idExi, $idBase, $idScenario);
 	
 	//$db = new Models_DbTable_Gevu_objetsxinterieurs();
 	//$db->ajoutDiag($idExi, 12, $idLieu, 106, $idBase);
-
+	*/
+	
 	//$db = new Models_DbTable_Gevu_espacesxinterieurs();
 	//$db->edit(3142, array("ref"=>"bidule"));
 	
@@ -71,6 +79,7 @@ $server->addDirectory(dirname(__FILE__) .'/../library/php/');
 
 /*pour l'authentification*/
 $server->setClassMap('LoginVO','AUTH_LoginVO');	
+
 
 $server->setProduction(false);
 
