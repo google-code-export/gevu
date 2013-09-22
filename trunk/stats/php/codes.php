@@ -1,8 +1,8 @@
 <?php
- $username = 'username';
- $password = 'password';
+ $username = 'root';
+ $password = '';
  $database = 'gevu_new';
- $server = '127.0.0.1';
+ $server = 'localhost';
  
  // Ouvre connexion MySQL
  $connection = mysql_connect ($server, $username, $password);
