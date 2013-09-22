@@ -92,7 +92,7 @@ class Models_DbTable_Gevu_locaux extends Zend_Db_Table_Abstract
 	    if(count($arr)==0){
 	    	if($lib=="")$lib="Local - ".$ref;
 			$diag = new GEVU_Diagnostique();
-	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false, array("id_type_controle"=>68));
 	    	$data["id_lieu"] = $idLieu;
 	    	$data["id_instant"] = $idInst;
 	    	$data["ref"] = $ref;

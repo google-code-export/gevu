@@ -78,18 +78,29 @@ class Models_DbTable_Gevu_batiments extends Zend_Db_Table_Abstract
      * @param string $ref
      * @param int $idInst
      * @param int $idLieuParent
-     * @param string $lib
+     * @param array $data
      *  
      * @return integer
      */
-    public function getByRef($ref, $idInst, $idLieuParent, $lib="")
+    public function getByRef($ref, $idInst, $idLieuParent, $data=false, $idBase)
     {    	
 		//vérification de l'existence de l'antenne
 	    $arr = $this->findByRef($ref);
 	    if(count($arr)==0){
-	    	if($lib=="")$lib="".$ref;
+	    	if(!$data)$data["lib"]="".$ref;
 			$diag = new GEVU_Diagnostique();
-	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, $idBase, $data["lib"], true, false, array("id_type_controle"=>45));
+		    $data["id_lieu"]=$idLieu;
+		    $data["id_instant"]=$idInst;
+		    $data["ref"]=$ref;
+		    //vérifie s'il faut créer le contact
+		    if($data["contact_gardien"] && !is_int($data["contact_gardien"])){
+		    	$dbC = new Models_DbTable_Gevu_contacts($this->_db);
+		    	$data["contact_gardien"] = $dbC->ajouter(array("nom"=>$data["contact_gardien"]));
+		    }
+		    //vérifie si la date de construction est valide
+		    if($data["date_achevement"] && strlen($data["date_achevement"])==4)
+		    	$data["date_achevement"]=$data["date_achevement"]."-01-01";
 		    $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "ref"=> $ref));
 		    $arr = $this->findByRef($ref);
 	    }

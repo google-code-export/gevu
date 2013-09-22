@@ -105,7 +105,7 @@ class Models_DbTable_Gevu_espacesxexterieurs extends Zend_Db_Table_Abstract
 	    if(count($arr)==0){
 	    	if($lib=="")$lib="Esp. Ext. - ".$ref;
 			$diag = new GEVU_Diagnostique();
-	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false);
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, false, $lib, true, false, array("id_type_controle"=>$data["id_type_specifique_ext"]));
 	    	$data["id_lieu"] = $idLieu;
 	    	$data["id_instant"] = $idInst;
 	    	$data["ref"] = $ref;
