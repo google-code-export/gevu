@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+			 creationComplete="creationCompleteHandler(event)"	
+				>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if(data.last){
+					this.setCurrentState("selected");					
+				}
+				separator.visible = data.separatorAfter;
+				txt.text = data.label;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@font-face {
+			src:url("assets/itc-officina-sans-book.ttf");
+			fontFamily: ITC;
+			embedAsCFF: true;
+		}
+
+		.lbl {
+			fontFamily:ITC;
+			fontSize: 14pt;
+		}
+		
+	</fx:Style>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="hovered"/>
+		<s:State name="selected"/>
+		<s:State name="downAndSelected"/>
+	</s:states>
+	
+	<s:layout>
+		<s:HorizontalLayout gap="1" verticalAlign="middle"/>
+	</s:layout>
+	
+	<s:Label id="txt"
+			 styleName="lbl"
+			 width="100%"
+			 verticalAlign="middle"
+			 height="20" />
+	<s:Label id="separator" styleName="lbl" text=">" />
+	
+</s:ItemRenderer>

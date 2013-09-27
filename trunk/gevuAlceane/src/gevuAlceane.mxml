@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:gevu="gevu.*"
+			   width="100%" height="100%" 
+			   pageTitle="GEVU Alcéane"
+			   creationComplete="creationCompleteHandler(event)"
+			   >
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.events.TreeEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+
+			[Bindable] public var exi:Object;
+			[Bindable] public var idExi:String = "";
+			[Bindable] public var dataNode:Object;
+			[Bindable] public var dataGeo:Object;
+
+			public var idLieu:int=-1;
+			public var idBase:String;
+
+			private var TreeObject:XML;
+			private var xmlTree:XML
+			private var arrSelect:Array;
+			private var objLieuFind:Array; 
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				treeAntenneInit();
+			}
+			
+			protected function btnRecherche_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function btnIdentifiant_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				Alert.show(str, "FaultHandlerService"+os);
+			}
+			private function displayNodeProperties(event:ResultEvent) : void {
+				
+				dataNode = event.result;
+				
+				//initialise les tabbox
+				bbMain.selectedIndex = 0;
+				currentState = 'carte';
+				
+				//bbAriane.NodeData = dataNode["ariane"];
+				dataGeo = dataNode["geo"];
+				
+			}			
+
+			private function updateTreeStructure(event:ResultEvent) : void {
+				
+				if(!event.result) return;
+				
+				/* get the id of the node */
+				var x:XML = <root></root>;
+				x.appendChild(event.result);		
+				
+				var idnoeud:int;
+				idnoeud = x.node.attribute("idLieu");
+				
+				//vérifie si le noeud existe
+				var objTree:XMLList = treeAntenne.dataProvider[0].descendants().(@idLieu == idnoeud);
+				if(objTree.length()){
+					/* add the new real node */
+					objTree[0].appendChild(x.node.node);
+					
+					if(arrSelect){
+						//ajoute le noeud à la sélection
+						x = treeAntenne.dataProvider[0].descendants().(@idLieu == idnoeud)[0];
+						treeAntenne.expandItem(x,true);
+						arrSelect.push(x);
+						treeAntenne.selectedItems = arrSelect;
+					}
+					
+					/* delete the old fake one */
+					delete  treeAntenne.dataProvider[0].descendants().(@idLieu==idnoeud)[0].children()[0];
+					
+					//conserve les data du tree complet
+					xmlTree = treeAntenne.dataProvider[0] as XML;
+				}	
+			}			
+			private function displayReponse(event:ResultEvent) : void {
+				
+				objLieuFind = event.result as Array;
+				arrSelect = new Array;
+				
+			}
+			public function treeAntenneInit():void{
+				//construction du tree des territoires
+				xmlTree = 
+					<node idLieu="2" lib="Alcéane" fake="0">
+						<node idLieu="-10"  fake="1" />
+					</node>;
+				treeAntenne.dataProvider=xmlTree;
+			}
+			private function treeItemOpened(event:TreeEvent) : void {
+				if (event.item.node.attribute("fake")==1)
+				{
+					var i:int = event.item.attribute("idLieu");
+					roDiag.getXmlNode(i, idBase);
+				}
+			}
+			private function treeItemClicked(event:ListEvent) : void {
+				var i:Object = event.currentTarget.selectedItem;
+				idLieu = i.attribute("idLieu");
+				if(i.attribute("lib")=="Alcéane")return;
+				if(idLieu>0) roDiag.getNodeDataAlceane(idLieu, idExi, idBase);
+			}			
+		
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RemoteObject
+			id="roDiag"
+			destination="zend"
+			source="GEVU_Diagnostique"
+			fault="faultHandlerService(event, 'GEVU - Diagnostic');"
+			showBusyCursor="true"
+			>
+			<s:method name="getNodeDataAlceane"	result="displayNodeProperties(event);" />
+			<s:method name="getXmlNode"			result="updateTreeStructure(event);" />
+			<s:method name="findLieu"			result="displayReponse(event);" />
+		</s:RemoteObject>
+		<s:ArrayCollection id="menuItems">
+			<s:source>
+				<fx:Object itemId="itemId1" label="Item 1" separatorAfter="true"/>
+				<fx:Object itemId="itemId2"
+						   label="Item 2"
+						   separatorAfter="true"/>
+				<fx:Object itemId="itemId3" label="Another item" separatorAfter="true"/>
+				<fx:Object itemId="itemId4" label="One more item" separatorAfter="true"/>
+				<fx:Object itemId="itemId5"
+						   label="Yet another item"
+						   separatorAfter="true"/>
+				<fx:Object itemId="itemId6" label="Last item" last="true"/>
+			</s:source>
+		</s:ArrayCollection>
+		<mx:ArrayCollection id="bbItems">
+			<fx:String>CARTE</fx:String> 
+			<fx:String>M&#201;DIAS</fx:String> 
+			<fx:String>DONN&#201;ES G&#201;N&#201;RALES</fx:String> 
+			<fx:String>DIAGNOSTICS</fx:String> 
+			<fx:String>ACCESSIBILIT&#201;</fx:String> 
+		</mx:ArrayCollection>
+
+	</fx:Declarations>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+
+		@font-face {
+			src:url("assets/din-bold.ttf");
+			fontFamily: DIN-bold;
+			embedAsCFF: true;
+		}
+		@font-face {
+			src:url("assets/itc-officina-sans-book.ttf");
+			fontFamily: ITC;
+			embedAsCFF: true;
+		}
+		@font-face {
+			src:url("assets/itc-officina-sans-bold.ttf");
+			fontFamily: ITC;
+			fontWeight: bold;
+			embedAsCFF: true;
+		}
+		@font-face {
+			src:url("assets/itc-officina-sans-book-italic.ttf");
+			fontFamily: ITC;
+			fontStyle: italic;
+			embedAsCFF: true;
+		}
+		.logoT {
+			fontFamily:DIN-bold;
+			fontSize: 64pt;
+			color: white;
+		}
+		.logoST {
+			fontFamily:ITC;
+			fontSize: 18pt;
+			color: white;
+			trackingLeft: 0.6;
+			trackingRight: 0.6;
+		}
+		.titreBloc {
+			fontFamily:ITC;
+			fontSize: 24pt;
+			color: white;
+		}
+		.stitreBlocB {
+			fontFamily:ITC;
+			fontWeight: bold;
+			fontSize: 14pt;
+			color: black;
+		}
+		.stitreBloc {
+			fontFamily:ITC;
+			fontSize: 14pt;
+			color: black;
+		}
+		.stitreBlocI {
+			fontFamily:ITC;
+			fontSize: 14pt;
+			fontStyle: italic;
+			color: black;
+		}
+		.inputText {
+			fontFamily:ITC;
+			fontSize: 24pt;
+			color: black;
+		}
+		.btnCorner {
+			cornerRadius: 10;
+		}				
+	</fx:Style>
+	<s:states>
+		<s:State name="carte"/>
+		<s:State name="medias"/>
+	</s:states>	
+	
+	<s:BorderContainer 
+		borderColor="black" borderStyle="inset" borderWeight="6" width="100%" height="100%">
+		<s:layout>
+			<s:VerticalLayout gap="0" />                
+		</s:layout>	
+		<s:HGroup width="100%" height="100%" gap="0" >
+			<s:VGroup width="264" height="100%" gap="0" >
+				<s:Group height="108" width="264" >
+					<s:Rect height="100%" width="100%" >
+						<s:fill><s:SolidColor color="#4B4B4D" /></s:fill>
+					</s:Rect>
+					<s:VGroup horizontalAlign="center" height="100%" width="100%" >
+						<s:Label paddingTop="0" styleName="logoT" text="Alcéane"/>
+						<s:Label paddingTop="-16" paddingLeft="-1" styleName="logoST" text="OPH DE LA VILLE DU HAVRE"/>
+					</s:VGroup>				
+				</s:Group>
+				<s:Group height="36" width="264" >
+					<s:Rect height="100%" width="100%" >
+						<s:fill><s:SolidColor color="#A49172" /></s:fill>
+					</s:Rect>
+					<s:VGroup horizontalAlign="center" verticalAlign="middle" height="100%" width="100%" >
+						<s:Label styleName="titreBloc" text="RECHERCHE"/>
+					</s:VGroup>				
+				</s:Group>
+				<s:Group height="195" width="264" >
+					<s:Rect height="100%" width="100%" >
+						<s:fill><s:SolidColor color="#BFB099" alpha="0.7" /></s:fill>
+					</s:Rect>
+					<s:VGroup height="100%" width="100%" paddingTop="12" paddingLeft="4" paddingRight="4" >
+						<s:HGroup verticalAlign="bottom"  >
+							<s:Label styleName="stitreBlocB" text="RECHERCHER "/>							
+							<s:Label styleName="stitreBloc" text="UN B&#194;TIMENT, UNE ADRESSE..."/>							
+						</s:HGroup>
+						<s:Label styleName="stitreBlocI" text="Ex : Zampa, ou Bourgogne, ou"/>							
+						<s:Label styleName="stitreBlocI" text="95 rue Jules Lecesne, ou Caucriauville..."/>
+						<s:HGroup width="100%" height="64" verticalAlign="bottom" >
+							<s:TextInput id="txtRecherche" width="100%" height="30" y="100"
+										 styleName="inputText"
+										 borderColor="black" borderVisible="true" />							
+						</s:HGroup>
+						<s:HGroup width="100%" height="48" verticalAlign="middle" horizontalAlign="right">
+							<s:Button skinClass="skin.btnAlceane" styleName="btnCorner" label="OK" id="btnRecherche" click="btnRecherche_clickHandler(event)" />
+						</s:HGroup>
+					</s:VGroup>				
+				</s:Group>
+				<s:Group height="36" width="264" >
+					<s:Rect height="100%" width="100%" >
+						<s:fill><s:SolidColor color="#A49172" /></s:fill>
+					</s:Rect>
+					<s:VGroup horizontalAlign="center" verticalAlign="middle" height="100%" width="100%" >
+						<s:Label styleName="titreBloc" text="RECHERCHE PAR ANTENNE"/>
+					</s:VGroup>				
+				</s:Group>
+				<s:Group height="100%" width="264" >
+					<s:Rect height="100%" width="100%" >
+						<s:fill><s:SolidColor color="#BFB099" alpha="0.7" /></s:fill>
+					</s:Rect>
+					<s:VGroup height="100%" width="100%" paddingTop="12" paddingLeft="4" paddingRight="4" >
+						<mx:Tree id="treeAntenne" labelField="@lib" showRoot="false" 
+								 height="100%"  width="100%" 
+								 itemOpening="treeItemOpened(event);"
+								 change="treeItemClicked( event );"
+								 horizontalScrollPolicy="on" verticalScrollPolicy="on"
+								 />
+					</s:VGroup>				
+				</s:Group>
+				<s:Group height="36" width="264" >
+					<s:Rect height="100%" width="100%" >
+						<s:fill><s:SolidColor color="#996C88" /></s:fill>
+					</s:Rect>
+					<s:VGroup horizontalAlign="center" verticalAlign="middle" height="100%" width="100%" >
+						<s:Label styleName="titreBloc" text="OPTION D'AFFICHAGE"/>
+					</s:VGroup>				
+				</s:Group>
+				<s:Group height="100%" width="264" >
+					<s:Rect height="100%" width="100%" >
+						<s:fill><s:SolidColor color="#BFB099" alpha="0.7" /></s:fill>
+					</s:Rect>
+					<s:VGroup height="100%" width="100%" paddingTop="12" paddingLeft="4" paddingRight="4" >
+						
+					</s:VGroup>				
+				</s:Group>
+			</s:VGroup>
+			<s:VGroup width="100%" height="100%" >
+				<s:Group height="108" width="100%" >
+					<s:Rect height="100%" width="100%" >
+						<s:fill><s:SolidColor color="#BFB099" alpha="0.7" /></s:fill>
+					</s:Rect>
+					<s:VGroup height="100%" width="100%" paddingLeft="200" paddingRight="30" paddingTop="20" >
+						<s:Label paddingTop="0" styleName="inputText" text="Identifiant"/>
+						<s:HGroup verticalAlign="middle">
+							<s:TextInput id="txtIdentifiant" width="400" height="30" 
+										 contentBackgroundColor="#A49172"
+										 styleName="inputText"
+										 borderColor="black" borderVisible="true" />													
+							<s:Button skinClass="skin.btnAlceane" styleName="btnCorner" label="Valider" width="100" id="btnIdentifiant" click="btnIdentifiant_clickHandler(event)" />
+						</s:HGroup>
+					</s:VGroup>				
+				</s:Group>
+				<s:HGroup paddingLeft="6" paddingTop="-10" width="100%" paddingRight="6">
+					<s:ButtonBar
+						id="bbMain"
+						skinClass="skin.bbAlceane"
+						requireSelection="true" 
+						width="100%" dataProvider="{bbItems}" />
+				</s:HGroup>
+				<s:VGroup id="gMain" paddingTop="-40" height="100%" width="100%" paddingBottom="6" paddingLeft="6" paddingRight="6" >
+					<s:Group width="100%" >
+						<s:Rect height="100%" width="100%" >
+							<s:fill><s:SolidColor color="white" /></s:fill>
+						</s:Rect>
+						<s:HGroup paddingBottom="6" paddingLeft="6" paddingRight="6" paddingTop="6" verticalAlign="middle">
+							<s:Label styleName="stitreBloc" text="Vous êtes ici :"/>
+							<s:List borderVisible="false" itemRenderer="gevu.irAriane" dataProvider="{menuItems}">
+								<s:layout>
+									<s:HorizontalLayout />
+								</s:layout>
+							</s:List>
+						</s:HGroup>
+					</s:Group>
+					<gevu:cnvIFCarto width="100%" height="100%" includeIn="carte" id="cartoIF" rsCarto="{dataGeo}" />
+				</s:VGroup>
+			</s:VGroup>
+		</s:HGroup>
+
+	</s:BorderContainer> 	
+
+</s:Application>
