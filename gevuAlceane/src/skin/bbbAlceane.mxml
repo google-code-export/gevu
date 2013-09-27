@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for a Spark ToggleButton component.  
+
+     @see spark.components.ToggleButton
+        
+      @langversion 3.0
+      @playerversion Flash 10
+      @playerversion AIR 1.5
+      @productversion Flex 4
+-->
+<s:SparkButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+                   xmlns:s="library://ns.adobe.com/flex/spark" 
+                   xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+                   minWidth="21" minHeight="21" 
+                   alpha.disabledStates="0.5">
+	<fx:Metadata>[HostComponent("spark.components.ButtonBarButton")]</fx:Metadata>
+    
+    <!-- host component -->
+    <fx:Script fb:purpose="styling">
+        /* Define the skin elements that should not be colorized. 
+           For toggle button, the graphics are colorized but the label is not. */
+        static private const exclusions:Array = ["labelDisplay"];
+
+        /**
+         * @private
+         */    
+        override public function get colorizeExclusions():Array {return exclusions;}
+        
+        /**
+         * @private
+         */
+        override protected function initializationComplete():void
+        {
+            useChromeColor = true;
+            super.initializationComplete();
+        }
+        
+        /**
+         * @private
+         */
+        override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void
+        {
+            var cr:Number = getStyle("cornerRadius");
+            
+            if (cornerRadius != cr)
+            {
+                cornerRadius = cr;
+                fill.radiusX = cornerRadius;
+                border.radiusX = cornerRadius;
+            }
+            
+            super.updateDisplayList(unscaledWidth, unscaledHeight);
+        }
+        
+        private var cornerRadius:Number = 30;
+    </fx:Script>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace fb "http://ns.adobe.com/flashbuilder/2009";
+		@font-face {
+			src:url("assets/itc-officina-sans-book.ttf");
+			fontFamily: ITC;
+			embedAsCFF: true;
+		}
+		.lblText {
+			fontFamily:ITC;
+			fontSize: 24pt;
+			color: white;
+		}
+		
+	</fx:Style>        
+    
+    <!-- states -->
+    <s:states>
+        <s:State name="up" />
+        <s:State name="over" stateGroups="overStates" />
+        <s:State name="down" stateGroups="downStates" />
+        <s:State name="disabled" stateGroups="disabledStates" />
+        <s:State name="upAndSelected" stateGroups="selectedStates, selectedUpStates" />
+        <s:State name="overAndSelected" stateGroups="overStates, selectedStates" />
+        <s:State name="downAndSelected" stateGroups="downStates, selectedStates" />
+        <s:State name="disabledAndSelected" stateGroups="selectedUpStates, disabledStates, selectedStates" />
+    </s:states>
+        
+    <!-- layer 2: fill -->
+    <!--- @private -->
+    <s:Rect id="fill" left="1" right="1" top="1" bottom="1" radiusX="30">
+		<s:fill><s:SolidColor color.up="#996C88" color.over="#383b71" color.upAndSelected="#383b71" color.downAndSelected="#383b71" /></s:fill>
+    </s:Rect>
+        
+    <!-- layer 7: border - put on top of the fill so it doesn't disappear when scale is less than 1 -->
+    <!--- @private -->
+    <s:Rect id="border" left="0" right="0" top="0" bottom="0" width="69" height="20" radiusX="30">
+		<s:stroke>
+			<s:SolidColorStroke color="white" />
+		</s:stroke>
+    </s:Rect>
+    
+    <!-- layer 8: text -->
+    <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay -->
+    <s:Label id="labelDisplay" top="10" horizontalCenter="0" maxDisplayedLines="1" styleName="lblText" color="white" textAlign="center">
+    </s:Label>
+    
+</s:SparkButtonSkin>
