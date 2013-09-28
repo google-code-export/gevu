@@ -429,7 +429,9 @@ class GEVU_Import extends GEVU_Site{
     	//chargement du fichier
 		//$chaines = file($docInfos['path_source']);
 		//$chaines = file('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910.csv');
-		$arrCSV = $this->csvToArray('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910utf8.csv');
+		//$arrCSV = $this->csvToArray('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910utf8.csv');
+		$arrCSV = $this->csvToArray('/Users/paragraphe/Documents/www/gevu/data/EXTRAC_GEVU_20130910/EXTRAC_GEVU_20130910.csv');
+		
 		$nbRow = count($arrCSV);
 				
 		//pour optimiser la récupération des informations
@@ -452,30 +454,30 @@ class GEVU_Import extends GEVU_Site{
 			//$chaine = trim($chaine); 
 			//$arr = explode(";", $chaine);
 			$err = "";
-			$nbCol = count($this->r);
+			$nbCol = count($this->arr);
 			/** TODO
 			 * il y a plus de colonne que de valeur
 			 */
 			//if($nbCol!="60") $err .= "Le nombre de colonne de la ligne $x n'est pas bon : $nbCol";
 				
    			//récupère l'antenne
-    		if($this->arrAnt["ref"]!=$this->arr[0]) $this->arrAnt = $this->dbAnt->getByRef($this->arr[0], $this->idInst, $idLieuParent, "ANTENNE ".$this->arr[0],$idBase);
+    		if($this->arrAnt["ref"]!=$this->arr[0]) $this->arrAnt = $this->dbAnt->getByRef($this->arr[0], $this->idInst, $idLieuParent, "ANTENNE ".$this->arr[0],$this->idBase);
    			//récupère le groupe
     		if($this->arrGrp["ref"]!=$this->arr[1]){
-    			$this->arrGrp = $this->dbGrp->getByRef($this->arr[1], $this->idInst, $this->arrAnt["id_lieu"],$this->arr[2],$idBase);
-    			$this->creaArboScenar($this->arrGrp["id_lieu"], $idScenar, $idBase);
+    			$this->arrGrp = $this->dbGrp->getByRef($this->arr[1], $this->idInst, $this->arrAnt["id_lieu"],"",$this->idBase);
+    			//$this->creaArboScenar($this->arrGrp["id_lieu"], $idScenar, $idBase);
     		}
     		//récupère le bâtiment
 	    	if($this->arrBat["ref"]!=$this->arr[4]){
 	    		$this->arrBat = $this->dbBat->getByRef($this->arr[4], $this->idInst, $this->arrGrp["id_lieu"]
-	    			,array("lib"=>$this->arr[5],"contact_gardien"=>$this->arr[44],"date_achevement"=>$this->arr[24]),$this->idBase);
-    			$this->creaArboScenar($this->arrBat["id_lieu"], $idScenar, $idBase);		    			
+	    			,array("lib"=>$this->arr[4],"contact_gardien"=>$this->arr[44],"date_achevement"=>$this->arr[24]),$this->idBase);
+    			//$this->creaArboScenar($this->arrBat["id_lieu"], $idScenar, $idBase);		    			
 	    	}
 		    	//on traite les lignes suivant le type de module
 			    switch ($this->arr[15]) {
 				    case 'ANTENNE TV':
 			    		//recherche la référence
-				    	$arrObj = $this->dbObjExt->getByRef($arr[13], $this->idInst, $arrBat["id_lieu"], $arr[15]." - ".$arr[13],array("id_type_controle"=>45));
+				    	$arrObj = $this->dbObjExt->getByRef($this->arr[13], $this->idInst, $this->arrBat["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_controle"=>45),$this->idBase);
 					break;
 				    case 'BATIMENT ADMINISTRATIF':
 				    	/*TODO
@@ -484,61 +486,64 @@ class GEVU_Import extends GEVU_Site{
 				    	//récupère le niveau
 				    	$this->getNiveau();
 				    	//récupère le local
-				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>88));
+				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>88),$this->idBase);
 					break;
 				    case 'CAVE':
 				    	//récupère la partie commune
 				    	$this->getPartieCommune();
 			    		//recherche la référence
-				    	$arrObj = $this->dbEspInt->getByRef($this->arr[13], $this->idInst, $this->arrPtc["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_int"=>75));
+				    	$arrObj = $this->dbEspInt->getByRef($this->arr[13], $this->idInst, $this->arrPtc["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_int"=>75),$this->idBase);
 					break;
 				    case 'COMMERCE':
 				    	$this->getNiveau();
 				    	//recherche la référence
-				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>86));
+				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>86),$this->idBase);
 					break;
 				    case 'DIVERS':
 				    	$this->getNiveau();
 				    	//recherche la référence
-				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13]);
+				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13],false,$this->idBase);
 				    	break;
 				    case 'ESPACE PUBLICITAIRE':
 			    		//recherche la référence
-				    	$arrObj = $this->dbObjExt->getByRef($this->arr[13], $this->idInst, $this->arrBat["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_objet_ext"=>89));
+				    	$arrObj = $this->dbObjExt->getByRef($this->arr[13], $this->idInst, $this->arrBat["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_objet_ext"=>89),$this->idBase);
 					break;
 				    case 'FOYER':
 				    	$this->getNiveau();
 				    	//recherche la référence
-				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>90));
+				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>90),$this->idBase);
 						break;
 				    case 'GARAGE':
 			    		//récupère la partie commune
 				    	$this->getPartieCommune();
 				    	//recherche la référence
-				    	$arrObj = $this->dbEspInt->getByRef($this->arr[13], $this->idInst, $this->arrPtc["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_int"=>91));
+				    	$arrObj = $this->dbEspInt->getByRef($this->arr[13], $this->idInst, $this->arrPtc["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_int"=>91),$this->idBase);
 					break;
 				    case 'JARDIN':
 			    		//récupère la parcelle
-			    		if($this->arrPcl["ref"]!=$this->arrBat["id_lieu"]."_".$this->arr[20]) $this->arrPcl = $this->dbPcl->getByRef($this->arrGrp["id_lieu"]."_".$this->arr[20], $this->idInst, $this->arrGrp["id_lieu"]);				    				    		
+			    		if($this->arrPcl["ref"]!=$this->arrBat["id_lieu"]."_".$this->arr[20]) $this->arrPcl = $this->dbPcl->getByRef($this->arrGrp["id_lieu"]."_".$this->arr[20], $this->idInst, $this->arrGrp["id_lieu"],"",false,$this->idBase);				    				    		
 			    		//recherche la référence
-				    	$arrObj = $this->dbEspExt->getByRef($this->arr[13], $this->idInst, $this->arrPcl["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_ext"=>81));
+			    		if(!$this->arrPcl["id_lieu"]){
+			    			$totot = 0;
+			    		}
+				    	$arrObj = $this->dbEspExt->getByRef($this->arr[13], $this->idInst, $this->arrPcl["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_ext"=>81),$this->idBase);
 					break;
 				    case 'LOCAL':
 				    	$this->getNiveau();
 				    	//recherche la référence
-				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>68));
+				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>68),$this->idBase);
 					break;
 				    case 'LOCAL PROFESSIONNEL':
 				    	$this->getNiveau();
 				    	//recherche la référence
-				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>68));
+				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>68),$this->idBase);
 						break;
 				    case 'LOCAL VELO':
 				    	$this->getPartieCommune();
 				    	//recherche la référence
-				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>74));
+				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>74),$this->idBase);
 				    	//creation de l'arboressence
-		    			$this->creaArboScenar($arrObj['id_lieu'], $idScenar, $idBase);		    			
+		    			//$this->creaArboScenar($arrObj['id_lieu'], $idScenar, $idBase);		    			
 				    	break;
 				    case 'LOGEMENT':
 				    	$this->getNiveau();
@@ -548,31 +553,31 @@ class GEVU_Import extends GEVU_Site{
 				    		,"DTA_Date"=>$this->arr[39],"DTA_Date_Travaux"=>$this->arr[43],"DTA_Presence_Amiante"=>$this->arr[40],"DTA_Presence_Amiante_Degradee"=>$this->arr[41],"DTA_Mesure_Conservatoire"=>$this->arr[42]
 				    		,"DPE_Date"=>$this->arr[31],"DPE_consommation_reelle"=>$this->arr[32],"DPE_Categorie_Consommation"=>$this->arr[33],"DPE_emissions_GES"=>$this->arr[34],"DPE_Categorie_Emissions_GES"=>$this->arr[35]
 				    		);
-				    	$arrObj = $this->dbLog->getByRef($arr[13], $this->idInst, $arrNiv["id_lieu"], $arr[15]." - ".$arr[13]);
+				    	$arrObj = $this->dbLog->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13],false,$this->idBase);
 				    	//creation de l'arboressence
-		    			$this->creaArboScenar($arrObj['id_lieu'], $idScenar, $idBase);		    			
+		    			//$this->creaArboScenar($arrObj['id_lieu'], $idScenar, $idBase);		    			
 					break;
 				    case 'PARKING':
 				    	$this->getPartieCommune();
 			    		//recherche la référence
-				    	$arrObj = $this->dbEspExt->getByRef($this->arr[13], $this->idInst, $this->arrPcl["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_ext"=>48));
+				    	$arrObj = $this->dbEspExt->getByRef($this->arr[13], $this->idInst, $this->arrPcl["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_ext"=>48),$this->idBase);
 					break;
 				    case 'RESIDENCE':
 				    	$this->getNiveau();
 				    	//recherche la référence
-				    	$arrObj = $this->dbLoc->getByRef($arr[13], $this->idInst, $arrNiv["id_lieu"], $arr[15]." - ".$arr[13], array("activite"=>92));
+				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>92),$this->idBase);
 						break;
 					break;
 				    case 'SECHOIR ou 2ème CAVE':
 				    	$this->getPartieCommune();
 				    	//recherche la référence
-				    	$arrObj = $this->dbEspInt->getByRef($arr[13], $this->idInst, $arrPtc["id_lieu"], $arr[15]." - ".$arr[13],array("id_type_specifique_int"=>93));
+				    	$arrObj = $this->dbEspInt->getByRef($this->arr[13], $this->idInst, $this->arrPtc["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_int"=>93),$this->idBase);
 					break;
 			    }
 			    //mise à jour de l'adresse
-			    $this->dbG->editByLieu($arrObj['id_lieu'],array("adresse"=>$arr[7]." ".$arr[9], "codepostal"=>$arr[10], "ville"=>$arr[11], "pays"=>"France"));
+			    $this->dbG->editByLieu($arrObj['id_lieu'],array("adresse"=>$this->arr[7]." ".$this->arr[9], "codepostal"=>$this->arr[10], "ville"=>$this->arr[11], "pays"=>"France"));
 				//ajoute la stat
-                $this->dbSta->ajouterByImport($arr, $arrObj['id_lieu'], $this->idInst);			    
+                $this->dbSta->ajouterByImport($this->arr, $arrObj['id_lieu'], $this->idInst);			    
 			    				
 			if($err!="")return "Le fichier n'est pas bien formaté.\n".$err;
     	}
@@ -595,14 +600,17 @@ class GEVU_Import extends GEVU_Site{
         	//récupère l'entrée
             if($this->arrEnt["ref"]!=$this->arrBat["id_lieu"]."_".$this->arr[6]){
             	//création de l'entrée
-                $this->arrEnt["id_lieu"] = $this->diag->ajoutLieu($this->arrBat["id_lieu"], -1, $idBase, "Entrée ".$this->arr[6], true, false, array("id_type_controle"=>132));
+                $this->arrEnt["id_lieu"] = $this->diag->ajoutLieu($this->arrBat["id_lieu"], -1, $this->idBase, "Entrée ".$this->arr[6], true, false, array("id_type_controle"=>132));
 			}
             //création du niveau
-			$this->arrNiv["ref"] = $this->dbNiv->getByRef($this->arrBat["id_lieu"]."_".$this->arr[6]."_".$this->arr[20], $this->idInst, $this->arrBat["id_lieu"], "NIVEAU ".$this->arr[20]);
+			$this->arrNiv = $this->dbNiv->getByRef($this->arrBat["id_lieu"]."_".$this->arr[6]."_".$this->arr[20], $this->idInst
+				, $this->arrBat["id_lieu"], "NIVEAU ".$this->arr[20], false, $this->idBase);
     		//vérifie la création du niveau
-    		if()
+    		if(!$this->arrNiv["id_lieu"]){
+				$toto = 0;
+    		}
 			
-			$this->creaArboScenar($this->arrNiv["id_lieu"], $this->idScenar, $this->idBase);
+			//$this->creaArboScenar($this->arrNiv["id_lieu"], $this->idScenar, $this->idBase);
 			
 		}
     	
@@ -620,8 +628,8 @@ class GEVU_Import extends GEVU_Site{
     	$ref = $this->arrBat["id_lieu"]."_".$this->arr[6]."_".$this->arr[20];
     	if($this->arrPtc["ref"]!=$ref){
     		//création de la partie commune
-    		$this->arrPtc = $this->dbPtc->getByRef($ref, $this->idInst, $this->arrNiv["id_lieu"]);				    	
-    		$this->creaArboScenar($this->arrPtc["id_lieu"], $this->idScenar, $this->idBase);    		
+    		$this->arrPtc = $this->dbPtc->getByRef($ref, $this->idInst, $this->arrNiv["id_lieu"],false,false,$this->idBase);				    	
+    		//$this->creaArboScenar($this->arrPtc["id_lieu"], $this->idScenar, $this->idBase);    		
     	}
     	
     }
@@ -667,7 +675,7 @@ class GEVU_Import extends GEVU_Site{
     		$this->creaArboScenar($idLieuEnf, $idScenar, $idBase);
     	}
     	//vérifie s'il faut supprimer le lieu
-    	if($i)$this->diag->deleteLieu($idLieuEnf, -1, idBase);
+    	//if($i)$this->diag->deleteLieu($idLieuEnf, -1, $idBase);
     	
 		
 	}
