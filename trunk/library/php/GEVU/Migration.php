@@ -68,7 +68,7 @@ class GEVU_Migration extends GEVU_Site{
     	$bddSource          = $idBaseSrc;       	// base de donnée Source
     	// tables Sources = 27
     	$tablesSources = array('gevu_contacts','gevu_couts','gevu_criteres','gevu_criteresxtypesxcriteres','gevu_criteresxtypesxdeficiences','gevu_criteresxtypesxdroits'
-    			,'gevu_droits','gevu_exis','gevu_exisxdroits','gevu_motsclefs','gevu_produits','gevu_produitsxcouts','gevu_roles','gevu_scenario','gevu_scenes'
+    			,'gevu_droits','gevu_exis','gevu_entreprises','gevu_exisxdroits','gevu_motsclefs','gevu_produits','gevu_produitsxcouts','gevu_roles','gevu_scenario','gevu_scenes'
     			,'gevu_solutions','gevu_solutionsxcouts','gevu_solutionsxcriteres','gevu_solutionsxmetiers','gevu_solutionsxproduits', 'gevu_interventions'
     			,'gevu_typesxcontroles','gevu_typesxcriteres','gevu_typesxdeficiences','gevu_typesxdroits','gevu_typesxsolutions','gevu_typexmotsclefs');
     	    	
@@ -138,7 +138,10 @@ class GEVU_Migration extends GEVU_Site{
 	    	// importation des lignes de la table source et construction de l'INSERT   	
 	    	$qry_import_lignes = 'SELECT * FROM '.$table;
 	    	$result = mysql_query($qry_import_lignes, $linkSource)
-	    	or die (mysql_error($linkSource));    	    	
+	    	or die (mysql_error($linkSource));
+	    	if($table=='gevu_exis'){
+	    		$toto = 25;
+	    	}
 	    	while ($row = mysql_fetch_row($result)){
 	    		$values = '(\''.implode("','", array_map('addslashes', $row)).'\')';
 	    		$qry[$table]["insert"][] = 'INSERT INTO '.$table.' VALUES '.$values;
@@ -175,10 +178,13 @@ class GEVU_Migration extends GEVU_Site{
 	    	$i=0;
 		    $this->trace('données à insérer '.$table. ' : '.count($qry_insert));
 		    foreach ($qry[$table]["insert"] as $v){
-	    		mysql_query($v, $linkCible)
-	    		or die (mysql_error($linkCible));
-		    	//$this->trace('insertion données '.$table. ' : '.$i);
-		    	$i++;
+			    if(mysql_query($v, $linkCible)){
+			    	//$this->trace('insertion données '.$table. ' : '.$i);
+			    	$i++;
+			    }else{
+    				echo $this->echoTrace;
+					throw new Exception(mysql_error($linkCible));
+				}
 	    	}
 	    	
 	    	
@@ -225,6 +231,7 @@ class GEVU_Migration extends GEVU_Site{
 		$this->arrDbDst['espace'] = new Models_DbTable_Gevu_espaces($this->dbDst);
 		$this->arrDbDst['espace_ext'] = new Models_DbTable_Gevu_espacesxexterieurs($this->dbDst);
 		$this->arrDbDst['espace_int'] = new Models_DbTable_Gevu_espacesxinterieurs($this->dbDst);
+		$this->arrDbDst['entreprise'] = new Models_DbTable_Gevu_entreprises($this->dbDst);
 		$this->arrDbDst['etablissement'] = new Models_DbTable_Gevu_etablissements($this->dbDst);
 		$this->arrDbDst['niveau'] = new Models_DbTable_Gevu_niveaux($this->dbDst);
 		$this->arrDbDst['objet_ext'] = new Models_DbTable_Gevu_objetsxexterieurs($this->dbDst);
