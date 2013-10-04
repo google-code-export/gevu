@@ -10,28 +10,27 @@
 			import mx.collections.IList;
 			import mx.events.FlexEvent;
 			
-			import spark.transitions.ZoomViewTransition;
-			import spark.transitions.ZoomViewTransitionMode;			
+			import spark.transitions.SlideViewTransition;
 						
-			public var zoomTrans:ZoomViewTransition = new ZoomViewTransition();	
-			private var durTrans:int = 500;
+			public var viewTrans:SlideViewTransition = new SlideViewTransition();	
+			private var durTrans:int = 800;
 
 			public var oItem:Object;
 			
 			protected function goUnivers():void 
 			{
 				bPrev.visible = false;
-				zoomTrans.mode = ZoomViewTransitionMode.OUT;
-				navigator.popToFirstView(zoomTrans);
+				viewTrans.direction = "left";
+				viewTrans.mode = "uncover";
+				navigator.popToFirstView(viewTrans);
 				
 			}
 			
 			public function goBack():void 
 			{
 				if(data.lieu.lib!="Univers"){
-					zoomTrans.duration = durTrans;
-					zoomTrans.mode = ZoomViewTransitionMode.IN;
-					navigator.popView(zoomTrans);					
+					viewTrans.direction = "up";
+					navigator.popView(viewTrans);					
 				}
 				this.parentApplication.initDetail();
 			}
@@ -80,7 +79,7 @@
 				if(data!=null){
 					init();
 				}
-				zoomTrans.duration = durTrans;
+				viewTrans.duration = durTrans;
 			}
 			
 			public function init():void
@@ -120,9 +119,9 @@
 				this.parentApplication.oLieu = oItem;
 				//vérifie s'il faut charger les enfants du lieu
 				if(oItem.children.length > 0){
-					zoomTrans.mode = ZoomViewTransitionMode.IN;
+					viewTrans.direction = "down";
 					var oData:Object = {"ariane":this.parentApplication.lblAriane.text,"lieu":oItem,"liste":new ArrayCollection(oItem.children)};
-					navigator.pushView(views.listeLieux, oData, zoomTrans);									
+					navigator.pushView(views.listeLieux, oData, viewTrans);									
 				}else{
 					this.title = oItem.lib;
 					tiNom.text = oItem.lib;

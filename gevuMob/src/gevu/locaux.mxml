@@ -29,8 +29,8 @@
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				ref.text = data.ref;
-				if(data.activite = "Associative")reponse_1.selected = true; else reponse_1.selected = false;
-				if(data.activite = "Associative")reponse_2.selected = true; else reponse_2.selected = false;
+				if(data.activite == "Associative")reponse_1.selected = true; else reponse_1.selected = false;
+				if(data.activite == "Associative")reponse_2.selected = true; else reponse_2.selected = false;
 			}
 			
 		]]>

@@ -16,6 +16,7 @@
 			import mx.rpc.events.ResultEvent;
 			
 			import spark.events.IndexChangeEvent;
+			import spark.transitions.SlideViewTransition;
 			
 			import air.net.URLMonitor;
 			
@@ -87,6 +88,10 @@
 			private var arrLieuView:Array = new Array;
 			private var bAjoutCtl:Boolean = false;
 			
+			public var viewTrans:SlideViewTransition = new SlideViewTransition();	
+			private var durTrans:int = 800;
+			
+			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				verifConnexion();
@@ -96,6 +101,9 @@
 				var r:Object = {idExi:1,droit_4:'[{"lib":"ERP-IOP","id":"4_13"},{"lib":"loge","id":"4_12"},{"lib":"Logement V3","id":"4_18"}]'};				
 				init(r)
 				*/
+				viewTrans.direction = "down";
+				viewTrans.mode = "cover";
+				viewTrans.duration = durTrans;
 			}
 			
 			protected function verifConnexion():void {
@@ -446,7 +454,7 @@
 				hgBarButton.visible = false;
 				//hgBarButton.removeAllElements();
 				//hgBarCtl.removeAllElements();
-				rightNav.pushView(views.htmlArea);
+				rightNav.pushView(views.htmlArea,null,null,viewTrans);
 			}
 
 			
@@ -564,7 +572,7 @@
 			protected function slBarButton_clickHandler(event:MouseEvent):void
 			{
 				var o:Object = event.currentTarget.selectedItem;
-				rightNav.pushView(o.clsView, o.dataView);
+				rightNav.pushView(o.clsView, o.dataView,null,viewTrans);
 			}
 			
 			public function changeLieuNom(arr:Array):void
