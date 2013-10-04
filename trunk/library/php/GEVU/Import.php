@@ -430,7 +430,7 @@ class GEVU_Import extends GEVU_Site{
 		//$chaines = file($docInfos['path_source']);
 		//$chaines = file('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910.csv');
 		//$arrCSV = $this->csvToArray('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910utf8.csv');
-		$arrCSV = $this->csvToArray('/Users/paragraphe/Documents/www/gevu/data/EXTRAC_GEVU_20130910/EXTRAC_GEVU_20130910.csv');
+		$arrCSV = $this->csvToArray('/Applications/XAMPP/xamppfiles/htdocs/gevu/data/EXTRAC_GEVU_20130910.csv');
 		
 		$nbRow = count($arrCSV);
 				
@@ -596,7 +596,8 @@ class GEVU_Import extends GEVU_Site{
     	}
     	
     	//récupère le niveau
-		if($this->arrNiv["ref"]!=$this->arrBat["id_lieu"]."_".$this->arr[6]."_".$this->arr[20]){
+    	$refNiv = $this->arrBat["id_lieu"]."_".$this->arr[6]."_".$this->arr[20];
+		if($this->arrNiv["ref"]!=$refNiv){
         	//récupère l'entrée
             if($this->arrEnt["ref"]!=$this->arrBat["id_lieu"]."_".$this->arr[6]){
             	//création de l'entrée

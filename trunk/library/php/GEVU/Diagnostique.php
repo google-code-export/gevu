@@ -217,7 +217,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		            	 		if(isset($d["id_instant"]))$d["id_instant"] = $idInst;
 		            	 		$k = $dbT->info('primary');
 		            	 		unset($d[$k[1]]);
-		            	 		$dbT->ajouter($d);
+		            	 		$dbT->ajouter($d,false);
 		            	 	}
 		            	}
 	            	}
@@ -874,7 +874,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 	public function getUtiLieuLock($idExi, $idBaseSrc=false, $idRegSrc=false, $idBaseDst=false, $idRegDst=false){
 		
 		//augmente le temps d'exécution
-		set_time_limit(100);
+		set_time_limit(1000);
 		
 		//initialise les gestionnaires de base de données
 		$dbDst = $this->getDb($idBaseDst, $idRegDst);
