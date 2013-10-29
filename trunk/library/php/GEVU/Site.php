@@ -13,6 +13,7 @@ class GEVU_Site{
 	var $dbCD;
 	var $dbD;
     var $dbDoc;
+	var $dbExi;
     var $dbEspInt;
     var $dbEspExt;
     var $dbG;

@@ -156,7 +156,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 			if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
 			
 			//création d'un nouvel instant
-			$idInst = $dbIDst->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+			$this->idInst = $dbIDst->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
 			
         	//création du fil d'ariane
             $ariane=$this->dbL->getFullChild($idLieuSrc);
@@ -173,7 +173,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 				
 				//création des data du nouveau lieu
 				$dataLieu["lib"] = $lieuSrc["lib"];
-				$dataLieu["id_instant"] = $idInst;
+				$dataLieu["id_instant"] = $this->idInst;
 				$dataLieu["id_type_controle"] = $lieuSrc["id_type_controle"];
 				$dataLieu["lock_diag"] = $lieuSrc["lock_diag"];
 				$dataLieu["lieu_copie"] = $lieuSrc["id_lieu"];
@@ -200,28 +200,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 					$newIdLieu = $dbLDst->ajouter($dataLieu, false);							
 				}
 				
-				//récupération des données lieés
-				$dt = $dbLDst->getDependentTables();							
-	            foreach($dt as $t){
-					$items = $lieuSrc->findDependentRowset($t);
-					if($items->count()){
-						//vérifie si on traite une des tables qu'on ne copie pas
-						// $t!="Models_DbTable_Gevu_diagnostics" && 
-						// && $t!="Models_DbTable_Gevu_lieuxinterventions"
-						// && $t!="Models_DbTable_Gevu_problemes" && 
-		            	if($t!="Models_DbTable_Gevu_stats" && $t!="Models_DbTable_Gevu_observations" && $t!="Models_DbTable_Gevu_docsxlieux"){
-							$dbT = new $t($dbDst);							
-		            	 	foreach ($items as $row) {
-		            	 		$d = $row->toArray();
-		            	 		$d["id_lieu"] = $newIdLieu;		            	 		
-		            	 		if(isset($d["id_instant"]))$d["id_instant"] = $idInst;
-		            	 		$k = $dbT->info('primary');
-		            	 		unset($d[$k[1]]);
-		            	 		$dbT->ajouter($d,false);
-		            	 	}
-		            	}
-	            	}
-				}
+				//copie les tables liées
+				$this->copieTableLie($this->dbL, $this->db, $lSrc["id_lieu"], $dbLDst, $dbDst, $newIdLieu);
 			    
             }
 
@@ -240,8 +220,22 @@ class GEVU_Diagnostique extends GEVU_Site{
     * @return array
     */
 	public function ajoutUtiDiag($idLieu, $login, $idBase){
+		
+		//initialise la connexion à la table
 		$this->getDb($idBase);
-		if(!$this->dbL) $this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		if(!$this->dbL) $this->dbL = new Models_DbTable_Gevu_lieux($this->db);		
+		
+		//on vérifie que le login est bien dans la base
+		$this->dbExi = new Models_DbTable_Gevu_exis($this->db);
+		$aExis = $this->dbExi->findById_exi($login);
+		if(count($aExis)==0){
+			//on récupère les données de références
+			$dbRef = $this->getDb(false,"serveur");
+			$dbExiRef = new Models_DbTable_Gevu_exis($dbRef);
+			$aExis = $dbExiRef->findById_exi($login);
+			//ajoute l'utilisateur
+			$this->dbExi->ajouter($aExis);
+		}
 		
 		//vérifie que le le lieu et ses enfants ne sont pas déjà attribué ou pris
 		$arr = $this->dbL->getEnfantsLockDiag($idLieu);
@@ -852,9 +846,11 @@ class GEVU_Diagnostique extends GEVU_Site{
 			$dbLsrc->setUtiIdLieuLock($lieu["id_lieu"], "+".$idExi, "");        		
         	//récupère les infos du lieu de destination
         	$arrLdst = $dbLdst->findById_lieu($lieu["lieu_copie"]);
-	        //copie le lieu
-        	$this->copiecolleLieu($lieu["id_lieu"], $arrLdst[0]["lieu_parent"], $idExi, $idBaseSrc, array($idBaseSrc, $idRegSrc, $idBaseDst, $idRegDst));
-        	//supprime les lieux sources
+        	if($lieu["lieu_copie"]!=0){
+		        //copie le lieu
+	        	$this->copiecolleLieu($lieu["id_lieu"], $arrLdst[0]["lieu_parent"], $idExi, $idBaseSrc, array($idBaseSrc, $idRegSrc, $idBaseDst, $idRegDst));
+        	}
+	        //supprime les lieux sources
         	$dbLsrc->remove($lieu["id_lieu"]);
         	// et destination
         	//$dbLdst->remove($lieu["lieu_copie"]);
@@ -899,12 +895,12 @@ class GEVU_Diagnostique extends GEVU_Site{
 	        foreach ($result[1] as $lieu) {
 	        	//on copie l'aboressence supérieur pour la validité des scénarios
 	        	$arrParent = $dbLsrc->getFullPath($lieu["id_lieu"]);
-	        	$idLieuPar = -1;
+	        	$idLieuPar = 1;
 	        	foreach ($arrParent as $l) {
 	        		if($l["id_lieu"]!=$lieu["id_lieu"] && $l["lib"] != "univers"){
 		        		//on ajoute le lieu
 	        			$idLieuPar = $dbLdst->ajouter(array("lieu_copie"=>$l["id_lieu"],"lieu_parent"=>$idLieuPar,"lib"=>$l["lib"],"id_type_controle"=>$l["id_type_controle"],"lock_diag"=>"x".$idExi));
-						$this->copieTableLie($dbLsrc, $l["id_lieu"], $dbLdst, $dbDst, $idLieuPar);
+						$this->copieTableLie($dbLsrc, $dbSrc, $l["id_lieu"], $dbLdst, $dbDst, $idLieuPar);
 	        		}
 	        	}
 		        $this->copiecolleLieu($lieu["id_lieu"], $idLieuPar, $idExi, $idBaseSrc, array($idBaseSrc, $idRegSrc, $idBaseDst, $idRegDst));
@@ -924,7 +920,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         return $result[1][0];
 	}
 
-	private function copieTableLie($dbLsrc, $idLsrc, $dbLDst, $dbDst, $ibLdst){
+	private function copieTableLie($dbLsrc, $dbSrc, $idLsrc, $dbLDst, $dbDst, $idLdst){
         //et les tables liées
         $Rowset = $dbLsrc->find($idLsrc);
 		$lieuSrc = $Rowset->current();
@@ -941,10 +937,24 @@ class GEVU_Diagnostique extends GEVU_Site{
 					$dbT = new $t($dbDst);							
             	 	foreach ($items as $row) {
             	 		$d = $row->toArray();
-            	 		$d["id_lieu"] = $ibLdst;		            	 		
+            	 		$d["id_lieu"] = $idLdst;		            	 		
             	 		$k = $dbT->info('primary');
+            	 		$oldId = $d[$k[1]];
             	 		unset($d[$k[1]]);
-            	 		$dbT->ajouter($d);
+            	 		$newId = $dbT->ajouter($d);
+            	 		//vérifie si on traite le diagnostic
+            	 		if($t=="Models_DbTable_Gevu_diagnostics"){
+            	 			if(!$this->dbSolusSrc) $this->dbSolusSrc = new Models_DbTable_Gevu_diagnosticsxsolutions($dbSrc);
+            	 			if(!$this->dbSolusDst) $this->dbSolusDst = new Models_DbTable_Gevu_diagnosticsxsolutions($dbDst);
+            	 			//on récupère les solutions
+            	 			$arrSolus = $this->dbSolusSrc->findByIdDiagSimple($oldId);
+            	 			//on copie les solutions
+		            	 	foreach ($arrSolus as $solus) {
+		            	 		$solus["id_diag"]=$newId;
+		            	 		unset($solus["id_diagsolus"]);
+		            	 		$this->dbSolusDst->ajouter($solus, $this->idExi, false, $this->idInst);
+		            	 	}
+            	 		}
             	 	}
             	}
             }
