@@ -48,8 +48,8 @@
             params.allowscriptaccess = "sameDomain";
             params.allowfullscreen = "true";
             var attributes = {};
-            attributes.id = "${application}";
-            attributes.name = "${application}";
+            attributes.id = "diag";
+            attributes.name = "diag";
             attributes.align = "middle";
             swfobject.embedSWF(
                 "${swf}.swf", "flashContent", 
@@ -78,7 +78,7 @@
         </div>
         
         <noscript>
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="${width}" height="${height}" id="${application}">
+            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="${width}" height="${height}" id="diag">
                 <param name="movie" value="${swf}.swf" />
                 <param name="quality" value="high" />
                 <param name="bgcolor" value="${bgcolor}" />
