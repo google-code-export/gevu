@@ -693,7 +693,7 @@ protected function collerLieu_clickHandler(event:MouseEvent):void
 		return;
 	}
 	idLieuColle = idLieu;
-	roDiagnostique.copiecolleLieu(idLieuCopie, idLieu, idExi, idBase);	
+	roDiagnostique.copiecolleLieu(idLieuCopie, idLieu, idExi, idBase);
 }
 
 protected function copiecolle_resultHandler(event:ResultEvent):void

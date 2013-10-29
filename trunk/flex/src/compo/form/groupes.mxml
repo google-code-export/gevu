@@ -5,12 +5,12 @@
 		   width="100%" height="100%" xmlns:form="compo.form.*"
 		   >
 	
-	<mx:VBox width="100%" height="100%" >
+	<mx:VBox width="100%" height="100%"  paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6" >
 		<mx:HBox width="100%">
 			<mx:Label text="ref" />
 			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
 		</mx:HBox>
-		<form:repType2 lblQ="Le bâtiment est t-il en ZPPAUP ?" Q="reponse_1" val="{NodeData.reponse_1}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="Le bâtiment est t-il en AVAP ?" Q="reponse_1" val="{NodeData.reponse_1}" fnct="{this.editModif}" />
 		<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
 	</mx:VBox>
 	
