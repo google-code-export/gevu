@@ -195,7 +195,7 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
     }
 
     
-    	/**
+	/**
      * Recherche une entrée Gevu_diagnosticsxsolutions avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -212,12 +212,29 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
 
+	/**
+     * Recherche une entrée Gevu_diagnosticsxsolutions avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param int $id_diag
+     *
+     * @return array
+     */
+    public function findByIdDiagSimple($id_diag)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_diagnosticsxsolutions") )                           
+                    ->where( "g.id_diag = ?", $id_diag);
+
+        return $this->fetchAll($query)->toArray(); 
+    }
+    
     /**
      * Recherche une entrée Gevu_diagnosticsxsolutions avec la valeur spécifiée
      * et retourne cette entrée.
      *
      * @param int $id_diag
-     * @param sting $idBase
+     * @param string $idBase
      *
      * @return array
      */
