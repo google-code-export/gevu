@@ -267,7 +267,7 @@ class Models_DbTable_Gevu_interventions extends Zend_Db_Table_Abstract
     public function findLienByIds($ids=false)
     {
         $query = $this->select()
-			->from( array("i" => "gevu_interventions"),array("id_interv", frequence, cout, 'lib'=>"CONCAT(description,' : ',mc.titre,' ',cout,' € par ',mc1.titre, ' tout les ',frequence, ' an(s)') AS lib") )                           
+			->from( array("i" => "gevu_interventions"),array("id_interv", frequence, cout, 'lib'=>"CONCAT(description,' : ',mc.titre,' ',cout,' € par ',mc1.titre, ' tous les ',frequence, ' an(s)') AS lib") )                           
 			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->joinInner(array('mc' => 'gevu_motsclefs'),
                 'mc.id_motclef = i.interv',array("libInterv"=>'titre'))
@@ -292,7 +292,7 @@ class Models_DbTable_Gevu_interventions extends Zend_Db_Table_Abstract
     public function findByIdsProduit($ids)
     {
         $query = $this->select()
-			->from( array("i" => "gevu_interventions"),array("id_interv", frequence, cout, 'lib'=>"CONCAT(description,' : ',mc.titre,' ',cout,' € par ',mc1.titre, ' tout les ',frequence, ' an(s)') AS lib") )                           
+			->from( array("i" => "gevu_interventions"),array("id_interv", frequence, cout, 'lib'=>"CONCAT(description,' : ',mc.titre,' ',cout,' € par ',mc1.titre, ' tous les ',frequence, ' an(s)') AS lib") )                           
 			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->joinInner(array('mc' => 'gevu_motsclefs'),
                 'mc.id_motclef = i.interv',array("libInterv"=>'titre'))

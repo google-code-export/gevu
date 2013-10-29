@@ -113,25 +113,6 @@ class Models_DbTable_Gevu_exis extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_exis 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_exi","champ"=>"id_exi","visible"=>true),
-    	array("titre"=>"nom","champ"=>"nom","visible"=>true),
-    	array("titre"=>"url","champ"=>"url","visible"=>true),
-    	array("titre"=>"mail","champ"=>"mail","visible"=>true),
-    	array("titre"=>"mdp","champ"=>"mdp","visible"=>true),
-    	array("titre"=>"mdp_sel","champ"=>"mdp_sel","visible"=>true),
-    	array("titre"=>"role","champ"=>"role","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
     /*
      * Recherche une entrée Gevu_exis avec la valeur spécifiée
@@ -144,8 +125,9 @@ class Models_DbTable_Gevu_exis extends Zend_Db_Table_Abstract
         $query = $this->select()
                     ->from( array("g" => "gevu_exis") )                           
                     ->where( "g.id_exi = " . $id_exi );
-
-        return $this->fetchRow($query)->toArray(); 
+		$r = $this->fetchRow($query);
+        if($r) return $r->toArray(); 
+        else return null;
     }
     /*
      * Recherche une entrée Gevu_exis avec la valeur spécifiée
@@ -157,7 +139,7 @@ class Models_DbTable_Gevu_exis extends Zend_Db_Table_Abstract
     {
         $query = $this->select()
                     ->from( array("g" => "gevu_exis") )                           
-                    ->where( "g.nom = " . $nom );
+                    ->where( "g.nom = ?", $nom );
 
         return $this->fetchRow($query)->toArray(); 
     }

@@ -199,7 +199,7 @@ class Models_DbTable_Gevu_lieuxinterventions extends Zend_Db_Table_Abstract
 			->from(array("li" => "gevu_lieuxinterventions"),array("id_lieuinterv","quantite","cout","fait"=>"DATE_FORMAT(fait, '%d %m %Y')","afaire"=>"DATE_FORMAT(afaire, '%d %m %Y')"))
 			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
 			->joinInner( array("i" => "gevu_interventions"),
-				'i.id_interv = li.id_interv',array("id_interv",'lib'=>"CONCAT(description,' : ',mc.titre,' ',i.cout,' € par ',mc1.titre, ' tout les ',frequence, ' an(s)') AS lib") )                           
+				'i.id_interv = li.id_interv',array("id_interv",'lib'=>"CONCAT(description,' : ',mc.titre,' ',i.cout,' € par ',mc1.titre, ' tous les ',frequence, ' an(s)') AS lib") )                           
             ->joinInner(array('mc' => 'gevu_motsclefs'),
                 'mc.id_motclef = i.interv',array("libInterv"=>'titre'))
             ->joinInner(array('mc1' => 'gevu_motsclefs'),
