@@ -21,6 +21,7 @@
 			[Bindable] public var itemSelect:Object; 
 			[Bindable] public var idLieu:int; 
 			[Bindable] public var idBase:String; 
+			private var dtSelect:Date; 
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				var str:String;
@@ -104,6 +105,16 @@
 				}
 				
 			}
+
+			private function dateChanged(date:Date):void {
+				dtSelect = date;
+			}
+		
+			protected function modif_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.findByIdLieu(idLieu, this.parentApplication.idBase);
+			}
 			
 		]]>
 	</mx:Script>
@@ -116,8 +127,8 @@
 					 >
 		<mx:method name="findByIdLieu" result="ro_resultHandler(event)" />
 		<mx:method name="edit" />
-		<mx:method name="ajouter" result="{ro.findByIdLieu(idLieu)}" />
-		<mx:method name="remove" result="{ro.findByIdLieu(idLieu)}"  />
+		<mx:method name="ajouter" result="modif_resultHandler(event)" />
+		<mx:method name="remove" result="modif_resultHandler(event)"  />
 		
 	</mx:RemoteObject>
 		
@@ -142,17 +153,17 @@
 				</mx:columns>
 			</mx:DataGrid>					
 		</mx:VBox>
-		<mx:VBox id="ajout" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
+		<mx:VBox id="ajout" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
 			<mx:Label text="Saisissez votre intervention :"/> 
-			<mx:Form width="100%" height="100%" id="insertForm">			                    		
+			<mx:Form id="insertForm">			                    		
 				<mx:FormItem label="type d'intervention : " >
-					<mx:ComboBox id="cbType" dataProvider="{produitsData}" width="100%" height="100%" labelField="lib" prompt="Choisissez" />				
+					<mx:ComboBox id="cbType" dataProvider="{produitsData}" labelField="lib" prompt="Choisissez" />				
 				</mx:FormItem>
 				<mx:FormItem label="quantité : " >
 					<mx:NumericStepper id="quantite" stepSize="1" width="100%" maximum="1000000"  />
 				</mx:FormItem>
 				<mx:FormItem label="fait le : " >
-					<mx:DateField id="dfFaitLe" yearNavigationEnabled="true" />
+					<mx:DateField id="dfFaitLe" yearNavigationEnabled="true" formatString="DD/MM/YYYY" change="dateChanged(DateField(event.target).selectedDate)"/>
 				</mx:FormItem>
 			</mx:Form>		
 			<mx:HBox>

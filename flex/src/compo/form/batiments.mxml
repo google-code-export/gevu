@@ -52,7 +52,7 @@
 		<form:repType2 lblQ="Le bâtiment est-il uniquement un lieu de travail ?" Q="reponse_1" val="{NodeData.reponse_1}" fnct="{this.editModif}" />
 		<form:repType2 lblQ="Si le bâtiment est un lieu de travail, compte-t-il plus de 20 salariés ?" Q="reponse_2" val="{NodeData.reponse_2}" fnct="{this.editModif}" />
 		<form:repType2 lblQ="S'agit-il d'un bâtiment de grande hauteur ?" Q="reponse_3" val="{NodeData.reponse_3}" fnct="{this.editModif}" />
-		<form:repType2 lblQ="Le bâtiment est t-il en ZPPAUP ?" Q="reponse_4" val="{NodeData.reponse_4}" fnct="{this.editModif}" />
+		<form:repType2 lblQ="Bâtiment en Groupe et ZPPAUP en AVAP ?" Q="reponse_4" val="{NodeData.reponse_4}" fnct="{this.editModif}" />
 		<form:repType2 lblQ="Le bâtiment est-il inscrit au Monument Historique ?" Q="reponse_5" val="{NodeData.reponse_5}" fnct="{this.editModif}" />
 		<form:repType2 lblQ="Le bâtiment est-il classé au Monument Historique ?" Q="reponse_6" val="{NodeData.reponse_6}" fnct="{this.editModif}" />
 		<mx:HBox width="100%">

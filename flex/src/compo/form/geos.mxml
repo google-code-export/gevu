@@ -3,11 +3,11 @@
 		  xmlns:composants="compo.*"
 		  label="Géographie"
 		  width="100%"
-		  height="120"
+		  height="124"
 		   creationComplete="creationCompleteHandler(event)"
 		  >
 	<mx:HBox width="100%" height="100%" >
-		<mx:VBox width="100%" >
+		<mx:VBox width="100%" height="100%" >
 			
 			<mx:HBox width="100%">
 				<mx:Label text="{NodeData.id_lieu}" /><mx:Label text="adresse" />
@@ -45,15 +45,13 @@
 								   minimum="0" maximum="30"
 								   data="{NodeData.zoom_max}" change="zoomMap(F05.value.toString())"  />
 			</mx:HBox>
-			<mx:HBox width="0" height="0">
+			<mx:HBox width="0" height="0" >
 				<mx:Label text="Coin Nord-Est :"/>
 				<mx:Label id="ne" text=""/>
-			</mx:HBox>
-			<mx:HBox width="0" height="0">
 				<mx:Label text="Coin Sud-Ouest :" />
 				<mx:Label id="sw" text=""/>
 			</mx:HBox>
-			<mx:HBox width="0" height="0" >
+			<mx:HBox >
 				<mx:Label text="Lat. SV :" />
 				<mx:Label id="lat_sv" text=""/>
 				<mx:Label text="Lng. SV :" />

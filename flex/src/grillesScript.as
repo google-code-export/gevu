@@ -22,7 +22,7 @@ public var dataArr:ArrayCollection = new ArrayCollection();
 [Bindable] public var exi:Object;
 [Bindable] public var idExi:String = "";
 [Bindable] public var idScenar:int;
-[Bindable] public var idBase:String = "gevu_new";
+[Bindable] public var idBase:String = "gevu_ref";
 
 public var uidCopie:String;
 
