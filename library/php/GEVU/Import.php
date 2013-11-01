@@ -429,8 +429,8 @@ class GEVU_Import extends GEVU_Site{
     	//chargement du fichier
 		//$chaines = file($docInfos['path_source']);
 		//$chaines = file('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910.csv');
-		//$arrCSV = $this->csvToArray('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910utf8.csv');
-		$arrCSV = $this->csvToArray('/Applications/XAMPP/xamppfiles/htdocs/gevu/data/EXTRAC_GEVU_20130910.csv');
+		$arrCSV = $this->csvToArray('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910utf8.csv');
+		//$arrCSV = $this->csvToArray('/Applications/XAMPP/xamppfiles/htdocs/gevu/data/EXTRAC_GEVU_20130910.csv');
 		
 		$nbRow = count($arrCSV);
 				
