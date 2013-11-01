@@ -113,7 +113,7 @@ class Models_DbTable_Gevu_parcelles extends Zend_Db_Table_Abstract
 	    	$this->ajouter($data);
 	    	$arr = $this->findByRef($ref);
 	    }
-    	return $arr;
+    	return $arr[0];
     } 
     
     /**
