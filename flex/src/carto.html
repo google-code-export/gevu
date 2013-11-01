@@ -46,6 +46,7 @@ function geocodePosition(pos) {
     }
     var b = map.getBounds();
 	setGeoParam('[{"LatLng":"'+pos+'","zoom":"'+map.getZoom()+'","adresse":"'+adresse+'","mapType":"'+map.getMapTypeId()+'","ne":"'+b.getNorthEast()+'","sw":"'+b.getSouthWest()+'"}]');  
+	initSV(pos.lb, pos.mb, 1, 1, 1);
 
   });
 }
