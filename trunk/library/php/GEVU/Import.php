@@ -397,13 +397,18 @@ class GEVU_Import extends GEVU_Site{
      */
     public function traiteImportLogement($idDoc, $idLieuParent, $idExi, $idScenar, $idBase){
 		
+    	$this->bTrace = true;					// pour afficher le nombre de lignes importées et le timing    	
+    	$this->echoTrace = false;//__METHOD__."<br/>";	//pour stocker les traces
+    	$this->temps_debut = microtime(true);
+		$this->trace("DEBUT ".__METHOD__);
+    	
     	$this->idBase = $idBase;
     	$this->diag = new GEVU_Diagnostique($idBase);
     	$this->db = $this->diag->db;
     	$this->idScenar = $idScenar;
     	
-    	//création des models
-    	$this->dbDoc = new Models_DbTable_Gevu_docs($this->db);
+		$this->trace('création des models');
+		$this->dbDoc = new Models_DbTable_Gevu_docs($this->db);
 		$this->dbObjExt = new Models_DbTable_Gevu_objetsxexterieurs($this->db);
 		$this->dbLieu = new Models_DbTable_Gevu_lieux($this->db);
 		$this->dbI = new Models_DbTable_Gevu_instants($this->db);
@@ -420,19 +425,21 @@ class GEVU_Import extends GEVU_Site{
 		$this->dbLog = new Models_DbTable_Gevu_logements($this->db);
 		$this->dbG = new Models_DbTable_Gevu_geos($this->db);
 				
-    	//création de l'instant
+		$this->trace("création de l'instant");
 		$c = str_replace("::", "_", __METHOD__); 
 		$this->idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
 		
-		$docInfos = $this->dbDoc->findByIdDoc($idDoc);    		
+		$this->trace("Récupère les infos du document");
+    	$docInfos = $this->dbDoc->findByIdDoc($idDoc);    		
     	
     	//chargement du fichier
-		//$chaines = file($docInfos['path_source']);
-		//$chaines = file('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910.csv');
-		$arrCSV = $this->csvToArray('C:/wamp/www/gevu/data/EXTRAC_GEVU_20130910utf8.csv');
-		//$arrCSV = $this->csvToArray('/Applications/XAMPP/xamppfiles/htdocs/gevu/data/EXTRAC_GEVU_20130910.csv');
-		
+		$ficPath = $_SERVER["DOCUMENT_ROOT"].'/gevu/data/EXTRAC_GEVU_20130910utf8.csv';
+    	//$ficPath = 'c:\wamp\www\gevu\data\EXTRAC_GEVU_20130910utf8cours.csv';
+		$this->trace("chargement du fichier : ".$ficPath);
+		$arrCSV = $this->csvToArray($ficPath);
+			
 		$nbRow = count($arrCSV);
+		$this->trace("Nb Ligne =".$nbRow);
 				
 		//pour optimiser la récupération des informations
 		$this->arrAnt = array("ref"=>-1);
@@ -450,29 +457,41 @@ class GEVU_Import extends GEVU_Site{
 		// parcourt toute les lignes du fichier
 		//foreach ($chaines as $x => $chaine) {
 		for ($x = 1; $x < $nbRow; $x++) {
+			$this->trace("Ligne ".$x);			
+			if($x==1000)  break;
+			
 			$this->arr = $arrCSV[$x];
-			//$chaine = trim($chaine); 
-			//$arr = explode(";", $chaine);
-			$err = "";
-			$nbCol = count($this->arr);
-			/** TODO
-			 * il y a plus de colonne que de valeur
-			 */
-			//if($nbCol!="60") $err .= "Le nombre de colonne de la ligne $x n'est pas bon : $nbCol";
-				
-   			//récupère l'antenne
-    		if($this->arrAnt["ref"]!=$this->arr[0]) $this->arrAnt = $this->dbAnt->getByRef($this->arr[0], $this->idInst, $idLieuParent, "ANTENNE ".$this->arr[0],$this->idBase);
-   			//récupère le groupe
-    		if($this->arrGrp["ref"]!=$this->arr[1]){
-    			$this->arrGrp = $this->dbGrp->getByRef($this->arr[1], $this->idInst, $this->arrAnt["id_lieu"],"",$this->idBase);
-    			//$this->creaArboScenar($this->arrGrp["id_lieu"], $idScenar, $idBase);
-    		}
-    		//récupère le bâtiment
-	    	if($this->arrBat["ref"]!=$this->arr[4]){
-	    		$this->arrBat = $this->dbBat->getByRef($this->arr[4], $this->idInst, $this->arrGrp["id_lieu"]
-	    			,array("lib"=>$this->arr[4],"contact_gardien"=>$this->arr[44],"date_achevement"=>$this->arr[24]),$this->idBase);
-    			//$this->creaArboScenar($this->arrBat["id_lieu"], $idScenar, $idBase);		    			
-	    	}
+			
+			//vérifie si la ligne est traités
+			$arrLieu = $this->dbSta->findIdLieuByCode_Logement($this->arr[13]);
+			if(count($arrLieu)>0){
+				$this->trace("Ligne faite : ".$x);			
+			}else{
+			
+				//$chaine = trim($chaine); 
+				//$arr = explode(";", $chaine);
+				$err = "";
+				$nbCol = count($this->arr);
+				/** TODO
+				 * il y a plus de colonne que de valeur
+				 */
+				//if($nbCol!="60") $err .= "Le nombre de colonne de la ligne $x n'est pas bon : $nbCol";
+					
+	   			//récupère l'antenne
+	    		if($this->arrAnt["ref"]!=$this->arr[0]) $this->arrAnt = $this->dbAnt->getByRef($this->arr[0], $this->idInst, $idLieuParent, "ANTENNE ".$this->arr[0],$this->idBase);
+	   			//récupère le groupe
+	    		if($this->arrGrp["ref"]!=$this->arr[1]){
+	    			$this->arrGrp = $this->dbGrp->getByRef($this->arr[1], $this->idInst, $this->arrAnt["id_lieu"],$this->arr[2],$this->idBase);
+	    			$this->creaArboScenar($this->arrGrp["id_lieu"], $idScenar, $idBase, 45);
+					$this->trace("Groupe ".$this->arrGrp["ref"]);
+	    		}
+	    		//récupère le bâtiment
+		    	if($this->arrBat["ref"]!=$this->arr[4]){
+		    		$this->arrBat = $this->dbBat->getByRef($this->arr[4], $this->idInst, $this->arrGrp["id_lieu"]
+		    			,array("lib"=>$this->arr[4],"contact_gardien"=>$this->arr[44],"date_achevement"=>$this->arr[24]),$this->idBase);
+	    			$this->creaArboScenar($this->arrBat["id_lieu"], $idScenar, $idBase, 132);		    			
+					$this->trace("Bâtiment ".$this->arrBat["ref"]);
+		    	}
 		    	//on traite les lignes suivant le type de module
 			    switch ($this->arr[15]) {
 				    case 'ANTENNE TV':
@@ -555,7 +574,7 @@ class GEVU_Import extends GEVU_Site{
 				    		);
 				    	$arrObj = $this->dbLog->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13],false,$this->idBase);
 				    	//creation de l'arboressence
-		    			//$this->creaArboScenar($arrObj['id_lieu'], $idScenar, $idBase);		    			
+		    			$this->creaArboScenar($arrObj['id_lieu'], $idScenar, $idBase);		    			
 					break;
 				    case 'PARKING':
 				    	$this->getPartieCommune();
@@ -578,11 +597,39 @@ class GEVU_Import extends GEVU_Site{
 			    $this->dbG->editByLieu($arrObj['id_lieu'],array("adresse"=>$this->arr[7]." ".$this->arr[9], "codepostal"=>$this->arr[10], "ville"=>$this->arr[11], "pays"=>"France"));
 				//ajoute la stat
                 $this->dbSta->ajouterByImport($this->arr, $arrObj['id_lieu'], $this->idInst);			    
-			    				
-			if($err!="")return "Le fichier n'est pas bien formaté.\n".$err;
-    	}
-    	    
-    }    
+				if($err!="")return "Le fichier n'est pas bien formaté.\n".$err;
+			}
+		}
+		$this->trace("FIN ".__METHOD__);
+    }       
+
+    
+    /**
+     * création d'un tableau à partir d'un csv
+     *
+     * @param string $file = adresse du fichier
+     * 
+     */
+    function csvToArray($file, $tailleCol="0", $sep=";"){
+		ini_set("memory_limit",'512M');
+    	$this->trace("DEBUT ".__METHOD__);     	
+	    if (($handle = fopen($file, "rb")) !== FALSE) {
+    		$this->trace("Traitement des lignes : ".ini_get("memory_limit"));     	
+	    	$i=0;
+    		while (($data = fgetcsv($handle, $tailleCol, $sep)) !== FALSE) {
+ 				$num = count($data);
+ 				$numTot = count($csvarray);
+ 				//echo "<p>$numTot -> $num fields in line $i: <br /></p>\n";
+        		$csvarray[] = $data;
+    			$i++;
+	    	}
+	    	$this->trace("FIN Traitement des lignes");     	
+	        fclose($handle);
+	    }
+    	
+    	$this->trace("FIN ".__METHOD__);     	
+		return $csvarray;		
+	}
     
     /**
      * récupère ou crée un niveau
@@ -601,22 +648,22 @@ class GEVU_Import extends GEVU_Site{
         	//récupère l'entrée
             if($this->arrEnt["ref"]!=$this->arrBat["id_lieu"]."_".$this->arr[6]){
             	//création de l'entrée
-                $this->arrEnt["id_lieu"] = $this->diag->ajoutLieu($this->arrBat["id_lieu"], -1, $this->idBase, "Entrée ".$this->arr[6], true, false, array("id_type_controle"=>132));
-			}
+                $this->arrEnt["id_lieu"] = $this->diag->ajoutLieu($this->arrBat["id_lieu"], -1, $this->idBase, "Entrée Bâtiment ".$this->arr[6], true, false, array("id_type_controle"=>132));
+				$this->arrEnt["ref"] = $this->arrBat["id_lieu"]."_".$this->arr[6];
+            }
             //création du niveau
 			$this->arrNiv = $this->dbNiv->getByRef($this->arrBat["id_lieu"]."_".$this->arr[6]."_".$this->arr[20], $this->idInst
-				, $this->arrBat["id_lieu"], "NIVEAU ".$this->arr[20], false, $this->idBase);
+				, $this->arrEnt["id_lieu"], "NIVEAU ".$this->arr[20], false, $this->idBase);
     		//vérifie la création du niveau
     		if(!$this->arrNiv["id_lieu"]){
 				$toto = 0;
     		}
-			
-			//$this->creaArboScenar($this->arrNiv["id_lieu"], $this->idScenar, $this->idBase);
-			
+			//$this->creaArboScenar($this->arrNiv["id_lieu"], $this->idScenar, $this->idBase, 62);
+			$this->getPartieCommune();
 		}
     	
-    }
-    
+    }    
+	
     /**
      * récupère ou crée une partie commune
      */
@@ -630,55 +677,43 @@ class GEVU_Import extends GEVU_Site{
     	if($this->arrPtc["ref"]!=$ref){
     		//création de la partie commune
     		$this->arrPtc = $this->dbPtc->getByRef($ref, $this->idInst, $this->arrNiv["id_lieu"],false,false,$this->idBase);				    	
-    		//$this->creaArboScenar($this->arrPtc["id_lieu"], $this->idScenar, $this->idBase);    		
+    		$this->creaArboScenar($this->arrPtc["id_lieu"], $this->idScenar, $this->idBase);    		
     	}
     	
     }
-    
-    
-    /**
-     * création d'un tableau à partir d'un csv
-     *
-     * @param string $file = adresse du fichier
-     * 
-     */
-    function csvToArray($file, $tailleCol="0", $sep=";"){
-		# Open the File.
-	    if (($handle = fopen($file, "r")) !== FALSE) {
-	        while (($data = fgetcsv($handle, $tailleCol, $sep)) !== FALSE) {
-	            $csvarray[] = $data;
-	        }
-	        fclose($handle);
-	    }
-     	return $csvarray;		
-	}
-    
+	
 	/**
 	 * Création de l'arboressence à partir du scenario
 	 * 
-     * @param int $idLieu = identifiant du lieu
-     * @param int $idScenar = identifiant du scenario
-     * @param int $idBase = identifiant de la base
+     * @param int $idLieu 		= identifiant du lieu
+     * @param int $idScenar 	= identifiant du scenario
+     * @param int $idBase		= identifiant de la base
+     * @param int $idCtlStop 	= identifiant du controle de stop
      * 
 	 */
-	function creaArboScenar($idLieu, $idScenar, $idBase=false){
+	function creaArboScenar($idLieu, $idScenar, $idBase=false, $idCtlStop=-1){
+		//$this->trace("DEBUT ".__METHOD__);
 		//création d'un lieu enfant
-		$idLieuEnf = $this->diag->ajoutLieu($idLieu, -1, $idBase, "Nouveau lieu", true, false);
+		$idLieuEnf = $this->diag->ajoutLieu($idLieu, -1, $idBase, "Nouveau lieu", false, false);
 		//vérifie s'il faut créer des controles 
     	$arr = $this->diag->getLieuCtl($idLieuEnf, $idScenar, $idBase);
     	for ($i = 0; $i < count($arr["ctrl"]); $i++) {
     		if($i>0){
-				$idLieuEnf = $this->diag->ajoutLieu($idLieu, -1, $idBase, "Nouveau lieu", true, false);
+				$idLieuEnf = $this->diag->ajoutLieu($idLieu, -1, $idBase, "Nouveau lieu", false, false);
     		}
-    		//on ajoute le type de contrôle
-    		$this->diag->ajoutCtlLieu($idLieuEnf, $arr["ctrl"][$i], -1, $idBase, $this->idInst);
-    		//on crée l'arboressence pour les enfants
-    		$this->creaArboScenar($idLieuEnf, $idScenar, $idBase);
+    		//vérifie s'il faut traiter le contrôle
+    		if($idCtlStop!=$arr["ctrl"][$i]["id_type_controle"]){
+		    	//on ajoute le type de contrôle
+		    	$this->diag->ajoutCtlLieu($idLieuEnf, $arr["ctrl"][$i], -1, $idBase, $this->idInst);
+		    	//on crée l'arboressence pour les enfants
+		    	$this->creaArboScenar($idLieuEnf, $idScenar, $idBase);
+    		}
     	}
     	//vérifie s'il faut supprimer le lieu
-    	//if($i)$this->diag->deleteLieu($idLieuEnf, -1, $idBase);
+    	if(count($arr["ctrl"])==0)$this->diag->deleteLieu($idLieuEnf, -1, $idBase);
+
+    	//$this->trace("FIN ".__METHOD__);
     	
-		
 	}
 		
     /**
