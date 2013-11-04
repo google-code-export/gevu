@@ -1,5 +1,7 @@
 <?php
 try {
+	set_time_limit(2000);
+	header('Content-Type: text/html; charset=utf-8');
 	require_once( "../application/configs/config.php" );
 	$application->bootstrap();
 	
@@ -12,6 +14,11 @@ try {
 	$imp->addDoc($_REQUEST);
 
 }catch (Zend_Exception $e) {
-	echo "Récupère exception: " . get_class($e) . "\n";
-    echo "Message: " . $e->getMessage() . "\n";
+	echo "
+	<h3>Exception information:</h3>
+  	<p>
+      <b>Message:</b>".$e->getMessage()."
+  	</p>
+	<h3>Stack trace:</h3>
+  	<pre>".$e->getTraceAsString()."</pre>";
 }
