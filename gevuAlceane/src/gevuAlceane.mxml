@@ -22,13 +22,95 @@
 			[Bindable] public var dataGeo:Object;
 
 			public var idLieu:int=-1;
-			public var idBase:String;
+			public var idBase:String = "gevu_new";
 
 			private var TreeObject:XML;
 			private var xmlTree:XML
 			private var arrSelect:Array;
-			private var objLieuFind:Array; 
-			
+			private var objLieuFind:Array;
+
+			[Bindable] private var xmlOptAff:XML = 
+				<optaff>
+					<item lib="Enjeux PSP" >
+						<item lib="Amélioration" select="false"/>
+						<item lib="Peuplement" select="false"/>
+						<item lib="Ventes" select="false"/>
+						<item lib="Réhabilitation" select="false"/>
+						<item lib="Démolition" select="false"/>
+						<item lib="Pérennisation" select="false"/>
+						<item lib="Peuplement" select="false"/>
+					</item>
+					<item lib="Délimitations géographiques" >
+						<item lib="Communes" select="false"/>
+						<item lib="EPCI" select="false"/>
+						<item lib="Zones Scellier" select="false"/>
+						<item lib="Zones Loyer" select="false"/>
+					</item>
+					<item lib="SERVICES">
+						<item lib="Transports" >
+							<item lib="Lignes de bus" select="false" />
+							<item lib="Arrêts de bus" select="false" />
+							<item lib="Lignes de tramway" select="false" />
+							<item lib="Arrêts de tramway" select="false" />
+							<item lib="Pistes cyclables" select="false" />
+						</item>
+						<item lib="Commerces" select="false" />
+						<item lib="Santé" >
+							<item lib="Hopitaux" select="false"/>
+							<item lib="Cliniques" select="false"/>
+							<item lib="Médecins" select="false"/>
+							<item lib="Pharmacies" select="false"/>
+						</item>
+						<item lib="Lieux d'enseignement" >
+							<item lib="Crèches" select="false"/>
+							<item lib="Ecoles maternelles" select="false"/>
+							<item lib="Ecoles primaires" select="false"/>
+							<item lib="Collèges" select="false"/>
+							<item lib="Lycées" select="false"/>
+							<item lib="Universités" select="false"/>
+						</item>
+						<item lib="Services Publics" >
+							<item lib="CMS" select="false"/>
+							<item lib="Pôle Emploi" select="false"/>
+							<item lib="CAF" select="false"/>
+							<item lib="CRAM" select="false"/>
+							<item lib="Sous Préfectures" select="false"/>
+							<item lib="Communautés Urbaine" select="false"/>
+						</item>
+					</item>
+					<item lib="VACANCE" >
+						<item lib="par antenne" >
+							<item lib="Centre ville" select="false"/>
+							<item lib="Mare-Rouge" select="false"/>
+							<item lib="Quartier Sud" select="false"/>
+							<item lib="Bléville" select="false"/>
+							<item lib="Caucriauville" select="false"/>
+						</item>
+						<item lib="par type" >
+							<item lib="Logement" select="false">
+								<item lib="T1" select="false"/>
+								<item lib="T2" select="false"/>
+								<item lib="T3" select="false"/>
+								<item lib="T4" select="false"/>
+								<item lib="T5" select="false"/>
+								<item lib="T6" select="false"/>
+							</item>				
+							<item lib="Pavillons" select="false"/>
+							<item lib="Commerces" select="false"/>
+							<item lib="Garages" select="false"/>
+						</item>
+					</item>
+					<item lib="VENTE EN COURS" >
+					</item>
+					<item lib="CHANTIERS &#38; PROJETS" >
+					</item>
+					<item lib="AUTRES" >
+					</item>
+				</optaff>
+
+											   
+
+				
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				treeAntenneInit();
@@ -64,7 +146,7 @@
 				bbMain.selectedIndex = 0;
 				currentState = 'carte';
 				
-				//bbAriane.NodeData = dataNode["ariane"];
+				lstAriane.dataProvider =  new ArrayCollection(dataNode["ariane"] as Array);
 				dataGeo = dataNode["geo"];
 				
 			}			
@@ -110,28 +192,46 @@
 			public function treeAntenneInit():void{
 				//construction du tree des territoires
 				xmlTree = 
-					<node idLieu="2" lib="Alcéane" fake="0">
-						<node idLieu="-10"  fake="1" />
+					<node idLieu="-1" lib="root" fake="0">
+						<node idLieu="1" lib="Alcéane" fake="0">
+							<node idLieu="-10"  fake="1" />
+						</node>
 					</node>;
 				treeAntenne.dataProvider=xmlTree;
+				roAlceane.getArboAntenne(1,idBase);
+				treeAntenne.showRoot=false;
+				
 			}
 			private function treeItemOpened(event:TreeEvent) : void {
 				if (event.item.node.attribute("fake")==1)
 				{
 					var i:int = event.item.attribute("idLieu");
-					roDiag.getXmlNode(i, idBase);
+					roAlceane.getXmlNode(i, idBase);
 				}
 			}
 			private function treeItemClicked(event:ListEvent) : void {
 				var i:Object = event.currentTarget.selectedItem;
 				idLieu = i.attribute("idLieu");
-				if(i.attribute("lib")=="Alcéane")return;
-				if(idLieu>0) roDiag.getNodeDataAlceane(idLieu, idExi, idBase);
+				//if(i.attribute("lib")=="Alcéane")return;
+				if(idLieu>0){
+					roDiag.getNodeRelatedData(idLieu, idExi, idBase);
+					lstAriane.dataProvider =  null;
+				}
 			}			
 		
 		]]>
 	</fx:Script>
 	<fx:Declarations>
+		<s:RemoteObject
+			id="roAlceane"
+			destination="zend"
+			source="GEVU_Alceane"
+			fault="faultHandlerService(event, 'GEVU - Diagnostic');"
+			showBusyCursor="true"
+			>
+			<s:method name="getArboAntenne"			result="updateTreeStructure(event);" />
+			<s:method name="findLieu"			result="displayReponse(event);" />
+		</s:RemoteObject>
 		<s:RemoteObject
 			id="roDiag"
 			destination="zend"
@@ -139,24 +239,9 @@
 			fault="faultHandlerService(event, 'GEVU - Diagnostic');"
 			showBusyCursor="true"
 			>
-			<s:method name="getNodeDataAlceane"	result="displayNodeProperties(event);" />
-			<s:method name="getXmlNode"			result="updateTreeStructure(event);" />
+			<s:method name="getNodeRelatedData"	result="displayNodeProperties(event);" />
 			<s:method name="findLieu"			result="displayReponse(event);" />
 		</s:RemoteObject>
-		<s:ArrayCollection id="menuItems">
-			<s:source>
-				<fx:Object itemId="itemId1" label="Item 1" separatorAfter="true"/>
-				<fx:Object itemId="itemId2"
-						   label="Item 2"
-						   separatorAfter="true"/>
-				<fx:Object itemId="itemId3" label="Another item" separatorAfter="true"/>
-				<fx:Object itemId="itemId4" label="One more item" separatorAfter="true"/>
-				<fx:Object itemId="itemId5"
-						   label="Yet another item"
-						   separatorAfter="true"/>
-				<fx:Object itemId="itemId6" label="Last item" last="true"/>
-			</s:source>
-		</s:ArrayCollection>
 		<mx:ArrayCollection id="bbItems">
 			<fx:String>CARTE</fx:String> 
 			<fx:String>M&#201;DIAS</fx:String> 
@@ -164,7 +249,6 @@
 			<fx:String>DIAGNOSTICS</fx:String> 
 			<fx:String>ACCESSIBILIT&#201;</fx:String> 
 		</mx:ArrayCollection>
-
 	</fx:Declarations>
 	<fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";
@@ -319,7 +403,11 @@
 						<s:fill><s:SolidColor color="#BFB099" alpha="0.7" /></s:fill>
 					</s:Rect>
 					<s:VGroup height="100%" width="100%" paddingTop="12" paddingLeft="4" paddingRight="4" >
-						
+						<mx:Tree id="treeOptAff" labelField="@lib" showRoot="false" 
+								 height="100%"  width="100%"
+								 dataProvider="{xmlOptAff}"
+								 horizontalScrollPolicy="on" verticalScrollPolicy="on"
+								 />
 					</s:VGroup>				
 				</s:Group>
 			</s:VGroup>
@@ -351,9 +439,9 @@
 						<s:Rect height="100%" width="100%" >
 							<s:fill><s:SolidColor color="white" /></s:fill>
 						</s:Rect>
-						<s:HGroup paddingBottom="6" paddingLeft="6" paddingRight="6" paddingTop="6" verticalAlign="middle">
+						<s:HGroup height="48" paddingBottom="6" paddingLeft="6" paddingRight="6" paddingTop="6" verticalAlign="middle">
 							<s:Label styleName="stitreBloc" text="Vous êtes ici :"/>
-							<s:List borderVisible="false" itemRenderer="gevu.irAriane" dataProvider="{menuItems}">
+							<s:List id="lstAriane" borderVisible="false" itemRenderer="gevu.irAriane" >
 								<s:layout>
 									<s:HorizontalLayout />
 								</s:layout>
