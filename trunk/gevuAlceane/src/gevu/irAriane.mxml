@@ -13,8 +13,9 @@
 				if(data.last){
 					this.setCurrentState("selected");					
 				}
-				separator.visible = data.separatorAfter;
-				txt.text = data.label;
+				separator.visible = true;
+				if(data.lib=="univers")data.lib="ALCEANE";
+				txt.text = data.lib;
 			}
 			
 		]]>
