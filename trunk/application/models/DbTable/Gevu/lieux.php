@@ -172,13 +172,14 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 			//echo $strIds;
         }
 		//suppression des données lieés
-        $dt = $this->getDependentTables();
-        foreach($dt as $t){
-        	$dbT = new $t($this->_db);
-        	$dbT->delete('id_lieu IN ('.$strIds.')');
+        if($strIds){
+	        $dt = $this->getDependentTables();
+	        foreach($dt as $t){
+	        	$dbT = new $t($this->_db);
+	        	$dbT->delete('id_lieu IN ('.$strIds.')');
+	        }        
+	        $this->delete('id_lieu IN ('.$strIds.')');
         }        
-        $this->delete('id_lieu IN ('.$strIds.')');
-        
         /** TODO
          * supprimer les documents sur le serveur
          */

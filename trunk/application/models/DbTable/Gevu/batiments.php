@@ -79,10 +79,11 @@ class Models_DbTable_Gevu_batiments extends Zend_Db_Table_Abstract
      * @param int $idInst
      * @param int $idLieuParent
      * @param array $data
+     * @param string $idBase
      *  
      * @return integer
      */
-    public function getByRef($ref, $idInst, $idLieuParent, $data=false, $idBase)
+    public function getByRef($ref, $idInst, $idLieuParent, $data=false, $idBase=false)
     {    	
 		//vérification de l'existence de l'antenne
 	    $arr = $this->findByRef($ref);
