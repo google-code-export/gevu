@@ -478,8 +478,12 @@ class GEVU_Import extends GEVU_Site{
 				//if($nbCol!="60") $err .= "Le nombre de colonne de la ligne $x n'est pas bon : $nbCol";
 					
 	   			//récupère l'antenne
-	    		if($this->arrAnt["ref"]!=$this->arr[0]) $this->arrAnt = $this->dbAnt->getByRef($this->arr[0], $this->idInst, $idLieuParent, "ANTENNE ".$this->arr[0],$this->idBase);
-	   			//récupère le groupe
+	    		if($this->arrAnt["ref"]!=$this->arr[0]){
+	    			$this->arrAnt = $this->dbAnt->getByRef($this->arr[0], $this->idInst, $idLieuParent, "ANTENNE ".$this->arr[0],$this->idBase);
+					$this->trace("Antenne ".$this->arrAnt["ref"]);			
+	    		}
+
+	    		//récupère le groupe
 	    		if($this->arrGrp["ref"]!=$this->arr[1]){
 	    			$this->arrGrp = $this->dbGrp->getByRef($this->arr[1], $this->idInst, $this->arrAnt["id_lieu"],$this->arr[2],$this->idBase);
 	    			$this->creaArboScenar($this->arrGrp["id_lieu"], $idScenar, $idBase, 45);
@@ -497,7 +501,8 @@ class GEVU_Import extends GEVU_Site{
 				    case 'ANTENNE TV':
 			    		//recherche la référence
 				    	$arrObj = $this->dbObjExt->getByRef($this->arr[13], $this->idInst, $this->arrBat["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_controle"=>45),$this->idBase);
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);			
+				    	break;
 				    case 'BATIMENT ADMINISTRATIF':
 				    	/*TODO
 				    	 *Est-ce une conciergerie ? 
@@ -506,63 +511,71 @@ class GEVU_Import extends GEVU_Site{
 				    	$this->getNiveau();
 				    	//récupère le local
 				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>88),$this->idBase);
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);			
+				    	break;
 				    case 'CAVE':
 				    	//récupère la partie commune
 				    	$this->getPartieCommune();
 			    		//recherche la référence
 				    	$arrObj = $this->dbEspInt->getByRef($this->arr[13], $this->idInst, $this->arrPtc["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_int"=>75),$this->idBase);
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);			
+				    	break;
 				    case 'COMMERCE':
 				    	$this->getNiveau();
 				    	//recherche la référence
 				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>86),$this->idBase);
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);			
+				    	break;
 				    case 'DIVERS':
 				    	$this->getNiveau();
 				    	//recherche la référence
 				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13],false,$this->idBase);
+				    	$this->trace($this->arr[15]." ".$this->arr[13]);			
 				    	break;
 				    case 'ESPACE PUBLICITAIRE':
 			    		//recherche la référence
 				    	$arrObj = $this->dbObjExt->getByRef($this->arr[13], $this->idInst, $this->arrBat["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_objet_ext"=>89),$this->idBase);
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);
+				    	break;
 				    case 'FOYER':
 				    	$this->getNiveau();
 				    	//recherche la référence
 				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>90),$this->idBase);
-						break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);
+				    	break;
 				    case 'GARAGE':
 			    		//récupère la partie commune
 				    	$this->getPartieCommune();
 				    	//recherche la référence
+				    	$this->trace($this->arr[15]." ".$this->arr[13]);
 				    	$arrObj = $this->dbEspInt->getByRef($this->arr[13], $this->idInst, $this->arrPtc["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_int"=>91),$this->idBase);
 					break;
 				    case 'JARDIN':
 			    		//récupère la parcelle
 			    		if($this->arrPcl["ref"]!=$this->arrBat["id_lieu"]."_".$this->arr[20]) $this->arrPcl = $this->dbPcl->getByRef($this->arrGrp["id_lieu"]."_".$this->arr[20], $this->idInst, $this->arrGrp["id_lieu"],"",false,$this->idBase);				    				    		
 			    		//recherche la référence
-			    		if(!$this->arrPcl["id_lieu"]){
-			    			$totot = 0;
-			    		}
 				    	$arrObj = $this->dbEspExt->getByRef($this->arr[13], $this->idInst, $this->arrPcl["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_ext"=>81),$this->idBase);
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);					
+				    	break;
 				    case 'LOCAL':
 				    	$this->getNiveau();
 				    	//recherche la référence
 				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>68),$this->idBase);
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);
+				    	break;
 				    case 'LOCAL PROFESSIONNEL':
 				    	$this->getNiveau();
 				    	//recherche la référence
 				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>68),$this->idBase);
-						break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);
+				    	break;
 				    case 'LOCAL VELO':
 				    	$this->getPartieCommune();
 				    	//recherche la référence
 				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>74),$this->idBase);
 				    	//creation de l'arboressence
 		    			//$this->creaArboScenar($arrObj['id_lieu'], $idScenar, $idBase);		    			
+				    	$this->trace($this->arr[15]." ".$this->arr[13]);
 				    	break;
 				    case 'LOGEMENT':
 				    	$this->getNiveau();
@@ -574,30 +587,35 @@ class GEVU_Import extends GEVU_Site{
 				    		);
 				    	$arrObj = $this->dbLog->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13],false,$this->idBase);
 				    	//creation de l'arboressence
-		    			$this->creaArboScenar($arrObj['id_lieu'], $idScenar, $idBase);		    			
-					break;
+		    			//$this->creaArboScenar($arrObj['id_lieu'], $idScenar, $idBase);		    			
+						$this->trace($this->arr[15]." ".$this->arr[13]);
+				    	break;
 				    case 'PARKING':
 				    	$this->getPartieCommune();
 			    		//recherche la référence
 				    	$arrObj = $this->dbEspExt->getByRef($this->arr[13], $this->idInst, $this->arrPcl["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_ext"=>48),$this->idBase);
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);
+				    	break;
 				    case 'RESIDENCE':
 				    	$this->getNiveau();
 				    	//recherche la référence
 				    	$arrObj = $this->dbLoc->getByRef($this->arr[13], $this->idInst, $this->arrNiv["id_lieu"], $this->arr[15]." - ".$this->arr[13], array("activite"=>92),$this->idBase);
-						break;
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);
+				    	break;
 				    case 'SECHOIR ou 2ème CAVE':
 				    	$this->getPartieCommune();
 				    	//recherche la référence
 				    	$arrObj = $this->dbEspInt->getByRef($this->arr[13], $this->idInst, $this->arrPtc["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_int"=>93),$this->idBase);
-					break;
+						$this->trace($this->arr[15]." ".$this->arr[13]);
+				    	break;
 			    }
 			    //mise à jour de l'adresse
 			    $this->dbG->editByLieu($arrObj['id_lieu'],array("adresse"=>$this->arr[7]." ".$this->arr[9], "codepostal"=>$this->arr[10], "ville"=>$this->arr[11], "pays"=>"France"));
-				//ajoute la stat
+				$this->trace("mise à jour de l'adresse");
+			    //ajoute la stat
                 $this->dbSta->ajouterByImport($this->arr, $arrObj['id_lieu'], $this->idInst);			    
-				if($err!="")return "Le fichier n'est pas bien formaté.\n".$err;
+				$this->trace("ajoute la stat");
+                if($err!="")return "Le fichier n'est pas bien formaté.\n".$err;
 			}
 		}
 		$this->trace("FIN ".__METHOD__);
