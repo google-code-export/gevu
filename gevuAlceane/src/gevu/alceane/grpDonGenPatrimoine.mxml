@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
+		 width="100%" height="100%"
+		 >
+	<fx:Script>
+		<![CDATA[
+			import spark.events.IndexChangeEvent;
+			
+			protected function bbMain_changeHandler(event:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<mx:ArrayCollection id="bbItems">
+			<fx:String>Patrimoine</fx:String> 
+			<fx:String>Comptabilité</fx:String> 
+			<fx:String>Gestion</fx:String> 
+			<fx:String>Assurance</fx:String> 
+			<fx:String>Sécurité</fx:String> 
+		</mx:ArrayCollection>
+	</fx:Declarations>
+	<s:states>
+		<s:State name="Patrimoine"/>
+		<s:State name="Comptabilité"/>
+		<s:State name="Gestion"/>
+		<s:State name="Assurance"/>
+		<s:State name="Sécurité"/>
+	</s:states>	
+
+	<s:BorderContainer 
+		borderColor="black" borderStyle="inset" borderWeight="4" width="100%" height="100%">
+		<s:Rect height="100%" width="100%" >
+			<s:fill><s:SolidColor color="#383B71" alpha="0.3" /></s:fill>
+		</s:Rect>
+		<s:HGroup paddingLeft="6" paddingTop="6" width="100%" paddingRight="6">
+			<s:ButtonBar
+				id="bbMain"
+				change="bbMain_changeHandler(event)"
+				skinClass="skin.bbAlceane"
+				requireSelection="true" 
+				width="100%" dataProvider="{bbItems}" />
+		</s:HGroup>
+		<s:Group id="gMainC" left="6" right="6" top="48" bottom="6" >
+			<s:layout>
+				<s:BasicLayout/>
+			</s:layout>
+			<s:Group height="40" width="100%" >
+				<s:Rect height="100%" width="100%" >
+					<s:fill><s:SolidColor color="#383b71" /></s:fill>
+				</s:Rect>
+				<s:VGroup horizontalAlign="left" verticalAlign="middle" 
+						  paddingLeft="6" paddingRight="6"
+						  height="100%" width="100%" >
+					<s:Label styleName="titreBloc" text="Taux d'impayé"/>
+				</s:VGroup>				
+			</s:Group>
+			<flexiframe:IFrame id="ifC" scrollPolicy="{IFrame.SCROLL_POLICY_OFF}"
+							   width="100%" height="100%"
+							   source="http://localhost/gevu/stats/antenne/bat_antenne.html"
+							   overlayDetection="true"
+							   />			   
+			
+		</s:Group>
+		
+	<!--
+	<s:Group height="100%" width="264" >
+		<s:Rect height="100%" width="100%" >
+			<s:fill><s:SolidColor color="#BFB099" alpha="0.7" /></s:fill>
+		</s:Rect>
+		<s:VGroup height="100%" width="100%" paddingTop="12" paddingLeft="4" paddingRight="4" >
+		</s:VGroup>				
+	</s:Group>
+	-->
+	</s:BorderContainer> 	
+	
+</s:Group>

@@ -5,7 +5,7 @@
 			   xmlns:gevu="gevu.*"
 			   width="100%" height="100%" 
 			   pageTitle="GEVU Alcéane"
-			   creationComplete="creationCompleteHandler(event)"
+			   creationComplete="creationCompleteHandler(event)" xmlns:alceane="gevu.alceane.*"
 			   >
 	<fx:Script>
 		<![CDATA[
@@ -15,6 +15,8 @@
 			import mx.events.TreeEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import spark.events.IndexChangeEvent;
 
 			[Bindable] public var exi:Object;
 			[Bindable] public var idExi:String = "";
@@ -105,6 +107,7 @@
 					<item lib="CHANTIERS &#38; PROJETS" >
 					</item>
 					<item lib="AUTRES" >
+						<item lib="Antennes Relais" select="false"/>
 					</item>
 				</optaff>
 
@@ -219,6 +222,11 @@
 				}
 			}			
 		
+			protected function bbMain_changeHandler(event:IndexChangeEvent):void
+			{
+				var to:String = "";
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -322,6 +330,7 @@
 	<s:states>
 		<s:State name="carte"/>
 		<s:State name="medias"/>
+		<s:State name="DonGen"/>
 	</s:states>	
 	
 	<s:BorderContainer 
@@ -430,6 +439,7 @@
 				<s:HGroup paddingLeft="6" paddingTop="-10" width="100%" paddingRight="6">
 					<s:ButtonBar
 						id="bbMain"
+						change="bbMain_changeHandler(event)"
 						skinClass="skin.bbAlceane"
 						requireSelection="true" 
 						width="100%" dataProvider="{bbItems}" />
@@ -448,7 +458,8 @@
 							</s:List>
 						</s:HGroup>
 					</s:Group>
-					<gevu:cnvIFCarto width="100%" height="100%" includeIn="carte" id="cartoIF" rsCarto="{dataGeo}" />
+					<gevu:cnvIFCarto includeIn="carte" width="100%" height="100%" id="cartoIF" rsCarto="{dataGeo}" />
+					<alceane:grpDonGenPatrimoine includeIn="DonGen" width="100%" height="100%" />
 				</s:VGroup>
 			</s:VGroup>
 		</s:HGroup>
