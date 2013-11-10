@@ -2,10 +2,12 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
 			   xmlns:gevu="gevu.*"
+			   xmlns:alceane="gevu.alceane.*" xmlns:stat="compo.stat.*" xmlns:form="compo.form.*"
 			   width="100%" height="100%" 
 			   pageTitle="GEVU Alcéane"
-			   creationComplete="creationCompleteHandler(event)" xmlns:alceane="gevu.alceane.*"
+			   creationComplete="creationCompleteHandler(event)" 
 			   >
 	<fx:Script>
 		<![CDATA[
@@ -22,9 +24,12 @@
 			[Bindable] public var idExi:String = "";
 			[Bindable] public var dataNode:Object;
 			[Bindable] public var dataGeo:Object;
+			
+			[Bindable] public var dataStat:Object;
 
 			public var idLieu:int=-1;
 			public var idBase:String = "gevu_new";
+			public var urlDomaine:String = "http://localhost/gevu/";
 
 			private var TreeObject:XML;
 			private var xmlTree:XML
@@ -108,6 +113,8 @@
 					</item>
 					<item lib="AUTRES" >
 						<item lib="Antennes Relais" select="false"/>
+						<item lib="Terrains Alcéane" select="false"/>
+						<item lib="Projets Alcéane" select="false"/>
 					</item>
 				</optaff>
 
@@ -117,6 +124,9 @@
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				treeAntenneInit();
+				idLieu = 1;
+				roDiag.getNodeRelatedData(idLieu, idExi, idBase);
+
 			}
 			
 			protected function btnRecherche_clickHandler(event:MouseEvent):void
@@ -151,6 +161,8 @@
 				
 				lstAriane.dataProvider =  new ArrayCollection(dataNode["ariane"] as Array);
 				dataGeo = dataNode["geo"];
+				dataStat = dataNode["___diagnostics"].diag.stat; 
+
 				
 			}			
 
@@ -224,12 +236,24 @@
 		
 			protected function bbMain_changeHandler(event:IndexChangeEvent):void
 			{
-				var to:String = "";
+				/*
+				<s:State name="carte"/>
+				<s:State name="medias"/>
+				<s:State name="DonGen"/>
+				<s:State name="Diag"/>
+				<s:State name="Access"/>
+				*/
+				if(event.newIndex==0)this.currentState = "carte";
+				if(event.newIndex==1)this.currentState = "medias";
+				if(event.newIndex==2)this.currentState = "DonGen";
+				if(event.newIndex==3)this.currentState = "PSP";
+				if(event.newIndex==4)this.currentState = "Diag";
+				if(event.newIndex==5)this.currentState = "Access";
 			}
 			
 		]]>
 	</fx:Script>
-	<fx:Declarations>
+	<fx:Declarations> 
 		<s:RemoteObject
 			id="roAlceane"
 			destination="zend"
@@ -254,6 +278,7 @@
 			<fx:String>CARTE</fx:String> 
 			<fx:String>M&#201;DIAS</fx:String> 
 			<fx:String>DONN&#201;ES G&#201;N&#201;RALES</fx:String> 
+			<fx:String>ENJEUX PSP</fx:String> 
 			<fx:String>DIAGNOSTICS</fx:String> 
 			<fx:String>ACCESSIBILIT&#201;</fx:String> 
 		</mx:ArrayCollection>
@@ -330,7 +355,10 @@
 	<s:states>
 		<s:State name="carte"/>
 		<s:State name="medias"/>
+		<s:State name="PSP"/>
 		<s:State name="DonGen"/>
+		<s:State name="Diag"/>
+		<s:State name="Access"/>
 	</s:states>	
 	
 	<s:BorderContainer 
@@ -458,8 +486,10 @@
 							</s:List>
 						</s:HGroup>
 					</s:Group>
-					<gevu:cnvIFCarto includeIn="carte" width="100%" height="100%" id="cartoIF" rsCarto="{dataGeo}" />
+					<gevu:cnvIFCarto includeIn="carte"  id="cartoIF" rsCarto="{dataGeo}" />
 					<alceane:grpDonGenPatrimoine includeIn="DonGen" width="100%" height="100%" />
+					<stat:cnvStatDiag includeIn="Access" id="stat" rsEtatDiag="{dataStat}" />
+					<alceane:grpDiagPatrimoine  includeIn="Diag" width="100%" height="100%" />
 				</s:VGroup>
 			</s:VGroup>
 		</s:HGroup>
