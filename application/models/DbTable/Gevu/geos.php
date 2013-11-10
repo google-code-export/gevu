@@ -231,16 +231,11 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
     public function findIdsLieuxByAdresse($adresse, $codepostal, $ville, $pays)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_geos"), array("ids"=>"GROUP_CONCAT(id_lieu)") )                           
+                    ->from( array("g" => "gevu_geos"), array("id_lieu") )                           
                     ->where( 'g.adresse LIKE "%'.$adresse.'"')
                     ->where( "g.codepostal = ?", $codepostal)
 					->where( "g.ville = ?", $ville)
-                    ->where( "g.pays = ?", $pays)
-                    ->where( "g.lat = 0")
-                    ->group("g.adresse")
-                    ->group("g.codepostal")
-                    ->group("g.ville")
-                    ->group("g.pays");
+                    ->where( "g.pays = ?", $pays);
                                         
         return $this->fetchAll($query)->toArray(); 
     }

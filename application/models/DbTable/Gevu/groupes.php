@@ -89,7 +89,7 @@ class Models_DbTable_Gevu_groupes extends Zend_Db_Table_Abstract
 	    if(count($arr)==0){
 	    	if(!$lib)$lib="Groupe - ".$ref;
 			$diag = new GEVU_Diagnostique();
-	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, $idBase, $lib, true, false, array("id_type_controle"=>61));
+	    	$idLieu = $diag->ajoutLieu($idLieuParent, -1, $idBase, $lib, false, false, array("id_type_controle"=>61));
 		    $data["id_lieu"]=$idLieu;
 		    $data["id_instant"]=$idInst;
 		    $data["ref"]=$ref;
