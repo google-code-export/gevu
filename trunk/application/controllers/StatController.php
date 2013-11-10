@@ -74,6 +74,16 @@ class StatController extends Zend_Controller_Action {
 					//récupère les types de logement
 					$this->view->stats = $db->getAllByType(54);
 				}
+				if($type=="patrimoineDonGen"){
+					$oStat = new GEVU_Statistique($this->_getParam('idBase', false));
+					$json = $oStat->getPatrimoineDonGen($this->_getParam('idBase', false));
+					$this->view->stats = $json;			
+				}
+				if($type=="patrimoineDiag"){
+					$oStat = new GEVU_Statistique($this->_getParam('idBase', false));
+					$json = $oStat->getPatrimoineDiag($this->_getParam('idBase', false));
+					$this->view->stats = $json;			
+				}
 			}
 			
 		}catch (Zend_Exception $e) {
