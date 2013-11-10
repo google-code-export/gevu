@@ -3,10 +3,15 @@ try {
 	require_once( "../application/configs/config.php" );
 
 	/*
+	$s = new GEVU_Statistique();
+	$json = $s->getPatrimoineDiag("gevu_new");
+	$json = $s->getPatrimoineDonGenPatrimoine("gevu_new");
+	*/
+	
+	/*
 	$alceane = new GEVU_Alceane();
 	header ("Content-Type:text/xml");  
 	echo $alceane->getArboAntenne(1,"gevu_new");
-	exit;
 	*/
 	
 	/*
@@ -94,8 +99,13 @@ $response = $server->handle();
 //var_dump($server->getFunctions());   		
 
 }catch (Zend_Exception $e) {
-	echo "Récupère exception: " . get_class($e) . "\n";
-    echo "Message: " . $e->getMessage() . "\n";
+	echo "
+	<h3>Exception information:</h3>
+  	<p>
+      <b>Message:</b>".$e->getMessage()."
+  	</p>
+	<h3>Stack trace:</h3>
+  	<pre>".$e->getTraceAsString()."</pre>";
 }
 echo $response;
 

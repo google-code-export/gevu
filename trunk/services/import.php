@@ -9,7 +9,10 @@ try {
 	//$imp->addScenario("C:/wamp/www/gevu/param/scenarisation.xml");
 	//$imp->addScenario("C:/wamp/www/gevu/param/logementV3.xml");
 	
-	echo $imp->traiteImportLogement(561, 1, 1, 18, "gevu_new");
+	//echo $imp->traiteImportLogement(561, 1, 1, 18, "gevu_new");
+	
+	echo $imp->importGeos("c:\wamp\www\gevu\data\carto\AlceaneCompLatLng2013-11-09 06-06-31.csv","gevu_new","adresse");
+	
 	
 	$imp->addDoc($_REQUEST);
 
