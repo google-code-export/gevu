@@ -61,5 +61,19 @@ class GraphController extends Zend_Controller_Action {
 		}
 			
 	}
+
+	/**
+	 * statistiques pour les antennes
+	 */
+	public function patrimoinedongenAction() {
+		
+		try {
+			$this->view->idBase = $this->_getParam('idBase', false);			
+		}catch (Zend_Exception $e) {
+	          echo "Récupère exception: " . get_class($e) . "\n";
+	          echo "Message: " . $e->getMessage() . "\n";
+		}
+			
+	}
 	
 }
