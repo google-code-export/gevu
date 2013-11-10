@@ -94,7 +94,10 @@ class Models_DbTable_Gevu_stats extends Zend_Db_Table_Abstract
     			, "RMI"=>$arr[42], "API"=>$arr[43], "AAH"=>$arr[44], "FNS"=>$arr[45], "ASCENSEUR"=>$arr[46], "MODCHAUF"=>$arr[47], "RESAN"=>$arr[48]
     			));
     	*/
-    	return $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst, "Tranche"=>$arr[3], "Code_Escalier"=>$arr[6], "Indicateur_Zus"=>$arr[12], "Code_Logement"=>$arr[13]
+    	
+    	return $this->ajouter(array("id_lieu"=>$idLieu, "id_instant"=>$idInst
+    		, "Antenne_rattachement"=>$arr[0], "Code_groupe"=>$arr[1], "Code_Batiment"=>$arr[4]
+    		, "Tranche"=>$arr[3], "Code_Escalier"=>$arr[6], "Indicateur_Zus"=>$arr[12], "Code_Logement"=>$arr[13]
     		, "Categorie_Module"=>$arr[14], "Logement_Individuel"=>$arr[16], "Type_Logement"=>$arr[17], "Nombre_pieces"=>$arr[19], "Etage"=>$arr[20], "Surface_Reelle"=>$arr[21], "Surface_Appliquee"=>$arr[22]
     		, "Type_financement"=>$arr[23], "Annee_Construction"=>$arr[24], "Contrat"=>$arr[25], "Type_Reception_TV"=>$arr[26], "Occupation"=>$arr[27], "Motif_Vacance"=>$arr[28], "Copropriete"=>$arr[30]
     		, "DPE_Date"=>$arr[31], "DPE_consommation_reelle"=>$arr[32], "DPE_Categorie_Consommation"=>$arr[33], "DPE_emissions_GES"=>$arr[34], "DPE_Categorie_Emissions_GES"=>$arr[35]
