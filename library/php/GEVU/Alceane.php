@@ -11,9 +11,9 @@ class GEVU_Alceane extends GEVU_Site{
     * @param boolean $cache
     * 
     */
-	public function __construct($idBase=false, $cache = false)
+	public function __construct($idBase=false, $cache = true)
     {
-    	parent::__construct($idBase, $cache = false);
+    	parent::__construct($idBase, $cache);
 		
     }
 	    
@@ -25,8 +25,13 @@ class GEVU_Alceane extends GEVU_Site{
     * @return DomDocument
     */
 	public function getArboAntenne($idLieu=0, $idBase=false){
-		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
-	   	$xml = false;//$this->cache->load($c);
+		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase;
+		
+		$dom = new DomDocument();
+		$dom->load('../tmp/arboAlceane.xml'); 
+        return $dom;
+		
+	   	$xml = $this->cache->load($c);
         if(!$xml){
 			//initialise les gestionnaires de base de données
 			$this->getDb($idBase);
@@ -73,10 +78,10 @@ class GEVU_Alceane extends GEVU_Site{
 	        	$xml .= "</node>";
         	}
         	$xml .= "</node>";        	
-	    	//$this->cache->save($xml, $c);
+	    	$this->cache->save($xml, $c);
         }
 
-        //
+        //echo $xml;
         if($xml!=""){
 	        $dom = new DomDocument();
 	        $dom->loadXML($xml);

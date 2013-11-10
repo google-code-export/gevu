@@ -458,7 +458,7 @@ class GEVU_Import extends GEVU_Site{
 		//foreach ($chaines as $x => $chaine) {
 		for ($x = 1; $x < $nbRow; $x++) {
 			$this->trace("Ligne ".$x);			
-			if($x==1000)  break;
+			//if($x==1000)  break;
 			
 			$this->arr = $arrCSV[$x];
 			
@@ -486,14 +486,14 @@ class GEVU_Import extends GEVU_Site{
 	    		//récupère le groupe
 	    		if($this->arrGrp["ref"]!=$this->arr[1]){
 	    			$this->arrGrp = $this->dbGrp->getByRef($this->arr[1], $this->idInst, $this->arrAnt["id_lieu"],$this->arr[2],$this->idBase);
-	    			$this->creaArboScenar($this->arrGrp["id_lieu"], $idScenar, $idBase, 45);
+	    			//$this->creaArboScenar($this->arrGrp["id_lieu"], $idScenar, $idBase, 45);
 					$this->trace("Groupe ".$this->arrGrp["ref"]);
 	    		}
 	    		//récupère le bâtiment
 		    	if($this->arrBat["ref"]!=$this->arr[4]){
 		    		$this->arrBat = $this->dbBat->getByRef($this->arr[4], $this->idInst, $this->arrGrp["id_lieu"]
 		    			,array("lib"=>$this->arr[4],"contact_gardien"=>$this->arr[44],"date_achevement"=>$this->arr[24]),$this->idBase);
-	    			$this->creaArboScenar($this->arrBat["id_lieu"], $idScenar, $idBase, 132);		    			
+	    			//$this->creaArboScenar($this->arrBat["id_lieu"], $idScenar, $idBase, 132);		    			
 					$this->trace("Bâtiment ".$this->arrBat["ref"]);
 		    	}
 		    	//on traite les lignes suivant le type de module
@@ -593,7 +593,7 @@ class GEVU_Import extends GEVU_Site{
 				    case 'PARKING':
 				    	$this->getPartieCommune();
 			    		//recherche la référence
-				    	$arrObj = $this->dbEspExt->getByRef($this->arr[13], $this->idInst, $this->arrPcl["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_ext"=>48),$this->idBase);
+				    	$arrObj = $this->dbEspExt->getByRef($this->arr[13], $this->idInst, $this->arrPtc["id_lieu"], $this->arr[15]." - ".$this->arr[13],array("id_type_specifique_ext"=>48),$this->idBase);
 						$this->trace($this->arr[15]." ".$this->arr[13]);
 				    	break;
 				    case 'RESIDENCE':
@@ -695,7 +695,7 @@ class GEVU_Import extends GEVU_Site{
     	if($this->arrPtc["ref"]!=$ref){
     		//création de la partie commune
     		$this->arrPtc = $this->dbPtc->getByRef($ref, $this->idInst, $this->arrNiv["id_lieu"],false,false,$this->idBase);				    	
-    		$this->creaArboScenar($this->arrPtc["id_lieu"], $this->idScenar, $this->idBase);    		
+    		//$this->creaArboScenar($this->arrPtc["id_lieu"], $this->idScenar, $this->idBase);    		
     	}
     	
     }
@@ -737,43 +737,54 @@ class GEVU_Import extends GEVU_Site{
     /**
      * importation d'un fichier pour ajouter des adresses
      *
-     * @param string $path = adresse du fichier
+     * @param string $path 			= adresse du fichier
+     * @param string $idBase 		= la base à mettre à jour
+     * @param string $findBy 		= type de recherche du lieu
+     * @param string $updateFor 	= type de mise à jour
      * 
      */
-    function importGeos($path, $findBy="Code_Logement"){
+    function importGeos($path, $idBase=false, $findBy="Code_Logement", $updateFor="latlng"){
 		
-    	$chaines = file($path);
-
-    	$inArr = array("40 RUE EDMOND CASAUX","63 RUE DES HETRES","65 AVENUE PAUL VERLAINE","65 RUE D'IENA","8 AVENUE VLADIMIR KOMAROV");
+    	$this->bTrace = true;					// pour afficher le nombre de lignes importées et le timing    	
+    	$this->echoTrace = false;//__METHOD__."<br/>";	//pour stocker les traces
+    	$this->temps_debut = microtime(true);
+		$this->trace("DEBUT ".__METHOD__);
     	
-		$this->dbSta = new Models_DbTable_Gevu_stats();
-		$this->dbG = new Models_DbTable_Gevu_geos();
+		$this->trace("chargement du fichier : ".$path);
+		$arrCSV = $this->csvToArray($path,0,",");
+			
+		$nbRow = count($arrCSV);
+		$this->trace("Nb Ligne =".$nbRow);
+    	
+		$this->trace("Initialisation des bases");
+		$this->getDb($idBase);
+		$this->dbSta = new Models_DbTable_Gevu_stats($this->db);
+		$this->dbG = new Models_DbTable_Gevu_geos($this->db);
     	
 		// parcourt toute les lignes du fichier
-		foreach ($chaines as $x => $chaine) {
-			$chaine = trim($chaine); 
-			$arr = explode(";", $chaine);
-			if($x > 0){
-				$var = array_search($arr[0], $inArr);
-				if (in_array($arr[0], $inArr)) {
-									//récupère l'identifiant de lieu
-					if($findBy=="Code_Logement"){
-						$rs = $this->dbSta->findIdLieuByCode_Logement($arr[13]);
-					    //mise à jour de l'adresse
-					    $this->dbG->editByLieu($rs[0]['id_lieu'],array("adresse"=>$arr[7]." ".$arr[9], "codepostal"=>$arr[10], "ville"=>$arr[11], "pays"=>"France"));
-					}
-					if($findBy=="adresse"){
-						$rs = $this->dbG->findIdsLieuxByAdresse($arr[0], $arr[1], $arr[2], $arr[3]);
-					    //mise à jour de l'adresse
-					    if(count($rs)>0){
-						    $this->dbG->editByIdsLieux($rs[0]['ids'],array("lat"=>$arr[4], "lng"=>$arr[5]));
-					    }
-					}
-				}
-				
+		foreach ($arrCSV as $arr) {
+			//
+			$this->trace("récupère l'identifiant de lieu = ".$arr[6]);
+			if($findBy=="Code_Logement"){
+				$rs = $this->dbSta->findIdLieuByCode_Logement($arr[6]);
 			}
+			if($findBy=="adresse"){
+				$rs = $this->dbG->findIdsLieuxByAdresse($arr[0], $arr[1], $arr[2], $arr[3]);
+			}
+			foreach ($rs as $r) {
+				$this->trace("Identifiant récupéré = ".$r['id_lieu']);
+				if($updateFor=="latlng"){
+				    $this->dbG->editByLieu($r['id_lieu'],array("lat"=>$arr[4], "lng"=>$arr[5]));
+				}
+				if($updateFor=="adresse"){
+				    $this->dbG->editByLieu($r['id_lieu'],array("adresse"=>$arr[7]." ".$arr[9], "codepostal"=>$arr[10], "ville"=>$arr[11], "pays"=>"France"));
+				}
+				$this->trace($updateFor." mise à jour.");
+			}
+			
 		}
-	}    
+		$this->trace("DEBUT ".__METHOD__);
+    }    
     
 /** merci à http://j-reaux.developpez.com/tutoriel/php/fonctions-redimensionner-image/
 // 	---------------------------------------------------------------
