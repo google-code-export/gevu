@@ -1,0 +1,124 @@
+<html>
+  <head>
+      <meta charset="utf-8">
+    <title>GEVU : Carte des diagnostics DPE</title>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
+    <script type="text/javascript" src="../js/d3.v3.min.js"></script>
+    <script>
+    // Données
+	var map, heatMapData = new Array(), heatmap; 
+
+	var rCercle = d3.scale.linear().domain([1, 140]).range([10, 60]);
+	var colorAge = d3.scale.linear().domain([1700, 1900, 1925, 1950, 1975, 2000, 2025]).range(["#fe0000", "#fe4d00", "#ffb200", "#ffff00", "#b2ff00", "#4afe00", "#00ff00"]);
+      
+	 //Centre de la carte
+      function initialize() {
+        var mapOptions = {
+          zoom: 11,
+          center: new google.maps.LatLng(49.54403690, 0.13247040),
+          mapTypeId: google.maps.MapTypeId.SATELLITE
+        };
+
+        map = new google.maps.Map(document.getElementById('map_canvas'),
+            mapOptions);
+
+
+      	d3.json("../stat/globale?type=patrimoineDonGen&idBase=<?php echo $this->idBase; ?>", function(data) { 
+
+			var i=0;
+      		data.children[5].children.forEach(function(geo) {
+
+      	  		geo.geos.forEach(function(p) {
+      	  			var latLng = new google.maps.LatLng(p.lat, p.lng);
+      	  	  		//var w = parseInt(poids[geo.name])*parseInt(p.poids);
+      	  	  		var w = parseInt(p.poids);
+      	  	  		w = rCercle(w);
+      	  	  		console.log(i+' w => '+geo.annee+'('+geo.name+') : '+p.poids+' = '+w);
+      	  	  		
+      	        	//heatMapData.push({location: latLng, weight:w});
+      	        	//if(i<2000){
+	         			var contentString = '<div id="content">'+p.poids+' logement(s) construit en '+geo.annee+'</div>';
+						var infowindow = new google.maps.InfoWindow({
+	                    	content: contentString,
+	                	});          		
+
+      	        		var marker = new google.maps.Marker({
+	      	            	position: latLng,
+	      	              	map: map,
+	      	              	icon: getCircle(w, colorAge(geo.annee)),
+	      	            	title: geo.annee
+	      	            });
+						google.maps.event.addListener(marker, 'click', function() {
+						    infowindow.open(map,marker);
+						  });
+      	        	//}
+      	        	i++      	        	
+      	  		});	
+      		});
+      		if(heatMapData.length > 0){
+	            heatmap = new google.maps.visualization.HeatmapLayer({
+	                data: heatMapData
+	                //,dissipating: false
+	              });
+	              heatmap.setMap(map);
+      		}            
+    	});
+        
+     }
+
+	function getCircle(val, color) {
+		  return {
+		    path: google.maps.SymbolPath.CIRCLE,
+		    fillColor: color,
+		    fillOpacity: 0.8,
+		    scale: val / Math.PI,
+		    strokeColor: 'white',
+		    strokeWeight: .5
+		  };
+		}	  
+	
+      function toggleHeatmap() {
+        heatmap.setMap(heatmap.getMap() ? null : map);
+      }
+	
+	//couleurs
+      function changeGradient() {
+        var gradient = [
+          'rgba(0, 255, 255, 0)',
+          'rgba(0, 255, 255, 1)',
+          'rgba(0, 191, 255, 1)',
+          'rgba(0, 127, 255, 1)',
+          'rgba(0, 63, 255, 1)',
+          'rgba(0, 0, 255, 1)',
+          'rgba(0, 0, 223, 1)',
+          'rgba(0, 0, 191, 1)',
+          'rgba(0, 0, 159, 1)',
+          'rgba(0, 0, 127, 1)',
+          'rgba(63, 0, 91, 1)',
+          'rgba(127, 0, 63, 1)',
+          'rgba(191, 0, 31, 1)',
+          'rgba(255, 0, 0, 1)'
+        ]
+        heatmap.setOptions({
+          gradient: heatmap.get('gradient') ? null : gradient
+        });
+      }
+
+      function changeRadius() {
+        heatmap.setOptions({radius: heatmap.get('radius') ? null : 20});
+      }
+
+      function changeOpacity() {
+        heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
+      }
+
+	
+
+
+    </script>
+  </head>
+
+  <body onload="initialize()" >
+    <div id="map_canvas" style="height: 700px; width: 900px;"></div>
+  </body>
+</html>
