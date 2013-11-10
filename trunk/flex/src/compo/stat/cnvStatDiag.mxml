@@ -81,10 +81,13 @@
 				cbMoteur.selectedIndex = 0;
 				cbVisuel.selectedIndex = 0;								
 				gmEnt.cb.selectedIndex = -1;
+				pDiagExt.height = 0;
+			}
+			if(rsEtatDiag){
+				TraiteEtatDiag();
 			}
 			//tc.goTagGo();
 			callChangeGeo("");
-			TraiteEtatDiag();
 		}
 		
 		public function getLettreIndex(lettre:String):int
@@ -405,7 +408,7 @@
 					</mx:VBox>
 				</mx:HBox>
 			</mx:Panel>				
-			<mx:Panel id="pDiagExt" title="Diagnotics extérieur" width="100%">
+			<mx:Panel id="pDiagExt" title="Diagnotics extérieur" width="100%" >
 				<mx:VBox paddingLeft="6" paddingBottom="3" paddingTop="3" paddingRight="6" width="100%">
 					<mx:HBox verticalAlign="middle" width="100%" >
 						<mx:VBox horizontalAlign="center" width="100%" >							
