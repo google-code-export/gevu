@@ -1,0 +1,238 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>GEVU : Patrimoine données générales</title>
+    <script type="text/javascript" src="../js/d3.v3.min.js"></script>
+    <style type="text/css">
+		.node circle {
+		  cursor: pointer;
+		  fill: #fff;
+		  stroke: steelblue;
+		  stroke-width: 1.5px;
+		}
+		
+		.node text {
+		  font: 10px sans-serif;
+		}
+		
+		path.link {
+		  fill: none;
+		  stroke: #ccc;
+		  stroke-width: 1.5px;
+		}
+		.caption {
+		  font-weight: bold;
+		}
+		
+		.key path {
+		  display: none;
+		}
+		
+		.key line {
+		  stroke: #000;
+		  shape-rendering: crispEdges;
+		}
+    </style>
+  </head>
+  <body>
+  	<div id="legende"></div>
+    <div id="chart"></div>
+
+    <script type="text/javascript">
+
+	var m = [20, 80, 20, 80],
+	    w = 1280 - m[1] - m[3],
+	    h = 600 - m[0] - m[2],
+	    i = 0,
+	    duration = 500,
+	    root; //On créer différentes variables pour les hauteurs, largeurs, temps de transition...
+	
+	var tree = d3.layout.tree()
+	    .size([h, w]); //On créer un arbre qui prend la hauteur et la largeur comme valeur
+	
+	var diagonal = d3.svg.diagonal()
+	    .projection(function(d) { return [d.y, d.x]; });
+
+	//création de la légende
+	//getLegende(w, 30, m);
+	
+	var vis = d3.select("#chart").append("svg")
+	    .attr("width", w + m[1] + m[3])
+	    .attr("height", h + m[0] + m[2])
+	  .append("g")
+	    .attr("transform", "translate(" + m[3] + "," + m[0] + ")"); //On créer une variable vis à laquelle on sélectionne un graphique où l'on ajoute un svg qui prend les hauteurs et largeurs affichées
+	
+	d3.json("../stat/globale?type=patrimoineDonGen&idBase=<?php echo $this->idBase; ?>", function(json) { //On créer une fonction json qui prend les données d'un fichier json
+	  root = json;
+	  root.x0 = h / 2;
+	  root.y0 = 0;
+	
+	
+	  function collapse(d) {
+	    if (d.children) {
+	      d._children = d.children;
+	      d._children.forEach(collapse);
+	      d.children = null;
+	    }
+	  }
+	
+	  root.children.forEach(collapse);
+	  update(root);
+	  
+	});
+
+	function getLegende(w, h, m){
+
+		var width = 960,
+	    height = 500,
+	    formatPercent = d3.format(".0%"),
+	    formatNumber = d3.format(".0f");
+
+		var threshold = d3.scale.threshold()
+		    .domain([.11, .22, .33, .50])
+		    .range(["#6e7c5a", "#a0b28f", "#d8b8b3", "#b45554", "#760000"]);
+	
+		// A position encoding for the key only.
+		var x = d3.scale.linear()
+		    .domain([0, 1])
+		    .range([0, 240]);
+	
+		var xAxis = d3.svg.axis()
+		    .scale(x)
+		    .orient("bottom")
+		    .tickSize(13)
+		    .tickValues(threshold.domain())
+		    .tickFormat(function(d) { return d === .5 ? formatPercent(d) : formatNumber(100 * d); });
+	
+		var svg = d3.select("#legende").append("svg")
+		    .attr("width", width)
+		    .attr("height", height);
+	
+		var g = svg.append("g")
+		    .attr("class", "key")
+		    .attr("transform", "translate(" + (width - 240) / 2 + "," + height / 2 + ")");
+	
+		g.selectAll("rect")
+		    .data(threshold.range().map(function(color) {
+		      var d = threshold.invertExtent(color);
+		      if (d[0] == null) d[0] = x.domain()[0];
+		      if (d[1] == null) d[1] = x.domain()[1];
+		      return d;
+		    }))
+		  .enter().append("rect")
+		    .attr("height", 8)
+		    .attr("x", function(d) { return x(d[0]); })
+		    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+		    .style("fill", function(d) { return threshold(d[0]); });
+	
+		g.call(xAxis).append("text")
+		    .attr("class", "caption")
+		    .attr("y", -6)
+		    .text("Percentage of stops that involved force");	    
+	}
+	
+	function update(source) {
+	
+	  // Calcule la disposition de l'arbre
+	  var nodes = tree.nodes(root).reverse();
+	
+	  // Fixe la profondeur de l'arbre
+	  nodes.forEach(function(d) { d.y = d.depth * 180; });
+	
+	  // Met à jour les noeuds
+	  var node = vis.selectAll("g.node")
+	      .data(nodes, function(d) { return d.id || (d.id = ++i); });
+	
+	  // Entre les nouveaux noeuds et la position antérieure du parent
+	  var nodeEnter = node.enter().append("g")
+	      .attr("class", "node")
+	      .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+	      .on("click", click);
+	
+	  nodeEnter.append("circle")
+	      .attr("r", 1e-6)
+	      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+	
+	  nodeEnter.append("text")
+	      .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+	      .attr("dy", ".35em")
+	      .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+	    .text(function(d) {
+	        if(d.nb)return d.name + " = " + d.nb;
+			else return d.name;
+	    	})
+		.style("fill", "black")
+		.style("fill-opacity", 1e-6);
+	
+	  // Noeud de transition à la nouvelle position
+	  var nodeUpdate = node.transition()
+	      .duration(duration)
+	      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+	
+	  nodeUpdate.select("circle")
+	      .attr("r", 4.5)
+	      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+	
+	  nodeUpdate.select("text")
+	      .style("fill-opacity", 1);
+	
+	  // Transition sortante des noeuds à la nouvelle position du parent
+	  var nodeExit = node.exit().transition()
+	      .duration(duration)
+	      .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+	      .remove();
+	
+	  nodeExit.select("circle")
+	      .attr("r", 1e-6);
+	
+	  nodeExit.select("text")
+	      .style("fill-opacity", 1e-6);
+	
+	  // Met à jour les liens
+	  var link = vis.selectAll("path.link")
+	      .data(tree.links(nodes), function(d) { return d.target.id; });
+	
+	  // Entre les nouveaux liens à la position antérieure du parent
+	  link.enter().insert("path", "g")
+	      .attr("class", "link")
+	      .attr("d", function(d) {
+	        var o = {x: source.x0, y: source.y0};
+	        return diagonal({source: o, target: o});
+	      });
+	
+	  // Lien de transition vers les nouvelles positions
+	  link.transition()
+	      .duration(duration)
+	      .attr("d", diagonal);
+	
+	  // Transition sortant des noeuds à la nouvelle position du parent
+	  link.exit().transition()
+	      .duration(duration)
+	      .attr("d", function(d) {
+	        var o = {x: source.x, y: source.y};
+	        return diagonal({source: o, target: o});
+	      })
+	      .remove();
+	
+	  // Anciennes positions de transition
+	  nodes.forEach(function(d) {
+	    d.x0 = d.x;
+	    d.y0 = d.y;
+	  });
+	}
+	
+	// Bascule les enfants selon le clic
+	function click(d) {
+	  if (d.children) {
+	    d._children = d.children;
+	    d.children = null;
+	  } else {
+	    d.children = d._children;
+	    d._children = null;
+	  }
+	  update(d);
+	}
+    </script>
+  </body>
+</html>
+	
