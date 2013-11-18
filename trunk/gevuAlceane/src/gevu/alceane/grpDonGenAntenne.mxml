@@ -4,10 +4,22 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
 		 xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
 		 width="100%" height="100%"
+		  creationComplete="creationCompleteHandler(event)"
 		 >
 	<fx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
+			[Bindable] public var idAntenne:int=-1;
 			
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				init();
+			}
+			
+			public function init():void{
+				ifrm.source = this.parentApplication.urlDomaine+'public/carto/antennedongen?idBase='+this.parentApplication.idBase+'&idLieu='+idAntenne;
+			}
 			
 		]]>
 	</fx:Script>
@@ -23,9 +35,8 @@
 			<s:layout>
 				<s:BasicLayout/>
 			</s:layout>
-			<flexiframe:IFrame scrollPolicy="{IFrame.SCROLL_POLICY_OFF}"
+			<flexiframe:IFrame id="ifrm" scrollPolicy="{IFrame.SCROLL_POLICY_OFF}"
 			   width="100%" height="100%"
-			   source="{this.parentApplication.urlDomaine+'public/carto/patrimoinedongen?idBase='+this.parentApplication.idBase}"
 			   overlayDetection="true"
 			   />			   
 		</s:Group>
