@@ -83,6 +83,11 @@ class StatController extends Zend_Controller_Action {
 				$json = $oStat->getPatrimoineDiag($this->_getParam('idBase', false));
 				$this->view->stats = $json;			
 			}
+			if($type=="antenneDonGen"){
+				$oStat = new GEVU_Statistique($this->_getParam('idBase', false));
+				$json = $oStat->getAntenneDonGen($this->_getParam('idBase', false), $this->_getParam('idLieu', -1));
+				$this->view->stats = $json;			
+			}
 		}
 			
 	}
