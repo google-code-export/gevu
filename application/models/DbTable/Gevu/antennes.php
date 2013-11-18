@@ -327,8 +327,15 @@ class Models_DbTable_Gevu_antennes extends Zend_Db_Table_Abstract
     public function findByIdLieu($idLieu)
     {
         $query = $this->select()
-                    ->from( array("g" => "gevu_antennes") )                           
-                    ->where( "g.id_lieu = ?", $idLieu);
+            ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+			->from( array("a" => "gevu_antennes") )                           
+            ->joinInner(array('l' => 'gevu_lieux'),
+                'l.id_lieu = a.id_lieu',array('lib', 'id_lieu', 'lieu_parent', 'niv', 'id_type_controle', 'lock_diag'))        
+            ->joinLeft(array('g' => 'gevu_geos'),
+                'g.id_lieu = l.id_lieu',array('lat', 'lng', 'latlng', 'sw', 'ne', 'zoom_min', 'zoom_max', 'adresse'
+            				, 'codepostal', 'ville', 'pays', 'kml', 'type_carte', 'maj', 'data', 'heading', 'pitch'
+            				, 'zoom_sv', 'lat_sv', 'lng_sv'))        
+            ->where( "a.id_lieu = ?", $idLieu);
 
         return $this->fetchAll($query)->toArray(); 
     }
