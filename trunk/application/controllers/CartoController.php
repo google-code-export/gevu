@@ -23,7 +23,7 @@ class CartoController extends Zend_Controller_Action {
 	}
 
 	/**
-	 * statistiques pour les antennes
+	 * statistiques pour le patrimoine
 	 */
 	public function patrimoinedpeAction() {
 		
@@ -37,7 +37,7 @@ class CartoController extends Zend_Controller_Action {
 	}
 
 	/**
-	 * statistiques pour les antennes
+	 * statistiques pour le patrimoine
 	 */
 	public function patrimoineageAction() {
 		
@@ -49,5 +49,21 @@ class CartoController extends Zend_Controller_Action {
 		}
 			
 	}
+
+	/**
+	 * statistiques pour le patrimoine
+	 */
+	public function patrimoinedongenAction() {
+		
+		try {
+			$this->view->idBase = $this->_getParam('idBase', false);			
+		}catch (Zend_Exception $e) {
+	          echo "Récupère exception: " . get_class($e) . "\n";
+	          echo "Message: " . $e->getMessage() . "\n";
+		}
+			
+	}
+	
+	
 	
 }

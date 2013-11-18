@@ -66,29 +66,23 @@ class StatController extends Zend_Controller_Action {
 	 */
 	public function globaleAction() {
 		
-		try {						
-			if($this->_getParam('type', 0)){
-				$type = $this->_getParam('type', 0);
-				if($type=="TypeLog"){
-					$db = new Models_DbTable_Gevu_motsclefs();
-					//récupère les types de logement
-					$this->view->stats = $db->getAllByType(54);
-				}
-				if($type=="patrimoineDonGen"){
-					$oStat = new GEVU_Statistique($this->_getParam('idBase', false));
-					$json = $oStat->getPatrimoineDonGen($this->_getParam('idBase', false));
-					$this->view->stats = $json;			
-				}
-				if($type=="patrimoineDiag"){
-					$oStat = new GEVU_Statistique($this->_getParam('idBase', false));
-					$json = $oStat->getPatrimoineDiag($this->_getParam('idBase', false));
-					$this->view->stats = $json;			
-				}
+		if($this->_getParam('type', 0)){
+			$type = $this->_getParam('type', 0);
+			if($type=="TypeLog"){
+				$db = new Models_DbTable_Gevu_motsclefs();
+				//récupère les types de logement
+				$this->view->stats = $db->getAllByType(54);
 			}
-			
-		}catch (Zend_Exception $e) {
-	          echo "Récupère exception: " . get_class($e) . "\n";
-	          echo "Message: " . $e->getMessage() . "\n";
+			if($type=="patrimoineDonGen"){
+				$oStat = new GEVU_Statistique($this->_getParam('idBase', false));
+				$json = $oStat->getPatrimoineDonGen($this->_getParam('idBase', false));
+				$this->view->stats = $json;			
+			}
+			if($type=="patrimoineDiag"){
+				$oStat = new GEVU_Statistique($this->_getParam('idBase', false));
+				$json = $oStat->getPatrimoineDiag($this->_getParam('idBase', false));
+				$this->view->stats = $json;			
+			}
 		}
 			
 	}
