@@ -1,0 +1,326 @@
+<html>
+  <head>
+      <meta charset="utf-8">
+    <title>GEVU : Données générales du patrimoine</title>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
+    <script type="text/javascript" src="../js/d3.v3.min.js"></script>
+    <script>
+    // Données
+	var map, heatMapData = new Array(), heatmap; 
+
+	var rCercle = d3.scale.linear().domain([1, 160]).range([10, 60]);
+	var colors = new Array();
+	colors["def"]=d3.scale.linear().domain([1, 160]).range(["#00ff00", "#fe0000"]);
+	colors["age"]= d3.scale.linear().domain([1700, 1900, 1925, 1950, 1975, 2000, 2025]).range(["#fe0000", "#fe4d00", "#ffb200", "#ffff00", "#b2ff00", "#4afe00", "#00ff00"]);
+
+	var markers = {NbFoyers:[],NbCommerce:[],NbAssos:[],NbRPA:[],NbCopro:[],NbPav:[],NbZus:[]
+		,typo:{D2:[],D3:[],D4:[],D5:[],D6:[],D7:[],LO:[],P1:[],P2:[],P3:[],P4:[],P5:[],P6:[],P7:[],P8:[],T1:[],T2:[],T3:[],T4:[],T5:[],T6:[],T7:[],T8:[]}
+		,statio:{ASSOCIATION:[],COMMERCE:[],ENTREPRISE:[],GARDIEN:[],INSTITUTIONNELS:[],'PERSONNE PHYSIQUE':[],'SANS DROIT NI TITRE':[]}
+		,vacLog:{'Occupé':[],'Vacant':[]}
+		,vacGar:{'Occupé':[],'Vacant':[]}
+		,vacCom:{'Occupé':[],'Vacant':[]}
+		,finance:{'ACQ/REHAB':[],'DIVERS':[],'Garage':[],'H.L.M.E.':[],'H.L.M.O.':[],'I.L.M.':[],'I.L.N.':[],'LOCAL A VELO':[],'P.L.A.':[],'P.L.A.I.':[],'P.L.A.T.S.':[],'P.L.R.':[],'P.L.S.':[],'P.S.R.':[],'PALULOS':[],'PLUS':[],'PLUS CD':[],'PLUS CD DEP':[],'PLUS DEP':[]}
+		,age:{1700:[],1900:[],1925:[],1950:[],1975:[],2000:[],2025:[]}
+		};
+
+	var m = [20, 80, 20, 80],
+    w = 800 - m[1] - m[3],
+    h = 700 - m[0] - m[2],
+    i = 0,
+    duration = 500,
+    root,
+    vis,
+    diagonal;
+	//On créer un arbre qui prend la hauteur et la largeur comme valeur
+	var tree = d3.layout.tree()
+	    .size([h, w]); 
+
+	//Initialise la carte
+	function initialize() {
+		//gmap
+    	var mapOptions = {
+          zoom: 11,
+          center: new google.maps.LatLng(49.598362444011975, 0.2588131734374777),
+          mapTypeId: google.maps.MapTypeId.SATELLITE
+        };
+        map = new google.maps.Map(document.getElementById('map_canvas'),
+            mapOptions);
+        //
+        
+		/*pour trouver le centrage de la map
+        google.maps.event.addListener(map, 'center_changed', function() {
+             console.log(map.getCenter());
+          });
+		*/
+		//récupère les données
+      	d3.json("../stat/globale?type=patrimoineDonGen&idBase=<?php echo $this->idBase; ?>", function(jsData) { 
+
+			//On créer la variable de visualisation
+			vis = d3.select("#chart_svg").append("svg")
+		    	.attr("width", w + m[1] + m[3])
+		    	.attr("height", h + m[0] + m[2])
+				.append("g")
+		    	.attr("transform", "translate(" + m[3] + "," + m[0] + ")"); 
+			
+			diagonal = d3.svg.diagonal()
+			    .projection(function(d) { return [d.y, d.x]; });
+
+      		//création des données pour l'arbre
+			root = jsData;
+	    	root.x0 = h / 2;
+	    	root.y0 = 0;
+	    	function collapse(d) {
+	    		if (d.children) {
+	    	    	d._children = d.children;
+	    	    	d._children.forEach(collapse);
+	    	      	d.children = null;
+	    	    }
+			}
+	    	root.children.forEach(collapse);
+	    	update(root);
+      		            
+    	});
+        
+     }
+
+	function getMarkers(geo, arr) {
+		var i=0;
+		if(geo.geos==null)return;
+		geo.geos.forEach(function(p) {
+			//gmap
+			var latLng = new google.maps.LatLng(p.lat, p.lng);
+			//
+			//var latLng = {lat:p.lat, lng:p.lng};
+  	  		var w = parseInt(p.poids);
+  	  		w = rCercle(w);
+  	  		var c;
+  	  		if(colors[geo.stat]!=null)
+				c = colors[geo.stat](w);
+  	  		else
+				c = colors["def"](w);
+  	  	  		
+  	  		//console.log(i+' - '+geo.name+"("+poids[geo.name]+") - "+p.poids+" => w="+w+" ; c="+c);
+  	  		
+			//gmap
+			var marker = new google.maps.Marker({
+	            position: latLng,
+	            map: map,
+	            icon: getCircle(w, c),
+	            title: geo.name+' = '+w
+	            }
+            );
+			//		            
+			arr.push(marker);
+			i++;
+    	});	
+	}
+
+	function showMarkers(geo) {
+		geo.visible = true;
+		var arr;
+		if(markers[geo.stat][geo.name]==null)arr=markers[geo.stat]; else arr=markers[geo.stat][geo.name];
+		if(arr.length==0){
+			getMarkers(geo, arr);
+		}else{
+			for (var i = 0; i < arr.length; i++) {
+				//gmap
+				arr[i].setMap(map);
+			}
+		}		
+	}
+
+	function clearMarkers(geo) {
+		geo.visible = false;
+		if(markers[geo.stat][geo.name]==null)arr=markers[geo.stat]; else arr=markers[geo.stat][geo.name];
+		for (var i = 0; i < arr.length; i++) {
+			//gmap
+			arr[i].setMap(null);
+		}		
+	}
+		
+	function getCircle(val, color) {
+		  return {
+		    //gmap
+			path: google.maps.SymbolPath.CIRCLE,
+		    fillColor: color,
+		    fillOpacity: 0.8,
+		    scale: val / Math.PI,
+		    strokeColor: 'white',
+		    strokeWeight: .5
+		  };
+		}	  
+
+  	function update(source) {
+
+		//met à jour le domain des couleurs
+  		if(source.min)colors["def"]= d3.scale.linear().domain([source.min, source.max]).range(["#00ff00", "#fe0000"]);		
+  	  		
+  	  // Calcule la disposition de l'arbre
+  	  var nodes = tree.nodes(root).reverse();
+  	
+  	  // Fixe la profondeur de l'arbre
+  	  nodes.forEach(function(d) { d.y = d.depth * 180; });
+  	
+  	  // Met à jour les noeuds
+  	  var node = vis.selectAll("g.node")
+  	      .data(nodes, function(d) { return d.id || (d.id = ++i); });
+  	
+  	  // Entre les nouveaux noeuds et la position antérieure du parent
+  	  var nodeEnter = node.enter().append("g")
+  	      .attr("class", "node")
+  	      .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+  	      .on("click", click);
+  	
+		nodeEnter.append("circle")
+			.attr("r", 1e-6)
+  	      	.style("stroke", function(d) {return d.visible ? "#fff" : "black";})
+  	      	.style("fill", function(d) {return diagColor(d);});
+  	
+  	  nodeEnter.append("text")
+  	      .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+  	      .attr("dy", ".35em")
+  	      .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+  	    .text(function(d) {
+  	        if(d.nb)return d.name + " = " + d.nb;
+  			else return d.name;
+  	    	})
+		.style("fill", function(d) {
+				return diagColor(d);
+			});
+  	
+  	  // Noeud de transition à la nouvelle position
+  	  var nodeUpdate = node.transition()
+  	      .duration(duration)
+  	      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+  	
+  	  nodeUpdate.select("circle")
+		.attr("r", 4.5)
+		.style("stroke", function(d) {return d.visible ? "#fff" : "black";})
+  	    .style("fill", function(d) { return diagColor(d); });
+  	
+  	  nodeUpdate.select("text")
+  	      .style("fill-opacity", 1);
+  	
+  	  // Transition sortante des noeuds à la nouvelle position du parent
+  	  var nodeExit = node.exit().transition()
+  	      .duration(duration)
+  	      .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+  	      .remove();
+  	
+  	  nodeExit.select("circle")
+  	      .attr("r", 1e-6);
+  	
+  	  nodeExit.select("text")
+  	      .style("fill-opacity", 1e-6);
+  	
+  	  // Met à jour les liens
+  	  var link = vis.selectAll("path.link")
+  	      .data(tree.links(nodes), function(d) { return d.target.id; });
+  	
+  	  // Entre les nouveaux liens à la position antérieure du parent
+  	  link.enter().insert("path", "g")
+  	      .attr("class", "link")
+  	      .attr("d", function(d) {
+  	        var o = {x: source.x0, y: source.y0};
+  	        return diagonal({source: o, target: o});
+  	      });
+  	
+  	  // Lien de transition vers les nouvelles positions
+  	  link.transition()
+  	      .duration(duration)
+  	      .attr("d", diagonal);
+  	
+  	  // Transition sortant des noeuds à la nouvelle position du parent
+  	  link.exit().transition()
+  	      .duration(duration)
+  	      .attr("d", function(d) {
+  	        var o = {x: source.x, y: source.y};
+  	        return diagonal({source: o, target: o});
+  	      })
+  	      .remove();
+  	
+  	  // Anciennes positions de transition
+  	  nodes.forEach(function(d) {
+  	    d.x0 = d.x;
+  	    d.y0 = d.y;
+  	  });
+  	}
+
+  	function diagColor(d){
+		if(!d.nb) return "#fff";
+  		var c;
+  		if(colors[d.stat]!=null)
+			c = colors[d.stat](d.nb);
+  		else
+			c = colors["def"](d.nb);
+  	    return c; 
+  	}
+  	
+  	// Bascule les enfants selon le clic
+  	function click(d) {
+  	  if (d.children) {
+   	    //masque les markers
+   	    if(d.stat){
+			d.children.forEach(function(geo) {
+	  			clearMarkers(geo);
+	   		});
+   	    }
+  	    d._children = d.children;
+  	    d.children = null;
+  	  } else {
+  	    d.children = d._children;
+  	    d._children = null;
+  	    //affiche les markers
+  	    if(d.stat){
+	  	    if(d.geos){
+				if(d.visible)clearMarkers(d);
+				else showMarkers(d);
+	  	    }else{
+				d.children.forEach(function(geo) {
+					showMarkers(geo);
+		  		});
+	  	    }
+  	    }
+	  }
+  	  update(d);
+  	}    
+
+  	
+  	</script>
+	
+    <style type="text/css">
+		.node circle {
+		  cursor: pointer;
+		  stroke-width: 2px;
+		}
+		
+		.node text {
+		  font: 10px sans-serif;
+		}
+		
+		path.link {
+		  fill: none;
+		  stroke: #ccc;
+		  stroke-width: 1.5px;
+		}
+		#chart_svg {
+		  float:left; 
+		  padding:10px;
+		}
+		#map_canvas {
+		  height: 700px; 
+		  width: 600px; 
+		}
+		body {
+			background-color:#383B71;
+		}
+
+    </style>
+	
+  </head>
+
+  <body onload="initialize()" >
+    <div id="chart_svg" ></div>
+    <div id="map_canvas" ></div>
+  </body>
+</html>
