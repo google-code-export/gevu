@@ -11,6 +11,7 @@
 			   >
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
@@ -26,10 +27,16 @@
 			[Bindable] public var dataGeo:Object;
 			
 			[Bindable] public var dataStat:Object;
+			[Bindable] public var bbItems:ArrayCollection;
 
 			public var idLieu:int=-1;
-			public var idBase:String = "gevu_alceane";
-			public var urlDomaine:String = "http://krys.alceane.lan/gevu/";
+			public var nivLieu:int=0;
+			public var idBase:String = "gevu_new";
+			public var urlDomaine:String = "http://localhost/gevu/";
+			[Bindable] public var idAntenne:int=-1; 
+			[Bindable] public var idGroupe:int=-1; 
+			[Bindable] public var idBat:int=-1; 
+			[Bindable] public var idLog:int=-1; 
 
 			private var TreeObject:XML;
 			private var xmlTree:XML
@@ -123,6 +130,14 @@
 				
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
+				bbItems = new ArrayCollection;
+				bbItems.addItem(['SERVICES','MÉDIAS','DONNÉES GÉNÉRALES','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ']);
+				bbItems.addItem(['SERVICES','MÉDIAS','DONNÉES GÉNÉRALES','ENJEUX PSP','ERP','ACCESSIBILITÉ']);
+				bbItems.addItem(['SERVICES','MÉDIAS','DONNÉES GÉNÉRALES','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ']);
+				bbItems.addItem(['MÉDIAS','DONNÉES GÉNÉRALES','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ','RÉNOV. - TRAVAUX','PLANS','PRESTATAIRES','CARNET IMMOPEP']);
+				bbItems.addItem(['MÉDIAS','DONNÉES GÉNÉRALES','DIAGNOSTICS','ACCESSIBILITÉ','PLANS','CARNET IMMOPEP']);
+
+				bbMain.dataProvider = new ArrayCollection(bbItems[0]);  
 				treeAntenneInit();
 				idLieu = 1;
 				roDiag.getNodeRelatedData(idLieu, idExi, idBase);
@@ -221,7 +236,7 @@
 				if (event.item.node.attribute("fake")==1)
 				{
 					var i:int = event.item.attribute("idLieu");
-					//roAlceane.getXmlNode(i, idBase);
+					roAlceane.getXmlNode(i, idBase);
 				}
 			}
 			private function treeItemClicked(event:ListEvent) : void {
@@ -232,6 +247,18 @@
 					roDiag.getNodeRelatedData(idLieu, idExi, idBase);
 					lstAriane.dataProvider =  null;
 				}
+				//affiche les onglets suivant le niveau
+				nivLieu = i.attribute("niv");
+				//corrige le niveau du logement
+				if(nivLieu == 1)idAntenne = idLieu;
+				if(nivLieu == 2)idGroupe = idLieu;
+				if(nivLieu == 3)idBat = idLieu;
+				if(nivLieu > 4){
+					nivLieu = 4;
+					idLog = idLieu;
+				}
+				bbMain.dataProvider = new ArrayCollection(bbItems[nivLieu]);  
+				
 			}			
 		
 			protected function bbMain_changeHandler(event:IndexChangeEvent):void
@@ -242,10 +269,14 @@
 				<s:State name="DonGen"/>
 				<s:State name="Diag"/>
 				<s:State name="Access"/>
+				(nivLieu==0 || nivLieu==1) && 
 				*/
 				if(event.newIndex==0)this.currentState = "carte";
 				if(event.newIndex==1)this.currentState = "medias";
-				if(event.newIndex==2)this.currentState = "DonGen";
+				if(event.newIndex==2){
+					this.currentState = "DonGen"+nivLieu;
+					if(nivLieu==1)dgAntenne.init();
+				}
 				if(event.newIndex==3)this.currentState = "PSP";
 				if(event.newIndex==4)this.currentState = "Diag";
 				if(event.newIndex==5)this.currentState = "Access";
@@ -274,14 +305,7 @@
 			<s:method name="getNodeRelatedData"	result="displayNodeProperties(event);" />
 			<s:method name="findLieu"			result="displayReponse(event);" />
 		</s:RemoteObject>
-		<mx:ArrayCollection id="bbItems">
-			<fx:String>CARTE</fx:String> 
-			<fx:String>M&#201;DIAS</fx:String> 
-			<fx:String>DONN&#201;ES G&#201;N&#201;RALES</fx:String> 
-			<fx:String>ENJEUX PSP</fx:String> 
-			<fx:String>DIAGNOSTICS</fx:String> 
-			<fx:String>ACCESSIBILIT&#201;</fx:String> 
-		</mx:ArrayCollection>
+		
 	</fx:Declarations>
 	<fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";
@@ -356,7 +380,8 @@
 		<s:State name="carte"/>
 		<s:State name="medias"/>
 		<s:State name="PSP"/>
-		<s:State name="DonGen"/>
+		<s:State name="DonGen0"/>
+		<s:State name="DonGen1"/>
 		<s:State name="Diag"/>
 		<s:State name="Access"/>
 	</s:states>	
@@ -470,7 +495,7 @@
 						change="bbMain_changeHandler(event)"
 						skinClass="skin.bbAlceane"
 						requireSelection="true" 
-						width="100%" dataProvider="{bbItems}" />
+						width="100%" />
 				</s:HGroup>
 				<s:VGroup id="gMain" paddingTop="-40" height="100%" width="100%" paddingBottom="6" paddingLeft="6" paddingRight="6" >
 					<s:Group width="100%" >
@@ -487,7 +512,8 @@
 						</s:HGroup>
 					</s:Group>
 					<gevu:cnvIFCarto includeIn="carte"  id="cartoIF" rsCarto="{dataGeo}" />
-					<alceane:grpDonGenPatrimoine includeIn="DonGen" width="100%" height="100%" />
+					<alceane:grpDonGenPatrimoine includeIn="DonGen0" width="100%" height="100%" />
+					<alceane:grpDonGenAntenne id="dgAntenne" includeIn="DonGen1" idAntenne="{idAntenne}" width="100%" height="100%" />
 					<stat:cnvStatDiag includeIn="Access" id="stat" rsEtatDiag="{dataStat}" />
 					<alceane:grpDiagPatrimoine  includeIn="Diag" width="100%" height="100%" />
 				</s:VGroup>
