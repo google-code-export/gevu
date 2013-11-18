@@ -28,8 +28,8 @@
 			[Bindable] public var dataStat:Object;
 
 			public var idLieu:int=-1;
-			public var idBase:String = "gevu_new";
-			public var urlDomaine:String = "http://localhost/gevu/";
+			public var idBase:String = "gevu_alceane";
+			public var urlDomaine:String = "http://krys.alceane.lan/gevu/";
 
 			private var TreeObject:XML;
 			private var xmlTree:XML
@@ -221,7 +221,7 @@
 				if (event.item.node.attribute("fake")==1)
 				{
 					var i:int = event.item.attribute("idLieu");
-					roAlceane.getXmlNode(i, idBase);
+					//roAlceane.getXmlNode(i, idBase);
 				}
 			}
 			private function treeItemClicked(event:ListEvent) : void {
