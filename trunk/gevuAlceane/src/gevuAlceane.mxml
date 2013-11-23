@@ -31,7 +31,7 @@
 
 			public var idLieu:int=-1;
 			public var nivLieu:int=0;
-			public var idBase:String = "gevu_new";
+			public var idBase:String = "gevu_alceane";
 			public var urlDomaine:String = "http://localhost/gevu/";
 			[Bindable] public var idAntenne:int=-1; 
 			[Bindable] public var idGroupe:int=-1; 
@@ -134,7 +134,7 @@
 				bbItems.addItem(['SERVICES','MÉDIAS','DONNÉES GÉNÉRALES','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ']);
 				bbItems.addItem(['SERVICES','MÉDIAS','DONNÉES GÉNÉRALES','ENJEUX PSP','ERP','ACCESSIBILITÉ']);
 				bbItems.addItem(['SERVICES','MÉDIAS','DONNÉES GÉNÉRALES','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ']);
-				bbItems.addItem(['MÉDIAS','DONNÉES GÉNÉRALES','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ','RÉNOV. - TRAVAUX','PLANS','PRESTATAIRES','CARNET IMMOPEP']);
+				bbItems.addItem(['MÉDIAS','DONNÉES GÉNÉRALES','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ','TRAVAUX','PLANS','CARNET IMMOPEP']);
 				bbItems.addItem(['MÉDIAS','DONNÉES GÉNÉRALES','DIAGNOSTICS','ACCESSIBILITÉ','PLANS','CARNET IMMOPEP']);
 
 				bbMain.dataProvider = new ArrayCollection(bbItems[0]);  
@@ -233,6 +233,7 @@
 				
 			}
 			private function treeItemOpened(event:TreeEvent) : void {
+				return;
 				if (event.item.node.attribute("fake")==1)
 				{
 					var i:int = event.item.attribute("idLieu");
@@ -272,13 +273,29 @@
 				(nivLieu==0 || nivLieu==1) && 
 				*/
 				if(event.newIndex==0)this.currentState = "carte";
-				if(event.newIndex==1)this.currentState = "medias";
+				if(event.newIndex==1){
+					if(nivLieu==3){
+						this.currentState = "DonGen"+nivLieu;
+						dgBat.init(dataNode);
+					}else{
+						this.currentState = "medias";
+					}
+				}
 				if(event.newIndex==2){
 					this.currentState = "DonGen"+nivLieu;
 					if(nivLieu==1)dgAntenne.init();
+					if(nivLieu==2)dgGroupe.init(dataNode);
 				}
-				if(event.newIndex==3)this.currentState = "PSP";
-				if(event.newIndex==4)this.currentState = "Diag";
+				if(event.newIndex==3){
+					if(nivLieu==3){
+						this.currentState = "Diag"+nivLieu;
+					}else{
+						this.currentState = "PSP";
+					}
+				}
+				if(event.newIndex==4){
+					this.currentState = "Diag"+nivLieu;
+				}
 				if(event.newIndex==5)this.currentState = "Access";
 			}
 			
@@ -350,11 +367,21 @@
 			fontSize: 24pt;
 			color: white;
 		}
+		.titreBlocBlack {
+			fontFamily:ITC;
+			fontSize: 18pt;
+			color: black;
+		}
 		.stitreBlocB {
 			fontFamily:ITC;
 			fontWeight: bold;
 			fontSize: 14pt;
 			color: black;
+		}
+		.stitreBlocW {
+			fontFamily:ITC;
+			fontSize: 14pt;
+			color: white;
 		}
 		.stitreBloc {
 			fontFamily:ITC;
@@ -382,7 +409,10 @@
 		<s:State name="PSP"/>
 		<s:State name="DonGen0"/>
 		<s:State name="DonGen1"/>
-		<s:State name="Diag"/>
+		<s:State name="DonGen2"/>
+		<s:State name="DonGen3"/>
+		<s:State name="Diag0"/>
+		<s:State name="Diag3"/>
 		<s:State name="Access"/>
 	</s:states>	
 	
@@ -514,8 +544,11 @@
 					<gevu:cnvIFCarto includeIn="carte"  id="cartoIF" rsCarto="{dataGeo}" />
 					<alceane:grpDonGenPatrimoine includeIn="DonGen0" width="100%" height="100%" />
 					<alceane:grpDonGenAntenne id="dgAntenne" includeIn="DonGen1" idAntenne="{idAntenne}" width="100%" height="100%" />
+					<alceane:grpDonGenGroupe id="dgGroupe" includeIn="DonGen2" width="100%" height="100%" />
+					<alceane:grpDonGenBat id="dgBat" includeIn="DonGen3" width="100%" height="100%" />
 					<stat:cnvStatDiag includeIn="Access" id="stat" rsEtatDiag="{dataStat}" />
-					<alceane:grpDiagPatrimoine  includeIn="Diag" width="100%" height="100%" />
+					<alceane:grpDiagPatrimoine  includeIn="Diag0" width="100%" height="100%" />
+					<alceane:grpDiagBat  includeIn="Diag3" width="100%" height="100%" />
 				</s:VGroup>
 			</s:VGroup>
 		</s:HGroup>
