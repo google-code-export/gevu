@@ -44,10 +44,30 @@
 				<s:HGroup height="100%" width="100%">
 					<s:VGroup width="100%" >
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Bâtiment :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+							<s:Label text="Nb de Bâtiments :" styleName="stitreBlocB"/><s:Label text="collectif"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Année de construction :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Nb de Bâtiments en copropriété :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Nb de pavillons :" styleName="stitreBlocB"/><s:Label text="1927"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Nb de foyers :" styleName="stitreBlocB"/><s:Label text="1927"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Nb de commerces :" styleName="stitreBlocB"/><s:Label text="1927"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Nb d'association :" styleName="stitreBlocB"/><s:Label text="1927"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Nb de garage et places de stationnement :" styleName="stitreBlocB"/><s:Label text="1927"/>
+						</s:HGroup>
+					</s:VGroup>
+					<s:VGroup width="100%" >
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Référence cadastrale :" styleName="stitreBlocB"/><s:Label text="1927"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
 							<s:Label text="Surface Shon :" styleName="stitreBlocB"/><s:Label text="1927"/>
@@ -57,9 +77,6 @@
 						</s:HGroup>
 					</s:VGroup>
 					<s:VGroup width="100%" >
-						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Nb de logement :" styleName="stitreBlocB"/><s:Label text="collectif"/>
-						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
 							<s:Label text="PLUS :" styleName="stitreBlocB"/><s:Label text="1927"/>
 						</s:HGroup>
@@ -76,11 +93,125 @@
 							<s:Label text="PLS :" styleName="stitreBlocB"/><s:Label text="1927"/>
 						</s:HGroup>
 					</s:VGroup>
-					<s:VGroup width="100%" horizontalAlign="center" >
-						<s:Label text="GARDIENNE" styleName="stitreBlocB"/>
-						<s:Image source="http://localhost/generateur/flex/src/images/logo-gen128.png" />
-						<s:Label text="Mme Lucky"/>
-						<s:Label text="TEL 02 45 32 98"/>
+				</s:HGroup>
+				<s:Label styleName="titreBlocBlack" text="VACANCES LOCATIVES"/>
+				<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
+					<s:stroke>
+						<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
+					</s:stroke>
+				</s:Line>
+				<s:HGroup height="100%" width="100%">
+					<s:VGroup width="100%" >
+						<s:Group height="26" width="100%" >
+							<s:Rect height="100%" width="100%" >
+								<s:fill><s:SolidColor color="#383B71" /></s:fill>
+							</s:Rect>
+							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
+								<s:Label styleName="stitreBlocW" text="Logements"/>
+							</s:VGroup>				
+						</s:Group>
+					</s:VGroup>
+					<s:VGroup width="100%" >
+						<s:Group height="26" width="100%" >
+							<s:Rect height="100%" width="100%" >
+								<s:fill><s:SolidColor color="#383B71" /></s:fill>
+							</s:Rect>
+							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
+								<s:Label styleName="stitreBlocW" text="Commerces"/>
+							</s:VGroup>				
+						</s:Group>
+						<!--
+						<mx:PieChart id="graphVacLocCom"
+									 dataProvider=""
+									 showDataTips="true"
+									 height="100" width="100"
+									 color="black"
+									 >
+							<mx:series>
+								<mx:PieSeries
+									selectable="true"
+									field="value"
+									nameField="label"
+									labelPosition="inside"
+									/>
+							</mx:series>
+						</mx:PieChart>
+						-->
+					</s:VGroup>
+					<s:VGroup width="100%" >
+						<s:Group height="26" width="100%" >
+							<s:Rect height="100%" width="100%" >
+								<s:fill><s:SolidColor color="#383B71" /></s:fill>
+							</s:Rect>
+							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
+								<s:Label styleName="stitreBlocW" text="Garages"/>
+							</s:VGroup>				
+						</s:Group>
+					</s:VGroup>
+				</s:HGroup>				
+				<s:Label styleName="titreBlocBlack" text="PRESTATAIRES ENTRETIEN"/>
+				<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
+					<s:stroke>
+						<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
+					</s:stroke>
+				</s:Line>
+				<s:HGroup height="100%" width="100%">
+					<s:VGroup width="100%" >
+						<s:Group height="26" width="100%" >
+							<s:Rect height="100%" width="100%" >
+								<s:fill><s:SolidColor color="#383B71" /></s:fill>
+							</s:Rect>
+							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
+								<s:Label styleName="stitreBlocW" text="Espaces verts"/>
+							</s:VGroup>				
+						</s:Group>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Nom :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Téléphone :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Adresse :" styleName="stitreBlocB"/><s:Label text="1927"/>
+						</s:HGroup>
+					</s:VGroup>
+					<s:VGroup width="100%" >
+						<s:Group height="26" width="100%" >
+							<s:Rect height="100%" width="100%" >
+								<s:fill><s:SolidColor color="#383B71" /></s:fill>
+							</s:Rect>
+							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
+								<s:Label styleName="stitreBlocW" text="Nettoyage"/>
+							</s:VGroup>				
+						</s:Group>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Nom :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Téléphone :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Adresse :" styleName="stitreBlocB"/><s:Label text="1927"/>
+						</s:HGroup>
+					</s:VGroup>
+					<s:VGroup width="100%" >
+						<s:Group height="26" width="100%" >
+							<s:Rect height="100%" width="100%" >
+								<s:fill><s:SolidColor color="#383B71" /></s:fill>
+							</s:Rect>
+							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
+								<s:Label styleName="stitreBlocW" text="Générateur gaz et robinetterie"/>
+							</s:VGroup>				
+						</s:Group>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Nom :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Téléphone :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+						</s:HGroup>
+						<s:HGroup verticalAlign="bottom">
+							<s:Label text="Adresse :" styleName="stitreBlocB"/><s:Label text="1927"/>
+						</s:HGroup>
 					</s:VGroup>
 				</s:HGroup>
 			</s:VGroup>
