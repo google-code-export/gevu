@@ -387,252 +387,39 @@ class GEVU_Statistique extends GEVU_Site{
     		//connexion à la base
     		$db = $this->getDb($idBase);
     		
-        	//récupère les données Nb de bâtiments d'habitation
-    		$sql = "SELECT COUNT(*) nbLog
-					, s.Logement_Individuel
-					, COUNT(DISTINCT s.code_batiment)
-				FROM gevu_stats s 
-				WHERE Categorie_Module = 'L'
-				GROUP BY s.Logement_Individuel";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$nbLogCol = $arr[0]['nbLog'];
-	    	$nbLogInd = $arr[1]['nbLog'];
-	    	/*
-	    	$r = array(
-						array("name"=>'Collectif',"nb"=>$arr[0]['nbBat'])
-						,array("name"=>'Individuel',"nb"=>$arr[1]['nbBat'])
-						);
-			$rStat[] = array("name"=>"Nb de bâtiments d'habitation","nb"=>($arr[0]['nbBat']+$arr[1]['nbBat']),"children"=>$r);
-			*/			
-        	//récupère les données Nb de Foyer
-    		$sql = "SELECT COUNT(*)
-					, COUNT(DISTINCT s.code_batiment) nbBat
-				FROM gevu_stats s 
-				WHERE s.Categorie_Module = 'F'";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$geos = $this->getGeoStat($db, "Categorie_Module", "F");
-	    	$rStat[] = array("name"=>"Nb de foyers","visible"=>true, "stat"=>"NbFoyers", "nb"=>$arr[0]['nbBat'],"geos"=>$geos);			
-        	//récupère les données Nb de Commerce
-    		$sql = "SELECT COUNT(*)
-					, COUNT(DISTINCT s.code_batiment) nbBat
-				FROM gevu_stats s 
-				WHERE s.Categorie_Module = 'C'";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$geos = $this->getGeoStat($db, "Categorie_Module", "C");
-	    	$rStat[] = array("name"=>"Nb de commerces","visible"=>true, "stat"=>"NbCommerce","nb"=>$arr[0]['nbBat'],"geos"=>$geos);			
-        	//récupère les données Nb d'associations
-    		$sql = "SELECT COUNT(*)
-					, COUNT(DISTINCT s.code_batiment) nbBat
-				FROM gevu_stats s 
-				WHERE s.Categorie_Module = 'A'";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$geos = $this->getGeoStat($db, "Categorie_Module", "A");
-	    	$rStat[] = array("name"=>"Nb d'associations","visible"=>true, "stat"=>"NbAssos","nb"=>$arr[0]['nbBat'],"geos"=>$geos);			
-        	//récupère les données Nb de RPA
-    		$sql = "SELECT COUNT(*)
-					, COUNT(DISTINCT s.code_batiment) nbBat
-				FROM gevu_stats s 
-				WHERE s.Categorie_Module = 'F'";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$geos = $this->getGeoStat($db, "Categorie_Module", "F");
-	    	$rStat[] = array("name"=>"Nb de RPA","visible"=>true, "stat"=>"NbRPA","nb"=>$arr[0]['nbBat'],"geos"=>$geos);			
-			
-	    	//récupère les données Nb de bâtiments en copropriété
-    		$sql = "SELECT COUNT(*) nbLog
-					, COUNT(DISTINCT s.code_batiment) nbBat
-				FROM gevu_stats s 
-				WHERE s.Copropriete != ''";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$nbLogCopro = $arr[0]['nbLog'];
-	    	$geos = $this->getGeoStat($db, "Copropriete", "non vide");
-	    	$rStat[] = array("name"=>"Nb de bâtiments en copropriété","visible"=>true, "stat"=>"NbCopro","nb"=>$arr[0]['nbBat'],"geos"=>$geos);			
-
-	    	/*récupère les données Nb de bâtiments administratifs
-    		$sql = "SELECT COUNT(*)
-					, s.Categorie_Module
-					, COUNT(DISTINCT s.code_batiment) nbBat
-				FROM gevu_stats s 
-				WHERE s.Categorie_Module = 'A'";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-			$rStat[] = array("name"=>"Nb de bâtiments administratifs","nb"=>$arr[0]['nbBat']);			
-        	*/
-        	/*récupère les données Nb de locaux d'activité
-    		$sql = "SELECT COUNT(*)
-					, s.Categorie_Module
-					, COUNT(DISTINCT s.code_batiment) nbBat
-				FROM gevu_stats s 
-				WHERE s.Categorie_Module = 'M'";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-			$rStat[] = array("name"=>"Nb de locaux administatifs","nb"=>$arr[0]['nbBat']);
-			*/
-        	/*récupère les données Nb de Hall d'entrée
-    		$sql = "SELECT SUM(sHall.nbHallBat) nbHall
-				FROM (
-					SELECT COUNT(*)
-						, s.code_batiment
-						, COUNT(DISTINCT Code_Escalier) nbHallBat
-					FROM gevu_stats s 
-					WHERE Categorie_Module = 'L'
-					GROUP BY s.code_batiment) sHall";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-			$rStat[] = array("name"=>"Nb de Hall d'entrée","nb"=>$arr[0]['nbBat']);			
-			*/
-        	//récupère les données Nb de pavillon
-    		$sql = "SELECT SUM(sPav.nbBat) nbPav
-				FROM (SELECT COUNT(*)
-						, s.Type_Logement
-						, COUNT(DISTINCT s.code_batiment) nbBat
-					FROM gevu_stats s 
-					WHERE s.Type_Logement LIKE 'P%'
-					GROUP BY s.code_batiment) sPav";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$geos = $this->getGeoStat($db, "Type_Logement", "P%", "LIKE");
-			$rStat[] = array("name"=>"Nb de pavillon","visible"=>true, "stat"=>"NbPav","nb"=>$arr[0]['nbPav'],"geos"=>$geos);			
-	    	
+    		$rStat[] = $this->batNbType("Nb de foyers", "Categorie_Module", "F");
+    		$rStat[] = $this->batNbType("Nb de commerces", "Categorie_Module", "C");
+    		$rStat[] = $this->batNbType("Nb d'associations", "Categorie_Module", "A");
+    		$rStat[] = $this->batNbType("Nb RPA", "Categorie_Module", "R");
+    		$rStat[] = $this->batNbType("Nb de bât. en copropriété", "Copropriete", "non vide");
+    		$rStat[] = $this->batNbType("Nb de pavillon", "Type_Logement", "P%", "LIKE");
+    		
 			//rassemble les stats pour les bâtiments
 			$rs[] = array("name"=>"Nombres de bâtiments","visible"=>true, "children"=>$rStat);
         	
 			//traitement des stats logement
 			$rStat = "";
-			//récupère les données Nb de logement collectif et individuel
-			$rStat[] = array("name"=>"Collectifs","visible"=>true, "nb"=>$nbLogCol);
-			$rStat[] = array("name"=>"Individuels","visible"=>true, "nb"=>$nbLogInd);
-			//récupère les données Réservataires
-			//$rStat[] = array("name"=>"Réservataires","nb"=>0);
-			//récupère les données En commercialisation
-			//$rStat[] = array("name"=>"En commercialisation (co-propriété)","nb"=>$nbLogCopro);
-        	//récupère les données Nb de logement ZUS
-    		$sql = "SELECT COUNT(*) nbLog
-				FROM gevu_stats s 
-				WHERE s.Indicateur_Zus = '2'";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-			$rStat[] = array("name"=>"Nb de logement ZUS", "stat"=>"NbZus","nb"=>$arr[0]['nbLog']);			
-        	//récupère les données Répartition des logements par typologie
-    		$sql = "SELECT COUNT(*) nbLog, s.Type_Logement
-				FROM gevu_stats s 
-				WHERE Categorie_Module = 'L'
-				GROUP BY s.Type_Logement
-				ORDER BY s.Type_Logement";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$rType="";
-	    	$min=$arr[0]["nbLog"];
-	    	$max=$min;
-	    	foreach ($arr as $type) {
-	    		$geos = $this->getGeoStat($db, "Type_Logement", $type["Type_Logement"]);
-	    		if($min > $type["nbLog"])$min = $type["nbLog"];
-	    		if($max < $type["nbLog"])$max = $type["nbLog"];
-				$rType[] = array("name"=>$type["Type_Logement"], "stat"=>"typo","nb"=>$type["nbLog"],"geos"=>$geos);			
-	    	}
-			$rStat[] = array("name"=>"Répartition des logements par typologie", "min"=>$min, "max"=>$max,"visible"=>true, "stat"=>"typo","children"=>$rType);			
-			//rassemble les stats pour les logements				
-        	$rs[] = array("name"=>"Nombres de logements","visible"=>true,"children"=>$rStat);
-
-			//traitement des stats stationnement
-			$rStat = "";
-        	//récupère les données par type de stationnement
-    		$sql = "SELECT COUNT(*) nbLog, s.Contrat
-				FROM gevu_stats s 
-				WHERE s.Type_Logement IN ('GA','GD','GP','TO') AND s.Contrat != ''
-				GROUP BY s.Contrat
-				ORDER BY s.Contrat";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$rType="";
-	    	$min=$arr[0]["nbLog"];
-	    	$max=$min;
-	    	foreach ($arr as $type) {
-	    		$geos = $this->getGeoStat($db, "Type_Logement", "'GA','GD','GP','TO'", "IN");	    		
-	    		$rType[] = array("name"=>$type["Contrat"], "stat"=>"statio","nb"=>$type["nbLog"]);			
-	    		if($min > $type["nbLog"])$min = $type["nbLog"];
-	    		if($max < $type["nbLog"])$max = $type["nbLog"];
-	    	}
-	    	//rassemble les stats pour les stationnement					    	
-        	$rs[] = array("name"=>"Nombres de stationnement", "min"=>$min, "max"=>$max,"visible"=>true,"stat"=>"statio","children"=>$rType);
-
+			//récupère les données Nb de logement collectif et individuel, ZUS
+    		$rStat[] = $this->logNbType("Nb de logement collectifs", array("Categorie_Module","Logement_Individuel"), array("L","C"));
+			$rStat[] = $this->logNbType("Nb de logement individuels", array("Categorie_Module","Logement_Individuel"), array("L","I"));
+    		$rStat[] = $this->logNbType("Nb de logement ZUS", "Indicateur_Zus", "2");
+			$rs[] = array("name"=>"Nombres de logements","visible"=>true, "children"=>$rStat);
+    		
+    		//récupère la typologie des logement
+    		$rs[] = $this->typeLogement();
+    		
+    		//traitement des stats stationnement
+    		$rs[] = $this->typeSationnement();
+    		
 			//traitement des stats Vacances locatives
-			$rStat = "";
-        	//récupère les données Nb de vacance
-    		$sql = "SELECT COUNT(*) nbLog, s.Categorie_Module, s.Occupation
-				FROM gevu_stats s 
-				WHERE s.Categorie_Module IN ('L','G','C')
-				GROUP BY s.Categorie_Module, s.Occupation
-				ORDER BY s.Categorie_Module, s.Occupation";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$geos[] = $this->getGeoStat($db, array("Categorie_Module", "Occupation"), array("L", "Occupé"));	    		
-	    	$geos[] = $this->getGeoStat($db, array("Categorie_Module", "Occupation"), array("L", "Vacant"));	    		
-	    	$geos[] = $this->getGeoStat($db, array("Categorie_Module", "Occupation"), array("G", "Occupé"));	    		
-	    	$geos[] = $this->getGeoStat($db, array("Categorie_Module", "Occupation"), array("G", "Vacant"));	    		
-	    	$geos[] = $this->getGeoStat($db, array("Categorie_Module", "Occupation"), array("C", "Occupé"));	    		
-	    	$geos[] = $this->getGeoStat($db, array("Categorie_Module", "Occupation"), array("C", "Vacant"));	    		
-	    	$rStat[] = array("name"=>"Logements","stat"=>"vacLog","visible"=>true
-				,"children"=>array(
-					array("name"=>$arr[4]["Occupation"],"stat"=>"vacLog","nb"=>$arr[4]["nbLog"],"geos"=>$geos[0])
-					,array("name"=>$arr[5]["Occupation"],"stat"=>"vacLog","nb"=>$arr[5]["nbLog"],"geos"=>$geos[1])
-					));			
-			$rStat[] = array("name"=>"Garages","stat"=>"vacGar","visible"=>true
-				,"children"=>array(
-					array("name"=>$arr[2]["Occupation"],"stat"=>"vacGar","nb"=>$arr[2]["nbLog"],"geos"=>$geos[2])
-					,array("name"=>$arr[3]["Occupation"],"stat"=>"vacGar","nb"=>$arr[3]["nbLog"],"geos"=>$geos[3])
-					));			
-			$rStat[] = array("name"=>"Commerces","stat"=>"vacCom","visible"=>true
-				,"children"=>array(
-					array("name"=>$arr[0]["Occupation"],"stat"=>"vacCom","nb"=>$arr[0]["nbLog"],"geos"=>$geos[4])
-					,array("name"=>$arr[1]["Occupation"],"stat"=>"vacCom","nb"=>$arr[1]["nbLog"],"geos"=>$geos[5])
-					));								
-        	$rs[] = array("name"=>"Vacances locatives","visible"=>true,"children"=>$rStat);
+    		$rs[] = $this->typeVacances();
         	
 			//traitement des stats Répartition par type de financement
-			$rStat = "";
-        	//récupère les données de type de financement
-    		$sql = "SELECT COUNT(*) nbLog, s.Type_financement
-				FROM gevu_stats s 
-				WHERE s.Type_financement != ''
-				GROUP BY s.Type_financement
-				ORDER BY s.Type_financement";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$min=$arr[0]["nbLog"];
-	    	$max=$min;
-	    	foreach ($arr as $type) {
-	    		$geos = $this->getGeoStat($db, "Type_financement", $type["Type_financement"]);
-				$rStat[] = array("name"=>$type["Type_financement"],"stat"=>"finance","nb"=>$type["nbLog"],"geos"=>$geos);			
-	    		if($min > $type["nbLog"])$min = $type["nbLog"];
-	    		if($max < $type["nbLog"])$max = $type["nbLog"];
-	    	}
-        	$rs[] = array("name"=>"Répartition par type de financement", "min"=>$min, "max"=>$max,"visible"=>true,"stat"=>"finance","children"=>$rStat);
+			$rs[] = $this->typeFinancement();
         	
 			//traitement des stats Répartition par age du patrimoine
-			$rStat = "";
-        	//récupère les données d'age du patrimoine
-    		$sql = "SELECT COUNT(*) nbLog, s.Annee_Construction, (YEAR(CURRENT_DATE()) - s.Annee_Construction) as age
-				FROM gevu_stats s 
-				WHERE s.Annee_Construction != ''
-				GROUP BY s.Annee_Construction";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$min=$arr[0]["nbLog"];
-	    	$max=$min;
-	    	foreach ($arr as $type) {
-	    		$geos = $this->getGeoStat($db, "Annee_Construction", $type["Annee_Construction"]);
-				$rStat[] = array("name"=>$type["age"],"stat"=>"age","annee"=>$type["Annee_Construction"],"nb"=>$type["nbLog"],"geos"=>$geos);			
-	    		if($min > $type["nbLog"])$min = $type["nbLog"];
-	    		if($max < $type["nbLog"])$max = $type["nbLog"];
-	    	}
-        	$rs[] = array("name"=>"Répartition par âge", "min"=>$min, "max"=>$max,"visible"=>true,"stat"=>"age","children"=>$rStat);
-        	
+			$rs[] = $this->typeAge();
+			        	
     		//compilation du tableau total
 			$rs = array("name"=>"Patrimoine","children"=>$rs);        	
         	$this->cache->save($rs, $c);
