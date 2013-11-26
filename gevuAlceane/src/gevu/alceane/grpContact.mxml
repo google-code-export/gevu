@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:form="compo.form.*"
+		 width="100%" 
+		 creationComplete="creationCompleteHandler(event)"
+		 >
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+
+			[Bindable] public var idContact:int;
+			[Bindable] public var paramsLien:Array;
+			[Bindable] public var objLien:String;
+
+			private function fillHandler(e:Object):void
+			{
+				if(!e)return;
+				var arrData:Array = e.result as Array;
+				if(arrData.length>0){
+					var item:Object=arrData[0];
+					nomGardien.text=item.prenom+" "+item.nom;
+					telGardien.text=item.mobile;
+					/*
+					UpdFixe.text=item.fixe;
+					UpdFax.text=item.fax;
+					UpdMail.text=item.mail;
+					*/
+					if(item.civilite=="Mme")titre.text="GARDIENNE";
+				}				
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if(idContact)init();
+			}
+			
+			public function init():void{
+				ro.getContact(this.parentApplication.idBase,objLien,paramsLien);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<mx:RemoteObject id="ro"
+						 source="GEVU_Diagnostique" destination="zend" 
+						 showBusyCursor="true"
+						 fault="{this.parentApplication.faultHandlerService(event, 'Contact')}"			
+						 >
+			<mx:method name="getContact"  result="fillHandler(event)"/>
+		</mx:RemoteObject>		
+	</fx:Declarations>
+
+	<s:VGroup width="100%" horizontalAlign="center" >
+		<s:Label id="titre" text="GARDIEN" styleName="stitreBlocB"/>
+		<s:Image source="http://localhost/generateur/flex/src/images/logo-gen128.png" id="imgGardien" />
+		<s:Label text="" id="nomGardien"/>
+		<s:HGroup>
+			<s:Label text="TEL : " /><s:Label text="" id="telGardien"/>
+		</s:HGroup>
+	</s:VGroup>
+	
+</s:Group>
