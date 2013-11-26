@@ -78,6 +78,12 @@ class GEVU_Site{
 		}
 	}
 
+	/**
+	* fonction pour tracer l'éxécution du code
+	*
+    * @param string $message
+    * 
+    */
 	public function trace($message){
 		if($this->bTrace){
 			$temps_fin = microtime(true);
@@ -157,6 +163,14 @@ class GEVU_Site{
 		return $html;
 	}
     
+   /**
+     * transforme des pramètres en chaine de caractère
+     *
+     * @param array $params
+     * @param boolean $md5
+     *   
+     * @return string
+     */
 	function getParamString($params, $md5=false){
 		$s="";
 		foreach ($params as $k=>$v){
@@ -168,6 +182,13 @@ class GEVU_Site{
 		return $s;	
 	} 
 
+   /**
+     * transforme un XML en objet
+     *
+     * @param XML $dom
+     *   
+     * @return objet
+     */
 	function xmlToObject($dom) {
 		
 		// validation à partir de la DTD référencée dans le document.
@@ -195,6 +216,14 @@ class GEVU_Site{
 		return $object;
 	}
 	
+   /**
+     * transforme un élément XML en objet
+     *
+     * @param XML $dom_element
+     * @param XML $object_element
+     *   
+     * @return objet
+     */
 	function getDomElementToObject($dom_element, $object_element) {
 	
 		// récupération du nom de l'élément

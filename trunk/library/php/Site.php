@@ -10,7 +10,7 @@ class Site{
   public $infos;
   
   function __tostring() {
-    return "Cette classe permet de d�finir et manipuler un site.<br/>";
+    return "Cette classe permet de définir et manipuler un site.<br/>";
     }
 
   function __construct($sites, $id, $complet=true) {

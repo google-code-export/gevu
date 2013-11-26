@@ -43,7 +43,7 @@ class GEVU_Diagnostique extends GEVU_Site{
     	->from( array("t" => $table), array($params['type']))
     	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
     	->joinInner(array('c' => 'gevu_contacts'),
-    			't.'.$params['type'].' = c.id_contact',array('id_contact','nom','prenom','fixe','mobile','fax','mail'))
+    			't.'.$params['type'].' = c.id_contact',array('id_contact','nom','prenom','fixe','mobile','fax','mail','civilite'))
     			->where( "t.".$clef." = ?", $params['id']);
     
     	return $o->fetchAll($query)->toArray();
@@ -1194,10 +1194,11 @@ class GEVU_Diagnostique extends GEVU_Site{
      * @param int $idExi
      * @param string $idBase
      * @param int $idScenar
+     * @param int $stat
      * 
      * @return array
      */
-    public function getNodeRelatedData($idLieu, $idExi, $idBase=false, $idScenar=false){
+    public function getNodeRelatedData($idLieu, $idExi, $idBase=false, $idScenar=false, $stat=false){
     
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idExi."_".$idBase; 
 	   	$res = $this->cache->load($c);
@@ -1258,6 +1259,18 @@ class GEVU_Diagnostique extends GEVU_Site{
 	        if($idScenar){
 		        //ajoute les interventions
 		        $res["___interventions"] = $this->getTypeInterv($idScenar, $idLieu, $idBase);	
+	        }
+	        
+	        if($stat){
+	        	//ajoute les statistiques
+				$oStat = new GEVU_Statistique($idBase);
+				
+				if($stat==0) $arrStat = $oStat->getPatrimoineDonGen($idBase, $idLieu);
+				if($stat==1) $arrStat = $oStat->getAntenneDonGen($idBase, $idLieu);
+				if($stat==2) $arrStat = $oStat->getGroupeDonGen($idBase, $idLieu);
+				if($stat==3) $arrStat = $oStat->getBatimentDonGen($idBase, $idLieu);
+				
+				$res["___stats"] = $arrStat;	
 	        }
 	        	        
             $this->cache->save($res, $c);
