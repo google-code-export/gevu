@@ -7,8 +7,38 @@
 		 >
 	<fx:Script>
 		<![CDATA[
+			
+			[Bindable] public var dataStat:Object;
+			[Bindable] public var dataTypeFinance:Object;
+			[Bindable] public var dataVacanceLog:Object;
+			[Bindable] public var dataVacanceGar:Object;
+			[Bindable] public var dataVacanceCom:Object;
+			[Bindable] public var dataLog:Object;
+			
 			public function init(dataNode:Object):void{
 				lblTitre.text = dataNode.ariane[0].parLib+" ("+dataNode.Models_DbTable_Gevu_groupes[0].ref+")";
+
+				dataTypeFinance = dataNode.___stats.children[4].children;
+				dataVacanceLog = dataNode.___stats.children[3].children[0].children;
+				dataVacanceGar = dataNode.___stats.children[3].children[1].children;
+				dataVacanceCom = dataNode.___stats.children[3].children[2].children;
+				dataLog = dataNode.___stats.children[1].children;
+				
+				this.nbAssos.text = dataNode.___stats.children[0].children[2].nb;
+				this.nbCom.text = dataNode.___stats.children[0].children[1].nb;
+				this.nbCopro.text =  dataNode.___stats.children[0].children[4].nb;
+				this.nbFoyer.text = dataNode.___stats.children[0].children[0].nb;
+				this.nbPav.text = dataNode.___stats.children[0].children[5].nb;
+				this.nbGar.text = dataNode.___stats.children[2].max;
+
+				this.nbBat.text = dataNode.___stats.children[0].nb;
+				
+				
+				/* données liées à la parcelle
+				this.refCad = dataNode.___stats.children[4].children[2].children;
+				this.surface = dataNode.___stats.children[4].children[2].children;
+				this.shon = dataNode.___stats.children[4].children[2].children;
+				*/
 			}
 
 			
@@ -44,53 +74,92 @@
 				<s:HGroup height="100%" width="100%">
 					<s:VGroup width="100%" >
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Nb de Bâtiments :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+							<s:Label text="Nb de Bâtiments :" styleName="stitreBlocB"/><s:Label id="nbBat" text=""/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Nb de Bâtiments en copropriété :" styleName="stitreBlocB"/><s:Label text="collectif"/>
+							<s:Label text="Nb de Bâtiments en copropriété :" styleName="stitreBlocB"/><s:Label id="nbCopro" text=""/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Nb de pavillons :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Nb de pavillons :" styleName="stitreBlocB"/><s:Label id="nbPav" text=""/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Nb de foyers :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Nb de foyers :" styleName="stitreBlocB"/><s:Label id="nbFoyer" text=""/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Nb de commerces :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Nb de commerces :" styleName="stitreBlocB"/><s:Label id="nbCom" text=""/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Nb d'association :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Nb d'association :" styleName="stitreBlocB"/><s:Label id="nbAssos" text=""/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Nb de garage et places de stationnement :" styleName="stitreBlocB"/><s:Label text="1927"/>
-						</s:HGroup>
-					</s:VGroup>
-					<s:VGroup width="100%" >
-						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Référence cadastrale :" styleName="stitreBlocB"/><s:Label text="1927"/>
-						</s:HGroup>
-						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Surface Shon :" styleName="stitreBlocB"/><s:Label text="1927"/>
-						</s:HGroup>
-						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Surface parcelle :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Nb de garage et places de stationnement :" styleName="stitreBlocB"/><s:Label id="nbGar" text=""/>
 						</s:HGroup>
 					</s:VGroup>
 					<s:VGroup width="100%" >
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="PLUS :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Référence cadastrale :" styleName="stitreBlocB"/><s:Label id="refCad" text=""/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="PLUS CD :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Surface SHON :" styleName="stitreBlocB"/><s:Label id="shon" text=""/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="PLAI :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Surface parcelle :" styleName="stitreBlocB"/><s:Label id="surface" text=""/>
 						</s:HGroup>
-						<s:HGroup verticalAlign="bottom">
-							<s:Label text="PLI :" styleName="stitreBlocB"/><s:Label text="1927"/>
+					</s:VGroup>
+					<s:VGroup width="100%" >
+						<s:Group height="26" width="100%" >
+							<s:Rect height="100%" width="100%" >
+								<s:fill><s:SolidColor color="#383B71" /></s:fill>
+							</s:Rect>
+							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
+								<s:Label styleName="stitreBlocW" text="Répartition des types de logements"/>
+							</s:VGroup>				
+						</s:Group>
+						<s:HGroup>
+							<mx:PieChart id="graphTypeLog"
+										 dataProvider="{dataLog}"
+										 showDataTips="true"
+										 height="160" width="160"
+										 color="black"
+										 >
+								<mx:series>
+									<mx:PieSeries
+										selectable="true"
+										field="nb"
+										nameField="name"
+										labelPosition="inside"
+										/>
+								</mx:series>
+							</mx:PieChart>
+							<mx:Legend dataProvider="{graphTypeLog}"/>
 						</s:HGroup>
-						<s:HGroup verticalAlign="bottom">
-							<s:Label text="PLS :" styleName="stitreBlocB"/><s:Label text="1927"/>
+					</s:VGroup>					
+					<s:VGroup width="100%" >
+						<s:Group height="26" width="100%" >
+							<s:Rect height="100%" width="100%" >
+								<s:fill><s:SolidColor color="#383B71" /></s:fill>
+							</s:Rect>
+							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
+								<s:Label styleName="stitreBlocW" text="Répartition par type de logement"/>
+							</s:VGroup>				
+						</s:Group>
+						<s:HGroup>
+							<mx:PieChart id="graphTypeFinance"
+										 dataProvider="{dataTypeFinance}"
+										 showDataTips="true"
+										 height="160" width="160"
+										 color="black"
+										 >
+								<mx:series>
+									<mx:PieSeries
+										selectable="true"
+										field="nb"
+										nameField="name"
+										labelPosition="inside"
+										/>
+								</mx:series>
+							</mx:PieChart>
+							<mx:Legend dataProvider="{graphTypeFinance}"/>
 						</s:HGroup>
 					</s:VGroup>
 				</s:HGroup>
@@ -108,8 +177,26 @@
 							</s:Rect>
 							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
 								<s:Label styleName="stitreBlocW" text="Logements"/>
-							</s:VGroup>				
+							</s:VGroup>
 						</s:Group>
+						<s:HGroup>
+							<mx:PieChart id="graphVacanceLog"
+										 dataProvider="{dataVacanceLog}"
+										 showDataTips="true"
+										 height="160" width="160"
+										 color="black"
+										 >
+								<mx:series>
+									<mx:PieSeries
+										selectable="true"
+										field="nb"
+										nameField="name"
+										labelPosition="inside"
+										/>
+								</mx:series>
+							</mx:PieChart>
+							<mx:Legend dataProvider="{graphVacanceLog}"/>
+						</s:HGroup>
 					</s:VGroup>
 					<s:VGroup width="100%" >
 						<s:Group height="26" width="100%" >
@@ -120,23 +207,24 @@
 								<s:Label styleName="stitreBlocW" text="Commerces"/>
 							</s:VGroup>				
 						</s:Group>
-						<!--
-						<mx:PieChart id="graphVacLocCom"
-									 dataProvider=""
-									 showDataTips="true"
-									 height="100" width="100"
-									 color="black"
-									 >
-							<mx:series>
-								<mx:PieSeries
-									selectable="true"
-									field="value"
-									nameField="label"
-									labelPosition="inside"
-									/>
-							</mx:series>
-						</mx:PieChart>
-						-->
+						<s:HGroup>
+							<mx:PieChart id="graphVacanceCom"
+										 dataProvider="{dataVacanceCom}"
+										 showDataTips="true"
+										 height="160" width="160"
+										 color="black"
+										 >
+								<mx:series>
+									<mx:PieSeries
+										selectable="true"
+										field="nb"
+										nameField="name"
+										labelPosition="inside"
+										/>
+								</mx:series>
+							</mx:PieChart>
+							<mx:Legend dataProvider="{graphVacanceCom}"/>
+						</s:HGroup>
 					</s:VGroup>
 					<s:VGroup width="100%" >
 						<s:Group height="26" width="100%" >
@@ -147,6 +235,24 @@
 								<s:Label styleName="stitreBlocW" text="Garages"/>
 							</s:VGroup>				
 						</s:Group>
+						<s:HGroup>
+							<mx:PieChart id="graphVacanceGar"
+										 dataProvider="{dataVacanceGar}"
+										 showDataTips="true"
+										 height="160" width="160"
+										 color="black"
+										 >
+								<mx:series>
+									<mx:PieSeries
+										selectable="true"
+										field="nb"
+										nameField="name"
+										labelPosition="inside"
+										/>
+								</mx:series>
+							</mx:PieChart>
+							<mx:Legend dataProvider="{graphVacanceGar}"/>
+						</s:HGroup>
 					</s:VGroup>
 				</s:HGroup>				
 				<s:Label styleName="titreBlocBlack" text="PRESTATAIRES ENTRETIEN"/>
