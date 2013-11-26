@@ -10,7 +10,7 @@ try {
 	/*pour l'authentification*/
 	$server->setClassMap('LoginVO','AUTH_LoginVO');	
 	
-	//$server->setClass("GEVU_Diagnostique");
+	$server->setClass("GEVU_Diagnostique");
 	
 	$server->setProduction(false);
 	

@@ -2,19 +2,20 @@
 try {
 	require_once( "../application/configs/config.php" );
 
-	/*
+	//
 	$s = new GEVU_Statistique();
 	//$json = $s->getAntenneDonGen("gevu_new", 3);
 	//$json = $s->getPatrimoineDiag("gevu_new");
-	$json = $s->getPatrimoineDonGen("gevu_alceane");
+	//$json = $s->getPatrimoineDonGen("gevu_alceane");
+	$json = $s->getBatimentDonGen("gevu_alceane", 5);
 	echo json_encode($json);
-	*/
-	
 	//
+	
+	/*
 	$alceane = new GEVU_Alceane();
 	//header ("Content-Type:text/xml");  
 	echo $alceane->getArboAntenne(1,"gevu_alceane");
-	//
+	*/
 	
 	/*
 	$s = new GEVU_Site();
