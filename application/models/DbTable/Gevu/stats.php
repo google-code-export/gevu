@@ -106,6 +106,7 @@ class Models_DbTable_Gevu_stats extends Zend_Db_Table_Abstract
     		, "Gardien"=>$arr[44], "Peupl_CSP"=>$arr[45], "Peupl_AHH"=>$arr[46], "Peupl_Famille_mono_parentale"=>$arr[47], "Peupl_Famille_Nombreuse"=>$arr[48], "Peupl_Celibataire"=>$arr[49]
     		, "Peupl_Foyer_0_2Enf"=>$arr[50], "Peupl_Nb_Occupants"=>$arr[51], "Peupl_Age_Signataire_1"=>$arr[52], "Peupl_Age_Signataire_2"=>$arr[53], "Peupl_nb_enfants"=>$arr[54]
     		, "Peupl_nb_enfants_0_10_ans"=>$arr[55], "Peupl_nb_enfants_11_17_ans"=>$arr[56], "Peupl_nb_enfants_sup18_ans"=>$arr[57], "Peupl_Provenance"=>$arr[58], "Peupl_Anciennete"=>$arr[59], "Peupl_Surpeuplement"=>$arr[60]
+    		, "Montant_Impaye"=>$arr[61], "Montant_Quittance"=>$arr[61]
     		));    		
     		
     } 
