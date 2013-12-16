@@ -9,6 +9,12 @@
 		<![CDATA[
 
 			
+			protected function showPdf(url:String):void
+			{
+				var targetURL:URLRequest = new URLRequest (url);
+				navigateToURL(targetURL, "_blank");
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -42,7 +48,7 @@
 					<s:Label text="Mesure conservatoire :" styleName="stitreBlocB"/><s:Label text=""/>
 					<s:Label text="Date des travaux :" styleName="stitreBlocB"/><s:Label text=""/>
 				</s:HGroup>
-				<s:HGroup height="100%" width="100%">
+				<s:HGroup width="100%">
 					<s:VGroup width="100%" >
 						<s:Group height="26" width="100%" >
 							<s:Rect height="100%" width="100%" >
@@ -88,7 +94,8 @@
 						<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
 					</s:stroke>
 				</s:Line>
-				<s:HGroup height="100%" width="100%">
+				<s:Label text="Date du diagnostique :" styleName="stitreBlocB"/><s:Label text=""/>
+				<s:HGroup height="100%" width="100%" minHeight="260">
 					<s:VGroup width="100%" >
 						<s:Group height="26" width="100%" >
 							<s:Rect height="100%" width="100%" >
@@ -96,8 +103,14 @@
 							</s:Rect>
 							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
 								<s:Label styleName="stitreBlocW" text="Consommation énergétique"/>
-								<s:Image height="240" source="images/DPE.png"/>
 							</s:VGroup>				
+							<mx:Canvas>
+								<s:Image y="20" height="240" source="images/DPE.png"/>
+								<s:Group id="grFlecheDPE" x="300" y="46" width="40" height="23">
+									<s:Image  width="40" height="23" source="images/DPE-fleche.png"/>
+									<s:Label  width="40" height="23" color="#FFFFFF" fontSize="12" text="27" textAlign="center" verticalAlign="middle"/>
+								</s:Group>			
+							</mx:Canvas>
 						</s:Group>
 					</s:VGroup>
 					<s:VGroup width="100%" >
@@ -107,8 +120,14 @@
 							</s:Rect>
 							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
 								<s:Label styleName="stitreBlocW" text="Emissions de gaz à effet de serre"/>
-								<s:Image height="240" source="images/GES.jpg"/>
 							</s:VGroup>				
+							<mx:Canvas>
+								<s:Image y="20" height="240" source="images/GES.png"/>
+								<s:Group id="grFlecheGES" x="177" y="159" width="40" height="23">
+									<s:Image  width="40" height="23" source="images/DPE-fleche.png"/>
+									<s:Label  width="40" height="23" color="#FFFFFF" fontSize="12" text="27" textAlign="center" verticalAlign="middle"/>
+								</s:Group>			
+							</mx:Canvas>
 						</s:Group>
 					</s:VGroup>
 				</s:HGroup>
@@ -121,7 +140,8 @@
 							</s:stroke>
 						</s:Line>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Résultat locatif :" styleName="stitreBlocB"/><s:Label text="????"/>
+							<s:Label text="Cliquer sur l'icone pour télécharger le document" styleName="stitreBlocB"/>
+							<s:Image source="images/pdf.png" click="showPdf('DiagAsc')" />
 						</s:HGroup>									
 					</s:VGroup>				
 					<s:VGroup width="100%" >					
@@ -132,7 +152,8 @@
 							</s:stroke>
 						</s:Line>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Résultat locatif :" styleName="stitreBlocB"/><s:Label text="????"/>
+							<s:Label text="Cliquer sur l'icone pour télécharger le document" styleName="stitreBlocB"/>
+							<s:Image source="images/pdf.png" click="showPdf('DiagAsc')"/>
 						</s:HGroup>									
 					</s:VGroup>				
 				</s:HGroup>								

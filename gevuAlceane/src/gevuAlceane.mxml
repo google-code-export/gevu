@@ -290,12 +290,13 @@
 				if(event.newIndex==2){
 					this.currentState = "medias";
 				}
-				if(event.newIndex==4){
+				if(event.newIndex==3){
 					if(nivLieu==3){
 						this.currentState = "Diag"+nivLieu;
-					}else{
-						this.currentState = "PSP";
 					}
+				}
+				if(event.newIndex==4){
+					this.currentState = "PSP";
 				}
 				if(event.newIndex==5){
 					this.currentState = "Diag"+nivLieu;
@@ -414,6 +415,7 @@
 		<s:State name="DonGen1"/>
 		<s:State name="DonGen2"/>
 		<s:State name="DonGen3"/>
+		<s:State name="DonGen4"/>
 		<s:State name="Diag0"/>
 		<s:State name="Diag3"/>
 		<s:State name="Access"/>
@@ -548,6 +550,7 @@
 						<alceane:grpDonGenAntenne id="dgAntenne" includeIn="DonGen1" idAntenne="{idAntenne}" width="100%" height="100%" />
 						<alceane:grpDonGenGroupe id="dgGroupe" includeIn="DonGen2" width="100%" height="100%" />
 						<alceane:grpDonGenBat id="dgBat" includeIn="DonGen3" width="100%" height="100%" />
+						<alceane:grpDonGenLog id="dgLog" includeIn="DonGen4" width="100%" height="100%" />
 						<gevu:cnvIFCarto includeIn="carte"  id="cartoIF" rsCarto="{dataGeo}" />
 						<stat:cnvStatDiag includeIn="Access" id="stat" rsEtatDiag="{dataDiag}" />
 						<alceane:grpDiagPatrimoine  includeIn="Diag0" width="100%" height="100%" />
