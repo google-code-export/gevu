@@ -433,8 +433,9 @@ class GEVU_Import extends GEVU_Site{
     	$docInfos = $this->dbDoc->findByIdDoc($idDoc);    		
     	
     	//chargement du fichier
-		$ficPath = $_SERVER["DOCUMENT_ROOT"].'/gevu/data/EXTRAC_GEVU_20130910utf8.csv';
+		$ficPath = $_SERVER["DOCUMENT_ROOT"].'/gevu/data/EXTRAC_GEVU_20131114utf8.csv';
     	//$ficPath = 'c:\wamp\www\gevu\data\EXTRAC_GEVU_20130910utf8cours.csv';
+		$ficPath = 'c:\wamp\www\gevu\data\EXTRAC_GEVU_20131114utf8.csv';
 		$this->trace("chargement du fichier : ".$ficPath);
 		$arrCSV = $this->csvToArray($ficPath);
 			
@@ -452,7 +453,7 @@ class GEVU_Import extends GEVU_Site{
 		$this->arrLoc = array("ref"=>-1);
 		
 		//la liste des colonnes
-		$arrCols = array("Antenne_rattachement","Code_groupe","Groupe","Tranche","Code_Batiment","Batiment","Code_Escalier","No_Rue","Type_Rue","Rue","Code_Postal","Ville","Indicateur_Zus","Code_Logement","Code_Categorie_Module","Categorie_Module","Logement_Individuel","Code_Type_Logement","Type_Logement","Nombre_pièces","Etage","Surface_Reelle","Surface_Appliquee","Type_financement","Annee_Construction","Contrat Location","Type_Reception_TV","Occupation","Code_Motif_Vacance","Motif_Vacance","Copropriete","DPE_Date","DPE_consommation_reelle","DPE_Categorie_Consommation","DPE_emissions_GES","DPE_Categorie_Emissions_GES","CREP_Date","CREP_presence_Plomb","CREP_Seuil_Plomb_depasse","DTA_Date","DTA_Presence_Amiante","DTA_Presence_Amiante_Degradee","DTA_Mesure_Conservatoire","DTA_Date_Travaux","Gardien","Peupl_CSP","Peupl_AHH","Peupl_Famille_mono_parentale","Peupl_Famille_Nombreuse","Peupl_Celibataire","Peupl_Foyer_0_2Enf","Peupl_Nb_Occupants","Peupl_Age_Signataire_1","Peupl_Age_Signataire_2","Peupl_nb_enfants","Peupl_nb_enfants_0_10_ans","Peupl_nb_enfants_11_17_ans","Peupl_nb_enfants_sup18_ans","Peupl_Provenance","Peupl_Anciennete","Peupl_Surpeuplement");
+		$arrCols = array("Antenne_rattachement","Code_groupe","Groupe","Tranche","Code_Batiment","Batiment","Code_Escalier","No_Rue","Type_Rue","Rue","Code_Postal","Ville","Indicateur_Zus","Code_Logement","Code_Categorie_Module","Categorie_Module","Logement_Individuel","Code_Type_Logement","Type_Logement","Nombre_pièces","Etage","Surface_Reelle","Surface_Appliquee","Type_financement","Annee_Construction","Contrat Location","Type_Reception_TV","Occupation","Code_Motif_Vacance","Motif_Vacance","Copropriete","DPE_Date","DPE_consommation_reelle","DPE_Categorie_Consommation","DPE_emissions_GES","DPE_Categorie_Emissions_GES","CREP_Date","CREP_presence_Plomb","CREP_Seuil_Plomb_depasse","DTA_Date","DTA_Presence_Amiante","DTA_Presence_Amiante_Degradee","DTA_Mesure_Conservatoire","DTA_Date_Travaux","Gardien","Peupl_CSP","Peupl_AHH","Peupl_Famille_mono_parentale","Peupl_Famille_Nombreuse","Peupl_Celibataire","Peupl_Foyer_0_2Enf","Peupl_Nb_Occupants","Peupl_Age_Signataire_1","Peupl_Age_Signataire_2","Peupl_nb_enfants","Peupl_nb_enfants_0_10_ans","Peupl_nb_enfants_11_17_ans","Peupl_nb_enfants_sup18_ans","Peupl_Provenance","Peupl_Anciennete","Peupl_Surpeuplement","Montant_Impayé","Montant_Quittancé");
 		
 		// parcourt toute les lignes du fichier
 		//foreach ($chaines as $x => $chaine) {
