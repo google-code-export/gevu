@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
+		 width="100%" height="100%"
+		  creationComplete="creationCompleteHandler(event)"
+		 >
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			import spark.events.IndexChangeEvent;
+			[Bindable] public var idL:String="";
+			[Bindable] public var type:String="patri";
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				
+			}
+			
+			public function init(idx:int):void
+			{
+				if(type=="patri"){
+					bbMain.dataProvider = new ArrayCollection(['BILAN GÉNÉRALES','BILAN CRITÈRES',"PLAN D'INVESTISSEMENT"]);  
+					if(idx==0){
+						ifrm.source = this.parentApplication.urlDomaine+'public/psp/bilangeneral?idBase='+this.parentApplication.idBase;
+					}				
+					if(idx==1){
+						ifrm.source = this.parentApplication.urlDomaine+'public/psp/bilancritere?idBase='+this.parentApplication.idBase;
+					}				
+					if(idx==2){
+						ifrm.source = this.parentApplication.urlDomaine+'public/psp/planinvestissement?idBase='+this.parentApplication.idBase;
+					}
+				}else{
+					bbMain.dataProvider = new ArrayCollection(['BILAN CRITÈRES',"PLAN D'INVESTISSEMENT"]);  
+					if(idx==0){
+						ifrm.source = this.parentApplication.urlDomaine+'public/psp/bilancritere?idBase='+this.parentApplication.idBase+"&"+type+"="+idL;
+					}				
+					if(idx==1){
+						ifrm.source = this.parentApplication.urlDomaine+'public/psp/planinvestissement?idBase='+this.parentApplication.idBase+"&"+type+"="+idL;
+					}				
+				}
+			}
+			
+			protected function bbMain_changeHandler(event:IndexChangeEvent):void
+			{
+				init(event.newIndex);
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+	</fx:Declarations>
+
+	<s:BorderContainer 
+		borderColor="black" borderStyle="inset" borderWeight="4" width="100%" height="100%">
+		<s:Rect height="100%" width="100%" >
+			<s:fill><s:SolidColor color="#383B71" alpha="0.3" /></s:fill>
+		</s:Rect>
+		<s:Group  id="gMainC" left="6" right="6" top="48" bottom="6" >
+			<s:layout>
+				<s:BasicLayout/>
+			</s:layout>
+			<s:HGroup paddingLeft="6" paddingTop="-10" width="100%" paddingRight="6">
+				<s:ButtonBar
+					id="bbMain"
+					change="bbMain_changeHandler(event)"
+					skinClass="skin.bbAlceane"
+					requireSelection="true" 
+					width="100%" />
+			</s:HGroup>
+			<s:VGroup id="gMain" paddingTop="40" height="100%" width="100%" paddingBottom="6" paddingLeft="6" paddingRight="6" >
+				<flexiframe:IFrame id="ifrm" width="100%" height="100%" overlayDetection="true"	   />			   
+			</s:VGroup>
+		</s:Group>
+	</s:BorderContainer> 	
+	
+</s:Group>

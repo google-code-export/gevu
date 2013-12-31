@@ -17,7 +17,7 @@
 	<s:BorderContainer 
 		borderColor="black" borderStyle="inset" borderWeight="4" width="100%" height="100%">
 		<s:Rect height="100%" width="100%" >
-			<s:fill><s:SolidColor color="#383B71" alpha="0.3" /></s:fill>
+			<s:fill><s:SolidColor color="#383B71" /></s:fill>
 		</s:Rect>
 		<s:Group  id="gMainC" left="6" right="6" top="48" bottom="6" >
 			<s:layout>

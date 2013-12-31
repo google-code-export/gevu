@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<optaff>
+	<item lib="Délimitations géographiques" >
+		<item lib="Communes" >
+			<item lib="Cauville sur Mer" select="false" src="http://www.gevu.org/data/carto/Cauville-sur-Mer.kml" />
+			<item lib="Criquetot l'Esneval" select="false" src="http://www.gevu.org/data/carto/Criquetot-l-Esneval.kml" />
+			<item lib="Epouville" select="false" src="http://www.gevu.org/data/carto/Epouville.kml" />
+			<item lib="Etretat" select="false" src="http://www.gevu.org/data/carto/Etretat.kml" />
+			<item lib="Fontaine la Mallet" select="false" src="http://www.gevu.org/data/carto/Fontaine-la-Mallet.kml" />
+			<item lib="Fontenay" select="false" src="http://www.gevu.org/data/carto/Fontenay.kml" />
+			<item lib="Gainneville" select="false" src="http://www.gevu.org/data/carto/Gainneville.kml" />
+			<item lib="Gonfreville l'Orcher" select="false" src="http://www.gevu.org/data/carto/Gonfreville-l-Orcher.kml" />
+			<item lib="Harfleur" select="false" src="http://www.gevu.org/data/carto/Harfleur.kml" />
+			<item lib="Le Havre" select="false" src="http://www.gevu.org/data/carto/Le-Havre.kml" />
+			<item lib="Manéglise" select="false" src="http://www.gevu.org/data/carto/Maneglise.kml" />
+			<item lib="Mannevillette" select="false" src="http://www.gevu.org/data/carto/Mannevillette.kml" />
+			<item lib="Montivillers" select="false" src="http://www.gevu.org/data/carto/Montivillers.kml" />
+			<item lib="Notre Dame du Bec" select="false" src="http://www.gevu.org/data/carto/Notre-Dame-du-Bec.kml" />
+			<item lib="Octeville sur Mer" select="false" src="http://www.gevu.org/data/carto/Octeville-sur-Mer.kml" />
+			<item lib="Rogerville" select="false" src="http://www.gevu.org/data/carto/Rogerville.kml" />
+			<item lib="Rolleville" select="false" src="http://www.gevu.org/data/carto/Rolleville.kml" />
+			<item lib="Saint Martin du Manoir" select="false" src="http://www.gevu.org/data/carto/Saint-Martin-du-Manoir.kml" />
+			<item lib="Sainte Adresse" select="false" src="http://www.gevu.org/data/carto/Sainte-Adresse.kml" />
+			<item lib="Sandouville" select="false" src="http://www.gevu.org/data/carto/Sandouville.kml" />
+			<item lib="Yport" select="false" src="http://www.gevu.org/data/carto/Yport.kml" />						
+		</item>
+		<item lib="EPCI" select="false" />
+		<item lib="Zones Scellier" select="false" />
+		<item lib="Zones Loyer" select="false" />
+	</item>
+	<item lib="SERVICES" >
+		<item lib="Transports" >
+			<item lib="Lignes de bus" >
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22298_4fb0b5d3782ec.kmz" lib="Ligne bus 1" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22310_4fb1f4979186d.kmz" lib="Ligne bus 10" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22311_4fb1f4bea08f1.kmz" lib="Ligne bus 11" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22312_4fb1f4cec4c7a.kmz" lib="Ligne bus 12" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22313_4fb1f505d5af0.kmz" lib="Ligne bus 13" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22314_4fb1f51581cdd.kmz" lib="Ligne bus 14" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22315_4fb1f52b3d353.kmz" lib="Ligne bus 15" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22316_4fb1f54203299.kmz" lib="Ligne bus 16" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22300_4fb1f38ea97f2.kmz" lib="Ligne bus 2" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22302_4fb1f3e658f74.kmz" lib="Ligne bus 3" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22303_4fb1f3fb15956.kmz" lib="Ligne bus 4" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22304_4fb1f42e2391c.kmz" lib="Ligne bus 5" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22305_4fb1f43b4030d.kmz" lib="Ligne bus 6" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22306_4fb1f45151916.kmz" lib="Ligne bus 6bis" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22307_4fb1f46135782.kmz" lib="Ligne bus 7" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22308_4fb1f4713538c.kmz" lib="Ligne bus 8" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22309_4fb1f4876cc5f.kmz" lib="Ligne bus 9" />
+				<item src="http://www.gevu.org/data/lieux/gevu_new/lieux_22299_4fb0b7974d5b8.kmz" lib="Ligne Montivilliers - Collège GB" />
+			</item>
+			<item lib="Arrêts de bus" select="false" />
+			<item lib="Lignes de tramway" select="false" src="http://www.gevu.org/data/lieux/gevu_new/lieux_22317_4fb1fe11b9eac.kmz" />
+			<item lib="Arrêts de tramway" select="false" />
+			<item lib="Pistes cyclables" select="false" />
+		</item>
+		<item lib="Commerces">
+			<item lib="Supermarchés" select="false" src="http://www.gevu.org/data/lieux/gevu_new/lieux_2_4fafc613333d4.kmz" />
+		</item>
+		<item lib="Santé" >
+			<item lib="Hopitaux" select="false" />
+			<item lib="Cliniques" select="false" />
+			<item lib="Médecins" select="false" />
+			<item lib="Pharmacies" select="false" src="http://www.gevu.org/data/lieux/gevu_new/lieux_2_4fafc60c785a1.kmz"/>
+		</item>
+		<item lib="Lieux d'enseignement" >
+			<item lib="Crèches" select="false" />
+			<item lib="Ecoles maternelles" select="false" src="http://www.gevu.org/data/lieux/gevu_new/lieux_2_4fafc59b6a5b4.kmz"/>
+			<item lib="Ecoles primaires" select="false" src="http://www.gevu.org/data/lieux/gevu_new/lieux_2_4fafc5bfc4fb1.kmz"/>
+			<item lib="Collèges" select="false" src="http://www.gevu.org/data/lieux/gevu_new/lieux_2_4fafb7e50a2ee.kmz"/>
+			<item lib="Lycées" select="false" src="http://www.gevu.org/data/lieux/gevu_new/lieux_2_4fafc5ff75348.kmz"/>
+			<item lib="Lycées professionnel" select="false" src="http://www.gevu.org/data/lieux/gevu_new/lieux_2_4fafc606c6aea.kmz"/>
+			<item lib="Universités" select="false" />
+		</item>
+		<item lib="Services Publics" >
+			<item lib="Bureaux de poste" select="false" src="http://www.gevu.org/data/lieux/gevu_new/lieux_2_4fafc587d9594.kmz"/>
+			<item lib="CAF" select="false" />
+			<item lib="CRAM" select="false" />
+			<item lib="CMS" select="false" />
+			<item lib="Communautés Urbaine" select="false" />
+			<item lib="Pôle Emploi" select="false" />
+			<item lib="Sous Préfectures" select="false" />
+		</item>
+	</item>
+	<item lib="AUTRES" >
+		<item lib="Antennes Alcéane">
+			<item lib="Antenne - BL" select="false" src="http://www.gevu.org/data/carto/Antenne-BL.kml" />
+			<item lib="Antenne - CA" select="false" src="http://www.gevu.org/data/carto/Antenne-CA.kml" />
+			<item lib="Antenne - CV" select="false" src="http://www.gevu.org/data/carto/Antenne-CV.kml" />
+			<item lib="Antenne - MR" select="false" src="http://www.gevu.org/data/carto/Antenne-MR.kml" />
+			<item lib="Antenne - QS" select="false" src="http://www.gevu.org/data/carto/Antenne-QS.kml" />
+		</item>
+		<item lib="Terrains Alcéane" select="false" />
+		<item lib="Projets Alcéane" select="false" />
+	</item>
+</optaff>
+				

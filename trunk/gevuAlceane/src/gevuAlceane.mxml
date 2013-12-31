@@ -7,7 +7,7 @@
 			   xmlns:alceane="gevu.alceane.*" xmlns:stat="compo.stat.*" xmlns:form="compo.form.*"
 			   width="100%" height="100%" 
 			   pageTitle="GEVU Alcéane"
-			   creationComplete="creationCompleteHandler(event)" 
+			   creationComplete="creationCompleteHandler(event)" xmlns:compo="compo.*" 
 			   >
 	<fx:Script>
 		<![CDATA[
@@ -33,7 +33,7 @@
 			public var nivLieu:int=0;
 			public var idBase:String = "gevu_alceane";
 			public var idScenar:int = 18;
-			public var urlDomaine:String = "http://localhost/gevu/";
+			public var urlDomaine:String = "http://www.gevu.org/";
 			[Bindable] public var idAntenne:int=-1; 
 			[Bindable] public var idGroupe:int=-1; 
 			[Bindable] public var idBat:int=-1; 
@@ -43,112 +43,26 @@
 			private var xmlTree:XML
 			private var arrSelect:Array;
 			private var objLieuFind:Array;
+			private var urlOptAffCarto:String = "optAffCarto.xml";
 
-			[Bindable] private var xmlOptAff:XML = 
-				<optaff>
-					<item lib="Enjeux PSP" >
-						<item lib="Amélioration" select="false"/>
-						<item lib="Peuplement" select="false"/>
-						<item lib="Ventes" select="false"/>
-						<item lib="Réhabilitation" select="false"/>
-						<item lib="Démolition" select="false"/>
-						<item lib="Pérennisation" select="false"/>
-						<item lib="Peuplement" select="false"/>
-					</item>
-					<item lib="Délimitations géographiques" >
-						<item lib="Communes" select="false"/>
-						<item lib="EPCI" select="false"/>
-						<item lib="Zones Scellier" select="false"/>
-						<item lib="Zones Loyer" select="false"/>
-					</item>
-					<item lib="SERVICES">
-						<item lib="Transports" >
-							<item lib="Lignes de bus" select="false" />
-							<item lib="Arrêts de bus" select="false" />
-							<item lib="Lignes de tramway" select="false" />
-							<item lib="Arrêts de tramway" select="false" />
-							<item lib="Pistes cyclables" select="false" />
-						</item>
-						<item lib="Commerces" select="false" />
-						<item lib="Santé" >
-							<item lib="Hopitaux" select="false"/>
-							<item lib="Cliniques" select="false"/>
-							<item lib="Médecins" select="false"/>
-							<item lib="Pharmacies" select="false"/>
-						</item>
-						<item lib="Lieux d'enseignement" >
-							<item lib="Crèches" select="false"/>
-							<item lib="Ecoles maternelles" select="false"/>
-							<item lib="Ecoles primaires" select="false"/>
-							<item lib="Collèges" select="false"/>
-							<item lib="Lycées" select="false"/>
-							<item lib="Universités" select="false"/>
-						</item>
-						<item lib="Services Publics" >
-							<item lib="CMS" select="false"/>
-							<item lib="Pôle Emploi" select="false"/>
-							<item lib="CAF" select="false"/>
-							<item lib="CRAM" select="false"/>
-							<item lib="Sous Préfectures" select="false"/>
-							<item lib="Communautés Urbaine" select="false"/>
-						</item>
-					</item>
-					<item lib="VACANCE" >
-						<item lib="par antenne" >
-							<item lib="Centre ville" select="false"/>
-							<item lib="Mare-Rouge" select="false"/>
-							<item lib="Quartier Sud" select="false"/>
-							<item lib="Bléville" select="false"/>
-							<item lib="Caucriauville" select="false"/>
-						</item>
-						<item lib="par type" >
-							<item lib="Logement" select="false">
-								<item lib="T1" select="false"/>
-								<item lib="T2" select="false"/>
-								<item lib="T3" select="false"/>
-								<item lib="T4" select="false"/>
-								<item lib="T5" select="false"/>
-								<item lib="T6" select="false"/>
-							</item>				
-							<item lib="Pavillons" select="false"/>
-							<item lib="Commerces" select="false"/>
-							<item lib="Garages" select="false"/>
-						</item>
-					</item>
-					<item lib="VENTE EN COURS" >
-					</item>
-					<item lib="CHANTIERS &#38; PROJETS" >
-					</item>
-					<item lib="AUTRES" >
-						<item lib="Antennes Relais" select="false"/>
-						<item lib="Terrains Alcéane" select="false"/>
-						<item lib="Projets Alcéane" select="false"/>
-					</item>
-				</optaff>
-
-											   
-
+			[Bindable] private var xmlOptAff:XML;
 				
-			protected function creationCompleteHandler(event:FlexEvent):void
+			public function showKML(params:Array):void
 			{
-				bbItems = new ArrayCollection;
-				bbItems.addItem(['DONNÉES GÉNÉRALES','SERVICES','MÉDIAS','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ']);
-				bbItems.addItem(['DONNÉES GÉNÉRALES','SERVICES','MÉDIAS','ENJEUX PSP','ERP','ACCESSIBILITÉ']);
-				bbItems.addItem(['DONNÉES GÉNÉRALES','SERVICES','MÉDIAS','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ']);
-				bbItems.addItem(['DONNÉES GÉNÉRALES','MÉDIAS','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ','TRAVAUX','PLANS','CARNET IMMOPEP']);
-				bbItems.addItem(['DONNÉES GÉNÉRALES','MÉDIAS','DIAGNOSTICS','ACCESSIBILITÉ','PLANS','CARNET IMMOPEP']);
-
-				bbMain.dataProvider = new ArrayCollection(bbItems[0]);  
-				treeAntenneInit();
-				idLieu = 1;
-				roDiag.getNodeRelatedData(idLieu, idExi, idBase);
-
+				cartoIF.callChargeKml(params);
 			}
+			public function hideKML(params:Array):void
+			{
+				cartoIF.callFunction("clearKml",params);
+			}
+				
 			
 			protected function btnRecherche_clickHandler(event:MouseEvent):void
 			{
-				// TODO Auto-generated method stub
-				
+				if(txtRecherche.text)
+					roAlceane.findLieu(txtRecherche.text, idBase);
+				else
+					Alert.show("Veuillez saisir une requête.");
 			}
 			
 			protected function btnIdentifiant_clickHandler(event:MouseEvent):void
@@ -175,14 +89,15 @@
 				bbMain.selectedIndex = 0;
 				
 				lstAriane.dataProvider =  new ArrayCollection(dataNode["ariane"] as Array);
-				dataGeo = dataNode["geo"];
+				dataGeo = dataNode["Models_DbTable_Gevu_geos"] ? dataNode["Models_DbTable_Gevu_geos"][0] : null;
 				dataDiag = dataNode["___diagnostics"].diag.stat; 
 
 				this.currentState = "DonGen"+nivLieu;
 				if(nivLieu==1)dgAntenne.init();
 				if(nivLieu==2)dgGroupe.init(dataNode);
 				if(nivLieu==3)dgBat.init(dataNode);
-				
+				if(nivLieu==4)dgLog.init(dataNode);
+
 			}			
 
 			private function updateTreeStructure(event:ResultEvent) : void {
@@ -219,8 +134,10 @@
 			}			
 			private function displayReponse(event:ResultEvent) : void {
 				
-				objLieuFind = event.result as Array;
-				arrSelect = new Array;
+				if(!event.result) return;
+				var x:XML = <root></root>;
+				x.appendChild(event.result);		
+				treeResult.dataProvider=x;
 				
 			}
 			public function treeAntenneInit():void{
@@ -269,7 +186,35 @@
 				bbMain.dataProvider = new ArrayCollection(bbItems[nivLieu]);  
 				
 			}			
-		
+
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				//chargement du xml pour les options d'affichage de la carte
+				var chargementXML:URLLoader = new URLLoader();// objet de chargement
+				var fichier:URLRequest = new URLRequest(urlOptAffCarto);// url du fichier chargé
+				chargementXML.addEventListener( Event.COMPLETE, chargementComplet );
+				chargementXML.load(fichier);
+
+				bbItems = new ArrayCollection;
+				bbItems.addItem(['DONNÉES GÉNÉRALES','CARTE','MÉDIAS','ENJEUX PSP','ACCESSIBILITÉ']);
+				bbItems.addItem(['DONNÉES GÉNÉRALES','CARTE','MÉDIAS','ENJEUX PSP','ERP','ACCESSIBILITÉ']);
+				bbItems.addItem(['DONNÉES GÉNÉRALES','CARTE','MÉDIAS','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ']);
+				bbItems.addItem(['DONNÉES GÉNÉRALES','MÉDIAS','ENJEUX PSP','DIAGNOSTICS','ACCESSIBILITÉ','TRAVAUX','PLANS','CARNET IMMOPEP']);
+				bbItems.addItem(['DONNÉES GÉNÉRALES','MÉDIAS','DIAGNOSTICS','ACCESSIBILITÉ','PLANS']);
+				
+				bbMain.dataProvider = new ArrayCollection(bbItems[0]);  
+				treeAntenneInit();
+				idLieu = 1;
+				roDiag.getNodeRelatedData(idLieu, idExi, idBase);
+				
+			}
+
+			// chargement terminé du fichier xml
+			protected function chargementComplet(pEvt:Event):void {
+				xmlOptAff = new XML( pEvt.target.data );
+			}
+			
 			protected function bbMain_changeHandler(event:IndexChangeEvent):void
 			{
 				/*
@@ -285,23 +230,87 @@
 					if(nivLieu==1)dgAntenne.init();
 					if(nivLieu==2)dgGroupe.init(dataNode);
 					if(nivLieu==3)dgBat.init(dataNode);
+					if(nivLieu==4)dgLog.init(dataNode);
 				}
-				if(event.newIndex==1)this.currentState = "carte";
+				if(event.newIndex==1){
+					if(nivLieu==3 || nivLieu==4){
+						this.currentState = "Medias";
+						media.init(dataNode);
+					}else{
+						this.currentState = "carte";
+						if(!treeOptAff.dataProvider)treeOptAff.dataProvider=xmlOptAff;
+						cartoIF.callChangeGeo();
+					}
+				}
 				if(event.newIndex==2){
-					this.currentState = "medias";
+					if(nivLieu==3){
+						this.currentState = "PSP";
+						psp.idL = dataNode["Models_DbTable_Gevu_batiments"][0]['ref'];
+						psp.type = "bat";
+						psp.init(0);
+					}else if(nivLieu==4){
+						this.currentState = "Diag";
+						diag.init(dataNode);
+					}else{
+						this.currentState = "Medias";
+						media.init(dataNode);
+					}
 				}
 				if(event.newIndex==3){
+					if(nivLieu==0){
+						this.currentState = "PSP";
+						psp.type = "patri";
+						psp.init(0);
+					}
+					if(nivLieu==1){
+						this.currentState = "PSP";
+						psp.idL = dataNode["Models_DbTable_Gevu_antennes"][0]['ref'];
+						psp.type = "ant";
+						psp.init(0);
+					}
+					if(nivLieu==2){
+						this.currentState = "PSP";
+						psp.idL = dataNode["Models_DbTable_Gevu_groupes"][0]['ref'];
+						psp.type = "grp";
+						psp.init(0);
+					}
 					if(nivLieu==3){
-						this.currentState = "Diag"+nivLieu;
+						this.currentState = "PSP";
+						psp.idL = dataNode["Models_DbTable_Gevu_batiments"][0]['ref'];
+						psp.type = "bat";
+						psp.init(0);
+					}
+					if(nivLieu==4){
+						this.currentState = "Access";
+						access.rsEtatDiag = dataNode["___diagnostics"].diag.stat; 
+					}
+					if(nivLieu==3){
+						this.currentState = "Diag";
+						diag.init(dataNode);
 					}
 				}
 				if(event.newIndex==4){
-					this.currentState = "PSP";
+					if(nivLieu==0 || nivLieu==3){
+						this.currentState = "Access";
+						access.rsEtatDiag = dataNode["___diagnostics"].diag.stat; 
+					}
+					if(nivLieu==2){
+						this.currentState = "Diag";
+						diag.init(dataNode);
+					}
 				}
 				if(event.newIndex==5){
-					this.currentState = "Diag"+nivLieu;
+					if(nivLieu==1 || nivLieu==2){
+						this.currentState = "Access";
+						access.rsEtatDiag = dataNode["___diagnostics"].diag.stat; 
+					}
 				}
-				if(event.newIndex==5)this.currentState = "Access";
+				if(event.newIndex==7){
+					if(nivLieu==3){
+						this.currentState = "Immo";
+						interv.NodeData = dataNode["Models_DbTable_Gevu_interventions"]; 
+					}
+				}
 			}
 						
 		]]>
@@ -408,17 +417,17 @@
 		}				
 	</fx:Style>
 	<s:states>
-		<s:State name="carte"/>
-		<s:State name="medias"/>
-		<s:State name="PSP"/>
 		<s:State name="DonGen0"/>
+		<s:State name="carte"/>
+		<s:State name="Medias"/>
+		<s:State name="PSP"/>
 		<s:State name="DonGen1"/>
 		<s:State name="DonGen2"/>
 		<s:State name="DonGen3"/>
 		<s:State name="DonGen4"/>
-		<s:State name="Diag0"/>
-		<s:State name="Diag3"/>
+		<s:State name="Diag"/>
 		<s:State name="Access"/>
+		<s:State name="Immo"/>
 	</s:states>	
 	
 	<s:BorderContainer 
@@ -492,7 +501,7 @@
 							<s:fill><s:SolidColor color="#996C88" /></s:fill>
 						</s:Rect>
 						<s:VGroup horizontalAlign="center" verticalAlign="middle" height="100%" width="100%" >
-							<s:Label styleName="titreBloc" text="OPTION D'AFFICHAGE"/>
+							<s:Label styleName="titreBloc" text="RESULTAT RECHERCHE"/>
 						</s:VGroup>				
 					</s:Group>
 					<s:Group height="100%" width="264" >
@@ -500,9 +509,9 @@
 							<s:fill><s:SolidColor color="#BFB099" alpha="0.7" /></s:fill>
 						</s:Rect>
 						<s:VGroup height="100%" width="100%" paddingTop="12" paddingLeft="4" paddingRight="4" >
-							<mx:Tree id="treeOptAff" labelField="@lib" showRoot="false" 
+							<mx:Tree id="treeResult" labelField="@lib" showRoot="false" 
 									 height="100%"  width="100%"
-									 dataProvider="{xmlOptAff}"
+									 change="treeItemClicked( event );"
 									 horizontalScrollPolicy="on" verticalScrollPolicy="on"
 									 />
 						</s:VGroup>				
@@ -513,7 +522,7 @@
 						<s:Rect height="100%" width="100%" >
 							<s:fill><s:SolidColor color="#BFB099" alpha="0.7" /></s:fill>
 						</s:Rect>
-						<s:VGroup height="100%" width="100%" paddingLeft="200" paddingRight="30" paddingTop="20" >
+						<s:VGroup height="100%" width="100%" paddingLeft="200" paddingRight="30" paddingTop="20" visible="false">
 							<s:Label paddingTop="0" styleName="inputText" text="Identifiant"/>
 							<s:HGroup verticalAlign="middle">
 								<s:TextInput id="txtIdentifiant" width="400" height="30" 
@@ -551,10 +560,30 @@
 						<alceane:grpDonGenGroupe id="dgGroupe" includeIn="DonGen2" width="100%" height="100%" />
 						<alceane:grpDonGenBat id="dgBat" includeIn="DonGen3" width="100%" height="100%" />
 						<alceane:grpDonGenLog id="dgLog" includeIn="DonGen4" width="100%" height="100%" />
-						<gevu:cnvIFCarto includeIn="carte"  id="cartoIF" rsCarto="{dataGeo}" />
-						<stat:cnvStatDiag includeIn="Access" id="stat" rsEtatDiag="{dataDiag}" />
-						<alceane:grpDiagPatrimoine  includeIn="Diag0" width="100%" height="100%" />
-						<alceane:grpDiagBat  includeIn="Diag3" width="100%" height="100%" />
+						<s:HGroup includeIn="carte" height="100%" width="100%" >
+							<s:VGroup height="100%">
+								<s:Group height="36" width="264" >
+									<s:Rect height="100%" width="100%" >
+										<s:fill><s:SolidColor color="#383B71" /></s:fill>
+									</s:Rect>
+									<s:VGroup horizontalAlign="center" verticalAlign="middle" height="100%" width="100%" >
+										<s:Label styleName="titreBloc" text="OPTION D'AFFICHAGE"/>
+									</s:VGroup>				
+								</s:Group>
+								<mx:Tree id="treeOptAff" labelField="@lib" showRoot="false" 
+										 height="100%"  width="100%"
+										 itemRenderer="gevu.irTreeCheckBox"
+										 horizontalScrollPolicy="on" verticalScrollPolicy="on"
+										 />
+							</s:VGroup>
+							<compo:cnvIFCarto id="cartoIF" rsCarto="{dataGeo}" />
+						</s:HGroup>
+						<alceane:grpDiag id="diag" includeIn="Diag" width="100%" height="100%" />
+						<alceane:grpPSP id="psp" includeIn="PSP" width="100%" height="100%" />
+						<stat:cnvStatDiag id="access" includeIn="Access" rsDiagExt="{false}" width="100%" height="100%" />
+						<alceane:grpMedia id="media" includeIn="Medias" width="100%" height="100%" />
+						<form:interventions id="interv" includeIn="Immo" bEdit="false" height="100%" width="100%" />
+
 					</s:VGroup>
 				</s:VGroup>
 			</s:HGroup>
