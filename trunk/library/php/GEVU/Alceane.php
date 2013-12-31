@@ -83,7 +83,7 @@ class GEVU_Alceane extends GEVU_Site{
 		$dom->load('../tmp/arboAlceane.xml'); 
         return $dom;
 		*/
-	   	$xml = false;//$this->cache->load($c);
+	   	$xml = $this->cache->load($c);
         if(!$xml){
 			//initialise les gestionnaires de base de données
 			$this->getDb($idBase);
