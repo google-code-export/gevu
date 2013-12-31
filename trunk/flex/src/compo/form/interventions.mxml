@@ -21,6 +21,7 @@
 			[Bindable] public var itemSelect:Object; 
 			[Bindable] public var idLieu:int; 
 			[Bindable] public var idBase:String; 
+			[Bindable] public var bEdit:Boolean=true;
 			private var dtSelect:Date; 
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
@@ -134,7 +135,7 @@
 		
 	<mx:ViewStack id="vs" width="100%" height="100%">
 		<mx:VBox id="lecture" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-			<mx:HBox width="100%" >
+			<mx:HBox width="100%" visible="{bEdit}" >
 				<mx:LinkButton id="btnAjout" click="vs.selectedChild = ajout;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter une intervention" enabled="true" />
 				<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une intervention" enabled="true" />							
 			</mx:HBox>							

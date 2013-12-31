@@ -74,11 +74,10 @@ function clearOverlays() {
 }
 
 //Removes the overlays from the map, but keeps them in the array
-document.clearKml = function(params) {
-  if (kmlArray) {
-    for (i in kmlArray) {
-    	if(kmlArray[i]==params[0])kmlArray[i].setMap(null);
-    }
+function clearKml(params) {
+  console.log(params[0]);
+  if (kmlArray[params[0]]) {
+   	kmlArray[params[0]].setMap(null);
   }
 }
 
@@ -134,7 +133,7 @@ function initialize() {
   
 }
 
-document.addIti = function(params){
+function addIti(params){
 
 	  directionsDisplay.setMap(map);
 	  directionsDisplay.setPanel(document.getElementById("itineraireTexte"));
@@ -156,13 +155,16 @@ document.addIti = function(params){
 }
 
 
-document.addKml = function(params){
+function addKml(params){
 	
 	if(!kmlArray[params[2]]){
 		var kmlLayer = new google.maps.KmlLayer(params[0]);
 		kmlLayer.setMap(map);
 		kmlArray[params[2]] = kmlLayer;
-		addCouche(params[2], "ckKml_"+params[2], params[1]);
+		//addCouche(params[2], "ckKml_"+params[2], params[1]);
+        console.log(params[0]+" "+params[1]+" "+params[2]);
+	}else{
+		kmlArray[params[2]].setMap(map);
 	}	
 }
 
@@ -192,7 +194,7 @@ function showCouche(id, idElem){
 	
 }
 
-document.addMarker = function(params){
+function addMarker(params){
 
 	deleteOverlays();
 	
@@ -214,7 +216,7 @@ document.addMarker = function(params){
 	//on ajoute le kml
 	if(params[4]!=""){
 		polyArray[params[5]] = addPolygone(params[4]);
-		addCouche(params[5], "ckPoly_"+params[5], params[6]);
+		//addCouche(params[5], "ckPoly_"+params[5], params[6]);
 	}
 	  
 	google.maps.event.addListener(marker, 'dragend', function() {
@@ -252,7 +254,7 @@ document.addMarker = function(params){
 
 }
 
-document.zoom = function(params){
+function zoom(params){
 	map.setZoom(parseInt(params[0]));	
 }
 
@@ -347,11 +349,12 @@ google.maps.event.addDomListener(window, 'load', initialize);
     float: left;
   }
   </style>
-  
-  <div id="couches" style="overflow:auto;" >Couches : 
+  <!--  
+  <div id="couches" style="overflow:auto;height:0px;width:0px;" >Couches : 
   	  <div style="cursor:pointer;" onclick="deleteCouches()" >(tout effacer)</div>
 	  <div id="listeCouche"></div>
   </div>
+  -->
   <div id="mapCanvas"></div>
   <div id="mapStreetView"></div>
   <div id="itineraireTexte" ></div>
