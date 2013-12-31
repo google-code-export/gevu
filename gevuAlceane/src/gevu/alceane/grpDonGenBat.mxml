@@ -18,11 +18,12 @@
 			public function init(dataNode:Object):void{
 				lblTitre.text = dataNode.ariane[0].parLib+" ("+dataNode.Models_DbTable_Gevu_batiments[0].ref+")";
 				
-				dataTypeFinance = dataNode.___stats.children[3].children;
-				dataVacanceLog = dataNode.___stats.children[2].children[0].children;
-				dataVacanceGar = dataNode.___stats.children[2].children[1].children;
-				dataVacanceCom = dataNode.___stats.children[2].children[2].children;
-				dataLog = dataNode.___stats.children[1].children;
+				dataTypeFinance = dataNode.___stats.children[3].children ? dataNode.___stats.children[3].children : null;
+				graphTypeFinance.visible = dataTypeFinance;
+				dataVacanceLog = dataNode.___stats.children[2].children[0].children ? dataNode.___stats.children[2].children[0].children : null;
+				dataVacanceGar = dataNode.___stats.children[2].children[1].children ? dataNode.___stats.children[2].children[1].children : null;
+				dataVacanceCom = dataNode.___stats.children[2].children[2].children ? dataNode.___stats.children[2].children[2].children : null;
+				dataLog = dataNode.___stats.children[1].children ? dataNode.___stats.children[1].children : null;
 				
 				var oBat:Object = dataNode.Models_DbTable_Gevu_batiments[0];
 				var oGeo:Object = dataNode.Models_DbTable_Gevu_geos[0];
@@ -125,7 +126,7 @@
 										 >
 								<mx:series>
 									<mx:PieSeries
-										selectable="true"
+										selectable="false"
 										field="nb"
 										nameField="name"
 										labelPosition="inside"
@@ -153,7 +154,7 @@
 										 >
 								<mx:series>
 									<mx:PieSeries
-										selectable="true"
+										selectable="false"
 										field="nb"
 										nameField="name"
 										labelPosition="inside"
@@ -193,7 +194,7 @@
 										 >
 								<mx:series>
 									<mx:PieSeries
-										selectable="true"
+										selectable="false"
 										field="nb"
 										nameField="name"
 										labelPosition="inside"
@@ -221,7 +222,7 @@
 										 >
 								<mx:series>
 									<mx:PieSeries
-										selectable="true"
+										selectable="false"
 										field="nb"
 										nameField="name"
 										labelPosition="inside"
@@ -249,7 +250,7 @@
 										 >
 								<mx:series>
 									<mx:PieSeries
-										selectable="true"
+										selectable="false"
 										field="nb"
 										nameField="name"
 										labelPosition="inside"

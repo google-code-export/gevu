@@ -8,13 +8,141 @@
 	<fx:Script>
 		<![CDATA[
 
+			[Bindable] public var dataDiag:Object;
+			
+			public function init(dataNode:Object):void
+			{
+				for each (var dt:Object in dataNode.___stats.children)
+				{
+					if(dt.name=="Diagnostics")dataDiag = dt.children;					
+				}
+				lblTitre.text = dataNode.ariane[0].parLib;
+				
+				//affiche les données
+				paMesCons.text = "";
+				paDateTrav.text = "";
+				aDate.text = "";
+				aPres.text = "";
+				aDeg.text = "";
+				pDate.text = "";
+				pPres.text = "";
+				pSeuil.text = "";
+
+				if(dataDiag[2].children){
+					var oA:Object = dataDiag[2].children[0];
+					paMesCons.text = oA.conservatoire ? oA.conservatoire : "aucune";
+					paDateTrav.text = oA.dateTrav;
+					aDate.text = oA.dateDiag;
+					aPres.text = oA.name=="O" ? "Oui" : "Non";
+					aDeg.text = oA.degradee=="O" ? "Oui" : "Non";
+				}
+				if(dataDiag[3].children){
+					var oP:Object = dataDiag[3].children[0];
+					pDate.text = oP.dateDiag;
+					pPres.text = oP.name=="O" ? "Oui" : "Non";
+					pSeuil.text = oP.depasse=="O" ? "Oui" : "Non";
+				}
+				
+				dpeDate.text = dataDiag[0].dateDiag;
+				//ajoute les flèches pour chaque répartition
+				grFlecheGESRepartition.removeAllElements();
+				grFlecheDPERepartition.removeAllElements();
+				for each (var g:Object in dataDiag[0].children)
+				{
+					creaFleches("GES",g.moyConso,g.nb);	
+				}
+				for each (var d:Object in dataDiag[1].children)
+				{
+					creaFleches("DPE",d.moyConso,d.nb);	
+				}
+				if(dataDiag[0].moyConso){
+					grFlecheGES.visible = true;
+					grFlecheDPE.visible = true;
+					grFlecheGES.y = getYFleche("GES",dataDiag[0].moyConso as int);
+					grFlecheDPE.y = getYFleche("DPE",dataDiag[1].moyConso as int);
+					lblFlecheGES.text = (dataDiag[0].moyConso as int).toString();
+					lblFlecheDPE.text = (dataDiag[1].moyConso as int).toString();
+				}else{
+					grFlecheGES.visible = false;
+					grFlecheDPE.visible = false;
+				}
+			}
 			
 			protected function showPdf(url:String):void
 			{
 				var targetURL:URLRequest = new URLRequest (url);
 				navigateToURL(targetURL, "_blank");
 			}
+
+			protected function creaFleches(type:String, conso:int, mesure:String):void
+			{
+				//création de la fleche
+				var f:grpFleche = new grpFleche();
+				f.mesure = mesure;
+				f.y = getYFleche(type, conso);
+				f.x = 440;
+				if(type=="DPE"){
+					grFlecheDPERepartition.addElement(f);
+				}
+				if(type=="GES"){
+					grFlecheGESRepartition.addElement(f);
+				}
+				
+			}
 			
+			protected function getYFleche(type:String, conso:int):int
+			{
+				var y:int=0;
+				if(type=="DPE"){
+					if(conso <= 50){
+						y = 46;
+					}
+					if(conso >= 51 && conso <= 90 ){
+						y = 74;
+					}
+					if(conso >= 91 && conso <= 150 ){
+						y = 102;
+					}
+					if(conso >= 151 && conso <= 230 ){
+						y = 130;
+					}
+					if(conso >= 231 && conso <= 330 ){
+						y = 159;
+					}
+					if(conso >= 331 && conso <= 450 ){
+						y = 187;
+					}
+					if(conso > 450){
+						y = 216;
+					}
+				}
+				
+				if(type=="GES"){
+					if(conso <= 5){
+						y = 46;
+					}
+					if(conso >= 6 && conso <= 10 ){
+						y = 74;
+					}
+					if(conso >= 11 && conso <= 20 ){
+						y = 102;
+					}
+					if(conso >= 21 && conso <= 35 ){
+						y = 130;
+					}
+					if(conso >= 36 && conso <= 55 ){
+						y = 159;
+					}
+					if(conso >= 56 && conso <= 80 ){
+						y = 187;
+					}
+					if(conso > 80){
+						y = 216;
+					}
+				}
+				return y;
+			}			
+				
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -45,8 +173,8 @@
 					</s:stroke>
 				</s:Line>
 				<s:HGroup verticalAlign="bottom">
-					<s:Label text="Mesure conservatoire :" styleName="stitreBlocB"/><s:Label text=""/>
-					<s:Label text="Date des travaux :" styleName="stitreBlocB"/><s:Label text=""/>
+					<s:Label text="Mesure conservatoire :" styleName="stitreBlocB"/><s:Label id="paMesCons" text=""/>
+					<s:Label text="Date des travaux :" styleName="stitreBlocB"/><s:Label id="paDateTrav" text=""/>
 				</s:HGroup>
 				<s:HGroup width="100%">
 					<s:VGroup width="100%" >
@@ -59,13 +187,13 @@
 							</s:VGroup>				
 						</s:Group>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Date :" styleName="stitreBlocB"/><s:Label text="Type de bâtiment"/>
+							<s:Label text="Date :" styleName="stitreBlocB"/><s:Label id="pDate" text="Type de bâtiment"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Présence :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Présence :" styleName="stitreBlocB"/><s:Label id="pPres" text="1927"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Seuil dépassé :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Seuil dépassé :" styleName="stitreBlocB"/><s:Label id="pSeuil" text="1927"/>
 						</s:HGroup>
 					</s:VGroup>
 					<s:VGroup width="100%" >
@@ -78,13 +206,13 @@
 							</s:VGroup>				
 						</s:Group>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Date :" styleName="stitreBlocB"/><s:Label text="Type de bâtiment"/>
+							<s:Label text="Date :" styleName="stitreBlocB"/><s:Label id="aDate" text="Type de bâtiment"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Présence :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Présence :" styleName="stitreBlocB"/><s:Label id="aPres" text="1927"/>
 						</s:HGroup>
 						<s:HGroup verticalAlign="bottom">
-							<s:Label text="Dégradée :" styleName="stitreBlocB"/><s:Label text="1927"/>
+							<s:Label text="Dégradée :" styleName="stitreBlocB" /><s:Label id="aDeg" text="1927"/>
 						</s:HGroup>
 					</s:VGroup>
 				</s:HGroup>
@@ -94,7 +222,7 @@
 						<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
 					</s:stroke>
 				</s:Line>
-				<s:Label text="Date du diagnostique :" styleName="stitreBlocB"/><s:Label text=""/>
+				<s:Label text="Date du diagnostique :" styleName="stitreBlocB"/><s:Label id="dpeDate" text=""/>
 				<s:HGroup height="100%" width="100%" minHeight="260">
 					<s:VGroup width="100%" >
 						<s:Group height="26" width="100%" >
@@ -104,12 +232,15 @@
 							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
 								<s:Label styleName="stitreBlocW" text="Consommation énergétique"/>
 							</s:VGroup>				
-							<mx:Canvas>
+							<mx:Canvas id="cnvDPE">
+								<s:Label y="30" x="240" text="Conso. moyenne"/>
+								<s:Label y="30" x="440" text="Nb. par cat."/>
 								<s:Image y="20" height="240" source="images/DPE.png"/>
-								<s:Group id="grFlecheDPE" x="300" y="46" width="40" height="23">
+								<s:Group id="grFlecheDPE" x="240" y="240" width="40" height="23">
 									<s:Image  width="40" height="23" source="images/DPE-fleche.png"/>
-									<s:Label  width="40" height="23" color="#FFFFFF" fontSize="12" text="27" textAlign="center" verticalAlign="middle"/>
+									<s:Label id="lblFlecheDPE" width="40" height="23" color="#FFFFFF" fontSize="12" text="27" textAlign="center" verticalAlign="middle"/>
 								</s:Group>			
+								<s:Group id="grFlecheDPERepartition" />
 							</mx:Canvas>
 						</s:Group>
 					</s:VGroup>
@@ -121,12 +252,15 @@
 							<s:VGroup horizontalAlign="left" verticalAlign="middle" paddingLeft="6" height="100%" width="100%" >
 								<s:Label styleName="stitreBlocW" text="Emissions de gaz à effet de serre"/>
 							</s:VGroup>				
-							<mx:Canvas>
+							<mx:Canvas id="cnvGES">
+								<s:Label y="30" x="240" text="Conso. moyenne"/>
+								<s:Label y="30" x="440" text="Nb. par cat."/>
 								<s:Image y="20" height="240" source="images/GES.png"/>
-								<s:Group id="grFlecheGES" x="177" y="159" width="40" height="23">
+								<s:Group id="grFlecheGES" x="240" y="240" width="40" height="23">
 									<s:Image  width="40" height="23" source="images/DPE-fleche.png"/>
-									<s:Label  width="40" height="23" color="#FFFFFF" fontSize="12" text="27" textAlign="center" verticalAlign="middle"/>
+									<s:Label id="lblFlecheGES" width="40" height="23" color="#FFFFFF" fontSize="12" text="27" textAlign="center" verticalAlign="middle"/>
 								</s:Group>			
+								<s:Group id="grFlecheGESRepartition" />
 							</mx:Canvas>
 						</s:Group>
 					</s:VGroup>
@@ -139,7 +273,7 @@
 								<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
 							</s:stroke>
 						</s:Line>
-						<s:HGroup verticalAlign="bottom">
+						<s:HGroup verticalAlign="bottom" visible="false">
 							<s:Label text="Cliquer sur l'icone pour télécharger le document" styleName="stitreBlocB"/>
 							<s:Image source="images/pdf.png" click="showPdf('DiagAsc')" />
 						</s:HGroup>									
@@ -151,7 +285,7 @@
 								<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
 							</s:stroke>
 						</s:Line>
-						<s:HGroup verticalAlign="bottom">
+						<s:HGroup verticalAlign="bottom" visible="false">
 							<s:Label text="Cliquer sur l'icone pour télécharger le document" styleName="stitreBlocB"/>
 							<s:Image source="images/pdf.png" click="showPdf('DiagAsc')"/>
 						</s:HGroup>									
