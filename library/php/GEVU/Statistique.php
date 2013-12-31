@@ -15,6 +15,98 @@ class GEVU_Statistique extends GEVU_Site{
 		
     }
 
+    
+    
+	/**
+	* récupère les données PSP du patrimoine
+    * @param 	string $idBase
+    * @param 	string $where
+    * 
+    * @return 	array
+    */
+	public function getPatrimoinePSP($idBase=false, $where=""){
+	   $c = str_replace("::", "_", __METHOD__)."_".$idBase; 
+	   $rs = false;//$this->cache->load($c);
+       if(!$rs){
+    		//connexion à la base
+    		$this->db = $this->getDb($idBase);
+
+    		//récupère les données pour les critères
+    		$rs["Critere"] = $this->getPSPstat("Critere", $where);     		
+    		//pour les services
+    		$rs["Serv"] = $this->getPSPstat("Serv", $where);     		
+			//pour les antennes
+    		$rs["Ant"] = $this->getPSPstat("Ant", $where);     		
+    		
+    		$this->cache->save($rs, $c);
+        }
+        return $rs;
+	}
+
+	/**
+	* récupère les données PSP de base
+    * @param 	string $idBase
+    * @param 	string $where
+    * 
+    * @return 	array
+    */
+	public function getPSP($idBase=false, $where=""){
+	   $c = str_replace("::", "_", __METHOD__)."_".$idBase; 
+	   $rs = false;//$this->cache->load($c);
+       if(!$rs){
+    		//connexion à la base
+    		$this->db = $this->getDb($idBase);
+    		$dbPSP = new Models_DbTable_Gevu_psp($this->db);
+    		if($where=="")$rs = $dbPSP->getAll();     		
+    		else $rs = $dbPSP->findByWhere($where);
+    		$this->cache->save($rs, $c);
+        }
+        return $rs;
+	}
+	
+	/**
+	* récupère les psp
+    * @param 	string $type
+    * @param 	string $where
+    * 
+    * @return string
+    */
+	public function getPSPstat($type, $where){
+	   $c = str_replace("::", "_", __METHOD__)."_".$type; 
+	   $s = false;//$this->cache->load($c);
+	   if($where!="")$where = " WHERE ".$where;
+       if(!$s){
+       		//initialisation de la réponse
+       		$s = array();
+        	//récupère les sommes pour les antennes
+    		$sql = "SELECT ".$type."
+				, SUM(prev2013) p2013, SUM(prev2014) p2014, SUM(prev2015) p2015, SUM(prev2016) p2016, SUM(prev2017) p2017, SUM(prev2018) p2018, SUM(prev2019) p2019, SUM(prev2020) p2020, SUM(prev2021) p2021, SUM(prev2022) p2022, SUM(prev2023) p2023, SUM(prev2024) p2024, SUM(prev2025) p2025
+			FROM gevu_psp
+			".$where."
+			GROUP BY ".$type;
+    		$stmt = $this->db->query($sql);
+	    	$arr = $stmt->fetchAll();
+	    	foreach ($arr as $r) {
+	    		foreach ($r as $k => $v) {
+	    			if($k!=$type){
+			    		$s[$r[$type]][$k]= $v; 
+			    		//cumul des types
+			    		if(is_numeric($r[$type]))
+				    		$typeTot = "tot".substr($r[$type], 0, -1)."0";
+				    	else 	 
+				    		$typeTot = "tot".$r[$type];
+				    	if(isset($s[$typeTot][$k]))$s[$typeTot][$k] += $v;
+				    	else $s[$typeTot][$k] = $v;
+	    			}
+	    		}
+	    	}
+	    	
+	    	$this->cache->save($s, $c);
+        }
+        return $s;
+    }
+    
+    
 	/**
 	* récupère les impayés par antenne
     * @param string $idBase
@@ -96,7 +188,7 @@ class GEVU_Statistique extends GEVU_Site{
 	public function getBatimentDonGen($idBase=false, $idLieu=-1){
 
 		$c = str_replace("::", "_", __METHOD__)."_".$idBase."_".$idLieu; 
-	   	$rs = $this->cache->load($c);
+	   	$rs = false;//$this->cache->load($c);
        	if(!$rs){
     		//connexion à la base
     		$db = $this->getDb($idBase);
@@ -117,6 +209,9 @@ class GEVU_Statistique extends GEVU_Site{
         	
 			//traitement des stats Répartition par type de financement
 			$rs[] = $this->typeFinancement($idLieu);
+			
+			//traitement des stats diagnostics
+			$rs[] = $this->getDiags($idLieu);
         				        	
     		//compilation du tableau total
 			$rs = array("name"=>"Bâtiment", "idLieu"=>$idLieu,"children"=>$rs);        	
@@ -124,6 +219,33 @@ class GEVU_Statistique extends GEVU_Site{
         }
         return $rs;		
 	}	
+
+	/**
+	* récupère les statistiques générales d'un logement
+    * @param string $idBase
+    * @param int 	$idLieu
+    * @return 		string
+    */
+	public function getLogementDonGen($idBase=false, $idLieu=-1){
+
+		$c = str_replace("::", "_", __METHOD__)."_".$idBase."_".$idLieu; 
+	   	$rs = false;//$this->cache->load($c);
+       	if(!$rs){
+    		//connexion à la base
+    		$db = $this->getDb($idBase);
+    		
+			//traitement des stats logement
+			$rStat = "";
+			
+			//traitement des stats diagnostics
+			$rs[] = $this->getDiags($idLieu);
+        				        	
+    		//compilation du tableau total
+			$rs = array("name"=>"Logement", "idLieu"=>$idLieu,"children"=>$rs);        	
+        	$this->cache->save($rs, $c);
+        }
+        return $rs;		
+	}		
 	/**
 	* récupère les statistiques générales d'un groupe
     * @param string $idBase
@@ -166,7 +288,10 @@ class GEVU_Statistique extends GEVU_Site{
         	
 			//traitement des stats Répartition par type de financement
 			$rs[] = $this->typeFinancement($idLieu);
-			        	
+
+			//traitement des stats diagnostics
+			$rs[] = $this->getDiags($idLieu);
+			
     		//compilation du tableau total
 			$rs = array("name"=>"Groupe", "idLieu"=>$idLieu,"children"=>$rs);        	
         	$this->cache->save($rs, $c);
@@ -176,57 +301,148 @@ class GEVU_Statistique extends GEVU_Site{
 	
 	/**
 	* récupère les diagnostics énergétique et carbonne du patrimoine
+    * @param int $idLieu
     * @param string $idBase
-    * @return string
+    * 
+    * @return array
     */
-	public function getPatrimoineDiag($idBase=false){
+	public function getDiags($idLieu=false, $idBase=false){
 	   $c = str_replace("::", "_", __METHOD__)."_".$idBase; 
-	   $rs = $this->cache->load($c);
-       if(!$rs){
-    		//connexion à la base
-    		$db = $this->getDb($idBase);
-    		
-        	//récupère les données GES
-    		$sql = "SELECT COUNT(*) nbLog
-				, s.DPE_Categorie_Emissions_GES
-				, SUM(DATEDIFF(CURDATE(), STR_TO_DATE(DPE_Date, '%d/%m/%Y %H:%i')))/COUNT(DISTINCT s.id_stat) moyAgeDiag
-				, SUM(YEAR(CURRENT_DATE())-s.Annee_Construction)/COUNT(DISTINCT s.id_stat) moyAge
-				FROM gevu_stats s 
-				WHERE DPE_Date != ''
-				GROUP BY s.DPE_Categorie_Emissions_GES";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$rType="";
-	    	foreach ($arr as $type) {
-	    		$geos = $this->getGeoStat($db, "DPE_Categorie_Emissions_GES", $type["DPE_Categorie_Emissions_GES"]);
-				$rType[] = array("name"=>$type["DPE_Categorie_Emissions_GES"],"diag"=>"GES","nb"=>$type["nbLog"],"moyAgeDiag"=>$type["moyAgeDiag"],"moyAge"=>$type["moyAge"],"geos"=>$geos);			
-	    	}
-			$rStat[] = array("name"=>"Bilan carbone","visible"=>true,"diag"=>"GES","children"=>$rType);			
-	    	
-	    	//récupère les données DPE
-    		$sql = "SELECT COUNT(*) nbLog
-				, s.DPE_Categorie_Consommation
-				, SUM(DATEDIFF(CURDATE(), STR_TO_DATE(DPE_Date, '%d/%m/%Y %H:%i')))/COUNT(DISTINCT s.id_stat) moyAgeDiag
-				, SUM(YEAR(CURRENT_DATE())-s.Annee_Construction)/COUNT(DISTINCT s.id_stat) moyAge
-				FROM gevu_stats s 
-				WHERE DPE_Date != ''
-				GROUP BY s.DPE_Categorie_Consommation";
-    		$stmt = $db->query($sql);
-	    	$arr = $stmt->fetchAll();
-	    	$rType="";
-	    	foreach ($arr as $type) {
-	    		$geos = $this->getGeoStat($db, "DPE_Categorie_Consommation", $type["DPE_Categorie_Consommation"]);
-		    	$rType[] = array("name"=>$type["DPE_Categorie_Consommation"],"diag"=>"DPE","nb"=>$type["nbLog"],"moyAgeDiag"=>$type["moyAgeDiag"],"moyAge"=>$type["moyAge"],"geos"=>$geos);
-	    	}
-			$rStat[] = array("name"=>"Diagnostic de performance énergétique","visible"=>true,"diag"=>"DPE","children"=>$rType);			
-    		//compilation du tableau total
-			$rs = array("name"=>"Diagnostics","visible"=>true,"children"=>$rStat);        	
-        	$this->cache->save($rs, $c);
-        }
-        return $rs;
+	    if($idLieu){
+	    	$join = "INNER JOIN gevu_lieux le ON le.id_lieu = s.id_lieu 
+				INNER JOIN gevu_lieux l ON le.lft BETWEEN l.lft AND l.rgt AND l.id_lieu = ".$idLieu;
+	    }
+    	
+        //récupère les données GES
+    	$sql = "SELECT COUNT(*) nbLog
+			, DPE_Categorie_Emissions_GES, MAX(s.DPE_Date) dateDiag
+			, FLOOR(SUM(s.DPE_emissions_GES)/COUNT(DISTINCT s.id_stat)) moyConso
+			, SUM(DATEDIFF(CURDATE(), STR_TO_DATE(DPE_Date, '%d/%m/%Y %H:%i')))/COUNT(DISTINCT s.id_stat) moyAgeDiag
+			, SUM(YEAR(CURRENT_DATE())-s.Annee_Construction)/COUNT(DISTINCT s.id_stat) moyAge
+			FROM gevu_stats s 
+			".$join."
+			WHERE DPE_Date != ''
+			GROUP BY s.DPE_Categorie_Emissions_GES";
+    	$stmt = $this->db->query($sql);
+    	$arr = $stmt->fetchAll();
+    	$rType="";
+    	$conso=0;    	
+    	foreach ($arr as $type) {
+    		$geos = $this->getGeoStat($this->db, "DPE_Categorie_Emissions_GES", $type["DPE_Categorie_Emissions_GES"]);
+			$rType[] = array("name"=>$type["DPE_Categorie_Emissions_GES"],"diag"=>"GES","nb"=>$type["nbLog"]
+				, "dateDiag"=>$type["dateDiag"],"moyConso"=>$type["moyConso"],"moyAgeDiag"=>$type["moyAgeDiag"],"moyAge"=>$type["moyAge"],"geos"=>$geos);
+			//calcule l'age du diag
+			if(!$dateDiag){
+		    	$ageDiag = $type["moyAgeDiag"];
+				$dateDiag=$type["dateDiag"];
+			}else{
+				if($type["moyAgeDiag"]<$ageDiag){
+					$dateDiag=$type["dateDiag"];
+			    	$ageDiag = $type["moyAgeDiag"];
+				}			
+			}
+			//calcule la consommation pour la moyenne
+			$conso += $type["moyConso"];
+    	}
+   		$rStat[] = array("name"=>"Bilan carbone","visible"=>true,"moyConso"=>intval($conso/count($arr)),"diag"=>"GES","dateDiag"=>$type["dateDiag"],"children"=>$rType);			
+    	
+    	//récupère les données DPE
+    	$sql = "SELECT COUNT(*) nbLog
+			, DPE_Categorie_Consommation, MAX(s.DTA_Date) dateDiag
+			, FLOOR(SUM(s.DPE_consommation_reelle)/COUNT(DISTINCT s.id_stat)) moyConso
+			, SUM(DATEDIFF(CURDATE(), STR_TO_DATE(DPE_Date, '%d/%m/%Y %H:%i')))/COUNT(DISTINCT s.id_stat) moyAgeDiag
+			, SUM(YEAR(CURRENT_DATE())-s.Annee_Construction)/COUNT(DISTINCT s.id_stat) moyAge
+			FROM gevu_stats s 
+			".$join."
+			WHERE DPE_Date != ''
+			GROUP BY s.DPE_Categorie_Consommation";
+    	$stmt = $this->db->query($sql);
+    	$arr = $stmt->fetchAll();
+    	$rType="";
+    	$conso=0;
+    	foreach ($arr as $type) {
+    		$geos = $this->getGeoStat($this->db, "DPE_Categorie_Consommation", $type["DPE_Categorie_Consommation"]);
+	    	$rType[] = array("name"=>$type["DPE_Categorie_Consommation"],"diag"=>"DPE","nb"=>$type["nbLog"]
+	    		, "dateDiag"=>$type["dateDiag"],"moyConso"=>$type["moyConso"],"moyAgeDiag"=>$type["moyAgeDiag"],"moyAge"=>$type["moyAge"],"geos"=>$geos);
+			//calcule l'age du diag
+			if(!$dateDiag){
+		    	$ageDiag = $type["moyAgeDiag"];
+				$dateDiag=$type["dateDiag"];
+			}else{
+				if($type["moyAgeDiag"]<$ageDiag){
+					$dateDiag=$type["dateDiag"];
+			    	$ageDiag = $type["moyAgeDiag"];
+				}			
+			}
+			//calcule la consommation pour la moyenne
+			$conso += $type["moyConso"];
+    	}
+		$rStat[] = array("name"=>"Diagnostic de performance énergétique","visible"=>true,"moyConso"=>intval($conso/count($arr)),"diag"=>"DPE","dateDiag"=>$type["dateDiag"],"children"=>$rType);			
+
+    	//récupère les données amiante
+    	$sql = "SELECT COUNT(*) nbLog
+			, s.DTA_Presence_Amiante, s.DTA_Presence_Amiante_Degradee, s.DTA_Mesure_Conservatoire, MAX(s.DTA_Date) dateDiag, MAX(s.DTA_Date_Travaux) dateTrav
+			, SUM(DATEDIFF(CURDATE(), STR_TO_DATE(s.DTA_Date, '%d/%m/%Y %H:%i')))/COUNT(DISTINCT s.id_stat) moyAgeDiag
+			, SUM(DATEDIFF(CURDATE(), STR_TO_DATE(s.DTA_Date_Travaux, '%d/%m/%Y %H:%i')))/COUNT(DISTINCT s.id_stat) moyAgeTrav
+			FROM gevu_stats s 
+			".$join."
+			WHERE DTA_Date != ''
+			GROUP BY s.DTA_Presence_Amiante, s.DTA_Presence_Amiante_Degradee, s.DTA_Mesure_Conservatoire";
+    	$stmt = $this->db->query($sql);
+    	$arr = $stmt->fetchAll();
+    	$rType="";
+    	foreach ($arr as $type) {
+    		$geos = $this->getGeoStat($this->db, "DTA_Presence_Amiante", $type["DTA_Presence_Amiante"]);
+	    	$rType[] = array("name"=>$type["DTA_Presence_Amiante"], "degradee"=>$type["DTA_Presence_Amiante_Degradee"], "conservatoire"=>$type["DTA_Mesure_Conservatoire"]
+	    		,"diag"=>"DTA","nb"=>$type["nbLog"],"moyAgeDiag"=>$type["moyAgeDiag"],"moyAgeTrav"=>$type["moyAgeTrav"],"dateTrav"=>$type["dateTrav"],"dateDiag"=>$type["dateDiag"],"geos"=>$geos);
+			//calcule l'age du diag
+			if(!$dateDiag){
+		    	$ageDiag = $type["moyAgeDiag"];
+				$dateDiag=$type["dateDiag"];
+			}else{
+				if($type["moyAgeDiag"]<$ageDiag){
+					$dateDiag=$type["dateDiag"];
+			    	$ageDiag = $type["moyAgeDiag"];
+				}			
+			}
+    	}
+		$rStat[] = array("name"=>"Diagnostic amiante","visible"=>true,"diag"=>"DTA","dateDiag"=>$type["dateDiag"],"children"=>$rType);			
+		 			
+
+    	//récupère les données plomb
+    	$sql = "SELECT COUNT(*) nbLog
+			, s.CREP_presence_Plomb, s.CREP_Seuil_Plomb_depasse, MAX(s.CREP_Date) dateDiag
+			, SUM(DATEDIFF(CURDATE(), STR_TO_DATE(s.CREP_Date, '%d/%m/%Y %H:%i')))/COUNT(DISTINCT s.id_stat) moyAgeDiag
+			FROM gevu_stats s 
+			".$join."
+			WHERE CREP_Date != ''
+			GROUP BY s.CREP_presence_Plomb, s.CREP_Seuil_Plomb_depasse";
+    	$stmt = $this->db->query($sql);
+    	$arr = $stmt->fetchAll();
+    	$rType="";
+    	foreach ($arr as $type) {
+    		$geos = $this->getGeoStat($this->db, "CREP_presence_Plomb", $type["CREP_presence_Plomb"]);
+	    	$rType[] = array("name"=>$type["CREP_presence_Plomb"],"depasse"=>$type["CREP_Seuil_Plomb_depasse"]
+	    		,"diag"=>"CREP","nb"=>$type["nbLog"],"moyAgeDiag"=>$type["moyAgeDiag"], "dateDiag"=>$type["dateDiag"],"geos"=>$geos);
+			//calcule l'age du diag
+			if(!$dateDiag){
+		    	$ageDiag = $type["moyAgeDiag"];
+				$dateDiag=$type["dateDiag"];
+			}else{
+				if($type["moyAgeDiag"]<$ageDiag){
+					$dateDiag=$type["dateDiag"];
+			    	$ageDiag = $type["moyAgeDiag"];
+				}			
+			}
+    	}
+		$rStat[] = array("name"=>"Diagnostic plomb","visible"=>true,"diag"=>"CREP","dateDiag"=>$type["dateDiag"],"children"=>$rType);			
+		
+		//compilation du tableau total
+        return array("name"=>"Diagnostics","visible"=>true,"children"=>$rStat);
 			
 	}
     
+
 	/**
 	* récupère les données géographique pour une stat
     * @param  db 		$db
@@ -320,7 +536,10 @@ class GEVU_Statistique extends GEVU_Site{
         	
 			//traitement des stats Répartition par age du patrimoine
 			$rs[] = $this->typeAge();
-			        	
+
+			//traitement des stats diagnostics
+			$rs[] = $this->getDiags();
+			
     		//compilation du tableau total
 			$rs = array("name"=>"Patrimoine","children"=>$rs);        	
         	$this->cache->save($rs, $c);

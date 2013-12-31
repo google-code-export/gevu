@@ -388,6 +388,100 @@ class GEVU_Import extends GEVU_Site{
     }
 
     /**
+     * importation d'un fichier PSP
+     *
+     * @param int 		$idDoc = l'identifiant du document qui contient les données
+     * @param int 		$idExi = l'identifiant de l'existence exécutant l'importation
+     * @param string 	$idBase = l'identifiant de la base de données pour l'importation
+     * 
+     */
+    public function traiteImportPSP($idDoc, $idExi, $idBase){
+		
+    	$this->bTrace = true;					// pour afficher le nombre de lignes importées et le timing    	
+    	$this->echoTrace = false;//__METHOD__."<br/>";	//pour stocker les traces
+    	$this->temps_debut = microtime(true);
+		$this->trace("DEBUT ".__METHOD__);
+    	
+    	$this->idBase = $idBase;
+    	$this->diag = new GEVU_Diagnostique($idBase);
+    	$this->db = $this->diag->db;
+    	
+		$this->trace('création des models');
+		$this->dbPsp = new Models_DbTable_Gevu_psp($this->db);
+		$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+		$this->dbDoc = new Models_DbTable_Gevu_docs($this->db);
+		
+		$this->trace("création de l'instant");
+		$c = str_replace("::", "_", __METHOD__); 
+		$this->idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
+		
+		$this->trace("Récupère les infos du document");
+    	$docInfos = $this->dbDoc->findByIdDoc($idDoc);    		
+    	
+    	//chargement du fichier
+		$ficPath = $_SERVER["DOCUMENT_ROOT"].'/gevu/data/EXTRAC_GEVU_20131114utf8.csv';
+    	//$ficPath = 'c:\wamp\www\gevu\data\EXTRAC_GEVU_20130910utf8cours.csv';
+		$ficPath = 'c:\wamp\www\gevu\data\psp\PlanInvestissement2014-2023.csv';
+		$this->trace("chargement du fichier : ".$ficPath);
+		$arrCSV = $this->csvToArray($ficPath);
+			
+		$nbRow = count($arrCSV);
+		$this->trace("Nb Ligne =".$nbRow);
+
+		for ($x = 4; $x < $nbRow; $x++) {
+			$this->trace("Ligne ".$x);			
+			//if($x==1000)  break;
+			$this->arr = $arrCSV[$x];
+			if($this->arr[1]!=""){
+				$idPsp = $this->dbPsp->ajouter(array(
+					"id_instant"=>$this->idInst,			
+	  				"PPI"=>$this->arr[0],
+	  				"Ant"=>$this->arr[1],
+	  				"Serv"=>$this->arr[2],
+	  				"pgr"=>$this->arr[3],
+	  				"code_bat"=>$this->arr[4],
+	  				"Critere"=>$this->arr[5],
+	  				"PPI_2011"=>$this->arr[6],
+	  				"PPI_2012"=>$this->arr[7],
+	  				"Nom_Groupe"=>$this->arr[8],
+	  				"Agglo"=>$this->arr[9],
+	  				"Nbre_Logts"=>$this->arr[10],
+	  				"Designations"=>$this->arr[11],
+	  				"Priorite"=>$this->arr[12],
+	  				"Observations"=>$this->arr[13],
+	  				"ANRU"=>$this->arr[14],
+	  				"Extraction_PPI"=>$this->arr[15],
+	  				"Estimation"=>$this->supSepMil($this->arr[16]),
+	  				"prev2013"=>$this->supSepMil($this->arr[17]),
+	  				"prev2014"=>$this->supSepMil($this->arr[18]),
+	  				"prev2015"=>$this->supSepMil($this->arr[19]),
+	  				"prev2016"=>$this->supSepMil($this->arr[20]),
+	  				"prev2017"=>$this->supSepMil($this->arr[21]),
+	  				"prev2018"=>$this->supSepMil($this->arr[22]),
+	  				"prev2019"=>$this->supSepMil($this->arr[23]),
+	  				"prev2020"=>$this->supSepMil($this->arr[24]),
+	  				"prev2021"=>$this->supSepMil($this->arr[25]),
+	  				"prev2022"=>$this->supSepMil($this->arr[26]),
+	  				"prev2023"=>$this->supSepMil($this->arr[27]),
+	  				"prev2024"=>$this->supSepMil($this->arr[28]),
+	  				"prev2025"=>$this->supSepMil($this->arr[29]),
+	  				"TOTAL"=>$this->supSepMil($this->arr[30]),
+	  				"Commentaires"=>$this->arr[31],
+	  				"UG"=>$this->arr[32],
+	  				"Resultat_Locatif_Groupe"=>$this->arr[33],
+	  				"Note_commerciale"=>$this->arr[34],
+	  				"Note_Peuplement"=>$this->arr[35],
+	  				"Note_technique"=>$this->arr[36],
+	  				"Enjeux_Valides"=>$this->arr[37],
+	  				"QSR"=>$this->arr[38]				
+				));
+				$this->trace("Nouvelle ligne psp : ".$idPsp);			
+			}
+		}
+
+    }
+    
+    /**
      * importation d'un fichier de logement 
      *
      * @param int $idDoc = l'identifiant du document qui contient les données
@@ -761,19 +855,37 @@ class GEVU_Import extends GEVU_Site{
 		$this->getDb($idBase);
 		$this->dbSta = new Models_DbTable_Gevu_stats($this->db);
 		$this->dbG = new Models_DbTable_Gevu_geos($this->db);
-    	
+		$this->dbB = new Models_DbTable_Gevu_batiments($this->db);
+		$this->dbGrp = new Models_DbTable_Gevu_groupes($this->db);
+		
 		// parcourt toute les lignes du fichier
 		foreach ($arrCSV as $arr) {
 			//
-			$this->trace("récupère l'identifiant de lieu = ".$arr[6]);
 			if($findBy=="Code_Logement"){
+				$ref = $arr[6];
 				$rs = $this->dbSta->findIdLieuByCode_Logement($arr[6]);
 			}
+			if($findBy=="Ref_Bat"){
+				$ref = $arr[0];
+				$rs = $this->dbB->findByRef($arr[0]);
+			}
 			if($findBy=="adresse"){
+				$ref = "$arr[0], $arr[1], $arr[2], $arr[3]";
 				$rs = $this->dbG->findIdsLieuxByAdresse($arr[0], $arr[1], $arr[2], $arr[3]);
 			}
+			if($findBy=="Ref_Grp"){
+				$ref = $arr[0];
+				$rs = $this->dbGrp->findByRef($arr[0]);
+			}
+			$this->trace("récupère l'identifiant de lieu = ".$ref);
 			foreach ($rs as $r) {
 				$this->trace("Identifiant récupéré = ".$r['id_lieu']);
+				if($updateFor=="latlngZoom"){
+				    $this->dbG->editByLieu($r['id_lieu'],array("lat"=>$arr[1], "lng"=>$arr[2],"adresse"=>$arr[4],"zoom_max"=>$arr[3]));
+				}
+				if($updateFor=="latlngKML"){
+				    $this->dbG->editByLieu($r['id_lieu'],array("lat"=>$arr[1], "lng"=>$arr[2],"adresse"=>$arr[4],"zoom_max"=>$arr[3],"kml"=>$arr[5]));
+				}
 				if($updateFor=="latlng"){
 				    $this->dbG->editByLieu($r['id_lieu'],array("lat"=>$arr[4], "lng"=>$arr[5]));
 				}
@@ -786,6 +898,16 @@ class GEVU_Import extends GEVU_Site{
 		}
 		$this->trace("DEBUT ".__METHOD__);
     }    
+    
+    /**
+     * supprime les séparateur de millier 
+     *
+     * @param string $str 			= chaine à formater
+     * @return string
+     */
+    function supSepMil($str){
+    	return preg_replace("/".chr(160)."/", "", preg_replace("/".chr(194)."/", "", $str));
+    }
     
 /** merci à http://j-reaux.developpez.com/tutoriel/php/fonctions-redimensionner-image/
 // 	---------------------------------------------------------------

@@ -16,7 +16,59 @@ class GEVU_Alceane extends GEVU_Site{
     	parent::__construct($idBase, $cache);
 		
     }
-	    
+
+	/**
+	* Trouve des lieux 
+    * @param string $query
+    * @param string $idBase
+    * 
+    * @return DomDocument
+    */
+	public function findLieu($query, $idBase=false){
+		$c = str_replace("::", "_", __METHOD__)."_".$query."_".$idBase;
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        $dbL = new Models_DbTable_Gevu_lieux($this->db);
+        $dbG = new Models_DbTable_Gevu_geos($this->db);
+        //initialise l'objet diagnostique
+        $oDiag = new GEVU_Diagnostique($idBase);
+        
+    	$xml='<node idLieu="1" lib="Lieux trouvés" fake="0">';
+
+        //recherche dans les noms de lieu
+    	$arrLieux = $dbL->trouveByLib($query);
+        $first = true;
+    	foreach ($arrLieux as $r) {
+    		if($first) $xml .= '<node idLieu="-1" lib="Dans les noms" fake="0">';
+    		$first=false;
+			$xml .= $oDiag->getXmlLieu($r,true);
+        }
+        if(!$first)$xml .= "</node>";
+    	
+    	//recherche dans les adresses
+    	$arrGeo = $dbG->trouveByAdresse($query);
+        $first = true;
+    	foreach ($arrGeo as $r) {
+    		if($first) $xml .= '<node idLieu="-1" lib="Dans les adresses" fake="0">';
+    		$first=false;
+			$xml .= $oDiag->getXmlLieu($r,true);
+        }
+        if(!$first)$xml .= "</node>";
+        
+        $xml .= "</node>";
+
+        //return $xml;
+        //
+        if($xml!=""){
+	        $dom = new DomDocument();
+	        $dom->loadXML($xml);
+        }else{
+	        $dom = false;
+        }
+        return $dom;
+        //
+	}
+	
 	/**
 	 * récupère l'arboressence initiale d'Alceane au format xml
     * @param int $idLieu
@@ -26,12 +78,12 @@ class GEVU_Alceane extends GEVU_Site{
     */
 	public function getArboAntenne($idLieu=0, $idBase=false){
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase;
-		//
+		/*
 		$dom = new DomDocument();
 		$dom->load('../tmp/arboAlceane.xml'); 
         return $dom;
-		//
-	   	$xml = $this->cache->load($c);
+		*/
+	   	$xml = false;//$this->cache->load($c);
         if(!$xml){
 			//initialise les gestionnaires de base de données
 			$this->getDb($idBase);

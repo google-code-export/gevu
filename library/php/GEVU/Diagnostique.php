@@ -1269,6 +1269,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 				if($stat==1) $arrStat = $oStat->getAntenneDonGen($idBase, $idLieu);
 				if($stat==2) $arrStat = $oStat->getGroupeDonGen($idBase, $idLieu);
 				if($stat==3) $arrStat = $oStat->getBatimentDonGen($idBase, $idLieu);
+				if($stat==4) $arrStat = $oStat->getLogementDonGen($idBase, $idLieu);
 				
 				$res["___stats"] = $arrStat;	
 	        }
