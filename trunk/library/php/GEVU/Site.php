@@ -30,6 +30,7 @@ class GEVU_Site{
     var $dbO;
     var $dbObjExt;
 	var $dbP;
+	var $dbPsp;
 	var $dbPtc;
 	var $dbPcl;
     var $dbScena;
