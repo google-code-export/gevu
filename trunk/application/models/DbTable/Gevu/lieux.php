@@ -711,5 +711,22 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 		// WHERE l.lock_diag LIKE "'.$oLock.'"'; 
 		$stmt = $this->_db->query($sql);
     }     
+
+    /**
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param varchar $lib
+     * 
+     * @return array
+     */
+    public function trouveByLib($lib)
+    {
+        $query = $this->select()
+        	->setIntegrityCheck(false)
+        	->from(array('l' => 'gevu_lieux'),array('id_lieu', 'lib', 'niv', 'id_type_controle', 'lock_diag', "score"=>new Zend_Db_Expr("MATCH (lib) AGAINST('".str_replace("'"," ",$lib)."')")))                           
+			->where( "MATCH (lib) AGAINST (?)", $lib);
+        return $this->fetchAll($query)->toArray(); 
+    }
     
 }
