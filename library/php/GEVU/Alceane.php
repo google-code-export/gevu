@@ -78,11 +78,11 @@ class GEVU_Alceane extends GEVU_Site{
     */
 	public function getArboAntenne($idLieu=0, $idBase=false){
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase;
-		/*
+		//
 		$dom = new DomDocument();
 		$dom->load('../tmp/arboAlceane.xml'); 
         return $dom;
-		*/
+		//
 	   	$xml = $this->cache->load($c);
         if(!$xml){
 			//initialise les gestionnaires de base de données
