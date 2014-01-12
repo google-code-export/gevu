@@ -1,3 +1,6 @@
+<?php 
+//print_r($this->data);
+?>
 <html>
   <head>
       <meta charset="utf-8">
@@ -6,13 +9,13 @@
 	    <script type="text/javascript" src="aight.min.js"></script>
 	    <![endif]-->
       
-    <title>GEVU : Données générales du patrimoine Alcéane</title>
+    <title>GEVU : Données générales de <?php echo $this->data[0]["lib"]; ?></title>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
     <script type="text/javascript" src="../js/d3.v3.min.js"></script>
     <script>
     // Données
 	var map, heatMapData = new Array(), heatmap; 
-
+	var dataAntenne = <?php echo json_encode($this->data[0]); ?>;
 	var rCercle = d3.scale.linear().domain([1, 160]).range([10, 60]);
 	var colors = new Array();
 	colors["def"]=d3.scale.linear().domain([1, 160]).range(["#00ff00", "#fe0000"]);
@@ -58,9 +61,12 @@
           });
 		*/
 		//récupère les données
-      	d3.json("../stat/globale?type=patrimoineDonGen&idBase=<?php echo $this->idBase; ?>", function(jsData) { 
+      	d3.json("../stat/globale?type=antenneDonGen&idBase=<?php echo $this->idBase; ?>&idLieu=<?php echo $this->idLieu; ?>", function(jsData) { 
 
-			//On créer la variable de visualisation
+			//vérifie s'il faut créer un kml
+			if(dataAntenne.kml)	addPolygone(dataAntenne.kml);
+
+      		//On créer la variable de visualisation
 			vis = d3.select("#chart_svg").append("svg")
 		    	.attr("width", w + m[1] + m[3])
 		    	.attr("height", h + m[0] + m[2])
@@ -88,6 +94,54 @@
         
      }
 
+	function addPolygone(kml) {
+		
+		var xmlDoc = getCoor(kml);
+		 
+		var coor = xmlDoc.getElementsByTagName("coordinates")[0].textContent;
+
+		var arrCoor = coor.split(" ");
+		 
+		var planCoor = [], posi;
+		for (i in arrCoor) {
+			posi = arrCoor[i].trim();
+			if(posi!=""){
+				posi = posi.split(",");
+				planCoor.push(new google.maps.LatLng(posi[1], posi[0]));			
+			}
+		}
+
+		var planPath = new google.maps.Polygon({
+			    paths: planCoor,
+			    strokeColor: "#FF0000",
+			    strokeOpacity: 0.8,
+			    strokeWeight: 2,
+			    fillColor: "#FF0000",
+			    fillOpacity: 0.35
+			  });	
+
+		planPath.setMap(map);
+			  
+		return planPath;
+	}
+
+	function getCoor(txt){
+		
+		if (window.DOMParser)
+		  {
+		  parser=new DOMParser();
+		  xmlDoc=parser.parseFromString(txt,"text/xml");
+		  }
+		else // Internet Explorer
+		  {
+		  xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+		  xmlDoc.async=false;
+		  xmlDoc.loadXML(txt);
+		} 
+		return xmlDoc;
+	}
+
+	
 	function getMarkers(geo, arr) {
 		var i=0;
 		if(geo.geos==null)return;
@@ -317,7 +371,7 @@
 		  width: 600px; 
 		}
 		body {
-			background-color:rgb(56,59,113);
+			background-color:#383B71;
 		}
 
     </style>

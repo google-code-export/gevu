@@ -1,0 +1,580 @@
+<?php 
+	function getTotaux($rs, $rsK, $class, $classFin){
+		//calcul les totaux suivant les paramètres
+		$arrTot = "";
+		$style = "text-align: right; width: 2.604cm;padding:6px;";
+		foreach ($rsK as $k0=>$rsK1) {
+			foreach ($rsK1 as $k1) {
+				//echo $k0."=>".$k1."<br/>";
+				foreach ($rs[$k0][$k1] as $k=>$r) {
+					if(isset($arrTot[$k]))$arrTot[$k]+=$r;
+					else $arrTot[$k]=$r;
+					//echo $k."=>".$r."<br/>";
+				}
+			}
+		}
+		//affiche le résultat
+		$i = 1;
+		$nb = count($arrTot);
+		$tot = 0;
+		foreach ($arrTot as $k=>$r) {
+			if($i>5){
+				echo '<td style="'.$style.'" id="tot'.$k.'" class="'.$classFin.'">'.$tot.'</td>';
+				return;
+			}
+			if($i==$nb)$style.="border-right-width:0.0878cm; border-right-style:solid; border-right-color:#000000;";
+			echo '<td style="'.$style.'" id="tot'.$k.'" class="'.$class.'">'.$r.'</td>';
+			$i++;
+			$tot += $r;
+		}
+		
+	}
+	
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://dublincore.org/documents/dcmi-terms/">
+<meta http-equiv="Content-Type"
+	content="application/xhtml+xml; charset=utf-8" />
+<title xml:lang="en-US" xmlns:xml="http://www.w3.org/XML/1998/namespace">Bilan général</title>
+<meta name="DCTERMS.title" content="" xml:lang="en-US"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" />
+<meta name="DCTERMS.language" content="en-US" scheme="DCTERMS.RFC4646" />
+<meta name="DCTERMS.source"
+	content="http://xml.openoffice.org/odf2xhtml" />
+<meta name="DCTERMS.creator" content="Alceane" />
+<meta name="DCTERMS.issued" content="2007-03-27T14:13:40"
+	scheme="DCTERMS.W3CDTF" />
+<meta name="DCTERMS.contributor" content="Huckel Samuel" />
+<meta name="DCTERMS.modified" content="2013-03-29T15:06:40"
+	scheme="DCTERMS.W3CDTF" />
+<meta name="DCTERMS.provenance" content="" xml:lang="en-US"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" />
+<meta name="DCTERMS.subject" content="," xml:lang="en-US"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" />
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"
+	hreflang="en" />
+<link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"
+	hreflang="en" />
+<link rel="schema.DCTYPE" href="http://purl.org/dc/dcmitype/"
+	hreflang="en" />
+<link rel="schema.DCAM" href="http://purl.org/dc/dcam/" hreflang="en" />
+<link href="../css/psp.css" rel="stylesheet" media="all" type="text/css" />
+</head>
+<body>
+<table border="0" cellspacing="0" cellpadding="0" class="ta2">
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce4"> </td>
+		<td style="text-align: right; width: 2.686cm;" class="ce27">
+		<p>2013</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce27">
+		<p>2014</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce27">
+		<p>2015</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce27">
+		<p>2016</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce27">
+		<p>2017</p>
+		</td>
+		<td style="text-align: left; width: 3.304cm;" class="ce65">
+		<p>TOTAL</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce5">
+		<p>Opérations Globales</p>
+		</td>
+		<td style="text-align: left; width: 2.686cm;" class="ce28"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce28"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce28"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce28"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce28"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce66"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce6">
+		<p>Construction, Réhabilitation, Résidentialisation, Développement
+		Durable, Démolition</p>
+		</td>
+		<?php 
+			getTotaux($this->rs, array("Critere"=>array("tot5000","tot900")), "ce29", "ce67");
+		?>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce7">
+		<p>Maintien du Patrimoine</p>
+		</td>
+		<td style="text-align: left; width: 2.686cm;" class="ce30"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce30"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce30"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce30"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce30"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce68"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce8">
+		<p>Maintenance des Bâtiments (1)</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>5 833 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>5 876 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>4 853 500 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>3 939 200 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>4 418 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce69">
+		<p>24 919 700 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce9">
+		<p>Dont Sécurité Incendie - Mise en place d'équipement de
+		désenfumage</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>325 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>300 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>300 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>300 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>300 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce69">
+		<p>1 525 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce9">
+		<p>Dont Remplacement des radiateurs</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>650 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>410 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>481 500 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>400 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>300 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce69">
+		<p>2 241 500 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce8"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce31"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce31"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce31"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce31"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce31"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce69"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce8">
+		<p>Modernisation du traitement des déchets ménagers</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>1 055 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>950 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>335 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>85 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>70 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce69">
+		<p>2 495 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce8">
+		<p>Sécurisation des Parties Communes</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>1 000 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>540 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>300 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>200 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce31">
+		<p>50 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce69">
+		<p>2 090 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce10">
+		<p>Sous Total</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce32">
+		<p>7 888 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce32">
+		<p>7 366 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce32">
+		<p>5 488 500 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce32">
+		<p>4 224 200 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce32">
+		<p>4 538 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce69">
+		<p>29 504 700 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce11">
+		<p>Ascenseurs</p>
+		</td>
+		<td style="text-align: left; width: 2.686cm;" class="ce33"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce33"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce33"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce33"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce33"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce70"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce12">
+		<p>Création d'ascenseur</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce34">
+		<p>930 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce34">
+		<p>930 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce34">
+		<p>930 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce34">
+		<p>930 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce34">
+		<p>530 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce71">
+		<p>4 250 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce13">
+		<p>Modernisation et Habillage</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce35">
+		<p>700 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce35">
+		<p>700 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce35">
+		<p>700 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce35">
+		<p>700 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce35">
+		<p>700 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce71">
+		<p>3 500 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce14">
+		<p>Sous Total</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce36">
+		<p>1 630 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce36">
+		<p>1 630 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce36">
+		<p>1 630 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce36">
+		<p>1 630 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce36">
+		<p>1 230 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce71">
+		<p>7 750 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce15">
+		<p>SOUS TOTAL</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce37">
+		<p>41 371 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce37">
+		<p>43 698 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce37">
+		<p>27 230 500 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce37">
+		<p>19 839 200 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce37">
+		<p>17 358 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce72">
+		<p>149 496 700 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro5">
+		<td style="text-align: left; width: 14.533cm;" class="ce16"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce38"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce38"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce38"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce38"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce38"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce73"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro6">
+		<td style="text-align: left; width: 14.533cm;" class="ce17">
+		<p>Bâtiments Administratifs</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce39">
+		<p>3 100 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce39">
+		<p>3 000 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce39">
+		<p>900 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce39">
+		<p>0 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce39">
+		<p>0 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce74">
+		<p>7 000 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce18">
+		<p>RPA et Foyer</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce40">
+		<p>3 705 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce40">
+		<p>3 671 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce40">
+		<p>800 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce40">
+		<p>0 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce40">
+		<p>0 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce75">
+		<p>8 176 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro5">
+		<td style="text-align: left; width: 14.533cm;" class="ce16"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce41"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce41"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce41"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce41"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce41"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce76"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro7">
+		<td style="text-align: left; width: 14.533cm;" class="ce19">
+		<p>Total Plan Pluriannuel d'Investissement</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce42">
+		<p>48 176 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce42">
+		<p>50 369 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce42">
+		<p>28 930 500 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce47">
+		<p>19 839 200 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce47">
+		<p>17 358 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce77">
+		<p>164 672 700 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro5">
+		<td style="text-align: left; width: 14.533cm;" class="ce16"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce38"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce38"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce38"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce41"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce41"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce78"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce20">
+		<p>Travaux de Gros Entretien</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce43">
+		<p>2 200 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce43">
+		<p>2 200 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce43">
+		<p>2 200 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce43">
+		<p>2 200 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce43">
+		<p>2 200 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce79">
+		<p>11 000 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro4">
+		<td style="text-align: left; width: 14.533cm;" class="ce21">
+		<p>Dont Aménagement pour le Handicap</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce44">
+		<p>550 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce44">
+		<p>550 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce44">
+		<p>550 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce44">
+		<p>550 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce44">
+		<p>550 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce80">
+		<p>2 750 000 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro8">
+		<td style="text-align: left; width: 14.533cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro9">
+		<td style="text-align: left; width: 14.533cm;" class="ce22">
+		<p>TOTAL GENERAL</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce45">
+		<p>50 376 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce45">
+		<p>52 569 000 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce45">
+		<p>31 130 500 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce45">
+		<p>22 039 200 €</p>
+		</td>
+		<td style="text-align: right; width: 2.686cm;" class="ce45">
+		<p>19 558 000 €</p>
+		</td>
+		<td style="text-align: right; width: 3.304cm;" class="ce81">
+		<p>175 672 700 €</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro1">
+		<td style="text-align: left; width: 14.533cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce46"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.686cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce3"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce3"> </td>
+	</tr>
+</table>
+</body>
+</html>
