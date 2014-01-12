@@ -360,6 +360,25 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
+    
+    /*
+     * Recherche une entrée Gevu_geos avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
+     * @param varchar $adresse
+     */
+    public function trouveByAdresse($adresse)
+    {
+        $query = $this->select()
+        	->setIntegrityCheck(false)
+        	->from(array("g" => "gevu_geos"),array("id_lieu", "score"=>new Zend_Db_Expr("MATCH (adresse) AGAINST('".str_replace("'"," ",$adresse)."')")))                           
+            ->joinInner(array('l' => 'gevu_lieux'),
+                'l.id_lieu = g.id_lieu',array('lib', 'niv', 'id_type_controle', 'lock_diag'))
+			->where( "MATCH (adresse) AGAINST (?)", $adresse );
+			
+
+        return $this->fetchAll($query)->toArray(); 
+    }
     /*
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
