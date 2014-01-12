@@ -1,0 +1,329 @@
+<?php 
+	function getTR($rs, $arrClass){
+		$style = "text-align: left; padding:6px;";
+		//echo "getTD $k0, $k1, $class";
+		$nb = count($rs);
+		$i = 0;
+		$colsEvit = array(0,1,8,9);
+		foreach ($rs as $r) {
+			echo '<tr class="ro19" id="idPSP_'.$r['id_psp'].'" >';
+			$c=0;
+			foreach ($r as $k=>$v) {
+				//on ne prend pas en compte les premières colonnes : id_psp...
+				//ni les colonnes cachées
+				if(!in_array($c, $colsEvit)){
+					//if($i==$nb)$style.="border-right-width:0.0878cm; border-right-style:solid; border-right-color:#000000;";
+					echo '<td style="'.$style.'" id="'.$i.'-'.$c.'-'.$k.'" class="'.$arrClass[$c].'">'.$v.'</td>';
+				}
+				$c++;
+			}
+			$i++;
+			echo '</tr>';
+		}
+	}
+	
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://dublincore.org/documents/dcmi-terms/">
+<meta http-equiv="Content-Type"
+	content="application/xhtml+xml; charset=utf-8" />
+<title xml:lang="en-US" xmlns:xml="http://www.w3.org/XML/1998/namespace">Plan d'investissement</title>
+<meta name="DCTERMS.title" content="" xml:lang="en-US"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" />
+<meta name="DCTERMS.language" content="en-US" scheme="DCTERMS.RFC4646" />
+<meta name="DCTERMS.source"
+	content="http://xml.openoffice.org/odf2xhtml" />
+<meta name="DCTERMS.creator" content="Alceane" />
+<meta name="DCTERMS.issued" content="2007-03-27T14:13:40"
+	scheme="DCTERMS.W3CDTF" />
+<meta name="DCTERMS.contributor" content="Huckel Samuel" />
+<meta name="DCTERMS.modified" content="2013-03-29T15:06:40"
+	scheme="DCTERMS.W3CDTF" />
+<meta name="DCTERMS.provenance" content="" xml:lang="en-US"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" />
+<meta name="DCTERMS.subject" content="," xml:lang="en-US"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" />
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"
+	hreflang="en" />
+<link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"
+	hreflang="en" />
+<link rel="schema.DCTYPE" href="http://purl.org/dc/dcmitype/"
+	hreflang="en" />
+<link rel="schema.DCAM" href="http://purl.org/dc/dcam/" hreflang="en" />
+<link href="../css/psp.css" rel="stylesheet" media="all" type="text/css" />
+</head>
+<body>
+
+<table xmlns="http://www.w3.org/1999/xhtml" border="0" cellspacing="0"	cellpadding="0" class="ta4">
+	<tr class="ro15">
+		<td style="text-align: left; width: 1.764cm;" class="ce159"> </td>
+		<td style="text-align: left; width: 0.923cm;" class="ce159"> </td>
+		<td style="text-align: left; width: 1.118cm;" class="ce159"> </td>
+		<td style="text-align: left; width: 1.118cm;" class="ce159"> </td>
+		<td style="text-align: left; width: 1.483cm;" class="ce159"> </td>
+		<td style="text-align: left; width: 1.568cm;" class="ce159"> </td>
+		<td style="text-align: left; width: 6.943cm;" class="ce174"> </td>
+		<td style="text-align: left; width: 2.716cm;" class="ce182"> </td>
+		<td style="text-align: left; width: 1.764cm;" class="ce184"> </td>
+		<td style="text-align: left; width: 8.567cm;" class="ce185"> </td>
+		<td style="text-align: left; width: 1.118cm;" class="ce184"> </td>
+		<td style="text-align: left; width: 7.447cm;" class="ce185"> </td>
+		<td style="text-align: left; width: 2.408cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 1.483cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 3.219cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce194"> </td>
+		<td style="text-align: left; width: 3.052cm;" class="ce222"> </td>
+		<td style="text-align: left; width: 15.96cm;" class="ce181"> </td>
+		<td colspan="7" style="text-align: left; width: 2.238cm;"
+			class="ce229">
+		<p>P S P</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce271"> </td>
+	</tr>
+	<tr class="ro16">
+		<td rowspan="2" style="text-align: left; width: 1.764cm;"
+			class="ce160">
+		<p>n° PPI</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 0.923cm;"
+			class="ce168">
+		<p>Ant</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 1.118cm;"
+			class="ce168">
+		<p>Serv</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 1.118cm;"
+			class="ce168">
+		<p>pgr</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 1.483cm;"
+			class="ce170">
+		<p>code bat</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 1.568cm;"
+			class="ce170">
+		<p>Critère</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 6.943cm;"
+			class="ce160">
+		<p>Nom du Groupe</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 2.716cm;"
+			class="ce160">
+		<p>Agglo</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 1.764cm;"
+			class="ce160">
+		<p>Nbre Logts</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 8.567cm;"
+			class="ce160">
+		<p>Désignations</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 1.118cm;"
+			class="ce170">
+		<p>Priorité</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 7.447cm;"
+			class="ce160">
+		<p>Observations</p>
+		</td>
+		<td style="text-align: left; width: 2.408cm;" class="ce160">
+		<p>Classif.</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 1.483cm;"
+			class="ce195">
+		<p>Extraction PPI</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 3.219cm;"
+			class="ce200">
+		<p>Estimation</p>
+		</td>
+		<td colspan="13" style="text-align: left; width: 2.549cm;"
+			class="ce206">
+		<p>Prévisionnel</p>
+		</td>
+		<td style="text-align: left; width: 3.052cm;" class="ce215">
+		<p>TOTAL</p>
+		</td>
+		<td rowspan="3" style="text-align: left; width: 15.96cm;"
+			class="ce225">
+		<p>Commentaires</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 2.238cm;"
+			class="ce230">
+		<p>n° UG</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 3.304cm;"
+			class="ce235">
+		<p>Résultat Locatif Groupe</p>
+		</td>
+		<td rowspan="3" style="text-align: left; width: 2.238cm;"
+			class="ce245">
+		<p>Note commerciale</p>
+		</td>
+		<td rowspan="3" style="text-align: left; width: 2.238cm;"
+			class="ce245">
+		<p>Note Peuplement</p>
+		</td>
+		<td rowspan="3" style="text-align: left; width: 2.238cm;"
+			class="ce245">
+		<p>Note technique</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 4.48cm;" class="ce230">
+		<p>Enjeux Validés</p>
+		</td>
+		<td rowspan="2" style="text-align: left; width: 3.78cm;" class="ce230">
+		<p>Q S R</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce272"> </td>
+	</tr>
+	<tr class="ro16">
+		<td style="text-align: left; width: 2.408cm;" class="ce175">
+		<p>ANRU</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce207">
+		<p>2013</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce207">
+		<p>2014</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce207">
+		<p>2015</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce207">
+		<p>2016</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce207">
+		<p>2017</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce215">
+		<p>2018</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce215">
+		<p>2019</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce217">
+		<p>2020</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce215">
+		<p>2021</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce217">
+		<p>2022</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce215">
+		<p>2023</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce217">
+		<p>2024</p>
+		</td>
+		<td style="text-align: left; width: 2.549cm;" class="ce215">
+		<p>2025</p>
+		</td>
+		<td style="text-align: left; width: 3.052cm;" class="ce223">
+		<p>2014          2018</p>
+		</td>
+		<td style="text-align: left; width: 2.238cm;" class="ce273"> </td>
+	</tr>
+	<tr class="ro17">
+		<td style="text-align: left; width: 1.764cm;" class="ce162"> </td>
+		<td style="text-align: left; width: 0.923cm;" class="ce162"> </td>
+		<td style="text-align: left; width: 1.118cm;" class="ce162"> </td>
+		<td style="text-align: left; width: 1.118cm;" class="ce162"> </td>
+		<td style="text-align: left; width: 1.483cm;" class="ce162"> </td>
+		<td style="text-align: left; width: 1.568cm;" class="ce162"> </td>
+		<td style="text-align: left; width: 6.943cm;" class="ce176"> </td>
+		<td style="text-align: left; width: 2.716cm;" class="ce176"> </td>
+		<td style="text-align: left; width: 1.764cm;" class="ce176"> </td>
+		<td style="text-align: left; width: 8.567cm;" class="ce176"> </td>
+		<td style="text-align: left; width: 1.118cm;" class="ce176"> </td>
+		<td style="text-align: left; width: 7.447cm;" class="ce176"> </td>
+		<td style="text-align: left; width: 2.408cm;" class="ce176"> </td>
+		<td style="text-align: left; width: 1.483cm;" class="ce197"> </td>
+		<td style="text-align: left; width: 3.219cm;" class="ce202"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce208"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce208"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce208"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce208"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce208"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce216"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce216"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce218"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce218"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce218"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce218"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce218"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce218"> </td>
+		<td style="text-align: left; width: 3.052cm;" class="ce218"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce230"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce237"> </td>
+		<td style="text-align: left; width: 4.48cm;" class="ce264"> </td>
+		<td style="text-align: left; width: 3.78cm;" class="ce230"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce273"> </td>
+	</tr>
+	<tr class="ro18">
+		<td style="text-align: left; width: 1.764cm;" class="ce163"> </td>
+		<td style="text-align: left; width: 0.923cm;" class="ce163"> </td>
+		<td style="text-align: left; width: 1.118cm;" class="ce165"> </td>
+		<td style="text-align: left; width: 1.118cm;" class="ce165"> </td>
+		<td style="text-align: left; width: 1.483cm;" class="ce165"> </td>
+		<td style="text-align: left; width: 1.568cm;" class="ce165"> </td>
+		<td style="text-align: left; width: 6.943cm;" class="ce177"> </td>
+		<td style="text-align: left; width: 2.716cm;" class="ce165"> </td>
+		<td style="text-align: left; width: 1.764cm;" class="ce165"> </td>
+		<td style="text-align: left; width: 8.567cm;" class="ce177"> </td>
+		<td style="text-align: left; width: 1.118cm;" class="ce165"> </td>
+		<td style="text-align: left; width: 7.447cm;" class="ce177"> </td>
+		<td style="text-align: left; width: 2.408cm;" class="ce165"> </td>
+		<td style="text-align: left; width: 1.483cm;" class="ce198"> </td>
+		<td style="text-align: left; width: 3.219cm;" class="ce203"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce209"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce209"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce209"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce209"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce209"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce209"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce209"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce219"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce219"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce219"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce219"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce219"> </td>
+		<td style="text-align: left; width: 2.549cm;" class="ce219"> </td>
+		<td style="text-align: left; width: 3.052cm;" class="ce224"> </td>
+		<td style="text-align: left; width: 15.96cm;" class="ce177"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce163"> </td>
+		<td style="text-align: left; width: 3.304cm;" class="ce238"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce246"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce246"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce257"> </td>
+		<td style="text-align: left; width: 4.48cm;" class="ce187"> </td>
+		<td style="text-align: left; width: 3.78cm;" class="ce163"> </td>
+		<td style="text-align: left; width: 2.238cm;" class="ce274"> </td>
+	</tr>
+	<?php 
+		getTR($this->rs,array('','','ce163','ce163','ce163','ce163','ce163','ce163','','ce163','ce178','ce165','ce165','ce178','ce165','ce178','ce165','ce198'
+		,'ce203','ce210','ce210','ce210','ce210','ce210','ce210','ce210','ce210','ce210','ce210','ce210','ce210','ce210'
+		,'ce224','ce178','ce163','ce239','ce247','ce252','ce258','ce265','ce163','ce275','ce163','ce163','ce163','ce163','ce163','ce163'
+		,'ce178','ce165','ce165','ce178','ce165','ce178','ce165','ce198','ce203','ce210','ce210','ce210','ce210','ce210','ce210','ce210'
+		,'ce220','ce220','ce220','ce220','ce220','ce220','ce224','ce178','ce231','ce240','ce248','ce253','ce259','ce266','ce231','ce275'));
+	?>
+
+	</tr>
+</table>
+</body>
+</html>

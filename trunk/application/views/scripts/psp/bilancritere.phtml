@@ -1,0 +1,1274 @@
+<?php 
+	function getTD($rs, $k0, $k1, $class){
+		$style = "text-align: right; width: 2.604cm;padding:6px;";
+		if(isset($rs) && isset($rs[$k0]) && isset($rs[$k0][$k1])){
+			//echo "getTD $k0, $k1, $class";
+			$nb = count($rs[$k0][$k1]);
+			$i = 1;
+			foreach ($rs[$k0][$k1] as $k=>$r) {
+				if($i==$nb)$style.="border-right-width:0.0878cm; border-right-style:solid; border-right-color:#000000;";
+				echo '<td style="'.$style.'" id="'.$k0.$k1.$k.'" class="'.$class.'">'.$r.'</td>';
+				$i++;
+			}
+		}else{
+			for ($i = 0; $i < 13; $i++) {
+				if($i==12)$style.="border-right-width:0.0878cm; border-right-style:solid; border-right-color:#000000;";
+				echo '<td style="'.$style.'" id="'.$k0.$k1.$i.'" class="'.$class.'">0</td>';
+			}
+		}
+	}
+	function getTotaux($rs, $rsK, $class){
+		//calcul les totaux suivant les paramètres
+		$arrTot = "";
+		$style = "text-align: right; width: 2.604cm;padding:6px;";
+		foreach ($rsK as $k0=>$rsK1) {
+			foreach ($rsK1 as $k1) {
+				//echo $k0."=>".$k1."<br/>";
+				foreach ($rs[$k0][$k1] as $k=>$r) {
+					if(isset($arrTot[$k]))$arrTot[$k]+=$r;
+					else $arrTot[$k]=$r;
+					//echo $k."=>".$r."<br/>";
+				}
+			}
+		}
+		//affiche le résultat
+		$i = 1;
+		$nb = count($arrTot);
+		foreach ($arrTot as $k=>$r) {
+			if($i==$nb)$style.="border-right-width:0.0878cm; border-right-style:solid; border-right-color:#000000;";
+			echo '<td style="'.$style.'" id="tot'.$k.'" class="'.$class.'">'.$r.'</td>';
+			$i++;
+		}
+		
+	}
+	
+?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://dublincore.org/documents/dcmi-terms/">
+<meta http-equiv="Content-Type"
+	content="application/xhtml+xml; charset=utf-8" />
+<title xml:lang="en-US" xmlns:xml="http://www.w3.org/XML/1998/namespace">Bilan critère</title>
+<meta name="DCTERMS.title" content="" xml:lang="en-US"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" />
+<meta name="DCTERMS.language" content="en-US" scheme="DCTERMS.RFC4646" />
+<meta name="DCTERMS.source"
+	content="http://xml.openoffice.org/odf2xhtml" />
+<meta name="DCTERMS.creator" content="Alceane" />
+<meta name="DCTERMS.issued" content="2007-03-27T14:13:40"
+	scheme="DCTERMS.W3CDTF" />
+<meta name="DCTERMS.contributor" content="Huckel Samuel" />
+<meta name="DCTERMS.modified" content="2013-03-29T15:06:40"
+	scheme="DCTERMS.W3CDTF" />
+<meta name="DCTERMS.provenance" content="" xml:lang="en-US"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" />
+<meta name="DCTERMS.subject" content="," xml:lang="en-US"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace" />
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"
+	hreflang="en" />
+<link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"
+	hreflang="en" />
+<link rel="schema.DCTYPE" href="http://purl.org/dc/dcmitype/"
+	hreflang="en" />
+<link rel="schema.DCAM" href="http://purl.org/dc/dcam/" hreflang="en" />
+<link href="../css/psp.css" rel="stylesheet" media="all" type="text/css" />
+</head>
+<body>
+<table xmlns="http://www.w3.org/1999/xhtml" border="0" cellspacing="0"
+	cellpadding="0" class="ta3">
+	<tr class="ro8">
+		<td colspan="2" style="text-align: left; width: 1.231cm;" class="ce86">
+		<p>Code</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce109">
+		<p>Désignation du Critère</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce124">
+		<p>2013</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2014</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2015</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2016</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2017</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2018</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce124">
+		<p>2019</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2020</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2021</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2022</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2023</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce140">
+		<p>2024</p>
+		</td>
+		<td style="text-align: right; width: 2.604cm;" class="ce150">
+		<p>2025</p>
+		</td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>100</p>
+		</td>
+		<td style="text-align: left; width: 1.231cm;" class="ce98"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Ascenseur</p>
+		</td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce142"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce151"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>101</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Mise aux normes</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','101','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>102</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Création d'ascenseur</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','102','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>103</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Modification (ex : Habillage des ascenseurs extérieurs)</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','103','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>104</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Prestations diverses (nettoyage, locaux machineries, …)</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','104','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce112"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>200</p>
+		</td>
+		<td style="text-align: left; width: 1.231cm;" class="ce101"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Mise aux Normes / Sécurité</p>
+		</td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce142"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce151"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>201</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Mise aux normes - Incendie / Désenfumage / Gaz / Amiante / etc</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','201','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>202</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Mise aux normes - Electricité</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','202','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>203</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Accès aux postes de travail (Terrasses, …)</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','203','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce112"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>300</p>
+		</td>
+		<td style="text-align: left; width: 1.231cm;" class="ce101"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Adaptation des logements pour les personnes hanicapées</p>
+		</td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce142"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce151"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>301</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce113">
+		<p>Confort des zones de vie (Appareillage du logement)</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','301','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>302</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Zones d'accès et parties communes</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','302','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>303</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Reconquète de logement et adaptabilité</p>
+		</td>
+		<?php
+			getTD($this->rs,'Critere','303','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce112"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>400</p>
+		</td>
+		<td style="text-align: left; width: 1.231cm;" class="ce101"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Aménagements pour le Locataire</p>
+		</td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce142"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce151"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>401</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce113">
+		<p>Confort des zones de vie (sanitaires, isolation, humidité…)</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','401','ce126');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>402</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Confort extérieur aux zones de vie ( fenêtres, volets, …)</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','402','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>403</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Parties communes ( caves, halls, portiers phoniques…)</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','403','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>404</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Sécurisation des Parties Communes</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','404','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>405</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Portes Palières et Entrées</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','405','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>406</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Réhabilitation des Garages</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','406','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce112"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>500</p>
+		</td>
+		<td style="text-align: left; width: 1.231cm;" class="ce101"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Modernistation du traitement des déchets ménagers</p>
+		</td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce142"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce151"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>501</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce113">
+		<p>Suppression colonnes V.O.</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','501','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>502</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Abris Conteneur Extérieur</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','502','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>503</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Système enterré</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','503','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>504</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Remise en état des Systèmes GOM</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','504','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce115"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>600</p>
+		</td>
+		<td style="text-align: left; width: 1.231cm;" class="ce101"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Maintien du Patrimoine</p>
+		</td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce142"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce125"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce151"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>601</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce116">
+		<p>Diagnostic bâtiments anciens</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','601','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>602</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Terrasse, Toiture</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','602','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>603</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Façade - Bardage - Isolation</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','603','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>604</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Serrurerie</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','604','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>605</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Chauffage individuel (Chaud. Murale et Chauffe Bain)</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','605','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>606</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce114">
+		<p>Chauffage collectif</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','606','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>607</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Plomberie</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','607','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>608</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Réseaux EU/EV/EP - Assainissement</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','608','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>609</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Menuiserie Extérieure</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','609','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>610</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce116">
+		<p>Peinture des cages d'escalier</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','610','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>611</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Portier Phonique</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','611','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>612</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Installation de VMC</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','612','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce112"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>700</p>
+		</td>
+		<td style="text-align: left; width: 1.231cm;" class="ce101"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Espaces verts, aménagements extérieurs</p>
+		</td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce145"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce128"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce154"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>701</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Espaces verts aménagements</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','701','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>702</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Clôtures et chemins</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','702','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>703</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Jeux pour enfants</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','703','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>704</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Borne Escamotable</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','704','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce115"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>800</p>
+		</td>
+		<td style="text-align: right; width: 1.231cm;" class="ce101">
+		<p>800</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Voirie, réseaux divers</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','800','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce115"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>900</p>
+		</td>
+		<td style="text-align: right; width: 1.231cm;" class="ce101">
+		<p>900</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Développement Durable</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','900','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce115"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>1000</p>
+		</td>
+		<td style="text-align: right; width: 1.231cm;" class="ce101">
+		<p>1000</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Divers - Critère Indéfini</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','1000','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>1001</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Reconquête des logements</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','1001','ce126');
+				?>
+
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce100"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce115"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce144"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce127"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce153"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro13">
+		<td style="text-align: left; width: 1.231cm;" class="ce90"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce102"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce117"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce157"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: right; width: 1.231cm;" class="ce87">
+		<p>5000</p>
+		</td>
+		<td style="text-align: left; width: 1.231cm;" class="ce101"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce110">
+		<p>Montage d'Opération</p>
+		</td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce143"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce126"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce152"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>5001</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Démolition</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','5001','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>5002</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Construction</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','5002','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>5003</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Réhabilitation</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','5003','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>5004</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Résidentialisation</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','5004','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce88"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce99">
+		<p>5005</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce111">
+		<p>Etude de Projet</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','5005','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce100">
+		<p>5006</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce112">
+		<p>Acquisition</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','5006','ce126');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro12">
+		<td style="text-align: left; width: 1.231cm;" class="ce89"> </td>
+		<td style="text-align: right; width: 1.231cm;" class="ce100">
+		<p>5100</p>
+		</td>
+		<td style="text-align: left; width: 11.703cm;" class="ce112">
+		<p>Pavillons Spécifiques - Diagnostic</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','5100','ce112');
+				?>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro13">
+		<td style="text-align: left; width: 1.231cm;" class="ce90"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce102"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce117"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce131"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce149"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce157"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>	
+	<tr class="ro1">
+		<td style="text-align: left; width: 1.231cm;" class="Default"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce103"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="Default"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce133"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro8">
+		<td style="text-align: left; width: 1.231cm;" class="Default"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce103"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="Default"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.604cm;" class="ce134"> </td>
+		<td style="text-align: left; width: 2.092cm;" class="Default"> </td>
+	</tr>
+	<tr class="ro14">
+		<td style="text-align: left; width: 1.231cm;" class="ce91"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce104"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce118">
+		<p>Montage Opération</p>
+		</td>
+		<?php
+			getTD($this->rs,'Critere','tot5000','ce135');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro14">
+		<td style="text-align: left; width: 1.231cm;" class="ce92"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce105"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce119">
+		<p>Developpement Durable</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','tot900','ce135');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro14">
+		<td style="text-align: left; width: 1.231cm;" class="ce92"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce105"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce119">
+		<p>Maintennce du Patrimoine</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','tot600','ce135');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro14">
+		<td style="text-align: left; width: 1.231cm;" class="ce92"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce105"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce119">
+		<p>Ascenseur</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Critere','tot100','ce135');
+		?>
+
+		<td style="text-align: left; width: 2.092cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro14">
+		<td style="text-align: left; width: 1.231cm;" class="ce92"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce105"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce120">
+		<p>RPA et Foyer</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Serv','RF','ce135');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro14">
+		<td style="text-align: left; width: 1.231cm;" class="ce92"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce105"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce120">
+		<p>Bâtiments Administratifs</p>
+		</td>
+		<?php 
+			getTD($this->rs,'Ant','BA','ce135');
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="ce3"> </td>
+	</tr>
+	<tr class="ro14">
+		<td style="text-align: left; width: 1.231cm;" class="ce93"> </td>
+		<td style="text-align: left; width: 1.231cm;" class="ce106"> </td>
+		<td style="text-align: left; width: 11.703cm;" class="ce121">
+		<p>TOTAL</p>
+		</td>
+		<?php 
+			getTotaux($this->rs, array("Ant"=>array("BA"),"Serv"=>array("RF"),"Critere"=>array("tot5000","tot100","tot600","tot900")), "ce138");
+		?>
+		<td style="text-align: left; width: 2.092cm;" class="ce3"> </td>
+	</tr>
+</table>
+</body>
+</html>
