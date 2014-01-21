@@ -511,7 +511,8 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     	->joinInner(array('enfants' => 'gevu_lieux'),
     			'enfants.lft BETWEEN node.lft AND node.rgt',array('lib', 'id_lieu', 'lieu_parent', 'niv', 'id_type_controle', 'lock_diag'))
 		->where( "node.id_lieu = ?", $idLieu)
-		->where( "enfants.id_type_controle = ?", $idTypeControle);
+		->where( "enfants.id_type_controle = ?", $idTypeControle)
+		->order("enfants.lib");
     	$result = $this->fetchAll($query);
     	return $result->toArray();
     }
