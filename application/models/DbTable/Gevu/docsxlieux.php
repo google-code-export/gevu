@@ -76,7 +76,7 @@ class Models_DbTable_Gevu_docsxlieux extends Zend_Db_Table_Abstract
         	->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
             ->from( array("dl" => "gevu_docsxlieux") )                           
         	->joinInner(array('d' => 'gevu_docs'),
-            	'd.id_doc = dl.id_doc',array('titre','content_type','url','path_source'))
+            	'd.id_doc = dl.id_doc',array('titre','content_type','url','path_source','branche'))
         	->where( "dl.id_lieu = ?", $idLieu)
         	->group("d.id_doc");
         if($types){
