@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
 		 xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
 		 width="100%" height="100%"
-		  creationComplete="creationCompleteHandler(event)" xmlns:compo="compo.*"
+		 creationComplete="creationCompleteHandler(event)" xmlns:compo="compo.*" xmlns:gevu="gevu.*"
 		 >
 	<fx:Script>
 		<![CDATA[
@@ -14,6 +14,12 @@
 			import spark.components.Image;
 
 			private var hImg:Number=100;
+			private var dataDocs:Array = new Array;
+			[Bindable] private var dataPhotos:ArrayCollection = new ArrayCollection;
+			[Bindable] private var dataVideos:ArrayCollection = new ArrayCollection;
+			[Bindable] private var dataPlans:ArrayCollection = new ArrayCollection;
+			[Bindable] private var dataAutres:ArrayCollection = new ArrayCollection;
+			[Bindable] private var dataHtml:ArrayCollection = new ArrayCollection;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
@@ -22,58 +28,113 @@
 			
 			public function init(dataNode:Object):void
 			{
-				hgPhotos.removeAllElements();
-				hgVideos.removeAllElements();
-				hgPlans.removeAllElements();
-				hgAutres.removeAllElements();
 				if(dataNode["Models_DbTable_Gevu_docsxlieux"])initDoc(dataNode["Models_DbTable_Gevu_docsxlieux"]);
 				lblTitre.text = dataNode.ariane[0].parLib;
 			}
 			
 			public function initDoc(rs:Object):void {
-								
+				
+				var i:int = 0;
 				for each (var d:Object in rs)
 				{
 					//vérifie le type de fichier
-					var ext:String = d.titre;
+					var ext:String = d.url;
 					ext = ext.substring(ext.length-3);
-					var img:Image = new Image;
-					var obj:Object = new Object;
+					var idDoc:String;
 					if(d.content_type == "application/octet-stream"){
 						if(ext=="doc" || ext=="ocx"){
-							img.source = "/images/doc.jpg";
-							hgAutres.addElement(img);
+							idDoc = "ext_"+i;
+							d.icone = "images/doc.jpg";
+							d.idFlex = idDoc;
+							d.fct = showExt;						
+							dataAutres.addItem(d);
 						}else if(ext=="pdf"){
-							img.source = "/images/pdf.jpg";
-							hgAutres.addElement(img);
+							idDoc = "ext_"+i;
+							d.icone = "images/pdf.png";
+							d.idFlex = idDoc;
+							d.fct = showExt;						
+							dataAutres.addItem(d);
 						}else if(ext=="xls" || ext=="lsx" || ext=="csv"){
-							img.source = "/images/xls.jpg";
-							hgAutres.addElement(img);
+							idDoc = "ext_"+i;
+							d.icone = "images/xls.jpg";
+							d.idFlex = idDoc;
+							d.fct = showExt;						
+							dataAutres.addItem(d);
 						}else if(ext=="ppt" || ext=="ptt"){
-							img.source = "/images/ptt.jpg";
-							hgAutres.addElement(img);
+							idDoc = "ext_"+i;
+							d.icone = "images/ptt.jpg";
+							d.idFlex = idDoc;
+							d.fct = showExt;						
+							dataAutres.addItem(d);
 						}else if(ext=="jpg" || ext=="png" || ext=="gif"){
-							img.source = d.url;
-							img.height = hImg;
-							hgPhotos.addElement(img);
+							idDoc = "img_"+i;
+							d.icone = "images/html.jpg";
+							d.idFlex = idDoc;
+							d.fct = showImg;
+							if(d.branche == 4)
+								dataPlans.addItem(d);
+							else
+								dataPhotos.addItem(d);
 						}
 					}				
 					if(d.content_type == "application/pdf"){
-						img.source = "/images/pdf.jpg";
-						hgAutres.addElement(img);
+						idDoc = "ext_"+i;
+						d.icone = "images/pdf.png";
+						d.idFlex = idDoc;
+						d.fct = showExt;						
+						dataAutres.addItem(d);
 					}
-					if(d.content_type == "image/png" || d.content_type == "image/jpeg"){
-						img.height = hImg;
-						img.source = d.url;
-						hgPhotos.addElement(img);
+					if(d.content_type == "image/png" || d.content_type == "image/jpeg" || d.content_type == "image/gif"){
+						idDoc = "img_"+i;
+						d.icone = "images/html.jpg";
+						d.idFlex = idDoc;
+						d.fct = showImg;
+						if(d.branche == 4)
+							dataPlans.addItem(d);
+						else
+							dataPhotos.addItem(d);
 					}
+					if(d.branche == 7){
+						idDoc = "html_"+i;
+						d.icone = "images/html.jpg";
+						d.idFlex = idDoc;
+						d.fct = showHtml;
+						dataHtml.addItem(d);
+					}
+					dataDocs[idDoc]=d;
+					i++;
 				}
-			}			
+			}
+			
+			private function showHtml(event:MouseEvent):void
+			{
+				this.currentState = "Html";
+				var img:Image = event.currentTarget as Image;
+				html.source = dataDocs[img.id].url;
+			}
+
+			private function showImg(event:MouseEvent):void
+			{
+				this.currentState = "Img";
+				var img:Image = event.currentTarget as Image;
+				imgBig.source = dataDocs[img.id].url;				
+			}
+			
+			private function showExt(event:MouseEvent):void
+			{
+				var img:Image = event.currentTarget as Image;
+				var targetURL:URLRequest = new URLRequest(dataDocs[img.id].url);
+				navigateToURL(targetURL, "_blank");
+			}
 			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 	</fx:Declarations>
+	<s:states>
+		<s:State name="Img"/>
+		<s:State name="Html"/>
+	</s:states>	
 
 	<s:BorderContainer 
 		borderColor="black" borderStyle="inset" borderWeight="4" width="100%" height="100%">
@@ -92,41 +153,49 @@
 					<s:Label styleName="titreBloc" id="lblTitre" text=""/>
 				</s:VGroup>				
 			</s:Group>
-			<s:VGroup height="100%" width="100%" paddingTop="12" >
-				<s:Label styleName="titreBlocBlack" text="PHOTOS"/>
-				<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
-					<s:stroke>
-						<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
-					</s:stroke>
-				</s:Line>
-				<s:HGroup id="hgPhotos" width="100%" height="100%" gap="1">
-				</s:HGroup>
-				<s:Label styleName="titreBlocBlack" text="VIDEOS"/>
-				<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
-					<s:stroke>
-						<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
-					</s:stroke>
-				</s:Line>
-				<s:HGroup height="100%" width="100%" id="hgVideos" >
-				</s:HGroup>
-				<s:Label styleName="titreBlocBlack" text="PLANS"/>
-				<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
-					<s:stroke>
-						<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
-					</s:stroke>
-				</s:Line>
-				<s:HGroup height="100%" width="100%" id="hgPlans" >
-				</s:HGroup>
-				<s:Label styleName="titreBlocBlack" text="AUTRES"/>
-				<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
-					<s:stroke>
-						<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
-					</s:stroke>
-				</s:Line>
-				<s:HGroup height="100%" width="100%" id="hgAutres" >
-				</s:HGroup>
-				
-			</s:VGroup>				
+			<s:HGroup height="100%" width="100%" paddingTop="12" >				
+				<s:VGroup height="100%" width="100%" >
+					<s:Label styleName="titreBlocBlack" text="PHOTOS"/>
+					<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
+						<s:stroke>
+							<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
+						</s:stroke>
+					</s:Line>
+					<gevu:lstMedia id="lstPhotos" dataProvider="{dataPhotos}" />
+					<s:Label styleName="titreBlocBlack" text="VIDEOS"/>
+					<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
+						<s:stroke>
+							<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
+						</s:stroke>
+					</s:Line>
+					<gevu:lstMedia id="lstVideos" dataProvider="{dataVideos}" />
+					<s:Label styleName="titreBlocBlack" text="PLANS"/>
+					<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
+						<s:stroke>
+							<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
+						</s:stroke>
+					</s:Line>
+					<gevu:lstMedia id="lstPlans" dataProvider="{dataPlans}" />
+					<s:Label styleName="titreBlocBlack" text="AUTRES"/>
+					<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
+						<s:stroke>
+							<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
+						</s:stroke>
+					</s:Line>
+					<gevu:lstMedia id="lstAutres" dataProvider="{dataAutres}" />
+					<s:Label styleName="titreBlocBlack" text="WEB"/>
+					<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
+						<s:stroke>
+							<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
+						</s:stroke>
+					</s:Line>
+					<gevu:lstMedia id="lstHtml" dataProvider="{dataHtml}" />
+				</s:VGroup>		
+				<s:VGroup height="100%" width="100%" >
+					<s:Image id="imgBig" includeIn="Img" click="imgBig.source='';" verticalAlign="top" horizontalAlign="left" source="" width="100%" />
+					<flexiframe:IFrame id="html" includeIn="Html" source="{this.parentApplication.urlVide}" width="100%" height="100%" overlayDetection="true" />
+				</s:VGroup>								
+			</s:HGroup>
 		</s:Group>
 	</s:BorderContainer> 	
 	

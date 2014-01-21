@@ -9,6 +9,7 @@
 		<![CDATA[
 
 			[Bindable] public var dataDiag:Object;
+			private var urlsDiag:Array = new Array;
 			
 			public function init(dataNode:Object):void
 			{
@@ -17,6 +18,24 @@
 					if(dt.name=="Diagnostics")dataDiag = dt.children;					
 				}
 				lblTitre.text = dataNode.ariane[0].parLib;
+				
+				//récupère les données de diag
+				grpEle.visible = false;
+				grpAsc.visible = false;
+				if(dataNode["Models_DbTable_Gevu_docsxlieux"]){
+					for each (var doc:Object in dataNode["Models_DbTable_Gevu_docsxlieux"])
+					{
+						if(doc.branche == 2){
+							grpEle.visible = true;
+							urlsDiag['diagEle']=doc.url;
+						}
+						if(doc.branche == 3){
+							grpAsc.visible = true;
+							urlsDiag['diagAsc']=doc.url;
+						}
+					}
+				}
+				
 				
 				//affiche les données
 				paMesCons.text = "";
@@ -70,7 +89,7 @@
 			
 			protected function showPdf(url:String):void
 			{
-				var targetURL:URLRequest = new URLRequest (url);
+				var targetURL:URLRequest = new URLRequest (urlsDiag[url]);
 				navigateToURL(targetURL, "_blank");
 			}
 
@@ -265,7 +284,7 @@
 						</s:Group>
 					</s:VGroup>
 				</s:HGroup>
-				<s:HGroup height="100%" width="100%">
+				<s:HGroup width="100%">
 					<s:VGroup width="100%" >					
 						<s:Label styleName="titreBlocBlack" text="ELECTRICITE"/>
 						<s:Line xFrom="0" xTo="100" yFrom="0" width="100%" >
@@ -273,9 +292,8 @@
 								<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
 							</s:stroke>
 						</s:Line>
-						<s:HGroup verticalAlign="bottom" visible="false">
-							<s:Label text="Cliquer sur l'icone pour télécharger le document" styleName="stitreBlocB"/>
-							<s:Image source="images/pdf.png" click="showPdf('DiagAsc')" />
+						<s:HGroup id="grpEle" verticalAlign="bottom" visible="false">
+							<s:Image source="images/pdf.png" click="showPdf('diagEle')" />
 						</s:HGroup>									
 					</s:VGroup>				
 					<s:VGroup width="100%" >					
@@ -285,9 +303,8 @@
 								<s:SolidColorStroke color="0x000000" weight="1" caps="square"/>
 							</s:stroke>
 						</s:Line>
-						<s:HGroup verticalAlign="bottom" visible="false">
-							<s:Label text="Cliquer sur l'icone pour télécharger le document" styleName="stitreBlocB"/>
-							<s:Image source="images/pdf.png" click="showPdf('DiagAsc')"/>
+						<s:HGroup id="grpAsc" verticalAlign="bottom" visible="false">
+							<s:Image source="images/pdf.png" click="showPdf('diagAsc')"/>
 						</s:HGroup>									
 					</s:VGroup>				
 				</s:HGroup>								
