@@ -146,6 +146,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 				$dbSrc = $this->getDb($dbSrcDst[0], $dbSrcDst[1]);
 				$dbDst = $this->getDb($dbSrcDst[2], $dbSrcDst[3]);				
 				$this->db=$dbSrc;
+				//pour r�cup�rer les bonnes lignes
+				$idBase = $dbSrcDst[2];
 				$c .= ",".implode(',',$dbSrcDst); 				
 			}else{
 				$dbDst = $this->db;								
@@ -205,6 +207,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 			    
             }
 
+            //pour r�cup�rer le bon lieu
+            if($dbSrcDst)$this->dbL = $dbLDst;
             $xml = $this->getXmlNode($newLieu["id_lieu"], $idBase);
 			return $xml;	
             
@@ -525,6 +529,28 @@ class GEVU_Diagnostique extends GEVU_Site{
         return $this->dbLDoc->findByIdLieu($idLieu);
         
 	}
+
+	/**
+	* ajoute un document en rapport avec un lieu
+	* et renvoie la liste de tous les documents associ�s 
+    * @param string $idLieu
+    * @param array  $dataDoc
+    * @param string $idBase
+    * 
+    * @return Array
+    */
+	public function ajoutLieuDoc($idLieu, $dataDoc, $idBase=false){
+			
+		$this->getDb($idBase);
+        if(!$this->dbLDoc)$this->dbLDoc = new Models_DbTable_Gevu_docsxlieux($this->db);
+        if(!$this->dbDoc)$this->dbDoc = new Models_DbTable_Gevu_docs($this->db);
+        $idDoc = $this->dbDoc->ajouter($dataDoc);
+        $this->dbLDoc->ajouter(array("id_doc"=>$idDoc, "id_lieu"=>$idLieu));
+        return $this->dbLDoc->findByIdLieu($idLieu);
+        
+	}
+	
+	
 
 	/**
 	* supprime le documents
@@ -1039,7 +1065,7 @@ class GEVU_Diagnostique extends GEVU_Site{
     * 
     * @return DomDocument
     */
-	public function getXmlNode($idLieu=0, $idBase=false, $nivMax=3){
+	public function getXmlNode($idLieu=0, $idBase=false, $nivMax=2){
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idBase; 
 	   	$xml = false;//$this->cache->load($c);
         if(!$xml){
@@ -1110,13 +1136,13 @@ class GEVU_Diagnostique extends GEVU_Site{
      * @param boolean $end
      * @return string
      */
-    public function getXmlLieu($rLieu, $end=false){
+    public function getXmlLieu($rLieu, $end=false, $fake=0){
     	//précision de l'icon
     	if(!$rLieu['lock_diag'])$icon = "";
     	if(substr($rLieu['lock_diag'],0,1)=="-")$icon = " icon='iconAjoutUtiM' ";
     	if(substr($rLieu['lock_diag'],0,1)=="+")$icon = " icon='iconAjoutUtiP' ";
     	 
-    	$xml = "<node idLieu=\"".$rLieu['id_lieu']."\" lib=\"".htmlspecialchars($rLieu['lib'])."\" niv=\"".$rLieu['niv']."\" fake=\"0\" ".$icon." lockDiag=\"".$rLieu['lock_diag']."\" typeControle=\"".$rLieu['id_type_controle']."\" >";
+    	$xml = "<node idLieu=\"".$rLieu['id_lieu']."\" lib=\"".htmlspecialchars($rLieu['lib'])."\" niv=\"".$rLieu['niv']."\" fake=\"".$fake."\" ".$icon." lockDiag=\"".$rLieu['lock_diag']."\" typeControle=\"".$rLieu['id_type_controle']."\" >";
     	if($end)$xml .= "</node>";
     	return $xml;
     }

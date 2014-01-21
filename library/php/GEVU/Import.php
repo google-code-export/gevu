@@ -172,9 +172,11 @@ class GEVU_Import extends GEVU_Site{
 
 			        $dataDoc = array(
 			    		"url"=>$url,"titre"=>$info["name"],"content_type"=>$adapter->getMimeType()
+			    		,"branche"=>$data['type']
 			    		,"path_source"=>$path
 			    		,"tronc"=>$data['objName']
 			    		);
+			    	if($data['titre'])$dataDoc["titre"]=$data['titre'];
 					
 			    	rename(ROOT_PATH.$rep.'/'.$info["name"],$path);
 			    		
