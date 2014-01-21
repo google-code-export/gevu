@@ -9,4 +9,4 @@ public const DOMAIN_URL:String = "localhost";
 public const ENDPOINT_IMPORT:String = "http://"+DOMAIN_URL+"/gevu/services/import.php";
 public const ENDPOINT_RAPPORT:String = "http://"+DOMAIN_URL+"/gevu/services/rapport.php";
 public const ENDPOINT_GRAPH:String = "http://"+DOMAIN_URL+"/gevu/public/graph";
-public const ENDPOINT_VIS3D:String = "http://"+DOMAIN_URL+"/gevu/alceane/visites/Residence%20Zampa.html";
+public const ENDPOINT_VIDE:String = "http://"+DOMAIN_URL+"/gevu/public/vide.html";

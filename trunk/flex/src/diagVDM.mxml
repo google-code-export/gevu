@@ -30,6 +30,7 @@ todo :
 		<mx:method name="deleteLieu" />
 		<mx:method name="getLieuDocs"	 		result="getDocs_resultHandler(event)" />
 		<mx:method name="deleteDoc"				result="roDiagnostique.getLieuDocs(idLieu, idBase);" />
+		<mx:method name="ajoutLieuDoc"	 		result="getDocs_resultHandler(event)" />
 		<mx:method name="getLieuCtl"			result="fillCtlListe(event);" />
 		<mx:method name="ajoutCtlLieu"			result="roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);" />
 		<mx:method name="copiecolleLieu"		result="copiecolle_resultHandler(event)" />
@@ -101,8 +102,8 @@ todo :
 									<mx:HBox id="detailLieu" width="100%" height="100%" >
 										<mx:VBox width="100%" height="100%" >
 											<mx:HBox id="rowHaut" width="100%" >
-												<mx:VBox >
-													<ns2:hbIcoMultimedia id="docs"  />
+												<mx:VBox width="100%" >
+													<ns2:hbIcoMultimedia id="docs" width="100%" typeDoc="1" />
 												</mx:VBox>
 											</mx:HBox>
 											<mx:VDividedBox width="100%" height="100%" >												
@@ -134,25 +135,13 @@ todo :
 						<mx:Canvas width="100%" height="100%" label="Rapports">
 							<ns2:cnvRapports id="cRapports" idLieu="{idLieu}" urlRapport="{ENDPOINT_RAPPORT}" />
 						</mx:Canvas>
-
-						<!--
-						<mx:Canvas width="100%" height="100%" label="Statistiques" >
-							<flexiframe:IFrame id="statIFrame"
-											   width="100%" height="100%"
-											   source="{ENDPOINT_GRAPH}"
-											   />
-						</mx:Canvas>
-						<mx:Canvas width="100%" height="100%" label="Visite"  >
-							<flexiframe:IFrame id="visiteIFrame"
-											   width="100%" height="100%"
-											   source="{ENDPOINT_VIS3D}"
-											   />
-						</mx:Canvas>
-						-->
 					</mx:TabNavigator>					
 				</mx:VBox>
-				<mx:VBox>
-					<mx:Image id="imgLieux" click="imgLieux.source='';" verticalAlign="top" horizontalAlign="left" source="" width="100%" />								
+				<mx:VBox width="10%" height="100%">
+					<mx:Image id="imgLieux" click="imgLieux.source='';" verticalAlign="top" horizontalAlign="left" source="" width="100%" />
+					<mx:Canvas width="100%" height="100%" >
+						<flexiframe:IFrame id="htmlLieux" source="{ENDPOINT_VIDE}" width="100%" height="100%" overlayDetection="true" />
+					</mx:Canvas>
 				</mx:VBox>
 		</mx:HDividedBox> 
 	 </mx:VBox>

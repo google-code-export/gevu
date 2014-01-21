@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+	close="PopUpManager.removePopUp(this);" title="Choix d'un type de document"
+	xmlns:ns2="compo.*" >
+	<mx:Script>
+        <![CDATA[
+			
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.CursorManager;
+			import mx.managers.PopUpManager;
+
+
+			[Bindable] public var callback:Function;
+			[Bindable] private var typeDoc:Object = 
+				[{"id_type_doc": 1,"lib": "Diag. DPE"}, {"id_type_doc": 2,"lib": "Diag. électricité"}, {"id_type_doc": 3,"lib": "Diag. ascenseur"}, {"id_type_doc": 4,"lib": "Plan"}, {"id_type_doc": 5,"lib": "Diag. accessibilité"}, {"id_type_doc": 6,"lib": "Autres"}, {"id_type_doc": 7,"lib": "Page WEB"}];
+						
+			protected function cb_changeHandler(event:ListEvent):void
+			{
+				if(cb.selectedItem.id_type_doc==7){
+					pageWeb.visible=true;
+				}
+			}
+						
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+				var type:int=6;
+				if(cb.selectedItem)type=cb.selectedItem.id_type_doc;
+				if(type==7){
+					var dataDoc:Array = new Array;						
+					dataDoc["titre"]=titre.text;
+					dataDoc["branche"]=cb.selectedItem.id_type_doc;
+					dataDoc["url"]=url.text;
+					this.parentApplication.roDiagnostique.ajoutLieuDoc(this.parentApplication.idLieu, dataDoc, this.parentApplication.idBase)
+				}else{
+					callback(type, titre.text);				
+				}				
+			}
+			
+		]]>
+    </mx:Script>
+	<mx:VBox >
+		<mx:ComboBox id="cb" dataProvider="{typeDoc}" prompt="Choisissez un type de document" labelField="lib" change="cb_changeHandler(event)" />
+		<mx:HBox>
+			<mx:Label text="Titre :" /><mx:TextInput id="titre" text="" />
+		</mx:HBox>			
+		<mx:HBox id="pageWeb" visible="false">
+			<mx:Label text="Adresse de la page WEB :" /><mx:TextInput id="url" text="" />			
+		</mx:HBox>
+		<mx:Button label="Valider" click="button1_clickHandler(event)" />
+	</mx:VBox>
+
+</mx:TitleWindow>
