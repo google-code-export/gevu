@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns2="compo.*" 
 	label="Documents multimédias" 
-	creationComplete="AppliVerifIco()"
+	creationComplete="AppliVerifIco()" xmlns:s="library://ns.adobe.com/flex/spark"
+	 paddingLeft="6" paddingRight="6"
 	>
 	<mx:Script>
 		<![CDATA[
@@ -16,6 +17,8 @@
 			import mx.events.CloseEvent;
 			import mx.events.ListEvent;
 			import mx.managers.PopUpManager;
+			
+			import spark.events.IndexChangeEvent;
 		
       	[Embed(source="/images/jpg.png")] [Bindable] private var PhotoIcon:Class;
       	[Embed(source="/images/mpg.png")] [Bindable] private var FilmIcon:Class;
@@ -28,6 +31,8 @@
 		[Embed(source="/images/ods.jpg")] [Bindable] private var OdsIcon:Class;
 		[Embed(source="/images/ptt.jpg")] [Bindable] private var PttIcon:Class;
 		[Embed(source="/images/odg.jpg")] [Bindable] private var OdgIcon:Class;
+		[Embed(source="/images/html.jpg")] [Bindable] private var HtmlIcon:Class;
+			
 
 		public var idRub:String;
 		public var idSite:String;
@@ -47,7 +52,7 @@
 		[Bindable] public var nbColo:int = 6;
 		[Bindable] public var bAjout:Boolean = true;
 		[Bindable] public var bSupp:Boolean = true;
-	
+		[Bindable] public var typeDoc:int;
 		
 		public function Init(EtatDiag:Object, Rub:String, Site:String, Ajax:String):void {	
 			idRub=Rub;
@@ -69,7 +74,7 @@
 			for each (var d:Object in rsDocs)
 			{
 				//vérifie le type de fichier
-				var ext:String = d.titre;
+				var ext:String = d.url;
 				ext = ext.substring(ext.length-3);
 				var img:Image = new Image;
 				var obj:Object = new Object;
@@ -167,6 +172,10 @@
 					dataIcons.addItem(d);
 					if(this.parentApplication.cartoIF)
 						this.parentApplication.cartoIF.callChargeKml([d.url, d.titre, d.id_doc]);					
+				}
+				if(d.content_type == "" || d.branche == 7){
+					d.vignette = HtmlIcon;
+					dataIcons.addItem(d);							
 				}
 			}
 		}
@@ -306,13 +315,40 @@
 				{
 					this.parentApplication.roDiagnostique.deleteDoc(listTypeDocs.selectedItem.id_doc, this.parentApplication.idBase);
 				}
+			}
+						
+			private function myChangedHandler(event:IndexChangeEvent):void {
+				
+				var item:Object = event.currentTarget.selectedItem;
+				
+				if(item.content_type == "application/vnd.google-earth.kml+xml kml"){
+					ShowHideKml(item.url);
+				}else if(item.vignette == PhotoIcon){
+					this.parentApplication.imgLieux.source = item.url;
+					this.parentApplication.htmlLieux.source = "";
+				}else if(item.vignette == HtmlIcon){
+					this.parentApplication.htmlLieux.source = item.url;
+					this.parentApplication.imgLieux.source = "";
+				}else{
+					go(item.url);
+				}
 			}			
 		]]>
   </mx:Script>
 		<mx:VBox id="barreBouton">
-			<ns2:cUploadFile visible="{bAjout}" idExi="{this.parentApplication.idExi}" wf="auton" ttBtn="Ajouter un document" id="uf" iconBtn="@Embed('images/AddRecord.png')" ctlBind="{parentApplication}" objName="Models_DbTable_Gevu_docsxlieux" typeFic="All" />
+			<ns2:cUploadFile visible="{bAjout}" idExi="{this.parentApplication.idExi}" wf="auton" 
+							 ttBtn="Ajouter un document" id="uf" iconBtn="@Embed('images/AddRecord.png')" ctlBind="{parentApplication}" 
+							 objName="Models_DbTable_Gevu_docsxlieux" typeFic="All" typeDoc="{typeDoc}" />
 			<mx:LinkButton visible="{bSupp}" click="deleteLieu()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un document" />															
 		</mx:VBox>
+	<!--
 		<mx:HorizontalList id="listTypeDocs" itemRenderer="compo.render.tofs" dataProvider="{dataIcons}" width="100%"   
-			rowHeight="86" columnWidth="60" rowCount="1" columnCount="{nbColo}" itemClick="listTypeDocs_clickHandler(event);" />
+			rowHeight="100" columnWidth="100" rowCount="1" columnCount="{nbColo}" itemClick="listTypeDocs_clickHandler(event);" />
+	-->
+	<s:List id="listTypeDocs" itemRenderer="compo.render.tofs" dataProvider="{dataIcons}" width="100%" change="myChangedHandler(event)" >
+		<s:layout>
+			<s:HorizontalLayout gap="10" />
+		</s:layout>
+	</s:List>
+	
 </mx:HBox>

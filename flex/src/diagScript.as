@@ -82,7 +82,9 @@ private var TreeObject:XML;
 private var xmlTree:XML
 public var idLieu:int=-1;
 public var idLieuCopie:int=-1;
+public var idBaseCopie:String="-1";
 public var idLieuColle:int=-1;
+public var idBaseColle:String="-1";
 private var libLieu:String;
 private var lockLieu:String;
 public var idBase:String;
@@ -484,7 +486,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 		var className:String;
 		var place:int;
 		//vérifie si on traite un objet du modele
-		if(arr.length == 4 && arr[3] != "lieuxchainedeplacements"){
+		if(arr.length == 4 && arr[3] != "lieuxchainedeplacements" && arr[3] != "stats"){
 			if(arr[3] != "diagext"){
 				//création dynamique de l'objet
 				className="compo.form."+arr[3];
@@ -594,6 +596,7 @@ private function displayNodeProperties(event:ResultEvent) : void {
 	docs.initDoc(docsxlieux);
 		
 	imgLieux.source = "";
+	htmlLieux.source = "";
 	boxDiag.visible = true;
 }
 
@@ -683,7 +686,7 @@ public function setIti(params:Object):void{
 protected function copierLieu_clickHandler(event:MouseEvent):void
 {
 	idLieuCopie = idLieu;
-	
+	idBaseCopie = idBase;
 }
 
 protected function collerLieu_clickHandler(event:MouseEvent):void
@@ -693,7 +696,16 @@ protected function collerLieu_clickHandler(event:MouseEvent):void
 		return;
 	}
 	idLieuColle = idLieu;
-	roDiagnostique.copiecolleLieu(idLieuCopie, idLieu, idExi, idBase);
+	idBaseColle = idBase;
+	if(idBaseColle!=idBaseCopie){
+		var arrBase:Array = new Array; 
+		arrBase.push(idBaseCopie);
+		arrBase.push("serveur");
+		arrBase.push(idBaseColle);
+		arrBase.push("serveur");
+		roDiagnostique.copiecolleLieu(idLieuCopie, idLieu, idExi, idBase, arrBase);
+	}else
+		roDiagnostique.copiecolleLieu(idLieuCopie, idLieu, idExi, idBase);
 }
 
 protected function copiecolle_resultHandler(event:ResultEvent):void

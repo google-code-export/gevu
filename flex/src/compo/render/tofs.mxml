@@ -1,6 +1,8 @@
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 		 horizontalAlign="center"
-		 verticalAlign="middle">	
+		 verticalAlign="middle"
+		  width="100%" height="100%"
+		 >	
 	
 	<mx:Script>
 		<![CDATA[
@@ -8,5 +10,6 @@
 	</mx:Script>
 	
 	<mx:Image source="{data.vignette}" toolTip="{data.titre}" />
+	<mx:Label text="{data.titre}" />
 	
 </mx:VBox>

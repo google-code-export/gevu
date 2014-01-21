@@ -20,17 +20,16 @@
 			//include the constant definition of the server endpoint URL
 			include "../grillesconfig.as";
                     
-			import mx.managers.PopUpManager;
-			
 			import com.adobe.serialization.json.JSON;
-
+			
+			import compo.twResultImport;
+			import compo.twWinProgress;
+			
 			import mx.controls.Alert;
-            import mx.controls.Button;
-            import mx.controls.LinkButton;
-            import mx.controls.List;
-            
-            import compo.twResultImport;
-            import compo.twWinProgress;
+			import mx.controls.Button;
+			import mx.controls.LinkButton;
+			import mx.controls.List;
+			import mx.managers.PopUpManager;
 
 			[Bindable]public var wf:String;
 			[Bindable]public var idExi:String;
@@ -41,6 +40,8 @@
            	[Bindable]public var ttBtn:String;            	 
 			[Bindable]public var ctlBind:Object;
 			[Bindable]public var typeFic:String;
+			[Bindable]public var typeDoc:int;
+			[Bindable]public var titreDoc:String;
 			[Bindable]public var UploadScript:String=ENDPOINT_IMPORT;
             
             private var _arrUploadFiles:Array;
@@ -50,7 +51,7 @@
             
             private var _winProgress:twWinProgress;
             private var twResult:twResultImport;
-            
+			            
             private function initApp():void {
                 Security.allowDomain("*");
                 _arrUploadFiles = new Array();
@@ -75,7 +76,28 @@
 					Alert.show("Veuillez sélectionner un lieu pour ajouter un document", "Ajout d'un document");
 					return;
 				}
+				//montre le choix d'un type de doc
+				if(typeDoc){
+					var tw:twChoixTypeDoc= twChoixTypeDoc(
+						PopUpManager.createPopUp(this, twChoixTypeDoc, true));
+					tw.callback = showNavFic;
+					PopUpManager.centerPopUp(tw);				
+				}else{
+					//le type de document par défaut est autres
+					//et pas de titre
+					showNavFic(6, "");
+				}
 								
+            }
+			
+			public function showNavFic(type:int, titre:String):void {
+				
+				typeDoc = type;
+				titreDoc = titre;
+
+				//dans le cas d'une page web on abandonne
+				if(typeDoc==7)return;
+				
 				if(_arrUploadFiles)_arrUploadFiles=new Array();
 				
 				var filter:FileFilter;
@@ -93,15 +115,15 @@
 				}
 				var Types:Array = new Array(filter);
 				
-                _refAddFiles = new FileReferenceList();
-                _refAddFiles.addEventListener(Event.SELECT, onSelectFileDirect);
-                if(filter){
-	                _refAddFiles.browse(Types);            	
-                }else{
-	                _refAddFiles.browse();            	
-                }
-            }
+				_refAddFiles = new FileReferenceList();
+				_refAddFiles.addEventListener(Event.SELECT, onSelectFileDirect);
+				if(filter){
+					_refAddFiles.browse(Types);            	
+				}else{
+					_refAddFiles.browse();            	
+				}
 
+			}
 
             private function onSelectFileDirect(event:Event):void {
                 if (_refAddFiles.fileList.length >= 1) {
@@ -196,6 +218,8 @@
                     sendVars.wf = wf;
                     sendVars.idExi = idExi;
                     sendVars.objName = objName;
+					sendVars.type = this.typeDoc;
+					sendVars.titre = this.titreDoc;
 					sendVars.idBase = this.parentApplication.idBase;
                     //récupération de l'identifiant d'objet
                     if(objName=='img_solus'){
