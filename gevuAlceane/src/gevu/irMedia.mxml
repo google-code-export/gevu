@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				creationComplete="creationCompleteHandler(event)"	
+				>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if(data.last){
+					this.setCurrentState("selected");					
+				}
+				txt.text = data.titre;
+				img.source = data.icone;
+				img.id = data.idFlex;
+				if(data.fct)img.addEventListener(MouseEvent.CLICK, data.fct);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@font-face {
+			src:url("assets/itc-officina-sans-book.ttf");
+			fontFamily: ITC;
+			embedAsCFF: true;
+		}
+		
+		.lbl {
+			fontFamily:ITC;
+			fontSize: 14pt;
+		}
+		
+	</fx:Style>
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="hovered"/>
+		<s:State name="selected"/>
+		<s:State name="downAndSelected"/>
+	</s:states>
+	
+	<s:layout>
+		<s:VerticalLayout gap="1" horizontalAlign="center" verticalAlign="middle" />
+	</s:layout>
+	
+	<s:Label id="txt" width="100%" height="20" styleName="lbl" textAlign="center" />
+	<s:Image id="img" width="100" />
+	
+</s:ItemRenderer>
