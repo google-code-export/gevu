@@ -33,8 +33,10 @@
 			public var nivLieu:int=0;
 			public var idBase:String = "gevu_alceane";
 			public var idScenar:int = 18;
+			public var urlDomaine:String = "http://localhost/gevu/";
 			//public var urlDomaine:String = "http://www.gevu.org/";
-			public var urlDomaine:String = "http://krys.alceane.lan/";
+			//public var urlDomaine:String = "http://krys.alceane.lan/";
+			public var urlVide:String = urlDomaine+"public/vide.html";
 			[Bindable] public var idAntenne:int=-1; 
 			[Bindable] public var idGroupe:int=-1; 
 			[Bindable] public var idBat:int=-1; 
@@ -155,11 +157,16 @@
 				
 			}
 			private function treeItemOpened(event:TreeEvent) : void {
-				return;
+				//return;
 				if (event.item.node.attribute("fake")==1)
 				{
 					var i:int = event.item.attribute("idLieu");
-					roAlceane.getXmlNode(i, idBase);
+					var type:int = event.item.attribute("typeControle");
+					var typeNext:int = -1;
+					//calcule le type de noeud suivant
+					if(type==61)typeNext=45;
+					if(type==45)typeNext=62;
+					roAlceane.getArboTypeLieu(i, typeNext, idBase);
 				}
 			}
 			private function treeItemClicked(event:ListEvent) : void {
@@ -325,6 +332,7 @@
 			showBusyCursor="true"
 			>
 			<s:method name="getArboAntenne"			result="updateTreeStructure(event);" />
+			<s:method name="getArboTypeLieu"			result="updateTreeStructure(event);" />
 			<s:method name="findLieu"			result="displayReponse(event);" />
 		</s:RemoteObject>
 		<s:RemoteObject
@@ -442,7 +450,7 @@
 						<s:Rect height="100%" width="100%" >
 							<s:fill><s:SolidColor color="#4B4B4D" /></s:fill>
 						</s:Rect>
-						<s:VGroup horizontalAlign="center" height="100%" width="100%" >
+						<s:VGroup horizontalAlign="center" height="100%" width="100%" toolTip="GEVU - Alcéane - 0.1133" >
 							<s:Label paddingTop="0" styleName="logoT" text="Alcéane"/>
 							<s:Label paddingTop="-16" paddingLeft="-1" styleName="logoST" text="OPH DE LA VILLE DU HAVRE"/>
 						</s:VGroup>				

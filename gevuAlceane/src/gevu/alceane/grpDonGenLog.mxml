@@ -22,6 +22,19 @@
 				this.typeLog.text = dataLog.Type_Logement;
 
 				interv.NodeData = dataNode["Models_DbTable_Gevu_interventions"];
+				
+				
+				//récupère les données de diag
+				if(dataNode["Models_DbTable_Gevu_docsxlieux"]){
+					for each (var doc:Object in dataNode["Models_DbTable_Gevu_docsxlieux"])
+					{
+						if(doc.branche == 4){
+							plan.source=doc.url;
+						}
+					}
+				}
+				
+								
 			}
 
 			
