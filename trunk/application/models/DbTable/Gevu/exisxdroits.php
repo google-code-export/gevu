@@ -76,8 +76,20 @@ class Models_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
      * @return void
      */
     public function edit($idExi, $idDroit, $data)
-    {        
+    {
+		$c = str_replace("::", "_", __METHOD__)."$idExi, $idDroit, $data";
+    	//vérifie s'il faut créer les utilisateurs dans les bases de données
+    	//dans le cas du droit application
+    	if($idDroit==3){
+    		$diag = new GEVU_Diagnostique();
+    		$arr = json_decode($data["params"]);
+    		foreach ($arr as $v) {
+	    		$c.=$diag->copieExi(false, substr($v->id, 2), $idExi);
+	    	}
+	    	$c.="KO";
+    	}        
         $this->update($data, 'gevu_exisxdroits.id_exi = '.$idExi.' AND gevu_exisxdroits.id_droit = '.$idDroit);
+    	return $c;
     }
     
     /**

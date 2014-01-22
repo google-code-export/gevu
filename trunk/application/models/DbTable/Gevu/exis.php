@@ -58,6 +58,7 @@ class Models_DbTable_Gevu_exis extends Zend_Db_Table_Abstract
      */
     public function ajouter($data, $existe=true)
     {
+    	$id=false;
     	if($existe)$id = $this->existe($data);
     	if(!$id){
     	 	$id = $this->insert($data);
