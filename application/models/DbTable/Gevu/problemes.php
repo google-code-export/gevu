@@ -64,7 +64,10 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
      */
     public function removeLieu($idLieu)
     {
-        $this->delete('id_lieu = ' . $idLieu);
+    	$arr = $this->findById_lieu($idLieu);
+		foreach($arr as $d){
+			$this->remove($d['id_probleme']);
+		}
     }
         
 	
@@ -136,7 +139,8 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
     public function remove($id, $idBase=false)
     {
     	if($idBase)$this->setDb($idBase);
-    	 
+    	$dbDP = new Models_DbTable_Gevu_docsxproblemes($this->_db);
+    	$dbDP->delete('id_probleme = ' . $id); 
         $this->delete('gevu_problemes.id_probleme = ' . $id);
     }
     

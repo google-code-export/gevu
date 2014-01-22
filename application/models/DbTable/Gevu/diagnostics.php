@@ -36,6 +36,10 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         )
     );	
     
+	 protected $_dependentTables = array(
+       "Models_DbTable_Gevu_problemes"
+       );
+           
     
     /**
      * Vérifie si une entrée Gevu_diagnostics existe.
@@ -112,8 +116,31 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      */
     public function remove($id)
     {
+    	$dbP = new Models_DbTable_Gevu_problemes($this->_db);
+        $dt = $dbP->findByIdDiag($id);
+        foreach($dt as $d){
+        	$dbP->remove($d["id_probleme"]);
+        }        
+    	
         $this->delete('gevu_diagnostics.id_diag = ' . $id);
     }
+    
+    /**
+     * Recherche une entrée Gevu_diagnostics avec la clef primaire spécifiée
+     * et supprime cette entrée.
+     *
+     * @param integer $id
+     *
+     * @return void
+     */
+    public function removeCampagne($id)
+    {
+        $dt = $this->findById_instant($id);
+        foreach($dt as $d){
+        	$this->remove($d["id_diag"]);
+        }        
+    }
+    
     
     /**
      * Récupère toutes les entrées Gevu_diagnostics avec certains critères
