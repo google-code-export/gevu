@@ -2,19 +2,23 @@
 try {
 	require_once( "../application/configs/config.php" );
 
-	//
+	$dbED = new Models_DbTable_Gevu_exisxdroits();
+	$dbED->edit(21, 3, '[{"lib":"GEVU alcéane","id":"3_gevu_new"},{"lib":"Alceane interne","id":"3_gevu_alceane"}]');
+	
+	/*
 	$s = new GEVU_Statistique();
 	//$json = $s->getAntenneDonGen("gevu_new", 3);
 	//$json = $s->getPatrimoineDiag("gevu_new");
 	//$json = $s->getPatrimoineDonGen("gevu_alceane");
 	$json = $s->getBatimentDonGen("gevu_alceane", 5);
 	echo json_encode($json);
-	//
+	*/
 	
 	/*
 	$alceane = new GEVU_Alceane();
-	//header ("Content-Type:text/xml");  
-	echo $alceane->getArboAntenne(1,"gevu_alceane");
+	header ("Content-Type:text/xml");  
+	echo $alceane->getArboLogement(5,"gevu_alceane");
+	//echo $alceane->getArboAntenne(1,"gevu_alceane");
 	*/
 	
 	/*
@@ -46,13 +50,15 @@ try {
 	print_r($r);
 	*/
 	
-	/*
+	//
 	$idBase = "gevu_new";	
 	$idExi = 16;
 	$idLieu = 113;
 	$idScenario = 18;
 
 	$d = new GEVU_Diagnostique();
+	$d->deleteDiagCampagne(300, $idExi, $idBase);
+	$d->deleteDiag(354, $idExi, $idBase);
 	//$d->ajoutUtiDiag($idLieu, $idExi, $idBase);
 	//$d->getContact($idBase,"Models_DbTable_Gevu_batiments",array("id"=>1,"type"=>"contact_proprietaire"));
 	//$arr = $d->getUtiLieuLock($idExi, "gevu_new", "serveur", "gevu_android", "local");
@@ -67,14 +73,14 @@ try {
 	//$d->genereDiagWithIti(1,$idBase);	
 	//$arr = $d->getNodeRelatedData($idLieu, $idExi, $idBase, $idScenario);
 	//$arr = $d->getLieuCtl(170, $idScenario, $idBase);	//23427
-	$arr = $d->copiecolleLieu(23601, 23600, $idExi, $idBase);	
+	$arr = $d->copiecolleLieu(22361, 15602, $idExi, "gevu_alceane", array("gevu_new","serveur","gevu_alceane","serveur"));	
 	//$arr = $d->getLieuCtl($idLieu, $idScenario, $idBase);	
 	$arr = $d->getXmlNode(1, $idBase);
 	//$arr = $d->getNodeRelatedData($idLieu, $idExi, $idBase, $idScenario);
 	
 	//$db = new Models_DbTable_Gevu_objetsxinterieurs();
 	//$db->ajoutDiag($idExi, 12, $idLieu, 106, $idBase);
-	*/
+	//
 	
 	//$db = new Models_DbTable_Gevu_espacesxinterieurs();
 	//$db->edit(3142, array("ref"=>"bidule"));
