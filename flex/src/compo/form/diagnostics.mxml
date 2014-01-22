@@ -51,6 +51,7 @@
 			private var numQestionInter:int;
 			private var arrQuestion:Array = new Array;
 			private var idInstant:int=-1;
+			private var campagne:Object;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
@@ -66,10 +67,10 @@
 			
 			protected function adgCrit_itemClickHandler(event:ListEvent):void
 			{
-				var s:Object=event.currentTarget.selectedItem;
-				if(s.id_lieu){
+				campagne=event.currentTarget.selectedItem;
+				if(campagne.id_lieu){
 					// récupère les données du diagnostic
-					roDiag.getDiagComplet(s.id_lieu,this.parentApplication.idBase,s.id_instant);					
+					roDiag.getDiagComplet(campagne.id_lieu,this.parentApplication.idBase,campagne.id_instant);					
 				}
 				
 			}
@@ -96,7 +97,7 @@
 			{
 				selectDiag = event.currentTarget.selectedItem;
 				if(selectDiag){
-					initProblemes(selectDiag.id_diag, selectDiag.criteres+" : "+selectDiag.reponse);
+					initProblemes(selectDiag.id_diag, selectDiag.criteres, selectDiag.id_reponse);
 					initSolutions();
 				}
 			}
@@ -110,11 +111,14 @@
 				}
 			}
 
-			private function initProblemes(idDiag:int, txtDiag:String):void
+			private function initProblemes(idDiag:int, txtDiag:String, idRep:String):void
 			{
 				formProbs.idDiag = idDiag;
 				formProbs.init();
-				txtCrit.text = txtDiag;				
+				if(idRep){
+					modifReponse.lblQ = txtDiag;
+					modifReponse.setVal(idRep);
+				}
 			}
 			
 			private function sortDiag(item:*, index:int, array:Array):Boolean
@@ -186,7 +190,7 @@
 				addIconesCritere(nodeQuestion);
 				
 				//charge les problèmes
-				initProblemes(nodeQuestion.idDiag, nodeQuestion.lib+" : "+nodeQuestion.@["val"]);				
+				initProblemes(nodeQuestion.idDiag, nodeQuestion.lib, "");				
 			}
 
 			private function addIconesCritere(node:XML):void
@@ -324,6 +328,17 @@
 				nodeQuestion.@["val"] = val;
 
 			}
+
+			protected function updReponse(nom:String, val:Object):void
+			{
+				//stocke la réponse
+				var vn:Array = new Array();
+				vn["id_critere"] = selectDiag.id_critere;
+				vn["id_reponse"] = val;	
+				vn["id_diag"] = selectDiag.id_diag;
+				setChoix(vn);
+				
+			}
 			
 			protected function creaChoix(vn:Object):void
 			{
@@ -341,9 +356,13 @@
 			protected function roDiagSetChoix_resultHandler(event:ResultEvent):void
 			{
 				var arr:Array = event.result as Array;
-				nodeQuestion.@["idDiag"] = arr.idDiags[0];
-				getNextQuestion();
-				ajout.enabled = true;
+				if(vs.selectedChild == ajout){
+					nodeQuestion.@["idDiag"] = arr.idDiags[0];
+					getNextQuestion();
+					ajout.enabled = true;
+				}else{
+					roDiag.getDiagComplet(campagne.id_lieu,this.parentApplication.idBase,campagne.id_instant);									
+				}
 			}
 			protected function roDiagCreaChoix_resultHandler(event:ResultEvent):void
 			{
@@ -421,6 +440,33 @@
 				vs.selectedChild = lecture;
 			}
 			
+			protected function deleteReponse(event:MouseEvent):void
+			{
+				if(selectDiag){
+					roDiag.deleteDiag(selectDiag.id_diag, this.parentApplication.idExi, this.parentApplication.idBase);
+				}
+				
+			}
+
+			protected function deleteDiag(event:MouseEvent):void
+			{
+				if(campagne.id_instant){
+					dgQuestions.dataProvider = null;
+					roDiag.deleteDiagCampagne(campagne.id_instant, this.parentApplication.idExi, this.parentApplication.idBase);
+				}
+					
+			}
+				
+			protected function deleteDiag_resultHandler(event:ResultEvent):void
+			{
+				roDiag.getDiagComplet(campagne.id_lieu,this.parentApplication.idBase,campagne.id_instant);									
+			}
+				
+			protected function removeCampagne_resultHandler(event:ResultEvent):void
+			{
+				roDiag.getDiagForLieu(idLieu, this.parentApplication.idExi, this.parentApplication.idBase)				
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:RemoteObject id="roDiag"
@@ -435,6 +481,8 @@
 		<mx:method name="setInstant" result="roInstAjout_resultHandler(event)" />
 		<mx:method name="creaChoix" result="roDiagCreaChoix_resultHandler(event)" />
 		<mx:method name="getDiagForLieu" result="getDiagForLieu_resultHandler(event)" />
+		<mx:method name="deleteDiag" result="deleteDiag_resultHandler(event)" />
+		<mx:method name="deleteDiagCampagne" result="removeCampagne_resultHandler(event)"/>
 	</mx:RemoteObject>
 	<mx:RemoteObject id="roScena"
 					 destination="zend"
@@ -454,7 +502,8 @@
 	<mx:VBox width="100%" height="100%">
 		<mx:HBox verticalAlign="middle">
 			<mx:LinkButton click="{roDiag.getDiagForLieu(idLieu, this.parentApplication.idExi, this.parentApplication.idBase)}" icon="@Embed('images/eye.png')" height="18" width="18" toolTip="Voir les diagnostics" />			
-			<mx:LinkButton id="btnAjout" click="btnAjout_clickHandler(event)" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un diagnostic" />			
+			<mx:LinkButton id="btnAjout" click="btnAjout_clickHandler(event)" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un diagnostic" visible="{vs.selectedChild == lecture}"/>			
+			<mx:LinkButton click="deleteDiag(event)" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un diagnostic" visible="{vs.selectedChild == lecture}" />							
 		</mx:HBox>
 		<mx:VDividedBox width="100%" height="100%">
 			<mx:ViewStack id="vs" width="100%" height="100%" >			
@@ -478,16 +527,19 @@
 							<mx:AdvancedDataGridColumn dataField="instant" headerText="Date"  />
 						</mx:columns>
 					</mx:AdvancedDataGrid>
-					<mx:DataGrid id="dgQuestions" height="100%" width="100%"
-								 itemClick="dgQuestions_itemClickHandler(event)"  
-								 >
-						<mx:columns>
-							<mx:DataGridColumn dataField="id_diag" visible="false" />
-							<mx:DataGridColumn dataField="ref" width="110" />
-							<mx:DataGridColumn dataField="criteres" />
-							<mx:DataGridColumn dataField="reponse" width="60" />
-						</mx:columns>
-					</mx:DataGrid>
+					<mx:VBox width="100%" height="100%">
+						<mx:LinkButton click="deleteReponse(event)" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer une réponse" />							
+						<mx:DataGrid id="dgQuestions" height="100%" width="100%"
+									 itemClick="dgQuestions_itemClickHandler(event)"  
+									 >
+							<mx:columns>
+								<mx:DataGridColumn dataField="id_diag" visible="false" />
+								<mx:DataGridColumn dataField="ref" width="110" />
+								<mx:DataGridColumn dataField="criteres" />
+								<mx:DataGridColumn dataField="reponse" width="60" />
+							</mx:columns>
+						</mx:DataGrid>
+					</mx:VBox>
 				</mx:HBox>
 				<mx:VBox id="ajout" width="100%" height="100%" creationComplete="ajout_creationCompleteHandler(event)" >
 					<mx:HBox verticalAlign="middle">
@@ -507,15 +559,14 @@
 						</mx:VBox>				
 						<form:repType2 id="ckReponse" lblQ="" Q="reponse_1" fnct="{this.chkReponse}" />
 					</mx:HBox>	
-					<mx:HBox width="100%">
-						<!-- <mx:Button id="btnSaveChoix" label="enregistrer" click="btnSaveChoix_clickHandler(event)" toolTip="Enregistre les réponses" /> -->
-						<mx:Label text="Commentaires :" />
-						<mx:TextInput id="txtComment" width="100%" />					
-					</mx:HBox>
 				</mx:VBox>
 			</mx:ViewStack>
 			<mx:VBox width="100%" height="100%" >
-				<mx:TextArea id="txtCrit" height="40" width="100%"  editable="false" />
+				<form:repType2 id="modifReponse" lblQ="" fnct="{this.updReponse}" visible="{vs.selectedChild == lecture}" />				
+				<mx:HBox width="100%">
+					<mx:Label text="Commentaires :" />
+					<mx:TextInput id="txtComment" width="100%" />					
+				</mx:HBox>
 				<mx:TabNavigator id="tn"  width="100%" height="100%" >
 					<form:problemes id="formProbs" />
 					<form:solutions id="formSolus" creationComplete="initSolutions()" />
