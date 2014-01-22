@@ -946,6 +946,16 @@ class GEVU_Diagnostique extends GEVU_Site{
         return $result[1][0];
 	}
 
+	/**
+	 * copie les tables liées à un lieu
+    * @param Zend_Db_Table_Abstract $dbLsrc
+    * @param Zend_Db_Table_Abstract $dbSrc
+    * @param integer $idLsrc 
+    * @param Zend_Db_Table_Abstract $dbLDst
+    * @param Zend_Db_Table_Abstract $dbDst
+    * @param integer $idLdst 
+    * 
+    */
 	private function copieTableLie($dbLsrc, $dbSrc, $idLsrc, $dbLDst, $dbDst, $idLdst){
         //et les tables liées
         $Rowset = $dbLsrc->find($idLsrc);
@@ -987,6 +997,33 @@ class GEVU_Diagnostique extends GEVU_Site{
 		}
 		
 	}
+
+	/**
+	 * copie d'une existence d'une base à l'autre
+    * @param string $idBaseSrc
+    * @param string $idBaseDst
+    * @param integer $idExi 
+    * 
+    */
+	public function copieExi($idBaseSrc, $idBaseDst, $idExi){
+		$c = str_replace("::", "_", __METHOD__)."$idExi, $idDroit, $data";
+		//récupère les connexions au bases
+		$dbSrc = $this->getDb($idBaseSrc);
+		$dbDst = $this->getDb($idBaseDst);
+		//créer les tables
+		$dbExiSrc = new Models_DbTable_Gevu_exis($dbSrc);
+		$dbExiDst = new Models_DbTable_Gevu_exis($dbDst);
+		//vérifie si l'existence existe déjà
+		$arrDst = $dbExiDst->findById_exi($idExi);
+		if(count($arrDst)==0){
+			//récupère l'existence source
+			$arrSrc = $dbExiSrc->findById_exi($idExi);
+			//ajoute à la base de sestination
+			$dbExiDst->ajouter($arrSrc,false);
+		}
+		return $c;
+	}
+	
 	
 	/**
 	 * récupère les lieux lockés pour un utilisateur
@@ -1891,6 +1928,52 @@ class GEVU_Diagnostique extends GEVU_Site{
 		//retourne les informations du parent
 		return $idLieu;		
 		
+    }
+
+    /**
+     * supprime un diagnostic et tous ces composants
+     *
+     * @param int $idDiag
+     * @param int $idExi
+     * @param string $idBase
+     * 
+     */
+    public function deleteDiag($idDiag, $idExi, $idBase=false){
+		    	
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
+		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+        
+		//création d'un nouvel instant
+		$c = str_replace("::", "_", __METHOD__.",$idDiag,$idExi,$idBase"); 
+		$idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+        
+        //suppression du lieu
+		$this->dbD->remove($idDiag);
+    }
+
+    /**
+     * supprime une campagne de diagnostic et tous ces composants
+     *
+     * @param int $idInst
+     * @param int $idExi
+     * @param string $idBase
+     * 
+     */
+    public function deleteDiagCampagne($idInst, $idExi, $idBase=false){
+		    	
+		//initialise les gestionnaires de base de données
+		$this->getDb($idBase);
+        if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
+		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+        
+		//création d'un nouvel instant
+		$c = str_replace("::", "_", __METHOD__.",$idLieu,$idExi,$idBase"); 
+		$this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
+        
+        //suppression du lieu
+		$this->dbD->removeCampagne($idInst);
     }
     
 }
