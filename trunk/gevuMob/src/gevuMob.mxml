@@ -126,12 +126,12 @@
 				arrOpt = new ArrayCollection(object.items);
 				
 				//roMig.migreRefServeurToLocal(1);
-				//showLogin();
-				//
+				showLogin();
+				/*
 				var r:Object = {idExi:1,droit_4:'[{"lib":"ERP-IOP","id":"4_13"},{"lib":"loge","id":"4_12"},{"lib":"Logement V3","id":"4_18"}]'};				
 				var c:Object = {"lib":"test","options":{"idBase":"gevu_android", "idBaseSrc":"gevu_new", "idBaseRef":"gevu_ref", "srvSrc":"ref", "srvDst":"android", "urlVerif":"http://www.gevu.org"}};				
 				init(r, c);
-				//
+				*/
 
 			}
 			
