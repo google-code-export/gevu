@@ -1,7 +1,6 @@
 <?php
 try {
 	require_once( "../application/configs/config.php" );
-	$application->bootstrap();
 		
 	if(!isset($_GET["idLieu"]) || !isset($_GET["idBase"])){
 		echo "variables invalides";
