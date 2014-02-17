@@ -67,7 +67,7 @@ class GEVU_Migration extends GEVU_Site{
 		// paramètres de connexion source
     	$arrConfSrc = $dbSrc->getConfig();
     	$hostSource         = $arrConfSrc["host"];// adresse IP du serveur Source    	
-    	$portSource         = '3306';          // port serveur MySql (3306 par défaut)
+    	$portSource         = '3306';          		// port serveur MySql (3306 par défaut)
     	$userSource         = $arrConfSrc["username"];// utilisateur
     	$mdpSource          = $arrConfSrc["password"];// mot de passe    	
     	$bddSource          = $idBaseSrc;       	// base de donnée Source
@@ -75,7 +75,7 @@ class GEVU_Migration extends GEVU_Site{
     	//récupère les connexion
     	$dbDst = $this->getDb($idBaseDst,$srvDst);				
     	// paramètres de connexion cible tablette  	
-    	$arrConfDst = $dbSrc->getConfig();
+    	$arrConfDst = $dbDst->getConfig();
     	$hostCible          = $arrConfDst["host"];      // adr. IP du serveur Cible (ici localhost pour l'exemple)
     	$portCible          = '3306';           		// port serveur MySql (3306 par défaut)
     	$userCible          = $arrConfDst["username"];  // utilisateur
