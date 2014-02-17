@@ -2,9 +2,14 @@
 try {
 	require_once( "../application/configs/config.php" );
 
+	//
+	$mig = new GEVU_Migration();
+	$mig->migreRefServeurToLocal("gevu_ref","tves","android","gevu_android");
+	//
+	/*
 	$dbED = new Models_DbTable_Gevu_exisxdroits();
 	$dbED->edit(21, 3, '[{"lib":"GEVU alcéane","id":"3_gevu_new"},{"lib":"Alceane interne","id":"3_gevu_alceane"}]');
-	
+	*/
 	/*
 	$s = new GEVU_Statistique();
 	//$json = $s->getAntenneDonGen("gevu_new", 3);
@@ -50,19 +55,19 @@ try {
 	print_r($r);
 	*/
 	
-	//
+	/*
 	$idBase = "gevu_new";	
-	$idExi = 16;
+	$idExi = 1;
 	$idLieu = 113;
 	$idScenario = 18;
 
 	$d = new GEVU_Diagnostique();
-	$d->deleteDiagCampagne(300, $idExi, $idBase);
-	$d->deleteDiag(354, $idExi, $idBase);
+	//$d->deleteDiagCampagne(300, $idExi, $idBase);
+	//$d->deleteDiag(354, $idExi, $idBase);
 	//$d->ajoutUtiDiag($idLieu, $idExi, $idBase);
 	//$d->getContact($idBase,"Models_DbTable_Gevu_batiments",array("id"=>1,"type"=>"contact_proprietaire"));
-	//$arr = $d->getUtiLieuLock($idExi, "gevu_new", "serveur", "gevu_android", "local");
-	//$arr = $d->setUtiLieuLock($idExi, "gevu_android", "android", "gevu_new", "serveur");
+	//$arr = $d->getUtiLieuLock('1', 'gevu_new', 'ref', 'gevu_android', 'android');
+	$arr = $d->setUtiLieuLock($idExi, "gevu_android", "android", "gevu_new", "ref");
 	//$arr = $d->getUtiIdLieuLock($idExi, $idLieu, $idBase);
 	//$d->ajouterContact($idBase, "Models_DbTable_Gevu_batiments", array("idCtc"=>"11","idLien"=>"1","type"=>"contact_gardien"));
 	//$d->deleteLieu($idLieu, $idExi, $idBase);
@@ -73,14 +78,15 @@ try {
 	//$d->genereDiagWithIti(1,$idBase);	
 	//$arr = $d->getNodeRelatedData($idLieu, $idExi, $idBase, $idScenario);
 	//$arr = $d->getLieuCtl(170, $idScenario, $idBase);	//23427
-	$arr = $d->copiecolleLieu(22361, 15602, $idExi, "gevu_alceane", array("gevu_new","serveur","gevu_alceane","serveur"));	
+	//$arr = $d->copiecolleLieu(22361, 15602, $idExi, "gevu_alceane", array("gevu_new","serveur","gevu_alceane","serveur"));	
 	//$arr = $d->getLieuCtl($idLieu, $idScenario, $idBase);	
-	$arr = $d->getXmlNode(1, $idBase);
+	//$arr = $d->getXmlNode(1, $idBase);
 	//$arr = $d->getNodeRelatedData($idLieu, $idExi, $idBase, $idScenario);
+	
 	
 	//$db = new Models_DbTable_Gevu_objetsxinterieurs();
 	//$db->ajoutDiag($idExi, 12, $idLieu, 106, $idBase);
-	//
+	*/
 	
 	//$db = new Models_DbTable_Gevu_espacesxinterieurs();
 	//$db->edit(3142, array("ref"=>"bidule"));
