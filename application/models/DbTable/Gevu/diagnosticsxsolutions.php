@@ -307,14 +307,17 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
      *
      * @param int $id_lieu
      * @param sting $idBase
+     * @param sting $idCrit
      *
      * @return array
      */
-    public function findByIdLieuAFaire($id_lieu, $idBase)
+    public function findByIdLieuAFaire($id_lieu, $idBase, $idCrit="")
     {
     
     	if($idBase)$this->setDb($idBase);
-    	 
+    	$wCrit=""; 
+    	if($idCrit)$wCrit = " AND c.id_critere =".$idCrit; 
+    	
 		//on ne récupère que les réponses NON et sous réserve du dernier diag
     	$query = "SELECT
 	    	 GROUP_CONCAT(DISTINCT d.id_diag) diags
@@ -325,17 +328,16 @@ class Models_DbTable_Gevu_diagnosticsxsolutions extends Zend_Db_Table_Abstract
 	      	, ds.id_solution
     	FROM gevu_lieux as ld
     	INNER JOIN gevu_lieux as l ON l.id_lieu = ".$id_lieu." AND ld.lft BETWEEN l.lft AND l.rgt
-    	INNER JOIN gevu_diagnostics as d ON d.id_lieu = ld.id_lieu AND d.id_reponse IN (141,2) AND d.last = 1
-    	INNER JOIN gevu_criteres as c ON c.id_critere = d.id_critere AND c.affirmation != ''
+    	INNER JOIN gevu_diagnostics as d ON d.id_lieu = ld.id_lieu AND d.id_reponse IN (141,2) AND d.last = 1 
+    	INNER JOIN gevu_criteres as c ON c.id_critere = d.id_critere AND c.affirmation != '' ".$wCrit."
 		LEFT JOIN gevu_diagnosticsxsolutions ds ON ds.id_diag = d.id_diag
     	WHERE ds.id_solution is null
 		GROUP BY d.id_critere";
-    
+
     	$adpt = $this->getAdapter();
     	$result = $adpt->query($query);
     
     	return $result->fetchAll();
-    
     }
     
     

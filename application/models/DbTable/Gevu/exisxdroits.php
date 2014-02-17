@@ -86,7 +86,6 @@ class Models_DbTable_Gevu_exisxdroits extends Zend_Db_Table_Abstract
     		foreach ($arr as $v) {
 	    		$c.=$diag->copieExi(false, substr($v->id, 2), $idExi);
 	    	}
-	    	$c.="KO";
     	}        
         $this->update($data, 'gevu_exisxdroits.id_exi = '.$idExi.' AND gevu_exisxdroits.id_droit = '.$idDroit);
     	return $c;

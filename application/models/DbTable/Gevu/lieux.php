@@ -154,6 +154,27 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      * et supprime cette entrée.
      *
      * @param integer $id
+     *
+     * @return void
+     */
+    public function removeParentVide($id)
+    {
+	    $arr = $this->findByLieu_parent($id);
+    	if(count($arr)==0){
+    		//on récupère le parent
+    		$l = $this->findById_lieu($id);
+    		//on supprime le lieu
+    		$this->remove($id);
+    		//on vérifie s'il faut supprimer le parent
+    		if($l[0]["lieu_parent"]!=1)$this->removeParentVide($l[0]["lieu_parent"]);
+    	}    	
+    }    	
+    
+    /**
+     * Recherche une entrée Gevu_lieux avec la clef primaire spécifiée
+     * et supprime cette entrée.
+     *
+     * @param integer $id
      * @param boolean $hierarchie
      *
      * @return void
@@ -670,7 +691,7 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
     		$sqlLieuParent = " INNER JOIN gevu_lieux lp ON lp.id_lieu =".$idLieu." AND l.lft BETWEEN lp.lft AND lp.rgt";
     	}
     	$sql = 'SELECT 
-    			l.lib, l.id_lieu, l.lieu_copie, l.lock_diag, SUBSTRING(l.lock_diag, 2) idExi, SUBSTRING(l.lock_diag, 1, 1) tLock, l.niv, l.lft, l.rgt
+    			l.lib, l.id_lieu, l.lieu_parent, l.lieu_copie, l.lock_diag, SUBSTRING(l.lock_diag, 2) idExi, SUBSTRING(l.lock_diag, 1, 1) tLock, l.niv, l.lft, l.rgt
 				, tc.lib tc, tc.icone
     		FROM gevu_lieux l
 				INNER JOIN gevu_exis e ON e.id_exi = SUBSTRING(l.lock_diag, 2) AND e.id_exi = '.$idExi.'
