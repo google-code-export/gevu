@@ -17,7 +17,7 @@
     <channels>
         <channel-definition id="zend-endpoint"
             class="mx.messaging.channels.AMFChannel">
-            <endpoint uri="http://localhost:8080/gevu/services/index.php"
+            <endpoint uri="http://localhost/gevu/services/index.php"
                 class="flex.messaging.endpoints.AMFEndpoint"/>
         </channel-definition>
     </channels>

@@ -95,13 +95,20 @@
 						
 			private function initSolutions():void
 			{
-				vnSolus.pushView(gevu.solutions,selectDiag);
+				if(selectDiag)
+					vnSolus.pushView(gevu.solutions, selectDiag);
+				else
+					vnSolus.pushView(gevu.solutions, {"id_diag":nodeQuestion.@["idDiag"], "id_lieu":idLieu, "id_critere":nodeQuestion.@["id_critere"]});
 			}
 			
-			private function initProblemes(idDiag:int, txtDiag:String):void
+			private function initProblemes(idDiag:int, idCritere:int, txtDiag:String, idRep:String):void
 			{
-				vnProbs.pushView(gevu.problemes,{"idDiag":idDiag,"idLieu":idLieu});
-				txtCritProb.text = txtDiag;				
+				vnProbs.pushView(gevu.problemes,{"idDiag":idDiag,"idLieu":idLieu, "idCrit":idCritere});
+				if(idRep){
+					modifReponse.lblQ = txtDiag;
+					modifReponse.setVal(idRep);
+				}
+				
 			}
 			
 			private function sortDiag(item:*, index:int, array:Array):Boolean
@@ -174,7 +181,10 @@
 				btnNextQuestion.enabled= lblQuestionNum.text != lblQuestionTot.text;
 				
 				//charge les problèmes
-				initProblemes(nodeQuestion.@["idDiag"], nodeQuestion.@["lib"]+" : "+nodeQuestion.@["val"]);				
+				initProblemes(nodeQuestion.@["idDiag"], nodeQuestion.@["id_critere"], nodeQuestion.@["lib"]+" : "+nodeQuestion.@["val"],"");	
+				
+				//charge les solutions
+				initSolutions();
 			}
 			
 			private function addIconesCritere(node:XML):void
@@ -292,7 +302,6 @@
 			
 			protected function chkReponse(nom:String, val:Object):void
 			{
-				
 				//stocke la réponse
 				var vn:Array = new Array();
 				vn["id_critere"] = nodeQuestion.@["id_critere"]+"";
@@ -306,28 +315,49 @@
 					setChoix(vn);
 				}
 				nodeQuestion.@["val"] = val;
-				
 			}
+			
+			protected function updReponse(nom:String, val:Object):void
+			{
+				//stocke la réponse
+				var vn:Array = new Array();
+				vn["id_critere"] = selectDiag.id_critere;
+				vn["id_reponse"] = val;	
+				vn["id_diag"] = selectDiag.id_diag;
+				setChoix(vn);
+				
+			}			
 			
 			protected function creaChoix(vn:Object):void
 			{
 				vgAjout.enabled = false
-				roDiag.creaChoix(this.parentApplication.idExi, idLieu, txtComment.text, vn, this.parentApplication.idBase);
+				roDiag.creaChoix(this.parentApplication.idExi, idLieu, "", vn, this.parentApplication.idBase);
 			}
 			
 			protected function setChoix(vn:Object):void
 			{
-				vgAjout.enabled = false
+				if(vgAjout)vgAjout.enabled = false
 				var choix:Array= new Array;
 				choix.push(vn);
-				roDiag.setChoix(this.parentApplication.idExi, idLieu, txtComment.text, choix, this.parentApplication.idBase, idInstant);
+				roDiag.setChoix(this.parentApplication.idExi, idLieu, "", choix, this.parentApplication.idBase, idInstant);
 			}
 			protected function roDiagSetChoix_resultHandler(event:ResultEvent):void
 			{
-				var arr:Array = event.result as Array;
-				nodeQuestion.@["idDiag"] = arr.idDiags[0];
-				getNextQuestion();
-				vgAjout.enabled = true;
+				if(nodeQuestion){
+					var arr:Array = event.result as Array;
+					nodeQuestion.@["idDiag"] = arr.idDiags[0];
+					getNextQuestion();
+					vgAjout.enabled = true;
+				}else{
+					//on recharge la liste des réponses
+					listRep.dataProvider = null;
+					var s:Object=listDiag.selectedItem;
+					if(s.id_lieu){
+						// récupère les données du diagnostic
+						roDiag.getDiagComplet(s.id_lieu,this.parentApplication.idBase,s.id_instant);					
+					}				
+					
+				}
 			}
 			protected function roDiagCreaChoix_resultHandler(event:ResultEvent):void
 			{
@@ -416,7 +446,7 @@
 			{
 				selectDiag = event.currentTarget.selectedItem;
 				if(selectDiag){
-					initProblemes(selectDiag.id_diag, selectDiag.criteres+" : "+selectDiag.reponse);
+					initProblemes(selectDiag.id_diag, selectDiag.id_critere, selectDiag.criteres, selectDiag.id_reponse);
 					initSolutions();
 				}				
 			}
@@ -487,13 +517,9 @@
 			<s:HGroup id="iconCtl" />
 		</s:HGroup>
 		<cpnt:repType width="100%" id="ckReponse" lblQ="" Q="reponse_1" fnct="{this.chkReponse}" />
-		<s:HGroup width="0">
-			<s:Label text="Commentaires :" />
-			<s:TextInput id="txtComment" width="100%" height="100%" />					
-		</s:HGroup>
 	</s:VGroup>
 	<s:VGroup width="100%" height="100%" >
-		<s:TextArea id="txtCritProb" height="60" width="100%"  editable="false" />
+		<cpnt:repType width="100%" id="modifReponse" lblQ="" fnct="{this.updReponse}" visible="{currentState == 'archive'}" />
 		<s:HGroup width="100%" height="100%" verticalAlign="middle" >
 			<s:ViewNavigator  id="vnProbs" width="100%" height="100%" firstView="views.htmlArea" />
 			<s:ViewNavigator  id="vnSolus" width="100%" height="100%" firstView="views.htmlArea" />			

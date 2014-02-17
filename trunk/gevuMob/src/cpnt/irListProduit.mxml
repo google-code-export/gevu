@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				creationComplete="creationCompleteHandler(event)"
+				>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if(data!=null){
+					labelDisplay.text = data.ref+" : "+data.solution;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Group height="100%" width="100%">
+		<s:Rect x="0" y="0" 
+				radiusX="4" radiusY="4" 
+				height="100%" width="100%">
+			<s:stroke><s:SolidColorStroke color="0x000000" weight="1"/></s:stroke>
+		</s:Rect>
+		<s:HGroup height="100%" width="100%" left="4"  paddingBottom="6" paddingLeft="6" paddingRight="6" paddingTop="6" gap="10" >
+			<s:Label id="labelDisplay" height="100%" width="100%" verticalAlign="middle" />
+		</s:HGroup>
+
+	</s:Group>	
+</s:ItemRenderer>

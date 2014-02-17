@@ -22,6 +22,7 @@
 			
 			[Bindable] public var idSelect:int=-1; 
 			[Bindable] public var idDiag:int; 
+			[Bindable] public var idCrit:int; 
 			[Bindable] public var idLieu:int; 
 			[Bindable] public var idBase:String; 
 			
@@ -29,6 +30,7 @@
 			{
 				idDiag = data.idDiag as int;
 				idLieu = data.idLieu as int;
+				idCrit = data.idCrit as int;
 				init();				
 			}
 
@@ -55,6 +57,7 @@
 				vn["observations"] = observations.text;
 				vn["id_diag"] = idDiag;
 				vn["id_lieu"] = idLieu;
+				vn["id_critere"] = idCrit;
 				
 				ro.ajouter(vn,this.parentApplication.idExi,this.parentApplication.idBase);
 			}
