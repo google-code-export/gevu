@@ -44,9 +44,11 @@ class GEVU_Migration extends GEVU_Site{
      * 
      * @param string $idBaseSrc
      * @param string $idBaseDst
+     * @param string $srvSrc
+     * @param string $srvDst
      * 
      */
-    public function migreRefServeurToLocal($idBaseSrc, $idBaseDst){
+    public function migreRefServeurToLocal($idBaseSrc, $srvSrc, $srvDst, $idBaseDst){
 
     	 
 	try {
@@ -57,37 +59,36 @@ class GEVU_Migration extends GEVU_Site{
     	$this->temps_debut = microtime(true);
     	$timeLimit          = 30;                			// en sec. Au cas où une connexion distante bloquerait...
     	//(ATTENTION ! ne pas se tromper de nom de table cible sinon... zap!)
-    	$ecraser            = false;            				// true on écrase la table cible si elle existe 
+    	$ecraser            = false;            			// true on écrase la table cible si elle existe 
     	$supprimer          = true;            				// true on supprime la table cible si elle existe 
-    	
-    	// paramètres de connexion source
-    	$hostSource         = '188.165.235.55';		// adresse IP du serveur Source    	
-    	$portSource         = '3306';           	// port serveur MySql (3306 par défaut)
-    	$userSource         = 'remoteuser';         // utilisateur
-    	$mdpSource          = 'Samszo2013' ;      	// mot de passe    	
+
+    	//récupère les connexion
+		$dbSrc = $this->getDb($idBaseSrc, $srvSrc);
+		// paramètres de connexion source
+    	$arrConfSrc = $dbSrc->getConfig();
+    	$hostSource         = $arrConfSrc["host"];// adresse IP du serveur Source    	
+    	$portSource         = '3306';          // port serveur MySql (3306 par défaut)
+    	$userSource         = $arrConfSrc["username"];// utilisateur
+    	$mdpSource          = $arrConfSrc["password"];// mot de passe    	
     	$bddSource          = $idBaseSrc;       	// base de donnée Source
+    	    	
+    	//récupère les connexion
+    	$dbDst = $this->getDb($idBaseDst,$srvDst);				
+    	// paramètres de connexion cible tablette  	
+    	$arrConfDst = $dbSrc->getConfig();
+    	$hostCible          = $arrConfDst["host"];      // adr. IP du serveur Cible (ici localhost pour l'exemple)
+    	$portCible          = '3306';           		// port serveur MySql (3306 par défaut)
+    	$userCible          = $arrConfDst["username"];  // utilisateur
+    	$mdpCible           = $arrConfDst["password"];	// mot de passe
+    	$bddCible           = $idBaseDst;				// base de donnée Cible
+    	//
+    	
     	// tables Sources = 27
     	$tablesSources = array('gevu_contacts','gevu_couts','gevu_criteres','gevu_criteresxtypesxcriteres','gevu_criteresxtypesxdeficiences','gevu_criteresxtypesxdroits'
     			,'gevu_droits','gevu_exis','gevu_entreprises','gevu_exisxdroits','gevu_motsclefs','gevu_produits','gevu_produitsxcouts','gevu_roles','gevu_scenario','gevu_scenes'
     			,'gevu_solutions','gevu_solutionsxcouts','gevu_solutionsxcriteres','gevu_solutionsxmetiers','gevu_solutionsxproduits', 'gevu_interventions'
     			,'gevu_typesxcontroles','gevu_typesxcriteres','gevu_typesxdeficiences','gevu_typesxdroits','gevu_typesxsolutions','gevu_typexmotsclefs');
-    	    	
-    	// paramètres de connexion cible tablette  	
-    	$hostCible          = '127.0.0.1';      // adr. IP du serveur Cible (ici localhost pour l'exemple)
-    	$portCible          = '3306';           // port serveur MySql (3306 par défaut)
-    	$userCible          = 'root';           // utilisateur
-    	$mdpCible           = '';    			// mot de passe
-    	$bddCible           = $idBaseDst;      // base de donnée Cible
-    	//
     	
-    	/* paramètres de connexion cible local 	
-    	$hostCible          = 'localhost';      // adr. IP du serveur Cible (ici localhost pour l'exemple)
-    	$portCible          = '3306';           // port serveur MySql (3306 par défaut)
-    	$userCible          = 'root';           // utilisateur
-    	$mdpCible           = '';    			// mot de passe
-    	$bddCible           = $idBaseDst;   // base de donnée Cible
-    	*/
-    			
     	// texte d'erreur de connexion
     	$errConnexion = "Impossible d'établir une connexion au port <b>%1\$s</b> du host <u>%2\$s</u> <b>%3\$s</b> dans la limite du temps imparti (%4\$s secondes). <br />Vérifiez l'adresse du host et le numéro de port du serveur %2\$s MySQL.<br />S'ils vous semblent corrects, essayez en changeant la valeur de <b>\$timeLimit</b>.";
     	
