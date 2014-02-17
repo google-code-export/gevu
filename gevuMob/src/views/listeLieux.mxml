@@ -9,8 +9,11 @@
 			import mx.collections.ArrayCollection;
 			import mx.collections.IList;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 			
 			import spark.transitions.SlideViewTransition;
+			
+			import cpnt.alert;
 						
 			public var viewTrans:SlideViewTransition = new SlideViewTransition();	
 			private var durTrans:int = 800;
@@ -30,20 +33,34 @@
 			{
 				if(data.lieu.lib!="Univers"){
 					viewTrans.direction = "up";
-					navigator.popView(viewTrans);					
+					navigator.popView(viewTrans);
+					//on recherche l'item
+					this.parentApplication.roDiag.getUtiIdLieuLock(this.parentApplication.idExi, data.lieu.lieu_parent, this.parentApplication.idBase);
+
 				}
 				this.parentApplication.initDetail();
 			}
 
 			public function suppItem(id:String):void 
 			{
-				list.dataProvider.removeItemAt(list.dataProvider.getItemIndex(findItem(id,list.dataProvider)));
+				var idx:int=list.dataProvider.getItemIndex(findItem(id,list.dataProvider));
+				if(idx>0)list.dataProvider.removeItemAt(idx);
 			}
 
 			public function addItem(item:Object):void 
 			{
+				if(!item)return;
 				var o:Object = findItem(item.id_lieu,list.dataProvider);
-				if(o!=null){
+				if(data && item.id_lieu == data.lieu.id_lieu){
+					data.lieu = item;
+					this.title = data.lieu.lib;
+					tiNom.text = data.lieu.lib;					
+					data.liste = new ArrayCollection(item.children as Array);
+					list.dataProvider = data.liste;
+					oItem = item;
+					this.parentApplication.oLieu = oItem;
+					return;
+				}else if(o!=null){
 					var i:int = list.dataProvider.getItemIndex(o);
 					list.dataProvider[i]=item;
 				}else{
@@ -74,8 +91,6 @@
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
-				//roDiagnostique.getXmlNode(1);
-				//if(data==null)data={"libLieuParent":"","libLieu":""};
 				if(data!=null){
 					init();
 				}
@@ -111,13 +126,19 @@
 				bPrev.visible = true;
 				oItem = event.currentTarget.selectedItem;
 				if(oItem==null)return;
-				showItem();
+				if(this.parentApplication.isRun){
+					var aProcess:alert = new alert();
+					aProcess.mess = "Un traitement est en cours, merci de patienter...";
+					aProcess.titre = 'Traitement en cours';
+					aProcess.open(this, true);
+					PopUpManager.centerPopUp(aProcess);										
+				}else showItem();
 			}
 			
 			protected function showItem():void
 			{
 				this.parentApplication.oLieu = oItem;
-				//vérifie s'il faut charger les enfants du lieu
+				/*vérifie s'il faut charger les enfants du lieu
 				if(oItem.children.length > 0){
 					viewTrans.direction = "down";
 					var oData:Object = {"ariane":this.parentApplication.lblAriane.text,"lieu":oItem,"liste":new ArrayCollection(oItem.children)};
@@ -125,17 +146,22 @@
 				}else{
 					this.title = oItem.lib;
 					tiNom.text = oItem.lib;
-					this.parentApplication.lblAriane.text = data.ariane+" / "+oItem.lib;
+					this.parentApplication.lblAriane.text = data.ariane+" / "+data.lieu.lib +" / "+oItem.lib;
 					showButton(oItem.tLock);
 					//charge les infos liées
 					this.parentApplication.getDataLieu();					
 				}
+				*/
+				//on charge à chaque fois une nouvelle vue
+				viewTrans.direction = "down";
+				var oData:Object = {"ariane":this.parentApplication.lblAriane.text,"lieu":oItem,"liste":new ArrayCollection(oItem.children)};
+				navigator.pushView(views.listeLieux, oData, viewTrans);									
 				
 			}
 			
 			protected function showButton(tLock:String):void
 			{
-				if(data.lieu.lib == "univers")bPrev.visible = false;
+				if(data.lieu.lib == "Univers")bPrev.visible = false;
 				else bPrev.visible = true;
 				if(tLock == "x"){
 					this.parentApplication.bCopie.visible = false;
@@ -166,7 +192,7 @@
 		<s:Button label="Univers" click="goUnivers()"/>
 	</s:navigationContent>
 	<s:actionContent>
-		<s:Button id="bPrev" label="Retour" click="goBack()" skinClass="skin.btnPrev" />
+		<s:Button id="bPrev" label="Retour" click="goBack()" visible="false" skinClass="skin.btnPrev" />
 	</s:actionContent>
 	
 	<s:VGroup width="100%" height="100%" paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4">

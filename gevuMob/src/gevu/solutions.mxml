@@ -3,44 +3,49 @@
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:cpnt="cpnt.*"
 		title="Solutions" 
-		width="100%" height="100%" 
+		width="100%" height="100%" minHeight="140"
 		creationComplete="creationCompleteHandler(event)"
 		>
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
-			
-			import spark.components.CheckBox;
-			
-			import cpnt.alert;
-			
-			import views.listeDiag;
-			
-			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+						
+			import cpnt.alert;
+			import cpnt.popSolus;
+			
+			import skin.btnSupp;
 			
 			[Bindable] public var idSelect:int=-1; 
 			[Bindable] public var idLieu:int; 
 			[Bindable] public var idDiag:int; 
 			[Bindable] public var idCrit:int; 
 			[Bindable] public var idBase:String; 
-			[Bindable] public var arrSolus:Array;
-			[Bindable] public var arrProduit:Array;
+			[Bindable] public var arrSolus:ArrayCollection;
+			[Bindable] public var arrProduit:ArrayCollection;
 			[Bindable] public var bAjout:Boolean = true;
 			[Bindable] public var bSupp:Boolean = true;
-			[Bindable] public var sMethode:String;
-			[Bindable] public var solusLieuxFait:solutions;
-			[Bindable] public var solusLieuxAFaire:solutions;
-			public var cnvListe:listeDiag;
+			private var wSolus:popSolus;			
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				idDiag = data.id_diag;
 				idCrit = data.id_critere;
-
+				idLieu = data.id_lieu;
 				init();
+			}
+			
+			public function init():void
+			{
+				arrSolus = new ArrayCollection;
+				arrProduit = new ArrayCollection;
+				
+				//recherche les solutions pour le diag
+				ro.findByIdDiag(idDiag, this.parentApplication.idBase);
+				
 			}
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
@@ -59,28 +64,18 @@
 			
 			public function btnAjouterClick():void
 			{
+				PopUpManager.removePopUp(wSolus);	
+				if(listSolusFait)listSolusFait.dataProvider = null;
+				if(listSolusAfaire)listSolusAfaire.dataProvider = null;
 				var vn:Array = getValeurs();
-				//vérifie si on fait un ajout multiple
-				if(cnvListe){
-					var arrDiag:Array = new Array;
-					//récupère les lieux sélectionnés
-					for each (var cb:CheckBox in cnvListe.arrSelectLieu)
-					{
-						if(cb.selected = true){
-							var id:Array = cb.id.split("_");
-							arrDiag.push(id[1]);
-						}
-					}
-					if(arrDiag.length>0){
-						ro.ajouterDiags(arrDiag,vn,this.parentApplication.idExi,this.parentApplication.idBase);						
-					}
-				}else{
-					ro.ajouter(vn,this.parentApplication.idExi,this.parentApplication.idBase);
-				}
+				ro.ajouter(vn,this.parentApplication.idExi,this.parentApplication.idBase);
 			}
 			
 			public function btnModifierClick():void
 			{
+				PopUpManager.removePopUp(wSolus);
+				if(listSolusFait)listSolusFait.dataProvider = null;
+				if(listSolusAfaire)listSolusAfaire.dataProvider = null;
 				var vn:Array = getValeurs();
 				ro.edit(idSelect, vn,this.parentApplication.idBase);
 			}
@@ -90,24 +85,24 @@
 				//création du tableau de valeur
 				var vn:Array = new Array();				
 				vn["id_diag"] = idDiag;
-				if(hgCout.solution)
-					vn["id_solution"] = hgCout.solution.id_solution;
-				if(hgCout.produit)
-					vn["id_produit"] = hgCout.produit.id_produit;
-				vn["id_cout"] = hgCout.cout.id_cout;				
-				vn["unite"] = hgCout.n_unite.value;				
-				vn["pose"] = hgCout.n_pose.value;				
-				vn["metre_lineaire"] = hgCout.n_metre_lineaire.value;				
-				vn["metre_carre"] = hgCout.n_metre_carre.value;				
-				vn["achat"] = hgCout.n_achat.value;				
-				vn["cout"] = hgCout.coutTotal.text;				
+				if(wSolus.hgCout.solution)
+					vn["id_solution"] = wSolus.hgCout.solution.id_solution;
+				if(wSolus.hgCout.produit)
+					vn["id_produit"] = wSolus.hgCout.produit.id_produit;
+				vn["id_cout"] = wSolus.hgCout.cout.id_cout;				
+				vn["unite"] = wSolus.hgCout.n_unite.value;				
+				vn["pose"] = wSolus.hgCout.n_pose.value;				
+				vn["metre_lineaire"] = wSolus.hgCout.n_metre_lineaire.value;				
+				vn["metre_carre"] = wSolus.hgCout.n_metre_carre.value;				
+				vn["achat"] = wSolus.hgCout.n_achat.value;				
+				vn["cout"] = wSolus.hgCout.coutTotal.text;				
 				
 				return vn;
 			}
 			
 			private function deleteItem():void {
 				
-				if (list.selectedItem)
+				if (listSolusFait.selectedItem)
 				{
 					var aProcess:alert = new alert();
 					aProcess.mess = "Confirmez-vous la suppression de cet élément ?";
@@ -123,97 +118,11 @@
 			{
 				ro.remove(idSelect, this.parentApplication.idBase);
 			}
-			
-			private function selectItem(event:Event):void {
-				var item:Object=event.currentTarget.selectedItem;
-				if(item){
-					idSelect = item.id_diagsolus;
-					idDiag = item.id_diag;
-					hgCout.cout = {"id_cout":item.id_cout, "unite":item.unite, "metre_lineaire":item.metre_lineaire, "metre_carre":item.metre_carre, "achat":item.achat, "pose":item.pose};
-					hgCout.coutSolus = {"unite":item.dsunite, "pose":item.dspose, "metre_lineaire":item.dsmetre_lineaire, "metre_carre":item.dsmetre_carre, "achat":item.dsachat, "cout":item.dscout};
-					
-					if(item.id_produit){
-						hgCout.produit = {"id_produit":item.id_produit, "ref":item.refProd, "marque":item.marque, "modele":item.modele};
-					}else{
-						hgCout.produit = null;						
-					}
-					hgCout.solution = {"id_solution":item.id_solution, "ref":item.refSolu, "solution":item.solution};
-					hgCout.init();
-					
-					if(sMethode=="findByIdLieuFait")
-						ajoutDiagListe(item.id_lieu,item.id_critere, false, "Lieux de la solution");
-					
-				}
-			}			
-			
-			protected function method_resultHandler(event:ResultEvent):void
-			{
-				init();
-				if(sMethode=="findByIdLieuAFaire"){
-					solusLieuxFait.init();
-				}
-			}
-			
-			public function init():void
-			{
-				arrSolus = new Array();
-				arrProduit = new Array();
-				
-				//vérifie s'il faut charger le critere
-				if(idCrit)
-					roSolus.findByIdCritere(idCrit, true); 
-				
-				//vérifie s'il faut charger les lieux
-				if(idLieu && idLieu!=-1){
-					if(sMethode=="findByIdLieuAFaire"){
-						currentState = 'ajout';
-						ro.findByIdLieuAFaire(idLieu, this.parentApplication.idBase); 
-					}
-					if(sMethode=="findByIdLieuFait"){
-						ro.findByIdLieuFait(idLieu, this.parentApplication.idBase);
-						bAjout = false;
-					}
-					
-				}	
-				
-				//vérifie s'il faut charger les diags
-				if(idDiag && idDiag!=-1 && !sMethode){
-					ro.findByIdDiag(idDiag, this.parentApplication.idBase);
-				}
-				
-				if(hgCout){
-					hgCout.cout = false;
-					hgCout.init();
-					//hgCout.docs.initDoc(null);
-				}
-				
-				//réinitialise la liste des lieux
-				if(diagSelect)diagSelect.removeAllElements();
-			}
-						
-			protected function ajoutDiagListe(lieux:String, critere:String, bCheckLieu:Boolean, titre:String):void
-			{
-				var vn:Array = new Array();
-				vn["niv"] = -1;
-				vn["handi"] = "";
-				vn["idLieu"] = lieux;
-				vn["idCrit"] = critere;
-				diagSelect.removeAllElements();
-				cnvListe = new listeDiag();
-				cnvListe.params = vn;
-				cnvListe.bForSolus = true;
-				cnvListe.bCheckLieu = bCheckLieu;
-				cnvListe.titre = titre;
-				
-				//cnvListe.mainCtrlWidth = 100;
-				diagSelect.addChild(cnvListe);
-				
-			}
-						
+																					
 			protected function calculerCout():void
 			{
 				var cg:int = 0;
-				for each (var c:Object in data)
+				for each (var c:Object in arrSolus)
 				{
 					cg += int(c.dscout);
 				}
@@ -223,57 +132,66 @@
 			
 			protected function findByIdDiag_resultHandler(event:ResultEvent):void
 			{
-				data = event.result as Array;
+				arrSolus = new ArrayCollection(event.result as Array);
 				
-				if(data.length > 0){
-					currentState = 'lecture';
+				if(arrSolus.length){
+					currentState = 'fait';
+					listSolusFait.dataProvider = new ArrayCollection(event.result as Array);
 					calculerCout();
-				}else
-					currentState = 'ajout';
-				
+				}else{
+					currentState = 'afaire';
+					ro.findByIdLieuAFaire(idLieu, this.parentApplication.idBase, idCrit); 
+				}
 				
 			}
 			
-			protected function findByIdLieuFait_resultHandler(event:ResultEvent):void
-			{
-				data = event.result as Array;
-				
-				if(data.length > 0)
-					currentState = 'lecture';
-				else
-					currentState = 'ajout';
-								
-				calculerCout();
-				
-			}
 			
 			protected function findByIdLieuAFaire_resultHandler(event:ResultEvent):void
 			{
-				data = event.result as Array;
-				listLieuxAFaire.percentHeight = 100;
-				listLieuxAFaire.percentWidth = 100;				
+				listSolusAfaire.dataProvider = new ArrayCollection(event.result as Array);
 			}
 			
 			
 			protected function findByIdCritere_resultHandler(event:ResultEvent):void
 			{
-				arrSolus = event.result as Array;
+				arrSolus = new ArrayCollection(event.result as Array);
+				if(arrSolus.length){
+					wSolus = new popSolus();
+					wSolus.functionAjout = btnAjouterClick;
+					wSolus.bAjout = currentState == 'afaire';
+					wSolus.bModif = currentState == 'fait';
+					wSolus.arrSolus = arrSolus;
+					wSolus.open(this.parentApplication.main,true);   
+					PopUpManager.centerPopUp(wSolus);
+				}else{
+					var aProcess:alert = new alert();
+					aProcess.mess = "Aucune solution n'est disponible";
+					aProcess.titre = 'Choix des solutions';
+					aProcess.open(this, true);
+					PopUpManager.centerPopUp(aProcess);					
+				}
 			}
 			
 			
-			protected function remove_resultHandler(event:ResultEvent):void
+			protected function methode_resultHandler(event:ResultEvent):void
 			{
-				init();
-				if(sMethode=="findByIdLieuFait"){
-					solusLieuxAFaire.init();
-				}
-				
+				init();				
 			}			
 			
-			protected function list_clickHandler(event:MouseEvent):void
+			protected function listLieuxFait_clickHandler(event:MouseEvent):void
 			{
-				// TODO Auto-generated method stub
-				
+				var item:Object=event.currentTarget.selectedItem;
+				if(item){
+					idSelect = item.id_diagsolus;
+					idDiag = item.id_diag;
+					wSolus = new popSolus();
+					wSolus.functionModif = btnModifierClick;
+					wSolus.bAjout = currentState == 'afaire';
+					wSolus.bModif = currentState == 'fait';
+					wSolus.arrSolus = arrSolus;
+					wSolus.open(this.parentApplication.main,true);   
+					PopUpManager.centerPopUp(wSolus);
+				}
 			}
 			
 			protected function listLieuxAFaire_clickHandler(event:MouseEvent):void
@@ -281,40 +199,8 @@
 				var item:Object=event.currentTarget.selectedItem;
 				if(!item)return;
 				roSolus.findByIdCritere(item.id_critere, true); 
-				
-				arrProduit = null;
-				hgCout.solution = null;
-				hgCout.cout = null;
-				hgCout.coutSolus = null;
-				hgCout.produit = null;
-				hgCout.init();
-				ajoutDiagListe(item.lieux,item.id_critere, true, "Liste des lieux sans solution");
-				
 			}
-			
-			protected function listSolution_clickHandler(event:MouseEvent):void
-			{
-				var item:Object=event.currentTarget.selectedItem;
-				if(!item)return;
-				arrProduit = item.produits;
-				hgCout.solution = item;
-				hgCout.cout = item.cout;
-				hgCout.coutSolus = null;
-				hgCout.produit = null;
-				hgCout.init();
-				
-			}
-			
-			protected function listProduit_clickHandler(event:MouseEvent):void
-			{
-				var item:Object=event.currentTarget.selectedItem;
-				if(!item)return;
-				hgCout.produit = item;
-				hgCout.cout = item.cout;				
-				hgCout.coutSolus = null;
-				hgCout.init();
-			}
-			
+						
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -324,12 +210,10 @@
 						 fault="faultHandlerService(event);"
 						 showBusyCursor="true" 
 						 >
-			<s:method name="ajouter" result="method_resultHandler(event)"	/>
-			<s:method name="ajouterDiags" result="method_resultHandler(event)"	/>
-			<s:method name="edit" result="method_resultHandler(event)"	/>
-			<s:method name="remove" result="remove_resultHandler(event)" />
+			<s:method name="ajouter" result="methode_resultHandler(event)"	/>
+			<s:method name="edit" result="methode_resultHandler(event)"	/>
+			<s:method name="remove" result="methode_resultHandler(event)" />
 			<s:method name="findByIdDiag" result="findByIdDiag_resultHandler(event)" />
-			<s:method name="findByIdLieuFait" result="findByIdLieuFait_resultHandler(event)"  />
 			<s:method name="findByIdLieuAFaire" result="findByIdLieuAFaire_resultHandler(event)" />
 		</s:RemoteObject>
 		<s:RemoteObject id="roSolus"
@@ -350,34 +234,16 @@
 			gap="6"/>                
 	</s:layout>	
 	<s:states>
-		<s:State name="lecture"/>
-		<s:State name="ajout"/>
-		<s:State name="rien"/>
+		<s:State name="fait"/>
+		<s:State name="afaire"/>
 	</s:states>	
 	
-	
-	<s:HGroup width="100%" height="100%" >
-		<s:VGroup includeIn="lecture" width="100%" height="100%" >
-			<s:HGroup width="100%" >
-				<s:Button skinClass="skin.btnAjout" click="{currentState = 'ajout'}" toolTip="Ajouter une solution" enabled="{bSupp}" />
-				<s:Button skinClass="skin.btnSupp" id="btnDelete" visible="{bSupp}" click="deleteItem()" toolTip="Supprimer une solution" enabled="{bSupp}" />	
-				<s:Label text="Coût global :" color="red" /><s:Label color="red" text="0" id="coutGlobal"/><s:Label color="red" text="€ H.T."/>
-			</s:HGroup>
-			<s:List id="list" width="100%" height="100%" click="list_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListLieu"  />
-		</s:VGroup>
-		<s:HGroup includeIn="ajout" width="100%" height="100%" >
-			<s:List id="listLieuxAFaire" width="100%" height="100%" click="listLieuxAFaire_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListLieu"  />
-			<s:VGroup width="100%" height="100%">					
-				<s:List id="listSolution" width="100%" height="100%" click="listSolution_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListLieu"  />
-				<s:List id="listProduit" width="100%" height="100%" click="listProduit_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListLieu"  />
-			</s:VGroup>
+	<s:VGroup includeIn="fait" width="100%" height="100%" >
+		<s:HGroup verticalAlign="middle">
+			<s:Button skinClass="skin.btnSupp" id="btnDelete" click="deleteItem()"  /><s:Label text="Coût global :" color="red" /><s:Label color="red" text="0" id="coutGlobal"/><s:Label color="red" text="€ H.T."/>
 		</s:HGroup>
-		<s:VGroup includeIn="rien" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >		
-		</s:VGroup>			
-		<s:VGroup width="100%" height="100%" paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2" verticalAlign="top">
-			<cpnt:hgCout id="hgCout" bAjout="{currentState == 'ajout'}" bModif="{currentState == 'lecture'}" functionAjout="btnAjouterClick" functionModif="btnModifierClick" />
-			<s:VGroup id="diagSelect" width="100%" height="100%" />
-		</s:VGroup>
-	</s:HGroup>
-
+		<s:List id="listSolusFait" width="100%" height="100%" click="listLieuxFait_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListSolusFait"  />
+	</s:VGroup>
+	<s:List includeIn="afaire" id="listSolusAfaire" width="100%" height="100%" click="listLieuxAFaire_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListSolusAfaire"  />
+	
 </s:View>

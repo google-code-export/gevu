@@ -2,7 +2,7 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" applicationDPI="160" backgroundColor="black" 
 			   creationComplete="creationCompleteHandler(event)" 
-			   name="GEVU Android"
+			   name="GEVU Android" xmlns:cpnt="cpnt.*"
 			   >
 	<fx:Script>
 		<![CDATA[
@@ -23,6 +23,7 @@
 			import cpnt.alert;
 			import cpnt.btnViewNavig;
 			import cpnt.login;
+			import cpnt.popSolus;
 			
 			import gevu.diagnostics;
 			import gevu.geos;
@@ -53,7 +54,9 @@
 			/*
 			private var o12:gevu.objetsxexterieurs;
 			private var o13:gevu.objetsxinterieurs;
+			*/
 			private var o14:gevu.objetsxvoiries;
+			/*
 			private var o15:gevu.observations;
 			private var o17:gevu.problemes;
 			*/
@@ -70,8 +73,9 @@
 			public var idBase:String = "gevu_android";
 			public var idBaseSrc:String = "gevu_new";
 			public var idBaseRef:String = "gevu_ref";
-			public var srvSrc:String = "serveur";
+			public var srvSrc:String = "ref";
 			public var srvDst:String = "android";
+			public var urlVerif:String = 'http://www.gevu.org';
 			public var idLieuChange:String;
 			public var arrLieuChange:Array;
 			public var idLieuCopie:String;
@@ -81,33 +85,58 @@
 			[Bindable] public var lstScenar:ArrayCollection;
 			[Bindable] public var isLog:Boolean=false;
 			[Bindable] public var isConnect:Boolean;
+			//pour ne pas aller trop vite
+			[Bindable] public var isRun:Boolean;
 			
+			private var bAjoutCtl:Boolean = false;
 			private var aProcess:alert;
 			private var puLogin:login;
 			private var monitor:URLMonitor;
 			private var arrLieuView:Array = new Array;
-			private var bAjoutCtl:Boolean = false;
 			
 			public var viewTrans:SlideViewTransition = new SlideViewTransition();	
 			private var durTrans:int = 800;
 			
+			private var urlOpt:String = "opt.js";
+			[Bindable] private var arrOpt:ArrayCollection;
+			[Bindable] public var arrObjVoirie:ArrayCollection;
+			
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
-				verifConnexion();
-				//roMig.migreRefServeurToLocal(1);
-				showLogin();
-				/*
-				var r:Object = {idExi:1,droit_4:'[{"lib":"ERP-IOP","id":"4_13"},{"lib":"loge","id":"4_12"},{"lib":"Logement V3","id":"4_18"}]'};				
-				init(r)
-				*/
+
+				//chargement du xml pour les options d'affichage de la carte
+				var chargementOpt:URLLoader = new URLLoader();// objet de chargement
+				var fichier:URLRequest = new URLRequest(urlOpt);// url du fichier chargé
+				chargementOpt.addEventListener( Event.COMPLETE, chargementComplet );
+				chargementOpt.load(fichier);
+				
 				viewTrans.direction = "down";
 				viewTrans.mode = "cover";
 				viewTrans.duration = durTrans;
+								
+			}
+			
+			// chargement terminé du fichier xml
+			protected function chargementComplet(pEvt:Event):void {
+				//xmlOpt = new XML( pEvt.target.data );
+
+				var object:Object = JSON.parse(String(pEvt.target.data));
+				//Affichage dans la liste
+				arrOpt = new ArrayCollection(object.items);
+				
+				//roMig.migreRefServeurToLocal(1);
+				//showLogin();
+				//
+				var r:Object = {idExi:1,droit_4:'[{"lib":"ERP-IOP","id":"4_13"},{"lib":"loge","id":"4_12"},{"lib":"Logement V3","id":"4_18"}]'};				
+				var c:Object = {"lib":"test","options":{"idBase":"gevu_android", "idBaseSrc":"gevu_new", "idBaseRef":"gevu_ref", "srvSrc":"ref", "srvDst":"android", "urlVerif":"http://www.gevu.org"}};				
+				init(r, c);
+				//
+
 			}
 			
 			protected function verifConnexion():void {
-				monitor = new URLMonitor(new URLRequest('http://www.gevu.org'));
+				monitor = new URLMonitor(new URLRequest(urlVerif));
 				monitor.addEventListener(StatusEvent.STATUS, announceStatus);
 				monitor.start();
 			}
@@ -121,16 +150,28 @@
 			private function showLogin():void 
 			{
 				puLogin = new login();
-				puLogin.open(this, true);   
+				puLogin.arrOpt = arrOpt;
+				puLogin.open(this);   
 				PopUpManager.centerPopUp(puLogin);
 			}
 			
-			public function init(result:Object):void
+			public function init(result:Object, optCnx:Object):void
 			{
 				exi = result;
 				idExi = result.idExi;
 				isLog = true;
 				setLstScenar(result.droit_4);
+				//récupération des options sélectionnées
+				idBase = optCnx.options.idBase;
+				idBaseSrc = optCnx.options.idBaseSrc;
+				idBaseRef = optCnx.options.idBaseRef;
+				srvSrc = optCnx.options.srvSrc;
+				srvDst = optCnx.options.srvDst;
+				urlVerif = optCnx.options.urlVerif;
+
+				verifConnexion();
+				
+				//récupère les données de la base pour l'utilisateur
 				roDiag.getUtiLieuLock(idExi, false, false, idBase, srvDst);
 				
 			}
@@ -147,7 +188,7 @@
 			protected function getBase_clickHandler(event:MouseEvent):void
 			{
 				if(isConnect){
-					roMig.migreRefServeurToLocal(idBaseRef, idBase);
+					roMig.migreRefServeurToLocal(idBaseRef, srvSrc, srvDst, idBase);
 				}else{
 					aProcess = new alert();
 					aProcess.mess = "Vous n'êtes pas connecté.\nImpossible de récupérer les données.";
@@ -176,8 +217,9 @@
 			
 			protected function migreRefServeurToLocal_resultHandler(event:ResultEvent):void
 			{
-				//aProcess.close();
-				rightNav.activeView.data=event.result as String;
+				//réinitialise les vues
+				leftNav.popToFirstView()
+				initDetail()
 				roDiag.getUtiLieuLock(idExi, idBaseSrc, srvSrc, idBase, srvDst);
 
 			}
@@ -225,15 +267,14 @@
 				if(event.result != null){
 					var arr:Array = event.result as Array;
 					var ll:listeLieux =	leftNav.activeView as listeLieux;
-					var oData:Object = {"ariane":"","lieu":arr,"liste":new ArrayCollection(arr.children)};
-					lblAriane.text= oData.ariane+' / '+oData.lieu.nom;
-					ll.list.dataProvider = oData.liste;
+					var oData:Object = {"ariane":"","lieu":{"lib":"Univers", "tLock":"x", "id_lieu":1},"liste":new ArrayCollection([arr])};
+					var ll:listeLieux =	leftNav.activeView as listeLieux;
+					ll.list.dataProvider = new ArrayCollection();
 					ll.data = oData;
-					ll.bPrev.visible = false;
 					ll.init();
-					bSupp.visible = false;
-					
+					lblAriane.text= ' / Univers';
 				}
+				bSupp.visible = false;
 			}
 			
 			protected function bSupp_clickHandler(event:MouseEvent):void
@@ -250,10 +291,7 @@
 			{
 				//récupère le lieu sélectionné
 				var ll:listeLieux =	leftNav.activeView as listeLieux;
-				roDiag.deleteLieu(oLieu.id_lieu, idExi, idBase);
-
-				if(ll.oItem==null)	ll.goBack();
-					
+				roDiag.deleteLieu(oLieu.id_lieu, idExi, idBase);					
 			}
 			
 			protected function deleteLieu_resultHandler(event:ResultEvent):void
@@ -262,8 +300,11 @@
 				initDetail();
 				var idLieuSupp:String = event.result as String;
 				var ll:listeLieux =	leftNav.activeView as listeLieux;
-				ll.suppItem(idLieuSupp);
-				editLock(ll.data.lieu.id_lieu);
+				//ll.suppItem(idLieuSupp);
+				ll.goBack();
+				//on supprime un niveau du fil d'ariane
+				lblAriane.text = lblAriane.text.substring(0,lblAriane.text.lastIndexOf("/"));
+				editLock(oLieu.lieu_parent);
 			}
 			
 			public function editLock(idLieu:String):void
@@ -333,6 +374,7 @@
 							slAjoutCtl.dataProvider = new ArrayCollection(arrLieuView[oLieu.id_lieu][1]);
 						}
 					}else{
+						isRun = true;
 						getScenarSelect();
 						roDiag.getNodeRelatedData(oLieu.id_lieu, idExi, idBase, idScenar);
 					}	
@@ -461,20 +503,20 @@
 			protected function getLieuCtl_resultHandler(event:ResultEvent):void
 			{
 				////aProcess.close();
-				
-				if(bAjoutCtl){
-					bAjoutCtl = false;
-					roDiag.getUtiIdLieuLock(idExi, oLieu.id_lieu, idBase);
-				}
-				
+				isRun = false;
+								
 				var rs:Object = event.result;
-				if(rs===""){
+				if(rs==="" || arrLieuView.length==0){
 					return;
 				}
 				if(rs.ctrl.length>0){
 					hgBarCtl.visible = true;
 					arrLieuView[oLieu.id_lieu][1] = rs.ctrl;
 					slAjoutCtl.dataProvider = new ArrayCollection(arrLieuView[oLieu.id_lieu][1]);
+				}else{
+					hgBarCtl.visible = false;
+					arrLieuView[oLieu.id_lieu][1] = new Array();
+					slAjoutCtl.dataProvider = null;	
 				}
 				if(rs.crit){
 					//ajoute la vue de diagnostic dans la liste
@@ -516,11 +558,11 @@
 			
 			protected function ajoutCtlLieu_resultHandler(event:ResultEvent):void
 			{
-				////aProcess.close();
 				initDetail();
 				editLock(oLieu.id_lieu);
 				bAjoutCtl = true;
-				roDiag.getLieuCtl(oLieu.id_lieu, idScenar, idBase);				
+				roDiag.getUtiIdLieuLock(idExi, oLieu.id_lieu, idBase);
+				
 			}
 			
 			protected function slScenar_changeHandler(event:IndexChangeEvent):void
@@ -542,12 +584,8 @@
 				////aProcess.close();
 				editLock(oLieu.id_lieu);
 				var id:String = event.result as String;
-				//on recharge le lieu ou son parent
-				if(oLieu.children.length > 0)
-					roDiag.getUtiIdLieuLock(idExi, id, idBase);
-				else
-					roDiag.getUtiIdLieuLock(idExi, oLieu.id_lieu, idBase);
-					
+				//on recharge le lieu
+				roDiag.getUtiIdLieuLock(idExi, oLieu.id_lieu, idBase);
 			}
 			
 			protected function getUtiIdLieuLock_resultHandler(event:ResultEvent):void
@@ -560,13 +598,24 @@
 				//on ajoute ou on change l'item
 				ll.addItem(o);
 				editLock(ll.data.lieu.id_lieu);
+				if(bAjoutCtl){
+					roDiag.getNodeRelatedData(oLieu.id_lieu, idExi, idBase, idScenar);
+					bAjoutCtl = false;
+				}
 				
 			}
 			
 			protected function slAjoutCtl_clickHandler(event:MouseEvent):void
 			{
 				var o:Object = event.currentTarget.selectedItem;
-				roDiag.ajoutCtlLieu(oLieu.id_lieu, o, idExi, idBase);
+				//vérifier s'il faut ajouter le controle ou créer un nouveau lieu
+				if(oLieu.tc==null)
+					roDiag.ajoutCtlLieu(oLieu.id_lieu, o, idExi, idBase);
+				else{
+					var vn:Array = new Array();				
+					vn["lock_diag"] = "+"+idExi;				
+					roDiag.ajoutLieu(oLieu.id_lieu, idExi, idBase, "Nouveau lieu", false, false, vn, o);					
+				}
 			}
 			
 			protected function slBarButton_clickHandler(event:MouseEvent):void
@@ -579,9 +628,7 @@
 			{
 				this.idLieuChange = oLieu.id_lieu;
 				this.arrLieuChange = arr;
-				var ll:listeLieux =	leftNav.activeView as listeLieux;
-				ll.goBack();
-				roDiag.edit(oLieu.id_lieu, arr, "Models_DbTable_Gevu_lieux", idBase);
+				roDiag.edit(oLieu.id_lieu, arr, "Models_DbTable_Gevu_lieux", idBase);				
 			}
 			
 			protected function bAccess_clickHandler(event:MouseEvent):void
@@ -592,8 +639,12 @@
 			
 			protected function setUtiLieuLock_resultHandler(event:ResultEvent):void
 			{
-				roMig.migreRefServeurToLocal(idBaseRef, idBase);
+				leftNav.popAll();
+				var oData:Object = {"ariane":"","lieu":{"lib":"Univers", "tLock":"x", "id_lieu":1},"liste":new ArrayCollection()};
+				leftNav.pushView(views.listeLieux, oData);
+				roMig.migreRefServeurToLocal(idBaseRef, srvSrc, srvDst, idBase);
 			}
+			
 			
 		]]>
 	</fx:Script>
@@ -605,7 +656,7 @@
 		}
 	</fx:Style>
 	-->
-	<fx:Declarations>
+	<fx:Declarations>		
 		<s:RemoteObject id="roMig"
 			destination="zend"
 			source="GEVU_Migration"
@@ -643,13 +694,14 @@
 			<s:Label id="lblAriane" text="" color="white" width="100%" />
 			<s:HGroup horizontalAlign="right" >
 				<s:Image source="@Embed('assets/Shutdown.png')" width="32" height="32" click="exit_clickHandler(event)" toolTip="Fermer l'application" horizontalAlign="right" />
+				<s:Spacer width="32"/>
 			</s:HGroup>			
 		</s:HGroup>
 		<s:HGroup gap="3" visible="{isLog}" height="40" width="100%" verticalAlign="middle" >
 			<s:Image source="@Embed('assets/get_srv.png')" click="getBase_clickHandler(event)" visible="{isConnect}" />
 			<s:Image source="@Embed('assets/send_srv.png')" id="bSend" click="sendBase_clickHandler(event)" visible="{isConnect}" />
-			<s:Button skinClass="skin.btnAjout" id="bAjout" click="bAjout_clickHandler(event)" />
-			<s:Button skinClass="skin.btnSupp" id="bSupp" click="bSupp_clickHandler(event)" />
+			<s:Button skinClass="skin.btnAjout" id="bAjout" click="bAjout_clickHandler(event)" visible="false" />
+			<s:Button skinClass="skin.btnSupp" id="bSupp" click="bSupp_clickHandler(event)" visible="false" />
 			<s:Button skinClass="skin.btnCopie" id="bCopie" click="bCopie_clickHandler(event)" visible="false" />
 			<s:Button skinClass="skin.btnColle" id="bColle" visible="false" click="bColle_clickHandler(event)" />
 			<s:HGroup id="hgBarCtl" visible="false" verticalAlign="middle" width="100%" horizontalAlign="left">

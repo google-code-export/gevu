@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnablePopUpContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" height="{this.parentApplication.main.height}" width="{this.parentApplication.main.width}" 
+		creationComplete="creationCompleteHandler(event)" xmlns:cpnt="cpnt.*"
+		>
+	<fx:Script >
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+
+			[Bindable] public var mess:String="";
+			[Bindable] public var titre:String="Choix des solutions pour un critère";			
+			[Bindable] public var btn1:Boolean = true;			
+			[Bindable] public var fct1:Function;			
+			[Bindable] public var fct2:Function;			
+			[Bindable] public var bProcess:Boolean = false;			
+			[Bindable] public var functionAjout:Function;
+			[Bindable] public var functionModif:Function;
+			[Bindable] public var bAjout:Boolean = false;
+			[Bindable] public var bModif:Boolean = false;
+			[Bindable] public var arrSolus:ArrayCollection;
+			[Bindable] public var arrProduit:ArrayCollection;
+						
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				if(fct1!=null)fct1();
+				PopUpManager.removePopUp(this);				
+			}
+						
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if(bProcess){
+					btn1 = false;
+				}
+				hgCout.functionAjout = functionAjout;
+				hgCout.functionModif = functionModif;
+				hgCout.bAjout = bAjout;
+				hgCout.bModif = bModif;
+				listSolution.dataProvider = arrSolus;
+				if(arrSolus[0] && arrSolus[0].dscout){
+					hgCout.cout = {"id_cout":arrSolus[0].id_cout, "unite":arrSolus[0].unite, "metre_lineaire":arrSolus[0].metre_lineaire, "metre_carre":arrSolus[0].metre_carre, "achat":arrSolus[0].achat, "pose":arrSolus[0].pose};
+					hgCout.coutSolus = {"unite":arrSolus[0].dsunite, "pose":arrSolus[0].dspose, "metre_lineaire":arrSolus[0].dsmetre_lineaire, "metre_carre":arrSolus[0].dsmetre_carre, "achat":arrSolus[0].dsachat, "cout":arrSolus[0].dscout};
+					
+					if(arrSolus[0].id_produit){
+						hgCout.produit = {"id_produit":arrSolus[0].id_produit, "ref":arrSolus[0].refProd, "marque":arrSolus[0].marque, "modele":arrSolus[0].modele};
+					}else{
+						hgCout.produit = null;						
+					}
+					hgCout.solution = {"id_solution":arrSolus[0].id_solution, "ref":arrSolus[0].refSolu, "solution":arrSolus[0].solution};
+					hgCout.init();
+				}
+			}
+			
+			protected function listSolution_clickHandler(event:MouseEvent):void
+			{
+				var item:Object=event.currentTarget.selectedItem;
+				if(!item)return;
+				arrProduit = new ArrayCollection(item.produits);
+				hgCout.solution = item;
+				hgCout.cout = item.cout;
+				hgCout.coutSolus = null;
+				hgCout.produit = null;
+				hgCout.init();
+				
+			}
+			
+			protected function listProduit_clickHandler(event:MouseEvent):void
+			{
+				var item:Object=event.currentTarget.selectedItem;
+				if(!item)return;
+				hgCout.produit = item;
+				hgCout.cout = item.cout;				
+				hgCout.coutSolus = null;
+				hgCout.init();
+			}
+			
+			
+		]]>		
+	</fx:Script>
+	<s:TitleWindow title="{titre}" close="close()" width="100%" height="100%">
+		<s:BusyIndicator id="bi" visible="{bProcess}" />
+		<s:VGroup id="main" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6" gap="5" width="100%" height="100%">
+			<s:VGroup width="100%" height="100%">
+				<s:Panel width="100%" height="100%" title="Solutions" >
+					<s:List id="listSolution" width="100%" height="100%" click="listSolution_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListSolus"  />
+				</s:Panel>
+				<s:Panel width="100%" height="100%" title="Produits" >
+					<s:List id="listProduit" width="100%" height="100%" click="listProduit_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListProduit"  />
+				</s:Panel>
+			</s:VGroup>
+			<s:Panel width="100%" height="100%" title="Coûts" >
+				<cpnt:hgCout id="hgCout"  />
+			</s:Panel>
+			<s:VGroup horizontalAlign="center" width="100%" >
+				<s:Button label="OK" visible="{btn1}" click="button1_clickHandler(event)" width="200"/>
+			</s:VGroup>
+		</s:VGroup>
+	</s:TitleWindow>
+</s:SkinnablePopUpContainer>

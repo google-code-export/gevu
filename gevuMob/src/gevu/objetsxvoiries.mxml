@@ -1,66 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
-		   xmlns:composants="compo.*" title="Objets voiries"
-		   width="100%" height="100%" creationComplete="init()"
-		   paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"
-		   >
-
-	<mx:VBox>
-		<mx:HBox>
-			<mx:Label text="nom" width="100" />
-			<mx:TextInput id="F1" width="100%" text="{NodeData.nom}" change="editModif('nom', F1.text)" />
-		</mx:HBox>
-		<mx:HBox>
-			<mx:Label text="ref" width="100" />
-			<mx:TextInput id="F2" width="100%" text="{NodeData.ref}" change="editModif('ref', F2.text)" />
-		</mx:HBox>
-		<mx:HBox>
-			<mx:Label text="Mise à jour" width="100" />
-			<mx:DateField id="F3" width="100%" text="{NodeData.maj}" change="editModif('maj', F3.text)" />
-		</mx:HBox>
-		<mx:HBox>
-			<mx:Label text="Type d'objet" width="100" />
-			<composants:KeywordsList id="F7" width="100%" acualId="{NodeData.id_type_objet_voirie}" change="editModif('id_type_objet_voirie', F7.acualId)" />
-		</mx:HBox>
-		<mx:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
-	</mx:VBox>
-
-	<mx:RemoteObject id="roModifBase"
-					 destination="zend"
-					 source="GEVU_Diagnostique"
-					 fault="faultHandlerService(event, &quot;Remote Object&quot;);">
-		<mx:method name="edit"	result=";" />
-	</mx:RemoteObject>
-	
-	<mx:Script>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:cpnt="cpnt.*"
+		title="Objet de voirie" 
+		width="100%" height="100%"
+		creationComplete="creationCompleteHandler(event)"
+		
+		>
+	<fx:Script>
 		<![CDATA[
-
-			import mx.controls.Alert;
-			import mx.rpc.events.FaultEvent;
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			private var obj:String = "Models_DbTable_Gevu_objetsxvoiries";			
+			private var obj:String = "Models_DbTable_Gevu_objetsxvoiries";
 			
-			[Bindable] public var NodeData:Object;
 			[Bindable] public var isChange:Boolean=false;
 			[Bindable] public var modifData:Array = new Array;
 			
-			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
-				var str:String;
-				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
-				      "Detail: "+fault.fault.faultDetail.toString()+"\n"+
-				      "String: "+fault.fault.faultString.toString()+"\n";
-				
-				if (os!="")
-					os = " - "+os;
-				Alert.show(str, "FaultHandlerService"+os);
-			}
 			
-			private function init():void{
-				isChange = false;
-				F7.setListType(40);
-			}
-
 			public function editModif(nom:String, val:Object) : void {
 				modifData[nom]=val;
 				isChange = true;
@@ -68,10 +25,86 @@
 			
 			protected function SaveModif_clickHandler(event:MouseEvent):void
 			{
-				roModifBase.edit(NodeData.id_objet_voirie, modifData, obj, this.parentApplication.idBase);
 				isChange = false;
+				this.parentApplication.roDiag.edit(data.id_objet_voirie, modifData, obj, this.parentApplication.idBase);
+				this.parentApplication.roDiag.getNodeRelatedData(data.id_lieu, this.parentApplication.idExi, this.parentApplication.idBase, this.parentApplication.idScenar);				
 			}
 			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				if(data!=null){
+					if(this.parentApplication.arrObjVoirie==null){
+						roMotsClefs.getAllByType(40);
+					}else{
+						slTypeObjet.dataProvider = this.parentApplication.arrObjVoirie;
+						setListeIndex(data.id_type_objet_voirie);
+					}
+				
+					ref.text = data.ref;					
+					nom.text = data.nom;					
+				}
+				
+			}
+
+			private function setDataList(event:ResultEvent):void{
+				
+				this.parentApplication.arrObjVoirie = new ArrayCollection(event.result as Array);
+				slTypeObjet.dataProvider = this.parentApplication.arrObjVoirie;
+				setListeIndex(data.id_type_objet_voirie);
+			}
+			
+			
+			protected function slTypeObjet_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			private function setListeIndex(id:int):void{
+			
+				for each(var row:Object in slTypeObjet.dataProvider){
+					if(row.id_motclef==id)slTypeObjet.selectedItem=row;
+				}
+
+			}
+			
+			
 		]]>
-	</mx:Script>
-</mx:Panel>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RemoteObject id="roMotsClefs"
+						destination="zend"
+						source="Models_DbTable_Gevu_motsclefs"
+						fault="this.parentApplication.faultHandlerService(event, 'GEVU - Mot clef');">
+			<s:method name="getAllByType" result="setDataList( event );" />
+		</s:RemoteObject>		
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
+	
+	<s:VGroup width="100%" height="100%" >
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="ref : " />
+			<s:TextInput id="ref" width="100%" change="editModif('ref', ref.text)" />
+		</s:HGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="nom : " />
+			<s:TextInput id="nom" width="100%" change="editModif('nom', nom.text)" />
+		</s:HGroup>
+		<s:HGroup width="100%" height="40" verticalAlign="middle" horizontalAlign="left">
+			<s:Label text="Type d'objet :" />
+			<s:SpinnerListContainer height="56" width="100%" >
+				<s:SpinnerList id="slTypeObjet" labelField="titre" width="100%" change="editModif('id_type_objet_voirie', slTypeObjet.selectedItem.id_motclef)" click="slTypeObjet_clickHandler(event)" />
+			</s:SpinnerListContainer>				
+		</s:HGroup>
+		<s:Button id="SaveModif" label="Enregistrer les modifications" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
+	</s:VGroup>
+	
+	
+</s:View>
