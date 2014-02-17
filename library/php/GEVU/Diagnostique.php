@@ -17,7 +17,7 @@ class GEVU_Diagnostique extends GEVU_Site{
     	parent::__construct($idBase, $cache = false);
 		
     }
-	    
+    
     /**
      * Recherche un contacts avec la valeur spécifiée
      * et retourne cette entrée.
@@ -164,7 +164,7 @@ class GEVU_Diagnostique extends GEVU_Site{
             $ariane=$this->dbL->getFullChild($idLieuSrc);
             $nbLieu = count($ariane);
             $newIdLieu = -1;
-            $newLieu = -1;
+            $newLieu = false;
             $arrParent = array();
 	        for ($i = 0; $i < $nbLieu; $i++) {
             
@@ -209,7 +209,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 
             //pour r�cup�rer le bon lieu
             if($dbSrcDst)$this->dbL = $dbLDst;
-            $xml = $this->getXmlNode($newLieu["id_lieu"], $idBase);
+            //vérifie qu'il y a bien un nouveau lieu
+            if($newLieu)$xml = $this->getXmlNode($newLieu["id_lieu"], $idBase);
 			return $xml;	
             
 	}
@@ -272,6 +273,7 @@ class GEVU_Diagnostique extends GEVU_Site{
     * @param string $idBase
     * @param int $idInst
     * 
+    * @return array
     */
 	public function ajoutCtlLieu($idLieu, $Obj, $idExi, $idBase=false, $idInst=false){
 			
@@ -302,7 +304,10 @@ class GEVU_Diagnostique extends GEVU_Site{
 		}
 		//met à jour le lieu avec le type de controle
 		if(!$this->dbL)$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
-		$this->dbL->edit($idLieu, array("id_type_controle"=>$Obj["id_type_controle"], "lib"=>$Obj["lib"]));
+		$dtLieu = array("id_type_controle"=>$Obj["id_type_controle"], "lib"=>$Obj["lib"]);
+		$this->dbL->edit($idLieu, $dtLieu);
+		
+		return $dtLieu;
 	}
 	
     /**
@@ -880,7 +885,10 @@ class GEVU_Diagnostique extends GEVU_Site{
         	$dbLsrc->remove($lieu["id_lieu"]);
         	// et destination
         	//$dbLdst->remove($lieu["lieu_copie"]);
-        }			
+        }
+        //vérifie s'il faut supprimer les parents
+        if($lieu["lieu_parent"]>0)$dbLsrc->removeParentVide($lieu["lieu_parent"]);
+        			
 	}
 		
 	/**
@@ -977,7 +985,7 @@ class GEVU_Diagnostique extends GEVU_Site{
             	 		$k = $dbT->info('primary');
             	 		$oldId = $d[$k[1]];
             	 		unset($d[$k[1]]);
-            	 		$newId = $dbT->ajouter($d);
+            	 		$newId = $dbT->ajouter($d, false);
             	 		//vérifie si on traite le diagnostic
             	 		if($t=="Models_DbTable_Gevu_diagnostics"){
             	 			if(!$this->dbSolusSrc) $this->dbSolusSrc = new Models_DbTable_Gevu_diagnosticsxsolutions($dbSrc);
@@ -1063,7 +1071,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 	    	$r = $arr[$j];
 	    	if($k==0)$niv=$r["niv"]; 
 			if($niv == $r["niv"]){
-				$rs[$k] = array("lib"=>$r["lib"],"id_lieu"=>$r["id_lieu"],"niv"=>$r["niv"],"tLock"=>$r["tLock"],"tc"=>$r["tc"],"icone"=>$r["icone"],"lieu_copie"=>$r["lieu_copie"],"children"=>array());				
+				$rs[$k] = array("lib"=>$r["lib"],"id_lieu"=>$r["id_lieu"],"lieu_parent"=>$r["lieu_parent"],"niv"=>$r["niv"],"tLock"=>$r["tLock"],"tc"=>$r["tc"],"icone"=>$r["icone"],"lieu_copie"=>$r["lieu_copie"],"children"=>array());				
 		    	$niv = $r["niv"];		    	
 				$k ++;			
 			}
@@ -1624,7 +1632,7 @@ class GEVU_Diagnostique extends GEVU_Site{
      * 
      * @return integer
      */
-    public function ajoutLieu($idLieuParent, $idExi=-1, $idBase=false, $lib="Nouveau lieu", $existe=false, $rtnXml=true, $data=array()){
+    public function ajoutLieu($idLieuParent, $idExi=-1, $idBase=false, $lib="Nouveau lieu", $existe=false, $rtnXml=true, $data=array(), $obj=false){
 		
 		//initialise les gestionnaires de base de données
 		$this->getDb($idBase);
@@ -1643,6 +1651,11 @@ class GEVU_Diagnostique extends GEVU_Site{
 		
 		//ajoute un lieu au parent
 		$arrLieu = $this->dbL->ajouter($data, $existe, true);
+		
+		//vérifie s'il faut créer le contrôle
+		if($obj){
+			$this->ajoutCtlLieu($arrLieu["id_lieu"], $obj, $idExi, $idBase, $this->idInst);				
+		}
 		
 		//récupère les coordonnées géographique du parent
 		$geos = $this->dbG->findById_lieu($idLieuParent);

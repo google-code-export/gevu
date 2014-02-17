@@ -482,6 +482,58 @@ class GEVU_Import extends GEVU_Site{
 		}
 
     }
+
+    /**
+     * importation d'un fichier detail logement
+     *
+     * @param int 		$idDoc = l'identifiant du document qui contient les données
+     * @param int 		$idExi = l'identifiant de l'existence exécutant l'importation
+     * @param string 	$idBase = l'identifiant de la base de données pour l'importation
+     * 
+     */
+    public function traiteImportPiece($idDoc, $idExi, $idBase){
+    	$this->bTrace = true;					// pour afficher le nombre de lignes importées et le timing    	
+    	$this->echoTrace = false;//__METHOD__."<br/>";	//pour stocker les traces
+    	$this->temps_debut = microtime(true);
+		$this->trace("DEBUT ".__METHOD__);
+    	
+    	$this->idBase = $idBase;
+    	$this->diag = new GEVU_Diagnostique($idBase);
+    	$this->db = $this->diag->db;
+    	
+		$this->trace('création des models');
+		$this->dbPsp = new Models_DbTable_Gevu_psp($this->db);
+		$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+		$this->dbDoc = new Models_DbTable_Gevu_docs($this->db);
+		
+		$this->trace("création de l'instant");
+		$c = str_replace("::", "_", __METHOD__); 
+		$this->idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
+		
+		$this->trace("Récupère les infos du document");
+    	$docInfos = $this->dbDoc->findByIdDoc($idDoc);    		
+    	
+    	//chargement du fichier
+		$ficPath = $_SERVER["DOCUMENT_ROOT"].'/gevu/data/import/EXTRAC_GEVU_PIECES.csv';
+		$ficPath = 'c:\wamp\www\gevu\data\import\EXTRAC_GEVU_PIECES.csv';
+		$this->trace("chargement du fichier : ".$ficPath);
+		$arrCSV = $this->csvToArray($ficPath);
+			
+		$nbRow = count($arrCSV);
+		$this->trace("Nb Ligne =".$nbRow);
+
+		//importation juste après la ligne d'entête
+		for ($x = 1; $x < $nbRow; $x++) {
+			$this->trace("Ligne ".$x);			
+			//if($x==1000)  break;
+			$this->arr = $arrCSV[$x];
+			if($this->arr[1]!=""){
+				//code logement
+				$code = $this->arr[11];
+			}
+			
+		}
+    }
     
     /**
      * importation d'un fichier de logement 
