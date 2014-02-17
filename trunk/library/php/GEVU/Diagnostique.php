@@ -887,7 +887,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         	//$dbLdst->remove($lieu["lieu_copie"]);
         }
         //vérifie s'il faut supprimer les parents
-        if($lieu["lieu_parent"]>0)$dbLsrc->removeParentVide($lieu["lieu_parent"]);
+        if($lieu["lieu_parent"]>1)$dbLsrc->removeParentVide($lieu["lieu_parent"]);
         			
 	}
 		
