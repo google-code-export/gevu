@@ -233,7 +233,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
             	'diag.id_instant = inst.id_instant',array('instant'=>"DATE_FORMAT(maintenant,'%d %c %Y')",'ici','nom','commentaires'))
         	->joinInner(array('tc' => 'gevu_typesxcontroles'),
             	'tc.id_type_controle = crit.id_type_controle',array('controle'=>'lib','icone'))
-        	->joinInner(array('exi' => 'gevu_exis'),
+        	->joinLeft(array('exi' => 'gevu_exis'),
             	'inst.id_exi = exi.id_exi',array('exis'=>'nom'))
         	->joinLeft(array('prob' => 'gevu_problemes'),
             	'diag.id_lieu = prob.id_lieu AND diag.id_instant = prob.id_instant AND diag.id_critere = prob.id_critere',array('nbProbleme'=>'COUNT(id_probleme)'))
@@ -462,7 +462,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
 				INNER JOIN `gevu_lieux` AS `l` ON le.lft BETWEEN l.lft AND l.rgt 
 			WHERE (l.id_lieu = ".$idLieu.")
 			GROUP BY `l`.`id_lieu`";
-		$db = $this->getAdapter()->query($sql);
+    	//echo $sql."<br/>";
+		$db = $this->_db->query($sql);
         $arr = $db->fetchAll();
         //vérifie la fin de la chaine
         $ids = $arr[0]['ids'];
@@ -475,7 +476,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
        	}    	
     	
     	//récupère les identifiants des derniers diagnostics
-    	$sql = "SELECT GROUP_CONCAT(sd.id_diag) ids 
+    	$sql = "SELECT GROUP_CONCAT(sd.id_lieu) ids 
 			FROM gevu_diagnostics sd,
 			(
 			SELECT `d`.`id_lieu`, MAX(i.id_instant) AS `lastinstant`
@@ -484,8 +485,9 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
 				INNER JOIN `gevu_lieux` AS `le` ON le.id_lieu = d.id_lieu
 				INNER JOIN `gevu_lieux` AS `l` ON le.lft BETWEEN l.lft AND l.rgt WHERE (l.id_lieu = ".$idLieu.") GROUP BY `d`.`id_lieu`) ssd
 			WHERE sd.id_instant = ssd.lastinstant AND sd.id_lieu = ssd.id_lieu";
-		$db = $this->getAdapter()->query($sql);
-        $arr = $db->fetchAll();
+    	//echo $sql."<br/>";
+    	$db = $this->_db->query($sql);
+    	$arr = $db->fetchAll();
         //vérifie la fin de la chaine
         $ids = $arr[0]['ids'];
         if(substr($ids,-1)==",")$ids.=-1;
