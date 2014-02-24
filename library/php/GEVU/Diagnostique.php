@@ -742,14 +742,14 @@ class GEVU_Diagnostique extends GEVU_Site{
     */
 	public function getDiagForLieu($idLieu, $idExi, $idBase=false){
 		$c = str_replace("::", "_", __METHOD__)."_".$idLieu."_".$idExi."_".$idBase; 
-	   	$r = $this->cache->load($c);
+	   	$r = false;//$this->cache->load($c);
         if(!$r){
 			$this->idExi = $idExi;
 			
 	        if(!$this->dbD){
 				$this->getDb($idBase);
 	        	$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
-				//marque les derniers diagnostics car la demande ne vient pas de getnodedata
+				//echo 'marque les derniers diagnostics car la demande ne vient pas de getnodedata';
 	        	$this->dbD->setLastDiagForLieu($idLieu);        	
 	        }
 				        
@@ -917,8 +917,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 			$dbLsrc = new Models_DbTable_Gevu_lieux($dbSrc);
 			
 			//mise à jour des lieux bloqués x pour optimiser l'arboressence
-	        $dbLdst->setUtiLieuLock("x%","x".$idExi);
-						
+			$dbLdst->setUtiLieuLock("x%","x".$idExi);
+			
 			//on récupère les lieux sources bloqués pour l'utilisateur
 			$arr = $dbLsrc->getUtiLieuLock($idExi,"-");
 	        
@@ -942,7 +942,6 @@ class GEVU_Diagnostique extends GEVU_Site{
 	        
 	        //on met à jour le lock de la source
 	        $dbLsrc->setUtiLieuLock("-".$idExi,"+".$idExi);
-			
 		}
 		        
 		//on récupère les lieux destination bloqués pour l'utilisateur
@@ -982,6 +981,7 @@ class GEVU_Diagnostique extends GEVU_Site{
             	 	foreach ($items as $row) {
             	 		$d = $row->toArray();
             	 		$d["id_lieu"] = $idLdst;		            	 		
+            	 		if(isset($d["id_instant"])) $d["id_instant"]=$this->idInst;		            	 		
             	 		$k = $dbT->info('primary');
             	 		$oldId = $d[$k[1]];
             	 		unset($d[$k[1]]);
