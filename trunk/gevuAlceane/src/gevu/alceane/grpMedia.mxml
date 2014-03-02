@@ -15,11 +15,11 @@
 
 			private var hImg:Number=100;
 			private var dataDocs:Array = new Array;
-			[Bindable] private var dataPhotos:ArrayCollection = new ArrayCollection;
-			[Bindable] private var dataVideos:ArrayCollection = new ArrayCollection;
-			[Bindable] private var dataPlans:ArrayCollection = new ArrayCollection;
-			[Bindable] private var dataAutres:ArrayCollection = new ArrayCollection;
-			[Bindable] private var dataHtml:ArrayCollection = new ArrayCollection;
+			[Bindable] private var dataPhotos:ArrayCollection;
+			[Bindable] private var dataVideos:ArrayCollection;
+			[Bindable] private var dataPlans:ArrayCollection;
+			[Bindable] private var dataAutres:ArrayCollection;
+			[Bindable] private var dataHtml:ArrayCollection;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
@@ -28,6 +28,14 @@
 			
 			public function init(dataNode:Object):void
 			{
+				dataPhotos = new ArrayCollection;
+				dataVideos = new ArrayCollection;
+				dataPlans = new ArrayCollection;
+				dataAutres = new ArrayCollection;
+				dataHtml = new ArrayCollection;
+				if(imgBig)imgBig.source = '';
+				if(html)html.source = this.parentApplication.urlVide
+
 				if(dataNode["Models_DbTable_Gevu_docsxlieux"])initDoc(dataNode["Models_DbTable_Gevu_docsxlieux"]);
 				lblTitre.text = dataNode.ariane[0].parLib;
 			}
