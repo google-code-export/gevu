@@ -103,10 +103,12 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
     {
     	if($idBase)$this->setDb($idBase);
     	 
-		//création d'un nouvel instant
-    	$dbI = new Models_DbTable_Gevu_instants($this->_db);
-    	$idI = $dbI->ajouter(array("id_exi"=>$idExi));
-    	$data['id_instant']=$idI;
+		if(!isset($data['id_instant'])){
+	    	//création d'un nouvel instant
+	    	$dbI = new Models_DbTable_Gevu_instants($this->_db);
+	    	$idI = $dbI->ajouter(array("id_exi"=>$idExi));
+	    	$data['id_instant']=$idI;
+		}
     	$data['maj']= new Zend_Db_Expr('NOW()');
     	$id = $this->insert($data);
 
