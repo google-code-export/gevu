@@ -42,20 +42,28 @@
 			
 			protected function btnAjouter_clickHandler(event:MouseEvent):void
 			{
+				if(!listType.selectedItem){
+					var a:alert = new alert;
+					a.mess = "Veuillez sélectionner une intervention.";
+					a.titre = "Ajout d'une intervention";
+					a.open(this, false);
+					return;										
+				}
 				//création du tableau de valeur
 				//id_lieuinterv 	id_lieu 	id_interv 	 	maj
 				var vn:Array = new Array();
 				vn["id_lieu"] = idLieu;
-				vn["id_interv"] = cbType.selectedItem.id_interv;
+				vn["id_interv"] = listType.selectedItem.id_interv;
+				//vn["id_interv"] = cbType.selectedItem.id_interv;
 				vn["quantite"] = quantiteA.value;
 				//calcule le cout
-				vn["cout"] = quantiteA.value*cbType.selectedItem.cout;
+				vn["cout"] = quantiteA.value*listType.selectedItem.cout;
 				//calcule les dates
 				var fait:Date = dfFaitLe.selectedDate;
 				var afaire:Date = new Date();
-				afaire.setFullYear(int(fait.getFullYear())+int(cbType.selectedItem.frequence));
-				vn["fait"] = fait.fullYear+"-"+fait.month+"-"+fait.day;
-				vn["afaire"] = afaire.fullYear+"-"+afaire.month+"-"+afaire.day;
+				afaire.setFullYear(int(fait.getFullYear())+int(listType.selectedItem.frequence));
+				vn["fait"] = fait.fullYear+"-"+fait.month+"-"+fait.date;
+				vn["afaire"] = afaire.fullYear+"-"+afaire.month+"-"+afaire.date;
 				ro.ajouter(vn, this.parentApplication.idExi, this.parentApplication.idBase);
 			}
 			
@@ -102,6 +110,11 @@
 				fait.text = oItem.fait;
 				afaire.text = oItem.afaire;
 				cout.text = oItem.cout;				
+			}
+
+			protected function listType_clickHandler(event:MouseEvent):void
+			{
+				uniteAjout.text = event.currentTarget.selectedItem.libUnite;
 			}
 			
 			protected function btnEdit_clickHandler(event:MouseEvent):void
@@ -175,20 +188,14 @@
 		</s:VGroup>	
 	</s:HGroup>
 	<s:VGroup includeIn="ajout" width="100%" height="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6"  >
-		<s:Label text="Saisissez votre intervention :"/> 
-		<s:Form width="100%" height="100%" id="insertForm">			                    		
-			<s:FormItem label="type d'intervention : " >
-				<s:SpinnerListContainer height="56" >
-					<s:SpinnerList id="cbType" dataProvider="{produitsData}" labelField="lib"/>
-				</s:SpinnerListContainer>				
-			</s:FormItem>
-			<s:FormItem label="quantité : " >
-				<s:NumericStepper id="quantiteA" stepSize="1" maximum="1000000" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin"  />
-			</s:FormItem>
-			<s:FormItem label="fait le : " >
-				<s:DateSpinner id="dfFaitLe" displayMode="{DateSelectorDisplayMode.DATE}" locale="'fr-FR'" height="60" />
-			</s:FormItem>
-		</s:Form>		
+		<s:Label text="Choisissez votre intervention :"/>
+		<s:List id="listType" width="100%" height="100%" dataProvider="{produitsData}" click="listType_clickHandler(event)" itemRenderer="cpnt.irListIntervAjout"  />
+		<s:HGroup>
+			<s:Label text="quantité en "/><s:Label id="uniteAjout" text=""/>
+			<s:NumericStepper id="quantiteA" stepSize="1" maximum="1000000" skinClass="skin.indecentmonkey.MobileNumericStepper.itemrenderer.MobileNumStepSkin"  />
+			<s:Label text="date de pose : "/>
+			<s:DateSpinner id="dfFaitLe" displayMode="{DateSelectorDisplayMode.DATE}" locale="'fr-FR'" height="60" />
+		</s:HGroup>
 		<s:HGroup>
 			<s:Button id="btnAjouter" label="Enregistrer" click="btnAjouter_clickHandler(event)" />
 			<s:Button id="btnAnnuler" label="Annuler" click="{currentState = 'lecture'}" />				

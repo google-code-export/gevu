@@ -134,14 +134,21 @@
 				var key:String;
 				var params:Object = JSON.parse(scrDescData["etapes"][0]["paramsCrit"]);
 				xlmScene = XML(params[0]["idCritSE"]);
+				totQestion = 0;
 				setKeyQuestion(xlmScene);
-				
+				nodeQuestion = null;
+				arrQuestion = new Array;
+				//lblQuestionNum.text = "1";
 				getNextQuestion();				
 			}
 			
 			private function getPrevQuestion():void
 			{
 				if(arrQuestion.length>0){
+					/*
+					var numQ:int = int(lblQuestionNum.text)-1;
+					lblQuestionNum.text =  numQ.toString();
+					*/
 					nodeQuestion = arrQuestion.pop();
 					showCritere();
 				}
@@ -157,6 +164,10 @@
 					nodeQuestion = xlmScene.children()[0];
 				}else{
 					verifRepCond(nodeQuestion);
+					/*
+					var numQ:int = int(lblQuestionNum.text)+1;
+					lblQuestionNum.text =  numQ.toString();
+					*/
 				}
 				arrQuestion.push(nodeQuestion);
 				showCritere();
@@ -165,12 +176,20 @@
 			private function showCritere():void
 			{
 				//vérifie s'il faut charger une réponse 
-				if(nodeQuestion.@["val"]){
-					ckReponse.setVal(nodeQuestion.@["val"]);
-				}									
+				var valQ:String = nodeQuestion.@["val"]+""; 
+				if(valQ !=""){
+					ckReponse.setVal(valQ);
+					//charge les problèmes
+					initProblemes(nodeQuestion.@["idDiag"], nodeQuestion.@["id_critere"], nodeQuestion.@["lib"]+" : "+valQ,"");	
+					//charge les solutions
+					initSolutions();
+				}else{
+					ckReponse.decocheVals();
+					vnProbs.pushView(views.htmlArea);
+					vnSolus.pushView(views.htmlArea);
+				}
 				idTypeControle = nodeQuestion.@["idCtrl"];
 				ckReponse.lblQ = nodeQuestion.@["lib"];
-				ckReponse.decocheVals();
 				lblQuestionNum.text = nodeQuestion.@["num"];
 				refCtl.text = nodeQuestion.@["ref"];
 				typeCtl.text = nodeQuestion.@["type"];
@@ -179,12 +198,7 @@
 
 				btnPrevQuestion.enabled = int(lblQuestionNum.text) > 1;
 				btnNextQuestion.enabled= lblQuestionNum.text != lblQuestionTot.text;
-				
-				//charge les problèmes
-				initProblemes(nodeQuestion.@["idDiag"], nodeQuestion.@["id_critere"], nodeQuestion.@["lib"]+" : "+nodeQuestion.@["val"],"");	
-				
-				//charge les solutions
-				initSolutions();
+								
 			}
 			
 			private function addIconesCritere(node:XML):void
@@ -500,7 +514,7 @@
 		<s:Button label="Ajouter un diag." click="{currentState = 'ajout';showQuestion();}" />
 	</s:actionContent>
 		
-	<s:VGroup includeIn="archive" width="100%" height="100%">
+	<s:VGroup includeIn="archive" width="100%" height="80%">
 		<s:HGroup verticalAlign="middle" width="100%" height="100%" >
 			<s:List id="listDiag" width="50%" height="100%" click="listDiag_clickHandler(event)"  itemRenderer="cpnt.irListDiag"  />
 			<s:List id="listRep" width="100%" height="100%"  click="listRep_clickHandler(event)" itemRenderer="cpnt.irListRep"  />

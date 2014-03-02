@@ -12,8 +12,6 @@
 			{
 				if(data!=null){
 					labelDisplay.text = data.lib;
-					dateDisplay.text = "posé le : "+data.fait+" - à faire le : "+data.afaire;
-					coutDisplay.text = data.quantite+" "+data.libUnite+" = "+data.cout+" €";
 				}
 			}
 			
@@ -28,8 +26,6 @@
 		</s:Rect>
 		<s:VGroup height="100%" width="100%" left="4" verticalAlign="middle" paddingBottom="3" paddingTop="4" paddingLeft="2" paddingRight="2" >
 			<s:Label id="labelDisplay" width="100%" verticalAlign="middle" />
-			<s:Label id="dateDisplay" width="100%" verticalAlign="middle" />
-			<s:Label id="coutDisplay" width="100%" verticalAlign="middle" />
 		</s:VGroup>
 		
 	</s:Group>	
