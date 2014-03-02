@@ -15,6 +15,7 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			import spark.components.calendarClasses.DateSelectorDisplayMode;
 			import spark.events.IndexChangeEvent;
 			import spark.transitions.SlideViewTransition;
 			
@@ -203,7 +204,13 @@
 			protected function sendBase_clickHandler(event:MouseEvent):void
 			{
 				if(isConnect){
-					roDiag.setUtiLieuLock(idExi, idBase, srvDst, idBaseSrc, srvSrc);
+					
+					aProcess = new alert();
+					aProcess.mess = "ATTENTION : si vous lancez la synchronisation la base sera réinitialisée.";
+					aProcess.titre = 'Confirmation de synchronisation';
+					aProcess.fct1 = setUtiLieuLock;
+					aProcess.open(this, true);
+					PopUpManager.centerPopUp(aProcess);					
 				}else{
 					aProcess = new alert();
 					aProcess.mess = "Vous n'êtes pas connecté.\nImpossible d'envoyer les données.";
@@ -213,6 +220,11 @@
 					PopUpManager.centerPopUp(aProcess);					
 					
 				}
+			}
+
+			public function setUtiLieuLock():void
+			{
+				roDiag.setUtiLieuLock(idExi, idBase, srvDst, idBaseSrc, srvSrc);
 			}
 			
 			protected function migreRefServeurToLocal_resultHandler(event:ResultEvent):void
@@ -273,6 +285,9 @@
 					ll.data = oData;
 					ll.init();
 					lblAriane.text= ' / Univers';
+					btnGetSrv.visible = false;
+				}else{
+					btnGetSrv.visible = true;
 				}
 				bSupp.visible = false;
 			}
@@ -698,7 +713,7 @@
 			</s:HGroup>			
 		</s:HGroup>
 		<s:HGroup gap="3" visible="{isLog}" height="40" width="100%" verticalAlign="middle" >
-			<s:Image source="@Embed('assets/get_srv.png')" click="getBase_clickHandler(event)" visible="{isConnect}" />
+			<s:Image source="@Embed('assets/get_srv.png')" id="btnGetSrv" click="getBase_clickHandler(event)" visible="{isConnect}" />
 			<s:Image source="@Embed('assets/send_srv.png')" id="bSend" click="sendBase_clickHandler(event)" visible="{isConnect}" />
 			<s:Button skinClass="skin.btnAjout" id="bAjout" click="bAjout_clickHandler(event)" visible="false" />
 			<s:Button skinClass="skin.btnSupp" id="bSupp" click="bSupp_clickHandler(event)" visible="false" />

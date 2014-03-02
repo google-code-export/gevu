@@ -94,6 +94,7 @@
 				if(data!=null){
 					init();
 				}
+				tiNom.text = "";
 				viewTrans.duration = durTrans;
 			}
 			
@@ -163,16 +164,16 @@
 			{
 				if(data.lieu.lib == "Univers")bPrev.visible = false;
 				else bPrev.visible = true;
-				if(tLock == "x"){
+				if(tLock != "x"){
+					this.parentApplication.bCopie.visible = true;
+					this.parentApplication.bSupp.visible = true;
+					this.parentApplication.bAjout.visible = true;
+				}else{
 					this.parentApplication.bCopie.visible = false;
 					this.parentApplication.bSupp.visible = false;
 					this.parentApplication.bAjout.visible = false;
 					this.parentApplication.bColle.visible = false;
 					hgModifNom.visible = false;
-				}else{
-					this.parentApplication.bCopie.visible = true;
-					this.parentApplication.bSupp.visible = true;
-					this.parentApplication.bAjout.visible = true;
 				}
 
 			}
