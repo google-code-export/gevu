@@ -867,7 +867,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		
 		//on récupère les lieux sources modifié par l'utilisateur
 		$arr = $dbLsrc->getUtiLieuLock($idExi,"+");
-		
+				
 		//création du tableau hiérarchique
         $result = $this->getHierachieLieu($arr, count($arr), 0);
         
@@ -875,19 +875,21 @@ class GEVU_Diagnostique extends GEVU_Site{
         foreach ($result[1] as $lieu) {
         	//change le tLock de destination
 			$dbLsrc->setUtiIdLieuLock($lieu["id_lieu"], "+".$idExi, "");        		
-        	//récupère les infos du lieu de destination
-        	$arrLdst = $dbLdst->findById_lieu($lieu["lieu_copie"]);
         	if($lieu["lieu_copie"]!=0){
-		        //copie le lieu
+	        	//récupère les infos du lieu de destination
+	        	$arrLdst = $dbLdst->findById_lieu($lieu["lieu_copie"]);
+        		//copie le lieu
 	        	$this->copiecolleLieu($lieu["id_lieu"], $arrLdst[0]["lieu_parent"], $idExi, $idBaseSrc, array($idBaseSrc, $idRegSrc, $idBaseDst, $idRegDst));
         	}
 	        //supprime les lieux sources
-        	$dbLsrc->remove($lieu["id_lieu"]);
+        	//$dbLsrc->remove($lieu["id_lieu"]);
         	// et destination
         	//$dbLdst->remove($lieu["lieu_copie"]);
         }
-        //vérifie s'il faut supprimer les parents
-        if($lieu["lieu_parent"]>1)$dbLsrc->removeParentVide($lieu["lieu_parent"]);
+        //supprime tous les lieux
+        $dbLsrc->remove(1);
+        //recrée le lieu univers
+        $dbLsrc->ajouter(array('id_lieu'=>1, 'lib'=>'univers', 'id_instant'=>1, "lft"=>1, "rgt"=>2, "niv"=>0, "lieu_parent"=>-1),false);
         			
 	}
 		
@@ -976,7 +978,8 @@ class GEVU_Diagnostique extends GEVU_Site{
 				// $t!="Models_DbTable_Gevu_diagnostics" && 
 				// && $t!="Models_DbTable_Gevu_lieuxinterventions"
 				// && $t!="Models_DbTable_Gevu_problemes" && 
-            	if($t!="Models_DbTable_Gevu_stats" && $t!="Models_DbTable_Gevu_observations" && $t!="Models_DbTable_Gevu_docsxlieux"){
+            	if($t!="Models_DbTable_Gevu_stats" && $t!="Models_DbTable_Gevu_observations" 
+            		&& $t!="Models_DbTable_Gevu_docsxlieux" && $t!="Models_DbTable_Gevu_problemes"){
 					$dbT = new $t($dbDst);							
             	 	foreach ($items as $row) {
             	 		$d = $row->toArray();
@@ -988,6 +991,7 @@ class GEVU_Diagnostique extends GEVU_Site{
             	 		$newId = $dbT->ajouter($d, false);
             	 		//vérifie si on traite le diagnostic
             	 		if($t=="Models_DbTable_Gevu_diagnostics"){
+            	 			//traitement des solutions
             	 			if(!$this->dbSolusSrc) $this->dbSolusSrc = new Models_DbTable_Gevu_diagnosticsxsolutions($dbSrc);
             	 			if(!$this->dbSolusDst) $this->dbSolusDst = new Models_DbTable_Gevu_diagnosticsxsolutions($dbDst);
             	 			//on récupère les solutions
@@ -997,6 +1001,18 @@ class GEVU_Diagnostique extends GEVU_Site{
 		            	 		$solus["id_diag"]=$newId;
 		            	 		unset($solus["id_diagsolus"]);
 		            	 		$this->dbSolusDst->ajouter($solus, $this->idExi, false, $this->idInst);
+		            	 	}
+            	 			//traitement des problemes
+            	 			if(!$this->dbProbSrc) $this->dbProbSrc = new Models_DbTable_Gevu_problemes($dbSrc);
+            	 			if(!$this->dbProbDst) $this->dbProbDst = new Models_DbTable_Gevu_problemes($dbDst);
+            	 			//on récupère les problèmes
+            	 			$arrProbs = $this->dbProbSrc->findByIdDiag($oldId);
+            	 			//on copie les problèmes
+		            	 	foreach ($arrProbs as $prob) {
+		            	 		$prob["id_diag"]=$newId;
+		            	 		$prob["id_instant"]=$this->idInst;
+		            	 		unset($prob["id_probleme"]);
+		            	 		$this->dbProbDst->ajouter($prob, $this->idExi);
 		            	 	}
             	 		}
             	 	}
