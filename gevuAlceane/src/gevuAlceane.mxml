@@ -33,8 +33,9 @@
 			public var nivLieu:int=0;
 			public var idBase:String = "gevu_alceane";
 			public var idScenar:int = 18;
-			//public var urlDomaine:String = "http://localhost/gevu/";
-			public var urlDomaine:String = "http://www.gevu.org/";
+			//public var urlDomaine:String = "http://176.76.20.19/gevu/";
+			public var urlDomaine:String = "http://localhost/gevu/";
+			//public var urlDomaine:String = "http://www.gevu.org/";
 			//public var urlDomaine:String = "http://krys.alceane.lan/";
 			public var urlVide:String = urlDomaine+"public/vide.html";
 			[Bindable] public var idAntenne:int=-1; 
