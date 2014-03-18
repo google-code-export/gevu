@@ -35,21 +35,30 @@
 // *** Accurate filename handling and urlencode in URLs
 // *** Add Paypal button
 
-$db_server   = "localhost";
-$db_name     = "gevu_trouville";
-$db_username = "root";
-$db_password = "";
+require_once( "../application/configs/config.php" );
+$rsDB = Zend_Registry::get("multidb");	
+$arrDB = $rsDB->getOptions();
+//$_GET["site"]="serveur";
+
+$site=false;
+if(isset($_GET["site"])){
+	$site=$_GET["site"];
+	$db_server   = $arrDB[$site]["host"];
+	$db_name     = $arrDB[$site]["dbname"];
+	$db_username = $arrDB[$site]["username"];
+	$db_password = $arrDB[$site]["password"];
+}
+
 
 //construction du choix des sites
 $fSite = "<form action='bigdump.php' method='get'>
-S&eacute;lectionner un site : <select name='site' >";
+S&eacute;lectionner une connexion : <select name='site' >";
 $i=0;
-while ($s = current($SITES)) {
+foreach ($arrDB as $k => $optDB) {
 	$selected="";
-	if(key($SITES)==$site)
+	if($optDB["dbname"]==$site)
 		$selected=" selected=\"selected\"";
-	$fSite .= "<option value='".key($SITES)."' ".$selected." >".$s["NOM"]."</option>";
-	next($SITES);
+	$fSite .= "<option value='".$k."' ".$selected." >".$k."</option>";
 }
 $fSite .= "</select>
 	<input name='valider' type='submit' value='valider' />
@@ -375,7 +384,7 @@ if (!$error && !isset($_REQUEST["fn"]) && $filename=="")
           echo ("<td>Misc</td>");
 
         if ((eregi("\.gz$",$dirfile) && function_exists("gzopen")) || eregi("\.sql$",$dirfile) || eregi("\.csv$",$dirfile))
-          echo ("<td><a href=\"".$_SERVER["PHP_SELF"]."?start=1&amp;fn=".urlencode($dirfile)."&amp;foffset=0&amp;totalqueries=0&site=".$idSite."\">Start Import</a> into $db_name at $db_server</td>\n <td><a href=\"".$_SERVER["PHP_SELF"]."?delete=".urlencode($dirfile)."\">Delete file</a></td></tr>\n");
+          echo ("<td><a href=\"".$_SERVER["PHP_SELF"]."?start=1&amp;fn=".urlencode($dirfile)."&amp;foffset=0&amp;totalqueries=0&site=".$site."\">Start Import</a> into $db_name at $db_server</td>\n <td><a href=\"".$_SERVER["PHP_SELF"]."?delete=".urlencode($dirfile)."\">Delete file</a></td></tr>\n");
         else
           echo ("<td>&nbsp;</td>\n <td>&nbsp;</td></tr>\n");
       }
