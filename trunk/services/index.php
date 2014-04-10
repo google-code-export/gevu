@@ -1,6 +1,7 @@
 <?php
 try {
 	require_once( "../application/configs/config.php" );
+	set_time_limit(98000);
 	
 	$server = new Zend_Amf_Server();
 	
