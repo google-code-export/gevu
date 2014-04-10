@@ -11,14 +11,8 @@
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				if(data!=null){
-					labelDisplay.text = data.lib;
-					if(data.tLock=="-")colorFond.color = 0x339900;
-					if(data.tLock=="x")colorFond.color = 0x000000;
-					if(data.icone!=""){
-						img.visible = true;
-						img.source = "assets/"+data.icone;
-					}
-					
+					img.source = data.url;
+					//img.source = data.path_source;
 				}
 			}
 			
@@ -29,14 +23,10 @@
 		<s:Rect x="0" y="0" 
 				radiusX="4" radiusY="4" 
 				height="100%" width="100%">
-			<s:fill><s:SolidColor id="colorFond" color="#990033" /></s:fill>
 			<s:stroke><s:SolidColorStroke color="0x000000" weight="1"/></s:stroke>
 		</s:Rect>
 		<s:HGroup height="100%" width="100%" left="4" verticalAlign="middle" >
-			<s:Label id="labelDisplay" color="white" height="46" width="100%" verticalAlign="middle" />
-			<s:HGroup horizontalAlign="right" verticalAlign="middle" paddingRight="4" >
-				<s:Image id="img" visible="false" height="40" horizontalAlign="right" />			
-			</s:HGroup>	
+			<s:Image id="img" height="100" width="100" />
 		</s:HGroup>
 
 	</s:Group>	

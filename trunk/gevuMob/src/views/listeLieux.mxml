@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="" creationComplete="creationCompleteHandler(event)" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="" creationComplete="creationCompleteHandler(event)" xmlns:views="views.*" 
 		>		
 	<fx:Declarations>
 	</fx:Declarations>
@@ -33,7 +33,7 @@
 			{
 				if(data.lieu.lib!="Univers"){
 					viewTrans.direction = "up";
-					navigator.popView(viewTrans);
+					//navigator.popView(viewTrans);
 					//on recherche l'item
 					this.parentApplication.roDiag.getUtiIdLieuLock(this.parentApplication.idExi, data.lieu.lieu_parent, this.parentApplication.idBase);
 
@@ -93,8 +93,9 @@
 			{
 				if(data!=null){
 					init();
+				}else{
+					tiNom.text = "";					
 				}
-				tiNom.text = "";
 				viewTrans.duration = durTrans;
 			}
 			
@@ -119,12 +120,15 @@
 				if(data.lieu.tLock != "x"){
 					this.parentApplication.getDataLieu();
 				}
-				
+				//affiche les photos
+				photo.init();					
+
 			}
 			
 			protected function list_clickHandler(event:MouseEvent):void
 			{
 				bPrev.visible = true;
+				viewTrans.direction = "down";
 				oItem = event.currentTarget.selectedItem;
 				if(oItem==null)return;
 				if(this.parentApplication.isRun){
@@ -133,7 +137,9 @@
 					aProcess.titre = 'Traitement en cours';
 					aProcess.open(this, true);
 					PopUpManager.centerPopUp(aProcess);										
-				}else showItem();
+				}else{
+					showItem();
+				}
 			}
 			
 			protected function showItem():void
@@ -154,7 +160,6 @@
 				}
 				*/
 				//on charge à chaque fois une nouvelle vue
-				viewTrans.direction = "down";
 				var oData:Object = {"ariane":this.parentApplication.lblAriane.text,"lieu":oItem,"liste":new ArrayCollection(oItem.children)};
 				navigator.pushView(views.listeLieux, oData, viewTrans);									
 				
@@ -200,6 +205,7 @@
 		<s:HGroup verticalAlign="middle" width="100%" id="hgModifNom">
 			<s:TextInput id="tiNom" width="100%" /><s:Button label="Modifier" click="modifier_clickHandler(event)" />			
 		</s:HGroup>
-		<s:List id="list" width="100%" height="100%" click="list_clickHandler(event)" labelField="lib" itemRenderer="cpnt.irListLieu"  />
+		<views:photo id="photo" width="100%" objName="Models_DbTable_Gevu_docsxlieux" objId="{this.parentApplication.oLieu.id_lieu}" />
+		<s:List id="list" width="100%" height="100%" click="list_clickHandler(event)" itemRenderer="cpnt.irListLieu"  />
 	</s:VGroup>  
 </s:View>

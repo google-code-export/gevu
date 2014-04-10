@@ -1,140 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
-		  xmlns:compo="compo.*"
-		  title="Espace intérieur"
-		  name="EspaInt"
-		  xmlns:composants="compo.*"
-		  width="100%" height="100%"
-		   >
-	
-	<mx:Script>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:cpnt="cpnt.*"
+		title="Espace" 
+		width="100%" height="100%" 
+		creationComplete="creationCompleteHandler(event)"
+		>
+	<fx:Script>
 		<![CDATA[
-			import mx.controls.Alert;
 			import mx.events.FlexEvent;
-			import mx.events.ListEvent;
-			import mx.rpc.events.FaultEvent;
-			import mx.rpc.events.ResultEvent;
-
+			
+			[Bindable] public var modifData:Array = new Array;
 			private var obj:String = "Models_DbTable_Gevu_espacesxinterieurs";
 			
-			[Bindable] public var NodeData:Object;
-			[Bindable] public var isChange:Boolean=false;
-			[Bindable] public var modifData:Array = new Array;
-			[Bindable] public var idTypeCtrl:String;
-			
-			
-			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
-				var str:String;
-				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
-					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
-					"String: "+fault.fault.faultString.toString()+"\n";
-				
-				if (os!="")
-					os = " - "+os;
-				Alert.show(str, "FaultHandlerService"+os);
-			}
+			[Bindable] public var isChange:Boolean;
 			
 			public function editModif(nom:String, val:Object) : void {
 				modifData[nom]=val;
 				isChange = true;
 			}
-			
-			protected function cbType_changeHandler(event:ListEvent):void
-			{
-				idTypeCtrl = cbType.selectedItem["id_type_controle"];
-				modifData["id_type_specifique_int"]=idTypeCtrl;
-				isChange = true;
-			}
-			
-			protected function panel1_creationCompleteHandler(event:FlexEvent):void
-			{
-				ro.getTypeControle(this.parentApplication.idScenar, NodeData.id_lieu);									
-			}
-			
-			protected function method1_resultHandler(event:ResultEvent):void
-			{
-				cbType.dataProvider = event.result as Array;
-				if(!NodeData)return;
-
-				if(!NodeData.id_type_specifique_int || NodeData.id_type_specifique_int!="0"){
-					for each(var row:Object in cbType.dataProvider){
-						if(row && row["id_type_controle"]==NodeData.id_type_specifique_int){
-							cbType.selectedItem=row;
-							cbType.enabled = false;
-							idTypeCtrl = NodeData.id_type_specifique_int;
-						}
-					}
-				}
-
-			}
-			
-			protected function SaveModif_clickHandler(event:MouseEvent):void
-			{
-				ro.edit(NodeData.id_espace_int, modifData, obj, this.parentApplication.idBase);
+			public function saveModifications() : void {
 				
-			}
-			
-			protected function method2_resultHandler(event:ResultEvent):void
-			{
-				//on vérifie si le parent a déjà un composant diagnostic
-				var td:HBox = this.parentApplication.tabDiag;
-				var df:diagnostics = td.getChildByName("formDiag") as diagnostics;
-				if(df){
-					df.vs.selectedChild = df.ajout;
-				}else{
-					df = new diagnostics();
-					df.NodeData = event.result;
-					df.idLieu = NodeData.id_lieu;
-					df.bAjout = true;
-					df.idTypeCtlParent = cbType.selectedItem["id_type_controle"];
-					td.addChild(df);
-				}
-				
-			}
-			
-			protected function ajoutDiag_clickHandler(event:MouseEvent):void
-			{
-				if(!cbType.selectedItem){
-					Alert.show("Veuillez sélectionner un type d'espace", "Ajout de diagnostics");
-					return;
-				}
-				ro.ajoutDiag(this.parentApplication.idExi, this.parentApplication.idScenar, NodeData.id_lieu, cbType.selectedItem["id_type_controle"])
-			}
-			
-			protected function method3_resultHandler(event:ResultEvent):void
-			{
 				isChange = false;
+				this.parentApplication.roDiag.edit(data.id_espace, modifData, obj, this.parentApplication.idBase);
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				ref.text = data.ref;			
 			}
 			
 		]]>
-	</mx:Script>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout
+			paddingBottom="6"
+			paddingLeft="6" 
+			paddingRight="6"
+			paddingTop="6"
+			gap="6"/>                
+	</s:layout>	
 	
-	<mx:VBox height="100%" width="100%" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6" >
-		<mx:HBox width="100%" >
-			<mx:Label text="ref" />
-			<mx:TextInput id="F2" width="100%"  text="{NodeData.ref}" change="editModif('ref', F2.text)" />
-		</mx:HBox>
-		<mx:HBox width="100%" >
-			<mx:Label text="fonction" />
-			<mx:TextInput id="F3" width="100%" text="{NodeData.fonction}" change="editModif('fonction', F3.text)" />
-		</mx:HBox>
-		<mx:HBox width="100%" id="lblType" visible="false" >
-			<mx:Label text="Type d'espace : " />
-			<mx:ComboBox id="cbType" width="100%" height="100%" labelField="lib" prompt="Choisissez" change="cbType_changeHandler(event)" />				
-		</mx:HBox>
-		<mx:HBox width="100%" >
-			<mx:Button id="saveModif" label="Enregistrer" enabled="{isChange}" click="SaveModif_clickHandler(event)" />
-			<mx:Button visible="false" id="ajoutDiag" label="Ajouter des diagnostics" click="ajoutDiag_clickHandler(event)"/>			
-		</mx:HBox>
-	</mx:VBox>
+	<s:VGroup>
+		<s:HGroup width="100%" verticalAlign="middle">
+			<s:Label text="ref" />
+			<s:TextInput id="ref" width="100%" change="editModif('ref', ref.text)"/>
+		</s:HGroup>
+		<s:Button id="saveModif" label="Enregistrer" click="saveModifications()" visible="{isChange}" />
+	</s:VGroup>
 	
-	<mx:RemoteObject id="ro"
-					 destination="zend"
-					 source="GEVU_Diagnostique"
-					 fault="faultHandlerService(event,this.title);">
-		<mx:method name="edit" result="method3_resultHandler(event)" />
-		<mx:method name="getTypeControle" result="method1_resultHandler(event)" />
-		<mx:method name="ajoutDiag" result="method2_resultHandler(event)" />
-	</mx:RemoteObject>
-	
-</mx:Panel>
+</s:View>

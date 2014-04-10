@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		title="Gestion des photos"
+		 creationComplete="creationCompleteHandler(event)"
+		>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import cpnt.alert;
+			private var urlRequest:URLRequest;
+			private var file:File;
+			[Bindable] public var objName:String;
+			[Bindable] public var objId:String;
+
+			//take a new picture with the camera
+			protected function uploadCamera_clickHandler(event:MouseEvent):void
+			{
+				if (CameraUI.isSupported)
+				{
+					trace("camera is supported");
+					var myCam:CameraUI = new CameraUI();
+					myCam.launch(MediaType.IMAGE);
+					myCam.addEventListener(MediaEvent.COMPLETE,selectCompleteHandler);
+				}
+				else
+				{
+					trace("camera not supported");
+					statusText.text = "La caméra n'est pas supportée sur ce matériel.";
+				}
+			}
+			
+			//select a picture from the camera roll (gallery)
+			protected function uploadGallery_clickHandler(event:MouseEvent):void
+			{
+				if (CameraRoll.supportsBrowseForImage) 
+				{
+					trace("La gallerie est active.");
+					var roll:CameraRoll = new CameraRoll();
+					roll.browseForImage();
+					roll.addEventListener(MediaEvent.SELECT,selectCompleteHandler);
+				}
+				else
+				{
+					trace("La gallerie n'est pas active.");
+					statusText.text = "La gallerie de photo n'est pas supportée sur ce matériel.";
+				}
+			}
+			
+			//when the selection is complete upload it
+			protected function selectCompleteHandler(event:MediaEvent):void
+			{
+				trace("event.data.file.url; = "+event.data.file.url);
+				takePhotoButton.enabled = galleryPhotoButton.enabled = false;
+				
+				//enregistrement du nouveau document
+				var data:Array = new Array();				
+				data["url"] = event.data.file.url;
+				data['idBase'] = this.parentApplication.idBase;
+				data['idExi'] = this.parentApplication.idExi;
+				//le type de document par défaut est autres
+				//et pas de titre
+				data['titre']="";
+				data['type']=6;
+				data['objName']=objName;//'Models_DbTable_Gevu_docsxproblemes' 'Models_DbTable_Gevu_docsxlieux'
+				data['new_name']=event.data.relativePath;
+				data['rep']="";
+				data['objId']=objId; //"id_probleme" "id_lieu"
+
+				var dataDoc:Array = new Array();				
+				dataDoc["url"] = event.data.file.url;
+				dataDoc["titre"]=event.data.relativePath;
+				dataDoc["branche"]=objName;
+				dataDoc["content_type"]=event.data.mediaType;
+				dataDoc["path_source"]=event.data.file.nativePath;
+				dataDoc["tronc"]=data['type'];
+				
+				roDiag.saveDoc(this.parentApplication.oLieu.id_lieu, data, dataDoc, this.parentApplication.idBase);
+				
+				/*
+				urlRequest.data = sendVars;
+				urlRequest.method = URLRequestMethod.POST;
+				file = event.data.file;
+				file.addEventListener(Event.COMPLETE,uploadCompleteHandler);
+				file.addEventListener(Event.OPEN,openUploadHandler);
+				file.addEventListener(IOErrorEvent.IO_ERROR, onUploadIoError);
+				file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onUploadSecurityError);
+				file.upload(urlRequest);								
+				*/
+			}
+			
+			// Called on upload io error
+			private function onUploadIoError(event:IOErrorEvent):void {
+				statusText.text = "IO erreur durant le téléchargement du fichier.";
+				file.cancel();
+			}
+			
+			// Called on upload security error
+			private function onUploadSecurityError(event:SecurityErrorEvent):void {
+				statusText.text = "Erreur de sécurité durant le téléchargement du fichier.";
+				file.cancel();
+			}			
+			
+			protected function uploadCompleteHandler(event:Event):void
+			{
+				trace("upload complete");
+				takePhotoButton.enabled = galleryPhotoButton.enabled = true;
+				statusText.text = "Photo enregistrée";
+			}
+			
+			protected function openUploadHandler(event:Event):void
+			{
+				trace("uploading");
+				statusText.text = "Enregistrement...";
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				urlRequest = new URLRequest(this.parentApplication.ENDPOINT_IMPORT);
+				list.scroller.setStyle("verticalScrollPolicy", "off");
+				list.scroller.setStyle("horizontalScrollPolicy", "on");
+				gMain.visible = false;
+				gMain.height = 0;
+				gMain.width = 0;
+				init();
+				
+			}
+			
+			public function init():void
+			{
+				currentState = 'main';
+				if(!this.parentApplication.oLieu || this.parentApplication.oLieu.tLock=="x"){
+					gMain.visible = false;
+					gMain.height = 0;
+					gMain.width = 0;
+				}else{
+					gMain.visible = true;
+					gMain.percentHeight = 100;
+					gMain.percentWidth = 100;
+					getDoc();				
+				}
+
+			}
+			
+			protected function saveDoc_resultHandler(event:ResultEvent):void
+			{
+				getDoc();				
+				uploadCompleteHandler(event);
+			}
+			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
+				//aProcess.close();
+				var str:String;
+				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
+					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
+					"String: "+fault.fault.faultString.toString()+"\n";
+				
+				if (os!="")
+					os = " - "+os;
+				var a:alert = new alert;
+				a.mess = str;
+				if(os)a.titre = os;
+				a.open(this, false);
+
+				takePhotoButton.enabled = galleryPhotoButton.enabled = true;
+				
+			}
+			
+			protected function getLieuDocs_resultHandler(event:ResultEvent):void
+			{
+				list.dataProvider =  new ArrayCollection(event.result as Array);								
+			}
+			
+			protected function list_clickHandler(event:MouseEvent):void
+			{
+				if (list.selectedItem)
+				{
+					currentState = 'zoom';
+					img.source = list.selectedItem.url;
+				}
+				
+			}
+
+			private function deleteItem():void {
+				
+				if (list.selectedItem)
+				{
+					var aProcess:alert = new alert();
+					aProcess.mess = "Confirmez-vous la suppression de cette photo ?";
+					aProcess.titre = 'Confirmation suppression';
+					aProcess.fct1 = deleteClickHandler;
+					aProcess.open(this, true);
+					PopUpManager.centerPopUp(aProcess);					
+				}
+				
+			}
+			
+			private function deleteClickHandler():void
+			{
+				roDiag.deleteDoc(list.selectedItem.id_doc, this.parentApplication.idBase);
+			}			
+			
+			protected function deleteDoc_resultHandler(event:ResultEvent):void
+			{
+				getDoc();				
+				var aProcess:alert = new alert();
+				aProcess.mess = "Le document est supprimé.";
+				aProcess.titre = "Suppression d'un document";
+				aProcess.open(this, true);
+				PopUpManager.centerPopUp(aProcess);					
+				
+			}
+			
+			protected function getDoc():void
+			{
+				list.dataProvider =  null;				
+				if(objId && objName=="Models_DbTable_Gevu_docsxlieux"){
+					roDiag.getLieuDocs(objId, this.parentApplication.idBase);				
+				}
+				if(objId && objName=="Models_DbTable_Gevu_docsxproblemes"){
+					ro.findDocs(objId,this.parentApplication.idBase);
+				}
+				
+			}
+						
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RemoteObject id="roDiag"
+						destination="zend"
+						source="GEVU_Diagnostique"
+						fault="faultHandlerService(event, 'GEVU - Diagnostique');"
+						showBusyCursor="true" 
+						>
+			<s:method name="saveDoc" result="saveDoc_resultHandler(event)" />
+			<s:method name="getLieuDocs" result="getLieuDocs_resultHandler(event)" />
+			<s:method name="deleteDoc" result="deleteDoc_resultHandler(event)" />
+		</s:RemoteObject>
+		<s:RemoteObject id="ro"
+						 destination="zend"
+						 source="Models_DbTable_Gevu_problemes"
+						 fault="faultHandlerService(event, 'GEVU - Problèmes');"
+						 showBusyCursor="true" 
+						 >
+			<s:method name="findDocs" result="getLieuDocs_resultHandler(event)" />
+			
+		</s:RemoteObject>
+		
+	</fx:Declarations>
+
+	<s:states>
+		<s:State name="main"/>
+		<s:State name="zoom"/>
+	</s:states>	
+	
+	<s:VGroup includeIn="main" id="gMain" width="100%" height="100%" >
+		<s:HGroup width="100%" >
+			<s:Button id="galleryPhotoButton" skinClass="skin.btnGallerie" click="uploadGallery_clickHandler(event)" />
+			<s:Button id="takePhotoButton" skinClass="skin.btnCamera" click="uploadCamera_clickHandler(event)" />
+			<s:Button skinClass="skin.btnSupp" id="btnDelete" click="deleteItem()"  />
+		</s:HGroup>							
+		<s:List id="list" width="100%" height="110" click="list_clickHandler(event)" itemRenderer="cpnt.irListPhoto" >
+			<s:layout>
+				<s:HorizontalLayout gap="10" verticalAlign="middle" />
+			</s:layout>
+		</s:List>		
+		<s:Label id="statusText" fontSize="24" text=""/>
+	</s:VGroup>
+	<s:VGroup includeIn="zoom" width="100%" height="100%" verticalAlign="top" paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4" >
+		<s:Button label="Fermer" click="{currentState = 'main'}" />				
+		<s:Image id="img" width="370" height="400" scaleMode="letterbox" />		
+	</s:VGroup>
+
+</s:View>

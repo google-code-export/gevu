@@ -39,6 +39,9 @@
 			import views.htmlArea;
 			import views.listeLieux;
 			
+			import flash.net.URLRequestDefaults;				
+
+			
 			private var o2:gevu.batiments;
 			private var o3:gevu.diagnostics;
 			private var o5:gevu.espaces;
@@ -46,7 +49,9 @@
 			private var o1:gevu.ariane;
 			private var o4:gevu.docsxlieux;
 			private var o6:gevu.espacesxexterieurs;
+			*/
 			private var o7:gevu.espacesxinterieurs;
+			/*
 			private var o8:gevu.etablissements;
 			private var o9:gevu.georss;
 			*/
@@ -77,6 +82,8 @@
 			public var srvSrc:String = "ref";
 			public var srvDst:String = "android";
 			public var urlVerif:String = 'http://www.gevu.org';
+			public var ENDPOINT_IMPORT:String = urlVerif+"/services/import.php";
+			
 			public var idLieuChange:String;
 			public var arrLieuChange:Array;
 			public var idLieuCopie:String;
@@ -98,7 +105,8 @@
 			public var viewTrans:SlideViewTransition = new SlideViewTransition();	
 			private var durTrans:int = 800;
 			
-			private var urlOpt:String = "opt.js";
+			//private var urlOpt:String = "http://localhost/gevu/application/configs/opt.js";
+			private var urlOpt:String = "http://localhost/gevu/services/test.php";
 			[Bindable] private var arrOpt:ArrayCollection;
 			[Bindable] public var arrObjVoirie:ArrayCollection;
 			
@@ -106,6 +114,9 @@
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 
+				//défii le timeout par défaut pour éviter les erreurs...
+				URLRequestDefaults.idleTimeout = 1200000; //note this value represents milliseconds 
+				
 				//chargement du xml pour les options d'affichage de la carte
 				var chargementOpt:URLLoader = new URLLoader();// objet de chargement
 				var fichier:URLRequest = new URLRequest(urlOpt);// url du fichier chargé
@@ -126,7 +137,6 @@
 				//Affichage dans la liste
 				arrOpt = new ArrayCollection(object.items);
 				
-				//roMig.migreRefServeurToLocal(1);
 				showLogin();
 				/*
 				var r:Object = {idExi:1,droit_4:'[{"lib":"ERP-IOP","id":"4_13"},{"lib":"loge","id":"4_12"},{"lib":"Logement V3","id":"4_18"}]'};				
@@ -169,6 +179,7 @@
 				srvSrc = optCnx.options.srvSrc;
 				srvDst = optCnx.options.srvDst;
 				urlVerif = optCnx.options.urlVerif;
+				ENDPOINT_IMPORT = urlVerif+"/services/import.php";
 
 				verifConnexion();
 				
@@ -192,7 +203,7 @@
 					roMig.migreRefServeurToLocal(idBaseRef, srvSrc, srvDst, idBase);
 				}else{
 					aProcess = new alert();
-					aProcess.mess = "Vous n'êtes pas connecté.\nImpossible de récupérer les données.";
+					aProcess.mess = "Vous n'êtes pas connecté.\nImpossible de récupérer les données.\n"+urlVerif;
 					aProcess.titre = 'Pas de connexion';
 					aProcess.btn2 = false;
 					aProcess.open(this, true);
@@ -213,7 +224,7 @@
 					PopUpManager.centerPopUp(aProcess);					
 				}else{
 					aProcess = new alert();
-					aProcess.mess = "Vous n'êtes pas connecté.\nImpossible d'envoyer les données.";
+					aProcess.mess = "Vous n'êtes pas connecté.\nImpossible d'envoyer les données.\n"+urlVerif;
 					aProcess.titre = 'Pas de connexion';
 					aProcess.btn2 = false;
 					aProcess.open(this, true);
@@ -224,14 +235,15 @@
 
 			public function setUtiLieuLock():void
 			{
-				roDiag.setUtiLieuLock(idExi, idBase, srvDst, idBaseSrc, srvSrc);
+				//roDiag.setUtiLieuLock(idExi, idBase, srvDst, idBaseSrc, srvSrc);
+				roMig.migreTabletteToServeur(idExi, idBase, srvDst, idBaseSrc, srvSrc);
 			}
 			
 			protected function migreRefServeurToLocal_resultHandler(event:ResultEvent):void
 			{
 				//réinitialise les vues
 				leftNav.popToFirstView()
-				initDetail()
+				initDetail(event.result)
 				roDiag.getUtiLieuLock(idExi, idBaseSrc, srvSrc, idBase, srvDst);
 
 			}
@@ -312,7 +324,7 @@
 			protected function deleteLieu_resultHandler(event:ResultEvent):void
 			{
 				////aProcess.close();
-				initDetail();
+				initDetail("");
 				var idLieuSupp:String = event.result as String;
 				var ll:listeLieux =	leftNav.activeView as listeLieux;
 				//ll.suppItem(idLieuSupp);
@@ -343,7 +355,8 @@
 
 			protected function bCopie_clickHandler(event:MouseEvent):void
 			{
-				bCopie.enabled = false;
+				//on peut écraser une copie 
+				bCopie.enabled = true;
 				bColle.visible = true;
 				
 				idLieuCopie = oLieu.id_lieu;
@@ -375,7 +388,7 @@
 			
 			public function getDataLieu():void
 			{
-				initDetail();
+				initDetail("");
 				//vérifie si le lieu n'est pas bloqué
 				if(oLieu.tLock!="x"){
 					if(arrLieuView[oLieu.id_lieu]){
@@ -428,7 +441,6 @@
 					if(
 						className == 'gevu.antennes'  ||
 						className == 'gevu.batiments' ||
-						className == 'gevu.docsxlieux' ||
 						className == 'gevu.diagnostics' ||						
 						className == 'gevu.espaces' ||
 						className == 'gevu.espacesxexterieurs' ||
@@ -504,14 +516,14 @@
 				return typeCtrl;
 			}
 			
-			public function initDetail():void
+			public function initDetail(dt:Object):void
 			{
 				//efface la barre de bouton
 				hgBarCtl.visible = false;
 				hgBarButton.visible = false;
 				//hgBarButton.removeAllElements();
 				//hgBarCtl.removeAllElements();
-				rightNav.pushView(views.htmlArea,null,null,viewTrans);
+				rightNav.pushView(views.htmlArea,dt,null,viewTrans);
 			}
 
 			
@@ -573,7 +585,7 @@
 			
 			protected function ajoutCtlLieu_resultHandler(event:ResultEvent):void
 			{
-				initDetail();
+				initDetail("");
 				editLock(oLieu.id_lieu);
 				bAjoutCtl = true;
 				roDiag.getUtiIdLieuLock(idExi, oLieu.id_lieu, idBase);
@@ -659,7 +671,15 @@
 				leftNav.pushView(views.listeLieux, oData);
 				roMig.migreRefServeurToLocal(idBaseRef, srvSrc, srvDst, idBase);
 			}
-			
+						
+			protected function migreTabletteToServeur_resultHandler(event:ResultEvent):void
+			{
+				initDetail(event.result)
+				leftNav.popAll();
+				var oData:Object = {"ariane":"","lieu":{"lib":"Univers", "tLock":"x", "id_lieu":1},"liste":new ArrayCollection()};
+				leftNav.pushView(views.listeLieux, oData);
+				roMig.migreRefServeurToLocal(idBaseRef, srvSrc, srvDst, idBase);
+			}
 			
 		]]>
 	</fx:Script>
@@ -679,6 +699,7 @@
 			showBusyCursor="true" invoke="showProcess()" 
 			>
 			<s:method name="migreRefServeurToLocal" result="migreRefServeurToLocal_resultHandler(event)"/>
+			<s:method name="migreTabletteToServeur" result="migreTabletteToServeur_resultHandler(event)" />
 		</s:RemoteObject>
 		<s:RemoteObject id="roDiag"
 						destination="zend"

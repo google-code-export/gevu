@@ -4,7 +4,7 @@
 		xmlns:cpnt="cpnt.*"
 		title="Problèmes" 
 		width="100%" height="100%" minHeight="140"
-		 creationComplete="creationCompleteHandler(event)"
+		 creationComplete="creationCompleteHandler(event)" xmlns:views="views.*"
 		>
 	<fx:Script>
 		<![CDATA[
@@ -15,7 +15,6 @@
 			import mx.rpc.events.ResultEvent;
 			
 			import cpnt.alert;
-			import cpnt.irListLieu;
 			
 			import skin.btnAjout;
 			import skin.btnSupp;
@@ -90,12 +89,13 @@
 			protected function method_resultHandler(event:ResultEvent):void
 			{
 				this.parentApplication.editLock(idLieu);
-
+				currentState = 'lecture';
 				init();
 			}
 			
 			public function init():void
 			{
+				btnPhoto.visible = false;
 				if(idDiag && idDiag!=-1){
 					ro.findByIdDiag(idDiag, this.parentApplication.idBase);
 					btnAjout.enabled = true;
@@ -112,6 +112,7 @@
 				var item:Object=event.currentTarget.selectedItem;
 				if(item){
 					idSelect = item.id_probleme;
+					btnPhoto.visible = true;
 				}
 				
 			}
@@ -147,16 +148,21 @@
 	<s:states>
 		<s:State name="lecture"/>
 		<s:State name="ajout"/>
+		<s:State name="photo"/>
 	</s:states>	
 		
 	<s:VGroup includeIn="lecture" width="100%" height="100%" >
 		<s:HGroup width="100%" >
 			<s:Button skinClass="skin.btnAjout" id="btnAjout" click="{currentState = 'ajout'}" />
 			<s:Button skinClass="skin.btnSupp" id="btnDelete" click="deleteItem()"  />
+			<s:Button skinClass="skin.btnCamera" id="btnPhoto" click="{currentState = 'photo';if(vPhoto)vPhoto.init();}" />
 		</s:HGroup>							
-		<s:HGroup width="100%" height="100%" >
+		<s:VGroup width="100%" height="100%" >
 			<s:List id="list" width="100%" height="100%" click="list_clickHandler(event)" itemRenderer="cpnt.irListProb"  />
-		</s:HGroup>							
+		</s:VGroup>							
+	</s:VGroup>
+	<s:VGroup includeIn="photo" width="100%" height="100%" >
+		<views:photo id="vPhoto" width="100%" objName="Models_DbTable_Gevu_docsxproblemes" objId="{idSelect}" />
 	</s:VGroup>
 	<s:VGroup includeIn="ajout" width="100%" height="100%"  >
 		<s:HGroup verticalAlign="middle" >

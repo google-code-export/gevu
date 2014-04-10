@@ -12,6 +12,7 @@
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.utils.UIDUtil;
@@ -20,6 +21,8 @@
 			import spark.events.ListEvent;
 			
 			import cpnt.alert;
+			
+			import skin.btnSupp;
 			
 			import views.htmlArea;
 			
@@ -46,6 +49,7 @@
 			private var numQestionInter:int;
 			private var arrQuestion:Array = new Array;
 			private var idInstant:int=-1;
+			private var campagne:Object;
 						
 			protected function stateChangeCompleteHandler(event:FlexEvent):void
 			{
@@ -63,6 +67,7 @@
 				roMC.getAllByType(2);
 				if(bAjout){
 					currentState = 'ajout';
+					gRep.visible = true;
 					if(idTypeCtlParent)
 						roDiag.getScenarioComplet(this.parentApplication.idScenar, idLieu, idTypeCtlParent);
 				}
@@ -149,7 +154,12 @@
 					var numQ:int = int(lblQuestionNum.text)-1;
 					lblQuestionNum.text =  numQ.toString();
 					*/
-					nodeQuestion = arrQuestion.pop();
+					if(arrQuestion[arrQuestion.length-1] == nodeQuestion)
+						nodeQuestion = arrQuestion.pop();
+					if(arrQuestion.length > 1)
+						nodeQuestion = arrQuestion.pop();
+					else
+						nodeQuestion = arrQuestion[0];
 					showCritere();
 				}
 			}
@@ -169,9 +179,19 @@
 					lblQuestionNum.text =  numQ.toString();
 					*/
 				}
-				arrQuestion.push(nodeQuestion);
+				addQuestion();
 				showCritere();
 			}			
+
+			private function addQuestion():void
+			{
+				//vérifie s'il faut ajouter ou modifier la question
+				if(arrQuestion[arrQuestion.length-1] == nodeQuestion)
+					arrQuestion[arrQuestion.length-1] = nodeQuestion;
+				else
+					arrQuestion.push(nodeQuestion);
+				
+			}
 			
 			private function showCritere():void
 			{
@@ -267,7 +287,13 @@
 				//vérifie s'il reste des questions frères
 				if(nodeIndex==(nbFrere-1)){
 					//on arrète s'il n'y a pas de parent
-					if(parent.parent()==null) return;
+					if(parent.parent()==null){
+						var a:alert = new alert;
+						a.mess = "Le diagnostic est terminé";
+						a.titre = "Diagnostic";
+						a.open(this, true);
+						return;
+					}
 					//on recherche le premier frère du parent
 					getNextQuestionFrere(parent.parent(), parent);
 				}else{
@@ -449,20 +475,77 @@
 			protected function listDiag_clickHandler(event:MouseEvent):void
 			{
 				listRep.dataProvider = null;
-				var s:Object=event.currentTarget.selectedItem;
-				if(s.id_lieu){
+				gRep.visible = false;
+				campagne=event.currentTarget.selectedItem;
+				if(campagne.id_lieu){
 					// récupère les données du diagnostic
-					roDiag.getDiagComplet(s.id_lieu,this.parentApplication.idBase,s.id_instant);					
+					roDiag.getDiagComplet(campagne.id_lieu,this.parentApplication.idBase,campagne.id_instant);					
 				}				
 			}
 			
 			protected function listRep_clickHandler(event:MouseEvent):void
 			{
+				gRep.visible = true;
 				selectDiag = event.currentTarget.selectedItem;
 				if(selectDiag){
 					initProblemes(selectDiag.id_diag, selectDiag.id_critere, selectDiag.criteres, selectDiag.id_reponse);
 					initSolutions();
 				}				
+			}
+			
+			protected function deleteReponse(event:MouseEvent):void
+			{
+				if(selectDiag){
+					var a:alert = new alert();
+					a.mess = "ATTENTION : vous allez supprimer une réponse";
+					a.titre = 'Confirmation fermeture';
+					a.fct1 = deleteDiagConfirm;
+					a.open(this, true);
+					PopUpManager.centerPopUp(a);										
+				}				
+			}
+			
+			protected function deleteDiagConfirm():void
+			{
+				listRep.dataProvider = null;
+				roDiag.deleteDiag(selectDiag.id_diag, this.parentApplication.idExi, this.parentApplication.idBase);				
+			}
+			
+			protected function deleteDiag(event:MouseEvent):void
+			{
+				if(campagne.id_lieu){
+					var a:alert = new alert();
+					a.mess = "ATTENTION : vous allez supprimer un diagnostic";
+					a.titre = 'Confirmation fermeture';
+					a.fct1 = deleteDiagCampagneConfirm;
+					a.open(this, true);
+					PopUpManager.centerPopUp(a);										
+				}
+				
+			}
+			
+			protected function deleteDiagCampagneConfirm():void
+			{
+				listDiag.dataProvider = null;
+				listRep.dataProvider = null;
+				// suprime une campagne de diagnostic
+				roDiag.deleteDiagCampagne(campagne.id_instant, this.parentApplication.idExi, this.parentApplication.idBase);
+			}
+
+			protected function deleteDiag_resultHandler(event:ResultEvent):void
+			{
+				roDiag.getDiagComplet(campagne.id_lieu,this.parentApplication.idBase,campagne.id_instant);									
+			}
+			
+			protected function removeCampagne_resultHandler(event:ResultEvent):void
+			{
+				roDiag.getDiagForLieu(idLieu, this.parentApplication.idExi, this.parentApplication.idBase);
+			}
+			
+			protected function ajoutLieuDoc_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
 			}
 			
 		]]>
@@ -480,6 +563,10 @@
 			<s:method name="setInstant" result="roInstAjout_resultHandler(event)" />
 			<s:method name="creaChoix" result="roDiagCreaChoix_resultHandler(event)" />
 			<s:method name="getDiagForLieu" result="getDiagForLieu_resultHandler(event)" />
+			<s:method name="deleteDiag" result="deleteDiag_resultHandler(event)" />
+			<s:method name="deleteDiagCampagne" result="removeCampagne_resultHandler(event)"/>
+			<s:method name="ajoutLieuDoc" result="ajoutLieuDoc_resultHandler(event)" />
+			
 		</s:RemoteObject>
 		<s:RemoteObject id="roScena"
 						 destination="zend"
@@ -511,20 +598,28 @@
 	</s:states>	
 	<s:actionContent>
 		<s:Button label="Diag. faits" click="{currentState = 'archive';roDiag.getDiagForLieu(idLieu, this.parentApplication.idExi, this.parentApplication.idBase);}" />
-		<s:Button label="Ajouter un diag." click="{currentState = 'ajout';showQuestion();}" />
+		<s:Button label="Ajouter un diag." click="{currentState = 'ajout';gRep.visible = true;showQuestion();}" />
 	</s:actionContent>
 		
 	<s:VGroup includeIn="archive" width="100%" height="80%">
 		<s:HGroup verticalAlign="middle" width="100%" height="100%" >
-			<s:List id="listDiag" width="50%" height="100%" click="listDiag_clickHandler(event)"  itemRenderer="cpnt.irListDiag"  />
-			<s:List id="listRep" width="100%" height="100%"  click="listRep_clickHandler(event)" itemRenderer="cpnt.irListRep"  />
+			<s:VGroup width="50%" height="100%" >
+				<s:Button skinClass="skin.btnSupp" click="deleteDiag(event)" />
+				<s:List id="listDiag" width="100%" height="100%" click="listDiag_clickHandler(event)"   itemRenderer="cpnt.irListDiag"  />
+			</s:VGroup>
+			<s:VGroup width="100%" height="100%" >
+				<s:Button skinClass="skin.btnSupp" click="deleteReponse(event)" />
+				<s:List id="listRep" width="100%" height="100%"  click="listRep_clickHandler(event)" itemRenderer="cpnt.irListRep"  />
+			</s:VGroup>
 		</s:HGroup>		
 	</s:VGroup>
 	<s:VGroup includeIn="ajout" id="vgAjout" width="100%" creationComplete="ajout_creationCompleteHandler(event)" >
 		<s:HGroup verticalAlign="middle">
 			<s:Label text="Questions : " />
 			<s:Button icon="@Embed('assets/prev.png')"  id="btnPrevQuestion" click="btnPrevQuest_clickHandler(event)" toolTip="Passe à la question précédente" />
-			<s:Label id="lblQuestionNum" text="1" /><s:Label id="lblQuestionInter" text="" /><s:Label text=" sur " /><s:Label id="lblQuestionTot" text="{totQestion}" />
+			<s:HGroup verticalAlign="middle" visible="false">
+				<s:Label id="lblQuestionNum" text="1" /><s:Label id="lblQuestionInter" text="" /><s:Label text=" sur " /><s:Label id="lblQuestionTot" text="{totQestion}" />
+			</s:HGroup>
 			<s:Button icon="@Embed('assets/next.png')"  id="btnNextQuestion" click="btnNextQuestion_clickHandler(event)" toolTip="Passe à la question suivante" />
 			<s:Label id="refCtl" text="" />
 			<s:Label id="typeCtl" text="" />
@@ -532,7 +627,7 @@
 		</s:HGroup>
 		<cpnt:repType width="100%" id="ckReponse" lblQ="" Q="reponse_1" fnct="{this.chkReponse}" />
 	</s:VGroup>
-	<s:VGroup width="100%" height="100%" >
+	<s:VGroup width="100%" height="100%" id="gRep" visible="false" >
 		<cpnt:repType width="100%" id="modifReponse" lblQ="" fnct="{this.updReponse}" visible="{currentState == 'archive'}" />
 		<s:HGroup width="100%" height="100%" verticalAlign="middle" >
 			<s:ViewNavigator  id="vnProbs" width="100%" height="100%" firstView="views.htmlArea" />

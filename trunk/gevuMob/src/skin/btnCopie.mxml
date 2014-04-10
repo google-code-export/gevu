@@ -19,15 +19,14 @@
 	</fx:Script>
 
 	<s:states>
-		<s:State name="normal" />
 		<s:State name="up" />
 		<s:State name="over" />
 		<s:State name="down" />
 		<s:State name="disabled" />
 	</s:states>    
 
-	<s:BitmapImage source.disabled="@Embed('assets/copie_full.png')" 
+	<s:BitmapImage id="ima" source="@Embed('assets/copie.png')" source.disabled="@Embed('assets/copie_full.png')" 
 				   source.down="@Embed('assets/copie.png')" 
-				   source.up="@Embed('assets/copie_empty.png')" 
+				   source.up="@Embed('assets/copie_full.png')" 
 				   source.over="@Embed('assets/copie.png')" />
 </s:SparkSkin>
