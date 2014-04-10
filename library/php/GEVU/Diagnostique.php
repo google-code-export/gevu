@@ -537,7 +537,27 @@ class GEVU_Diagnostique extends GEVU_Site{
 
 	/**
 	* ajoute un document en rapport avec un lieu
-	* et renvoie la liste de tous les documents associ�s 
+	* et renvoie la liste de tous les documents associés 
+    * @param string $idLieu
+    * @param array  $dataDoc
+    * @param string $idBase
+    * 
+    * @return Array
+    */
+	public function saveDoc($idLieu, $data, $dataDoc, $idBase=false){
+			
+		$this->getDb($idBase);
+		if(!$this->dbLDoc)$this->dbLDoc = new Models_DbTable_Gevu_docsxlieux($this->db);
+		$imp = new GEVU_Import();
+		$imp->saveDoc($data, $dataDoc);
+        
+		return $this->dbLDoc->findByIdLieu($idLieu);
+        
+	}
+	
+	/**
+	* enregistre un document en rapport avec un lieu
+	* et renvoie la liste de tous les documents associés 
     * @param string $idLieu
     * @param array  $dataDoc
     * @param string $idBase
@@ -554,7 +574,6 @@ class GEVU_Diagnostique extends GEVU_Site{
         return $this->dbLDoc->findByIdLieu($idLieu);
         
 	}
-	
 	
 
 	/**
@@ -1248,13 +1267,16 @@ class GEVU_Diagnostique extends GEVU_Site{
 	   	$rs = false;//$this->cache->load($c);
         if(!$rs){           
 			//initialise les gestionnaires de base de données
-			$this->getDb($idBase);
+			$db = Zend_Db_Table::getDefaultAdapter();    	
+			$arrConfig = $db->getConfig();        	
+			$dbRef = $arrConfig['dbname'];
+        	$this->getDb($idBase);
         	if(!$this->dbD)$this->dbD = new Models_DbTable_Gevu_diagnostics($this->db);
 
         	if(!isset($params['reg']))$params['reg']=0;
         	
 	        //récupère les campagnes pour le lieu
-	        $rs = $this->dbD->getDiagliste($params['idLieu'], 1, $params['handi'], $params['niv'], $params['idCrit'], $params['reg']);
+	        $rs = $this->dbD->getDiagliste($params['idLieu'], 1, $params['handi'], $params['niv'], $params['idCrit'], $params['reg'], $idBase, $dbRef);
 	        $nb = count($rs);
 	        $oLieu = -1;
 	        for ($i = 0; $i < $nb; $i++) {
