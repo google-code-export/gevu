@@ -1,11 +1,46 @@
 <?php
 try {
 	require_once( "../application/configs/config.php" );
-
-	//
+	
+	// Heure actuelle
+	echo date('h:i:s') . "\n";
+	// Stoppe pour 10 secondes
+	sleep(100);
+	// retour !
+	echo date('h:i:s') . "\n";
+	
+	/*
+	$dumpSettings = array(
+        'include-tables' => array('table1', 'table2'),
+        'exclude-tables' => array('table3', 'table4'),
+        'compress' => 'GZIP',
+        'no-data' => false,
+        'add-drop-database' => false,
+        'add-drop-table' => false,
+        'single-transaction' => true,
+        'lock-tables' => false,
+        'add-locks' => true,
+        'extended-insert' => true,
+        'disable-foreign-keys-check' => false
+    );
+    $dump = new Mysqldump('clouddueling', 'root', 'password', 'localhost', 'mysql', $dumpSettings);
+    $dump->start('storage/work/dump.sql');
+    */
+		
+	/*
+	$ftp = ftp_connect("ns367089.ovh.net", 21);
+	ftp_login($ftp, "gevu", "TVES2013");
+		
+	$liste_fichiers = ftp_nlist($ftp, '.');
+	ftp_put($ftp, "/www/data/android/IMG_20140402_135704.jpg", "/mnt/sdcard/DCIM/Camera/IMG_20140402_135704.jpg", FTP_BINARY);		
+	*/
+	
+	/*
 	$mig = new GEVU_Migration();
+	$mig->migreTabletteToServeur("gevu_android","android","tves","gevu_test");
 	$mig->migreRefServeurToLocal("gevu_ref","tves","android","gevu_android");
-	//
+	*/
+
 	/*
 	$dbED = new Models_DbTable_Gevu_exisxdroits();
 	$dbED->edit(21, 3, '[{"lib":"GEVU alcéane","id":"3_gevu_new"},{"lib":"Alceane interne","id":"3_gevu_alceane"}]');
@@ -56,7 +91,7 @@ try {
 	*/
 	
 	/*
-	$idBase = "gevu_new";	
+	$idBase = "gevu_alceane";	
 	$idExi = 1;
 	$idLieu = 113;
 	$idScenario = 18;
@@ -67,18 +102,19 @@ try {
 	//$d->ajoutUtiDiag($idLieu, $idExi, $idBase);
 	//$d->getContact($idBase,"Models_DbTable_Gevu_batiments",array("id"=>1,"type"=>"contact_proprietaire"));
 	//$arr = $d->getUtiLieuLock('1', 'gevu_new', 'ref', 'gevu_android', 'android');
-	$arr = $d->setUtiLieuLock($idExi, "gevu_android", "android", "gevu_new", "ref");
+	//$arr = $d->setUtiLieuLock($idExi, "gevu_android", "android", "gevu_new", "ref");
 	//$arr = $d->getUtiIdLieuLock($idExi, $idLieu, $idBase);
 	//$d->ajouterContact($idBase, "Models_DbTable_Gevu_batiments", array("idCtc"=>"11","idLien"=>"1","type"=>"contact_gardien"));
 	//$d->deleteLieu($idLieu, $idExi, $idBase);
-	//$d->getDiagListe(array("handi"=>"moteur","idLieu"=>23198,"niv"=>0),$idBase);
+	$arr = $d->getDiagListe(array("handi"=>"moteur","idLieu"=>15601,"niv"=>0),$idBase);
+	echo 'toto';
 	//$d->ajoutLieu(1,$idExi,$idBase);
 	//$d->edit(3142,array("ref"=>"machn"),"Models_DbTable_Gevu_espacesxinterieurs",$idBase);
 	//$arr = $d->getChaineDepla(1,$idBase);
 	//$d->genereDiagWithIti(1,$idBase);	
 	//$arr = $d->getNodeRelatedData($idLieu, $idExi, $idBase, $idScenario);
 	//$arr = $d->getLieuCtl(170, $idScenario, $idBase);	//23427
-	//$arr = $d->copiecolleLieu(22361, 15602, $idExi, "gevu_alceane", array("gevu_new","serveur","gevu_alceane","serveur"));	
+	//$arr = $d->copiecolleLieu(8, 1, $idExi, "gevu_valdemarne", array("gevu_etudiants","ref","gevu_valdemarne","ref"));	
 	//$arr = $d->getLieuCtl($idLieu, $idScenario, $idBase);	
 	//$arr = $d->getXmlNode(1, $idBase);
 	//$arr = $d->getNodeRelatedData($idLieu, $idExi, $idBase, $idScenario);
@@ -98,6 +134,8 @@ try {
     echo $scene->saveXML();
 	*/
 
+	print_r($arr);
+	
 }catch (Zend_Exception $e) {
 	echo "
 	<h3>Exception information:</h3>
