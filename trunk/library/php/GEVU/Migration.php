@@ -35,6 +35,167 @@ class GEVU_Migration extends GEVU_Site{
     }
 
     /**
+     * migre les données de la tablette vers le serveur
+     * 
+     * @param string $idBaseSrc
+     * @param string $idBaseDst
+     * @param string $srvSrc
+     * @param string $srvDst
+     * 
+     */
+    public function migreTabletteToServeur($idExi, $idBaseSrc, $srvSrc, $srvDst, $idBaseDst){
+   	 
+	try {
+		// paramètres de configuration    	
+    	$this->bTrace = true;								// pour afficher le nombre de lignes importées et le timing    	
+    	$this->echoTrace = "";//"Migration des données de la tablette vers le serveur<br/>";	//pour stocker les traces
+    	$this->temps_debut = microtime(true);
+    	$timeLimit          = 30;                			// en sec. Au cas où une connexion distante bloquerait...
+    	
+    	$this->trace('paramétrage du dump de la base à exporter');
+	    $dumpSettings = array(
+	        'include-tables' => array("gevu_lieux"
+			   ,"gevu_batiments"
+		       ,"gevu_georss"
+		       ,"gevu_geos"
+		       ,"gevu_diagnostics"
+		       ,"gevu_diagnosticsxvoirie"
+		       ,"gevu_docsxlieux"
+		       ,"gevu_espaces"
+		       ,"gevu_espacesxexterieurs"
+		       ,"gevu_espacesxinterieurs"
+		       ,"gevu_etablissements"
+		       ,"gevu_niveaux"
+		       ,"gevu_objetsxexterieurs"
+		       ,"gevu_objetsxinterieurs"
+		       ,"gevu_objetsxvoiries"
+		       ,"gevu_observations"
+		       ,"gevu_parcelles"
+		       ,"gevu_problemes"
+		       ,"gevu_antennes"
+		       ,"gevu_groupes"
+		       ,"gevu_logements"
+		       ,"gevu_locaux"
+		       ,"gevu_partiescommunes"
+		       ,"gevu_stats"
+		       ,"gevu_lieuxinterventions"
+		       ,"gevu_chainesdeplacements"
+		       ,"gevu_lieuxchainedeplacements"
+		       ,"gevu_diagext"	
+		       ,"gevu_docs"	
+		       ,"gevu_docsxproblemes"	
+		       ),
+	        'no-data' => false,
+        	'compress' => 'GZIP',
+		    'add-drop-database' => false,
+	        'add-drop-table' => true,
+	        'single-transaction' => true,
+	        'lock-tables' => false,
+	        'add-locks' => true,
+	        'extended-insert' => true,
+	        'disable-foreign-keys-check' => false
+	    );
+
+	    $this->trace('paramètres de connexion source');
+		$dbSrc = $this->getDb($idBaseSrc, $srvSrc);
+    	$arrConfSrc = $dbSrc->getConfig();
+    	
+	    $this->trace('paramètres de connexion serveur');
+    	$dbDst = $this->getDb($idBaseDst,$srvDst);				
+    	$arrConfDst = $dbDst->getConfig();
+    	$hostCible          = $arrConfDst["host"];      // adr. IP du serveur Cible (ici localhost pour l'exemple)
+    	$portCible          = '3306';           		// port serveur MySql (3306 par défaut)
+    	$userCible          = $arrConfDst["username"];  // utilisateur
+    	$mdpCible           = $arrConfDst["password"];	// mot de passe
+    	$bddCible           = $idBaseDst;				// base de donnée Cible    		        	
+    	
+    	$this->trace('connexion_serveur_cible');
+    	if (!@fsockopen($hostCible, $portCible, $errno, $errstr, $timeLimit)){
+    		printf($errConnexion, $portCible, 'cible', $hostCible,  $timeLimit);
+		    return $this->echoTrace;
+      	}
+    	
+    	$this->trace('connexion_bdd_cible');
+    	$linkCible = mysql_connect($hostCible.':'.$portCible, $userCible, $mdpCible)    	
+    	or die (mysql_error());
+    	    	
+	    $bddName = "MTS_".$idBaseSrc."_".date("YmdHis"); 
+	    $this->trace('création de la nouvelle base : '.$bddName);
+		$sql = 'CREATE DATABASE '.$bddName;
+		if (mysql_query($sql, $linkCible)) {
+			$this->trace('Base '.$bddName.' crée.');
+		} else {
+			$this->trace('Erreur création de la Base '.$bddName.' : '.mysql_error());
+		    return $this->echoTrace;
+		}	    
+	    $this->trace('initialisation de la nouvelle base : '.$bddName);
+		$params = array("start"=>1, "fn"=>"gevu_ref.sql","foffset"=>0,"totalqueries"=>0,'site'=>$srvSrc, "db"=>$bddName, "ajaxrequest"=>1);
+	    $resultBD = $this->getUrlBodyContent(URL_SRV_DUMP,$params,false);
+	    $rltJson = json_decode($resultBD);
+	    if(count($rltJson->erreur)>0){
+			$this->trace('Erreur initialisation de la base '.$bddName);
+			foreach ($rltJson->erreur as $value) {
+				$this->trace($value);
+			}
+		    return $this->echoTrace;
+		}	   
+		
+	    $ficName = "migreTabletteToServeur_".$idBaseSrc."_".date("Y-m-d_H-i-s").".sql"; 
+    	$this->trace('création du dump : '.$ficName);
+    	$pathFicName = ROOT_PATH.'/bdd/'.$ficName; 
+	    $dump = new Mysqldump($idBaseSrc, $arrConfSrc["username"], $arrConfSrc["password"], $arrConfSrc["host"], 'mysql', $dumpSettings);
+		$dump->start($pathFicName);
+    	
+		$this->trace('transfert FTP du dump : '.$ficName);
+	    $ftpResult = $this->ftpPut($pathFicName.".gz", FTP_PATH.'/bdd/'.$ficName.".gz", 0775);
+	    $this->trace($ftpResult[1]);
+	    if(!$ftpResult[0])return $this->echoTrace;
+	    
+		
+		$this->trace('importation du dump dans la nouvelle base');	    
+		$params = array("start"=>1, "fn"=>$ficName.".gz","foffset"=>0,"totalqueries"=>0,'site'=>$srvSrc, "db"=>$bddName, "ajaxrequest"=>1);
+		$resultBD = $this->getUrlBodyContent(URL_SRV_DUMP_FTP,$params,false);
+	    $rltJson = json_decode($resultBD);
+	    if(count($rltJson->erreur)>0){
+			$this->trace('Erreur importation du dump dans la nouvelle base');
+			foreach ($rltJson->erreur as $value) {
+				$this->trace($value);
+			}
+			return $this->echoTrace;
+		}	   
+
+		$this->trace('transfert des images');
+    	$dbDoc = new Models_DbTable_Gevu_docs($dbSrc);
+    	$arrImg = $dbDoc->getAll();
+    	foreach ($arrImg as $img) {
+			$ficName = date("Ymd_His").$img->id_doc."_".$img->id_instant."_".$img->titre;
+			$ftpResult = $this->ftpPut($img->path_source, FTP_PATH.'/img/'.$ficName, 0775);
+		    $this->trace($ftpResult[1]);
+		    if(!$ftpResult[0])return $this->echoTrace;
+    	}
+
+		$this->trace('synchronisation des bases serveur');
+		$params = array("idExi"=>$idExi, "idBaseSrc"=>$idBaseSrc, "srvSrc"=>$srvSrc, "srvDst"=>$srvDst, "idBaseDst"=>$idBaseDst);
+		$result = $this->getUrlBodyContent(URL_SRV_APPLI."migration",$params,false);
+		$this->trace($result);
+
+		$this->trace('reinitialisation de la base locale');
+		$dbLsrc = new Models_DbTable_Gevu_lieux($dbSrc);
+        $dbLsrc->remove(1);
+        //recrée le lieu univers
+        $dbLsrc->ajouter(array('id_lieu'=>1, 'lib'=>'univers', 'id_instant'=>1, "lft"=>1, "rgt"=>2, "niv"=>0, "lieu_parent"=>-1),false);
+		
+    	$this->trace('fin de la migration des données de la tablette');
+
+	}catch (Zend_Exception $e) {
+		echo "Récupère exception: " . get_class($e) . "\n";
+	    echo "Message: " . $e->getMessage() . "\n";
+    	return $this->echoTrace;
+	}
+    	return $this->echoTrace;
+    }
+		
+    /**
      * migre les données de référence du serveur vers la tablette
      *
      * ATTENTION les références de la tablette sont supprimée

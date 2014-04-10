@@ -495,27 +495,28 @@ class GEVU_Import extends GEVU_Site{
     	$this->bTrace = true;					// pour afficher le nombre de lignes importées et le timing    	
     	$this->echoTrace = false;//__METHOD__."<br/>";	//pour stocker les traces
     	$this->temps_debut = microtime(true);
-		$this->trace("DEBUT ".__METHOD__);
+		$this->trace("DEBUT ".__METHOD__."$idDoc, $idExi, $idBase");
     	
     	$this->idBase = $idBase;
     	$this->diag = new GEVU_Diagnostique($idBase);
     	$this->db = $this->diag->db;
     	
 		$this->trace('création des models');
-		$this->dbPsp = new Models_DbTable_Gevu_psp($this->db);
 		$this->dbI = new Models_DbTable_Gevu_instants($this->db);
-		$this->dbDoc = new Models_DbTable_Gevu_docs($this->db);
+		$this->dbSta = new Models_DbTable_Gevu_stats($this->db);
+		$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		$this->dbEsp = new Models_DbTable_Gevu_espaces($this->db);
 		
 		$this->trace("création de l'instant");
 		$c = str_replace("::", "_", __METHOD__); 
 		$this->idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));		
 		
 		$this->trace("Récupère les infos du document");
-    	$docInfos = $this->dbDoc->findByIdDoc($idDoc);    		
+    	//$docInfos = $this->dbDoc->findByIdDoc($idDoc);    		
     	
     	//chargement du fichier
-		$ficPath = $_SERVER["DOCUMENT_ROOT"].'/gevu/data/import/EXTRAC_GEVU_PIECES.csv';
-		$ficPath = 'c:\wamp\www\gevu\data\import\EXTRAC_GEVU_PIECES.csv';
+		$ficPath = ROOT_PATH.'/data/import/EXTRAC_GEVU_PIECES_1.csv';
+		//$ficPath = 'c:\wamp\www\gevu\data\import\EXTRAC_GEVU_PIECES.csv';
 		$this->trace("chargement du fichier : ".$ficPath);
 		$arrCSV = $this->csvToArray($ficPath);
 			
@@ -525,15 +526,229 @@ class GEVU_Import extends GEVU_Site{
 		//importation juste après la ligne d'entête
 		for ($x = 1; $x < $nbRow; $x++) {
 			$this->trace("Ligne ".$x);			
-			//if($x==1000)  break;
+			//if($x==10)  break;
 			$this->arr = $arrCSV[$x];
 			if($this->arr[1]!=""){
-				//code logement
-				$code = $this->arr[11];
+				switch ($this->arr[15]) {
+					case "BLN": //BLN	BALCON	TERRASSE
+						$idCtl = 42;
+						break;
+					case "CAB": //CAB	CAB. TOILETTE	WC
+						$idCtl = 36;
+						break;
+					case "CB": //CB	CAB. TOILETTE	WC
+						$idCtl = 36;
+						break;
+					case "CHH": //CHH CHAMBRE HANDICAPEE	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CHR": //CHAMBRE 0.6	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "C11": //CHAMBRE 1	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CH1": //CHAMBRE 1	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CH2": //CHAMBRE 2	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "C22": //CHAMBRE 2	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "C33": //CHAMBRE 3	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CH3": //CHAMBRE 3	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CH4": //CHAMBRE 4	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "C44": //CHAMBRE 4	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CH5": //CHAMBRE 5	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CH6": //CHAMBRE 6	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CH7": //CHAMBRE 7	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CH8": //CHAMBRE 8	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CHB": //CHAMBRE 1 BIS	CHAMBRE
+						$idCtl = 41;
+						break;
+					case "CCU": //COIN CUISINE	CUISINE
+						$idCtl = 40;
+						break;
+					case "CUI": //CUISINE	CUISINE
+						$idCtl = 40;
+						break;
+					case "CU2": //CUISINE N°2	CUISINE
+						$idCtl = 40;
+						break;
+					case "CU3": //CUISINE BIS	CUISINE
+						$idCtl = 40;
+						break;
+					case "DEG": //DEGAGEMENT COUL	COULOIR
+						$idCtl = 72;
+						break;
+					case "D22": //DEGAGEMENT N°2	COULOIR
+						$idCtl = 72;
+						break;
+					case "D23": //DEGAGEMENT N°3	COULOIR
+						$idCtl = 72;
+						break;
+					case "HLA": //ENTRE:COUL	ENTREE
+						$idCtl = 8;
+						break;
+					case "ENT": //ENTREE	ENTREE
+						$idCtl = 8;
+						break;
+					case "LGA": //LOGGIA	TERRASSE
+						$idCtl = 42;
+						break;
+					case "LOG": //LOGGIA	TERRASSE
+						$idCtl = 42;
+						break;
+					case "PEN": //PORTE ENTREE	PORTE ENTREE LOGEMENT
+						$idCtl = 106;
+						$dataEsp =false;
+						break;
+					case "SD2": //S. DE BAINS N°2	SDB
+						$idCtl = 43;
+						break;
+					case "SDH": //SALLE DE BAIN HAND	SDB
+						$idCtl = 43;
+						break;
+					case "SDB": //SALLE DE BAINS	SDB
+						$idCtl = 43;
+						break;
+					case "SDE": //SALLE D'EAU	SDB
+						$idCtl = 43;
+						break;
+					case "SAL": //SALON	SEJOUR
+						$idCtl = 83;
+						break;
+					case "SEJ": //SEJOUR	SEJOUR
+						$idCtl = 83;
+						break;
+					case "SE2": //SEJOUR N°2	SEJOUR
+						$idCtl = 83;
+						break;
+					case "SE3": //SELOUR BIS	SEJOUR
+						$idCtl = 83;
+						break;						
+					case "TER": //TERRASSE	TERRASSE
+						$idCtl = 42;
+						break;
+					case "TRS": //TERRASSE	TERRASSE
+						$idCtl = 42;
+						break;
+					case "TOI": //TOILETTE	WC
+						$idCtl = 36;
+						break;
+					case "WC3": //TOILETTES	WC
+						$idCtl = 36;
+						break;
+					case "WC": //TOILETTES	WC
+						$idCtl = 36;
+						break;
+					case "WC2": //TOILETTES N°2	WC
+						$idCtl = 36;
+						break;
+					case "WC1": //WC ETAGE	WC
+						$idCtl = 36;
+						break;						
+					default:
+						$idCtl = 0;
+						/*
+						ABE	ABRI EXTERIEUR	-
+						ANX	ANNEXE	-
+						ANN	ANNEXE	-
+						ANE	ANNEXE 1	-
+						CAV	CAVE	-
+						CEL	CELLIER	-
+						CLE	CELLIER	-
+						CE2	CELLIER N°2	-
+						DB	DEBARRAS	-
+						DE	DEBARRAS	-
+						DEB	DEBARRAS	-
+						DE2	DEBARRAS N°2	-
+						DRE	DRESSING	-
+						ESP	ESPACE DE VIE PMR	-
+						GAR	GARAGE (IND;)	-
+						JAR	JARDIN	-
+						LIN	LINGERIE	-
+						LCR	LOCAL RDC	-
+						LOC	LOCAL SERVICE	-
+						MEZ	MEZZANINE	-
+						OFF	OFFICE	-
+						PAL	PALLIER	-
+						PA	PLACARD	-
+						PLA	PLACARD	-
+						PA2	PLACARD 2	-
+						RAG	RANGEMENT	-
+						RP	REPAS	-
+						SCH	SECHOIR	-
+						SEC	SECHOIR	-
+						STU	STUDIO	-
+						VER	VERANDA	-
+						*/
+						;
+					break;
+				}
+				//création de la pièce
+				if($idCtl){
+					//récupère le code du logement
+					$arrLieu = $this->dbSta->findIdLieuByCode_Logement($this->arr[11]);
+					//création de la pièce suivant le code de la pièce
+					$dataLieu="";
+					$dataLieu["lieu_parent"]= $arrLieu[0]["id_lieu"];
+					$dataLieu["lib"]= $this->arr[16];
+					$dataLieu["id_instant"]= $this->idInst;
+					$dataLieu["id_type_controle"]= $idCtl;
+					$dataEsp = "";
+					$dataEsp["surface"]= $this->arr[17];
+					$dataEsp["id_instant"]= $this->idInst;
+					$dataEsp["ref"]= $this->arr[11]."_".$x;
+					if($dataEsp)$dataEsp["id_type_controle"]= $idCtl;				
+					$this->creaPieceLogement($dataLieu, $dataEsp);										
+				}
+				
 			}
 			
 		}
+		$this->trace("FIN =".__METHOD__);
+		
     }
+
+	/**
+	 * Création d'une pièce dans un logement
+	 * 
+     * @param array $dataLieu 	= données pour le lieu
+     * @param array $dataEsp 	= données pour l'objet lié
+     * 
+	 */
+	function creaPieceLogement($dataLieu, $dataEsp=false){
+		//$this->trace("DEBUT =".__METHOD__);
+		$idLieu = $this->dbL->ajouter($dataLieu, false);
+		//$this->trace("création d'un lieu pour la pièce");
+		if($dataEsp){
+			$dataEsp['id_lieu'] = $idLieu;
+			$this->dbEsp->ajouter($dataEsp,false);
+			//$this->trace("création d'un espace");
+		}
+		//$this->trace("FIN =".__METHOD__);
+		
+	}
+    
     
     /**
      * importation d'un fichier de logement 
@@ -778,15 +993,15 @@ class GEVU_Import extends GEVU_Site{
      * 
      */
     function csvToArray($file, $tailleCol="0", $sep=";"){
-		ini_set("memory_limit",'512M');
+		ini_set("memory_limit",'1024M');
     	$this->trace("DEBUT ".__METHOD__);     	
 	    if (($handle = fopen($file, "rb")) !== FALSE) {
     		$this->trace("Traitement des lignes : ".ini_get("memory_limit"));     	
 	    	$i=0;
     		while (($data = fgetcsv($handle, $tailleCol, $sep)) !== FALSE) {
- 				$num = count($data);
+    			$num = count($data);
  				$numTot = count($csvarray);
- 				//echo "<p>$numTot -> $num fields in line $i: <br /></p>\n";
+ 				//$this->trace("$numTot -> $num fields in line $i:");
         		$csvarray[] = $data;
     			$i++;
 	    	}
@@ -848,8 +1063,8 @@ class GEVU_Import extends GEVU_Site{
     	}
     	
     }
-	
-	/**
+	    
+    /**
 	 * Création de l'arboressence à partir du scenario
 	 * 
      * @param int $idLieu 		= identifiant du lieu
