@@ -233,7 +233,7 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_docs avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -248,5 +248,19 @@ class Models_DbTable_Gevu_docs extends Zend_Db_Table_Abstract
         return $this->fetchRow($query)->toArray(); 
     }
     
+    /**
+     * Met à jour les adresses des document avec le titre et les constantes du site
+     *
+     * @param varchar $root
+     * @param varchar $path
+     * 
+     */
+    public function changeAdressesByTitre($root, $path)
+    {
+        $sql = "UPDATE gevu_docs 
+        	SET url = CONCAT('".$root."', titre)
+        	, path_source=CONCAT('".$path."', titre)";
+    	$stmt = $this->_db->query($sql);
+    }
     
 }

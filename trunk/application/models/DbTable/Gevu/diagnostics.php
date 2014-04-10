@@ -199,7 +199,7 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         	*/
         	->where( "diag.id_lieu = ?", $idLieu)
 			->group(array('id_instant','id_critere'))
-        	->order(array('id_instant','id_critere'));
+        	->order(array('id_instant','id_diag','id_critere'));
         
         //vérifie si on ajoute d'autres conditions
         //les derniers diagnostics
@@ -587,29 +587,33 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
      * @param int $niv
      * @param string $idCrit
      * @param string $reg
+     * @param string $dbDiag
+     * @param string $dbRef
      * 
      * @return array
      */
-    public function getDiagliste($idLieu, $last=-1, $handi="", $niv=-1, $idCrit="", $reg=0)
+    public function getDiagliste($idLieu, $last=-1, $handi="", $niv=-1, $idCrit="", $reg=0, $dbDiag = "", $dbRef = "")
     {
-        $query = $this->select()
+    	if($dbRef)$dbRef.=".";
+    	if($dbDiag)$dbDiag.=".";
+    	$query = $this->select()
                 ->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
-            ->from(array('diag' => 'gevu_diagnostics'))
-            ->joinInner(array('le' => 'gevu_lieux'),
+            ->from(array('diag' => $dbDiag.'gevu_diagnostics'))
+            ->joinInner(array('le' => $dbDiag.'gevu_lieux'),
                 'le.id_lieu = diag.id_lieu',array("dLieu"=>'id_lieu', 'lib'))
-            ->joinInner(array('l' => 'gevu_lieux'),
+            ->joinInner(array('l' => $dbDiag.'gevu_lieux'),
                 'le.lft BETWEEN l.lft AND l.rgt',array('lib', 'id_lieu'))
-            ->joinInner(array('crit' => 'gevu_criteres'),
+            ->joinInner(array('crit' => $dbRef.'gevu_criteres'),
             	'diag.id_critere = crit.id_critere',array('ref','handicateur_moteur','handicateur_auditif','handicateur_visuel','handicateur_cognitif','affirmation','criteres'))
-        	->joinInner(array('tc' => 'gevu_typesxcontroles'),
+        	->joinInner(array('tc' => $dbRef.'gevu_typesxcontroles'),
             	'tc.id_type_controle = crit.id_type_controle',array('controle'=>'lib','icone'))
-        	->joinInner(array('tcrit' => 'gevu_criteresxtypesxcriteres'),
+        	->joinInner(array('tcrit' => $dbRef.'gevu_criteresxtypesxcriteres'),
             	'tcrit.id_critere = crit.id_critere',array('typeCrit'=>new Zend_Db_Expr("GROUP_CONCAT(DISTINCT tcrit.id_type_critere)")))
-        	->joinInner(array('dc' => 'gevu_criteresxtypesxdroits'),
+        	->joinInner(array('dc' => $dbRef.'gevu_criteresxtypesxdroits'),
             	'dc.id_critere = crit.id_critere',array('droitCrit'=>new Zend_Db_Expr("GROUP_CONCAT(DISTINCT dc.id_type_droit ORDER BY dc.id_type_droit SEPARATOR '-')")))
-        	->joinInner(array('inst' => 'gevu_instants'),
+        	->joinLeft(array('inst' => $dbDiag.'gevu_instants'),
             	'diag.id_instant = inst.id_instant',array('instant'=>"DATE_FORMAT(maintenant,'%W %d %M %Y')",'nom'))
-        	->joinInner(array('exi' => 'gevu_exis'),
+        	->joinLeft(array('exi' => $dbRef.'gevu_exis'),
             	'inst.id_exi = exi.id_exi',array('exis'=>'nom'))
             ->group("diag.id_diag")
         	->where( "l.id_lieu IN (".$idLieu.")")
@@ -644,6 +648,8 @@ class Models_DbTable_Gevu_diagnostics extends Zend_Db_Table_Abstract
         //ajoute la contrainte réglementaire souhaitable
         if($reg) $query->where("tcrit.id_type_critere =".$reg);
         
+		//$sql = $query->__toString();
+		//echo "$sql\n";
         
         $result = $this->fetchAll($query);
         return $result->toArray(); 
