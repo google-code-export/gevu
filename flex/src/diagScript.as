@@ -700,9 +700,9 @@ protected function collerLieu_clickHandler(event:MouseEvent):void
 	if(idBaseColle!=idBaseCopie){
 		var arrBase:Array = new Array; 
 		arrBase.push(idBaseCopie);
-		arrBase.push("serveur");
+		arrBase.push("ref");
 		arrBase.push(idBaseColle);
-		arrBase.push("serveur");
+		arrBase.push("ref");
 		roDiagnostique.copiecolleLieu(idLieuCopie, idLieu, idExi, idBase, arrBase);
 	}else
 		roDiagnostique.copiecolleLieu(idLieuCopie, idLieu, idExi, idBase);
