@@ -1,37 +1,277 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>GEVU - GEOPORTAIL</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico"/>
-    <style type="text/css"><!--/*--><![CDATA[/*><!--*/
-    div#viewerDiv {
-        width:600px;
-        height:600px;
-        background-color:white;
-        background-image:url(http://api.ign.fr/geoportail/api/js/2.0.0/theme/geoportal/img/loading.gif);
-        background-position:center center;
-        background-repeat:no-repeat;
+<head>
+<title>GEVU</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css"><!--/*--><![CDATA[/*><!--*/
+    div#viewerContainer {
+        width:800px;
+        height:600px
     }
-    div#footer {
-        font-size:x-small;
-        text-align:center;
-        width:600px;
+    h1 {
+        font-size:25px;
+        font-weight:bold;
+        font-family: sans-serif;
     }
-    div#footer a, div#footer a:link, div#footer a:visited, div#footer a:hover {
-        text-decoration:none;
-        color:black;
-    }
-    /*]]>*/--></style>
-  </head>
-  <body>
-    <div id="viewerDiv"></div>
-    <div id="footer"><a href="https://api.ign.fr/geoportail/document.do?doc=legal_mentions" id="legal" target="_blank"></a> - &copy;IGN 2008-2011</div>
+/*]]>*/--></style>
+<script type="text/javascript" charset="utf-8" src="public/js/jquery.min.js"></script>
+</head>
+<body>
+<!--  
+<div onclick="addMarker(['50.65090300','3.09451800','machin truc','16']);">Add Marker 1</div>
+<div onclick="addMarker([49.525088958850986, 0.06485301445312502,'truc bidule','10']);">Add Marker 2</div>
+-->
+<div id="viewerContainer"></div>
+<script type="text/javascript"><!--//--><![CDATA[//><!--
+    /**
+     * Property: iViewer
+     * {<Geoportal.InterfaceViewer>} The Geoportal API viewer interface.
+     */
+    var APIkeyDev= "uxjsvi48w3yfzgeqop5zr22h";
+    var APIkeyProd = "pbgl1pc4di7xqdgp64e6deqi";
+    var APIkey = "uxjsvi48w3yfzgeqop5zr22h";
+    iViewer= null;
+ 	var domaine = "localhost/gevu";//"www.gevu.org";
+ 	var flexApp = parent.document.getElementById('diagVDM');
+	var adresse;
+	var arr = [];
+	
+ 	/**
+     * Function: init
+     * Load the map. Called when "onload" event is fired.
+     */
+    function init() {
+        iViewer= Geoportal.load(
+            // map's div id - identifiant de la div de la carte :
+            "viewerContainer",
+            // API's keys - clefs API :
+            [APIkey],
+            {
+                // center in WGS84G - centre en WGS84G
+                lon:2.475751206548219,
+                lat:48.767909036726294
+            },
+            // zoom level (0-20) - niveau de zooms (0 à 20) :
+            12,
+            {   // various options :
+                loadTheme: function() {
+                    Geoportal.Util.setTheme("geoportal3");
+                    Geoportal.Util.loadCSS("http://api.ign.fr/geoportail/api/js/2.0.3/theme/geoportal3/style.css","__GeoportalBlackCss__","");
+                    if (OpenLayers.Util.alphaHack()) {
+                        Geoportal.Util.loadCSS("http://api.ign.fr/geoportail/api/js/2.0.3/theme/geoportal3/ie6-style.css","__IE6GeoportalBlackCss__","");
+                    }
+                },
+                // viewer default controls options overloads :
+                componentsOptions:{},
+                // Geoportal's layers to load (when none, all contracts' layers are loaded) :
+                layers:["ORTHOIMAGERY.ORTHOPHOTOS:WMTS","GEOGRAPHICALGRIDSYSTEMS.MAPS:WMTS","CADASTRALPARCELS.PARCELS:WMTS"],
+                // Geoportal's layers options :
+                layersOptions:{"ORTHOIMAGERY.ORTHOPHOTOS:WMTS":{"opacity":1,"visibility":false},"GEOGRAPHICALGRIDSYSTEMS.MAPS:WMTS":{"opacity":0.3,"visibility":true,"eventListeners":{"loadend":layerLoadEnd}},"CADASTRALPARCELS.PARCELS:WMTS":{"opacity":1,"visibility":false}},
+                // External or user's layers :
+                overlays:{},
+                // callback to use before returning (after centering) :
+                onView:function() {viewer=iViewer.getViewer(); 
+ 
+                					//Récupération de la barre d'outils 
+                                   var tbx= viewer.getMap().getControlsByClass("Geoportal.Control.ToolBox")[0]; 
+                                   var panel= new Geoportal.Control.Panel({
+                                                          div:OpenLayers.Util.getElement(tbx.id+"_search") 
+                                              });
+ 
+                                   viewer.getMap().addControls([panel]);
+ 
+                                   //Ajout du contrôle d'impression
+                                   var nv= viewer.getMap().getControlsByClass("Geoportal.Control.NavToolbar")[0]; 
+                                   nv.addControls([new Geoportal.Control.PrintMap()]);
+ 
+                                   var measurebar= new Geoportal.Control.MeasureToolbar({ 
+                                        div: OpenLayers.Util.getElement(tbx.id+"_measure"), 
+                                        displaySystem:(viewer.getMap().getProjection().getProjName()=="longlat"?"geographic":"metric"), 
+                                        targetElement: OpenLayers.Util.getElement(tbx.id+"_meares") 
+                                   }); 
+                                   viewer.getMap().addControl(measurebar); 
+ 
+                                  //Ajout de la LayerToolbar
+                                   var tOpts= {div: OpenLayers.Util.getElement(tbx.id+"_addlyr")};
+                                               tOpts= OpenLayers.Util.extend(tOpts,{
+                                                            addVectorLayerOptions:{
+                                                                       supportedClasses:[
+                                                                           "OpenLayers.Format.KML",
+                                                                           "Geoportal.Format.GPX",
+                                                                           "OpenLayers.Format.OSM",
+                                                                          "OpenLayers.Layer.GeoRSS",
+                                                                          "OpenLayers.Layer.WFS"
+                                                                       ],
+                                                                       styleMapTemplates:{
+                                                                          "OpenLayers.Layer.GeoRSS":new OpenLayers.StyleMap(
+                                                                              new OpenLayers.Style(
+                                                                                  OpenLayers.Util.applyDefaults({
+                                                                                      "graphic":true,
+                                                                                    "externalGraphic":Geoportal.Util.getImagesLocation()+"xy-target.gif",
+                                                                                       "graphicOpacity":1.0,
+                                                                                       "graphicWidth":25,
+                                                                                       "graphicHeight":25,
+                                                                                      "graphicXOffset":-12.5,
+                                                                                      "graphicYOffset":-12.5
+                                                                                  },OpenLayers.Feature.Vector.style["default"])
+                                                                            )
+                                                                           )
+                                                                    },
+                                                                       layerVectorOptions:{
+                                                                           global:{
+                                                                          }
+                                                                      }
+                                                                   }
+,
+                                                              addImageLayerOptions:{
+                                                                     layerImageOptions:{
+                                                                         singleTile:false
+                                                                      }
+                                                                }
+ 
+                                               });
+                                  var LayerToolbar= new Geoportal.Control.LayerToolbar(tOpts);
+                                  viewer.getMap().addControl(LayerToolbar);
+ 
+                                   //Accès au GéoCatalogue
+                                   var CSW= new Geoportal.Control.CSW(
+                                               OpenLayers.Util.extend( 
+                                                       { 
+                                                           title:"gpControlCSW.title"
+                                                       },
+                                                       {
+                                                           cswUrl:"http://www.geocatalogue.fr/api-public/servicesRest?"
+                                                       }
+                                               ))
+                                   panel.addControls([CSW]);
+ 
+                                   //Ajout du contrôle de recherche par noms de lieux
+                                   var GeoNames= new Geoportal.Control.LocationUtilityService.GeoNames(
+                                               new Geoportal.Layer.OpenLS.Core.LocationUtilityService( 
+                                                "PositionOfInterest:OPENLS;Geocode",//layer name
+                                                { 
+                                                    maximumResponses:100,
+                                                    formatOptions: {
+                                                    }
+                                               }
+                                               ),{
+                                                    drawLocation:true,
+                                                    setZoom: Geoportal.Control.LocationUtilityService.GeoNames.setZoomForBDNyme,
+                                                    autoCompleteOptions: {}
+                                               }
+                                   );
+                                   panel.addControls([GeoNames]);
+ 
+                                   //Ajout du contrôle de recherche par adresses
+                                   var Geocode= new Geoportal.Control.LocationUtilityService.Geocode(
+                                               new Geoportal.Layer.OpenLS.Core.LocationUtilityService( 
+                                                       "StreetAddress:OPENLS;Geocode",//layer name 
+                                                       { 
+                                                           maximumResponses:100,
+                                                           formatOptions: {
+                                                           }
+                                                       }
+                                               ),{
+                                                       drawLocation:true,
+                                                       setZoom: Geoportal.Control.LocationUtilityService.GeoNames.setZoomForBDNyme,
+                                                       autoCompleteOptions: {}
+                                               }
+                                   );
+                                   panel.addControls([Geocode]);
   
-    <script type="text/javascript" src="http://api.ign.fr/geoportail/api/js/latest/GeoportalExtended.js"></script>
-    <script type="text/javascript" src="public/js/geoportailutils.js"></script>     
-    <script type="text/javascript" src="public/js/geoportail.js"></script>
-  	<div onClick="ajoutMarker()" >TOTO</div>
-    
-  </body>
+                },
+                // class of viewer to use :
+                viewerClass:"Geoportal.Viewer.Default"
+            }
+        );        
+    }
+	
+	function layerLoadEnd(e){
+        //préviens flex que la carte est loadée
+        flexApp.cartoLoad();
+		
+	}
+ 
+ 	function addMarker(params){
+ 		//[lat, lng, type_carte, zoom_max, kml, idLieu, lib, sw, ne, lat_sv, lng_sv , heading, pitch, zoom_sv]
+ 		//centre la carte
+ 		if(params[2]){
+ 			//traitement des données pour coordonnées Google Map
+ 			epsg4326 = new OpenLayers.Projection("EPSG:4326");
+			var center = new OpenLayers.LonLat(params[1], params[0]);
+			center.transform(epsg4326, viewer.getMap().getProjectionObject());
+			//positionnement de la carte
+			viewer.getMap().setCenter(center, parseInt(params[3])); 			 			
+	        //création d'un marker draggable
+ 	 	    if(arr[params[5]]) return;
+ 			arr[params[5]] = true;
+			position = new OpenLayers.Geometry.Point(params[1], params[0]);
+	        position.transform(OpenLayers.Projection.CRS84, viewer.projection);        
+			style = {externalGraphic:'images/favicon.png', graphicWidth:30, graphicHeight:30};
+			pt = new OpenLayers.Feature.Vector(position, null, style);		 
+			//couche du marqueur
+			couche = new OpenLayers.Layer.Vector(params[6]);
+			couche.addFeatures([pt]);
+			viewer.getMap().addLayer(couche);		 
+			// fonction du marqueur déplaçable et centré automatiquement avec affichage dans le formulaire - attention à la conversion des coord qui doit être réinversé en fin de fonction
+			drag = new OpenLayers.Control.DragFeature(couche, {onComplete: function(f)	{
+				//transformation pour l'affichage
+				//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
+				position.transform(viewer.projection, OpenLayers.Projection.CRS84);
+				//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
+				viewer.getMap().setCenterAtLonLat(f.geometry.x, f.geometry.y);
+				/*récupère l'ampleur de la carte
+				b = viewer.getMap().getExtent();
+				b = b.transform(viewer.projection, epsg4326);
+				*/
+				//récupère l'adresse
+				getAdresse(f.geometry.y, f.geometry.x, viewer.getMap().getZoom());
+				//transformation pour la sauvegarde
+				position.transform(OpenLayers.Projection.CRS84, epsg4326);
+				//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
+				flexApp.modifLieu('[{"lat":"'+f.geometry.y+'","lng":"'+f.geometry.x+'","zoom":"'+viewer.getMap().getZoom()+'","adresse":"'+adresse+'"}]');
+				//retour àla transformation initiale
+				position.transform(epsg4326, viewer.projection);        
+				//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
+			}});
+			viewer.getMap().addControl(drag);
+			drag.activate();	        
+			viewer.getMap().setCenter(position, parseInt(params[3])); 			 			
+
+ 		}
+ 	}
+ 	
+ 	function addKml(params){
+ 		if(arr[params[2]]) return;
+ 		arr[params[2]] = true;
+ 		var url = params[0];
+ 		//pour les tests en local
+ 		url = url.replace("www.gevu.org",domaine);
+ 		viewer.getMap().addLayer(
+ 				"KML",
+ 				params[1],
+ 				url,
+ 				{"opacity":1,"visibility":true}
+ 			);
+ 	}
+
+ 	function getAdresse(lat, lng, zoom){
+ 		$.ajax({
+ 	         url: "http://nominatim.openstreetmap.org/reverse?format=json&lat="+lat+"&lon="+lng+"&zoom="+zoom+"&addressdetails=1",
+ 	         success: function(result) {
+ 	                  	adresse = result.display_name;
+ 	                  },
+			async:  false,
+ 	        dataType: "json"
+ 	    });
+ 		
+ 		
+ 	}
+ 	
+    window.onload= init;
+//--><!]]></script>
+<script type="text/javascript" charset="utf-8" src="http://api.ign.fr/geoportail/api/js/latest/GeoportalExtended.js"><!--//--><![CDATA[//><!--
+//--><!]]></script>
+</body>
 </html>
+
