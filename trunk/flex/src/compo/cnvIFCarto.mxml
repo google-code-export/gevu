@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas label="Cartographie" xmlns:mx="http://www.adobe.com/2006/mxml" 
 		   xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
-		   visible="true" 
+		   visible="true" creationComplete="creationCompleteHandler(event)" 
 		  width="100%" height="100%">
 	<mx:Script><![CDATA[
 		import flash.external.*;
 		
 		import mx.controls.Alert;
+		import mx.events.FlexEvent;
 		
 		[Bindable]	public var rsCarto:Object;
-		[Bindable]	public var urlCarto:String="carto.html";
+		[Bindable]	public var urlCarto:String= "cartoIGN.html";//"carto.html";
 		
 		public function callChangeGeo():void {
 			if(rsCarto)
@@ -36,13 +37,18 @@
 			trace("The method returned '" + result + "'.");
 		}
 		
+		protected function creationCompleteHandler(event:FlexEvent):void
+		{
+			
+		}
+		
 	]]></mx:Script>
 
 	<flexiframe:IFrame id="cartoIFrame"
 					   width="100%" height="100%"
 					   source="{urlCarto}"
-					    visible="{this.visible}"
-						overlayDetection="true"
+					    visible="{this.visible}" 
+						overlayDetection="true"  
 					   />			   
 
 	

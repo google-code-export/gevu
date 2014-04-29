@@ -140,10 +140,12 @@ public function init():void
 	cbBases.dataProvider = dataBases;
 	var dataScenar:Array = JSON.decode(this.exi.droit_4);
 	cbScenar.dataProvider = dataScenar;
+	//notification des fonctions javascript ouverte
 	ExternalInterface.addCallback("modifLieu",modifLieu);	
 	ExternalInterface.addCallback("setIti",setIti);	
 	ExternalInterface.addCallback("modifSV",modifSV);	
-
+	ExternalInterface.addCallback("cartoLoad",cartoLoad);	
+	
 	//roDiagnostique.getTablesNames();
 }
 
@@ -654,20 +656,35 @@ private function deleteLieuClickHandler(event:CloseEvent):void
 	}
 }
 
+public function cartoLoad():void{
+	if(cartoIF)cartoIF.callChangeGeo();
+}
+
+
 public function modifLieu(params:String):void{
 	var objParams:Object = JSON.decode(params);
-	geo.F01.text = objParams[0].adresse;
-	var latlng:String = objParams[0].LatLng;
-	latlng = latlng.substring(1,latlng.length-1);
-	var arrlatlng:Array = latlng.split(",");
-	geo.F01.text = objParams[0].adresse;
-	geo.F02.value = Number(arrlatlng[0]);
-	geo.F03.value = Number(arrlatlng[1]);
+	if(objParams[0].LatLng){
+		var latlng:String = objParams[0].LatLng;
+		latlng = latlng.substring(1,latlng.length-1);
+		var arrlatlng:Array = latlng.split(",");
+		geo.F02.value = Number(arrlatlng[0]);
+		geo.F03.value = Number(arrlatlng[1]);
+	}
+	if(objParams[0].lat)
+		geo.F02.value = Number(objParams[0].lat);
+	if(objParams[0].lng)
+		geo.F03.value = Number(objParams[0].lng);
+	if(objParams[0].adresse)
+		geo.F01.text = objParams[0].adresse;
 	//geo.F04.value = Number(objParams[0].zoom);
-	geo.F05.value = Number(objParams[0].zoom);
-	geo.sw.text = objParams[0].sw;
-	geo.ne.text = objParams[0].ne;
-	geo.setMapType(objParams[0].mapType);
+	if(objParams[0].zoom)
+		geo.F05.value = Number(objParams[0].zoom);
+	if(objParams[0].sw)
+		geo.sw.text = objParams[0].sw;
+	if(objParams[0].ne)
+		geo.ne.text = objParams[0].ne;
+	if(objParams[0].mapType)
+		geo.setMapType(objParams[0].mapType);
 }
 
 public function modifSV(params:String):void{

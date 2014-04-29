@@ -10,7 +10,7 @@
  */
 const APIkeyDev= "c4p0y3y827jx03whl91uk689";
 const APIkeyProd = "pbgl1pc4di7xqdgp64e6deqi";
-const APIkey = "pbgl1pc4di7xqdgp64e6deqi";
+const APIkey = "uxjsvi48w3yfzgeqop5zr22h";
 
 var flexApp = parent.document.getElementById('diag');
 
@@ -21,7 +21,11 @@ function setGeoParam(params) {
 var urlPicto = 'http://api.ign.fr/geoportail/api/js/2.0.2/img/marker.png',
 	GeoXYFormLon, GeoXYFormLat, Description;
 
-function ajoutMarker(){
+function addMarker(params){
+    //[lat, lng, type_carte, zoom_max, kml, idLieu, lib, sw, ne, lat_sv, lng_sv , heading, pitch, zoom_sv]
+	//centre la carte
+    viewer.getMap().setCenterAtLonLat(params[1], params[0], params[3]);	    
+	
 	//ajoute un marker
 	var vectorLayer = new OpenLayers.Layer.Vector("Overlay");
     var attributes= {
@@ -30,19 +34,20 @@ function ajoutMarker(){
             'description': "",
             externalGraphic:urlPicto	
         };
-    var center = new OpenLayers.LonLat(0.112063743398919, 49.52400026608731).transform(
+    /*
+    var center = new OpenLayers.LonLat(params[1], params[0]).transform(
             new OpenLayers.Projection("EPSG:4326"),
             viewer.getProjectionObject()
         );
-    var geo = new OpenLayers.Geometry.Point(0.112063743398919, 49.52400026608731);
+    var geo = new OpenLayers.Geometry.Point(params[1], params[0]);
 	var feature = new OpenLayers.Feature.Vector(geo, attributes);
 	vectorLayer.addFeatures(feature);
 	viewer.getMap().addLayer(vectorLayer);	
     updateXYForm(feature);
     viewer.getVariable('selectCntrl').select(feature);
-	
+	*/
+    
 }
-
 
 /**
  * Property: viewer
@@ -57,6 +62,8 @@ viewer= null;
 	 */
 	function initMap() {
 	   
+		
+		
 	    // ----- Traduction
 	    translate();
 	
@@ -81,10 +88,14 @@ viewer= null;
 	    }
 	   
 	    // ----- Layers
-	    viewer.addGeoportalLayers(['ORTHOIMAGERY.ORTHOPHOTOS','GEOGRAPHICALGRIDSYSTEMS.MAPS']);	
+	    viewer.addGeoportalLayers(['ORTHOIMAGERY.ORTHOPHOTOS','GEOGRAPHICALGRIDSYSTEMS.MAPS',"TRANSPORTNETWORKS.ROADS",
+	               				"TRANSPORTNETWORKS.RAILWAYS",
+	            				"HYDROGRAPHY.HYDROGRAPHY",
+	            				"BUILDINGS.BUILDINGS",
+	            				"GEOGRAPHICALNAMES.NAMES"]);	
 	    
 	    // ----- Autres
-		viewer.getMap().setCenterAtLonLat(0.112063743398919,49.52400026608731, 16);		
+		viewer.getMap().setCenterAtLonLat(2.464750,48782749, 10);		
 	
 		var myStyleMap = new OpenLayers.StyleMap({
 			"default": new OpenLayers.Style({
