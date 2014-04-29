@@ -91,6 +91,7 @@ public var idBase:String;
 public var idScenar:String;
 private var arrSelect:Array;
 private var objLieuFind:Array; 
+private var firstCartoLoad:Boolean = true;
 
 //création des références d'objet pour la création dynamique
 private var o1:compo.ariane;
@@ -181,6 +182,10 @@ public function initTreeTerre():void{
 	treeTree.dataProvider=xmlTree;
 	roDiagnostique.getXmlNode(1,idBase);
 	treeTree.showRoot=false;
+	//recharge la carto
+	if(cartoIF)cartoIF.cartoIFrame.rechargeCarto();
+		
+		
 }
 
 public function ForceCalcul():void{
@@ -657,7 +662,10 @@ private function deleteLieuClickHandler(event:CloseEvent):void
 }
 
 public function cartoLoad():void{
-	if(cartoIF)cartoIF.callChangeGeo();
+	if(cartoIF && firstCartoLoad){
+		cartoIF.callChangeGeo();
+		firstCartoLoad = false;
+	}
 }
 
 

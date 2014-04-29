@@ -39,6 +39,10 @@
 		
 		protected function creationCompleteHandler(event:FlexEvent):void
 		{
+		}
+		
+		public function rechargeCarto():void{
+			cartoIFrame.source = urlCarto;
 			
 		}
 		
