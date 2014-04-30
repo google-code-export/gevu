@@ -44,6 +44,7 @@ class GEVU_Site{
     var $temps_debut;
     var $temps_inter;
     var $temps_nb=0;
+    var $saut_ligne="<br/>";
     
 	/**
 	* constructeur de la class
@@ -90,13 +91,15 @@ class GEVU_Site{
 			$temps_fin = microtime(true);
 			$tG = str_replace(".",",",round($temps_fin - $this->temps_debut, 4));
 			$tI = str_replace(".",",",round($temps_fin - $this->temps_inter, 4));
-			$mess = $this->temps_nb." | ".$message." |".$tG."|".$tI."<br/>";
+			$mess = $this->temps_nb." | ".$message." |".$tG."|".$tI.$this->saut_ligne;
 			if($this->echoTrace)
 				$this->echoTrace .= $mess;
 			else
 				echo $mess;
 			$this->temps_inter = $temps_fin;
 			$this->temps_nb ++;
+			ob_flush();
+	        flush();
 		}		
 	}
 
@@ -110,27 +113,27 @@ class GEVU_Site{
     * @return array
     */
 	public function ftpPut($src, $dst, $droits=false){	
-
-		$ftp = ftp_connect(FTP_HOST, 21);
+		
+    	$ftp = ftp_connect(FTP_HOST, 21);
 		$login_result = ftp_login($ftp, FTP_LOG, FTP_PWP);				
 		
 		$b = ftp_put($ftp, $dst, $src, FTP_BINARY);
 		
 		// Charge un fichier
 		if ($b) {
-			$result = "Le fichier a été téléchargé avec succès";
+			$this->trace("Le fichier a été téléchargé avec succès");
 			
 			if($droits){
 				// Tentative de modification des permissions du fichier $file en 644
 				if (ftp_chmod($ftp, $droits, $dst) !== false) {
-				 	$result .= "Les permissions du fichier ont été modifiées";
+				 	$this->trace("Les permissions du fichier ont été modifiées");
 				} else {
-				 	$result .= "Impossible de modifier les permissions du fichier";
+				 	$this->trace("Impossible de modifier les permissions du fichier");
 				}
 			}
 			
 		} else {
-		 	$result = "Il y a eu un problème lors du chargement du fichier $src ".$login_result;
+		 	$this->trace("Il y a eu un problème lors du chargement du fichier $src ".$login_result);
 		}
 		
 		
@@ -138,7 +141,7 @@ class GEVU_Site{
 		// Fermeture de la connexion
 		ftp_close($ftp);
 		
-		return array($b, $result);
+		return $b;
 	}
 	
 

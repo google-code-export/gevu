@@ -1,7 +1,7 @@
 <?php
 /*
 * LoginManager
-*
+* /Users/samszo/Documents/La Muse ment/ico compte/papi-gamecenter.png
 * Verify's the users login credentials and
 checks the users role against the ACL for access rights.
 *
@@ -60,7 +60,6 @@ class GEVU_Migration extends GEVU_Site{
 		       ,"gevu_geos"
 		       ,"gevu_diagnostics"
 		       ,"gevu_diagnosticsxvoirie"
-		       ,"gevu_docsxlieux"
 		       ,"gevu_espaces"
 		       ,"gevu_espacesxexterieurs"
 		       ,"gevu_espacesxinterieurs"
@@ -83,6 +82,7 @@ class GEVU_Migration extends GEVU_Site{
 		       ,"gevu_lieuxchainedeplacements"
 		       ,"gevu_diagext"	
 		       ,"gevu_docs"	
+		       ,"gevu_docsxlieux"
 		       ,"gevu_docsxproblemes"	
 		       ),
 	        'no-data' => false,
@@ -96,7 +96,7 @@ class GEVU_Migration extends GEVU_Site{
 	        'disable-foreign-keys-check' => false
 	    );
 
-	    $this->trace('paramètres de connexion source');
+	    $this->trace('paramètres de connexion source '.$idBaseSrc.', '.$srvSrc);
 		$dbSrc = $this->getDb($idBaseSrc, $srvSrc);
     	$arrConfSrc = $dbSrc->getConfig();
     	
@@ -139,8 +139,22 @@ class GEVU_Migration extends GEVU_Site{
 			}
 		    return $this->echoTrace;
 		}	   
+
+		$this->trace('transfert des images');
+    	$dbDoc = new Models_DbTable_Gevu_docs($dbSrc);
+    	$arrImg = $dbDoc->getAll();
+    	foreach ($arrImg as $img) {
+			//création du nouveau nom
+    		$ficName = date("Ymd_His").$img['id_doc']."_".$img['id_instant']."_".$img['titre'];
+			//mise à jour du nom
+			$dbDoc->edit($img['id_doc'], array("titre"=>$ficName));
+			//transfert FTP
+			$ftpResult = $this->ftpPut($img['path_source'], FTP_PATH.'/img/'.$ficName, 0775);
+		    if(!$ftpResult)return $this->echoTrace;
+    	}
 		
-	    $ficName = "migreTabletteToServeur_".$idBaseSrc."_".date("Y-m-d_H-i-s").".sql"; 
+		
+	    $ficName = "MTTS_".date("Y-m-d_H-i-s").".sql"; 
     	$this->trace('création du dump : '.$ficName);
     	$pathFicName = ROOT_PATH.'/bdd/'.$ficName; 
 	    $dump = new Mysqldump($idBaseSrc, $arrConfSrc["username"], $arrConfSrc["password"], $arrConfSrc["host"], 'mysql', $dumpSettings);
@@ -148,8 +162,7 @@ class GEVU_Migration extends GEVU_Site{
     	
 		$this->trace('transfert FTP du dump : '.$ficName);
 	    $ftpResult = $this->ftpPut($pathFicName.".gz", FTP_PATH.'/bdd/'.$ficName.".gz", 0775);
-	    $this->trace($ftpResult[1]);
-	    if(!$ftpResult[0])return $this->echoTrace;
+	    if(!$ftpResult)return $this->echoTrace;
 	    
 		
 		$this->trace('importation du dump dans la nouvelle base');	    
@@ -164,18 +177,8 @@ class GEVU_Migration extends GEVU_Site{
 			return $this->echoTrace;
 		}	   
 
-		$this->trace('transfert des images');
-    	$dbDoc = new Models_DbTable_Gevu_docs($dbSrc);
-    	$arrImg = $dbDoc->getAll();
-    	foreach ($arrImg as $img) {
-			$ficName = date("Ymd_His").$img->id_doc."_".$img->id_instant."_".$img->titre;
-			$ftpResult = $this->ftpPut($img->path_source, FTP_PATH.'/img/'.$ficName, 0775);
-		    $this->trace($ftpResult[1]);
-		    if(!$ftpResult[0])return $this->echoTrace;
-    	}
-
 		$this->trace('synchronisation des bases serveur');
-		$params = array("idExi"=>$idExi, "idBaseSrc"=>$idBaseSrc, "srvSrc"=>$srvSrc, "srvDst"=>$srvDst, "idBaseDst"=>$idBaseDst);
+		$params = array("dir"=>"setUtiLieuLock", "idExi"=>$idExi, "idBaseSrc"=>$bddName, "idRegSrc"=>$srvDst, "idRegDst"=>$srvDst, "idBaseDst"=>$idBaseDst);
 		$result = $this->getUrlBodyContent(URL_SRV_APPLI."migration",$params,false);
 		$this->trace($result);
 
