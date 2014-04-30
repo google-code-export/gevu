@@ -37,7 +37,7 @@ class Models_DbTable_Gevu_docsxlieux extends Zend_Db_Table_Abstract
     );	    
     
     /**
-     * Recherche les entrées de Gevu_batiments avec la clef de lieu
+     * Recherche les entrées avec la clef de lieu
      * et supprime ces entrées.
      *
      * @param integer $idLieu
@@ -46,6 +46,13 @@ class Models_DbTable_Gevu_docsxlieux extends Zend_Db_Table_Abstract
      */
     public function removeLieu($idLieu)
     {
+    	//récupère les documents du lieu
+    	$arr = $this->findByIdLieu($idLieu);
+    	if(count($arr))$dbD = new Models_DbTable_Gevu_docs($this->_db);
+    	//supprime tous les documents
+    	foreach ($arr as $d){
+			$dbD->remove($d['id_doc'], $this->_db);    		
+    	}
         $this->delete('id_lieu = ' . $idLieu);
     }
         

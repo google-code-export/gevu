@@ -197,12 +197,19 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
 	        $dt = $this->getDependentTables();
 	        foreach($dt as $t){
 	        	$dbT = new $t($this->_db);
-	        	$dbT->delete('id_lieu IN ('.$strIds.')');
+	        	if($t=="Models_DbTable_Gevu_docsxlieux" || $t=="Models_DbTable_Gevu_problemes"){
+	        		$arrId = explode(",", $strIds);
+	        		foreach ($arrId as $idL) {
+		        		$dbT->removeLieu($idL);
+	        		} 
+	        	}else{
+		        	$dbT->delete('id_lieu IN ('.$strIds.')');
+	        	}
 	        }        
 	        $this->delete('id_lieu IN ('.$strIds.')');
         }        
         /** TODO
-         * supprimer les documents sur le serveur
+         * supprimer les fichiers des documents sur le serveur
          */
         
         if($hierarchie){        

@@ -17,7 +17,7 @@
  */
 class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
 {
-    
+    	
     /*
      * Nom de la table.
      */
@@ -51,23 +51,6 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
     		$db = Zend_Db::factory('PDO_MYSQL', $arr);
     	}
     	$this->_db = self::_setupAdapter($db);
-    }
-    
-    
-    /**
-     * Recherche les entrées de Gevu_batiments avec la clef de lieu
-     * et supprime ces entrées.
-     *
-     * @param integer $idLieu
-     *
-     * @return void
-     */
-    public function removeLieu($idLieu)
-    {
-    	$arr = $this->findById_lieu($idLieu);
-		foreach($arr as $d){
-			$this->remove($d['id_probleme']);
-		}
     }
         
 	
@@ -145,6 +128,28 @@ class Models_DbTable_Gevu_problemes extends Zend_Db_Table_Abstract
     	$dbDP->delete('id_probleme = ' . $id); 
         $this->delete('gevu_problemes.id_probleme = ' . $id);
     }
+        
+
+    /**
+     * Recherche les entrées avec la clef de lieu
+     * et supprime ces entrées.
+     *
+     * @param integer $idLieu
+     *
+     * @return void
+     */
+    public function removeLieu($idLieu)
+    {
+    	//récupère les problèmes liés au lieu
+    	$arr = $this->findById_lieu($idLieu);
+    	//supprime les problèmes avec les documents
+    	foreach ($arr as $p){
+			$this->remove($p['id_probleme']);	
+    	}
+        $this->delete('id_lieu = ' . $idLieu);
+    }
+        
+    
     
     /**
      * Récupère toutes les entrées Gevu_problemes avec certains critères
