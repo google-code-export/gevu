@@ -3,8 +3,8 @@
  */
 public const ENDPOINT_URL:String = "grilles.php";
 //public const DOMAIN_URL:String = "krys.alceane.lan";
-public const DOMAIN_URL:String = "localhost/gevu";
-//public const DOMAIN_URL:String = "www.gevu.org";
+//public const DOMAIN_URL:String = "localhost/gevu";
+public const DOMAIN_URL:String = "www.gevu.org";
 
 [Bindable] public var ENDPOINT_SERVICE:String = "http://"+DOMAIN_URL+"/services/index.php";
 public const ENDPOINT_IMPORT:String = "http://"+DOMAIN_URL+"/services/import.php";

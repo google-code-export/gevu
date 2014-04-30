@@ -16,6 +16,7 @@
 /*]]>*/--></style>
 <script type="text/javascript" charset="utf-8" src="public/js/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="http://api.ign.fr/geoportail/api/js/latest/GeoportalExtended.js"></script>
+<script type="text/javascript" src="public/js/serverListFunctionso.js"></script>
 </head>
 <body>
 <!--  
@@ -36,7 +37,7 @@
     var APIkey = APIkeyProd;
     var iViewer= null;
     var map;
- 	var domaine = "www.gevu.org";
+ 	var domaine = "www.gevu.org";//"localhost/gevu";
  	//var domaine = "localhost/gevu";
  	var flexApp = parent.document.getElementById('diagVDM');
 	var adresse;
@@ -54,11 +55,11 @@
             [APIkey],
             {
                 // center in WGS84G - centre en WGS84G
-                lon:2.475751206548219,
-                lat:48.767909036726294
+                lon:6.51957,
+                lat:47.33798
             },
             // zoom level (0-20) - niveau de zooms (0 à 20) :
-            12,
+            5,
             {   // various options :
                 loadTheme: function() {
                     Geoportal.Util.setTheme("geoportal3");
