@@ -26,7 +26,7 @@
 				viewTrans.direction = "left";
 				viewTrans.mode = "uncover";
 				navigator.popToFirstView(viewTrans);
-				
+				this.parentApplication.initDetail("");
 			}
 			
 			public function goBack():void 
@@ -38,7 +38,7 @@
 					this.parentApplication.roDiag.getUtiIdLieuLock(this.parentApplication.idExi, data.lieu.lieu_parent, this.parentApplication.idBase);
 
 				}
-				this.parentApplication.initDetail();
+				this.parentApplication.initDetail("");
 			}
 
 			public function suppItem(id:String):void 

@@ -8,10 +8,12 @@
 		<![CDATA[
 			import flash.events.StatusEvent;
 			import flash.net.URLRequest;
+			import flash.net.URLRequestDefaults;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
+			import mx.messaging.config.ServerConfig;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
@@ -37,9 +39,7 @@
 			import skin.btnSupp;
 			
 			import views.htmlArea;
-			import views.listeLieux;
-			
-			import flash.net.URLRequestDefaults;				
+			import views.listeLieux;				
 
 			
 			private var o2:gevu.batiments;
@@ -83,6 +83,8 @@
 			public var srvDst:String = "android";
 			public var urlVerif:String = 'http://www.gevu.org';
 			public var ENDPOINT_IMPORT:String = urlVerif+"/services/import.php";
+			private var urlOpt:String = "application/configs/opt.js";
+			private var urlMig:String = "public/index.php/migration";
 			
 			public var idLieuChange:String;
 			public var arrLieuChange:Array;
@@ -105,8 +107,6 @@
 			public var viewTrans:SlideViewTransition = new SlideViewTransition();	
 			private var durTrans:int = 800;
 			
-			//private var urlOpt:String = "http://localhost/gevu/application/configs/opt.js";
-			private var urlOpt:String = "http://localhost/gevu/services/test.php";
 			[Bindable] private var arrOpt:ArrayCollection;
 			[Bindable] public var arrObjVoirie:ArrayCollection;
 			
@@ -114,9 +114,14 @@
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 
-				//défii le timeout par défaut pour éviter les erreurs...
-				URLRequestDefaults.idleTimeout = 1200000; //note this value represents milliseconds 
+				//mise à jour des url
+				var ep:String = ServerConfig.getChannel("domaine").endpoint
+				urlOpt = ep+urlOpt;
+				urlMig = ep+urlMig;
 				
+				//défini le timeout par défaut pour éviter les erreurs...
+				URLRequestDefaults.idleTimeout = 1200000; //note this value represents milliseconds 
+					
 				//chargement du xml pour les options d'affichage de la carte
 				var chargementOpt:URLLoader = new URLLoader();// objet de chargement
 				var fichier:URLRequest = new URLRequest(urlOpt);// url du fichier chargé
@@ -200,7 +205,15 @@
 			protected function getBase_clickHandler(event:MouseEvent):void
 			{
 				if(isConnect){
-					roMig.migreRefServeurToLocal(idBaseRef, srvSrc, srvDst, idBase);
+					showWait(urlMig+"\n"+"idExi="+idExi+"&idBaseSrc="+idBaseRef+"&idRegSrc="+srvSrc+"&idRegDst="+srvDst+"&idBaseDst="+idBase+"&dir=ServeurToLocal");
+					//roMig.migreRefServeurToLocal(idBaseRef, srvSrc, srvDst, idBase);
+					//passage des migrations par urlLoader pour éviter le timeout
+					var chargementOpt:URLLoader = new URLLoader();// objet de chargement
+					var fichier:URLRequest = new URLRequest(urlMig);// url a chargé
+					var variables:URLVariables = new URLVariables("idExi="+idExi+"&idBaseSrc="+idBaseRef+"&idRegSrc="+srvSrc+"&idRegDst="+srvDst+"&idBaseDst="+idBase+"&dir=ServeurToLocal"); 
+					fichier.data = variables;
+					chargementOpt.addEventListener( Event.COMPLETE, migreRefServeurToLocal_resultHandler);					
+					chargementOpt.load(fichier);
 				}else{
 					aProcess = new alert();
 					aProcess.mess = "Vous n'êtes pas connecté.\nImpossible de récupérer les données.\n"+urlVerif;
@@ -208,10 +221,19 @@
 					aProcess.btn2 = false;
 					aProcess.open(this, true);
 					PopUpManager.centerPopUp(aProcess);					
-					
 				}
 			}
 
+			protected function showWait(mess:String):void
+			{
+				aProcess = new alert();
+				aProcess.mess = "Merci de patienter pendant le traitement.\n"+mess;
+				aProcess.titre = 'Traitement en cours';
+				aProcess.bProcess = true;
+				aProcess.open(this, true);
+				PopUpManager.centerPopUp(aProcess);					
+			}
+			
 			protected function sendBase_clickHandler(event:MouseEvent):void
 			{
 				if(isConnect){
@@ -235,18 +257,42 @@
 
 			public function setUtiLieuLock():void
 			{
+				showWait(urlMig+"\n"+"idExi="+idExi+"&idBaseSrc="+idBase+"&idRegSrc="+srvDst+"&idRegDst="+srvSrc+"&idBaseDst="+idBaseSrc+"&dir=LocalToServer");
 				//roDiag.setUtiLieuLock(idExi, idBase, srvDst, idBaseSrc, srvSrc);
-				roMig.migreTabletteToServeur(idExi, idBase, srvDst, idBaseSrc, srvSrc);
+				//roMig.migreTabletteToServeur(idExi, idBase, srvDst, idBaseSrc, srvSrc);
+				//passage des migrations par urlLoader pour éviter le timeout
+				var chargementOpt:URLLoader = new URLLoader();// objet de chargement
+				var fichier:URLRequest = new URLRequest(urlMig);// url a chargé
+				var variables:URLVariables = new URLVariables("idExi="+idExi+"&idBaseSrc="+idBase+"&idRegSrc="+srvDst+"&idRegDst="+srvSrc+"&idBaseDst="+idBaseSrc+"&dir=LocalToServer"); 
+				fichier.data = variables;
+				chargementOpt.addEventListener( Event.COMPLETE, migreTabletteToServeur_resultHandler);
+				chargementOpt.load(fichier);
+				
 			}
 			
-			protected function migreRefServeurToLocal_resultHandler(event:ResultEvent):void
+			protected function migreRefServeurToLocal_resultHandler(event:Event):void
 			{
 				//réinitialise les vues
-				leftNav.popToFirstView()
-				initDetail(event.result)
-				roDiag.getUtiLieuLock(idExi, idBaseSrc, srvSrc, idBase, srvDst);
+				leftNav.popToFirstView();
+				initDetail(event.target.data);
+				//passage des migrations par urlLoader pour éviter le timeout
+				var chargementOpt:URLLoader = new URLLoader();// objet de chargement
+				var fichier:URLRequest = new URLRequest(urlMig);// url a chargé
+				var variables:URLVariables = new URLVariables("idExi="+idExi+"&idBaseSrc="+idBaseSrc+"&idRegSrc="+srvSrc+"&idRegDst="+srvDst+"&idBaseDst="+idBase+"&dir=getUtiLieuLock"); 
+				trace(urlMig+"?idExi="+idExi+"&idBaseSrc="+idBaseSrc+"&idRegSrc="+srvSrc+"&idRegDst="+srvDst+"&idBaseDst="+idBase+"&dir=getUtiLieuLock");
+				fichier.data = variables;
+				chargementOpt.addEventListener( Event.COMPLETE, getUtiLieuLock_result);
+				chargementOpt.load(fichier);
+				//roDiag.getUtiLieuLock(idExi, idBaseSrc, srvSrc, idBase, srvDst);
 
 			}
+			private function getUtiLieuLock_result(event:Event):void {
+				initDetail(event.target.data);
+				aProcess.close();
+				isRun = false;				
+				roDiag.getUtiLieuLock(idExi, false, false, idBase, srvDst);				
+			}
+			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				//aProcess.close();
 				var str:String;
@@ -271,17 +317,6 @@
 				aProcess.open(this, true);
 				PopUpManager.centerPopUp(aProcess);					
 					
-			}
-			protected function showProcess():void
-			{
-				/*problème de fermeture
-				aProcess = new alert();
-				aProcess.mess = "Veuillez patienter";
-				aProcess.titre = 'Processus en cours...';
-				aProcess.bProcess = true;
-				aProcess.open(this, true);
-				PopUpManager.centerPopUp(aProcess);
-				*/
 			}
 						
 			protected function getUtiLieuLock_resultHandler(event:ResultEvent):void
@@ -343,7 +378,7 @@
 				oLieu.tLock="+";
 				idLieuChange = idLieu;
 				arrLieuChange = vn;
-				
+				bSend.visible = true;
 			}
 						
 			protected function edit_resultHandler(event:ResultEvent):void
@@ -666,19 +701,24 @@
 			
 			protected function setUtiLieuLock_resultHandler(event:ResultEvent):void
 			{
+				aProcess.close();
+				isRun = false;
 				leftNav.popAll();
 				var oData:Object = {"ariane":"","lieu":{"lib":"Univers", "tLock":"x", "id_lieu":1},"liste":new ArrayCollection()};
 				leftNav.pushView(views.listeLieux, oData);
 				roMig.migreRefServeurToLocal(idBaseRef, srvSrc, srvDst, idBase);
 			}
 						
-			protected function migreTabletteToServeur_resultHandler(event:ResultEvent):void
+			protected function migreTabletteToServeur_resultHandler(event:Event):void
 			{
-				initDetail(event.result)
+				aProcess.close();
+				isRun = false;
+				btnGetSrv.visible = true;
+				bSend.visible = false;
+				initDetail(event.target.data);
 				leftNav.popAll();
 				var oData:Object = {"ariane":"","lieu":{"lib":"Univers", "tLock":"x", "id_lieu":1},"liste":new ArrayCollection()};
 				leftNav.pushView(views.listeLieux, oData);
-				roMig.migreRefServeurToLocal(idBaseRef, srvSrc, srvDst, idBase);
 			}
 			
 		]]>
@@ -696,7 +736,7 @@
 			destination="zend"
 			source="GEVU_Migration"
 			fault="faultHandlerService(event, 'GEVU - Synchronisation');"
-			showBusyCursor="true" invoke="showProcess()" 
+			showBusyCursor="true" 
 			>
 			<s:method name="migreRefServeurToLocal" result="migreRefServeurToLocal_resultHandler(event)"/>
 			<s:method name="migreTabletteToServeur" result="migreTabletteToServeur_resultHandler(event)" />

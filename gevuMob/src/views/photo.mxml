@@ -77,7 +77,7 @@
 				dataDoc["url"] = event.data.file.url;
 				dataDoc["titre"]=event.data.relativePath;
 				dataDoc["branche"]=objName;
-				dataDoc["content_type"]=event.data.mediaType;
+				dataDoc["content_type"]= "image/jpeg";//pour afficher dans gevu diag event.data.mediaType;
 				dataDoc["path_source"]=event.data.file.nativePath;
 				dataDoc["tronc"]=data['type'];
 				
@@ -134,6 +134,7 @@
 			
 			public function init():void
 			{
+				if(!gMain)return;
 				currentState = 'main';
 				if(!this.parentApplication.oLieu || this.parentApplication.oLieu.tLock=="x"){
 					gMain.visible = false;
@@ -150,6 +151,7 @@
 			
 			protected function saveDoc_resultHandler(event:ResultEvent):void
 			{
+				if(this.parentApplication.oLieu.tLock=="-")this.parentApplication.editLock(this.parentApplication.id_lieu);
 				getDoc();				
 				uploadCompleteHandler(event);
 			}

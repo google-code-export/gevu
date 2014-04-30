@@ -7,7 +7,15 @@
 			import flashx.textLayout.conversion.TextConverter;
 		]]>
 	</fx:Script>
-	<s:RichText id="richTxt" x="20" y="20" width="100%" height="100%">
-		<s:textFlow>{TextConverter.importToFlow(data, TextConverter.TEXT_FIELD_HTML_FORMAT)}</s:textFlow>
-	</s:RichText>		
+	<s:BorderContainer width="100%" height="100%" 
+					   borderWeight="3" borderStyle="solid">
+		<s:Scroller width="100%" height="100%" >
+			<s:Group >
+				<s:RichText id="richTxt" x="20" y="20" width="100%" height="100%" >
+					<s:textFlow>{TextConverter.importToFlow(data, TextConverter.TEXT_FIELD_HTML_FORMAT)}</s:textFlow>
+				</s:RichText>
+			</s:Group>
+		</s:Scroller>
+	</s:BorderContainer>	
+	
 </s:View>
