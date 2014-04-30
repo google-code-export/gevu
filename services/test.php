@@ -1,13 +1,8 @@
 <?php
+//<a href="http://localhost:8080/gevu/public/index.php/migration?idExi=1&idBaseSrc=gevu_android&idRegSrc=android&idRegDst=ref&idBaseDst=gevu_new&dir=LocalToServer">TEST</a>
+
 try {
 	require_once( "../application/configs/config.php" );
-	
-	// Heure actuelle
-	echo date('h:i:s') . "\n";
-	// Stoppe pour 10 secondes
-	sleep(100);
-	// retour !
-	echo date('h:i:s') . "\n";
 	
 	/*
 	$dumpSettings = array(
@@ -35,11 +30,11 @@ try {
 	ftp_put($ftp, "/www/data/android/IMG_20140402_135704.jpg", "/mnt/sdcard/DCIM/Camera/IMG_20140402_135704.jpg", FTP_BINARY);		
 	*/
 	
-	/*
+	//
 	$mig = new GEVU_Migration();
-	$mig->migreTabletteToServeur("gevu_android","android","tves","gevu_test");
+	$mig->migreTabletteToServeur(1,"gevu_android","android","tves","gevu_test");
 	$mig->migreRefServeurToLocal("gevu_ref","tves","android","gevu_android");
-	*/
+	//
 
 	/*
 	$dbED = new Models_DbTable_Gevu_exisxdroits();
@@ -90,7 +85,7 @@ try {
 	print_r($r);
 	*/
 	
-	/*
+	//
 	$idBase = "gevu_alceane";	
 	$idExi = 1;
 	$idLieu = 113;
@@ -102,12 +97,12 @@ try {
 	//$d->ajoutUtiDiag($idLieu, $idExi, $idBase);
 	//$d->getContact($idBase,"Models_DbTable_Gevu_batiments",array("id"=>1,"type"=>"contact_proprietaire"));
 	//$arr = $d->getUtiLieuLock('1', 'gevu_new', 'ref', 'gevu_android', 'android');
-	//$arr = $d->setUtiLieuLock($idExi, "gevu_android", "android", "gevu_new", "ref");
+	//$arr = $d->setUtiLieuLock($idExi, "gevu_android", "android", "gevu_alceane", "ref");
 	//$arr = $d->getUtiIdLieuLock($idExi, $idLieu, $idBase);
 	//$d->ajouterContact($idBase, "Models_DbTable_Gevu_batiments", array("idCtc"=>"11","idLien"=>"1","type"=>"contact_gardien"));
 	//$d->deleteLieu($idLieu, $idExi, $idBase);
-	$arr = $d->getDiagListe(array("handi"=>"moteur","idLieu"=>15601,"niv"=>0),$idBase);
-	echo 'toto';
+	//$arr = $d->getDiagListe(array("handi"=>"moteur","idLieu"=>15601,"niv"=>0),$idBase);
+	//echo 'toto';
 	//$d->ajoutLieu(1,$idExi,$idBase);
 	//$d->edit(3142,array("ref"=>"machn"),"Models_DbTable_Gevu_espacesxinterieurs",$idBase);
 	//$arr = $d->getChaineDepla(1,$idBase);
@@ -122,7 +117,7 @@ try {
 	
 	//$db = new Models_DbTable_Gevu_objetsxinterieurs();
 	//$db->ajoutDiag($idExi, 12, $idLieu, 106, $idBase);
-	*/
+	//
 	
 	//$db = new Models_DbTable_Gevu_espacesxinterieurs();
 	//$db->edit(3142, array("ref"=>"bidule"));

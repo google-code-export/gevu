@@ -17,7 +17,7 @@ try {
 	
 	$response = $server->handle();
 	//var_dump($server->getFunctions());   		
-
+	
 }catch (Zend_Exception $e) {
 	echo "
 	<h3>Exception information:</h3>
