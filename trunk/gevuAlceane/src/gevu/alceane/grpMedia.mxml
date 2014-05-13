@@ -33,11 +33,20 @@
 				dataPlans = new ArrayCollection;
 				dataAutres = new ArrayCollection;
 				dataHtml = new ArrayCollection;
+								
 				if(imgBig)imgBig.source = '';
 				if(html)html.source = this.parentApplication.urlVide
 
 				if(dataNode["Models_DbTable_Gevu_docsxlieux"])initDoc(dataNode["Models_DbTable_Gevu_docsxlieux"]);
 				lblTitre.text = dataNode.ariane[0].parLib;
+
+				//réfraichi les liste pour éviter les problèmes d'incohérences des données
+				lstPhotos.invalidateList();				
+				lstVideos.invalidateList();				
+				lstPlans.invalidateList();				
+				lstAutres.invalidateList();				
+				lstHtml.invalidateList();				
+				
 			}
 			
 			public function initDoc(rs:Object):void {
