@@ -298,11 +298,11 @@
 						<mx:TextInput id="UpdLib" change="UpdLib_changeHandler(event)" />
 						<mx:Button label="Enregistrer" click="updateItem()" toolTip="Enregistre les modifications du scénario" />
 					</mx:HBox>
-					<mx:Panel id="pArboCtl" width="100%" height="100%" title="Arboressence des contrôles" >
+					<mx:Panel id="pArboCtl" width="100%" height="100%" title="Arborescence des contrôles" >
 					</mx:Panel>
 				</mx:VBox>
 				<mx:VDividedBox width="100%" height="100%">					
-					<mx:Panel id="pArboCrit" width="100%" height="100%" minHeight="200" title="Arboressence des critères" >
+					<mx:Panel id="pArboCrit" width="100%" height="100%" minHeight="200" title="Arborescence des critères" >
 						
 					</mx:Panel>
 					<mx:Panel id="pProduit" width="100%" height="100%" minHeight="200" title="Produits associés" >

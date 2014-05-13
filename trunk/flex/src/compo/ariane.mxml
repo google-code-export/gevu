@@ -16,6 +16,11 @@
 				//vérifie s'il faut ajouter un élément
 				if(item["id_lieu"]==-1){
 					this.parentApplication.ajouterLieu();
+				}else if(this.parentApplication.bbItems){
+					//gestion de l'affichage des onglets
+					//this.parentApplication.updateOnglet(item.niv, item.id_lieu);
+					//pour l'instant on ne fait rien
+					var toto:Boolean = true;
 				}else{
 					this.parentApplication.roDiagnostique.getNodeRelatedData(item["id_lieu"],this.parentApplication.idExi, this.parentApplication.idBase);					
 				}
