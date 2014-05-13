@@ -28,8 +28,9 @@
 			
 			[Bindable] public var dataDiag:Object;
 			[Bindable] public var bbItems:ArrayCollection;
+			
 
-			public var idLieu:int=-1;
+			[Bindable] public var idLieu:int=-1;
 			public var nivLieu:int=0;
 			public var idBase:String = "gevu_alceane";
 			public var idScenar:int = 18;
@@ -171,14 +172,18 @@
 				}
 			}
 			private function treeItemClicked(event:ListEvent) : void {
-				var i:Object = event.currentTarget.selectedItem;
-				idLieu = i.attribute("idLieu");
-				
+				var i:Object = event.currentTarget.selectedItem;				
 				//if(i.attribute("lib")=="Alcéane")return;
+				updateOnglet(i.attribute("niv"), i.attribute("idLieu"));
 				
+			}			
+
+			public function updateOnglet(lieuNiv:int, lieuId:int):void
+			{
 				if(idLieu>0){
 					//affiche les onglets suivant le niveau
-					nivLieu = i.attribute("niv");
+					idLieu = lieuId;
+					nivLieu = lieuNiv;
 					//corrige le niveau du logement
 					if(nivLieu == 1)idAntenne = idLieu;
 					if(nivLieu == 2){
@@ -189,13 +194,13 @@
 						nivLieu = 4;
 						idLog = idLieu;
 					}
-					roDiag.getNodeRelatedData(idLieu, idExi, idBase, idScenar, nivLieu);
+					
+					roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase, idScenar, nivLieu);
 					lstAriane.dataProvider =  null;					
 				}
 				bbMain.dataProvider = new ArrayCollection(bbItems[nivLieu]);  
 				
-			}			
-
+			}
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
@@ -215,7 +220,7 @@
 				bbMain.dataProvider = new ArrayCollection(bbItems[0]);  
 				treeAntenneInit();
 				idLieu = 1;
-				roDiag.getNodeRelatedData(idLieu, idExi, idBase);
+				roDiagnostique.getNodeRelatedData(idLieu, idExi, idBase);
 				
 			}
 
@@ -291,7 +296,7 @@
 					}
 					if(nivLieu==4){
 						this.currentState = "Access";
-						access.rsEtatDiag = dataNode["___diagnostics"].diag.stat; 
+						access.rsEtatDiag = dataNode["___diagnostics"].diag.stat;
 					}
 					if(nivLieu==3){
 						this.currentState = "Diag";
@@ -337,7 +342,7 @@
 			<s:method name="findLieu"			result="displayReponse(event);" />
 		</s:RemoteObject>
 		<s:RemoteObject
-			id="roDiag"
+			id="roDiagnostique"
 			destination="zend"
 			source="GEVU_Diagnostique"
 			fault="faultHandlerService(event, 'GEVU - Diagnostique');"
@@ -590,7 +595,7 @@
 						</s:HGroup>
 						<alceane:grpDiag id="diag" includeIn="Diag" width="100%" height="100%" />
 						<alceane:grpPSP id="psp" includeIn="PSP" width="100%" height="100%" />
-						<stat:cnvStatDiag id="access" includeIn="Access" rsDiagExt="{false}" width="100%" height="100%" />
+						<stat:cnvStatDiag id="access" includeIn="Access" rsDiagExt="{false}" idLieu="{this.idLieu}" width="100%" height="100%" />
 						<alceane:grpMedia id="media" includeIn="Medias" width="100%" height="100%" />
 						<form:interventions id="interv" includeIn="Immo" bEdit="false" height="100%" width="100%" />
 
