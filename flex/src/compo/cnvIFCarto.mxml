@@ -10,7 +10,7 @@
 		import mx.events.FlexEvent;
 		
 		[Bindable]	public var rsCarto:Object;
-		[Bindable]	public var urlCarto:String= "cartoIGN.html";//"carto.html";
+		[Bindable]	public var urlCarto:String= "carto.html";//"cartoIGN.html";//
 		
 		public function callChangeGeo():void {
 			if(rsCarto)
