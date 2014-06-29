@@ -142,12 +142,12 @@
 				//Affichage dans la liste
 				arrOpt = new ArrayCollection(object.items);
 				
-				showLogin();
-				/*
+				//showLogin();
+				//
 				var r:Object = {idExi:1,droit_4:'[{"lib":"ERP-IOP","id":"4_13"},{"lib":"loge","id":"4_12"},{"lib":"Logement V3","id":"4_18"}]'};				
-				var c:Object = {"lib":"test","options":{"idBase":"gevu_android", "idBaseSrc":"gevu_new", "idBaseRef":"gevu_ref", "srvSrc":"ref", "srvDst":"android", "urlVerif":"http://www.gevu.org"}};				
+				var c:Object = {"lib":"test","options":{"idBase":"gevu_android", "idBaseSrc":"gevu_new", "idBaseRef":"gevu_ref", "srvSrc":"ref", "srvDst":"android", "urlVerif":"http://localhost/gevu"}};				
 				init(r, c);
-				*/
+				//
 
 			}
 			
@@ -364,8 +364,6 @@
 				var ll:listeLieux =	leftNav.activeView as listeLieux;
 				//ll.suppItem(idLieuSupp);
 				ll.goBack();
-				//on supprime un niveau du fil d'ariane
-				lblAriane.text = lblAriane.text.substring(0,lblAriane.text.lastIndexOf("/"));
 				editLock(oLieu.lieu_parent);
 			}
 			
@@ -457,6 +455,15 @@
 				setDatalieu();
 			}
 			
+			private function setAriane(arrAriane:Array) : void {
+				var ariane:String = "";
+				for each (var l:Array in arrAriane){
+					ariane += l["lib"] + " / ";
+				}
+				lblAriane.text= ariane;
+
+			}
+
 			private function setDatalieu() : void {
 
 				var ClassReference:Class;
@@ -467,6 +474,9 @@
 				arrLieuView[oLieu.id_lieu][0]=new Array;
 				arrLieuView[oLieu.id_lieu][1]=new Array;
 				arrLieuView[oLieu.id_lieu][2]=new Array;
+				
+				//affiche le fil d'ariane
+				setAriane(dataLieu["ariane"]);
 				
 				//pour le type de controle parent d'un diag
 				var typeCtrlParent:String ="";
@@ -761,41 +771,49 @@
 	</fx:Declarations>
 	<s:VGroup id="main" width="100%" height="100%" paddingBottom="2" paddingLeft="2" paddingRight="2" paddingTop="2" >
 		<s:HGroup verticalAlign="middle" width="100%" >
-			<s:Image source="@Embed('assets/logo.png')" />
-			<s:VGroup >
-				<s:SpinnerListContainer height="56" >
-					<s:SpinnerList id="slScenar" dataProvider="{lstScenar}" labelField="lib" width="160" change="slScenar_changeHandler(event)" />
-				</s:SpinnerListContainer>				
-			</s:VGroup>			
-			<s:Label id="lblAriane" text="" color="white" width="100%" />
-			<s:HGroup horizontalAlign="right" >
+			<s:VGroup verticalAlign="middle" width="100%" >
+				<s:HGroup verticalAlign="middle" width="100%" >
+					<s:Image source="@Embed('assets/logo.png')" />
+					<s:VGroup >
+						<s:SpinnerListContainer height="56" >
+							<s:SpinnerList id="slScenar" dataProvider="{lstScenar}" labelField="lib" width="160" change="slScenar_changeHandler(event)" />
+						</s:SpinnerListContainer>				
+					</s:VGroup>			
+					<s:Label id="lblAriane" text="" backgroundColor="white" color="black" width="100%" height="48" paddingTop="6" paddingBottom="6" paddingLeft="6" paddingRight="6" />
+				</s:HGroup>
+				<s:HGroup gap="3" visible="{isLog}" height="40" width="100%" verticalAlign="middle" >
+					<s:HGroup verticalAlign="middle" width="300" horizontalAlign="right" gap="16" >
+						<s:Image source="@Embed('assets/get_srv.png')" id="btnGetSrv" click="getBase_clickHandler(event)" visible="{isConnect}" />
+						<s:Image source="@Embed('assets/send_srv.png')" id="bSend" click="sendBase_clickHandler(event)" visible="{isConnect}" />
+						<s:Button skinClass="skin.btnAjout" id="bAjout" click="bAjout_clickHandler(event)" visible="false" />
+						<s:Button skinClass="skin.btnSupp" id="bSupp" click="bSupp_clickHandler(event)" visible="false" />
+						<s:Button skinClass="skin.btnCopie" id="bCopie" click="bCopie_clickHandler(event)" visible="false" />
+						<s:Button skinClass="skin.btnColle" id="bColle" visible="false" click="bColle_clickHandler(event)" />
+					</s:HGroup>		
+					<s:HGroup verticalAlign="middle" width="100%" >
+						<s:HGroup id="hgBarCtl" visible="false" verticalAlign="middle" width="100%" horizontalAlign="left">
+							<s:Label id="lblAjoutCtl" text="Ajouter un contrôle :" color="white" />
+							<s:SpinnerListContainer height="56" width="100%" >
+								<s:SpinnerList id="slAjoutCtl" labelField="lib" width="100%" click="slAjoutCtl_clickHandler(event)" />
+							</s:SpinnerListContainer>				
+						</s:HGroup>		
+						<s:HGroup id="hgBarButton" visible="false" width="100%" height="40" verticalAlign="middle" horizontalAlign="left">
+							<s:Label text="Vues :" color="white" />
+							<s:SpinnerListContainer height="56" width="100%" >
+								<s:SpinnerList id="slBarButton" labelField="btnLbl" width="100%" click="slBarButton_clickHandler(event)" />
+							</s:SpinnerListContainer>				
+						</s:HGroup>
+					</s:HGroup>		
+				</s:HGroup>		
+			</s:VGroup>		
+			<s:HGroup horizontalAlign="right" width="64" >
 				<s:Image source="@Embed('assets/Shutdown.png')" width="32" height="32" click="exit_clickHandler(event)" toolTip="Fermer l'application" horizontalAlign="right" />
-				<s:Spacer width="32"/>
+				<s:Spacer width="16"/>
 			</s:HGroup>			
-		</s:HGroup>
-		<s:HGroup gap="3" visible="{isLog}" height="40" width="100%" verticalAlign="middle" >
-			<s:Image source="@Embed('assets/get_srv.png')" id="btnGetSrv" click="getBase_clickHandler(event)" visible="{isConnect}" />
-			<s:Image source="@Embed('assets/send_srv.png')" id="bSend" click="sendBase_clickHandler(event)" visible="{isConnect}" />
-			<s:Button skinClass="skin.btnAjout" id="bAjout" click="bAjout_clickHandler(event)" visible="false" />
-			<s:Button skinClass="skin.btnSupp" id="bSupp" click="bSupp_clickHandler(event)" visible="false" />
-			<s:Button skinClass="skin.btnCopie" id="bCopie" click="bCopie_clickHandler(event)" visible="false" />
-			<s:Button skinClass="skin.btnColle" id="bColle" visible="false" click="bColle_clickHandler(event)" />
-			<s:HGroup id="hgBarCtl" visible="false" verticalAlign="middle" width="100%" horizontalAlign="left">
-				<s:Label id="lblAjoutCtl" text="Ajouter un contrôle :" color="white" />
-				<s:SpinnerListContainer height="56" width="100%" >
-					<s:SpinnerList id="slAjoutCtl" labelField="lib" width="100%" click="slAjoutCtl_clickHandler(event)" />
-				</s:SpinnerListContainer>				
-			</s:HGroup>		
-			<s:HGroup id="hgBarButton" visible="false" width="100%" height="40" verticalAlign="middle" horizontalAlign="left">
-				<s:Label text="Vues :" color="white" />
-				<s:SpinnerListContainer height="56" width="100%" >
-					<s:SpinnerList id="slBarButton" labelField="btnLbl" width="100%" click="slBarButton_clickHandler(event)" />
-				</s:SpinnerListContainer>				
-			</s:HGroup>
 		</s:HGroup>		
 		<s:SplitViewNavigator id="svn" width="100%" height="100%" visible="{isLog}" >
-			<s:ViewNavigator id="leftNav" width="30%" height="100%" firstView="views.listeLieux"/>
-			<s:ViewNavigator  id="rightNav" width="70%" height="100%" firstView="views.htmlArea" />
+			<s:ViewNavigator id="leftNav" width="300" height="100%" firstView="views.listeLieux"/>
+			<s:ViewNavigator  id="rightNav" width="100%" height="100%" firstView="views.htmlArea" />
 		</s:SplitViewNavigator>		
 	</s:VGroup>
 

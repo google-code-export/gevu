@@ -104,7 +104,6 @@
 				//affiche le fil d'ariane
 				this.title = data.lieu.lib;
 				tiNom.text = data.lieu.lib;
-				this.parentApplication.lblAriane.text= data.ariane+' / '+data.lieu.lib;
 				this.parentApplication.oLieu = data.lieu;
 				//vérifie si un des enfants n'a pas changé
 				if(this.parentApplication.idLieuChange){
@@ -160,7 +159,7 @@
 				}
 				*/
 				//on charge à chaque fois une nouvelle vue
-				var oData:Object = {"ariane":this.parentApplication.lblAriane.text,"lieu":oItem,"liste":new ArrayCollection(oItem.children)};
+				var oData:Object = {"lieu":oItem,"liste":new ArrayCollection(oItem.children)};
 				navigator.pushView(views.listeLieux, oData, viewTrans);									
 				
 			}
