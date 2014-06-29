@@ -22,16 +22,30 @@
 			//basé sur les mot-clef de type 2
 			//1 	Oui, 2 	Non, 124 	N. A., 141 	Sous réserve
 			if(val && val!="0"){
-			var rbNom:String = "reponse_"+val;
-			var rb:RadioButton = this[rbNom];
-			rb.selected = true;
+				var rbNom:String = "reponse_"+val;
+				/*
+				var rb:RadioButton = this[rbNom];
+				rb.selected = true;
+				*/
+				for (var i:int=0; i<grpRep.numElements; i++) {
+					var rb:Image = grpRep.getElementAt(i) as Image;
+					if(rb.id==rbNom) rb.alpha = 1;
+					else rb.alpha = 0.5;
+					
+				}
 			}
 		}
 		public function decocheVals():void{
+			reponse_1.alpha = 1;
+			reponse_2.alpha = 1;
+			reponse_124.alpha = 1;
+			reponse_141.alpha = 1;
+			/*
 			reponse_1.selected = false;
 			reponse_2.selected = false;
 			reponse_124.selected = false;
 			reponse_141.selected = false;
+			*/
 		}
 		
 		]]>
@@ -41,12 +55,18 @@
 			<s:fill><s:SolidColor color="black" /></s:fill>
 		</s:Rect>
 		<s:VGroup  paddingBottom="13" paddingLeft="13" paddingTop="13" paddingRight="13" width="100%">
-			<s:Label  text="{lblQ}" width="100%" height="100%" color="white"/>
-			<s:HGroup verticalAlign="middle" >		
+			<s:Label  text="{lblQ}" width="100%" height="100%" color="white" fontSize="24"/>
+			<s:HGroup id="grpRep" verticalAlign="middle" >		
+				<s:Image  id="reponse_1" source="@Embed('assets/OUI.png')" click="changeModif('1')"  />
+				<s:Image  id="reponse_2" source="@Embed('assets/NON.png')" click="changeModif('2')" />
+				<s:Image  id="reponse_124" source="@Embed('assets/SR.png')" click="changeModif('124')" />
+				<s:Image  id="reponse_141" source="@Embed('assets/NA.png')" click="changeModif('141')" />
+				<!--
 				<s:RadioButton groupName="reponse" id="reponse_1" label="oui" color="white" click="changeModif('1')" /> 
 				<s:RadioButton groupName="reponse" id="reponse_2" label="non" color="white" click="changeModif('2')"/>
 				<s:RadioButton groupName="reponse" id="reponse_124" label="n. a." color="white" click="changeModif('124')"/>
 				<s:RadioButton groupName="reponse" id="reponse_141" label="sous réserve" color="white" click="changeModif('141')" />
+				-->
 			</s:HGroup>
 		</s:VGroup>
 	</s:Group>	
