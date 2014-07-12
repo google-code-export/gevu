@@ -492,6 +492,8 @@ class GEVU_Import extends GEVU_Site{
      * 
      */
     public function traiteImportPiece($idDoc, $idExi, $idBase){
+    	set_time_limit(0);
+    	
     	$this->bTrace = true;					// pour afficher le nombre de lignes importées et le timing    	
     	$this->echoTrace = false;//__METHOD__."<br/>";	//pour stocker les traces
     	$this->temps_debut = microtime(true);
@@ -505,6 +507,7 @@ class GEVU_Import extends GEVU_Site{
 		$this->dbI = new Models_DbTable_Gevu_instants($this->db);
 		$this->dbSta = new Models_DbTable_Gevu_stats($this->db);
 		$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		$this->dbLog = new Models_DbTable_Gevu_logements($this->db);
 		$this->dbEsp = new Models_DbTable_Gevu_espaces($this->db);
 		
 		$this->trace("création de l'instant");
@@ -529,6 +532,8 @@ class GEVU_Import extends GEVU_Site{
 			//if($x==10)  break;
 			$this->arr = $arrCSV[$x];
 			if($this->arr[1]!=""){
+				$this->trace($this->arr[15]);			
+				
 				switch ($this->arr[15]) {
 					case "BLN": //BLN	BALCON	TERRASSE
 						$idCtl = 42;
@@ -707,19 +712,29 @@ class GEVU_Import extends GEVU_Site{
 				//création de la pièce
 				if($idCtl){
 					//récupère le code du logement
-					$arrLieu = $this->dbSta->findIdLieuByCode_Logement($this->arr[11]);
-					//création de la pièce suivant le code de la pièce
-					$dataLieu="";
-					$dataLieu["lieu_parent"]= $arrLieu[0]["id_lieu"];
-					$dataLieu["lib"]= $this->arr[16];
-					$dataLieu["id_instant"]= $this->idInst;
-					$dataLieu["id_type_controle"]= $idCtl;
-					$dataEsp = "";
-					$dataEsp["surface"]= $this->arr[17];
-					$dataEsp["id_instant"]= $this->idInst;
-					$dataEsp["ref"]= $this->arr[11]."_".$x;
-					if($dataEsp)$dataEsp["id_type_controle"]= $idCtl;				
-					$this->creaPieceLogement($dataLieu, $dataEsp);										
+					//$arrLieu = $this->dbSta->findIdLieuByCode_Logement($this->arr[11]);
+					$arrLieu = $this->dbLog->findByRef($this->arr[11]);
+					if($arrLieu[0]["id_lieu"]){
+						$this->trace($this->arr[11]." : ".$arrLieu[0]["id_lieu"]);
+						//création de l'étage
+						$idEt =  $this->dbL->ajouter(array("lib"=>"Etage 1","id_type_controle"=>69,"lieu_parent"=>$arrLieu[0]["id_lieu"],"id_instant"=>$this->idInst));
+						$this->trace("etage 1 :".$idEt); 
+						
+						//création de la pièce suivant le code de la pièce
+						$dataLieu="";
+						$dataLieu["lieu_parent"]= $idEt;
+						$dataLieu["lib"]= $this->arr[16];
+						$dataLieu["id_instant"]= $this->idInst;
+						$dataLieu["id_type_controle"]= $idCtl;
+						$dataEsp = "";
+						$dataEsp["surface"]= $this->arr[17];
+						$dataEsp["id_instant"]= $this->idInst;
+						$dataEsp["ref"]= $this->arr[11]."_".$x;
+						$dataEsp["id_type_controle"]= $idCtl;				
+						$this->creaPieceLogement($dataLieu, $dataEsp);										
+					}else{
+						$this->trace("logement pas trouvé : ".$this->arr[11]." : ".$arrLieu[0]["id_lieu"]);
+					}
 				}
 				
 			}
@@ -738,11 +753,11 @@ class GEVU_Import extends GEVU_Site{
 	 */
 	function creaPieceLogement($dataLieu, $dataEsp=false){
 		//$this->trace("DEBUT =".__METHOD__);
-		$idLieu = $this->dbL->ajouter($dataLieu, false);
+		$idLieu = $this->dbL->ajouter($dataLieu);
 		//$this->trace("création d'un lieu pour la pièce");
 		if($dataEsp){
 			$dataEsp['id_lieu'] = $idLieu;
-			$this->dbEsp->ajouter($dataEsp,false);
+			$this->dbEsp->ajouter($dataEsp);
 			//$this->trace("création d'un espace");
 		}
 		//$this->trace("FIN =".__METHOD__);
