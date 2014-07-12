@@ -319,6 +319,20 @@ class Models_DbTable_Gevu_lieux extends Zend_Db_Table_Abstract
      * Recherche une entrée Gevu_lieux avec la valeur spécifiée
      * et retourne cette entrée.
      *
+     * @param varchar $type
+     */
+    public function findByType($type)
+    {
+        $query = $this->select()
+                    ->from( array("g" => "gevu_lieux") )                           
+                    ->where( "g.id_type_controle = ?",$type);
+
+        return $this->fetchAll($query)->toArray(); 
+    }
+    /**
+     * Recherche une entrée Gevu_lieux avec la valeur spécifiée
+     * et retourne cette entrée.
+     *
      * @param int $id_parent
      */
     public function findById_parent($id_parent)

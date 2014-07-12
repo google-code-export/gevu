@@ -131,7 +131,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray();
     }
             
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -145,7 +145,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -164,7 +164,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -178,7 +178,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -198,7 +198,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 		}
 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -212,7 +212,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -226,7 +226,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -240,7 +240,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -254,7 +254,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -268,7 +268,7 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
 
         return $this->fetchRow($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_criteres avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -283,5 +283,31 @@ class Models_DbTable_Gevu_criteres extends Zend_Db_Table_Abstract
         return $this->fetchRow($query)->toArray(); 
     }
     
+    /**
+     *Exporte tous les critères
+     *
+     * @return array 
+     */
+    public function exporte()
+    {
+        $sql = "SELECT c.id_critere, c.id_type_controle, c.ref, c.handicateur_moteur, c.handicateur_auditif, c.handicateur_visuel, c.handicateur_cognitif, c.criteres, c.affirmation,
+		         tc.lib typeControle,
+		         GROUP_CONCAT(DISTINCT tcri.lib) typesCritere,
+		         GROUP_CONCAT(DISTINCT tdro.lib) typesDroit,
+		         GROUP_CONCAT(DISTINCT tdef.lib) typesDeficience
+		    FROM gevu_criteres c
+		         INNER JOIN gevu_typesxcontroles tc ON tc.id_type_controle = c.id_type_controle
+		         INNER JOIN gevu_criteresxtypesxcriteres ctcri ON ctcri.id_critere = c.id_critere
+		         INNER JOIN gevu_typesxcriteres tcri ON tcri.id_type_critere = tcri.id_type_critere
+		         INNER JOIN gevu_criteresxtypesxdroits ctdro ON ctdro.id_critere = c.id_critere
+		         INNER JOIN gevu_typesxdroits tdro ON tdro.id_type_droit = ctdro.id_type_droit
+		         INNER JOIN gevu_criteresxtypesxdeficiences ctdef ON ctdef.id_critere = c.id_critere
+		         INNER JOIN gevu_typesxdeficiences tdef ON tdef.id_type_deficience = ctdef.id_type_deficience
+		GROUP BY c.id_critere";
+        
+        $stmt = $this->_db->query($sql);
+
+        return $stmt->fetchAll();
+    }
     
 }
