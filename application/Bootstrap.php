@@ -26,9 +26,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	
 	    Zend_Registry::set("multidb", $resource);         
 	    Zend_Registry::set("alceane",$resource->getDb('alceane'));     
+	    Zend_Registry::set("import",$resource->getDb('import'));     
 	    Zend_Registry::set("android",$resource->getDb('android'));     
 	    Zend_Registry::set("tves",$resource->getDb('tves'));     
 	    Zend_Registry::set("ref",$resource->getDb('ref'));     
+	    Zend_Registry::set("gapaii",$resource->getDb('gapaii'));     
+	    Zend_Registry::set("vdm",$resource->getDb('vdm'));     
 	    
 	    
 	}
