@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXTreeItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx"
+					  >
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.treeClasses.*;
+			import mx.collections.*;
+			import mx.events.FlexEvent;
+
+			protected function ckbx_changeHandler(event:Event):void
+			{
+				var idDoc:String;
+				if(treeListData.item.@idDoc != null)
+					idDoc = treeListData.item.@idDoc;
+				else
+					idDoc = treeListData.uid;
+					
+				if(ckbx.selected){
+					var url:String = treeListData.item.@src;
+					var titre:String = treeListData.item.@lib;
+					this.parentApplication.showKML([url, titre, idDoc]);
+				}else{
+					this.parentApplication.hideKML([idDoc]);
+				}
+			}
+
+			// Override the set method for the data property
+			// to set the font color and style of each node.
+			// http://help.adobe.com/en_US/flex/using/WS03d33b8076db57b9-1c32bcb9124deadc3e9-8000.html#WS03d33b8076db57b9-3edf2834124deb0ca54-8000
+			override public function set data(value:Object):void {
+				super.data = value;
+				if(treeListData.hasChildren)
+				{
+					ckbx.width = 0;
+				}
+				else
+				{
+					if(treeListData.item.@select=="true"){
+						ckbx.selected = true;
+					}
+					
+					var src:String = treeListData.item.@src;
+					trace("irTreeCheckBox "+ treeListData.hasChildren + " " + src + " " + treeListData.item.@lib);
+					if(src){
+						ckbx.enabled = true;
+					}else{
+						ckbx.enabled = false;
+					}
+				}
+				if(treeListData.item.@idItem=="ajoutCouche")ckbx.width = 0;
+			}			
+			
+		]]>
+	</fx:Script>
+	
+	
+	<s:states>
+		<s:State name="normal" />            
+		<s:State name="hovered" />
+		<s:State name="selected" />
+	</s:states>
+	<s:HGroup id="row" left="0" right="0" top="0" bottom="0" verticalAlign="middle">
+		<s:Rect id="indentationSpacer" width="{treeListData.indent}" percentHeight="100" alpha="0">
+			<s:fill>
+				<s:SolidColor color="0xFFFFFF" />
+			</s:fill>
+		</s:Rect>
+		<s:Group id="disclosureGroup">
+			<s:BitmapImage source="{treeListData.disclosureIcon}" visible="{treeListData.hasChildren}" />
+		</s:Group>
+		<s:BitmapImage source="{treeListData.icon}" />
+		<s:Label id="labelField" text="{treeListData.label}" paddingTop="2"/>
+		<s:CheckBox id="ckbx" visible="{!treeListData.hasChildren}" change="ckbx_changeHandler(event)" />
+	</s:HGroup>
+</s:MXTreeItemRenderer>

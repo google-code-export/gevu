@@ -9,7 +9,8 @@ todo :
 				xmlns:ns2="compo.*"
 				xmlns:form="compo.form.*"
 				xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
-
+				backgroundImage="images/IDVisuVDM.png"
+				backgroundColor="0x038CDC" 
 				width="100%" height="100%" creationComplete="login()" layout="absolute"
 				name="gevu_diagnostic" xmlns:stat="compo.stat.*" >
 	<mx:Style source="styles.css" />		
@@ -95,6 +96,9 @@ todo :
 			[Bindable] public var dataGeo:Object;
 			[Bindable] public var dataStat:Object;
 			[Bindable] public var dataDiagExt:Object;
+
+			[Bindable] public var xmlOptAff:XML;
+			private var urlOptAffCarto:String = "optAffCarto.xml";
 			
 			private var TreeObject:XML;
 			private var xmlTree:XML
@@ -151,8 +155,15 @@ todo :
 			
 			public function init():void
 			{
+				Application.application.setStyle("backgroundImage", null);
+				vbImg.percentWidth = 10;				
+				
+				chargeOptCarto();
+				
 				boxGen.visible = true;
-				if(cartoIF)cartoIF.visible = true;
+				if(cartoIF){
+					cartoIF.visible = true;
+				}
 				
 				//construction de la listes des bases disponibles
 				var dataBases:Array = JSON.decode(this.exi.droit_3);
@@ -166,6 +177,30 @@ todo :
 				ExternalInterface.addCallback("cartoLoad",cartoLoad);	
 				
 				//roDiagnostique.getTablesNames();
+			}
+
+			public function chargeOptCarto():void
+			{
+				//chargement du xml pour les options d'affichage de la carte
+				var chargementXML:URLLoader = new URLLoader();// objet de chargement
+				var fichier:URLRequest = new URLRequest(urlOptAffCarto);// url du fichier chargé
+				chargementXML.addEventListener( Event.COMPLETE, chargementComplet );
+				chargementXML.load(fichier);
+
+			}
+			
+			// chargement terminé du fichier xml
+			protected function chargementComplet(pEvt:Event):void {
+				xmlOptAff = new XML( pEvt.target.data );
+			}
+			
+			public function showKML(params:Array):void
+			{
+				cartoIF.callChargeKml(params);
+			}
+			public function hideKML(params:Array):void
+			{
+				cartoIF.callFunction("clearKml",params);
 			}
 			
 			protected function cbBases_changeHandler(event:ListEvent):void
@@ -904,9 +939,10 @@ todo :
 		<mx:method name="ajoutUtiDiag"			result="ajoutUtiDiag_resultHandler(event)"/>
 	</mx:RemoteObject>
 	
-	<mx:VBox id="boxGen" visible="false" width="100%" height="100%"  >
+	<mx:VBox id="boxGen" visible="false" width="100%" height="100%" paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3" >
 		<mx:HBox width="100%" >
 			<mx:Image source="@Embed('images/logo.png')" />
+			<mx:Image source="@Embed('images/logoVDM.jpeg')" />
 			<mx:VBox horizontalAlign="left" >
 				<mx:Label fontSize="16" text="Saisie des diagnostics"/>		
 				<mx:Label text="V 0.1166" />
@@ -1004,7 +1040,7 @@ todo :
 						</mx:Canvas>
 					</mx:TabNavigator>					
 				</mx:VBox>
-				<mx:VBox width="10%" height="100%">
+				<mx:VBox id="vbImg" width="0%" height="100%">
 					<mx:Image id="imgLieux" click="imgLieux.source='';" verticalAlign="top" horizontalAlign="left" source="" width="100%" />
 					<mx:Canvas width="100%" height="100%" >
 						<flexiframe:IFrame id="htmlLieux" source="{ENDPOINT_VIDE}" width="100%" height="100%" overlayDetection="true" />

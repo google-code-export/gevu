@@ -30,10 +30,11 @@
 			public var tcFunction:Function;
 
 			private function init():void{
+				cbSou.selected = true;
+				cbReg.selected = true;					
 				if(params["reg"]==1){
 					cbSou.selected = false;
-				}
-				if(params["reg"]==3){
+				}else if(params["reg"]==3){
 					cbReg.selected = false;
 				}
 				

@@ -43,6 +43,7 @@
 		public var son:Boolean;
 		public var doc:Boolean;
 		public var kml:Boolean;
+		public var kmlParams:Array;
 		private var urlPdf:String;
 		private var rsDocs:Object;
 		private var rsTofs:ArrayCollection = new ArrayCollection();
@@ -79,6 +80,7 @@
 				var img:Image = new Image;
 				var obj:Object = new Object;
 				kml = false;
+				kmlParams = null;
 				if(d.content_type == "application/octet-stream"){
 					if(ext=="doc" || ext=="ocx"){
 						d.vignette = DocIcon;
@@ -170,8 +172,9 @@
 				if(kml){
 					d.vignette = KmlIcon;
 					dataIcons.addItem(d);
+					kmlParams = [d.url, d.titre, d.id_doc];
 					if(this.parentApplication.cartoIF)
-						this.parentApplication.cartoIF.callChargeKml([d.url, d.titre, d.id_doc]);					
+						this.parentApplication.cartoIF.callChargeKml(kmlParams);
 				}
 				if(d.content_type == "" || d.branche == 7){
 					d.vignette = HtmlIcon;

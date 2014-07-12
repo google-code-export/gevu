@@ -42,6 +42,9 @@
  	var flexApp = parent.document.getElementById('diagVDM');
 	var adresse;
 	var arr = [];
+	var latDef = 47.33798;
+	var lonDef = 6.51957;
+	var zoomDef = 5;
 	
  	/**
      * Function: init
@@ -55,11 +58,11 @@
             [APIkey],
             {
                 // center in WGS84G - centre en WGS84G
-                lon:6.51957,
-                lat:47.33798
+                lon:lonDef,
+                lat:latDef
             },
             // zoom level (0-20) - niveau de zooms (0 à 20) :
-            5,
+            zoomDef,
             {   // various options :
                 loadTheme: function() {
                     Geoportal.Util.setTheme("geoportal3");
@@ -203,56 +206,58 @@
  		//[lat, lng, type_carte, zoom_max, kml, idLieu, lib, sw, ne, lat_sv, lng_sv , heading, pitch, zoom_sv]
  		//centre la carte
  		if(params[2]){
- 			//traitement des données pour coordonnées Google Map
- 			epsg4326 = new OpenLayers.Projection("EPSG:4326");
-			
-			//création d'un marker draggable			
-			var position;
-			var couche, drag;
- 	 	    //vérifie s'il faut supprimer la couche
-			if(arr[params[5]]){
- 	 	    	couche = arr[params[5]];
- 	 	    	map.removeLayer(couche);
- 	 	    }
-			//positionnement de la carte
-			var center = new OpenLayers.LonLat(params[1], params[0]);
-			center.transform(epsg4326, map.getProjectionObject());
-			map.setCenter(center, parseInt(params[3])); 			 			
-			//couche du marqueur
-			position = new OpenLayers.Geometry.Point(params[1], params[0]);
-        	position.transform(OpenLayers.Projection.CRS84, viewer.projection);        
-        	var style = {externalGraphic:'images/favicon.png', graphicWidth:30, graphicHeight:30};
-			var pt = new OpenLayers.Feature.Vector(position, null, style);		 
-				couche = new OpenLayers.Layer.Vector(params[6]);
-				couche.addFeatures([pt]);
-				map.addLayer(couche);			
-			// fonction du marqueur déplaçable et centré automatiquement avec affichage dans le formulaire - attention à la conversion des coord qui doit être réinversé en fin de fonction
-			drag = new OpenLayers.Control.DragFeature(couche, {onComplete: function(f)	{
-				//transformation pour l'affichage
-				//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
-				position.transform(viewer.projection, OpenLayers.Projection.CRS84);
-				//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
-				map.setCenterAtLonLat(f.geometry.x, f.geometry.y);
-				/*récupère l'ampleur de la carte
-				b = viewer.getMap().getExtent();
-				b = b.transform(viewer.projection, epsg4326);
-				*/
-				//récupère l'adresse
-				getAdresse(f.geometry.y, f.geometry.x, map.getZoom());
-				//transformation pour la sauvegarde
-				position.transform(OpenLayers.Projection.CRS84, epsg4326);
-				//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
-				if(flexApp)flexApp.modifLieu('[{"lat":"'+f.geometry.y+'","lng":"'+f.geometry.x+'","zoom":"'+viewer.getMap().getZoom()+'","adresse":"'+adresse+'"}]');
-				//retour àla transformation initiale
-				position.transform(epsg4326, viewer.projection);        
-				//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
-			}});
-			map.addControl(drag);
-			drag.activate();	        
-			//map.setCenter(position, parseInt(params[3])); 			 			
-			arr[params[5]]=couche;
-
+ 			params[0] = latDef; 			
+ 			params[1] = lonDef; 			
+ 			params[3] = zoomDef; 			
  		}
+		//traitement des données pour coordonnées Google Map
+		epsg4326 = new OpenLayers.Projection("EPSG:4326");
+		
+		//création d'un marker draggable			
+		var position;
+		var couche, drag;
+	 	    //vérifie s'il faut supprimer la couche
+		if(arr[params[5]]){
+	 	    	couche = arr[params[5]];
+	 	    	map.removeLayer(couche);
+	 	    }
+		//positionnement de la carte
+		var center = new OpenLayers.LonLat(params[1], params[0]);
+		center.transform(epsg4326, map.getProjectionObject());
+		map.setCenter(center, parseInt(params[3])); 			 			
+		//couche du marqueur
+		position = new OpenLayers.Geometry.Point(params[1], params[0]);
+       	position.transform(OpenLayers.Projection.CRS84, viewer.projection);        
+       	var style = {externalGraphic:'images/favicon.png', graphicWidth:30, graphicHeight:30};
+		var pt = new OpenLayers.Feature.Vector(position, null, style);		 
+			couche = new OpenLayers.Layer.Vector(params[6]);
+			couche.addFeatures([pt]);
+			map.addLayer(couche);			
+		// fonction du marqueur déplaçable et centré automatiquement avec affichage dans le formulaire - attention à la conversion des coord qui doit être réinversé en fin de fonction
+		drag = new OpenLayers.Control.DragFeature(couche, {onComplete: function(f)	{
+			//transformation pour l'affichage
+			//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
+			position.transform(viewer.projection, OpenLayers.Projection.CRS84);
+			//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
+			map.setCenterAtLonLat(f.geometry.x, f.geometry.y);
+			/*récupère l'ampleur de la carte
+			b = viewer.getMap().getExtent();
+			b = b.transform(viewer.projection, epsg4326);
+			*/
+			//récupère l'adresse
+			getAdresse(f.geometry.y, f.geometry.x, map.getZoom());
+			//transformation pour la sauvegarde
+			position.transform(OpenLayers.Projection.CRS84, epsg4326);
+			//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
+			if(flexApp)flexApp.modifLieu('[{"lat":"'+f.geometry.y+'","lng":"'+f.geometry.x+'","zoom":"'+viewer.getMap().getZoom()+'","adresse":"'+adresse+'"}]');
+			//retour àla transformation initiale
+			position.transform(epsg4326, viewer.projection);        
+			//console.log(f.geometry.x+' '+f.geometry.y+' '+viewer.getMap().getZoom());
+		}});
+		map.addControl(drag);
+		drag.activate();	        
+		//map.setCenter(position, parseInt(params[3])); 			 			
+		arr[params[5]]=couche;
  	}
  	
  	

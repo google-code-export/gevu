@@ -36,6 +36,7 @@ import mx.rpc.http.HTTPService;
 [Bindable] public var endPoint:String;
 [Bindable] public var bInit:Boolean=true;
 [Bindable] public var idExi:String;
+[Bindable] public var urlExport:String; 
 private var idCritere:int;	
 
 
@@ -264,7 +265,20 @@ private function deleteDeficiClickHandler(event:CloseEvent):void
 			ROCC.findByIdCritere(idCritere);
 		}
 
-        ]]>
+			protected function btnExport_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest(urlExport);
+				var variables:URLVariables = new URLVariables();
+				variables.idLieu=1;
+				variables.idBase= this.parentApplication.idBase;
+				variables.type = "csvCrit";
+				request.data = variables;
+				request.method = URLRequestMethod.GET;
+				navigateToURL(request,"_blank");
+				
+			}
+			
+		]]>
     </mx:Script>
     
 	<mx:RemoteObject id="RO"
@@ -315,6 +329,7 @@ private function deleteDeficiClickHandler(event:CloseEvent):void
 				<mx:HBox id="AddDelete" >		
 					<mx:LinkButton id="btnAddNew" click="this.selectedChild = insert;" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un critère" />
 					<mx:LinkButton id="btnDelete" click="deleteItem()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un critère" />
+					<mx:LinkButton id="btnExport" click="btnExport_clickHandler(event)" icon="@Embed('images/csv.jpg')" toolTip="Exporter les critères en CSV" />
 				</mx:HBox>
 				<ns2:cnvFilterControl id="dgFilter" />
 				<mx:DataGrid 

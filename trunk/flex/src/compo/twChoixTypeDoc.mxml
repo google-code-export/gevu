@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
-	close="PopUpManager.removePopUp(this);" title="Choix d'un type de document"
+	close="PopUpManager.removePopUp(this);" title="Choix d'un type de document" creationComplete="creationCompleteHandler(event)"
 	xmlns:ns2="compo.*" >
 	<mx:Script>
         <![CDATA[
@@ -14,6 +14,7 @@
 
 
 			[Bindable] public var callback:Function;
+			[Bindable] public var bRapport:Boolean = false;
 			[Bindable] private var typeDoc:Object = 
 				[{"id_type_doc": 1,"lib": "Diag. DPE"}, {"id_type_doc": 2,"lib": "Diag. électricité"}, {"id_type_doc": 3,"lib": "Diag. ascenseur"}, {"id_type_doc": 4,"lib": "Plan"}, {"id_type_doc": 5,"lib": "Diag. accessibilité"}, {"id_type_doc": 6,"lib": "Autres"}, {"id_type_doc": 7,"lib": "Page WEB"}];
 						
@@ -38,6 +39,15 @@
 				}else{
 					callback(type, titre.text);				
 				}				
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				//vérifie s'il faut afficher des types de rapport
+				if(bRapport)
+					typeDoc = [{"id_type_doc": 8,"lib": "Rapport bâtiment"}, {"id_type_doc": 9,"lib": "Rapport espace"}, {"id_type_doc": 10,"lib": "Rapport niveau"}
+						, {"id_type_doc": 11,"lib": "Rapport objet"}, {"id_type_doc": 12,"lib": "Fiche logement"}, {"id_type_doc": 13,"lib": "Rapport logement"}];
+
 			}
 			
 		]]>

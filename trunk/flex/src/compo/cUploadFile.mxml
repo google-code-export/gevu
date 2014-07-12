@@ -81,6 +81,8 @@
 					var tw:twChoixTypeDoc= twChoixTypeDoc(
 						PopUpManager.createPopUp(this, twChoixTypeDoc, true));
 					tw.callback = showNavFic;
+					//précise le type de fichier
+					if(typeFic=="models")tw.bRapport=true;
 					PopUpManager.centerPopUp(tw);				
 				}else{
 					//le type de document par défaut est autres

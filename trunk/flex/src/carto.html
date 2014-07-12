@@ -3,17 +3,22 @@
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript" src="public/js/jquery.min.js"></script>
+<!--  
 <script type="text/javascript" src="public/js/d3.v2.js"></script>
+-->
 
 <script type="text/javascript">
 var geocoder = new google.maps.Geocoder();
 var map;
 var iti;
+var latDef = 47.33798;
+var lonDef = 6.51957;
+var zoomDef = 5;
 var markersArray = [];
 var kmlArray = [];
 var polyArray = [];
 var mt = new Array(google.maps.MapTypeId.HYBRID,google.maps.MapTypeId.ROADMAP,google.maps.MapTypeId.SATELLITE,google.maps.MapTypeId.TERRAIN);
-var lstKML = d3.select('#listeKML');
+//var lstKML = d3.select('#listeKML');
 var flexApp = parent.document.getElementById('diag');
 
 var rendererOptions = {
@@ -94,8 +99,8 @@ function deleteCouches() {
 		    }
 		    polyArray.length = 0;
 		  }
-	  d3.select('#listeCouche').remove();	  
-	  d3.select('#couches').append("div").attr("id", "listeCouche");	   
+	  //d3.select('#listeCouche').remove();	  
+	  //d3.select('#couches').append("div").attr("id", "listeCouche");	   
 	  directionsDisplay.setMap(null);
 }
 
@@ -111,8 +116,8 @@ function showOverlays() {
 
 function initialize() {
 	var options = {
-		zoom: 8,
-		center: new google.maps.LatLng(49.49, 0.11),
+		zoom: zoomDef,
+		center: new google.maps.LatLng(latDef, lonDef),
 		mapTypeId: google.maps.MapTypeId.TERRAIN,
 		streetViewControl: true,
 		mapTypeControlOptions: {
@@ -129,7 +134,7 @@ function initialize() {
 	  setIti(directionsDisplay.directions);
   });
 
-	initSV(49.49, 0.11, 1, 1, 1);
+	initSV(latDef, lonDef, 1, 1, 1);
   
 }
 
@@ -169,7 +174,7 @@ function addKml(params){
 }
 
 function addCouche(id, idElem, texte){
-
+	/*
 	d3.select('#listeCouche')
 		.append("span")
 		.text(texte)
@@ -178,6 +183,7 @@ function addCouche(id, idElem, texte){
 			.attr("id", idElem)
 			.attr("checked","checked")
 			.attr("onclick","showCouche("+id+",'"+idElem+"')");	
+	*/
 }
 
 function showCouche(id, idElem){
@@ -197,6 +203,12 @@ function showCouche(id, idElem){
 function addMarker(params){
 
 	deleteOverlays();
+	
+	if(params[2]=""){
+			params[0] = latDef; 			
+			params[1] = lonDef; 			
+			params[3] = zoomDef; 			
+	}
 	
 	var latLng = new google.maps.LatLng(params[0], params[1]);
 

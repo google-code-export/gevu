@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<optaff>
+	<item idItem="ajoutCouche" lib="Lieu(x) sélectionné(s)" >
+	</item>
+	<item lib="Délimitations géographiques" >
+		<item lib="Communes" >
+			<item lib="Cauville sur Mer" select="false" src="http://www.gevu.org/data/carto/Cauville-sur-Mer.kml" />
+		</item>
+		<item lib="EPCI" select="false" />
+		<item lib="Zones Scellier" select="false" />
+		<item lib="Zones Loyer" select="false" />
+	</item>
+	<item lib="SERVICES" >
+		<item lib="Transports" >
+			<item lib="Lignes de bus" >
+			</item>
+			<item lib="Arrêts de bus" select="false" />
+			<item lib="Arrêts de tramway" select="false" />
+			<item lib="Pistes cyclables" select="false" />
+		</item>
+		<item lib="Commerces">
+			<item lib="Supermarchés" select="false" src="" />
+		</item>
+		<item lib="Santé" >
+			<item lib="Hopitaux" select="false" />
+			<item lib="Cliniques" select="false" />
+			<item lib="Médecins" select="false" />
+			<item lib="Pharmacies" select="false" src=""/>
+		</item>
+		<item lib="Lieux d'enseignement" >
+			<item lib="Crèches" select="false" />
+			<item lib="Universités" select="false" />
+		</item>
+		<item lib="Services Publics" >
+			<item lib="Bureaux de poste" select="false" src=""/>
+			<item lib="CAF" select="false" />
+			<item lib="CRAM" select="false" />
+			<item lib="CMS" select="false" />
+			<item lib="Communautés Urbaine" select="false" />
+			<item lib="Pôle Emploi" select="false" />
+			<item lib="Sous Préfectures" select="false" />
+		</item>
+	</item>
+</optaff>
+				

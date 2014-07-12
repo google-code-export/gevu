@@ -14,6 +14,7 @@
 		import mx.collections.ArrayCollection;
 		import mx.controls.Alert;
 		import mx.events.IndexChangedEvent;
+		import mx.events.ListEvent;
 		import mx.managers.PopUpManager;
 		import mx.rpc.events.FaultEvent;
 		import mx.rpc.events.ResultEvent;
@@ -64,16 +65,45 @@
 		[Bindable]	public var rsVisuel:ArrayCollection;		
 		
 		public function init():void {
-			//details.removeAllChildren();
+			
+			if(details.numChildren)details.removeAllChildren();
 			if(rsDiagExt){
 				idDiagExt = rsDiagExt.id_diagext;
 				gmEnt.keyValue = rsDiagExt.id_entreprise;
 				gmEnt.init();
 				tiSource.text=rsDiagExt.source;
-				cbAuditif.selectedIndex = getLettreIndex(rsDiagExt.auditif);
-				cbCognitif.selectedIndex = getLettreIndex(rsDiagExt.cognitif);
-				cbMoteur.selectedIndex = getLettreIndex(rsDiagExt.moteur);
-				cbVisuel.selectedIndex = getLettreIndex(rsDiagExt.visuel);								
+				
+				if(rsDiagExt.general!="-"){
+					cbGeneral.selectedIndex = getLettreIndex(rsDiagExt.general);
+					imgGenExt.height = 60;						
+					imgGenExt.source=handi[rsDiagExt.general].icon;									
+				}
+
+				if(rsDiagExt.auditif!="-"){
+					cbAuditif.selectedIndex = getLettreIndex(rsDiagExt.auditif);
+					imgAudioExt.height = 60;						
+					imgAudioExt.source=handi[rsDiagExt.auditif].icon;				
+				}
+				
+				if(rsDiagExt.cognitif!="-"){
+					cbCognitif.selectedIndex = getLettreIndex(rsDiagExt.cognitif);
+					imgCogExt.height = 60;						
+					imgCogExt.source=handi[rsDiagExt.cognitif].icon;				
+				}
+				
+				if(rsDiagExt.moteur!="-"){
+					cbMoteur.selectedIndex = getLettreIndex(rsDiagExt.moteur);
+					imgMoteurExt.height = 60;						
+					imgMoteurExt.source=handi[rsDiagExt.moteur].icon;				
+				}
+				
+				if(rsDiagExt.visuel!="-"){
+					cbVisuel.selectedIndex = getLettreIndex(rsDiagExt.visuel);								
+					imgVisuelExt.height = 60;						
+					imgVisuelExt.source=handi[rsDiagExt.visuel].icon;		
+				}
+				
+
 			}else{
 				tiSource.text="";
 				cbAuditif.selectedIndex = 0;
@@ -81,8 +111,17 @@
 				cbMoteur.selectedIndex = 0;
 				cbVisuel.selectedIndex = 0;								
 				gmEnt.cb.selectedIndex = -1;
-				pDiagExt.height = 0;
+				imgGenExt.height = 0;				
+				imgAudioExt.height = 0;						
+				imgCogExt.height = 0;						
+				imgMoteurExt.height = 0;						
+				imgVisuelExt.height = 0;										
 			}
+			//pour val de marne pas de tagcloud
+			pTC.height = 0;
+			//pour supprimer le diag exterieur
+			//pDiagExt.height = 0;
+
 			if(rsEtatDiag){
 				TraiteEtatDiag();
 			}
@@ -169,12 +208,16 @@
 				vn["niv"] = this.selectNiv;
 				vn["handi"] = this.selectHandi;
 				vn["idLieu"] = this.idLieu;
-				vn["reg"] = 0;
+
 				if(cbReg.selected)
 					vn["reg"] = 1;
 				else if(cbSou.selected)
 					vn["reg"] = 3;
-				
+				if(cbReg.selected && cbSou.selected)
+					vn["reg"] = "";
+				if(!cbReg.selected && !cbSou.selected)
+					vn["reg"] = -1;
+
 				details.removeAllChildren();
 				var cnvListe:cnvDiagListe = new cnvDiagListe();
 				cnvListe.params = vn;
@@ -234,12 +277,18 @@
 		protected function enrDiagExt_clickHandler(event:MouseEvent):void
 		{
 			var arrParams:Array = new Array();
-			arrParams["id_entreprise"]=gmEnt.cb.selectedItem.id_entreprise;
+			if(gmEnt.cb.selectedItem)arrParams["id_entreprise"]=gmEnt.cb.selectedItem.id_entreprise;
 			arrParams["source"]=tiSource.text;
 			arrParams["auditif"]=cbAuditif.selectedLabel;
 			arrParams["cognitif"]=cbCognitif.selectedLabel;
 			arrParams["moteur"]=cbMoteur.selectedLabel;
 			arrParams["visuel"]=cbVisuel.selectedLabel;				
+			arrParams["general"]=cbGeneral.selectedLabel;				
+			arrParams["cmt_auditif"]=cmtAudioExt.text;
+			arrParams["cmt_cognitif"]=cmtCogExt.text;
+			arrParams["cmt_moteur"]=cmtMoteurExt.text;
+			arrParams["cmt_visuel"]=cmtVisuelExt.text;				
+			arrParams["cmt_general"]=cmtGenExt.text;				
 			if(idDiagExt){
 				ro.edit(idDiagExt, arrParams, "Models_DbTable_Gevu_diagext",this.parentApplication.idBase);
 			}else{
@@ -279,6 +328,35 @@
 			tcIFrame.callIFrameFunction('changeTagCloud', [txt]);
 		}
 		
+		protected function cbExt_changeHandler(event:ListEvent):void
+		{
+			var img:Image;
+			switch (event.currentTarget.id) {
+				case "cbVisuel":
+					img = imgVisuelExt;
+					break;
+				case "cbMoteur":
+					img = imgMoteurExt;	
+					break;
+				case "cbCognitif":
+					img = imgCogExt;									
+					break;
+				case "cbAuditif":
+					img = imgAudioExt;									
+					break;
+				case "cbGeneral":
+					img = imgGenExt;									
+					break;		
+			}
+			if(event.currentTarget.selectedLabel=="--")
+				img.height = 0;
+			else{
+				img.height = 60;
+				img.source=handi[event.currentTarget.selectedLabel].icon;					
+			}
+
+		}
+		
 	]]></mx:Script>
 	<mx:RemoteObject id="ro"
 					 source="GEVU_Diagnostique" destination="zend" 
@@ -296,6 +374,7 @@
 		<mx:String>B</mx:String>
 		<mx:String>C</mx:String>
 		<mx:String>D</mx:String>
+		<mx:String>E</mx:String>
 	</mx:ArrayCollection>
 	
 	<!-- Define custom colors for use as fills. -->
@@ -312,7 +391,7 @@
 
 	<mx:HBox height="100%" width="100%" >
 		<mx:VBox label="Diagnostic" height="100%" >
-			<mx:Panel title="Diagnotics GEVU" width="100%">
+			<mx:Panel title="Diagnotics GEVU" width="100%" height="100%">
 				<mx:HBox verticalAlign="middle" paddingLeft="6" >
 					<mx:CheckBox id="cbSou" label="Souhaitable" selected="true" change="filtreSouReg_changeHandler(event)" />		
 					<mx:CheckBox id="cbReg" label="Réglementaire" selected="true" change="filtreSouReg_changeHandler(event)" />		
@@ -408,22 +487,49 @@
 					</mx:VBox>
 				</mx:HBox>
 			</mx:Panel>				
-			<mx:Panel id="pDiagExt" title="Diagnotics extérieur" width="100%" >
-				<mx:VBox paddingLeft="6" paddingBottom="3" paddingTop="3" paddingRight="6" width="100%">
-					<mx:HBox verticalAlign="middle" width="100%" >
-						<mx:VBox horizontalAlign="center" width="100%" >							
-							<mx:Label text="auditif" /><mx:ComboBox id="cbAuditif" dataProvider="{acLettre}" />
+			<mx:Panel id="pDiagExt" title="Diagnotics extérieur" width="100%" height="100%" >
+				<mx:VBox paddingLeft="6" paddingBottom="3" paddingTop="3" paddingRight="6" width="100%" horizontalAlign="center">
+					
+					<mx:VBox horizontalAlign="center" width="100%">
+						<mx:Label text="Général" />
+						<mx:Image id="imgGenExt" source="{BIcon}" width="60" />						
+						<mx:ComboBox id="cbGeneral" dataProvider="{acLettre}" change="cbExt_changeHandler(event)"/>
+					</mx:VBox>
+					
+					<mx:HBox height="100%" width="100%">
+						<mx:VBox horizontalAlign="center" width="100%">
+							<mx:Label text="Auditif" />
+							<mx:Image id="imgAudioExt" source="{BIcon}" width="60" />						
+							<mx:ComboBox id="cbAuditif" dataProvider="{acLettre}" change="cbExt_changeHandler(event)" />
 						</mx:VBox>
-						<mx:VBox horizontalAlign="center" width="100%" >							
-							<mx:Label text="cognitif" /><mx:ComboBox id="cbCognitif" dataProvider="{acLettre}" />
+						<mx:VBox horizontalAlign="center" width="100%">
+							<mx:Label text="Cognitif" />
+							<mx:Image id="imgCogExt" source="{BIcon}" width="60" />						
+							<mx:ComboBox id="cbCognitif" dataProvider="{acLettre}" change="cbExt_changeHandler(event)"/>
 						</mx:VBox>
-						<mx:VBox horizontalAlign="center" width="100%" >							
-							<mx:Label text="moteur" /><mx:ComboBox id="cbMoteur" dataProvider="{acLettre}" />
+						<mx:VBox horizontalAlign="center" width="100%">
+							<mx:Label text="Moteur" />
+							<mx:Image id="imgMoteurExt" source="{BIcon}" width="60" />						
+							<mx:ComboBox id="cbMoteur" dataProvider="{acLettre}" change="cbExt_changeHandler(event)"/>
 						</mx:VBox>
-						<mx:VBox horizontalAlign="center" width="100%" >							
-							<mx:Label text="visuel" /><mx:ComboBox id="cbVisuel" dataProvider="{acLettre}" />						
+						<mx:VBox horizontalAlign="center" width="100%">
+							<mx:Label text="Visuel" />
+							<mx:Image id="imgVisuelExt" source="{BIcon}" width="60" />						
+							<mx:ComboBox id="cbVisuel" dataProvider="{acLettre}" change="cbExt_changeHandler(event)"/>
 						</mx:VBox>
-					</mx:HBox>
+					</mx:HBox>					
+					<mx:VBox width="100%">
+						<mx:Label text="Commentaire niveau accessibilité général" />
+						<mx:TextArea width="100%" id="cmtGenExt"/>
+						<mx:Label text="Commentaire niveau accessibilité auditif" />
+						<mx:TextArea width="100%" id="cmtAudioExt"/>
+						<mx:Label text="Commentaire niveau accessibilité cognitif" />
+						<mx:TextArea width="100%" id="cmtCogExt"/>
+						<mx:Label text="Commentaire niveau accessibilité moteur" />
+						<mx:TextArea width="100%" id="cmtMoteurExt"/>
+						<mx:Label text="Commentaire niveau accessibilité visuel" />
+						<mx:TextArea width="100%" id="cmtVisuelExt"/>
+					</mx:VBox>
 					<mx:HBox verticalAlign="middle" width="100%" >
 						<mx:Label text="source :" /><mx:TextInput id="tiSource" text="" width="100%"/>
 					</mx:HBox>

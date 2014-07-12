@@ -15,10 +15,12 @@
 		public function callChangeGeo():void {
 			if(rsCarto)
 				cartoIFrame.callIFrameFunction('addMarker', [rsCarto.lat, rsCarto.lng, rsCarto.type_carte, rsCarto.zoom_max, rsCarto.kml, rsCarto.idLieu, rsCarto.lib, rsCarto.sw, rsCarto.ne, rsCarto.lat_sv, rsCarto.lng_sv , rsCarto.heading, rsCarto.pitch, rsCarto.zoom_sv], handleChangeGeo);
+			//vérifie s'il faut charger un kml
+			if(this.parentApplication.docs.kmlParams)callChargeKml(this.parentApplication.docs.kmlParams);			
 		}
 
 		public function callChargeKml(params:Array):void {
-			cartoIFrame.callIFrameFunction('addKml', params, handleChangeGeo);	
+			ajoutCouche(params);
 		}
 
 		public function callAddIti(adresseDep:String, adresseArr:String):void {		
@@ -27,6 +29,26 @@
 		
 		public function callFunction(name:String, params:Array):void {
 			cartoIFrame.callIFrameFunction(name, params, handleChangeGeo);	
+		}
+		
+		public function ajoutCouche(params:Array):void {
+				var node:XML = <item />;
+				node.@lib= params[1];
+				node.@select="true";
+				node.@src= params[0];
+				node.@idDoc= params[2];
+				var x:XML = <root></root>;
+				x.appendChild(node);
+				var objTree:XMLList = treeOptAff.dataProvider[0].descendants().(@lib == "Lieu(x) sélectionné(s)");
+				//vérifie si le kml est déjà là
+				var xItem:XML = objTree[0].descendants().(@src == params[0])[0];
+				if(xItem==null){
+					objTree[0].appendChild(x.item);
+					//ouvre le noeud parent
+					treeOptAff.expandItem(objTree[0],true);						
+				}
+				cartoIFrame.callIFrameFunction('addKml', params, handleChangeGeo);	
+			
 		}
 		
 		/**
@@ -39,21 +61,35 @@
 		
 		protected function creationCompleteHandler(event:FlexEvent):void
 		{
+			
+			//on n'affiche pas les options d'affichage avec l'IGN
+			if(urlCarto=="cartoIGN.html")treeOptAff.width=0;
+			if(!treeOptAff.dataProvider)treeOptAff.dataProvider=this.parentApplication.xmlOptAff;
 		}
 		
 		public function rechargeCarto():void{
 			cartoIFrame.source = urlCarto;
-			
+			this.parentApplication.chargeOptCarto();
 		}
 		
 	]]></mx:Script>
 
-	<flexiframe:IFrame id="cartoIFrame"
-					   width="100%" height="100%"
-					   source="{urlCarto}"
-					    visible="{this.visible}" 
-						overlayDetection="true"  
-					   />			   
+	<mx:HBox width="100%" height="100%">
+		<mx:Tree id="treeOptAff" labelField="@lib" showRoot="false" 
+				 height="100%" 
+				 visible="{this.visible}"
+				 dataProvider="{this.parentApplication.xmlOptAff}"
+				 itemRenderer="compo.render.irTreeCheckBox"
+				 horizontalScrollPolicy="on" verticalScrollPolicy="on"
+				 />
+		<flexiframe:IFrame id="cartoIFrame"
+						   width="100%" height="100%"
+						   source="{urlCarto}"
+						   visible="{this.visible}" 
+						   overlayDetection="true"  
+						   />			   
+	</mx:HBox>
+	
 
 	
 </mx:Canvas>

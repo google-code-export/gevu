@@ -10,7 +10,7 @@
 		<mx:VBox width="100%" height="100%" >
 			
 			<mx:HBox width="100%">
-				<mx:Label text="{NodeData.id_lieu}" /><mx:Label text="adresse" />
+				<mx:Label text="adresse" />
 				<mx:TextInput id="F01" data="{NodeData.adresse}" width="100%" />
 			</mx:HBox>
 			<mx:HBox width="100%">
@@ -63,7 +63,12 @@
 				<mx:Label text="Zoom SV :" />
 				<mx:Label id="zoom_sv" text=""/>
 			</mx:HBox>
-			<mx:Button id="save" label="enregistrer" click="saveModifications();"/>
+			<mx:HBox>
+				<mx:Label text="Id. GEVU :" /><mx:Label text="{NodeData.id_lieu}" />
+				<mx:Label text="Id. Ext. :" /><mx:TextInput id="idExt" data="{NodeData.id_ext}" />
+				<mx:Label text="code INSEE :" /><mx:TextInput id="insee" data="{NodeData.insee}" />
+				<mx:Button id="save" label="enregistrer" click="saveModifications();"/>				
+			</mx:HBox>
 		</mx:VBox>
 		<mx:Label text="kml" />
 		<mx:TextArea id="F06" data="{NodeData.kml}" editable="true" height="100%" width="100%" />
@@ -106,7 +111,9 @@
 				zoom_sv.text = NodeData["zoom_sv"];
 				heading.text = NodeData["heading"];
 				pitch.text = NodeData["pitch"];
-
+				insee.text = NodeData["insee"];
+				idExt.text = NodeData.id_ext;
+				
 			}
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
@@ -136,6 +143,8 @@
 				arr["zoom_sv"]=zoom_sv.text;
 				arr["heading"]=heading.text;
 				arr["pitch"]=pitch.text;
+				arr["insee"]=insee.text;
+				arr["id_ext"]=idExt.text;
 				
 				roModifBase.edit(NodeData.id_geo, arr, obj, this.parentApplication.idBase);
 			}			

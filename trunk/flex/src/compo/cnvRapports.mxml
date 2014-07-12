@@ -107,7 +107,7 @@
 			<mx:VBox>
 				<mx:Label text="Modèles de rapport" />
 				<mx:HBox>
-					<compo:cUploadFile x="-100" id="ufModel" iconBtn="@Embed('images/AddRecord.png')" idExi="{this.parentApplication.idExi}" objName="model_rapport" ttBtn="Ajouter un modèle" ctlBind="{this}" wf="models" typeFic="models" />								
+					<compo:cUploadFile x="-100" id="ufModel" iconBtn="@Embed('images/AddRecord.png')" idExi="{this.parentApplication.idExi}" objName="model_rapport" ttBtn="Ajouter un modèle" ctlBind="{this}" wf="models" typeFic="models" typeDoc="1" />								
 					<compo:cbGroupeMot labelName="titre" bRemove="true" bAjout="false" titre="un modèle" keyName="id_doc" id="cbModel" objName="Models_DbTable_Gevu_docs" objMethode="findByTronc"  objParam="model_rapport" />
 				</mx:HBox>
 			</mx:VBox>
