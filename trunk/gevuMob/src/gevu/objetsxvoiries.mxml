@@ -3,7 +3,7 @@
 		xmlns:cpnt="cpnt.*"
 		title="Objet de voirie" 
 		width="100%" height="100%"
-		creationComplete="creationCompleteHandler(event)"
+		 creationComplete="creationCompleteHandler(event)"
 		
 		>
 	<fx:Script>
