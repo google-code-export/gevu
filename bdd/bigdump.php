@@ -35,7 +35,7 @@
 // *** Accurate filename handling and urlencode in URLs
 // *** Add Paypal button
 
-require_once( "../application/configs/config.php" );
+require_once( "../../application/configs/config.php" );
 $rsDB = Zend_Registry::get("multidb");	
 $arrDB = $rsDB->getOptions();
 //$_GET["site"]="serveur";
