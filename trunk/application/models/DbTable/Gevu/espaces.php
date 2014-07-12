@@ -121,7 +121,11 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
     public function getAll($order=null, $limit=0, $from=0)
     {
         $query = $this->select()
-                    ->from( array("gevu_espaces" => "gevu_espaces") );
+            ->from( array("e" => "gevu_espaces"))
+			->setIntegrityCheck(false) //pour pouvoir sélectionner des colonnes dans une autre table
+            ->joinInner(array('t' => 'gevu_typesxcontroles'),
+                't.id_type_controle = e.id_type_controle',array('libCtl'=>"lib"))
+		;
                     
         if($order != null)
         {
@@ -135,31 +139,9 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray();
     }
-
-    /**
-     * Récupère les spécifications des colonnes Gevu_espaces 
-     */
-    public function getCols(){
-
-    	$arr = array("cols"=>array(
-    	   	array("titre"=>"id_espace","champ"=>"id_espace","visible"=>true),
-    	array("titre"=>"id_lieu","champ"=>"id_lieu","visible"=>true),
-    	array("titre"=>"id_instant","champ"=>"id_instant","visible"=>true),
-    	array("titre"=>"ref","champ"=>"ref","visible"=>true),
-    	array("titre"=>"id_type_espace","champ"=>"id_type_espace","visible"=>true),
-    	array("titre"=>"reponse_1","champ"=>"reponse_1","visible"=>true),
-    	array("titre"=>"reponse_2","champ"=>"reponse_2","visible"=>true),
-    	array("titre"=>"id_type_specifique_int","champ"=>"id_type_specifique_int","visible"=>true),
-    	array("titre"=>"id_type_specifique_ext","champ"=>"id_type_specifique_ext","visible"=>true),
-    	array("titre"=>"id_donnee","champ"=>"id_donnee","visible"=>true),
-    	array("titre"=>"maj","champ"=>"maj","visible"=>true),
-        	
-    		));    	
-    	return $arr;
-		
-    }     
     
-    /*
+    
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -173,7 +155,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -187,7 +169,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -201,7 +183,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -215,7 +197,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -229,7 +211,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -243,7 +225,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -257,7 +239,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -271,7 +253,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -285,7 +267,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -299,7 +281,7 @@ class Models_DbTable_Gevu_espaces extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_espaces avec la valeur spécifiée
      * et retourne cette entrée.
      *

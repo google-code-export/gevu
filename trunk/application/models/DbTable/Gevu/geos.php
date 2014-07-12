@@ -42,7 +42,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 	var $selectFields = array("id_geo", "id_instant", "id_lieu", "lat", "lng"
 		, "latlng"=>"CONCAT('(',X(latlng),',',Y(latlng),')')", "sw"=>"CONCAT('(',X(sw),',',Y(sw),')')", "ne"=>"CONCAT('(',X(ne),',',Y(ne),')')"
 		, "zoom_min", "zoom_max", "adresse", "codepostal", "ville", "pays", "kml", "type_carte", "maj", "data"
-		,"lat_sv", "lng_sv", "zoom_sv", "heading", "pitch");
+		,"lat_sv", "lng_sv", "zoom_sv", "heading", "pitch", "insee", "id_ext");
 
     /**
      * Vérifie la valeur des données géographiques et de date
@@ -240,7 +240,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -255,7 +255,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -270,7 +270,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -285,7 +285,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -300,7 +300,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -315,7 +315,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -330,7 +330,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -345,7 +345,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -361,7 +361,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
         return $this->fetchAll($query)->toArray(); 
     }
     
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -379,7 +379,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -394,7 +394,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -409,7 +409,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
@@ -424,7 +424,7 @@ class Models_DbTable_Gevu_geos extends Zend_Db_Table_Abstract
 
         return $this->fetchAll($query)->toArray(); 
     }
-    /*
+    /**
      * Recherche une entrée Gevu_geos avec la valeur spécifiée
      * et retourne cette entrée.
      *
