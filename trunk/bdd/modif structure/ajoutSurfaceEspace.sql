@@ -1,0 +1,14 @@
+ALTER TABLE  gevu_alceane.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_new.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_trouville.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_valdemarne.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_pro_administratif.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_pro_cafetaria.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_pro_formation.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_pro_prospective.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_clrp.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_etudiants.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_prospective.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_ref.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_ref_alceane.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
+ALTER TABLE gevu_test.gevu_espaces ADD surface DECIMAL( 10, 2 ) NOT NULL;
