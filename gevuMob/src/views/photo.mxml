@@ -209,6 +209,7 @@
 			
 			protected function deleteDoc_resultHandler(event:ResultEvent):void
 			{
+				currentState = 'main';
 				getDoc();				
 				var aProcess:alert = new alert();
 				aProcess.mess = "Le document est supprimé.";
@@ -274,7 +275,10 @@
 		<s:Label id="statusText" fontSize="24" text=""/>
 	</s:VGroup>
 	<s:VGroup includeIn="zoom" width="100%" height="100%" verticalAlign="top" paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4" >
-		<s:Button label="Fermer" click="{currentState = 'main'}" />				
+		<s:HGroup width="100%" >
+			<s:Button label="Fermer" click="{currentState = 'main'}" />				
+			<s:Button skinClass="skin.btnSupp" click="deleteItem()"  />
+		</s:HGroup>							
 		<s:Image id="img" width="370" height="400" scaleMode="letterbox" />		
 	</s:VGroup>
 

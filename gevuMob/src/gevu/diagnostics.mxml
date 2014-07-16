@@ -94,6 +94,7 @@
 			
 			protected function getDiagComplet_resultHandler(event:ResultEvent):void
 			{
+				listRep.dataProvider = null;
 				diagData = event.result as Array;
 				listRep.dataProvider = new ArrayCollection(diagData['questions']);
 			}
@@ -106,9 +107,9 @@
 					vnSolus.pushView(gevu.solutions, {"id_diag":nodeQuestion.@["idDiag"], "id_lieu":idLieu, "id_critere":nodeQuestion.@["id_critere"]});
 			}
 			
-			private function initProblemes(idDiag:int, idCritere:int, txtDiag:String, idRep:String):void
+			private function initProblemes(idDiag:int, idCritere:int, txtDiag:String, idRep:String, cs:String):void
 			{
-				vnProbs.pushView(gevu.problemes,{"idDiag":idDiag,"idLieu":idLieu, "idCrit":idCritere});
+				vnProbs.pushView(gevu.problemes,{"idDiag":idDiag,"idLieu":idLieu, "idCrit":idCritere, "fctPasser":getNextQuestion, "cs":cs});
 				if(idRep){
 					modifReponse.lblQ = txtDiag;
 					modifReponse.setVal(idRep);
@@ -165,7 +166,7 @@
 			}
 			
 			
-			private function getNextQuestion():void
+			public function getNextQuestion():void
 			{
 				
 				//calcule la prochaine question
@@ -200,7 +201,7 @@
 				if(valQ !=""){
 					ckReponse.setVal(valQ);
 					//charge les problèmes
-					initProblemes(nodeQuestion.@["idDiag"], nodeQuestion.@["id_critere"], nodeQuestion.@["lib"]+" : "+valQ,"");	
+					initProblemes(nodeQuestion.@["idDiag"], nodeQuestion.@["id_critere"], nodeQuestion.@["lib"]+" : "+valQ,"","lecture");	
 					//charge les solutions
 					initSolutions();
 				}else{
@@ -386,7 +387,11 @@
 				if(nodeQuestion){
 					var arr:Array = event.result as Array;
 					nodeQuestion.@["idDiag"] = arr.idDiags[0];
-					getNextQuestion();
+					//si la réponse est négative on affiche la saisie d'observation
+					if(arr.id_reponse==2){
+						initProblemes(arr.idDiags[0], arr.id_critere,"","","ajout");
+					}else
+						getNextQuestion();
 					vgAjout.enabled = true;
 				}else{
 					//on recharge la liste des réponses
@@ -404,7 +409,11 @@
 				var arr:Array = event.result as Array;
 				this.idInstant = arr.idInst;
 				nodeQuestion.@["idDiag"] = arr.idDiag;
-				getNextQuestion();
+				//si la réponse est négative on affiche la saisie d'observation
+				if(arr.id_reponse==2){
+					initProblemes(arr.idDiag, arr.id_critere,"","","ajout");
+				}else
+					getNextQuestion();
 				vgAjout.enabled = true;
 			}
 			
@@ -488,7 +497,7 @@
 				gRep.visible = true;
 				selectDiag = event.currentTarget.selectedItem;
 				if(selectDiag){
-					initProblemes(selectDiag.id_diag, selectDiag.id_critere, selectDiag.criteres, selectDiag.id_reponse);
+					initProblemes(selectDiag.id_diag, selectDiag.id_critere, selectDiag.criteres, selectDiag.id_reponse,"lecture");
 					initSolutions();
 				}				
 			}
@@ -609,7 +618,7 @@
 			</s:VGroup>
 			<s:VGroup width="100%" height="100%" >
 				<s:Button skinClass="skin.btnSupp" click="deleteReponse(event)" />
-				<s:List id="listRep" width="100%" height="100%"  click="listRep_clickHandler(event)" itemRenderer="cpnt.irListRep"  />
+				<s:List id="listRep" width="100%" height="100%" useVirtualLayout="true"  click="listRep_clickHandler(event)" itemRenderer="cpnt.irListRep"  />
 			</s:VGroup>
 		</s:HGroup>		
 	</s:VGroup>

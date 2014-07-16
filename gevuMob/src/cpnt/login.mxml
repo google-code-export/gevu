@@ -29,7 +29,8 @@
 				var p:Object=new Object;
 				p['username']=log.text;
 				p['password']=mdp.text;
-				LoginService.verifyUser(p);								
+				LoginService.verifyUser(p);
+				trace(LoginService.endpoint);
 			}
 			
 			protected function creationCompleteHandler(event:FlexEvent):void

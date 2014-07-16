@@ -81,7 +81,7 @@
 			public var idBaseRef:String = "gevu_ref";
 			public var srvSrc:String = "ref";
 			public var srvDst:String = "android";
-			public var urlVerif:String = 'http://www.gevu.org';
+			public var urlVerif:String = 'http://www.google.fr';
 			public var ENDPOINT_IMPORT:String = urlVerif+"/services/import.php";
 			private var urlOpt:String = "application/configs/opt.js";
 			private var urlMig:String = "public/index.php/migration";
@@ -145,7 +145,7 @@
 				//showLogin();
 				//
 				var r:Object = {idExi:1,droit_4:'[{"lib":"ERP-IOP","id":"4_13"},{"lib":"loge","id":"4_12"},{"lib":"Logement V3","id":"4_18"}]'};				
-				var c:Object = {"lib":"test","options":{"idBase":"gevu_android", "idBaseSrc":"gevu_new", "idBaseRef":"gevu_ref", "srvSrc":"ref", "srvDst":"android", "urlVerif":"http://localhost/gevu"}};				
+				var c:Object = {"lib":"test","options":{"idBase":"gevu_android", "idBaseSrc":"gevu_new", "idBaseRef":"gevu_ref", "srvSrc":"gapaii", "srvDst":"android", "urlVerif":"http://www.google.fr "}};				
 				init(r, c);
 				//
 
@@ -295,6 +295,8 @@
 			
 			private function faultHandlerService(fault:FaultEvent, os:String=""):void {
 				//aProcess.close();
+				isRun = false;
+
 				var str:String;
 				str = "Code: "+fault.fault.faultCode.toString()+"\n"+
 					"Detail: "+fault.fault.faultDetail.toString()+"\n"+
@@ -698,6 +700,7 @@
 			
 			public function changeLieuNom(arr:Array):void
 			{
+				if(oLieu==null)return;
 				this.idLieuChange = oLieu.id_lieu;
 				this.arrLieuChange = arr;
 				roDiag.edit(oLieu.id_lieu, arr, "Models_DbTable_Gevu_lieux", idBase);				

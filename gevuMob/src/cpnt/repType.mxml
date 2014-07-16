@@ -59,8 +59,8 @@
 			<s:HGroup id="grpRep" verticalAlign="middle" >		
 				<s:Image  id="reponse_1" source="@Embed('assets/OUI.png')" click="changeModif('1')"  />
 				<s:Image  id="reponse_2" source="@Embed('assets/NON.png')" click="changeModif('2')" />
-				<s:Image  id="reponse_124" source="@Embed('assets/SR.png')" click="changeModif('124')" />
-				<s:Image  id="reponse_141" source="@Embed('assets/NA.png')" click="changeModif('141')" />
+				<s:Image  id="reponse_124" source="@Embed('assets/NA.png')" click="changeModif('124')" />
+				<s:Image  id="reponse_141" source="@Embed('assets/SR.png')" click="changeModif('141')" />
 				<!--
 				<s:RadioButton groupName="reponse" id="reponse_1" label="oui" color="white" click="changeModif('1')" /> 
 				<s:RadioButton groupName="reponse" id="reponse_2" label="non" color="white" click="changeModif('2')"/>
