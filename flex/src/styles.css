@@ -14,3 +14,7 @@
 	down-skin:		Embed("/images/right_arrow_up.gif");
 	disabled-skin:	Embed("/images/right_arrow_disabled.gif");
 }
+
+.titreBloc {
+	color: white;
+}

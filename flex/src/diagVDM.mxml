@@ -3,18 +3,17 @@
  Licensed under the Apache License, Version 2.0:
     http://www.apache.org/licenses/LICENSE-2.0
 todo :
-
 -->
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
 				xmlns:ns2="compo.*"
 				xmlns:form="compo.form.*"
 				xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
-				backgroundImage="images/IDVisuVDM.png"
-				backgroundColor="0x038CDC" 
-				width="100%" height="100%" creationComplete="login()" layout="absolute"
-				name="gevu_diagnostic" xmlns:stat="compo.stat.*" >
+				xmlns:stat="compo.stat.*"
+				width="100%" height="100%" backgroundColor="0x038CDC"
+				backgroundImage="images/IDVisuVDM.png" creationComplete="login()" layout="absolute"
+				name="gevu_diagnostic" viewSourceURL="srcview/index.html">
 	<mx:Style source="styles.css" />		
-
+	
 	<mx:Script>
 		<![CDATA[
 			//include the constant definition of the server endpoint URL
@@ -803,7 +802,7 @@ todo :
 			}
 			
 			
-			private function updateTreeStructure(event:ResultEvent) : void {
+			private function updateTreeStructure(event:ResultEvent, forceIcon:Boolean=false) : void {
 				
 				if(!event.result) return;
 				
@@ -817,9 +816,14 @@ todo :
 				//vérifie si le noeud existe
 				var objTree:XMLList = treeTree.dataProvider[0].descendants().(@idLieu == idnoeud);
 				if(objTree.length()){
+					
 					/* add the new real node */
 					objTree[0].appendChild(x.node.node);
-					
+										
+					if(forceIcon){
+						x = treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0];
+						treeTree.setItemIcon(x, iconAjoutUtiM, iconAjoutUtiM);
+					}
 					if(arrSelect){
 						//ajoute le noeud à la sélection
 						x = treeTree.dataProvider[0].descendants().(@idLieu == idnoeud)[0];
@@ -897,7 +901,8 @@ todo :
 					for(var i:Number=0; i < lEnfs.length(); i++) {
 						delete lEnfs[i];
 					}
-					updateTreeStructure(event);
+					updateTreeStructure(event, true);
+					
 				}else{
 					var arr:Array = event.result as Array;
 					Alert.show("Des composants du lieu sont déjà en cours de diagnostic.\n" +
@@ -961,7 +966,7 @@ todo :
 	 	<mx:HDividedBox width="100%" height="100%">
 				<mx:Canvas label="TERRITOIRES" width="400" height="100%" id="cnvTerre" enabled="false">
 					<mx:VBox width="100%" height="100%">
-						<mx:Panel width="100%" borderColor="#080808" cornerRadius="0"
+						<mx:Panel width="100%"  cornerRadius="0"  
 								  paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3"
 								  title="Trouver un territoire">
 							<mx:HBox width="100%">
@@ -978,7 +983,7 @@ todo :
 								</mx:VBox>
 							</mx:HBox>
 						</mx:Panel>
-				 		<mx:Panel title="Gestion du territoire" width="100%" height="100%" borderColor="#080808" cornerRadius="0">
+				 		<mx:Panel title="Gestion du territoire" width="100%" height="100%"  cornerRadius="0"  >
 							<mx:HBox>
 								<mx:LinkButton click="ajouterLieu()" icon="@Embed('images/AddRecord.png')" toolTip="Ajouter un lieu" />
 								<mx:LinkButton click="deleteLieu()" icon="@Embed('images/DeleteRecord.png')" toolTip="Supprimer un lieu" />															
