@@ -172,7 +172,7 @@
 			}
 
 			public function zoomMap(val:String):void{
-				this.parentApplication.cartoIF.callFunction("zoom",val);
+				this.parentApplication.cartoIF.callFunction("zoom",[val]);
 			}
 			
 			public function initData():void
