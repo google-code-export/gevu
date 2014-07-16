@@ -182,7 +182,7 @@
 
 			}
 			
-			protected function modifier_clickHandler(event:MouseEvent):void
+			protected function modifier_clickHandler():void
 			{
 				if(tiNom.text=="")return;
 				var modifData:Array = new Array();
@@ -202,9 +202,9 @@
 	
 	<s:VGroup width="100%" height="100%" paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4">
 		<s:HGroup verticalAlign="middle" width="100%" id="hgModifNom">
-			<s:TextInput id="tiNom" width="100%" /><s:Button label="Modifier" click="modifier_clickHandler(event)" />			
+			<s:TextInput id="tiNom" width="100%" change="modifier_clickHandler()" /><!-- <s:Button label="Modifier" click="modifier_clickHandler()" /> -->			
 		</s:HGroup>
 		<views:photo id="photo" width="100%" objName="Models_DbTable_Gevu_docsxlieux" objId="{this.parentApplication.oLieu.id_lieu}" />
-		<s:List id="list" width="100%" height="100%" click="list_clickHandler(event)" itemRenderer="cpnt.irListLieu"  />
+		<s:List id="list" width="100%" height="100%" click="list_clickHandler(event)" itemRenderer="cpnt.irListLieu" />
 	</s:VGroup>  
 </s:View>

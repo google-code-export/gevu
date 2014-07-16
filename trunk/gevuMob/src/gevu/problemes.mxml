@@ -2,7 +2,7 @@
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:cpnt="cpnt.*"
-		title="Problèmes" 
+		title="Observations" 
 		width="100%" height="100%" minHeight="140"
 		 creationComplete="creationCompleteHandler(event)" xmlns:views="views.*"
 		>
@@ -24,12 +24,15 @@
 			[Bindable] public var idCrit:int; 
 			[Bindable] public var idLieu:int; 
 			[Bindable] public var idBase:String; 
+			[Bindable] public var fctPasser:Function 
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
 				idDiag = data.idDiag as int;
 				idLieu = data.idLieu as int;
 				idCrit = data.idCrit as int;
+				fctPasser = data.fctPasser;
+				currentState = data.cs;
 				init();				
 			}
 
@@ -122,6 +125,11 @@
 				list.dataProvider =  new ArrayCollection(event.result as Array);				
 			}
 			
+			protected function passer(event:MouseEvent):void
+			{
+				fctPasser();
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -175,6 +183,7 @@
 			<s:Label text="Observations :" /><s:TextInput id="observations" width="100%" />
 		</s:HGroup>
 		<s:HGroup verticalAlign="middle" >
+			<s:Button label="passer" click="passer(event)"  />
 			<s:Button id="btnAjouter" label="Enregistrer" click="btnAjouter_clickHandler(event)" />
 			<s:Button id="btnAnnuler" label="Annuler" click="{currentState = 'lecture'}" />				
 		</s:HGroup>
