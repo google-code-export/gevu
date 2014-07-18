@@ -39,7 +39,7 @@
  	var domaine = "localhost/gevu";
     var iViewer= null;
     var map;
- 	var flexApp = parent.document.getElementById('diagVDM');
+ 	var flexApp = parent.document.getElementById('diag');
 	var adresse;
 	var arr = [];
 	var latDef = 47.33798;
@@ -205,7 +205,7 @@
  	function addMarker(params){
  		//[lat, lng, type_carte, zoom_max, kml, idLieu, lib, sw, ne, lat_sv, lng_sv , heading, pitch, zoom_sv]
  		//centre la carte
- 		if(params[2]){
+ 		if(params[2]==""){
  			params[0] = latDef; 			
  			params[1] = lonDef; 			
  			params[3] = zoomDef; 			
