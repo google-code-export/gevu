@@ -640,7 +640,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 				//récupère les diags non
 				$r['DiagNon'.$reg] = $this->dbD->getDiagReponse($idLieu, $idInstant, 2, $reg);
 				//récupère tous les diags
-				$r['DiagTot'.$reg] = $this->dbD->getDiagReponse($idLieu, $idInstant, $reg);
+				$r['DiagTot'.$reg] = $this->dbD->getDiagReponse($idLieu, $idInstant, "", $reg);
 				
 				//calcule les handicateurs
 				$r['handicateur'.$reg]['auditif'] = $this->getHandicateur("auditif", $r, $reg);
@@ -1428,12 +1428,21 @@ class GEVU_Diagnostique extends GEVU_Site{
 	        if($stat){
 	        	//ajoute les statistiques
 				$oStat = new GEVU_Statistique($idBase);
-				
+								
 				if($stat==0) $arrStat = $oStat->getPatrimoineDonGen($idBase, $idLieu);
 				if($stat==1) $arrStat = $oStat->getAntenneDonGen($idBase, $idLieu);
 				if($stat==2) $arrStat = $oStat->getGroupeDonGen($idBase, $idLieu);
 				if($stat==3) $arrStat = $oStat->getBatimentDonGen($idBase, $idLieu);
-				if($stat==4) $arrStat = $oStat->getLogementDonGen($idBase, $idLieu);
+				if($stat==4){
+					//modifie le fil d'ariane pour qu'il correspondent à la stat
+					for ($i = $stat; $i < count($res['ariane']); $i++) {
+						if($res['ariane'][$i]["id_lieu"]!=$idLieu)
+							unset($res['ariane'][$i]);
+						else
+							$res['ariane'][$i]["niv"]=$stat;						
+					}
+					$arrStat = $oStat->getLogementDonGen($idBase, $idLieu);
+				} 
 				
 				$res["___stats"] = $arrStat;	
 	        }
@@ -1598,7 +1607,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 	       		$idDiags[] = $p['id_diag'];
        		}
        	}
-        return array("idInst"=>$idInst,"idDiags"=>$idDiags);
+        return array("idInst"=>$idInst,"idDiags"=>$idDiags,'id_reponse'=>$p['id_reponse'],'id_critere'=>$p['id_critere']);
     }
 
 
@@ -1632,7 +1641,7 @@ class GEVU_Diagnostique extends GEVU_Site{
         
    		//ajoute le diagnostique
 	    $idDiag = $this->dbD->ajouter(array('id_critere'=>$p['id_critere'],'id_reponse'=>$p['id_reponse'],'id_instant'=>$idInst,'id_lieu'=>$idLieuControle),false);
-        return array("idInst"=>$idInst,"idDiag"=>$idDiag);
+        return array("idInst"=>$idInst,"idDiag"=>$idDiag,'id_reponse'=>$p['id_reponse'],'id_critere'=>$p['id_critere']);
     }
     
     
@@ -1733,7 +1742,7 @@ class GEVU_Diagnostique extends GEVU_Site{
 		if(!$this->dbG)$this->dbG = new Models_DbTable_Gevu_geos($this->db);
 		if(!$this->dbI)$this->dbI = new Models_DbTable_Gevu_instants($this->db);
 		
-		//création d'un nouvel instant si ajout forcer
+		$this->trace("création d'un nouvel instant si ajout forcer");
 		if(!$existe){
 			$c = str_replace("::", "_", __METHOD__); 
 			$this->idInst = $this->dbI->ajouter(array("id_exi"=>$idExi,"nom"=>$c));
@@ -1742,10 +1751,10 @@ class GEVU_Diagnostique extends GEVU_Site{
 		$data["lieu_parent"]= $idLieuParent;
 		$data["lib"]= $lib;
 		
-		//ajoute un lieu au parent
+		$this->trace("ajoute un lieu au parent");
 		$arrLieu = $this->dbL->ajouter($data, $existe, true);
 		
-		//vérifie s'il faut créer le contrôle
+		$this->trace("vérifie s'il faut créer le contrôle");
 		if($obj){
 			$this->ajoutCtlLieu($arrLieu["id_lieu"], $obj, $idExi, $idBase, $this->idInst);				
 		}
