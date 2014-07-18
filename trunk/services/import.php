@@ -11,8 +11,8 @@ try {
 	
 	//echo $imp->traiteImportLogement(561, 1, 1, 18, "gevu_new");
 	//echo $imp->importGeos("c:\wamp\www\gevu\data\carto\AlceaneCompLatLng2013-11-09 06-06-31.csv","gevu_new","adresse");
-	//echo $imp->traiteImportPiece(561, 1, "gevu");
-	
+	//echo $imp->traiteImportPiece(561, 1, "gevu_alceane");
+	//$imp->creaDiagEspace(18, "gevu_alceane");
 	
 	$imp->addDoc($_REQUEST);
 

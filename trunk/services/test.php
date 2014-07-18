@@ -3,7 +3,7 @@
 
 try {
 	require_once( "../application/configs/config.php" );
-	
+		
 	/*
 	$dumpSettings = array(
         'include-tables' => array('table1', 'table2'),
@@ -30,11 +30,11 @@ try {
 	ftp_put($ftp, "/www/data/android/IMG_20140402_135704.jpg", "/mnt/sdcard/DCIM/Camera/IMG_20140402_135704.jpg", FTP_BINARY);		
 	*/
 	
-	//
+	/*
 	$mig = new GEVU_Migration();
 	$mig->migreTabletteToServeur(1,"gevu_android","android","tves","gevu_test");
 	$mig->migreRefServeurToLocal("gevu_ref","tves","android","gevu_android");
-	//
+	*/
 
 	/*
 	$dbED = new Models_DbTable_Gevu_exisxdroits();
@@ -76,16 +76,16 @@ try {
 	$rapport->setSolusDefaut(6671,1,"gevu_trouville");
 	$rapport->creaRapport(546,6671,1,"gevu_trouville");
 	*/
-	/*
+	//
 	$a = new AUTH_LoginManager();
 	$user = new AUTH_LoginVO();
-	$user->username='lucky';
-	$user->password='lucky';
+	$user->username='samszo';
+	$user->password='samszo';
 	$r = $a->verifyUser($user);
 	print_r($r);
-	*/
-	
 	//
+	
+	/*
 	$idBase = "gevu_alceane";	
 	$idExi = 1;
 	$idLieu = 113;
