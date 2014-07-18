@@ -1,9 +1,8 @@
 <?php
 try {
 	require_once( "../application/configs/config.php" );
-	$application->bootstrap();	
-	//http://localhost/gevu/services/rapport.php?idExi=1&idLieu=1113&idBase=gevu_clrp&idModele=546	
-	$_GET["idModele"]=546;$_GET["idLieu"]=1113;$_GET["idExi"]=1;$_GET["idBase"]="gevu_clrp";
+
+	//$_GET["idModele"]=11;$_GET["idLieu"]=15622;$_GET["idExi"]=1;$_GET["idBase"]="gevu_alceane";
 	if(!isset($_GET["idModele"]) || !isset($_GET["idLieu"]) || !isset($_GET["idExi"]) || !isset($_GET["idBase"])){
 		echo "variables invalises";
 	}else{

@@ -1,7 +1,6 @@
 <?php
 try {
 	require_once( "../application/configs/config.php" );
-	set_time_limit(98000);
 	
 	$server = new Zend_Amf_Server();
 	
@@ -17,7 +16,7 @@ try {
 	
 	$response = $server->handle();
 	//var_dump($server->getFunctions());   		
-	
+
 }catch (Zend_Exception $e) {
 	echo "
 	<h3>Exception information:</h3>
