@@ -11,7 +11,8 @@ class GEVU_Import extends GEVU_Site{
 	var $arrPcl;
 	var $arrLoc;
 	var $idScenar;
-		
+	var $arrScenarCtl;
+	
 	/**
 	* constructeur de la class
 	*
@@ -249,6 +250,12 @@ class GEVU_Import extends GEVU_Site{
 			
     }
 
+     /**
+     * traitement des documents
+     *
+     * @param int 		$idDoc = l'identifiant du document qui contient les données
+     * @param int 		$creerModele
+     */
     public function traiteDoc($idDoc, $creerModele=false){
 
 		$doc = new Models_DbTable_Gevu_docs();
@@ -507,7 +514,6 @@ class GEVU_Import extends GEVU_Site{
 		$this->dbI = new Models_DbTable_Gevu_instants($this->db);
 		$this->dbSta = new Models_DbTable_Gevu_stats($this->db);
 		$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
-		$this->dbLog = new Models_DbTable_Gevu_logements($this->db);
 		$this->dbEsp = new Models_DbTable_Gevu_espaces($this->db);
 		
 		$this->trace("création de l'instant");
@@ -532,8 +538,6 @@ class GEVU_Import extends GEVU_Site{
 			//if($x==10)  break;
 			$this->arr = $arrCSV[$x];
 			if($this->arr[1]!=""){
-				$this->trace($this->arr[15]);			
-				
 				switch ($this->arr[15]) {
 					case "BLN": //BLN	BALCON	TERRASSE
 						$idCtl = 42;
@@ -712,29 +716,23 @@ class GEVU_Import extends GEVU_Site{
 				//création de la pièce
 				if($idCtl){
 					//récupère le code du logement
-					//$arrLieu = $this->dbSta->findIdLieuByCode_Logement($this->arr[11]);
-					$arrLieu = $this->dbLog->findByRef($this->arr[11]);
-					if($arrLieu[0]["id_lieu"]){
-						$this->trace($this->arr[11]." : ".$arrLieu[0]["id_lieu"]);
-						//création de l'étage
-						$idEt =  $this->dbL->ajouter(array("lib"=>"Etage 1","id_type_controle"=>69,"lieu_parent"=>$arrLieu[0]["id_lieu"],"id_instant"=>$this->idInst));
-						$this->trace("etage 1 :".$idEt); 
-						
-						//création de la pièce suivant le code de la pièce
-						$dataLieu="";
-						$dataLieu["lieu_parent"]= $idEt;
-						$dataLieu["lib"]= $this->arr[16];
-						$dataLieu["id_instant"]= $this->idInst;
-						$dataLieu["id_type_controle"]= $idCtl;
-						$dataEsp = "";
-						$dataEsp["surface"]= $this->arr[17];
-						$dataEsp["id_instant"]= $this->idInst;
-						$dataEsp["ref"]= $this->arr[11]."_".$x;
-						$dataEsp["id_type_controle"]= $idCtl;				
-						$this->creaPieceLogement($dataLieu, $dataEsp);										
-					}else{
-						$this->trace("logement pas trouvé : ".$this->arr[11]." : ".$arrLieu[0]["id_lieu"]);
-					}
+					$arrLieu = $this->dbSta->findIdLieuByCode_Logement($this->arr[11]);
+					//création de l'étage
+					$idEt =  $this->dbL->ajouter(array("lib"=>"Etage 1","id_type_controle"=>69,"lieu_parent"=>$arrLieu[0]["id_lieu"],"id_instant"=>$this->idInst),false);
+					$this->trace("etage 1 (".$idEt.") ".$arrLieu[0]["lib"]."(".$arrLieu[0]["id_lieu"].') = '.$this->arr[11]); 
+					
+					//création de la pièce suivant le code de la pièce
+					$dataLieu="";
+					$dataLieu["lieu_parent"]= $idEt;
+					$dataLieu["lib"]= $this->arr[16];
+					$dataLieu["id_instant"]= $this->idInst;
+					$dataLieu["id_type_controle"]= $idCtl;
+					$dataEsp = "";
+					$dataEsp["surface"]= $this->arr[17];
+					$dataEsp["id_instant"]= $this->idInst;
+					$dataEsp["ref"]= $this->arr[11]."_".$x;
+					$dataEsp["id_type_controle"]= $idCtl;				
+					$this->creaPieceLogement($dataLieu, $dataEsp);										
 				}
 				
 			}
@@ -753,11 +751,11 @@ class GEVU_Import extends GEVU_Site{
 	 */
 	function creaPieceLogement($dataLieu, $dataEsp=false){
 		//$this->trace("DEBUT =".__METHOD__);
-		$idLieu = $this->dbL->ajouter($dataLieu);
+		$idLieu = $this->dbL->ajouter($dataLieu, false);
 		//$this->trace("création d'un lieu pour la pièce");
 		if($dataEsp){
 			$dataEsp['id_lieu'] = $idLieu;
-			$this->dbEsp->ajouter($dataEsp);
+			$this->dbEsp->ajouter($dataEsp,false);
 			//$this->trace("création d'un espace");
 		}
 		//$this->trace("FIN =".__METHOD__);
@@ -1078,22 +1076,74 @@ class GEVU_Import extends GEVU_Site{
     	}
     	
     }
-	    
+
+    /**
+	 * Création des diagnostics pour les espaces
+	 * 
+     * @param int $idScenar 	= identifiant du scenario
+     * @param int $idBase		= identifiant de la base
+     * 
+	 */
+	function creaDiagEspace($idScenar, $idBase){
+		
+    	set_time_limit(0);
+    	
+    	$this->bTrace = true;					// pour afficher le nombre de lignes importées et le timing    	
+    	$this->echoTrace = false;//__METHOD__."<br/>";	//pour stocker les traces
+    	$this->temps_debut = microtime(true);
+		$this->trace("DEBUT ".__METHOD__." $idScenar, $idBase");
+    	
+    	$this->idBase = $idBase;
+    	$this->diag = new GEVU_Diagnostique($idBase);
+    	$this->diag->bTrace = $this->bTrace;
+    	$this->db = $this->diag->db;
+    	
+		$this->trace('création des models');
+		$this->dbI = new Models_DbTable_Gevu_instants($this->db);
+		$this->dbL = new Models_DbTable_Gevu_lieux($this->db);
+		$this->dbEsp = new Models_DbTable_Gevu_espaces($this->db);
+		
+		$this->trace("création de l'instant");
+		$c = str_replace("::", "_", __METHOD__); 
+		$this->idInst = $this->dbI->ajouter(array("id_exi"=>1,"nom"=>$c));		
+
+		//récupèration des espaces
+		$arrEsp = $this->dbEsp->getAll("id_lieu");
+		$this->trace("Nombre d'espace à traiter ".count($arrEsp));
+		foreach ($arrEsp as $esp) {
+			$this->trace("traitement de ".$esp["id_lieu"]." ".$esp["id_type_controle"]);
+			//if($esp["id_lieu"]>=)
+			$this->creaArboScenar($esp["id_lieu"], $idScenar, $idBase, -1, $esp["id_type_controle"]);
+		}
+		
+	}
+    
     /**
 	 * Création de l'arboressence à partir du scenario
 	 * 
-     * @param int $idLieu 		= identifiant du lieu
-     * @param int $idScenar 	= identifiant du scenario
-     * @param int $idBase		= identifiant de la base
-     * @param int $idCtlStop 	= identifiant du controle de stop
+     * @param int 		$idLieu 	= identifiant du lieu
+     * @param int 		$idScenar 	= identifiant du scenario
+     * @param int 		$idBase		= identifiant de la base
+     * @param int 		$idCtlStop 	= identifiant du controle de stop
+     * @param string 	$idCtl 		= type de controle du lieu
      * 
 	 */
-	function creaArboScenar($idLieu, $idScenar, $idBase=false, $idCtlStop=-1){
-		//$this->trace("DEBUT ".__METHOD__);
+	function creaArboScenar($idLieu, $idScenar, $idBase=false, $idCtlStop=-1, $idCtl=0){
+		$this->trace("DEBUT ".__METHOD__." $idLieu, $idScenar, $idBase, $idCtlStop");
 		//création d'un lieu enfant
 		$idLieuEnf = $this->diag->ajoutLieu($idLieu, -1, $idBase, "Nouveau lieu", false, false);
-		//vérifie s'il faut créer des controles 
-    	$arr = $this->diag->getLieuCtl($idLieuEnf, $idScenar, $idBase);
+		$this->trace("ajout d'un nouveau lieu ".$idLieuEnf);
+
+		//vérifie si les contrôles sont enregistré
+		if($idCtl && isset($this->arrScenarCtl[$idCtl])){
+			$this->trace("récupère les contrôles enregistré ".$idCtl);
+			$arr = $this->arrScenarCtl["ctl".$idCtl];
+		}else{
+			$this->trace("récupère les contrôle à créer ".$idCtl);
+			$arr = $this->diag->getLieuCtl($idLieuEnf, $idScenar, $idBase);    	
+			//enregistre les contrôle récupéré
+		    $this->arrScenarCtl["ctl".$idCtl] = $arr;			
+		}
     	for ($i = 0; $i < count($arr["ctrl"]); $i++) {
     		if($i>0){
 				$idLieuEnf = $this->diag->ajoutLieu($idLieu, -1, $idBase, "Nouveau lieu", false, false);
